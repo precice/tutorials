@@ -1,0 +1,26 @@
+*INCLUDE, INPUT=all.msh
+*INCLUDE, INPUT=fix1.nam
+*INCLUDE, INPUT=fix2.nam
+*INCLUDE, INPUT=fix3.nam
+*INCLUDE, INPUT=interface.nam
+*MATERIAL, Name=EL
+*ELASTIC
+ 100000000, 0.3
+*DENSITY
+ 10000.0
+*SOLID SECTION, Elset=Eall, Material=EL
+*STEP, NLGEOM, INC=1000000
+*DYNAMIC
+0.01, 5.0
+*BOUNDARY
+ Nfix1, 3, 3, 0
+ Nfix2, 1, 1, 0
+ Nfix2, 3, 3, 0
+ Nfix3, 1, 3, 0
+*CLOAD
+ Ninterface, 1, 0.0
+*NODE FILE
+ U
+*EL FILE
+ S, E
+*END STEP

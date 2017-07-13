@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding='UTF-8'?>
+
+<precice-configuration>
+
+   <solver-interface dimensions="3">
+      <data:vector name="Forces0"/>
+      <data:vector name="DisplacementDeltas0"/>
+
+      <mesh name="SU2_Mesh0">
+         <use-data name="Forces0"/>
+         <use-data name="DisplacementDeltas0"/>
+      </mesh>
+
+      <mesh name="Calculix_Mesh">
+         <use-data name="DisplacementDeltas0"/>
+         <use-data name="Forces0"/>
+      </mesh>
+
+      <participant name="SU2_CFD">
+         <use-mesh name="Calculix_Mesh" from="Calculix"/>
+         <use-mesh name="SU2_Mesh0" provide="yes"/>
+         <write-data name="Forces0" mesh="SU2_Mesh0"/>
+         <read-data  name="DisplacementDeltas0" mesh="SU2_Mesh0"/>
+         <mapping:nearest-neighbor
+            direction="write" from="SU2_Mesh0" to="Calculix_Mesh"
+            constraint="conservative" timing="initial"/>
+         <mapping:nearest-neighbor
+	        direction="read" from="Calculix_Mesh" to="SU2_Mesh0"
+            constraint="consistent" timing="initial"/>
+      </participant>
+
+      <participant name="Calculix">
+         <use-mesh name="Calculix_Mesh" provide="yes"/>
+         <write-data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
+         <read-data  name="Forces0"      mesh="Calculix_Mesh"/>
+      </participant>
+
+      <m2n:sockets from="SU2_CFD" to="Calculix"  exchange-directory="../" distribution-type="gather-scatter"/>
+      
+      <coupling-scheme:serial-implicit>
+           <participants first="SU2_CFD" second="Calculix"/>
+           <max-timesteps value="10000"/>
+           <timestep-length value="1e-4" />
+           <exchange data="Forces0" mesh="Calculix_Mesh" from="SU2_CFD" to="Calculix"/>
+           <exchange data="DisplacementDeltas0" mesh="Calculix_Mesh" from="Calculix" to="SU2_CFD" />
+           <max-iterations value="50"/>
+           <relative-convergence-measure limit="1e-4" data="DisplacementDeltas0" mesh="Calculix_Mesh"/>
+           <relative-convergence-measure limit="1e-4" data="Forces0" mesh="Calculix_Mesh"/>
+           <extrapolation-order value="2"/>
+           <post-processing:aitken>
+              <data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
+              <initial-relaxation value="0.1"/>
+           </post-processing:aitken>
+      </coupling-scheme:serial-implicit>
+
+   </solver-interface>
+
+</precice-configuration>
