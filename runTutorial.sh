@@ -41,6 +41,13 @@ cp precice-config.xml Output/$fname
 cp point1.watchpoint.txt Output/$fname 
 cp plotDisplacement.sh Output/$fname 
 # clean everything 
- ./Allclean
+rm -f *log
+rm -f *vtk
+rm -f *txt
+rm -f *csv
+rm -f *out
+rm -f restart_flow*
+rm -f forces*
+rm -f flap.[^i]*
 
  echo " Copying of results was successfull! Let's hope that simulation went well as well" 
