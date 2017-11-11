@@ -27,29 +27,31 @@
          <mapping:nearest-neighbor
 	        direction="read" from="Calculix_Mesh" to="SU2_Mesh0"
             constraint="consistent" timing="initial"/>
+        <!--watch-point mesh="SU2_Mesh0" name="point1" coordinate="0.1; 0.5; 1.6"-->
       </participant>
 
       <participant name="Calculix">
          <use-mesh name="Calculix_Mesh" provide="yes"/>
          <write-data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
          <read-data  name="Forces0"      mesh="Calculix_Mesh"/>
+        <watch-point mesh="Calculix_Mesh" name="point1" coordinate="-0.05;0.01;1">
       </participant>
 
       <m2n:sockets from="SU2_CFD" to="Calculix"  exchange-directory="../" distribution-type="gather-scatter"/>
       
       <coupling-scheme:serial-implicit>
            <participants first="SU2_CFD" second="Calculix"/>
-           <max-timesteps value="10000"/>
-           <timestep-length value="1e-4" />
+           <max-timesteps value="200"/>
+           <timestep-length value="3e-2" />
            <exchange data="Forces0" mesh="Calculix_Mesh" from="SU2_CFD" to="Calculix"/>
            <exchange data="DisplacementDeltas0" mesh="Calculix_Mesh" from="Calculix" to="SU2_CFD" />
            <max-iterations value="50"/>
-           <relative-convergence-measure limit="1e-4" data="DisplacementDeltas0" mesh="Calculix_Mesh"/>
-           <relative-convergence-measure limit="1e-4" data="Forces0" mesh="Calculix_Mesh"/>
+           <relative-convergence-measure limit="1e-1" data="DisplacementDeltas0" mesh="Calculix_Mesh"/>
+           <relative-convergence-measure limit="1e-1" data="Forces0" mesh="Calculix_Mesh"/>
            <extrapolation-order value="2"/>
            <post-processing:aitken>
               <data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
-              <initial-relaxation value="0.1"/>
+              <initial-relaxation value="0.9"/>
            </post-processing:aitken>
       </coupling-scheme:serial-implicit>
 
