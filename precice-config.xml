@@ -41,7 +41,7 @@
       
       <coupling-scheme:serial-implicit>
            <participants first="SU2_CFD" second="Calculix"/>
-           <max-timesteps value="200"/>
+           <max-timesteps value="160"/>
            <timestep-length value="3e-2" />
            <exchange data="Forces0" mesh="Calculix_Mesh" from="SU2_CFD" to="Calculix"/>
            <exchange data="DisplacementDeltas0" mesh="Calculix_Mesh" from="Calculix" to="SU2_CFD" />
