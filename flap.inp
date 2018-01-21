@@ -3,7 +3,7 @@
 *INCLUDE, INPUT=CalculixMesh/interface_beam.nam
 *MATERIAL, Name=EL
 *ELASTIC
- 40000, 0.3
+ 400000, 0.3
 *DENSITY
  2000
 *SOLID SECTION, Elset=Eall, Material=EL
