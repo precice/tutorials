@@ -27,7 +27,6 @@
          <mapping:nearest-neighbor
 	        direction="read" from="Calculix_Mesh" to="SU2_Mesh0"
             constraint="consistent" timing="initial"/>
-        <!--watch-point mesh="SU2_Mesh0" name="point1" coordinate="0.1; 0.5; 1.6"-->
       </participant>
 
       <participant name="Calculix">
@@ -39,21 +38,41 @@
 
       <m2n:sockets from="SU2_CFD" to="Calculix"  exchange-directory="../" distribution-type="gather-scatter"/>
       
-      <coupling-scheme:serial-implicit>
+      <coupling-scheme:parallel-implicit>
+      <!--coupling-scheme:serial-implicit-->
            <participants first="SU2_CFD" second="Calculix"/>
-           <max-timesteps value="160"/>
-           <timestep-length value="3e-2" />
+           <max-timesteps value="400"/>
+           <timestep-length value="1e-2" />
            <exchange data="Forces0" mesh="Calculix_Mesh" from="SU2_CFD" to="Calculix"/>
            <exchange data="DisplacementDeltas0" mesh="Calculix_Mesh" from="Calculix" to="SU2_CFD" />
            <max-iterations value="50"/>
-           <relative-convergence-measure limit="1e-1" data="DisplacementDeltas0" mesh="Calculix_Mesh"/>
-           <relative-convergence-measure limit="1e-1" data="Forces0" mesh="Calculix_Mesh"/>
+           <relative-convergence-measure limit="1e-3" data="DisplacementDeltas0" mesh="Calculix_Mesh"
+/>
+           <relative-convergence-measure limit="1e-3" data="Forces0" mesh="Calculix_Mesh"/>
            <extrapolation-order value="2"/>
-           <post-processing:aitken>
+
+           <post-processing:IQN-ILS>
+            <data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
+            <data name="Forces0" mesh="Calculix_Mesh"/>
+            <preconditioner type="residual-sum"/>
+            <filter type="QR1" limit="1e-6"/>
+            <initial-relaxation value="0.5"/>
+            <max-used-iterations value="40"/>
+            <timesteps-reused value="10"/>
+           </post-processing:IQN-ILS>
+
+           <!--post-processing:aitken>
               <data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
               <initial-relaxation value="0.9"/>
-           </post-processing:aitken>
-      </coupling-scheme:serial-implicit>
+           </post-processing:aitken-->
+           
+      </coupling-scheme:parallel-implicit>
+      <!--/coupling-scheme:serial-implicit-->
+
+
+
+
+
 
    </solver-interface>
 

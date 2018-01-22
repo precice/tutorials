@@ -3,21 +3,19 @@
 *INCLUDE, INPUT=CalculixMesh/interface_beam.nam
 *MATERIAL, Name=EL
 *ELASTIC
- 400000, 0.3
+ 200000, 0.3
 *DENSITY
- 2000
+ 3000
 *SOLID SECTION, Elset=Eall, Material=EL
 *STEP, NLGEOM, INC=1000000
 *DYNAMIC
-0.03, 4.8
+1.E-2, 5.0
 *BOUNDARY
 Nfix1, 1, 3
 *BOUNDARY
 Nall, 2, 2 
 *CLOAD
  Nsurface, 1, 0.0
- Nsurface, 2, 0.0
- Nsurface, 3, 0.0
 *NODE FILE
  U
 *EL FILE

@@ -1,24 +1,16 @@
 #! /bin/bash 
 
 
-echo "Select folder name"
-read fname
-if [-d 'Output']; then
-    mkdir Output/$fname
-else 
-    mkdir Output 
-    mkdir Output/$fname
-fi 
 
 
-tmux has-session -t PreciceSU2-Calculix 2>/dev/null
+tmux has-session -t PreciceSU2-Calculix-newtonParallel 2>/dev/null
 if [ "$?" -eq 1 ] ; then 
-    tmux new-session -d -s 'PreciceSU2-Calculix'
+    tmux new-session -d -s 'PreciceSU2-Calculix-newtonParallel'
     tmux split-window -v
 fi
 
 
-session=PreciceSU2-Calculix
+session=PreciceSU2-Calculix-newtonParallel
 window=${session}:0
 pane_su2=${window}.0
 pane_Calculix=${window}.1
@@ -32,14 +24,15 @@ tmux attach-session -t "$session"
 
 tmux detach -s "$session" 
 
-cp flow*.vtk Output/$fname 
-cp euler_config_coupled.cfg Output/$fname 
-cp flap.inp Output/$fname 
-cp calculix.log Output/$fname 
-cp su2.log Output/$fname  
-cp precice-config.xml Output/$fname 
-cp point1.watchpoint.txt Output/$fname 
-cp plotDisplacement.sh Output/$fname 
+rm -f Output/*
+cp flow*.vtk Output
+cp euler_config_coupled.cfg Output
+cp flap.inp Output
+cp Calculix.log Output
+cp Su2.log Output
+cp precice-config.xml Output
+cp point1.watchpoint.txt Output
+cp plotDisplacement.sh Output
 # clean everything 
 rm -f *log
 rm -f *vtk
@@ -50,4 +43,5 @@ rm -f restart_flow*
 rm -f forces*
 rm -f flap.[^i]*
 
- echo " Copying of results was successfull! Let's hope that simulation went well as well" 
+ echo " Copying of results was successfull! Let's hope that simulation went well as well. Results are in the output
+ folder" 
