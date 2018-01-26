@@ -16,6 +16,8 @@ Nfix1, 1, 3
 Nall, 2, 2 
 *CLOAD
  Nsurface, 1, 0.0
+ Nsurface, 2, 0.0
+ Nsurface, 3, 0.0
 *NODE FILE
  U
 *EL FILE
