@@ -46,8 +46,7 @@
            <exchange data="Forces0" mesh="Calculix_Mesh" from="SU2_CFD" to="Calculix"/>
            <exchange data="DisplacementDeltas0" mesh="Calculix_Mesh" from="Calculix" to="SU2_CFD" />
            <max-iterations value="50"/>
-           <relative-convergence-measure limit="1e-3" data="DisplacementDeltas0" mesh="Calculix_Mesh"
-/>
+           <relative-convergence-measure limit="1e-3" data="DisplacementDeltas0" mesh="Calculix_Mesh"/>
            <relative-convergence-measure limit="1e-3" data="Forces0" mesh="Calculix_Mesh"/>
            <extrapolation-order value="2"/>
 
@@ -61,10 +60,10 @@
             <timesteps-reused value="10"/>
            </post-processing:IQN-ILS>
 
-           <!--post-processing:aitken>
+           <!-- <post-processing:aitken>
               <data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
               <initial-relaxation value="0.9"/>
-           </post-processing:aitken-->
+           </post-processing:aitken> -->
            
       </coupling-scheme:parallel-implicit>
       <!--/coupling-scheme:serial-implicit-->
