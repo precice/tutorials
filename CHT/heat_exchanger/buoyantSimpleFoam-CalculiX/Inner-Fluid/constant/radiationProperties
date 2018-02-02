@@ -1,0 +1,8 @@
+FoamFile {
+    version 2.0;
+    class dictionary;
+    object radiationProperties;
+    format ascii;
+}
+radiation off;
+radiationModel none;
