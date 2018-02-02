@@ -1,0 +1,8 @@
+FoamFile {
+    version 2.0;
+    class uniformDimensionedVectorField;
+    object g;
+    format ascii;
+}
+value (0.0 0.0 0.0);
+dimensions [0 1 -2 0 0 0 0];
