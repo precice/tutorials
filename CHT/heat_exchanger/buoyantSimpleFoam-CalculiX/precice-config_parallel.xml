@@ -70,7 +70,7 @@
       <read-data mesh="Outer-Fluid-to-Solid" name="Heat-Transfer-Coefficient-Solid"/>
       <mapping:nearest-neighbor constraint="consistent" direction="read" to="Outer-Fluid-to-Solid" from="Solid-to-Outer-Fluid"/>
     </participant>
-    <m2n:sockets to="Inner-Fluid" from="Solid" exchange-directory="/home/makish/OpenFOAM/makish-5.0/run/adapter-thesis/heat-exchanger-par" distribution-type="gather-scatter"/>
+    <m2n:sockets to="Inner-Fluid" from="Solid" exchange-directory="." distribution-type="gather-scatter"/>
     <coupling-scheme:parallel-explicit>
       <timestep-length value="1"/>
       <max-time value="500"/>
@@ -80,7 +80,7 @@
       <exchange data="Sink-Temperature-Inner-Fluid" mesh="Inner-Fluid-to-Solid" from="Inner-Fluid" to="Solid" initialize="yes"/>
       <exchange data="Heat-Transfer-Coefficient-Inner-Fluid" mesh="Inner-Fluid-to-Solid" from="Inner-Fluid" to="Solid" initialize="yes"/>
     </coupling-scheme:parallel-explicit>
-    <m2n:sockets to="Outer-Fluid" from="Solid" exchange-directory="/home/makish/OpenFOAM/makish-5.0/run/adapter-thesis/heat-exchanger-par" distribution-type="gather-scatter"/>
+    <m2n:sockets to="Outer-Fluid" from="Solid" exchange-directory="." distribution-type="gather-scatter"/>
     <coupling-scheme:parallel-explicit>
       <timestep-length value="1"/>
       <max-time value="500"/>
