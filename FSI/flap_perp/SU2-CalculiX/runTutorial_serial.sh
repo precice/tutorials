@@ -24,7 +24,8 @@ tmux attach-session -t "$session"
 
 tmux detach -s "$session" 
 
-rm -f Output/*
+rm -rf Output
+mkdir Output
 cp flow*.vtk Output
 cp euler_config_coupled.cfg Output
 cp flap.inp Output
