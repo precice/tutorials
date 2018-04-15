@@ -26,7 +26,8 @@ tmux detach -s "$session"
 
 SU2_SOL euler_config_coupled_mergeSolution.cfg
 
-rm -f Output/*
+rm -rf Output
+mkdir Output
 cp flow*.vtk Output
 cp euler_config_coupled.cfg Output
 cp flap.inp Output
