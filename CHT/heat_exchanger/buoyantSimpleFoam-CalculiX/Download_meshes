@@ -7,12 +7,12 @@ echo "This script downloads and extracts the missing files."
 echo ""
 
 echo "Downloading the Solid case..."
-curl -s https://syncandshare.lrz.de/dl/fi3c9Xt5UzBc5hJvXzsLBHXn/Solid.tar.gz | tar -xzv
+wget -nv -O - https://syncandshare.lrz.de/dl/fi3c9Xt5UzBc5hJvXzsLBHXn/Solid.tar.gz | tar -xzv
 
 echo "Downloading and extracting the Inner-Fluid mesh..."
-curl -s https://syncandshare.lrz.de/dl/fiNsYGC1DKzgio4jS5NhsXg7/polyMesh.org.tar.gz | tar -xzv -C Inner-Fluid/constant
+wget -nv -O - https://syncandshare.lrz.de/dl/fiNsYGC1DKzgio4jS5NhsXg7/polyMesh.org.tar.gz | tar -xzv -C Inner-Fluid/constant
 
 echo "Downloading and extracting the Outer-Fluid mesh..."
-curl -s https://syncandshare.lrz.de/dl/fiEZRQ8rcVWRkoyZvANim1R1/polyMesh.org.tar.gz | tar -xzv -C Outer-Fluid/constant
+wget -nv -O - https://syncandshare.lrz.de/dl/fiEZRQ8rcVWRkoyZvANim1R1/polyMesh.org.tar.gz | tar -xzv -C Outer-Fluid/constant
 
 echo "Completed."
