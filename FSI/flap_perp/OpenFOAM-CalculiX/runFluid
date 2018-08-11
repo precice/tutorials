@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Fluid participant
+
+# Run this script in one terminal and the "runSolid" script in another terminal.
+# These scripts present how the two participants would be started manually.
+# Alternatively, you may execute the "Allrun" script in one terminal.
+
+# The script "Allclean" cleans-up the result and log files.
+
+# Use the precice-config for the serial run
+ln -s -f precice-config_serial.xml precice-config.xml
+
+# Prepare
+blockMesh -case Fluid
+: '
+cd Fluid
+transformPoints -rotate "((0 1 0) (0 0 1))"
+transformPoints -translate "(0 0.3 0)"
+cd ..
+'
+
+potentialFoam -case Fluid
+
+# Run
+pimpleDyMFoam -case Fluid
