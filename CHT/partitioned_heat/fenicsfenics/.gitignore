@@ -1,0 +1,4 @@
+*.txt
+venv
+.idea
+*.pyc
