@@ -157,6 +157,7 @@ class Coupling(object):
         x_vert, y_vert = self.extract_coupling_boundary_coordinates()
 
         updated_write_data = np.array([write_function(x, y) for x, y in zip(x_vert, y_vert)])
+        print updated_write_data
         self.write_data = updated_write_data
         self.interface.writeBlockScalarData(self.write_data_id, self.n_vertices, self.vertex_ids, self.write_data)
         self.interface.advance(dt)
