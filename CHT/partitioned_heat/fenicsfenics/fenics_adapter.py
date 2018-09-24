@@ -151,7 +151,7 @@ class Coupling(object):
 
     def create_coupling_neumann_boundary_condition(self, test_functions):
         self.create_coupling_boundary_condition()
-        return - self.coupling_bc_expression * test_functions * dolfin.ds
+        return self.coupling_bc_expression * test_functions * dolfin.ds  # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
 
     def exchange_data(self, write_function, dt):
         x_vert, y_vert = self.extract_coupling_boundary_coordinates()

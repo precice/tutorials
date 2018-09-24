@@ -70,11 +70,17 @@ class CouplingBoundary(SubDomain):
             return False
 
 
-def fluxes_from_temperature_full_domain(F, bcs, mesh, dt, hy):
-    V = FunctionSpace(mesh, 'CG', 1)
-    fluxes_vector = assemble(F)
-    fluxes = Function(V)
-    fluxes.vector()[:] = - fluxes_vector[:] * dt / hy
+def fluxes_from_temperature_full_domain(F, V, hy):
+    """
+    compute flux from weak form (see p.3 in Toselli, Andrea, and Olof Widlund. Domain decomposition methods-algorithms and theory. Vol. 34. Springer Science & Business Media, 2006.)
+    :param F: weak form with known u^{n+1}
+    :param V: function space
+    :param hy: spatial resolution perpendicular to flux direction
+    :return:
+    """
+    fluxes_vector = assemble(F)  # assemble weak form -> evaluate integral
+    fluxes = Function(V)  # create function for flux
+    fluxes.vector()[:] = fluxes_vector[:] / hy  # put weight from assemble on function, scale function by spatial resolution
     return fluxes
 
 
@@ -119,12 +125,12 @@ num_steps = 10  # number of time steps
 dt = T / num_steps  # time step size
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
+y_bottom, y_top = 0, 1
+x_left, x_right = 0, 2
 x_coupling = .7  # x coordinate of coupling interface
-y_bottom = 0
-y_top = 1
-hy = (y_top - y_bottom) / (ny)
+hy = (y_top - y_bottom) / ny
 
-TEST_NAME = Tests.FENICS
+TEST_NAME = Tests.SIN
 
 if TEST_NAME is Tests.FENICS:
     lam = 1
@@ -134,11 +140,11 @@ elif TEST_NAME is Tests.SIN:
 lam_c = Constant(lam)
 
 if problem is ProblemType.DIRICHLET:
-    p0 = Point(0, y_bottom)
+    p0 = Point(x_left, y_bottom)
     p1 = Point(x_coupling, y_top)
 elif problem is ProblemType.NEUMANN:
     p0 = Point(x_coupling, y_bottom)
-    p1 = Point(2, y_top)
+    p1 = Point(x_right, y_top)
 
 mesh = RectangleMesh(p0, p1, nx, ny)
 V = FunctionSpace(mesh, 'P', 1)
@@ -160,7 +166,6 @@ f_N_function = interpolate(f_N, V)
 coupling_boundary = CouplingBoundary()
 remaining_boundary = ComplementaryBoundary(coupling_boundary)
 
-# todo put all the function calls below into one?
 coupling = fenics_adapter.Coupling(config_file_name, solver_name)
 coupling.set_coupling_mesh(mesh, coupling_boundary, coupling_mesh_name)
 if problem is ProblemType.DIRICHLET:
@@ -170,12 +175,10 @@ elif problem is ProblemType.NEUMANN:
     coupling.set_read_field(read_data_name, f_N_function)
     coupling.set_write_field(write_data_name, u_D_function)
 coupling.initialize_data()
-# todo until here.
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
 # Define initial value
 u_n = interpolate(u_D, V)
-# u_n = project(u_D, V)
 
 # Define variational problem
 u = TrialFunction(V)
@@ -197,9 +200,9 @@ if problem is ProblemType.NEUMANN:
 a, L = lhs(F), rhs(F)
 
 # Time-stepping
-u = Function(V)
-F_alternative = (u - u_n) / dt * v * dx + lam_c * dot(grad(u), grad(v)) * dx - f * v * dx
-u.rename("Temperature", "")
+u_np1 = Function(V)
+F_known_u = u_np1 * v * dx + dt * lam_c * dot(grad(u_np1), grad(v)) * dx - (u_n + dt * f) * v * dx
+u_np1.rename("Temperature", "")
 t = coupling.precice_tau
 u_D.t = t
 assert (dt == coupling.precice_tau)
@@ -210,15 +213,15 @@ ref_out = File("out/ref%s.pvd" % solver_name)
 while coupling.is_coupling_ongoing():
 
     # Compute solution
-    solve(a == L, u, bcs)
+    solve(a == L, u_np1, bcs)
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
-        fluxes = fluxes_from_temperature_full_domain(F_alternative, bcs, mesh, dt, hy)
+        fluxes = fluxes_from_temperature_full_domain(F_known_u, V, hy)
         coupling.exchange_data(fluxes, dt)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
-        coupling.exchange_data(u, dt)
+        coupling.exchange_data(u_np1, dt)
 
     is_converged = coupling.check_convergence()
 
@@ -226,16 +229,16 @@ while coupling.is_coupling_ongoing():
         # Compute error at vertices
         u_e = interpolate(u_D, V)
         u_e.rename("reference", " ")
-        error = assemble(inner(u_e - u, u_e - u) * dx)
+        error = assemble(inner(u_e - u_np1, u_e - u_np1) * dx)
         print('t = %.2f: error = %.3g' % (t, error))
         # Update previous solution
-        file_out << u
+        file_out << u_np1
         ref_out << u_e
         # Update current time
         t += coupling.precice_tau
         # Update dirichlet BC
         u_D.t = t
-        u_n.assign(u)
+        u_n.assign(u_np1)
 
 # Hold plot
 coupling.finalize()
