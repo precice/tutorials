@@ -43,11 +43,6 @@ class ProblemType(Enum):
     NEUMANN = 2  # Neumann problem
 
 
-class Tests(Enum):
-    SIN = 1
-    FENICS = 2
-
-
 class ComplementaryBoundary(SubDomain):
     def __init__(self, subdomain):
         self.complement = subdomain
@@ -130,15 +125,6 @@ x_left, x_right = 0, 2
 x_coupling = .7  # x coordinate of coupling interface
 hy = (y_top - y_bottom) / ny
 
-TEST_NAME = Tests.SIN
-
-if TEST_NAME is Tests.FENICS:
-    lam = 1
-elif TEST_NAME is Tests.SIN:
-    lam = .01
-
-lam_c = Constant(lam)
-
 if problem is ProblemType.DIRICHLET:
     p0 = Point(x_left, y_bottom)
     p1 = Point(x_coupling, y_top)
@@ -150,17 +136,10 @@ mesh = RectangleMesh(p0, p1, nx, ny)
 V = FunctionSpace(mesh, 'P', 1)
 
 # Define boundary condition
-if TEST_NAME is Tests.FENICS:
-    u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, t=dt)
-elif TEST_NAME is Tests.SIN:
-    u_D = Expression('exp(-5 * t *lam * pi * pi / 4) * (500 * sin(pi/2 * x[0]) * sin (pi * x[1]))', t=0, lam=lam,
-                     degree=2)
+u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, t=dt)
 u_D_function = interpolate(u_D, V)
-# Define flux on coupling interface (grad(u_D) in normal direction)
-if TEST_NAME is Tests.FENICS:
-    f_N = Expression('2 * x[0]', degree=1)
-elif TEST_NAME is Tests.SIN:
-    f_N = Expression('500 * pi/2 * cos(pi/2 * x[0]) * sin (pi * x[1])', degree=1)
+# Define flux in x direction on coupling interface (grad(u_D) in normal direction)
+f_N = Expression('2 * x[0]', degree=1)
 f_N_function = interpolate(f_N, V)
 
 coupling_boundary = CouplingBoundary()
@@ -183,12 +162,8 @@ u_n = interpolate(u_D, V)
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-if TEST_NAME is Tests.FENICS:
-    f = Constant(beta - 2 - 2 * alpha)
-elif TEST_NAME is Tests.SIN:
-    f = Constant(0)
-
-F = u * v * dx + dt * lam_c * dot(grad(u), grad(v)) * dx - (u_n + dt * f) * v * dx
+f = Constant(beta - 2 - 2 * alpha)
+F = u * v * dx + dt * dot(grad(u), grad(v)) * dx - (u_n + dt * f) * v * dx
 
 if problem is ProblemType.DIRICHLET:
     # apply Dirichlet boundary condition on coupling interface
@@ -201,7 +176,7 @@ a, L = lhs(F), rhs(F)
 
 # Time-stepping
 u_np1 = Function(V)
-F_known_u = u_np1 * v * dx + dt * lam_c * dot(grad(u_np1), grad(v)) * dx - (u_n + dt * f) * v * dx
+F_known_u = u_np1 * v * dx + dt * dot(grad(u_np1), grad(v)) * dx - (u_n + dt * f) * v * dx
 u_np1.rename("Temperature", "")
 t = coupling.precice_tau
 u_D.t = t
