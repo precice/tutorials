@@ -178,8 +178,8 @@ a, L = lhs(F), rhs(F)
 u_np1 = Function(V)
 F_known_u = u_np1 * v * dx + dt * dot(grad(u_np1), grad(v)) * dx - (u_n + dt * f) * v * dx
 u_np1.rename("Temperature", "")
-t = coupling.precice_tau
-u_D.t = t
+t = 0
+u_D.t = t + coupling.precice_tau
 assert (dt == coupling.precice_tau)
 
 file_out = File("out/%s.pvd" % solver_name)
@@ -204,7 +204,8 @@ while coupling.is_coupling_ongoing():
         # Compute error at vertices
         u_e = interpolate(u_D, V)
         u_e.rename("reference", " ")
-        error = assemble(inner(u_e - u_np1, u_e - u_np1) * dx)
+        error = assemble(inner(u_e - u_np1, u_e - u_np1)/(u_e * u_e) * dx)
+        assert (error < 10e-4)
         print('t = %.2f: error = %.3g' % (t, error))
         # Update previous solution
         file_out << u_np1
@@ -212,7 +213,7 @@ while coupling.is_coupling_ongoing():
         # Update current time
         t += coupling.precice_tau
         # Update dirichlet BC
-        u_D.t = t
+        u_D.t = t + coupling.precice_tau
         u_n.assign(u_np1)
 
 # Hold plot

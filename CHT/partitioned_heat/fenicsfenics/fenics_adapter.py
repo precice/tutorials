@@ -155,10 +155,7 @@ class Coupling(object):
 
     def exchange_data(self, write_function, dt):
         x_vert, y_vert = self.extract_coupling_boundary_coordinates()
-
-        updated_write_data = np.array([write_function(x, y) for x, y in zip(x_vert, y_vert)])
-        print updated_write_data
-        self.write_data = updated_write_data
+        self.write_data = convert_fenics_to_precice(write_function, self.mesh_fenics, self.coupling_subdomain)
         self.interface.writeBlockScalarData(self.write_data_id, self.n_vertices, self.vertex_ids, self.write_data)
         self.interface.advance(dt)
         self.interface.readBlockScalarData(self.read_data_id, self.n_vertices, self.vertex_ids, self.read_data)
