@@ -70,11 +70,11 @@ class CouplingBoundary(SubDomain):
             return False
 
 
-def fluxes_from_temperature_full_domain(F, bcs, mesh):
+def fluxes_from_temperature_full_domain(F, bcs, mesh, dt, hy):
     V = FunctionSpace(mesh, 'CG', 1)
     fluxes_vector = assemble(F)
     fluxes = Function(V)
-    fluxes.vector()[:] = - fluxes_vector[:]
+    fluxes.vector()[:] = - fluxes_vector[:] * dt / hy
     return fluxes
 
 
@@ -111,6 +111,9 @@ elif problem is ProblemType.NEUMANN:
     read_data_name = "Flux"
     write_data_name = "Temperature"
 
+# Create mesh and define function space
+nx = ny = 20
+
 T = 1.0  # final time
 num_steps = 10  # number of time steps
 dt = T / num_steps  # time step size
@@ -119,8 +122,9 @@ beta = 1.3  # parameter beta
 x_coupling = .7  # x coordinate of coupling interface
 y_bottom = 0
 y_top = 1
+hy = (y_top - y_bottom) / (ny)
 
-TEST_NAME = Tests.FENICS
+TEST_NAME = Tests.SIN
 
 if TEST_NAME is Tests.FENICS:
     lam = 1
@@ -128,9 +132,6 @@ elif TEST_NAME is Tests.SIN:
     lam = .01
 
 lam_c = Constant(lam)
-
-# Create mesh and define function space
-nx = ny = 20
 
 if problem is ProblemType.DIRICHLET:
     p0 = Point(0, y_bottom)
@@ -205,7 +206,7 @@ non_coupling_ds = dolfin.Measure('ds', domain=mesh, subdomain_data=mesh_function
 
 # Time-stepping
 u = Function(V)
-F_alternative = (u - (u_n + dt * f)) / dt * v * dx + lam_c * dot(grad(u), grad(v)) * dx # - dot(normal, grad(u)) * v * non_coupling_ds
+F_alternative = (u - (u_n + dt * f)) / dt * v * dx + lam_c * dot(grad(u), grad(v)) * dx #- dot(normal, grad(u)) * v * non_coupling_ds
 u.rename("Temperature", "")
 t = coupling.precice_tau
 u_D.t = t
@@ -221,7 +222,7 @@ while coupling.is_coupling_ongoing():
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
-        fluxes = fluxes_from_temperature_full_domain(F_alternative, bcs, mesh)
+        fluxes = fluxes_from_temperature_full_domain(F_alternative, bcs, mesh, dt, hy)
         coupling.exchange_data(fluxes, dt)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
