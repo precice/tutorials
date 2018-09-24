@@ -100,6 +100,9 @@ if args.dirichlet and args.neumann:
 if not (args.dirichlet or args.neumann):
     raise Exception("you have to choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
 
+# Create mesh and define function space
+nx = ny = 30
+
 if problem is ProblemType.DIRICHLET:
     solver_name = "HeatDirichlet"
     coupling_mesh_name = "DirichletNodes"
@@ -111,9 +114,6 @@ elif problem is ProblemType.NEUMANN:
     read_data_name = "Flux"
     write_data_name = "Temperature"
 
-# Create mesh and define function space
-nx = ny = 20
-
 T = 1.0  # final time
 num_steps = 10  # number of time steps
 dt = T / num_steps  # time step size
@@ -124,7 +124,7 @@ y_bottom = 0
 y_top = 1
 hy = (y_top - y_bottom) / (ny)
 
-TEST_NAME = Tests.SIN
+TEST_NAME = Tests.FENICS
 
 if TEST_NAME is Tests.FENICS:
     lam = 1
@@ -196,17 +196,9 @@ if problem is ProblemType.NEUMANN:
 
 a, L = lhs(F), rhs(F)
 
-"""
-normal = dolfin.FacetNormal(mesh)
-mesh_function = dolfin.MeshFunction("size_t", mesh, mesh.topology().dim()-1, 0)
-mesh_function.set_all(0)
-remaining_boundary.mark(mesh_function, 1)
-non_coupling_ds = dolfin.Measure('ds', domain=mesh, subdomain_data=mesh_function)
-"""
-
 # Time-stepping
 u = Function(V)
-F_alternative = (u - (u_n + dt * f)) / dt * v * dx + lam_c * dot(grad(u), grad(v)) * dx #- dot(normal, grad(u)) * v * non_coupling_ds
+F_alternative = (u - u_n) / dt * v * dx + lam_c * dot(grad(u), grad(v)) * dx - f * v * dx
 u.rename("Temperature", "")
 t = coupling.precice_tau
 u_D.t = t
@@ -231,13 +223,9 @@ while coupling.is_coupling_ongoing():
     is_converged = coupling.check_convergence()
 
     if is_converged:
-        # plot solution
-        # plot(u)
-        # plt.pause(.1)
         # Compute error at vertices
         u_e = interpolate(u_D, V)
         u_e.rename("reference", " ")
-        # error = np.abs(u_e.vector().get_local() - u.vector().get_local()).max()
         error = assemble(inner(u_e - u, u_e - u) * dx)
         print('t = %.2f: error = %.3g' % (t, error))
         # Update previous solution
