@@ -30,7 +30,13 @@ to start the solver that computes the Neumann problem (right part of domain).
 
 Output is written into the folder `out`. You can visualize the content with paraview by opening the `*.pvd` files. The files `HeatDirichlet` and `HeatNeumann` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution.
 
-![Alt Text](movie.gif)
+![](movie.gif)
+
+## Open Issues
+
+* currently, there is as small difference between the reference solution and the partitioned solution. This difference vanishes over time. You can visualize this issue, by looking at countour plots of the reference solution (blue contours) and of the partitioned solution (white/red contours) in paraview:
+
+![](difference.png)
 
 ## References
 
