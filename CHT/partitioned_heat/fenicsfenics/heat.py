@@ -65,7 +65,7 @@ class CouplingBoundary(SubDomain):
             return False
 
 
-def fluxes_from_temperature_full_domain(F, V, hy):
+def fluxes_from_temperature_full_domain(F, V):
     """
     compute flux from weak form (see p.3 in Toselli, Andrea, and Olof Widlund. Domain decomposition methods-algorithms and theory. Vol. 34. Springer Science & Business Media, 2006.)
     :param F: weak form with known u^{n+1}
@@ -74,8 +74,10 @@ def fluxes_from_temperature_full_domain(F, V, hy):
     :return:
     """
     fluxes_vector = assemble(F)  # assemble weak form -> evaluate integral
+    v = TestFunction(V)
     fluxes = Function(V)  # create function for flux
-    fluxes.vector()[:] = fluxes_vector[:] / hy  # put weight from assemble on function, scale function by spatial resolution
+    area = assemble(v * ds).array()
+    fluxes.vector()[area != 0] = fluxes_vector[hy != 0] / area[area != 0]  # put weight from assemble on function, scale function by spatial resolution
     return fluxes
 
 
@@ -192,7 +194,7 @@ while coupling.is_coupling_ongoing():
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
-        fluxes = fluxes_from_temperature_full_domain(F_known_u, V, hy)
+        fluxes = fluxes_from_temperature_full_domain(F_known_u, V)
         coupling.exchange_data(fluxes, dt)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
