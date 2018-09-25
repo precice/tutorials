@@ -34,5 +34,5 @@ Output is written into the folder `out`. You can visualize the content with para
 
 ## References
 
-[1] Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Minutes-The FEniCS Tutorial Volume I." (2016).
+[1] Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Minutes-The FEniCS Tutorial Volume I." (2016).  
 [2] Monge, Azahar, and Philipp Birken. "Convergence Analysis of the Dirichlet-Neumann Iteration for Finite Element Discretizations." Proceedings in Applied Mathematics and Mechanics (2016).
