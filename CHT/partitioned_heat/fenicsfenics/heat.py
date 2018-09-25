@@ -77,7 +77,7 @@ def fluxes_from_temperature_full_domain(F, V):
     v = TestFunction(V)
     fluxes = Function(V)  # create function for flux
     area = assemble(v * ds).array()
-    fluxes.vector()[area != 0] = fluxes_vector[hy != 0] / area[area != 0]  # put weight from assemble on function, scale function by spatial resolution
+    fluxes.vector()[area != 0] = fluxes_vector[area != 0] / area[area != 0]  # put weight from assemble on function, scale function by spatial resolution
     return fluxes
 
 
@@ -104,9 +104,13 @@ if not (args.dirichlet or args.neumann):
     raise Exception("you have to choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
 
 # Create mesh and define function space
-nx = ny = 30
+
+nx = 15
+ny = 30
 
 if problem is ProblemType.DIRICHLET:
+    ny = 10
+    nx = 15
     solver_name = "HeatDirichlet"
     coupling_mesh_name = "DirichletNodes"
     read_data_name = "Temperature"
@@ -124,8 +128,7 @@ alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
-x_coupling = .7  # x coordinate of coupling interface
-hy = (y_top - y_bottom) / ny
+x_coupling = 1.5  # x coordinate of coupling interface
 
 if problem is ProblemType.DIRICHLET:
     p0 = Point(x_left, y_bottom)
