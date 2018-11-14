@@ -1,0 +1,5 @@
+*.log
+Fluid
+Solid/VTK
+out
+*.txt
