@@ -30,7 +30,7 @@ To make sure that fenics is working properly, you should run at least one of the
 
 * you can check your fenics version by typing `dolfin-version`
 * for newer fenics versions, you might have to replace `u_e.vector().array()` with `u_e.vector().get_local()`. (newer: 2017.2.0, older:1.6)
-* if you get strange errors with Dolfin, make sure that you have sympy version 1.1.1 (see https://www.allanswered.com/post/gnewm/vectorfunctionspace-not-working-in-2018-1-since-there-are-no-variables-in-the-expression-0-0-it-cannot-be-differentiated/). You can check your sympy version via `python -c "import sympy; print(sympy.__version__)"`. If you have to downgrade sympy, remove it first via `sudo apt-get remove --auto-remove python-sympy`. Then install it using pip `sudo pip install sympy==1.1.1`. Probably, you will have to reinstall fenics after autoremoving sympy.
+* if you get strange errors with Dolfin, make sure that you have sympy version 1.1.1 (see https://www.allanswered.com/post/gnewm/vectorfunctionspace-not-working-in-2018-1-since-there-are-no-variables-in-the-expression-0-0-it-cannot-be-differentiated/). You can check your sympy version via `python3 -c "import sympy; print(sympy.__version__)"`. If you have to downgrade sympy, remove it first via `sudo apt-get remove --auto-remove python3-sympy`. Then install it using pip `sudo pip install sympy==1.1.1`. Probably, you will have to reinstall fenics after autoremoving sympy.
 
 ## Get the OpenFOAM Fluid case
 
@@ -48,7 +48,7 @@ buoyantPimpleFoam -case Fluid
 To start the solid solver (FEniCS), run the following command in a shell opened in this folder:
 
 ```
-python Solid/heat.py
+python3 Solid/heat.py
 ```
 
 ## Visualization

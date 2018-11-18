@@ -18,11 +18,11 @@ As soon as all dependencies are installed, you have to open two shells and run t
 
 Run 
 ```
-python heat.py precice-config.xml -d
+python3 heat.py precice-config.xml -d
 ```
 in the first shell to start the solver that computes the Dirichlet problem (left part of domain) and run
 ```
-python heat.py precice-config.xml -n
+python3 heat.py precice-config.xml -n
 ```
 to start the solver that computes the Neumann problem (right part of domain).
 
