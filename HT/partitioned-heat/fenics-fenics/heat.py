@@ -28,7 +28,7 @@ from __future__ import print_function, division
 from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
     TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, near
 from enum import Enum
-from fenicsadapter import Coupling
+from fenicsadapter import Adapter
 import argparse
 
 
@@ -84,7 +84,6 @@ def fluxes_from_temperature_full_domain(F, V):
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("configurationFileName", help="Name of the xml precice configuration file.", type=str)
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 
@@ -93,7 +92,7 @@ try:
 except SystemExit:
     raise Exception("No config file name given. Did you forget adding the precice configuration file as an argument?")
 
-config_file_name = args.configurationFileName
+config_file_name = "precice-config.xml"  # TODO should be moved into config, see #5
 
 # coupling parameters
 if args.dirichlet:
@@ -150,15 +149,14 @@ f_N_function = interpolate(f_N, V)
 coupling_boundary = CouplingBoundary()
 remaining_boundary = ComplementaryBoundary(coupling_boundary)
 
-coupling = Coupling(config_file_name, solver_name)
-coupling.set_coupling_mesh(mesh, coupling_boundary, coupling_mesh_name)
+precice = Adapter()
+precice.configure(solver_name, config_file_name, coupling_mesh_name, write_data_name, read_data_name)  # TODO in the future we want to remove this function and read these variables from a config file. See #5
 if problem is ProblemType.DIRICHLET:
-    coupling.set_read_field(read_data_name, u_D_function)
-    coupling.set_write_field(write_data_name, f_N_function)
+    precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
+                       write_field=f_N_function)
 elif problem is ProblemType.NEUMANN:
-    coupling.set_read_field(read_data_name, f_N_function)
-    coupling.set_write_field(write_data_name, u_D_function)
-coupling.initialize_data()
+    precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
+                       write_field=u_D_function)
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
 # Define initial value
@@ -173,10 +171,10 @@ F = u * v * dx + dt * dot(grad(u), grad(v)) * dx - (u_n + dt * f) * v * dx
 
 if problem is ProblemType.DIRICHLET:
     # apply Dirichlet boundary condition on coupling interface
-    bcs.append(coupling.create_coupling_dirichlet_boundary_condition(V))
+    bcs.append(precice.create_coupling_dirichlet_boundary_condition(V))
 if problem is ProblemType.NEUMANN:
     # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
-    F += coupling.create_coupling_neumann_boundary_condition(v)
+    F += precice.create_coupling_neumann_boundary_condition(v)
 
 a, L = lhs(F), rhs(F)
 
@@ -200,10 +198,10 @@ file_out << u_n
 ref_out << u_e
 
 # set t_1 = t_0 + dt, this gives u_D^1
-u_D.t = t + coupling._precice_tau
-assert (dt == coupling._precice_tau)
+u_D.t = t + precice._precice_tau
+assert (dt == precice._precice_tau)
 
-while coupling.is_coupling_ongoing():
+while precice.is_coupling_ongoing():
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
@@ -211,12 +209,10 @@ while coupling.is_coupling_ongoing():
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
         fluxes = fluxes_from_temperature_full_domain(F_known_u, V)
-        coupling.exchange_data(fluxes, dt)
+        is_converged = precice.advance(fluxes, dt)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
-        coupling.exchange_data(u_np1, dt)
-
-    is_converged = coupling.check_convergence()
+        is_converged = precice.advance(u_np1, dt)
 
     if is_converged:
         # Compute error at vertices
@@ -230,13 +226,13 @@ while coupling.is_coupling_ongoing():
         file_out << u_np1
         ref_out << u_e
         # Update current time t_n+1 = t_n + dt
-        t += coupling._precice_tau
+        t += precice._precice_tau
         # Update dirichlet BC
-        u_D.t = t + coupling._precice_tau
+        u_D.t = t + precice._precice_tau
         # use u^n+1 as initial condition for next timestep
         u_n.assign(u_np1)
         # n -> n+1
         n += 1
 
 # Hold plot
-coupling.finalize()
+precice.finalize()

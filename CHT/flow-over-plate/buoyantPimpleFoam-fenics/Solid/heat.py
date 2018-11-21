@@ -27,7 +27,7 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 from __future__ import print_function, division
 from fenics import Function, SubDomain, RectangleMesh, BoxMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
     TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, near
-from fenicsadapter import Coupling
+from fenicsadapter import Adapter
 
 
 class ComplementaryBoundary(SubDomain):
@@ -123,11 +123,9 @@ f_N_function = interpolate(f_N, V)
 coupling_boundary = TopBoundary()
 bottom_boundary = BottomBoundary()
 
-coupling = Coupling(config_file_name, solver_name)
-coupling.set_coupling_mesh(mesh, coupling_boundary, coupling_mesh_name)
-coupling.set_read_field(read_data_name, u_D_function)
-coupling.set_write_field(write_data_name, f_N_function)
-coupling.initialize_data()
+precice = Adapter()
+precice.configure(solver_name, config_file_name, coupling_mesh_name, write_data_name, read_data_name)  # TODO in the future we want to remove this function and read these variables from a config file. See #5
+precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function, write_field=f_N_function)
 
 bcs = [DirichletBC(V, u_D, bottom_boundary)]
 # Define initial value
@@ -139,7 +137,7 @@ v = TestFunction(V)
 F = u * v / dt * dx + alpha * dot(grad(u), grad(v)) * dx - u_n * v / dt * dx
 
 # apply Dirichlet boundary condition on coupling interface
-bcs.append(coupling.create_coupling_dirichlet_boundary_condition(V))
+bcs.append(precice.create_coupling_dirichlet_boundary_condition(V))
 
 a, L = lhs(F), rhs(F)
 
@@ -148,33 +146,31 @@ u_np1 = Function(V)
 F_known_u = u_np1 * v / dt * dx + alpha * dot(grad(u_np1), grad(v)) * dx - u_n * v / dt * dx
 u_np1.rename("T", "")
 t = 0
-u_D.t = t + coupling._precice_tau
-assert (dt == coupling._precice_tau)
+u_D.t = t + precice._precice_tau
+assert (dt == precice._precice_tau)
 
 file_out = File("Solid/VTK/%s.pvd" % solver_name)
 
-while coupling.is_coupling_ongoing():
+while precice.is_coupling_ongoing():
 
     # Compute solution
     solve(a == L, u_np1, bcs)
 
     # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
     fluxes = fluxes_from_temperature_full_domain(F_known_u, V, k)
-    coupling.exchange_data(fluxes, dt)
-
-    is_converged = coupling.check_convergence()
+    is_converged = precice.advance(fluxes, dt)
 
     if is_converged:
         # Update previous solution
         if abs(t % dt_out) < 10e-5 or abs(t % dt_out) < 10e-5:  # just a very complicated way to only produce output if t is a multiple of dt_out
             file_out << u_np1
         # Update current time
-        t += coupling._precice_tau
+        t += precice._precice_tau
         # Update dirichlet BC
-        u_D.t = t + coupling._precice_tau
+        u_D.t = t + precice._precice_tau
         u_n.assign(u_np1)
 
 file_out << u_np1
 
 # Hold plot
-coupling.finalize()
+precice.finalize()
