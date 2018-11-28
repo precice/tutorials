@@ -96,7 +96,6 @@ coupling_mesh_name = "Solid-Mesh"
 read_data_name = "Temperature"
 write_data_name = "Heat-Flux"
 
-T = 1.0  # final time
 dt = 0.01  # time step size
 dt_out = 0.2
 y_top = 0

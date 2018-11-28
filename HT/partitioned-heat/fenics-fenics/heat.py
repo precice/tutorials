@@ -121,7 +121,6 @@ elif problem is ProblemType.NEUMANN:
     read_data_name = "Flux"
     write_data_name = "Temperature"
 
-T = 1  # final time
 dt = .1  # time step size
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
