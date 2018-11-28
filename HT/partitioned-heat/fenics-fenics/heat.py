@@ -29,6 +29,7 @@ from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Exp
     TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, near
 from enum import Enum
 from fenicsadapter import Adapter
+from errorcomputation import compute_errors
 import argparse
 
 
@@ -121,7 +122,6 @@ elif problem is ProblemType.NEUMANN:
     read_data_name = "Flux"
     write_data_name = "Temperature"
 
-T = 1  # final time
 dt = .1  # time step size
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
@@ -185,17 +185,21 @@ u_np1.rename("Temperature", "")
 t = 0
 
 # reference solution at t=0
-u_e = interpolate(u_D, V)
-u_e.rename("reference", " ")
+u_ref = interpolate(u_D, V)
+u_ref.rename("reference", " ")
 
-file_out = File("out/%s.pvd" % solver_name)
+temperature_out = File("out/%s.pvd" % solver_name)
 ref_out = File("out/ref%s.pvd" % solver_name)
+error_out = File("out/error%s.pvd" % solver_name)
 
 # output solution and reference solution at t=0, n=0
 n = 0
 print('output u^%d and u_ref^%d' % (n, n))
-file_out << u_n
-ref_out << u_e
+temperature_out << u_n
+ref_out << u_ref
+
+error_total, error_pointwise = compute_errors(u_n, u_ref, V)
+error_out << error_pointwise
 
 # set t_1 = t_0 + dt, this gives u_D^1
 u_D.t = t + precice._precice_tau
@@ -216,15 +220,15 @@ while precice.is_coupling_ongoing():
 
     if is_converged:
         # Compute error at vertices
-        u_e = interpolate(u_D, V)
-        u_e.rename("reference", " ")
-        error = assemble(inner(u_e - u_np1, u_e - u_np1)/(u_e * u_e) * dx)
-        assert (error < 10e-4)
-        print('n = %d, t = %.2f: error = %.3g' % (n, t, error))
+        u_ref = interpolate(u_D, V)
+        u_ref.rename("reference", " ")
+        error, error_pointwise = compute_errors(u_np1, u_ref, V)
+        print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
-        print('output u^%d and u_ref^%d' % (n+1, n+1))
-        file_out << u_np1
-        ref_out << u_e
+        print('output u^%d and u_ref^%d' % (n+1, n+1))        
+        temperature_out << u_np1
+        ref_out << u_ref
+        error_out << error_pointwise
         # Update current time t_n+1 = t_n + dt
         t += precice._precice_tau
         # Update dirichlet BC
