@@ -29,6 +29,7 @@ from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Exp
     TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, near
 from enum import Enum
 from fenicsadapter import Adapter
+from errorcomputation import compute_errors
 import argparse
 
 
@@ -196,8 +197,8 @@ n = 0
 print('output u^%d and u_ref^%d' % (n, n))
 temperature_out << u_n
 ref_out << u_ref
-error_pointwise = project((u_ref - u_n)/(u_ref), V)  # compute pointwise error by taking the difference
-error_pointwise.rename("error", " ")
+
+error_total, error_pointwise = compute_errors(u_n, u_ref, V)
 error_out << error_pointwise
 
 # set t_1 = t_0 + dt, this gives u_D^1
@@ -221,15 +222,12 @@ while precice.is_coupling_ongoing():
         # Compute error at vertices
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
-        error = assemble(inner(u_ref - u_np1, u_ref - u_np1)/(u_ref * u_ref) * dx)  # determine L2 norm to estimate total error
-        assert (error < 10e-4)
-        print('n = %d, t = %.2f: error = %.3g' % (n, t, error))
+        error, error_pointwise = compute_errors(u_np1, u_ref, V)
+        print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
         print('output u^%d and u_ref^%d' % (n+1, n+1))        
         temperature_out << u_np1
         ref_out << u_ref
-        error_pointwise = project((u_ref - u_np1)/(u_ref), V)  # compute pointwise error by taking the difference
-        error_pointwise.rename("error", " ")
         error_out << error_pointwise
         # Update current time t_n+1 = t_n + dt
         t += precice._precice_tau
