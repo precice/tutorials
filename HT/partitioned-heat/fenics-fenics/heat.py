@@ -92,7 +92,7 @@ try:
 except SystemExit:
     raise Exception("No config file name given. Did you forget adding the precice configuration file as an argument?")
 
-config_file_name = "precice-config.xml"  # TODO should be moved into config, see #5
+config_file_name = "precice-config.xml"  # TODO should be moved into config, see https://github.com/precice/fenics-adapter/issues/5
 
 # coupling parameters
 if args.dirichlet:
@@ -150,7 +150,7 @@ coupling_boundary = CouplingBoundary()
 remaining_boundary = ComplementaryBoundary(coupling_boundary)
 
 precice = Adapter()
-precice.configure(solver_name, config_file_name, coupling_mesh_name, write_data_name, read_data_name)  # TODO in the future we want to remove this function and read these variables from a config file. See #5
+precice.configure(solver_name, config_file_name, coupling_mesh_name, write_data_name, read_data_name)  # TODO in the future we want to remove this function and read these variables from a config file. See https://github.com/precice/fenics-adapter/issues/5
 if problem is ProblemType.DIRICHLET:
     precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
                        write_field=f_N_function)
