@@ -107,11 +107,10 @@ if not (args.dirichlet or args.neumann):
 
 # Create mesh and define function space
 
-nx = 5
+nx = 10
 ny = 10
 
 if problem is ProblemType.DIRICHLET:
-    nx = nx*3
     solver_name = "HeatDirichlet"
     coupling_mesh_name = "DirichletNodes"
     read_data_name = "Temperature"
@@ -127,7 +126,7 @@ alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
-x_coupling = 1.5  # x coordinate of coupling interface
+x_coupling = 1  # x coordinate of coupling interface
 
 if problem is ProblemType.DIRICHLET:
     p0 = Point(x_left, y_bottom)
@@ -188,9 +187,9 @@ t = 0
 u_ref = interpolate(u_D, V)
 u_ref.rename("reference", " ")
 
-temperature_out = File("out/%s.pvd" % solver_name)
-ref_out = File("out/ref%s.pvd" % solver_name)
-error_out = File("out/error%s.pvd" % solver_name)
+temperature_out = File("out_uniform/%s.pvd" % solver_name)
+ref_out = File("out_uniform/ref%s.pvd" % solver_name)
+error_out = File("out_uniform/error%s.pvd" % solver_name)
 
 # output solution and reference solution at t=0, n=0
 n = 0
