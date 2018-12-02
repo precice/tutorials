@@ -33,6 +33,7 @@ from errorcomputation import compute_errors
 import argparse
 
 
+
 class ProblemType(Enum):
     """
     Enum defines problem type. Details see above.
@@ -88,12 +89,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 
-try:
-    args = parser.parse_args()
-except SystemExit:
-    raise Exception("No config file name given. Did you forget adding the precice configuration file as an argument?")
+args = parser.parse_args()
 
-config_file_name = "precice-config.xml"  # TODO should be moved into config, see https://github.com/precice/fenics-adapter/issues/5
+
+config_file_name = "precice-config.xml"  # TODO should be moved into config, see https://github.com/precice/fenics-adapter/issues/5 , in case file doesnt not exsist open will fail
 
 # coupling parameters
 if args.dirichlet:
