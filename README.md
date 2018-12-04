@@ -13,3 +13,5 @@ The files in this repository are organised in the form `problem_type/geometry/so
    * `flap_perp`: A flap attached on the walls of a channel, perpendicular to the flow
       * `SU2-CalculiX`
       * `OpenFOAM-CalculiX`
+    * `cylinderFlap`: A cylinder with a flexible flap in a channel flow. The von Karman vortices cause the flap to oscillate. 
+      * `OpenFOAM-CalculiX`

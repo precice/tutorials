@@ -1,0 +1,48 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    system;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    application         pimpleDyMFoam;
+    startFrom           latestTime;
+    startTime           0;
+    stopAt              endTime;
+    endTime             25.;
+    deltaT              1.e-3;
+    writeControl        adjustableRunTime;
+    writeInterval       1.e-1;
+    purgeWrite          0;
+    writeFormat         ascii;
+    writePrecision      10;
+    writeCompression    uncompressed;
+    timeFormat          general;
+    timePrecision       12;
+    graphFormat         raw;
+    runTimeModifiable   true;
+    adjustTimeStep      false;
+    maxCo               1.;
+    maxDeltaT           1.0;
+
+// ************************************************************************* //
+libs ("libOpenFOAM.so" "libgroovyBC.so");
+
+// ************************************************************************* //
+functions
+{
+    preCICE_Adapter
+    {
+        type preciceAdapterFunctionObject;
+        libs ("libpreciceAdapterFunctionObject.so");
+    }
+}
