@@ -17,14 +17,14 @@ FoamFile
 
 solvers
 {
+
     p
     {
-        solver           GAMG;
-        tolerance        1e-7;
-        relTol           0.01;
-
-        smoother         DICGaussSeidel;
-
+            
+    solver           PCG;
+    preconditioner   DIC;
+    tolerance        1e-8;
+    relTol 	         1.0e-3;
     }
 
     pFinal
@@ -33,31 +33,56 @@ solvers
         relTol          0;
     }
 
-    "(U|k|epsilon|Phi|cellMotionU)"
+    pcorr
+    {
+        $p;
+    }
+
+    pcorrFinal
+    {
+        $pcorr;
+        relTol          0;
+    }
+
+    Phi
+    {
+        $p;
+    }
+
+    "(U|cellDisplacement)"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
-        tolerance       1e-05;
-        relTol          0.1;
+        tolerance       1e-6;
+        relTol          1e-4;
+        minIter         2;
     }
 
-    "(U|k|epsilon|Phi|cellMotionU)Final"
+    "(U|cellDisplacement)Final"
     {
         $U;
         relTol          0;
     }
 }
 
+PIMPLE
+{
+    nCorrectors 4;
+    nNonOrthogonalCorrectors 1;
+    // tolerance 1.0e-14;
+    // relTol 5e-3;
+    consistent  true;
+    correctPhi  true;
+    momentumPredictor true; 
+    nOuterCorrectors	1;
+}
+
+
 potentialFlow
 {
     nNonOrthogonalCorrectors 10;
 }
 
-PIMPLE
-{
-    nNonOrthogonalCorrectors 0;
-    nCorrectors         2;
-}
 
 
 // ************************************************************************* //

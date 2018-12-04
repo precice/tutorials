@@ -8,33 +8,30 @@ echo "Cleaning..."
 
 # Participant 1: Fluid
 Participant1="Fluid"
+Participant2="Solid"
 cd ${Participant1}
     # Clean the case
-    cleanCase
+    ./cleanCase.sh
+    rm *.log
     # Create an empty .foam file for ParaView
     # Note: ".foam" triggers the native OpenFOAM reader of ParaView.
     # Change to ".OpenFOAM" to use the OpenFOAM reader provided with OpenFOAM.
     touch ${Participant1}.foam
 cd ..
-# Remove the log files
-rm -f ${Participant1}_blockMesh.log
-rm -f ${Participant1}_checkMesh.log
-rm -f ${Participant1}_decomposePar.log
-rm -f ${Participant1}.log
-rm -f ${Participant1}_reconstructPar.log
 
-: '
-# Participant 2: Solid
-Participant2="Solid"
 cd ${Participant2}
     # Clean the case
-    cleanCase
-    # Create an empty .foam file for ParaView
-    # Note: ".foam" triggers the native OpenFOAM reader of ParaView.
-    # Change to ".OpenFOAM" to use the OpenFOAM reader provided with OpenFOAM.
-    touch ${Participant2}.foam
+	rm *.nam
+	rm *.msh
+    rm *.log
 cd ..
-'
+
+# Remove the log files
+rm -f ${Participant1}/blockMesh.log
+rm -f ${Participant1}/checkMesh.log
+rm -f ${Participant1}/decomposePar.log
+rm -f ${Participant1}/reconstructPar.log
+rm -f ${Participant1}.log
 
 # Remove the log files
 rm -f flap.cvg
@@ -42,6 +39,8 @@ rm -f flap.dat
 rm -f flap.frd
 rm -f flap.sta
 rm -f spooles.out
+rm -f ${Participant2}.log
+
 
 # Remove the preCICE-related log files
 echo "Deleting the preCICE log files..."

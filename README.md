@@ -10,5 +10,6 @@ The files in this repository are organised in the form `problem_type/geometry/so
    * `heat_exchanger`: A shell-and-tube heat exchanger
       * `buoyantSimpleFoam-CalculiX`
 * `FSI`: Fluid-Structure Interaction
-   * `flap_perp`: A flap attached on the walls of a channel, perpendicular to the flow.
+   * `flap_perp`: A flap attached on the walls of a channel, perpendicular to the flow
       * `SU2-CalculiX`
+      * `OpenFOAM-CalculiX`

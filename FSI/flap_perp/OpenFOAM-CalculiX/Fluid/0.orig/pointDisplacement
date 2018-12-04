@@ -9,16 +9,50 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      transportProperties;
+    class       pointVectorField;
+    object      pointDisplacement;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-transportModel  Newtonian;
+dimensions      [0 1 0 0 0 0 0];
 
-nu              nu [ 0 2 -1 0 0 0 0 ] 1e-03;
+internalField   uniform (0 0 0);
 
-rho             rho [1 -3 0 0 0 0 0] 1e-0;
+boundaryField
+{
+    inlet
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    outlet
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    flap
+    {
+        type            fixedValue;
+        value           $internalField;
+        // type            noSlip;
+    }
+    
+    upperWall
+    {
+        type            slip;
+    }
+
+    lowerWall
+    {
+        type            slip;
+    }
+
+    frontAndBack
+    {
+        type            empty;
+    }
+}
 
 // ************************************************************************* //

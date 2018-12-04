@@ -1,15 +1,15 @@
-*INCLUDE, INPUT=CalculixMesh/all.msh
-*INCLUDE, INPUT=CalculixMesh/fix1_beam.nam
-*INCLUDE, INPUT=CalculixMesh/interface_beam.nam
+*INCLUDE, INPUT=Solid/all.msh
+*INCLUDE, INPUT=Solid/fix1_beam.nam
+*INCLUDE, INPUT=Solid/interface_beam.nam
 *MATERIAL, Name=EL
 *ELASTIC
- 200000, 0.3
+ 400000, 0.3
 *DENSITY
  3000
 *SOLID SECTION, Elset=Eall, Material=EL
 *STEP, NLGEOM, INC=1000000
-*DYNAMIC
-1.E-2, 5.0
+*DYNAMIC, DIRECT
+1.E-2, 10.0
 
 ** fix on the lower boundary from x to z.  
 *BOUNDARY

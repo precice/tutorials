@@ -17,5 +17,5 @@ interfaces:
 FSIenabled: true
 
 CHTenabled: false
-disableCheckpointing: true
-evaluateBoundaries: false
+disableCheckpointing: false
+evaluateBoundaries: true
