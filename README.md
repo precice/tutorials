@@ -1,4 +1,4 @@
-**This branch of the tutorials repository represents the version of the code used for producing the results presented at the GAMM CSE 2018. See the corresponding presentation [here](https://mediatum.ub.tum.de/1467486). [preCICE v 1.3.0](https://github.com/precice/precice/releases/tag/v1.3.0) was used for the experiments.**
+**This branch of the tutorials repository represents the version of the code used for producing the results presented at the GAMM CSE 2018. See the corresponding presentation [here](https://mediatum.ub.tum.de/1467488). [preCICE v 1.3.0](https://github.com/precice/precice/releases/tag/v1.3.0) was used for the experiments.**
 
 # preCICE Tutorials
 
