@@ -53,7 +53,7 @@ python3 Solid/heat.py
 
 ## Visualization
 
-To create VTK output for the Fluid solver, go to the directory `fenics-adapter/tutorials/CHT/flow-over-plate/buoyantPimpleFoam-fenics/Fluid` and run `foamToVTK`. Now you can use paraview to visualize the output. The solid solver's output is stored in `fenics-adapter/tutorials/CHT/flow-over-plate/buoyantPimpleFoam-fenics/out` (open `FEniCs_precice_Lund2018/out/Solid.pvd`), the Fluid solver's output is stored in `fenics-adapter/tutorials/CHT/flow-over-plate/buoyantPimpleFoam-fenics/Fluid/VTK` (open `Fluid_..vtk`). The fluid dataset is a 3D dataset, therefore you should extract a **Slice** first (Z normal, origin at (x,y,z) = (x,y,0.0001)). Then you can combine this slice and the solid 2D dataset into a single dataset using **Group Datasets**.
+To create VTK output for the Fluid solver, go to the directory `fenics-adapter/tutorials/CHT/flow-over-plate/buoyantPimpleFoam-fenics/Fluid` and run `foamToVTK`. Now you can use paraview to visualize the output. The solid solver's output is stored in `fenics-adapter/tutorials/CHT/flow-over-plate/buoyantPimpleFoam-fenics/Solid/VTK` (open `Solid.pvd`), the Fluid solver's output is stored in `fenics-adapter/tutorials/CHT/flow-over-plate/buoyantPimpleFoam-fenics/Fluid/VTK` (open `Fluid_..vtk`). The fluid dataset is a 3D dataset, therefore you should extract a **Slice** first (Z normal, origin at (x,y,z) = (x,y,0.0001)). Then you can combine this slice and the solid 2D dataset into a single dataset using **Group Datasets**.
 
 ![Visualization of the temperature](final.png)
 
