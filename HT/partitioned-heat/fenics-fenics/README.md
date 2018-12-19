@@ -6,13 +6,15 @@ This tutorial is used to solve a partitioned heat equation. For information on t
 
 In this tutorial the computational domain is partitioned and coupled via preCICE. The coupling roughly follows the approach described in [2].
 
-## Dependencies & Running
+## Dependencies
 
 For running this tutorial, you have to install
 
-* FEniCS, see https://fenicsproject.org/download/
-* preCICE, see https://github.com/precice/precice/wiki
-* preCICE python bindings, see https://github.com/precice/precice/wiki/Non%E2%80%93standard-APIs
+* **preCICE**, see [preCICE wiki](https://github.com/precice/precice/wiki/Building).
+* **FEniCS**, see [fenicsproject.org](https://fenicsproject.org/download/).
+* **FEniCS adapter**, see [precice/fenics-adapter](https://github.com/precice/fenics-adapter).
+
+## Running
 
 As soon as all dependencies are installed, you have to open two shells and run the following commands:
 

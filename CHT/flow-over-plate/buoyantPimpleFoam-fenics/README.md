@@ -1,30 +1,23 @@
-# Setup
+# Tutorial for a flow over a heated plate, using OpenFOAM and FEniCS.
+
+## Setup
 
 The setup for this tutorial is based on the the flow-over-plate tutorial in the [precice/openfoam-adapter](https://github.com/precice/openfoam-adapter). Please refer to [this wiki page](https://github.com/precice/openfoam-adapter/wiki/Tutorial-for-CHT:-Flow-over-a-heated-plate) of the openfoam-adapter for details and references regarding the experimental setup.
 
-## OpenFOAM
+## Dependencies
 
-See [Download v5.0 | Ubuntu](https://openfoam.org/download/5-0-ubuntu/). Don't forget to also update your `~/.bashrc`! See [Download v5.0 | Ubuntu -> User Configuration](https://openfoam.org/download/5-0-ubuntu/).
+For running this tutorial, you have to install
 
-## preCICE + OpenFOAM adapter
+* **preCICE**, see [preCICE wiki](https://github.com/precice/precice/wiki/Building).
+* **OpenFOAM**, see [Download v5.0 | Ubuntu](https://openfoam.org/download/5-0-ubuntu/). Don't forget to also update your `~/.bashrc`! See [Download v5.0 | Ubuntu -> User Configuration](https://openfoam.org/download/5-0-ubuntu/).
+* **OpenFOAM adapter**, see [OpenFOAM adapter wiki](https://github.com/precice/openfoam-adapter/wiki/Building). If you have problems compiling, see the "Troubleshooting" section below.
+* **FEniCS**, see [fenicsproject.org](https://fenicsproject.org/download/).
+* **FEniCS adapter**, see [precice/fenics-adapter](https://github.com/precice/fenics-adapter).
 
-**preCICE:** See [preCICE wiki](https://github.com/precice/precice/wiki/Building). If you have problems compiling, see the "Troubleshooting" section below.
-**OpenFOAM adapter:** See [OpenFOAM adapter wiki](https://github.com/precice/openfoam-adapter/wiki/Building). If you have problems compiling, see the "Troubleshooting" section below.
+### Testing your installation
 
-To make sure that everything is working properly, you should run the following tutorial case: https://github.com/precice/openfoam-adapter/wiki/Tutorial-for-CHT:-Flow-over-a-heated-plate
-
-## FEniCS
-
-To install FEniCS for python run the following commands (from https://fenicsproject.org/download/):
-
-```
-sudo apt-get install software-properties-common
-sudo add-apt-repository ppa:fenics-packages/fenics
-sudo apt-get update
-sudo apt-get install --no-install-recommends fenics
-```
-
-To make sure that fenics is working properly, you should run at least one of the tutorials on https://github.com/hplgit/fenics-tutorial/tree/master/pub/python/vol1.
+* **OpenFOAM and OpenFOAM adapter:** To make sure that everything is working properly, you should run the following tutorial case: https://github.com/precice/openfoam-adapter/wiki/Tutorial-for-CHT:-Flow-over-a-heated-plate.
+* **FEniCS:** To make sure that fenics is working properly, you should run at least one of the tutorials on https://github.com/hplgit/fenics-tutorial/tree/master/pub/python/vol1.
 
 ### Troubleshooting
 
@@ -36,7 +29,7 @@ To make sure that fenics is working properly, you should run at least one of the
 
 Copy the Folder `Fluid` and all its contents from https://github.com/precice/openfoam-adapter/tree/master/tutorials/CHT/flow-over-plate/buoyantPimpleFoam-laplacianFoam to this folder.
 
-# Running
+## Running
 
 To start the fluid solver (OpenFOAM), run the following commands in a shell opened in this folder:
 
@@ -51,7 +44,7 @@ To start the solid solver (FEniCS), run the following command in a shell opened 
 python3 Solid/heat.py
 ```
 
-## Visualization
+### Visualization
 
 To create VTK output for the Fluid solver, go to the directory `fenics-adapter/tutorials/CHT/flow-over-plate/buoyantPimpleFoam-fenics/Fluid` and run `foamToVTK`. Now you can use paraview to visualize the output. The solid solver's output is stored in `fenics-adapter/tutorials/CHT/flow-over-plate/buoyantPimpleFoam-fenics/Solid/VTK` (open `Solid.pvd`), the Fluid solver's output is stored in `fenics-adapter/tutorials/CHT/flow-over-plate/buoyantPimpleFoam-fenics/Fluid/VTK` (open `Fluid_..vtk`). The fluid dataset is a 3D dataset, therefore you should extract a **Slice** first (Z normal, origin at (x,y,z) = (x,y,0.0001)). Then you can combine this slice and the solid 2D dataset into a single dataset using **Group Datasets**.
 
