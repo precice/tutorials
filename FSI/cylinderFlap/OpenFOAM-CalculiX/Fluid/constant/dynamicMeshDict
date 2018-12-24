@@ -25,12 +25,15 @@ twoDMotion  yes;
 
 solver      displacementLaplacian;
 
-diffusivity quadratic inverseDistance (flap);
+displacementLaplacianCoeffs {
 
+    diffusivity quadratic inverseDistance (flap);
 
-// not sure if needed
-frozenDiffusion     yes;
-distancePatches
-(
-    flap
-);
+    // not sure if needed
+    frozenDiffusion     yes;
+    distancePatches
+    (
+        flap
+    );
+
+}
