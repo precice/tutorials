@@ -1,10 +1,3 @@
-/*--------------------------------*- C++ -*----------------------------------*\
-| =========                 |                                                 |
-| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  plus                                  |
-|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
-|    \\/     M anipulation  |                                                 |
-\*---------------------------------------------------------------------------*/
 FoamFile
 {
     version     2.0;
@@ -15,34 +8,37 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    // Note: With OpenFOAM v1806 and OpenFOAM 6, the DyM solvers
-    // were marked deprecated and merged into their respective standard solvers.
-    application         pimpleFoam;    // OpenFOAM v1806, OpenFOAM 6, or newer
-    // application         pimpleDyMFoam; // OpenFOAM v1712, OpenFOAM 5.x, or older
+// Note: With OpenFOAM v1806 and OpenFOAM 6, the DyM solvers
+// were marked deprecated and merged into their respective standard solvers.
+application         pimpleFoam;    // OpenFOAM v1806, OpenFOAM 6, or newer
+// application         pimpleDyMFoam; // OpenFOAM v1712, OpenFOAM 5.x, or older
 
-    startFrom           latestTime;
-    startTime           0;
-    stopAt              endTime;
-    endTime             25.;
-    deltaT              1.e-3;
-    writeControl        adjustableRunTime;
-    writeInterval       1.e-1;
-    purgeWrite          0;
-    writeFormat         ascii;
-    writePrecision      10;
-    writeCompression    uncompressed;
-    timeFormat          general;
-    timePrecision       12;
-    graphFormat         raw;
-    runTimeModifiable   true;
-    adjustTimeStep      false;
-    maxCo               1.;
-    maxDeltaT           1.0;
+startFrom           startTime;
 
-// ************************************************************************* //
-libs ("libOpenFOAM.so" "libgroovyBC.so");
+startTime           0;
 
-// ************************************************************************* //
+stopAt              endTime;
+
+endTime             25;
+
+deltaT              0.001;
+
+writeControl        adjustableRunTime;
+
+writeInterval       0.1;
+
+purgeWrite          0;
+
+writeFormat         ascii;
+
+writePrecision      10;
+
+writeCompression    off;
+
+timeFormat          general;
+
+timePrecision       12;
+
 functions
 {
     preCICE_Adapter
