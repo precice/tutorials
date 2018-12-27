@@ -8,53 +8,53 @@ echo "Cleaning..."
 
 # Participant 1: Fluid
 Participant1="Fluid"
-Participant2="Solid"
 cd ${Participant1}
     # Clean the case
-    ./cleanCase.sh
-    rm *.log
+    cleanCase
+    rm -rfv 0
     # Create an empty .foam file for ParaView
     # Note: ".foam" triggers the native OpenFOAM reader of ParaView.
     # Change to ".OpenFOAM" to use the OpenFOAM reader provided with OpenFOAM.
     touch ${Participant1}.foam
 cd ..
+# Remove the log files
+rm -fv ${Participant1}_blockMesh.log
+rm -fv ${Participant1}_checkMesh.log
+rm -fv ${Participant1}_potentialFoam.log
+rm -fv ${Participant1}_decomposePar.log
+rm -fv ${Participant1}.log
+rm -fv ${Participant1}_reconstructPar.log
 
+# Participant 2: Solid
+Participant2="Solid"
 cd ${Participant2}
     # Clean the case
-	rm *.nam
-	rm *.msh
-    rm *.log
+	rm -fv *.nam
+	rm -fv *.msh
+    rm -fv *.log
 cd ..
-
 # Remove the log files
-rm -f ${Participant1}/blockMesh.log
-rm -f ${Participant1}/checkMesh.log
-rm -f ${Participant1}/decomposePar.log
-rm -f ${Participant1}/reconstructPar.log
-rm -f ${Participant1}.log
-
-# Remove the log files
-rm -f flap.cvg
-rm -f flap.dat
-rm -f flap.frd
-rm -f flap.sta
-rm -f spooles.out
-rm -f ${Participant2}.log
+rm -fv flap.cvg
+rm -fv flap.dat
+rm -fv flap.frd
+rm -fv flap.sta
+rm -fv spooles.out
+rm -fv ${Participant2}.log
 
 # Remove the preCICE-related log files
 echo "Deleting the preCICE log files..."
-rm -f \
+rm -fv \
     precice-*.log \
     precice-postProcessingInfo.log
     
 # Output files for preCICE versions before 1.2:
-rm -f \
+rm -fv \
     iterations-${Participant1}.txt iterations-${Participant2}.txt \
     convergence-${Participant1}.txt convergence-${Participant2}.txt \
     Events-${Participant1}.log Events-${Participant2}.log \
     EventTimings-${Participant1}.log EventTimings-${Participant2}.log
 
-rm -f .${Participant1}-${Participant2}.address
+rm -fv .*.address
 
 echo "Cleaning complete!"
 #------------------------------------------------------------------------------

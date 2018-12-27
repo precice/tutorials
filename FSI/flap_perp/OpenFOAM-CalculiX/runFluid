@@ -1,4 +1,6 @@
 #!/bin/bash
+cd ${0%/*} || exit 1    		    		# Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions    # Tutorial run functions
 
 # Fluid participant
 
@@ -8,34 +10,34 @@
 
 # The script "Allclean" cleans-up the result and log files.
 
+# 1 for true, 0 for false
 parallel=0
 
-. $WM_PROJECT_DIR/bin/tools/RunFunctions    # Tutorial run functions
-# get application information
-cd Fluid
-	solver=$(getApplication)	# solv	er
-
-	if [ $parallel -eq 1 ]; then
-		np=$(getNumberOfProcessors)	# number of processors
-		cp ../precice-config_parallel.xml precice-config.xml
-	else
-		np=1
-		cp ../precice-config_serial.xml precice-config.xml
-	fi
-	rm -rf 0
-	cp -r 0.orig 0
-cd ..
+echo "Preparing and running the Fluid participant..."
 
 # Prepare
-blockMesh -case Fluid > Fluid/blockMesh.log 2>&1
+if [ $parallel -eq 1 ]; then
+    ln -s -f precice-config_parallel.xml precice-config.xml
+else
+    ln -s -f precice-config_serial.xml precice-config.xml
+fi
 
-potentialFoam -case Fluid > Fluid/potentialFoam.log 2>&1
+rm -rfv Fluid/0/
+cp -r Fluid/0.orig/ Fluid/0/
+blockMesh -case Fluid
+checkMesh -case Fluid
 
 # Run
+cd Fluid
+	solver=$(getApplication)
+cd ..
 if [ $parallel -eq 1 ]; then
-	decomposePar -case Fluid -force > Fluid/decomposePar.log 2>&1
-	mpirun -np $np $solver -parallel -case Fluid > Fluid.log  2>&1
-	reconstructPar -case Fluid > Fluid/reconstrucPar.log  2>&1
+    decomposePar -force -case Fluid
+    mpirun -np $(getNumberOfProcessors) $solver -parallel -case Fluid
+    reconstructPar -case Fluid
 else
-	$solver -case Fluid > Fluid.log 2>&1
+    $solver -case Fluid
 fi
+
+# Workaround for issue #26
+./removeObsoleteFolders.sh

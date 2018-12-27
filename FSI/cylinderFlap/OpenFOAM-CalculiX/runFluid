@@ -9,46 +9,35 @@ cd ${0%/*} || exit 1    		    		# Run from this directory
 # Alternatively, you may execute the "Allrun" script in one terminal.
 
 # The script "Allclean" cleans-up the result and log files.
-run=1
-parallel=1
 
-cd Fluid 
-	# get application information
-	solver=$(getApplication)	# solver
-	if [ $parallel -eq 1 ]; then
-		np=$(getNumberOfProcessors)	# number of processors
-		ln -s -f ../precice-config_parallel.xml precice-config.xml
-	else
-		ln -s -f ../precice-config_serial.xml precice-config.xml
-	fi
-cd ..
+# 1 for true, 0 for false
+parallel=0
+
+echo "Preparing and running the Fluid participant..."
 
 # Prepare
-if [ -f Fluid/blockMesh.log ]; then
-	echo "Fluid case is already prepared. "
+if [ $parallel -eq 1 ]; then
+    ln -s -f precice-config_parallel.xml precice-config.xml
 else
-	cd Fluid
-
-	blockMesh > blockMesh.log 2>&1
-
-	checkMesh > checkMesh.log 2>&1
-
-	rm -rf 0
-	cp -r 0.orig 0
-
-	cd ..
-
+    ln -s -f precice-config_serial.xml precice-config.xml
 fi
 
-if [ $run -eq 1 ]; then 
-	# Run
-	if [ $parallel -eq 1 ]; then
-		decomposePar -force -case Fluid > Fluid/decomposePar.log  2>&1
-		mpirun -np $np $solver -parallel -case Fluid  > Fluid.log 2>&1
-		mv log Fluid/$solver.log
-		reconstructPar -case Fluid > Fluid/reconstructPar.log  2>&1 
-	else
-		#first run with output
-		$solver -case Fluid > Fluid.log 2>&1
-	fi
+rm -rfv Fluid/0/
+cp -r Fluid/0.orig/ Fluid/0/
+blockMesh -case Fluid
+checkMesh -case Fluid
+
+# Run
+cd Fluid
+	solver=$(getApplication)
+cd ..
+if [ $parallel -eq 1 ]; then
+    decomposePar -force -case Fluid
+    mpirun -np $(getNumberOfProcessors) $solver -parallel -case Fluid
+    reconstructPar -case Fluid
+else
+    $solver -case Fluid
 fi
+
+# Workaround for issue #26
+./removeObsoleteFolders.sh

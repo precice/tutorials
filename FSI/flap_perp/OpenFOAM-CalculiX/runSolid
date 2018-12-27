@@ -1,13 +1,20 @@
 #!/bin/bash
 
-rm precice-config.xml
+# Solid participant
 
-ln -s -f precice-config_serial.xml precice-config.xml
-# ln -s -f precice-config_parallel.xml precice-config.xml
-# prepare in silent mode
+# Run this script in one terminal and the "runFluid" script in another terminal.
+# These scripts present how the two participants would be started manually.
+# Alternatively, you may execute the "Allrun" script in one terminal.
+
+# The script "Allclean" cleans-up the result and log files.
+
+echo "Preparing and running the Solid participant..."
+echo "Note: run the script runFluid first. It sets up a link to the correct precice-config.xml file."
+
+# Prepare in silent mode
 cd Solid
-cgx -bg pre_flap.fbd > prepare_flap.log  2>&1
+    cgx -bg pre_flap.fbd
 cd -
 
-
-ccx_preCICE -i flap -precice-participant Calculix > Solid.log 2>&1
+# Run
+ccx_preCICE -i flap -precice-participant Calculix

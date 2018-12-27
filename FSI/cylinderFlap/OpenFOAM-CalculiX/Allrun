@@ -22,33 +22,34 @@ Participant1="Fluid"
 cd $Participant1 
     # get application information
     Solver1=$(getApplication)    # solver
-    echo "Fluid solver: ${Solver1}. Make sure to use the correct solver for your OpenFOAM version! (pimpleFoam for OpenFOAM v1806, OpenFOAM 6, or newer, vs pimpleDyMFoam for older) You may change this in your Fluid/system/controlDict file, if needed."
+    echo "Solver: ${Solver1}."
+    echo "### WARNING ### Make sure to use the correct solver for your OpenFOAM version! (pimpleFoam for OpenFOAM v1806, OpenFOAM 6, or newer, vs pimpleDyMFoam for older) You may change this in your Fluid/system/controlDict file, if needed."
     if [ $parallel -eq 1 ]; then
         np=$(getNumberOfProcessors) # number of processors
     fi
-    rm -rf 0
+    rm -rfv 0
     cp -r 0.orig 0
-    
-    cd ..
+cd ..
 
     # Prepare
     echo "Preparing the ${Participant1} participant..."
-    blockMesh -case ${Participant1} > ${Participant1}/blockMesh.log 2>&1
-    checkMesh -case ${Participant1} > ${Participant1}/checkMesh.log 2>&1
+    blockMesh -case ${Participant1} > ${Participant1}_blockMesh.log 2>&1
+    checkMesh -case ${Participant1} > ${Participant1}_checkMesh.log 2>&1
 
-    potentialFoam -case ${Participant1} > ${Participant1}/potentialFoam.log 2>&1
+    # Initialize the internal field with a potential flow
+    potentialFoam -case ${Participant1} > ${Participant1}_potentialFoam.log 2>&1
 
     # Run and get the process id
     echo "Starting the ${Participant1} participant..."
     if [ $parallel -eq 1 ]; then
         ln -s -f precice-config_parallel.xml precice-config.xml 
-        decomposePar -force -case ${Participant1} > ${Participant1}/decomposePar.log 2>&1
+        decomposePar -force -case ${Participant1} > ${Participant1}_decomposePar.log 2>&1
         mpirun -np $np ${Solver1} -parallel -case ${Participant1} > ${Participant1}.log 2>&1 &
     else
         ln -s -f precice-config_serial.xml precice-config.xml
         ${Solver1} -case ${Participant1} > ${Participant1}.log 2>&1 &
     fi
-        PIDParticipant1=$!
+    PIDParticipant1=$!
 
 # =============== Participant 2: Solid ===========================
 Participant2="Solid"
@@ -57,7 +58,9 @@ Solver2="ccx_preCICE"
     # Prepare in silent mode
     echo "Preparing the ${Participant2} participant..."
     cd Solid
-    cgx -bg pre_flap.fbd > prepare_flap.log  2>&1
+        # We use CalculiX CGX to setup the structural simulation
+        echo "Executing cgx (provided by CalculiX, make sure this exists)..."
+        cgx -bg pre_flap.fbd > prepare_flap.log  2>&1
     cd ..
 
     # Run
@@ -69,10 +72,9 @@ Solver2="ccx_preCICE"
 # =============== Wait for all the participants to finish =======
 echo "Waiting for the participants to exit..., PIDs: ${PIDParticipant1}, ${PIDParticipant2}"
 echo "(you may run 'tail -f ${Participant1}.log' in another terminal to check the progress)"
-echo "To kill midrun, press 'c'. Ctrl+C will cause the processes to run in the background."
-# loop="ps -p ${PIDParticipant1}"
+
+echo "To interrupt the simulation, press 'c'. Ctrl+C will only send the processes to the background."
 while [ -e /proc/${PIDParticipant1} ]; do
-    # loop="ps -p ${PIDParticipant1}"
     read -r -t1 -n1 input
     if [ "$input" = "c" ]; then
         kill ${PIDParticipant1}
@@ -84,16 +86,20 @@ done
 if [ $? -ne 0 ] || [ "$(grep -c -E "error:" ${Participant1}.log)" -ne 0 ] || [ "$(grep -c -E "error:" ${Participant2}.log)" -ne 0 ]; then
     echo ""
     echo "Something went wrong... See the log files for more."
-    # precaution
+    # Precaution
     kill ${PIDParticipant1}
     kill ${PIDParticipant2}
 else
     echo ""
-    echo "The simulation completed! Reconstructing fields (if parallel)"
-    ./removeObsoleteFolders.sh      # For some versions of openfoam, the functionobject is written in an empty timeolder. remove these.
+    echo "The simulation completed!"
     if [ $parallel -eq 1 ]; then
-        reconstructPar -case ${Participant1} > ${Participant1}/reconstructPar.log 2>&1 & 
+        echo "Reconstructing fields..."
+        reconstructPar -case ${Participant1} > ${Participant1}_reconstructPar.log 2>&1 & 
     fi
+
+    # Workaround for issue #26
+    ./removeObsoleteFolders.sh
+    
     echo "You may now open '${Participant1}/${Participant1}.foam' in ParaView."
     # Note: ".foam" triggers the native OpenFOAM reader of ParaView.
     # Change to ".OpenFOAM" to use the OpenFOAM reader provided with OpenFOAM.
