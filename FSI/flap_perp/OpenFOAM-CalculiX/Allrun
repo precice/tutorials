@@ -8,45 +8,58 @@ cd ${0%/*} || exit 1                        # Run from this directory
 # Alternatively, you may execute the scripts "runSolid" and "runFluid"
 # in separate terminals.
 
+# Run this script with "-parallel" for parallel simulations
+
 # The script "Allclean" cleans-up the result and log files.
 # Set up the run parameters:
 
 # 1 for true, 0 for false
 parallel=0
-
-# Link to the precice-config for the serial run
-echo "Setting up the preCICE configuration file for a simulation..."
+if [ "$1" = "-parallel" ]; then
+    parallel=1
+fi
 
 # =============== Participant 1: Fluid ===========================
 Participant1="Fluid"
-cd $Participant1 
-    # get application information
-    Solver1=$(getApplication)    # solver
-    echo "Solver: ${Solver1}."
-    echo "### WARNING ### Make sure to use the correct solver for your OpenFOAM version! (pimpleFoam for OpenFOAM v1806, OpenFOAM 6, or newer, vs pimpleDyMFoam for older) You may change this in your Fluid/system/controlDict file, if needed."
-    if [ $parallel -eq 1 ]; then
-        np=$(getNumberOfProcessors) # number of processors
-    fi
-    rm -rfv 0
-    cp -r 0.orig 0
-cd ..
 
     # Prepare
     echo "Preparing the ${Participant1} participant..."
+
+    cd $Participant1 
+    echo "  Restoring 0/ from 0.orig/..."
+        rm -rfv 0
+        cp -r 0.orig 0
+    cd ..
+
+    echo "  Preparing the mesh..."
     blockMesh -case ${Participant1} > ${Participant1}_blockMesh.log 2>&1
     checkMesh -case ${Participant1} > ${Participant1}_checkMesh.log 2>&1
 
     # Initialize the internal field with a potential flow
     potentialFoam -case ${Participant1} > ${Participant1}_potentialFoam.log 2>&1
 
+    # get application information
+    cd ${Participant1}
+        Solver1=$(getApplication)    # solver
+        echo "  ${Participant1} Solver: ${Solver1}."
+        echo "  ### WARNING ### Make sure to use the correct solver for your OpenFOAM version! (pimpleFoam for OpenFOAM v1806, OpenFOAM 6, or newer, vs pimpleDyMFoam for older) You may change this in your Fluid/system/controlDict file, if needed."
+    cd ..
+
     # Run and get the process id
-    echo "Starting the ${Participant1} participant..."
     if [ $parallel -eq 1 ]; then
-        ln -s -f precice-config_parallel.xml precice-config.xml 
+        echo "  Decomposing the case..."
         decomposePar -force -case ${Participant1} > ${Participant1}_decomposePar.log 2>&1
-        mpirun -np $np ${Solver1} -parallel -case ${Participant1} > ${Participant1}.log 2>&1 &
+        echo "  Setting up the preCICE configuration file for a parallel simulation..."
+        ln -s -f precice-config_parallel.xml precice-config.xml 
+        cd ${Participant1}
+            nproc=$(getNumberOfProcessors)
+        cd ..
+        echo "  Starting the ${Participant1} participant in parallel..."
+        mpirun -np ${nproc} ${Solver1} -parallel -case ${Participant1} > ${Participant1}.log 2>&1 &
     else
+        echo "  Setting up the preCICE configuration file for a serial simulation..."
         ln -s -f precice-config_serial.xml precice-config.xml
+        echo "  Starting the ${Participant1} participant in serial..."
         ${Solver1} -case ${Participant1} > ${Participant1}.log 2>&1 &
     fi
     PIDParticipant1=$!
@@ -57,14 +70,14 @@ Solver2="ccx_preCICE"
 
     # Prepare in silent mode
     echo "Preparing the ${Participant2} participant..."
-    cd Solid
+    cd ${Participant2}
         # We use CalculiX CGX to setup the structural simulation
-        echo "Executing cgx (provided by CalculiX, make sure this exists)..."
+        echo "  Executing cgx (provided by CalculiX, make sure this exists)..."
         cgx -bg pre_flap.fbd > prepare_flap.log 2>&1
     cd ..
 
     # Run
-    echo "Starting the ${Participant2} participant..."
+    echo "  Starting the ${Participant2} participant..."
     ${Solver2} -i flap -precice-participant Calculix > ${Participant2}.log  2>&1 &
     PIDParticipant2=$!
 
@@ -91,14 +104,15 @@ if [ $? -ne 0 ] || [ "$(grep -c -E "error:" ${Participant1}.log)" -ne 0 ] || [ "
     kill ${PIDParticipant2}
 else
     echo ""
-    echo "The simulation completed!"
+    echo "The simulation completed! (check for any errors)"
     if [ $parallel -eq 1 ]; then
         echo "Reconstructing fields..."
         reconstructPar -case ${Participant1} > ${Participant1}_reconstructPar.log 2>&1 & 
     fi
 
     # Workaround for issue #26
-    ./removeObsoleteFolders.sh
+    echo "Problems with time directories without results? Run the script removeObsoleteFolders.sh and see issue #26 on GitHub."
+    # ./removeObsoleteFolders.sh
     
     echo "You may now open '${Participant1}/${Participant1}.foam' in ParaView."
     # Note: ".foam" triggers the native OpenFOAM reader of ParaView.
