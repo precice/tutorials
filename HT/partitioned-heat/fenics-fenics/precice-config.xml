@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+
+<precice-configuration>
+
+  <log enabled="1">
+    <sink filter="%Severity% > debug" />
+  </log>
+  
+  <solver-interface dimensions="2">
+    
+    <!-- Data fields that are exchanged between the solvers -->
+    <data:scalar name="Temperature"/>
+    <data:scalar name="Flux"/>
+
+    <!-- A common mesh that uses these data fields -->
+    <mesh name="DirichletNodes">
+        <use-data name="Temperature"/>
+        <use-data name="Flux"/>
+    </mesh>
+
+    <mesh name="NeumannNodes">
+       <use-data name="Temperature"/>   
+       <use-data name="Flux"/>
+    </mesh>
+
+    <!-- Represents each solver using preCICE. In a coupled simulation, two participants have to be
+         defined. The name of the participant has to match the name given on construction of the
+         precice::SolverInterface object used by the participant. -->
+    
+    <participant name="HeatDirichlet">
+      <!-- Makes the named mesh available to the participant. Mesh is provided by the solver directly. -->
+      <use-mesh name="DirichletNodes" provide="yes"/>
+      <use-mesh name="NeumannNodes" from="HeatNeumann"/>
+      <!-- Define input/output of the solver.  -->
+      <write-data name="Flux" mesh="DirichletNodes"/>
+      <read-data  name="Temperature" mesh="DirichletNodes"/>
+      <mapping:nearest-projection direction="write" from="DirichletNodes" to="NeumannNodes"   constraint="consistent" timing="initial"/>
+      <mapping:nearest-projection direction="read"  from="NeumannNodes"   to="DirichletNodes" constraint="consistent" timing="initial"/>
+    </participant>
+    
+    <participant name="HeatNeumann">
+      <use-mesh name="NeumannNodes" provide="yes"/>
+      <write-data name="Temperature" mesh="NeumannNodes"/>
+      <read-data  name="Flux"        mesh="NeumannNodes"/>
+    </participant>
+
+    <!-- Communication method, use TCP sockets, Change network to "ib0" on SuperMUC -->
+    <m2n:sockets distribution-type="gather-scatter" from="HeatDirichlet" to="HeatNeumann" network="lo"/>
+
+      <coupling-scheme:serial-implicit>
+         <participants first="HeatDirichlet" second="HeatNeumann"/>
+         <max-time value="1"/>
+         <timestep-length value=".1" valid-digits="8"/>
+         <max-iterations value="100"/>
+         <exchange data="Flux"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
+         <exchange data="Temperature" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
+         <relative-convergence-measure data="Flux"        mesh="NeumannNodes" limit="1e-5"/>
+         <relative-convergence-measure data="Temperature" mesh="NeumannNodes" limit="1e-5"/>
+         <extrapolation-order value="0"/>
+         <post-processing:IQN-ILS> 
+	    <!--PostProc always done on the second participant-->
+            <data name="Temperature" mesh="NeumannNodes"/>
+            <initial-relaxation value="0.01"/>
+            <max-used-iterations value="3"/>
+            <timesteps-reused value="1"/>
+            <filter type="QR2" limit="1e-3"/>
+         </post-processing:IQN-ILS>
+      </coupling-scheme:serial-implicit>
+    
+  </solver-interface>
+</precice-configuration>
