@@ -17,4 +17,4 @@ cd Solid
 cd -
 
 # Run
-ccx_preCICE -i flap -precice-participant Calculix
+ccx_preCICE -i Solid/flap -precice-participant Calculix

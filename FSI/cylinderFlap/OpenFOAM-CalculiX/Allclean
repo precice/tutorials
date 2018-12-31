@@ -32,12 +32,12 @@ cd ${Participant2}
 	rm -fv *.nam
 	rm -fv *.msh
     rm -fv *.log
+    rm -fv flap.cvg
+    rm -fv flap.dat
+    rm -fv flap.frd
+    rm -fv flap.sta
 cd ..
 # Remove the log files
-rm -fv flap.cvg
-rm -fv flap.dat
-rm -fv flap.frd
-rm -fv flap.sta
 rm -fv spooles.out
 rm -fv ${Participant2}.log
 

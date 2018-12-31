@@ -78,7 +78,7 @@ Solver2="ccx_preCICE"
 
     # Run
     echo "  Starting the ${Participant2} participant..."
-    ${Solver2} -i flap -precice-participant Calculix > ${Participant2}.log  2>&1 &
+    ${Solver2} -i ${Participant2}/flap -precice-participant Calculix > ${Participant2}.log  2>&1 &
     PIDParticipant2=$!
 
 
