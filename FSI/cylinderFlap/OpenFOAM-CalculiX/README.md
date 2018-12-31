@@ -1,42 +1,17 @@
-# Tutorial for a coupled simulation with OpenFOAM and CalculiX
+# Tutorial for an FSI simulation of a cylinder-flap scenario 
 
-# Setup
+This tutorial is described in the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-OpenFOAM-and-CalculiX).
 
-The setup for this tutorial is based on the the cylinder with a flap benchmarking case from Turek and Hron. [Include cite here]. 
+It is known to work with OpenFOAM 4.1, 5.0, v1712, v1806 and CalculiX 2.13 with CGX, but it should also work with newer versions. Have a look on issues concerning [OpenFOAM 6 / dev](https://github.com/precice/openfoam-adapter/issues/21) and [OpenFOAM v1812](https://github.com/precice/openfoam-adapter/issues/59).
 
-In the [precice/openfoam-adapter](https://github.com/precice/openfoam-adapter). Please refer to [this wiki page](https://github.com/precice/openfoam-adapter/wiki/Tutorial-for-CHT:-Flow-over-a-heated-plate) of the openfoam-adapter for details and references regarding the experimental setup.
+You may run the coupled simulation in serial using the script `Allrun` or in parallel with `Allrun -parallel` (`Allrun_parallel` is a shortcut to this). The output of each step will be redirected to log files. You can cleanup the simulation using `Allclean`.
 
-## OpenFOAM
+If you prefer to run the two simulations in two different terminals and watch their output on the screen, use the (simpler) scripts `runFluid` (or `runFluid -parallel`) and `runSolid`. Please always run the script `runFluid` first.
 
-See [Download v5.0 | Ubuntu](https://openfoam.org/download/5-0-ubuntu/). Don't forget to also update your `~/.bashrc`! See [Download v5.0 | Ubuntu -> User Configuration](https://openfoam.org/download/5-0-ubuntu/).
+CGX is used to prepare the Solid participant and it should be executable by running `cgx`. If it has a different name (e.g. `cgx_2.13`), adapt the respective run script, or set an alias/link from `cgx` to `cgx_2.13`.
 
-## Boundary conditions
-The flow in the domain is determined by a fixedValue at the inlet. From time [0-2] seconds, the flow speed is linearly increased to the a fixed value of 2m/s uniform inflow, leading to a Reynolds number of 200, where the cylinder diameter is used as the length scale. 
+There is an [open issue](https://github.com/precice/openfoam-adapter/issues/26) that leads to additional "empty" result directories when running with some OpenFOAM versions, leading to inconveniences during post-processing. Please run the script `removeObsoleteSolvers.sh` to delete the additional files.
 
-Note that the inflow conditions is somewhat different from the parabolic inflow condition specified at the original benchmarking case. The inflow is easy to recreate, using for example the third-party package 'swak4foam' with 'groovyBC'.
+You may adjust the end time in the precice-config_*.xml, or interupt the execution earlier if you want.
 
-
-## preCICE + OpenFOAM adapter
-
-**preCICE:** See [preCICE wiki](https://github.com/precice/precice/wiki/Building). If you have problems compiling, see the "Troubleshooting" section below.
-**OpenFOAM adapter:** See [OpenFOAM adapter wiki](https://github.com/precice/openfoam-adapter/wiki/Building). If you have problems compiling, see the "Troubleshooting" section below.
-
-To make sure that everything is working properly, you should run the following tutorial case: https://github.com/precice/openfoam-adapter/wiki/Tutorial-for-CHT:-Flow-over-a-heated-plate
-
-## Calculix
-
-ccx 2.13 is used in the creation of this tutorial. 
-Calculix sourcecode can be found at [calculix.de](http://www.calculix.de/)
-
-## Get the OpenFOAM Fluid case
-
-Copy the Folder `Fluid` and all its contents from https://github.com/precice/openfoam-adapter/tree/master/tutorials/CHT/flow-over-plate/buoyantPimpleFoam-laplacianFoam to this folder.
-
-# Running
-
-To start the coupled simulation, run the command 
-'Allrun'
-and to clean the case, 
-'Allclean'.
-
-Alternatively, you can start the separate solvers by running './runFluid' and './runSolid' in separate terminals. 
+This case was contributed by Derek Risseeuw (TU Delft).
