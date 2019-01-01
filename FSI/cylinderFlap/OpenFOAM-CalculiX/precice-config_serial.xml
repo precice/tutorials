@@ -36,7 +36,6 @@
 
     <participant name="Calculix">
         <use-mesh name="Calculix_Mesh" provide="yes"/>
-        <use-mesh name="Fluid-Mesh-Faces" from="Fluid"/>
         <read-data name="Forces0" mesh="Calculix_Mesh"/>
         <write-data name="Displacements0" mesh="Calculix_Mesh"/>
         <watch-point mesh="Calculix_Mesh" name="point1" coordinate="0.6;0.2;0." />

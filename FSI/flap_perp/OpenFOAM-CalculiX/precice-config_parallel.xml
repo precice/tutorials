@@ -38,7 +38,6 @@
 
     <participant name="Calculix">
         <use-mesh name="Solid" provide="yes"/>
-        <use-mesh name="Fluid-Mesh-Faces" from="Fluid"/>
         <read-data name="Forces0" mesh="Solid"/>
         <write-data name="Displacements0" mesh="Solid"/>
     </participant>
