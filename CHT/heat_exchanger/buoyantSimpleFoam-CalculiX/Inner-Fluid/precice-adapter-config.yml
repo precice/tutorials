@@ -7,3 +7,5 @@ interfaces:
       patches: [interface]
       read-data: [Sink-Temperature-Solid, Heat-Transfer-Coefficient-Solid]
       write-data: [Sink-Temperature-Inner-Fluid, Heat-Transfer-Coefficient-Inner-Fluid]
+
+CHTenabled: true

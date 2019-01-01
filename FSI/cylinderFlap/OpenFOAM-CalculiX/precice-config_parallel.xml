@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+
+<precice-configuration>
+
+    <log>
+        <sink type="stream" output="stdout" filter="%Severity% > debug" enabled="true"/>
+    </log>
+
+    <solver-interface dimensions="3">
+
+    <data:vector name="Forces0"/>
+    <data:vector name="Displacements0"/>
+
+    <mesh name="Fluid-Mesh-Faces">
+        <use-data name="Forces0"/>
+    </mesh>
+
+    <mesh name="Fluid-Mesh-Nodes">
+        <use-data name="Displacements0"/>
+    </mesh>
+
+    <mesh name="Calculix_Mesh">
+        <use-data name="Forces0"/>
+        <use-data name="Displacements0"/>
+    </mesh>
+
+    <participant name="Fluid">
+ 	<master:mpi-single/>
+        <use-mesh name="Fluid-Mesh-Faces" provide="yes"/>
+        <use-mesh name="Fluid-Mesh-Nodes" provide="yes"/>
+        <use-mesh name="Calculix_Mesh" from="Calculix"/>
+        <write-data name="Forces0" mesh="Fluid-Mesh-Faces"/>
+        <read-data name="Displacements0" mesh="Fluid-Mesh-Nodes"/>
+        <mapping:petrbf-thin-plate-splines direction="write" from="Fluid-Mesh-Faces" to="Calculix_Mesh" constraint="conservative" z-dead="true" />
+        <mapping:petrbf-thin-plate-splines direction="read" from="Calculix_Mesh" to="Fluid-Mesh-Nodes" constraint="consistent" />
+    </participant>
+
+    <participant name="Calculix">
+        <use-mesh name="Calculix_Mesh" provide="yes"/>
+        <read-data name="Forces0" mesh="Calculix_Mesh"/>
+        <write-data name="Displacements0" mesh="Calculix_Mesh"/>
+        <watch-point mesh="Calculix_Mesh" name="point1" coordinate="0.6;0.2;0." />
+    </participant>
+
+    <m2n:sockets from="Fluid" to="Calculix" distribution-type="gather-scatter"/>
+
+    <coupling-scheme:serial-implicit>
+            <timestep-length value="0.001" />
+            <max-time value="10"/>
+            <participants first="Fluid" second="Calculix"/>
+            <exchange data="Forces0" mesh="Calculix_Mesh" from="Fluid" to="Calculix"/>
+            <exchange data="Displacements0" mesh="Calculix_Mesh" from="Calculix" to="Fluid" initialize="0" />
+
+            <max-iterations value="50"/>
+            <relative-convergence-measure limit="1e-4" data="Displacements0" mesh="Calculix_Mesh"/>
+            <relative-convergence-measure limit="1e-4" data="Forces0" mesh="Calculix_Mesh"/>
+            <extrapolation-order value="2"/>
+
+             <post-processing:IQN-ILS>
+                <data name="Displacements0" mesh="Calculix_Mesh"/>
+                <preconditioner type="residual-sum"/>
+                <filter type="QR1" limit="1e-6"/>
+                <initial-relaxation value="0.1"/> 
+                <max-used-iterations value="50"/>
+                <timesteps-reused value="10"/> 
+            </post-processing:IQN-ILS> 
+
+    </coupling-scheme:serial-implicit>
+
+
+    </solver-interface>
+
+</precice-configuration>
