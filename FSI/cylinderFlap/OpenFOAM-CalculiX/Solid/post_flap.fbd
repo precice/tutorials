@@ -1,10 +1,9 @@
-ulin perpendicular flap to the flow
+ulin cylinder with flap parallel to the flow
 read Solid/flap.frd
 read Solid/flap.inp
 view elem
 view disp
-rot y
-#rot l 180
+rot -z
 ds 1 e 4
 #graph NA time DISP D1
 #q
