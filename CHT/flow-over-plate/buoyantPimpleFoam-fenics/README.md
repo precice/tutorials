@@ -9,7 +9,7 @@ The setup for this tutorial is based on the the flow-over-plate tutorial in the 
 For running this tutorial, you have to install
 
 * **preCICE**, see [preCICE wiki](https://github.com/precice/precice/wiki/Building).
-* **OpenFOAM**, see [Download v5.0 | Ubuntu](https://openfoam.org/download/5-0-ubuntu/). Don't forget to also update your `~/.bashrc`! See [Download v5.0 | Ubuntu -> User Configuration](https://openfoam.org/download/5-0-ubuntu/).
+* **OpenFOAM**, see [Notes on OpenFOAM](https://github.com/precice/openfoam-adapter/wiki/Notes-on-OpenFOAM).
 * **OpenFOAM adapter**, see [OpenFOAM adapter wiki](https://github.com/precice/openfoam-adapter/wiki/Building). If you have problems compiling, see the "Troubleshooting" section below.
 * **FEniCS**, see [fenicsproject.org](https://fenicsproject.org/download/).
 * **FEniCS adapter**, see [precice/fenics-adapter](https://github.com/precice/fenics-adapter).
@@ -53,3 +53,7 @@ To create VTK output for the Fluid solver, go to the directory `fenics-adapter/t
 This is how your setup in paraview should look like, to obtain this output:
 
 ![Paraview](paraviewtree.png)
+
+## Disclaimer
+
+This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM® and OpenCFD® trade marks.
