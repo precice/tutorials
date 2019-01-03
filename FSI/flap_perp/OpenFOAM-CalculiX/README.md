@@ -15,3 +15,7 @@ There is an [open issue](https://github.com/precice/openfoam-adapter/issues/26) 
 You may adjust the end time in the precice-config_*.xml, or interupt the execution earlier if you want.
 
 This case was contributed by Derek Risseeuw (TU Delft).
+
+## Disclaimer
+
+This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM® and OpenCFD® trade marks.
