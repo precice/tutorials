@@ -148,19 +148,19 @@ f_N_function = interpolate(f_N, V)
 coupling_boundary = CouplingBoundary()
 remaining_boundary = ComplementaryBoundary(coupling_boundary)
 
-precice = Adapter()
-precice.configure(solver_name, config_file_name, coupling_mesh_name, write_data_name, read_data_name)  # TODO in the future we want to remove this function and read these variables from a config file. See https://github.com/precice/fenics-adapter/issues/5
-if problem is ProblemType.DIRICHLET:
-    precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
-                       write_field=f_N_function)
-elif problem is ProblemType.NEUMANN:
-    precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
-                       write_field=u_D_function)
-
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
 # Define initial value
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
+
+precice = Adapter()
+precice.configure(solver_name, config_file_name, coupling_mesh_name, write_data_name, read_data_name)  # TODO in the future we want to remove this function and read these variables from a config file. See https://github.com/precice/fenics-adapter/issues/5
+if problem is ProblemType.DIRICHLET:
+    precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
+                       write_field=f_N_function, u_n=u_n)
+elif problem is ProblemType.NEUMANN:
+    precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
+                       write_field=u_D_function, u_n=u_n)
 
 # Define variational problem
 u = TrialFunction(V)
@@ -181,7 +181,7 @@ a, L = lhs(F), rhs(F)
 u_np1 = Function(V)
 F_known_u = u_np1 * v * dx + dt * dot(grad(u_np1), grad(v)) * dx - (u_n + dt * f) * v * dx
 u_np1.rename("Temperature", "")
-t = 0
+t_print = t = 0
 
 # reference solution at t=0
 u_ref = interpolate(u_D, V)
@@ -212,30 +212,27 @@ while precice.is_coupling_ongoing():
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
         fluxes = fluxes_from_temperature_full_domain(F_known_u, V)
-        is_converged = precice.advance(fluxes, dt)
+        u_n, t, n = precice.advance(fluxes, u_np1, t + dt, n + 1, dt)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
-        is_converged = precice.advance(u_np1, dt)
+        u_n, t, n = precice.advance(u_np1, u_np1, t + dt, n + 1, dt)
 
-    if is_converged:
-        # Compute error at vertices
+    print("time = %.2f" % t)
+
+    if t_print < t:
+        t_print = t
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
         error, error_pointwise = compute_errors(u_np1, u_ref, V)
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
-        print('output u^%d and u_ref^%d' % (n+1, n+1))        
+        print('output u^%d and u_ref^%d' % (n+1, n+1))
         temperature_out << u_np1
         ref_out << u_ref
         error_out << error_pointwise
-        # Update current time t_n+1 = t_n + dt
-        t += precice._precice_tau
-        # Update dirichlet BC
-        u_D.t = t + precice._precice_tau
-        # use u^n+1 as initial condition for next timestep
-        u_n.assign(u_np1)
-        # n -> n+1
-        n += 1
+
+    # Update dirichlet BC
+    u_D.t = t + precice._precice_tau
 
 # Hold plot
 precice.finalize()
