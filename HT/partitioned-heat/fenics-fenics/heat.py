@@ -80,7 +80,7 @@ def fluxes_from_temperature_full_domain(F, V):
         if area[i] != 0:  # put weight from assemble on function
             fluxes.vector()[i] = fluxes_vector[i] / area[i]  # scale by surface area
         else:
-            assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux   
+            #assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux
             fluxes.vector()[i] = fluxes_vector[i]  
     return fluxes
 
@@ -181,7 +181,7 @@ a, L = lhs(F), rhs(F)
 u_np1 = Function(V)
 F_known_u = u_np1 * v * dx + dt * dot(grad(u_np1), grad(v)) * dx - (u_n + dt * f) * v * dx
 u_np1.rename("Temperature", "")
-t_print = t = 0
+t = 0
 
 # reference solution at t=0
 u_ref = interpolate(u_D, V)
@@ -204,30 +204,43 @@ error_out << error_pointwise
 u_D.t = t + precice._precice_tau
 assert (dt == precice._precice_tau)
 
+print("heat.py: ENTERING MAIN LOOP")
 while precice.is_coupling_ongoing():
+
+    if problem is ProblemType.DIRICHLET:
+        u_ref = interpolate(u_D, V)
+        print("before solve:")
+        print(u_n(.5, .5))
+        print(u_np1(.5, .5))
+        print(u_ref(.5, .5))
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
 
     if problem is ProblemType.DIRICHLET:
+        print("after solve:")
+        print(u_n(.5, .5))
+        print(u_np1(.5, .5))
+        print(u_ref(.5, .5))
+
+    if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
         fluxes = fluxes_from_temperature_full_domain(F_known_u, V)
-        u_n, t, n = precice.advance(fluxes, u_np1, t + dt, n + 1, dt)
+        out, t, n, success = precice.advance(fluxes, u_np1, t + precice._precice_tau, n + 1, precice._precice_tau)
+        u_n.assign(out)  # todo doing things wrong here is quite easy. Maybe better? Do FEniCS assignments for u_n inside advance.
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
-        u_n, t, n = precice.advance(u_np1, u_np1, t + dt, n + 1, dt)
+        out, t, n, success = precice.advance(u_np1, u_np1, t + precice._precice_tau, n + 1, precice._precice_tau)
+        u_n.assign(out)
 
-    print("time = %.2f" % t)
-
-    if t_print < t:
-        t_print = t
+    if success:
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
-        error, error_pointwise = compute_errors(u_np1, u_ref, V)
+        error, error_pointwise = compute_errors(u_n, u_ref, V)
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
-        print('output u^%d and u_ref^%d' % (n+1, n+1))
-        temperature_out << u_np1
+        print('output u^%d and u_ref^%d' % (n, n))
+        temperature_out << u_n
         ref_out << u_ref
         error_out << error_pointwise
 
