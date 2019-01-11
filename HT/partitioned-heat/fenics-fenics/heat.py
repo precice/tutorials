@@ -226,12 +226,10 @@ while precice.is_coupling_ongoing():
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
         fluxes = fluxes_from_temperature_full_domain(F_known_u, V)
-        out, t, n, success = precice.advance(fluxes, u_np1, t + precice._precice_tau, n + 1, precice._precice_tau)
-        u_n.assign(out)  # todo doing things wrong here is quite easy. Maybe better? Do FEniCS assignments for u_n inside advance.
+        t, n, success = precice.advance(fluxes, u_np1, u_n, t, precice._precice_tau, n)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
-        out, t, n, success = precice.advance(u_np1, u_np1, t + precice._precice_tau, n + 1, precice._precice_tau)
-        u_n.assign(out)
+        t, n, success = precice.advance(u_np1, u_np1, u_n, t, precice._precice_tau, n)
 
     if success:
         u_ref = interpolate(u_D, V)
