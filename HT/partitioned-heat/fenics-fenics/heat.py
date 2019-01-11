@@ -204,7 +204,6 @@ error_out << error_pointwise
 u_D.t = t + precice._precice_tau
 assert (dt == precice._precice_tau)
 
-print("heat.py: ENTERING MAIN LOOP")
 while precice.is_coupling_ongoing():
 
     if problem is ProblemType.DIRICHLET:
