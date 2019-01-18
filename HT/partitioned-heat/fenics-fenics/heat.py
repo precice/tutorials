@@ -259,8 +259,6 @@ while precice.is_coupling_ongoing():
         error_out << error_pointwise
 
     # Update dirichlet BC
-    print(t)
-    print("calculate for %f" % ( t+dt(0) ))
     u_D.t = t + dt(0)
 
 # Hold plot
