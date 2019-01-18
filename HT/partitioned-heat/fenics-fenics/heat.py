@@ -31,7 +31,7 @@ from enum import Enum
 from fenicsadapter import Adapter
 from errorcomputation import compute_errors
 import argparse
-
+import numpy as np
 
 
 class ProblemType(Enum):
@@ -40,6 +40,17 @@ class ProblemType(Enum):
     """
     DIRICHLET = 1  # Dirichlet problem
     NEUMANN = 2  # Neumann problem
+
+class Subcyling(Enum):
+    """
+    Enum defines which kind of subcycling is used
+    """
+    NONE = 0  # no subcycling, precice_dt == fenics_dt
+    MATCHING = 1  # subcycling, where fenics_dt fits into precice_dt, mod(precice_dt, fenics_dt) == 0
+    NONMATCHING = 2  # subcycling, where fenics_dt does not fit into precice_dt, mod(precice_dt, fenics_dt) != 0
+
+    # note: the modulo expressions above should be understood in an exact way (no floating point round off problems. For
+    # details, see https://stackoverflow.com/questions/14763722/python-modulo-on-floats)
 
 
 class ComplementaryBoundary(SubDomain):
@@ -108,6 +119,7 @@ if not (args.dirichlet or args.neumann):
 
 nx = 5
 ny = 10
+subcycle = Subcyling.NONE
 
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
@@ -121,7 +133,20 @@ elif problem is ProblemType.NEUMANN:
     read_data_name = "Flux"
     write_data_name = "Temperature"
 
-dt = .1  # time step size
+# for all scenarios, we assume precice_dt == .1
+if subcycle is Subcyling.NONE:
+    fenics_dt = .1  # time step size
+    error_tol = 10 ** -4  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
+elif subcycle is Subcyling.MATCHING:
+    fenics_dt = .01  # time step size
+    error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
+    # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
+elif subcycle is Subcyling.NONMATCHING:
+    fenics_dt = .03  # time step size
+    error_tol = 10 ** -1  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
+    # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
+
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 y_bottom, y_top = 0, 1
@@ -156,11 +181,14 @@ u_n.rename("Temperature", "")
 precice = Adapter()
 precice.configure(solver_name, config_file_name, coupling_mesh_name, write_data_name, read_data_name)  # TODO in the future we want to remove this function and read these variables from a config file. See https://github.com/precice/fenics-adapter/issues/5
 if problem is ProblemType.DIRICHLET:
-    precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
-                       write_field=f_N_function, u_n=u_n)
+    precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
+                                    write_field=f_N_function, u_n=u_n)
 elif problem is ProblemType.NEUMANN:
-    precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
-                       write_field=u_D_function, u_n=u_n)
+    precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
+                                    write_field=u_D_function, u_n=u_n)
+
+dt = Constant(0)
+dt.assign(np.min([fenics_dt, precice_dt]))
 
 # Define variational problem
 u = TrialFunction(V)
@@ -201,39 +229,28 @@ error_total, error_pointwise = compute_errors(u_n, u_ref, V)
 error_out << error_pointwise
 
 # set t_1 = t_0 + dt, this gives u_D^1
-u_D.t = t + precice._precice_tau
-assert (dt == precice._precice_tau)
+u_D.t = t + dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
 
 while precice.is_coupling_ongoing():
-
-    if problem is ProblemType.DIRICHLET:
-        u_ref = interpolate(u_D, V)
-        print("before solve:")
-        print(u_n(.5, .5))
-        print(u_np1(.5, .5))
-        print(u_ref(.5, .5))
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
 
     if problem is ProblemType.DIRICHLET:
-        print("after solve:")
-        print(u_n(.5, .5))
-        print(u_np1(.5, .5))
-        print(u_ref(.5, .5))
-
-    if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
         fluxes = fluxes_from_temperature_full_domain(F_known_u, V)
-        t, n, success = precice.advance(fluxes, u_np1, u_n, t, precice._precice_tau, n)
+        t, n, success, precice_dt = precice.advance(fluxes, u_np1, u_n, t, dt(0), n)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
-        t, n, success = precice.advance(u_np1, u_np1, u_n, t, precice._precice_tau, n)
+        t, n, success, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)
+
+    dt.assign(np.min([fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
+    print(dt(0))
 
     if success:
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
-        error, error_pointwise = compute_errors(u_n, u_ref, V)
+        error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
         print('output u^%d and u_ref^%d' % (n, n))
@@ -242,7 +259,9 @@ while precice.is_coupling_ongoing():
         error_out << error_pointwise
 
     # Update dirichlet BC
-    u_D.t = t + precice._precice_tau
+    print(t)
+    print("calculate for %f" % ( t+dt(0) ))
+    u_D.t = t + dt(0)
 
 # Hold plot
 precice.finalize()
