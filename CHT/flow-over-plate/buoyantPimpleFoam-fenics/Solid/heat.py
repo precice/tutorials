@@ -31,6 +31,12 @@ from fenicsadapter import Adapter
 
 
 class ComplementaryBoundary(SubDomain):
+    """Determines if a point is at the complementary boundary with tolerance of
+    1E-14.
+
+    :func inside(): returns True if point belongs to the boundary, otherwise
+                    returns False
+    """
     def __init__(self, subdomain):
         self.complement = subdomain
         SubDomain.__init__(self)
@@ -44,6 +50,11 @@ class ComplementaryBoundary(SubDomain):
 
 
 class TopBoundary(SubDomain):
+    """Determines if the point is at the top boundary with tolerance of 1E-14.
+
+    :func inside(): returns True if point belongs to the boundary, otherwise
+                    returns False
+    """
     def inside(self, x, on_boundary):
         tol = 1E-14
         if on_boundary and near(x[1], y_top, tol):
@@ -53,6 +64,12 @@ class TopBoundary(SubDomain):
 
 
 class BottomBoundary(SubDomain):
+    """Determines if the point is at the bottom boundary with tolerance of
+    1E-14.
+
+    :func inside(): returns True if point belongs to the boundary, otherwise
+                    returns False
+    """
     def inside(self, x, on_boundary):
         tol = 1E-14
         if on_boundary and near(x[1], y_bottom, tol):
@@ -63,12 +80,14 @@ class BottomBoundary(SubDomain):
 
 
 def fluxes_from_temperature_full_domain(F, V, k):
-    """
-    compute flux from weak form (see p.3 in Toselli, Andrea, and Olof Widlund. Domain decomposition methods-algorithms and theory. Vol. 34. Springer Science & Business Media, 2006.)
+    """Computes flux from weak form (see p.3 in Toselli, Andrea, and Olof
+    Widlund. Domain decomposition methods-algorithms and theory. Vol. 34.
+    Springer Science & Business Media, 2006.).
+
     :param F: weak form with known u^{n+1}
     :param V: function space
-    :param hy: spatial resolution perpendicular to flux direction
-    :return:
+    :param k: thermal conductivity
+    :return: fluxes function
     """
     fluxes_vector = assemble(F)  # assemble weak form -> evaluate integral
     v = TestFunction(V)
@@ -84,7 +103,6 @@ def fluxes_from_temperature_full_domain(F, V, k):
 
 
 # Create mesh and define function space
-
 nx = 100
 ny = 25
 nz = 1
@@ -115,9 +133,11 @@ f_N_function = interpolate(f_N, V)
 coupling_boundary = TopBoundary()
 bottom_boundary = BottomBoundary()
 
+#start preCICE adapter
 precice = Adapter()
 precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function, write_field=f_N_function)
 bcs = [DirichletBC(V, u_D, bottom_boundary)]
+
 # Define initial value
 u_n = interpolate(u_D, V)
 
