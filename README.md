@@ -20,3 +20,6 @@ The files in this repository are organized in the form `problem_type/geometry/so
       * `OpenFOAM-CalculiX`
     * `cylinderFlap`: A cylinder with a flexible flap in a channel flow. The von Karman vortices cause the flap to oscillate. 
       * `OpenFOAM-CalculiX`
+* `SSI`: Structure-Structure Interaction
+   * `loaded_beam`: A partitioned elastic beam fixed at both ends. A mechanical force is applied to one partition.
+      * `CalculiX-CalculiX`     
