@@ -74,27 +74,20 @@ def fluxes_from_temperature_full_domain(F, V, k):
     v = TestFunction(V)
     fluxes = Function(V)  # create function for flux
     area = assemble(v * ds).get_local()
-    for i in range(area.shape[0]): 
+    for i in range(area.shape[0]):
         if area[i] != 0:  # put weight from assemble on function
             fluxes.vector()[i] = - k * fluxes_vector[i] / area[i]  # scale by surface area
         else:
-            assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux   
-            fluxes.vector()[i] = - k * fluxes_vector[i]  
+            assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux
+            fluxes.vector()[i] = - k * fluxes_vector[i]
     return fluxes
 
-
-config_file_name = "precice-config.xml"
 
 # Create mesh and define function space
 
 nx = 100
 ny = 25
 nz = 1
-
-solver_name = "Solid"
-coupling_mesh_name = "Solid-Mesh"
-read_data_name = "Temperature"
-write_data_name = "Heat-Flux"
 
 dt = 0.01  # time step size
 dt_out = 0.2
@@ -123,9 +116,7 @@ coupling_boundary = TopBoundary()
 bottom_boundary = BottomBoundary()
 
 precice = Adapter()
-precice.configure(solver_name, config_file_name, coupling_mesh_name, write_data_name, read_data_name)  # TODO in the future we want to remove this function and read these variables from a config file. See #5
 precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function, write_field=f_N_function)
-
 bcs = [DirichletBC(V, u_D, bottom_boundary)]
 # Define initial value
 u_n = interpolate(u_D, V)
@@ -148,7 +139,7 @@ t = 0
 u_D.t = t + precice._precice_tau
 assert (dt == precice._precice_tau)
 
-file_out = File("Solid/VTK/%s.pvd" % solver_name)
+file_out = File("Solid/VTK/%s.pvd" % precice._solver_name)
 
 while precice.is_coupling_ongoing():
 
