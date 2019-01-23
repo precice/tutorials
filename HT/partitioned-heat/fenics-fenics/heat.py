@@ -87,12 +87,12 @@ def fluxes_from_temperature_full_domain(F, V):
     v = TestFunction(V)
     fluxes = Function(V)  # create function for flux
     area = assemble(v * ds).get_local()
-    for i in range(area.shape[0]): 
+    for i in range(area.shape[0]):
         if area[i] != 0:  # put weight from assemble on function
             fluxes.vector()[i] = fluxes_vector[i] / area[i]  # scale by surface area
         else:
-            #assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux
-            fluxes.vector()[i] = fluxes_vector[i]  
+            assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux
+            fluxes.vector()[i] = fluxes_vector[i]
     return fluxes
 
 
@@ -123,15 +123,11 @@ subcycle = Subcyling.NONE
 
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
-    solver_name = "HeatDirichlet"
-    coupling_mesh_name = "DirichletNodes"
-    read_data_name = "Temperature"
-    write_data_name = "Flux"
+    adapter_config_filename = "precice-adapter-config-D.json"
+
 elif problem is ProblemType.NEUMANN:
-    solver_name = "HeatNeumann"
-    coupling_mesh_name = "NeumannNodes"
-    read_data_name = "Flux"
-    write_data_name = "Temperature"
+    ny = 20
+    adapter_config_filename = "precice-adapter-config-N.json"
 
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcyling.NONE:
@@ -178,8 +174,8 @@ bcs = [DirichletBC(V, u_D, remaining_boundary)]
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
-precice = Adapter()
-precice.configure(solver_name, config_file_name, coupling_mesh_name, write_data_name, read_data_name)  # TODO in the future we want to remove this function and read these variables from a config file. See https://github.com/precice/fenics-adapter/issues/5
+precice = Adapter(adapter_config_filename)
+
 if problem is ProblemType.DIRICHLET:
     precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
                                     write_field=f_N_function, u_n=u_n)
@@ -215,9 +211,9 @@ t = 0
 u_ref = interpolate(u_D, V)
 u_ref.rename("reference", " ")
 
-temperature_out = File("out/%s.pvd" % solver_name)
-ref_out = File("out/ref%s.pvd" % solver_name)
-error_out = File("out/error%s.pvd" % solver_name)
+temperature_out = File("out/%s.pvd" % precice._solver_name)
+ref_out = File("out/ref%s.pvd" % precice._solver_name)
+error_out = File("out/error%s.pvd" % precice._solver_name)
 
 # output solution and reference solution at t=0, n=0
 n = 0
