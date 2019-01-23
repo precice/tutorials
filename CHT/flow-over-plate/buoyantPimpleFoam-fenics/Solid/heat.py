@@ -134,7 +134,7 @@ coupling_boundary = TopBoundary()
 bottom_boundary = BottomBoundary()
 
 #start preCICE adapter
-precice = Adapter()
+precice = Adapter('precice-adapter-config2.json')
 precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function, write_field=f_N_function)
 bcs = [DirichletBC(V, u_D, bottom_boundary)]
 
