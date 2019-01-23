@@ -31,6 +31,12 @@ from fenicsadapter import Adapter
 
 
 class ComplementaryBoundary(SubDomain):
+    """Determines if a point is at the complementary boundary with tolerance of
+    1E-14.
+
+    :func inside(): returns True if point belongs to the boundary, otherwise
+                    returns False
+    """
     def __init__(self, subdomain):
         self.complement = subdomain
         SubDomain.__init__(self)
@@ -44,6 +50,11 @@ class ComplementaryBoundary(SubDomain):
 
 
 class TopBoundary(SubDomain):
+    """Determines if the point is at the top boundary with tolerance of 1E-14.
+
+    :func inside(): returns True if point belongs to the boundary, otherwise
+                    returns False
+    """
     def inside(self, x, on_boundary):
         tol = 1E-14
         if on_boundary and near(x[1], y_top, tol):
@@ -53,6 +64,12 @@ class TopBoundary(SubDomain):
 
 
 class BottomBoundary(SubDomain):
+    """Determines if the point is at the bottom boundary with tolerance of
+    1E-14.
+
+    :func inside(): returns True if point belongs to the boundary, otherwise
+                    returns False
+    """
     def inside(self, x, on_boundary):
         tol = 1E-14
         if on_boundary and near(x[1], y_bottom, tol):
@@ -63,38 +80,32 @@ class BottomBoundary(SubDomain):
 
 
 def fluxes_from_temperature_full_domain(F, V, k):
-    """
-    compute flux from weak form (see p.3 in Toselli, Andrea, and Olof Widlund. Domain decomposition methods-algorithms and theory. Vol. 34. Springer Science & Business Media, 2006.)
+    """Computes flux from weak form (see p.3 in Toselli, Andrea, and Olof
+    Widlund. Domain decomposition methods-algorithms and theory. Vol. 34.
+    Springer Science & Business Media, 2006.).
+
     :param F: weak form with known u^{n+1}
     :param V: function space
-    :param hy: spatial resolution perpendicular to flux direction
-    :return:
+    :param k: thermal conductivity
+    :return: fluxes function
     """
     fluxes_vector = assemble(F)  # assemble weak form -> evaluate integral
     v = TestFunction(V)
     fluxes = Function(V)  # create function for flux
     area = assemble(v * ds).get_local()
-    for i in range(area.shape[0]): 
+    for i in range(area.shape[0]):
         if area[i] != 0:  # put weight from assemble on function
             fluxes.vector()[i] = - k * fluxes_vector[i] / area[i]  # scale by surface area
         else:
-            assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux   
-            fluxes.vector()[i] = - k * fluxes_vector[i]  
+            assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux
+            fluxes.vector()[i] = - k * fluxes_vector[i]
     return fluxes
 
 
-config_file_name = "precice-config.xml"
-
 # Create mesh and define function space
-
 nx = 100
 ny = 25
 nz = 1
-
-solver_name = "Solid"
-coupling_mesh_name = "Solid-Mesh"
-read_data_name = "Temperature"
-write_data_name = "Heat-Flux"
 
 dt = 0.01  # time step size
 dt_out = 0.2
@@ -122,11 +133,11 @@ f_N_function = interpolate(f_N, V)
 coupling_boundary = TopBoundary()
 bottom_boundary = BottomBoundary()
 
+#start preCICE adapter
 precice = Adapter()
-precice.configure(solver_name, config_file_name, coupling_mesh_name, write_data_name, read_data_name)  # TODO in the future we want to remove this function and read these variables from a config file. See #5
 precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function, write_field=f_N_function)
-
 bcs = [DirichletBC(V, u_D, bottom_boundary)]
+
 # Define initial value
 u_n = interpolate(u_D, V)
 
@@ -148,7 +159,7 @@ t = 0
 u_D.t = t + precice._precice_tau
 assert (dt == precice._precice_tau)
 
-file_out = File("Solid/VTK/%s.pvd" % solver_name)
+file_out = File("Solid/VTK/%s.pvd" % precice._solver_name)
 
 while precice.is_coupling_ongoing():
 

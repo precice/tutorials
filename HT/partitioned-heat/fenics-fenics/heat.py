@@ -76,12 +76,12 @@ def fluxes_from_temperature_full_domain(F, V):
     v = TestFunction(V)
     fluxes = Function(V)  # create function for flux
     area = assemble(v * ds).get_local()
-    for i in range(area.shape[0]): 
+    for i in range(area.shape[0]):
         if area[i] != 0:  # put weight from assemble on function
             fluxes.vector()[i] = fluxes_vector[i] / area[i]  # scale by surface area
         else:
-            assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux   
-            fluxes.vector()[i] = fluxes_vector[i]  
+            assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux
+            fluxes.vector()[i] = fluxes_vector[i]
     return fluxes
 
 
@@ -111,15 +111,11 @@ ny = 10
 
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
-    solver_name = "HeatDirichlet"
-    coupling_mesh_name = "DirichletNodes"
-    read_data_name = "Temperature"
-    write_data_name = "Flux"
+    adapter_config_filename = "precice-adapter-config-D.json"
+
 elif problem is ProblemType.NEUMANN:
-    solver_name = "HeatNeumann"
-    coupling_mesh_name = "NeumannNodes"
-    read_data_name = "Flux"
-    write_data_name = "Temperature"
+    ny = 20
+    adapter_config_filename = "precice-adapter-config-N.json"
 
 dt = .1  # time step size
 alpha = 3  # parameter alpha
@@ -148,8 +144,7 @@ f_N_function = interpolate(f_N, V)
 coupling_boundary = CouplingBoundary()
 remaining_boundary = ComplementaryBoundary(coupling_boundary)
 
-precice = Adapter()
-precice.configure(solver_name, config_file_name, coupling_mesh_name, write_data_name, read_data_name)  # TODO in the future we want to remove this function and read these variables from a config file. See https://github.com/precice/fenics-adapter/issues/5
+precice = Adapter(adapter_config_filename)
 if problem is ProblemType.DIRICHLET:
     precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
                        write_field=f_N_function)
@@ -187,9 +182,9 @@ t = 0
 u_ref = interpolate(u_D, V)
 u_ref.rename("reference", " ")
 
-temperature_out = File("out/%s.pvd" % solver_name)
-ref_out = File("out/ref%s.pvd" % solver_name)
-error_out = File("out/error%s.pvd" % solver_name)
+temperature_out = File("out/%s.pvd" % precice._solver_name)
+ref_out = File("out/ref%s.pvd" % precice._solver_name)
+error_out = File("out/error%s.pvd" % precice._solver_name)
 
 # output solution and reference solution at t=0, n=0
 n = 0
@@ -224,7 +219,7 @@ while precice.is_coupling_ongoing():
         error, error_pointwise = compute_errors(u_np1, u_ref, V)
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
-        print('output u^%d and u_ref^%d' % (n+1, n+1))        
+        print('output u^%d and u_ref^%d' % (n+1, n+1))
         temperature_out << u_np1
         ref_out << u_ref
         error_out << error_pointwise
