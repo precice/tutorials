@@ -28,6 +28,7 @@ from __future__ import print_function, division
 from fenics import Function, SubDomain, RectangleMesh, BoxMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
     TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, near
 from fenicsadapter import Adapter
+import numpy as np
 
 
 class ComplementaryBoundary(SubDomain):
@@ -107,7 +108,7 @@ nx = 100
 ny = 25
 nz = 1
 
-dt = 0.01  # time step size
+fenics_dt = 0.01  # time step size
 dt_out = 0.2
 y_top = 0
 y_bottom = y_top - .25
@@ -133,13 +134,16 @@ f_N_function = interpolate(f_N, V)
 coupling_boundary = TopBoundary()
 bottom_boundary = BottomBoundary()
 
-#start preCICE adapter
-precice = Adapter()
-precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function, write_field=f_N_function)
-bcs = [DirichletBC(V, u_D, bottom_boundary)]
-
 # Define initial value
 u_n = interpolate(u_D, V)
+u_n.rename("T", "")
+
+#start preCICE adapter
+precice = Adapter()
+precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function, write_field=f_N_function,
+                   u_n=u_n)
+dt = np.min([fenics_dt, precice_dt])  # todo we could also consider deciding on time stepping size inside the adapter
+bcs = [DirichletBC(V, u_D, bottom_boundary)]
 
 # Define variational problem
 u = TrialFunction(V)
@@ -154,12 +158,11 @@ a, L = lhs(F), rhs(F)
 # Time-stepping
 u_np1 = Function(V)
 F_known_u = u_np1 * v / dt * dx + alpha * dot(grad(u_np1), grad(v)) * dx - u_n * v / dt * dx
-u_np1.rename("T", "")
 t = 0
-u_D.t = t + precice._precice_tau
-assert (dt == precice._precice_tau)
+u_D.t = t + dt
 
 file_out = File("Solid/VTK/%s.pvd" % precice._solver_name)
+n=0
 
 while precice.is_coupling_ongoing():
 
@@ -168,19 +171,18 @@ while precice.is_coupling_ongoing():
 
     # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
     fluxes = fluxes_from_temperature_full_domain(F_known_u, V, k)
-    is_converged = precice.advance(fluxes, dt)
+    t, n, precice_timestep_is_complete, precice_dt = precice.advance(fluxes, u_np1, u_n, t, dt, n)
 
-    if is_converged:
-        # Update previous solution
+    dt = np.min([fenics_dt, precice_dt])  # todo we could also consider deciding on time stepping size inside the adapter
+
+    if precice_timestep_is_complete:
         if abs(t % dt_out) < 10e-5 or abs(t % dt_out) < 10e-5:  # just a very complicated way to only produce output if t is a multiple of dt_out
-            file_out << u_np1
-        # Update current time
-        t += precice._precice_tau
-        # Update dirichlet BC
-        u_D.t = t + precice._precice_tau
-        u_n.assign(u_np1)
+            file_out << u_n
 
-file_out << u_np1
+    # Update dirichlet BC
+    u_D.t = t + dt
+
+file_out << u_n
 
 # Hold plot
 precice.finalize()
