@@ -108,7 +108,7 @@ nx = 100
 ny = 25
 nz = 1
 
-fenics_dt = 0.001  # time step size
+fenics_dt = 0.01  # time step size
 dt_out = 0.2
 y_top = 0
 y_bottom = y_top - .25
