@@ -11,3 +11,7 @@ or the `Allrun_parallel` for a parallel run.
 You may adjust the end time in the precice-config_*.xml, or interupt the execution earlier if you want.
 
 Based on a case prepared with simscale.com.
+
+## Disclaimer
+
+This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM® and OpenCFD® trade marks.
