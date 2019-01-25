@@ -173,18 +173,6 @@ bcs = [DirichletBC(V, u_D, remaining_boundary)]
 # Define initial value
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
-<<<<<<< HEAD
-
-precice = Adapter()
-precice.configure(solver_name, config_file_name, coupling_mesh_name, write_data_name, read_data_name)  # TODO in the future we want to remove this function and read these variables from a config file. See https://github.com/precice/fenics-adapter/issues/5
-if problem is ProblemType.DIRICHLET:
-    precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
-                       write_field=f_N_function, u_n=u_n)
-elif problem is ProblemType.NEUMANN:
-    precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
-                       write_field=u_D_function, u_n=u_n)
-=======
->>>>>>> master
 
 precice = Adapter(adapter_config_filename)
 
