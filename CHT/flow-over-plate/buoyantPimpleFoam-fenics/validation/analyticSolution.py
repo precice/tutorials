@@ -51,11 +51,13 @@ from matplotlib import pyplot as plt
 from scipy.signal import savgol_filter
 
 plt.plot(x,theta_b, label=r"analytical solution $\theta_b(x)$")
+"""
 y = vynnycky_analytical[Pr][Re][k]['y']
-plt.plot(vynnycky_analytical[Pr][Re][k]['x'], savgol_filter(y, 11, 3), 'o',
+plt.plot(vynnycky_analytical[Pr][Re][k]['x'], savgol_filter(y, 11, 3), 'o', 
          label="Vynnycky, analytical for Pr={Pr}, Re={Re}, k={k}".format(Pr=Pr, Re=Re, k=k))
 plt.plot(vynnycky_analytical[Pr][Re][k]['x'], y, 'sb',
          label="Vynnycky, analytical for Pr={Pr}, Re={Re}, k={k}".format(Pr=Pr, Re=Re, k=k))
+"""
 plt.xlabel("x")
 plt.ylabel(r"$\theta_b$")
 plt.legend(loc='lower center')

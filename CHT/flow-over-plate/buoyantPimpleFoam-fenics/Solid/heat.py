@@ -108,7 +108,7 @@ nx = 100
 ny = 25
 nz = 1
 
-fenics_dt = 0.01  # time step size
+fenics_dt = 0.2  # time step size
 dt_out = 0.2
 y_top = 0
 y_bottom = y_top - .25
@@ -176,8 +176,8 @@ while precice.is_coupling_ongoing():
     dt = np.min([fenics_dt, precice_dt])  # todo we could also consider deciding on time stepping size inside the adapter
 
     if precice_timestep_is_complete:
-        if abs(t % dt_out) < 10e-5 or abs(t % dt_out) < 10e-5:  # just a very complicated way to only produce output if t is a multiple of dt_out
-            file_out << u_n
+        #if abs(t % dt_out) < 10e-5 or abs(t % dt_out) < 10e-5:  # just a very complicated way to only produce output if t is a multiple of dt_out
+        file_out << u_n
 
     # Update dirichlet BC
     u_D.t = t + dt
