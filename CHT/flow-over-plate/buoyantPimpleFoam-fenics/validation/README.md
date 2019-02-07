@@ -6,17 +6,17 @@ We want to compare the flow over heated plate scenario for two different softwar
 
 We use OpenFOAM for simulation of the fluid and OpenFOAM for simulation of the solid
 
-* source code and running, see [here](LINK!!!)
-* preCICE config being used [`precice-config_serial_FE_OF.xml`](LINK!!!)
-* data stored in `out_OF-OF.csv`
+* source code and running, see [flow-over-plate/buoyantPimpleFoam-laplacianFoam](https://github.com/precice/openfoam-adapter/tree/master/tutorials/CHT/flow-over-plate/buoyantPimpleFoam-laplacianFoam)
+* preCICE config being used [`precice-config_serial_FE_OF.xml`](https://github.com/precice/tutorials/blob/GAMMAnnual2019/CHT/flow-over-plate/buoyantPimpleFoam-fenics/validation/precice-config_serial_OF_OF.xml)
+* data stored in [`out_OF-OF.csv`](https://github.com/precice/tutorials/blob/GAMMAnnual2019/CHT/flow-over-plate/buoyantPimpleFoam-fenics/validation/out_OF_OF.csv)
 
 ## 2) FE-OF
 
 Using OpenFOAM for simulation of the fluid and FEniCS for simulation of the solid.
 
-* source code and running, see [here](LINK!!!)
-* preCICE config being used [`precice-config_serial_FE_OF.xml`](LINK!!!)
-* data stored in `out_FE-OF.csv`
+* source code and running, see [flow-over-plate/buoyantPimpleFoam-fenics](https://github.com/precice/tutorials/tree/GAMMAnnual2019/CHT/flow-over-plate/buoyantPimpleFoam-fenics)
+* preCICE config being used [`precice-config_serial_FE_OF.xml`](https://github.com/precice/tutorials/blob/GAMMAnnual2019/CHT/flow-over-plate/buoyantPimpleFoam-fenics/validation/precice-config_serial_FE_OF.xml)
+* data stored in [`out_FE-OF.csv`](https://github.com/precice/tutorials/blob/GAMMAnnual2019/CHT/flow-over-plate/buoyantPimpleFoam-fenics/validation/out_FE_OF.csv)
 
 ## 3) analytic solution
 
@@ -34,11 +34,14 @@ Run `python3 plotParaviewOut.py` to obtain the plot with the results.
  
 ## Results
 
-See `comparison.png`
+![](comparison.png)
+
+* Simulation results match each other
+* Both simulation results miss analytical solution
 
 ## References
 
-[1] Vynnycky Paper PUT PROPER REFERENCE!
-[2] Cheung Thesis PUT PROPER REFERENCE!
-[3] Reiser Thesis PUT PROPER REFERENCE!
-[4] Chourdak Thesis PUT PROPER REFERENCE!
+[1] Vynnycky, M., Kimura, S., Kanev, K., & Pop, I. (1998). Forced convection heat transfer from a flat plate: the conjugate problem. International Journal of Heat and Mass Transfer, 41(1), 45–59.  
+[2] Cheung Yau, L. (2016). Conjugate Heat Transfer with the Multiphysics Coupling Library preCICE. Technical University of Munich.  
+[3] Reiser, A. (2018). Extending a CFD Lab Course by a preCICE Conjugate Heat Transfer Tutorial. Technical University of Munich.  
+[4] Chourdakis, G. (2017). A general OpenFOAM adapter for the coupling library preCICE. Technical University of Munich.  
