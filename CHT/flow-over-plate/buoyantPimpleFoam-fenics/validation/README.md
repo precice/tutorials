@@ -22,6 +22,10 @@ Using OpenFOAM for simulation of the fluid and FEniCS for simulation of the soli
 
 For derivation see [1].
 
+## 4) experimental solution
+
+From numerical experiments in [1].
+
 ## Comments
 
 The data `*.out` is obtained from the vtk output of the solid part of the simulation. We use paraview to exporting the data of *plot over line* along the coupling boundary.
@@ -37,7 +41,9 @@ Run `python3 plotParaviewOut.py` to obtain the plot with the results.
 ![](comparison.png)
 
 * Simulation results match each other
-* Both simulation results miss analytical solution
+* Both simulation results miss analytical solution and experimental solution
+* in [1, p.55] it is already mentioned that Pr = 0.01 might be too low for the analytical solution.
+* The difference between our experiemnts and the ones in [1] might be due to the slightly different scenarios. In our case, we have a channel with fluid; in [1] we have a half plane.
 
 ## References
 
