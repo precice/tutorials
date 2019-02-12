@@ -38,12 +38,36 @@ Run `python3 plotParaviewOut.py` to obtain the plot with the results.
  
 ## Results
 
+### Finding the right model parameters
+
+Given in [1]
+
+* `lambda = 0.25`: use `a = 0.25` and `b=1`
+* `Re = 500 = rho * v * d / mu`: use `b=1` as characteristic length `d`; `U_inf = 0.1` as inflow velocity `v`; `mu = 0.0002` for the dynamic viscosity; `rho = 1` for the density (**how to set this in OpenFOAM???**).
+* `Pr = 0.01`: directly defined in `Fluid/constant/thermophysicalProperties`.
+* `k=1`: use `k_s = 100` (defined in `Solid/constant/transportProperties`) and `k_f=100=c_p * mu / Pr` (all defined in `Fluid/constant/thermophysicalProperties`).
+
+#### `T_c` and `T_inf`
+
+* not given in [1]
+* we use `T_c = 310` and `T_inf = 300`
+
+However, these parameters have a huge effect on the results:
+
+![](comparisonTemperatures.png)
+
+Here, we compared our reference case (`T_c = 310` and `T_inf = 300`) to another case (`T_c = 310` and `T_inf = 25`).
+
+
+### Comparison to Vynnycky results
+
 ![](comparison.png)
 
 * Simulation results match each other
 * Both simulation results miss analytical solution and experimental solution
 * in [1, p.55] it is already mentioned that Pr = 0.01 might be too low for the analytical solution.
 * The difference between our experiemnts and the ones in [1] might be due to the slightly different scenarios. In our case, we have a channel with fluid; in [1] we have a half plane.
+
 
 ## References
 
