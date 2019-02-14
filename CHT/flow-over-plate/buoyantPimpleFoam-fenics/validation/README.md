@@ -58,6 +58,21 @@ However, these parameters have a huge effect on the results:
 
 Here, we compared our reference case (`T_c = 310` and `T_inf = 300`) to another case (`T_c = 310` and `T_inf = 25`).
 
+### varying U_in
+
+* We tried the following values for `U_in= 1, 0.1, 0.01, 0.001, 0.0001`
+* Case files can be found in `CHT/flow-over-plate/buoyantPimpleFoam-laplacianFoam_extended_300_310_U_*`
+* We used a maximum simulation time of `T_end = 500` and timestep size `dt=0.01`
+* Most cases **did not** run until `T_end`!
+    * `U_in= 1` breaks
+    * `U_in= 0.1` ??? (`T_end` too low!)
+    * `U_in= 0.01` breaks
+    * `U_in= 0.001` succeeds
+    * `U_in= 0.0001` breaks
+
+![](study_U.png)
+
+**with none of the velocities we get close to the results from [1]!**
 
 ### Comparison to Vynnycky results
 
