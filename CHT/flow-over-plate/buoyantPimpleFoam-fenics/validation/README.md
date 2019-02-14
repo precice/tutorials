@@ -64,11 +64,11 @@ Here, we compared our reference case (`T_c = 310` and `T_inf = 300`) to another 
 * Case files can be found in `CHT/flow-over-plate/buoyantPimpleFoam-laplacianFoam_extended_300_310_U_*`
 * We used a maximum simulation time of `T_end = 500` and timestep size `dt=0.01`
 * Most cases **did not** run until `T_end`!
-    * `U_in= 1` breaks
-    * `U_in= 0.1` ??? (`T_end` too low!)
-    * `U_in= 0.01` breaks
-    * `U_in= 0.001` succeeds
-    * `U_in= 0.0001` breaks
+    * `U_in= 1` breaks at `t=1.25` (succesfully ran with `dt = 0.001` until `T_end = 50`)
+    * `U_in= 0.1` breaks at `t = 150`
+    * `U_in= 0.01` breaks at `t = 470`
+    * `U_in= 0.001` succeeds until `T_end = 500`
+    * `U_in= 0.0001` breaks at `t = 68`
 
 ![](study_U.png)
 
