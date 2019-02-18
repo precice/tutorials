@@ -79,7 +79,16 @@ def plot_experimental(label):
         x.append(p[0]/145)
         y.append(1-p[1]/90)
 
-    plt.plot(x,savgol_filter(y, 2101, 2), label=label)
+    import csv
+    yy = savgol_filter(y, 2101, 2)
+    with open('vynn.csv', 'w') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',',
+			                    quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        writer.writerow(['x','theta'])
+        for i in range(x.__len__()):
+            writer.writerow([x[i], yy[i]])
+
+    plt.plot(x,yy, label=label)
 
 
 read_and_plot('out_FE_OF.csv', "FE-OF coupling for Pr={Pr}, Re={Re}, k={k}".format(Pr=Pr, Re=Re, k=k))
