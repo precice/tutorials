@@ -1,9 +1,9 @@
 {
-  "solver_name": "StructureDirichlet",
+  "solver_name": "HeatDirichlet",
   "config_file_name": "precice-config.xml",
   "interface": {
       "coupling_mesh_name": "DirichletNodes",
-      "write_data_name": "Force",
-      "read_data_name": "Displacement"
+      "write_data_name": "Flux",
+      "read_data_name": "Temperature"
     }
 }
