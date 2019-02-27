@@ -1,9 +1,9 @@
 {
-  "solver_name": "HeatNeumann",
+  "solver_name": "StructureNeumann",
   "config_file_name": "precice-config.xml",
   "interface": {
       "coupling_mesh_name": "NeumannNodes",
-      "write_data_name": "Temperature",
-      "read_data_name": "Flux"
+      "write_data_name": "Displacement",
+      "read_data_name": "Force"
     }
 }
