@@ -99,7 +99,6 @@ elif problem is ProblemType.NEUMANN:
     precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
                        write_field=u_D_function, u_n=u_n)
 
-print("-----------> After initalization")
 
 #Strain tensor
 def epsilon(u):
@@ -126,11 +125,12 @@ if problem is ProblemType.NEUMANN:
     L += precice.create_coupling_neumann_boundary_condition(v)
 
 u = Function(V)
-# TODO: This loop is incomplete. How to handle timesteping in "static" case with preCICE?
-while precice.is_coupling_ongoing():
+# TODO: This loop is incomplete. How to handle timesteping in "static" case with preCICE? See TODO.md
+
+#while precice.is_coupling_ongoing():
     #Solve
-    solve(a == L, u, bcs)
-    #precice.advance(...)
+solve(a == L, u, bcs)
+#precice.advance(u,u)
 
 #Plot solution
 plt.figure(1)
