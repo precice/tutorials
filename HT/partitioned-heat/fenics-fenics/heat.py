@@ -48,6 +48,7 @@ class Subcycling(Enum):
     NONE = 0  # no subcycling, precice_dt == fenics_dt
     MATCHING = 1  # subcycling, where fenics_dt fits into precice_dt, mod(precice_dt, fenics_dt) == 0
     NONMATCHING = 2  # subcycling, where fenics_dt does not fit into precice_dt, mod(precice_dt, fenics_dt) != 0
+    DIFFERENT = 3  # subcycling, where fenics_dt fits into precice_dt and fenics_dt differs for the two subdomains
 
     # note: the modulo expressions above should be understood in an exact way (no floating point round off problems. For
     # details, see https://stackoverflow.com/questions/14763722/python-modulo-on-floats)
@@ -119,7 +120,7 @@ if not (args.dirichlet or args.neumann):
 
 nx = 5
 ny = 10
-subcycle = Subcycling.NONE
+subcycle = Subcycling.DIFFERENT
 
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
@@ -142,7 +143,13 @@ elif subcycle is Subcycling.NONMATCHING:
     fenics_dt = .03  # time step size
     error_tol = 10 ** -1  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
-
+elif subcycle is Subcycling.DIFFERENT:
+    if problem is ProblemType.DIRICHLET:
+        fenics_dt = .05  # time step size
+    elif problem is ProblemType.NEUMANN:
+        fenics_dt = .1  # time step size
+    error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
+    # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 y_bottom, y_top = 0, 1
