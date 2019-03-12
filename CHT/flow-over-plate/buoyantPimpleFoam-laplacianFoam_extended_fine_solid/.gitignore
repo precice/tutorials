@@ -1,2 +1,6 @@
-Solid
+*.log
 Fluid
+Solid/*
+!Solid/0/*
+out
+*.txt
