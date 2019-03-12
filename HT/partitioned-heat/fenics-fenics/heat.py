@@ -41,7 +41,7 @@ class ProblemType(Enum):
     DIRICHLET = 1  # Dirichlet problem
     NEUMANN = 2  # Neumann problem
 
-class Subcyling(Enum):
+class Subcycling(Enum):
     """
     Enum defines which kind of subcycling is used
     """
@@ -119,7 +119,7 @@ if not (args.dirichlet or args.neumann):
 
 nx = 5
 ny = 10
-subcycle = Subcyling.NONE
+subcycle = Subcycling.NONE
 
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
@@ -130,15 +130,15 @@ elif problem is ProblemType.NEUMANN:
     adapter_config_filename = "precice-adapter-config-N.json"
 
 # for all scenarios, we assume precice_dt == .1
-if subcycle is Subcyling.NONE:
+if subcycle is Subcycling.NONE:
     fenics_dt = .1  # time step size
     error_tol = 10 ** -4  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
-elif subcycle is Subcyling.MATCHING:
+elif subcycle is Subcycling.MATCHING:
     fenics_dt = .01  # time step size
     error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
-elif subcycle is Subcyling.NONMATCHING:
+elif subcycle is Subcycling.NONMATCHING:
     fenics_dt = .03  # time step size
     error_tol = 10 ** -1  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
