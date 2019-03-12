@@ -29,3 +29,4 @@ def convert(filename):
 
 convert('out_FE_OF.csv')
 convert('out_OF_OF.csv')
+convert('out_OF_OF_extended_geometry.csv')

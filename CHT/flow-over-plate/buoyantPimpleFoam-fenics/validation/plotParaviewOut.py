@@ -93,6 +93,7 @@ def plot_experimental(label):
 
 read_and_plot('out_FE_OF.csv', "FE-OF coupling for Pr={Pr}, Re={Re}, k={k}".format(Pr=Pr, Re=Re, k=k))
 read_and_plot('out_OF_OF.csv', "OF-OF coupling for Pr={Pr}, Re={Re}, k={k}".format(Pr=Pr, Re=Re, k=k))
+read_and_plot('out_OF_OF_extended_geometry.csv', "OF-OF mod coupling for Pr={Pr}, Re={Re}, k={k}".format(Pr=Pr, Re=Re, k=k))
 plot_analytic("Analytical solution for Pr={Pr}, Re={Re}, k={k} from [1]".format(Pr=Pr, Re=Re, k=k))
 plot_experimental("Experimental solution for Pr={Pr}, Re={Re}, k={k} from [1]".format(Pr=Pr, Re=Re, k=k))
 plt.legend(loc='lower center')

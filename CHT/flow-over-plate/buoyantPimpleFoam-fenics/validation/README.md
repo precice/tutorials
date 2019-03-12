@@ -26,6 +26,13 @@ For derivation see [1].
 
 From numerical experiments in [1].
 
+## 5) OF-OF (with modified geometry)
+
+We use OpenFOAM for simulation of the fluid and OpenFOAM for simulation of the solid
+
+* source code and running, see (branch:`GAMMAnnual2019`) [tutorials/CHT/flow-over-plate/buoyantPimpleFoam-laplacianFoam_extended_out_T_different](https://github.com/precice/tutorials/tree/GAMMAnnual2019/CHT/flow-over-plate/buoyantPimpleFoam-laplacianFoam_extended_out_T_different)
+* data stored in [`out_OF_OF_extended_geometry.csv`](https://github.com/precice/tutorials/blob/GAMMAnnual2019/CHT/flow-over-plate/buoyantPimpleFoam-fenics/validation/out_OF_OF_extended_geometry.csv)
+
 ## Comments
 
 The data `*.out` is obtained from the vtk output of the solid part of the simulation. We use paraview to exporting the data of *plot over line* along the coupling boundary.
