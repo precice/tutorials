@@ -1,6 +1,11 @@
 *.log
-Fluid
+Fluid/*
+!Fluid/0
+!Fluid/constant
+!Fluid/system
+!Fluid/Fluid.foam
+!Fluid/precice-adapter-config.yml
 Solid/*
-!Solid/0/*
+!Solid/0
 out
 *.txt
