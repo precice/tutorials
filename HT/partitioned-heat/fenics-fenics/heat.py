@@ -146,7 +146,7 @@ elif subcycle is Subcycling.DIFFERENT:
     if problem is ProblemType.DIRICHLET:
         fenics_dt = .1  # time step size
     elif problem is ProblemType.NEUMANN:
-        fenics_dt = .1  # time step size
+        fenics_dt = .01  # time step size
     error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
 alpha = 3  # parameter alpha
@@ -169,7 +169,7 @@ V = FunctionSpace(mesh, 'P', 1)
 u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, t=0)
 u_D_function = interpolate(u_D, V)
 # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
-f_N = Expression('2 * x[0]', degree=1)
+f_N = Expression('.1 * 2 * x[0]', degree=1)  # todo: this expression is scaled by the surface area!
 f_N_function = interpolate(f_N, V)
 
 coupling_boundary = CouplingBoundary()
@@ -258,7 +258,7 @@ while precice.is_coupling_ongoing():
         fluxes = fluxes_from_temperature_full_domain(F_known_u, V)
         t, n, precice_timestep_complete, precice_dt = precice.advance(fluxes, u_np1, u_n, t, dt(0), n)
     elif problem is ProblemType.NEUMANN:
-        # Neumann problem obtains sends temperature on boundary to Dirichlet problem
+        # Neumann problem samples temperature on boundary from solution and sends temperature to Dirichlet problem
         t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)
 
     dt.assign(np.min([fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
