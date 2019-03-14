@@ -103,9 +103,6 @@ parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='ne
 
 args = parser.parse_args()
 
-
-config_file_name = "precice-config.xml"  # TODO should be moved into config, see https://github.com/precice/fenics-adapter/issues/5 , in case file doesnt not exsist open will fail
-
 # coupling parameters
 if args.dirichlet:
     problem = ProblemType.DIRICHLET
@@ -125,10 +122,12 @@ subcycle = Subcycling.DIFFERENT
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
     adapter_config_filename = "precice-adapter-config-D.json"
+    other_adapter_config_filename = "precice-adapter-config-N.json"
 
 elif problem is ProblemType.NEUMANN:
     ny = 20
     adapter_config_filename = "precice-adapter-config-N.json"
+    other_adapter_config_filename = "precice-adapter-config-D.json"
 
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcycling.NONE:
@@ -145,7 +144,7 @@ elif subcycle is Subcycling.NONMATCHING:
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
 elif subcycle is Subcycling.DIFFERENT:
     if problem is ProblemType.DIRICHLET:
-        fenics_dt = .05  # time step size
+        fenics_dt = .1  # time step size
     elif problem is ProblemType.NEUMANN:
         fenics_dt = .1  # time step size
     error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
@@ -181,7 +180,7 @@ bcs = [DirichletBC(V, u_D, remaining_boundary)]
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
-precice = Adapter(adapter_config_filename)
+precice = Adapter(adapter_config_filename, other_adapter_config_filename)  # todo: how to avoid requiring both configs without Waveform Relaxation?
 
 if problem is ProblemType.DIRICHLET:
     precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
@@ -251,6 +250,8 @@ while precice.is_coupling_ongoing():
         print(u_n(.5, .5))
         print(u_np1(.5, .5))
         print(u_ref(.5, .5))
+
+    print("t={t}; dt={dt}".format(t=t, dt=dt(0)))
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
