@@ -117,17 +117,17 @@ if not (args.dirichlet or args.neumann):
 
 nx = 5
 ny = 10
-subcycle = Subcycling.DIFFERENT
+subcycle = Subcycling.NONE
 
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
-    adapter_config_filename = "precice-adapter-config-D.json"
-    other_adapter_config_filename = "precice-adapter-config-N.json"
+    adapter_config_filename = "precice-adapter-config-D-1.json"
+    other_adapter_config_filename = "precice-adapter-config-N-1.json"
 
 elif problem is ProblemType.NEUMANN:
     ny = 20
-    adapter_config_filename = "precice-adapter-config-N.json"
-    other_adapter_config_filename = "precice-adapter-config-D.json"
+    adapter_config_filename = "precice-adapter-config-N-1.json"
+    other_adapter_config_filename = "precice-adapter-config-D-1.json"
 
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcycling.NONE:
@@ -146,7 +146,7 @@ elif subcycle is Subcycling.DIFFERENT:
     if problem is ProblemType.DIRICHLET:
         fenics_dt = .1  # time step size
     elif problem is ProblemType.NEUMANN:
-        fenics_dt = .01  # time step size
+        fenics_dt = .05  # time step size
     error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
 alpha = 3  # parameter alpha
