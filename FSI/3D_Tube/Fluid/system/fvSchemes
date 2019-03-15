@@ -1,10 +1,3 @@
-/*--------------------------------*- C++ -*----------------------------------*\
-|       o          |                                                          |
-|    o     o       | HELYX-OS                                                  |
-|   o   O   o      | Version: v2.3.1                                           |
-|    o     o       | Web:     http://www.engys.com                            |
-|       o          |                                                          |
-\*---------------------------------------------------------------------------*/
 FoamFile
 {
     version 2.0;
@@ -22,9 +15,7 @@ FoamFile
     gradSchemes
     {
         default Gauss linear;
-	//grad(U) Gauss linear;
 	grad(U) leastSquares;
-	//grad(U) cellLimited Gauss linear 1;
         grad(nuTilda) cellLimited Gauss linear 1;
         grad(k) cellLimited Gauss linear 1;
         grad(kl) cellLimited Gauss linear 1;
@@ -43,10 +34,6 @@ FoamFile
     {
         default Gauss linear;
         div(phi,U) Gauss linearUpwindV leastSquares;
-	//div(phi,U) Gauss linearUpwindV Gauss linear;
-	//div(phi,U) Gauss upwind;
-        //div(phi,U) Gauss limitedLinear 1;
-	//div(phi,U) Gauss linear;
         div(phi,k)  Gauss linearUpwind cellLimited Gauss linear 1;
         div(phi,epsilon) bounded Gauss linearUpwind grad(epsilon);
         div(phi,zeta) bounded Gauss linearUpwind grad(zeta);
