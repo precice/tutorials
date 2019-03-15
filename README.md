@@ -22,3 +22,7 @@ The files in this repository are organized in the form `problem_type/geometry/so
       * `OpenFOAM-CalculiX`
     * `3D_Tube`: A 3D expanding tube with a pressure inlet boundary condition.
       * `OpenFOAM-CalculiX`
+* `SSI`: Structure-Structure Interaction
+   * `loaded_beam`: A partitioned elastic beam fixed at both ends. A mechanical force is applied to one partition.
+      * `CalculiX-CalculiX`     
+

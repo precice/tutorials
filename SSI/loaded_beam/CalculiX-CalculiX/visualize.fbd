@@ -1,0 +1,9 @@
+read beam_full.frd
+view disp
+frame
+plot e all n
+plus n all g
+rot x
+scal d 1e-1
+#movi frames auto
+ds 1 ah 4
