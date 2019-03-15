@@ -1,0 +1,51 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# This script prepares and runs all the participants in one terminal,
+# forwarding the solvers' output to log files.
+# You need to first download the mesh files separately using the Download_meshes script.
+# The script "Allclean" cleans-up the result and log files.
+
+# Participant 1: Calculix1Mesh
+Participant1="Calculix1Mesh"
+CalculixSolver="/path/to/Calculix/ccx_preCICE"
+
+    # Run and get the process id
+    echo "Starting the ${Participant1} participant..."
+    export OMP_NUM_THREADS=1
+    export CCX_NPROC_EQUATION_SOLVER=1
+    ${CalculixSolver} -i beam1 -precice-participant Calculix1 > ${Participant1}.log 2>&1 &
+    PIDParticipant1=$!
+
+# Participant 2: Calculix2Mesh
+Participant2="Calculix2Mesh"
+
+    # Run and get the process id
+    echo "Starting the ${Participant2} participant..."
+    export OMP_NUM_THREADS=1
+    export CCX_NPROC_EQUATION_SOLVER=1
+    ${CalculixSolver} -i beam2 -precice-participant Calculix2 > ${Participant2}.log 2>&1 &
+    PIDParticipant2=$!
+
+# =============== Wait for all the participants to finish =======
+echo "Waiting for the participants to exit..., PIDs: ${PIDParticipant1}, ${PIDParticipant2}"
+echo "(you may run 'tail -f ${Participant1}.log' in another terminal to check the progress)"
+echo "To kill midrun, press 'c'. Ctrl+C will cause the processes to run in the background."
+while [ -e /proc/${PIDParticipant1} ]; do
+    read -r -t1 -n1 input
+    if [ "$input" = "c" ]; then
+        kill ${PIDParticipant1}
+        kill ${PIDParticipant2}
+        false
+    fi
+done
+ if [ $? -ne 0 ] || [ "$(grep -c -E "error:" ${Participant1}.log)" -ne 0 ] || [ "$(grep -c -E "error:" ${Participant2}.log)" -ne 0 ]; then
+    echo ""
+    echo "Something went wrong... See the log files for more."
+    # precaution
+    kill ${PIDParticipant1}
+    kill ${PIDParticipant2}
+else
+    echo ""
+    echo "The simulation completed!"
+fi
