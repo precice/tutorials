@@ -25,7 +25,3 @@ The files in this repository are organized in the form `problem_type/geometry/so
 * `SSI`: Structure-Structure Interaction
    * `loaded_beam`: A partitioned elastic beam fixed at both ends. A mechanical force is applied to one partition.
       * `CalculiX-CalculiX`     
-
-## Disclaimer
-
-This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM® and OpenCFD® trade marks.
