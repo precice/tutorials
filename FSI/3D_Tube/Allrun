@@ -57,7 +57,7 @@ Solver2="ccx_preCICE"
     echo "Starting the ${Participant2} participant..."
     export OMP_NUM_THREADS=1
     export CCX_NPROC_EQUATION_SOLVER=1
-    /path/to/ccx_preCICE/${Solver2} -i ${Participant2}/tube -precice-participant Calculix > ${Participant2}.log 2>&1 &
+   ${Solver2} -i ${Participant2}/tube -precice-participant Calculix > ${Participant2}.log 2>&1 &
     PIDParticipant2=$!
 
 # Wait for all the participants to finish
