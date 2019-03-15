@@ -41,7 +41,6 @@ echo "Deleting the preCICE log files..."
 rm -fv \
     precice-*.log \
     precice-*.json \
-    precice-postProcessingInfo.log
     
 # Output files for preCICE versions before 1.2:
 rm -fv \
