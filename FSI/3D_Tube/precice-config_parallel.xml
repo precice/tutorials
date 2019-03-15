@@ -45,7 +45,6 @@
       <m2n:sockets from="Fluid" to="Calculix" distribution-type="gather-scatter"/>
       
       <coupling-scheme:serial-implicit>
-      <!--coupling-scheme:serial-implicit-->
            <participants first="Fluid" second="Calculix"/>
            <max-timesteps value="100"/>
            <timestep-length value="1e-4" />
@@ -63,19 +62,8 @@
             <max-used-iterations value="10"/>
             <timesteps-reused value="1"/>
            </post-processing:IQN-IMVJ>		
-
-       <!--     <post-processing:aitken>
-              <data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
-              <initial-relaxation value="0.05"/>
-           </post-processing:aitken>		-->		
-           
+	 
       </coupling-scheme:serial-implicit>
-      <!--/coupling-scheme:serial-implicit-->
-
-
-
-
-
 
    </solver-interface>
 
