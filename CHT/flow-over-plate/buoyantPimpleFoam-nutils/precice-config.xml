@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<precice-configuration>
+
+  <log>
+    <sink type="stream" output="stdout"  filter= "%Severity% > debug" format="preCICE:%ColorizedSeverity% %Message%" enabled="true" />	
+  </log>
+
+  <solver-interface dimensions="3">
+
+  <data:scalar name="Temperature"/>
+  <data:scalar name="Heat-Flux"/>
+
+  <mesh name="OpenFOAM-Mesh">
+    <use-data name="Temperature"/>
+    <use-data name="Heat-Flux"/>
+  </mesh>
+
+  <mesh name="MeshNutils-GP">
+    <use-data name="Temperature" />
+  </mesh>
+  
+  <mesh name="MeshNutils-CC">
+    <use-data name="Heat-Flux" />
+  </mesh>
+
+  <participant name="OpenFOAM">
+    <use-mesh name="OpenFOAM-Mesh" provide="yes"/>
+    <read-data name="Heat-Flux" mesh="OpenFOAM-Mesh"/>
+    <write-data name="Temperature" mesh="OpenFOAM-Mesh"/>
+  </participant>
+
+  <participant name="Nutils">
+    <use-mesh name="OpenFOAM-Mesh" from="OpenFOAM"/>
+    <use-mesh name="MeshNutils-GP" provide="yes"/>
+    <use-mesh name="MeshNutils-CC" provide="yes"/>
+    <mapping:nearest-neighbor direction="write" from="MeshNutils-CC" to="OpenFOAM-Mesh" constraint="consistent"/>
+    <mapping:nearest-neighbor direction="read"  from="OpenFOAM-Mesh" to="MeshNutils-GP" constraint="consistent"/>
+    <read-data name="Temperature" mesh="MeshNutils-GP" />
+    <write-data name="Heat-Flux" mesh="MeshNutils-CC" />
+  </participant>    
+
+  <m2n:sockets from="OpenFOAM" to="Nutils" exchange-directory=".." distribution-type="gather-scatter"/>
+
+  <coupling-scheme:serial-implicit>
+    <timestep-length value="0.01"/>
+    <max-time value="1"/>
+    <max-iterations value="30"/>
+    <participants first="OpenFOAM" second="Nutils"/>
+    <exchange data="Temperature" mesh="OpenFOAM-Mesh" from="OpenFOAM" to="Nutils"/>
+    <exchange data="Heat-Flux" mesh="OpenFOAM-Mesh" from="Nutils" to="OpenFOAM"/>
+    <relative-convergence-measure limit="1.0e-5" data="Temperature" mesh="OpenFOAM-Mesh"/>
+    <post-processing:aitken>
+      <data mesh="OpenFOAM-Mesh" name="Heat-Flux" />
+      <initial-relaxation value="0.01" />
+    </post-processing:aitken>
+  </coupling-scheme:serial-implicit>
+
+  </solver-interface>
+
+</precice-configuration>
