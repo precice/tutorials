@@ -42,8 +42,8 @@ def main(elemsize: 'mesh width in x and y direction' = 0.05,
   interface.configure(configFileName)
 
   # define coupling meshes
-  meshNameGP = "MeshNutils-GP" # Gauss points
-  meshNameCC = "MeshNutils-CC" # cell centers (potentially sub-sampled)
+  meshNameGP = "Nutils-Mesh-GP" # Gauss points
+  meshNameCC = "Nutils-Mesh-CC" # cell centers (potentially sub-sampled)
   meshIDGP = interface.get_mesh_id(meshNameGP)
   meshIDCC = interface.get_mesh_id(meshNameCC)
 
