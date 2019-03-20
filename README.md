@@ -11,6 +11,7 @@ The files in this repository are organized in the form `problem_type/geometry/so
       * `buoyantSimpleFoam-CalculiX`
    * `flow-over-plate`: A channel flow over a hot plate
       * `buoyantPimpleFoam-fenics`: for running see `README.md`
+      * `buoyantPimpleFoam-nutils`: for running see `README.md`
 * `HT`: Heat Transfer
    * `partitioned-heat`: Solving heat equation on a partitioned domain
       * `fenics-fenics`: for running see `README.md`
