@@ -34,7 +34,7 @@ For running this tutorial, you further have to install
 
 ### Testing your installation
 
-* **OpenFOAM and OpenFOAM adapter:** To make sure that everything is working properly, you should run the following tutorial case: https://github.com/precice/openfoam-adapter/wiki/Tutorial-for-CHT:-Flow-over-a-heated-plate.
+* **OpenFOAM and OpenFOAM adapter:** To make sure that everything is working properly, you should run the [similar OpenFOAM-OpenFOAM tutorial case](https://github.com/precice/openfoam-adapter/wiki/Tutorial-for-CHT:-Flow-over-a-heated-plate).
 * **Nutils:** To make sure that Nutils is working properly, you should run at least one of the [Nutils examples](http://www.nutils.org/en/latest/examples/).
 
 ## Run the tutorial
