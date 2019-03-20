@@ -31,6 +31,7 @@ cd ..
 Participant2="Nutils"
 cd ${Participant2}
     echo "Cleaning" ${Participant2}
+    rm -f ${Participant2}.log
     rm -f *.vtk
     rm -f \
         precice-*.log \

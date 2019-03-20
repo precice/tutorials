@@ -53,6 +53,8 @@ $ cd Nutils
 $ python3 cht.py
 ```
 
+Alternatively, you can also directly use the `Allrun` script in one terminal. 
+
 ### Visualization
 
 Both solvers, OpenFOAM and Nutils, create vtk output that you can, for example, load in Paraview. 
