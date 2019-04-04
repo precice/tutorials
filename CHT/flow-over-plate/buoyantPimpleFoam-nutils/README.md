@@ -44,7 +44,7 @@ Open two terminals at the root of this tutorial.
 Terminal 1:
 ```
 $ cd OpenFOAM
-$ ./runFOAM
+$ ./runFluid
 ```
 
 Terminal 2:
