@@ -122,9 +122,9 @@ subcycle = Subcycling.NONE
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcycling.NONE:
     fenics_dt = .1  # time step size
-    d_subcycling = "N-WR11"
-    n_subcycling = "D-WR11"
-    wr_tag = "-WR11"
+    wr_tag = "WR11"
+    d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
+    n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
     error_tol = 10 ** -4  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcycling.MATCHING:
@@ -141,9 +141,9 @@ elif subcycle is Subcycling.DIFFERENT:
     elif problem is ProblemType.NEUMANN:
         fenics_dt = .05  # time step size
     error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
-    d_subcycling = "N-WR12"
-    n_subcycling = "D-WR12"
-    wr_tag = "-WR12"
+    wr_tag = "WR12"
+    d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
+    n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
 
 if problem is ProblemType.DIRICHLET:
