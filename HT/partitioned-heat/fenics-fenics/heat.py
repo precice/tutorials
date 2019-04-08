@@ -115,9 +115,9 @@ if not (args.dirichlet or args.neumann):
 
 # Create mesh and define function space
 
-nx = 5
+nx = 10
 ny = 10
-subcycle = Subcycling.NONE
+subcycle = Subcycling.MATCHING
 
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcycling.NONE:
@@ -128,7 +128,10 @@ if subcycle is Subcycling.NONE:
     error_tol = 10 ** -4  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcycling.MATCHING:
-    fenics_dt = .01  # time step size
+    fenics_dt = .1  # time step size
+    wr_tag = "WR22"
+    d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
+    n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
     error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
 elif subcycle is Subcycling.NONMATCHING:
@@ -137,10 +140,10 @@ elif subcycle is Subcycling.NONMATCHING:
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
 elif subcycle is Subcycling.DIFFERENT:
     if problem is ProblemType.DIRICHLET:
-        fenics_dt = .1  # time step size
+        fenics_dt = .2  # time step size
     elif problem is ProblemType.NEUMANN:
-        fenics_dt = .05  # time step size
-    error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
+        fenics_dt = .1  # time step size
+    error_tol = 10 ** -1  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
     wr_tag = "WR12"
     d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
     n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
@@ -152,7 +155,6 @@ if problem is ProblemType.DIRICHLET:
     other_adapter_config_filename = "precice-adapter-config-{n_subcycling}.json".format(n_subcycling=n_subcycling)
 
 elif problem is ProblemType.NEUMANN:
-    ny = 20
     adapter_config_filename = "precice-adapter-config-{n_subcycling}.json".format(n_subcycling=n_subcycling)
     other_adapter_config_filename = "precice-adapter-config-{d_subcycling}.json".format(d_subcycling=d_subcycling)
 
@@ -242,21 +244,17 @@ u_D.t = t + dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a be
 
 while precice.is_coupling_ongoing():
 
+    x_check, y_check = 1.5, 0.5
+
     if problem is ProblemType.DIRICHLET:
         u_ref = interpolate(u_D, V)
         print("before solve:")
-        print(u_n(.5, .5))
-        print(u_np1(.5, .5))
-        print(u_ref(.5, .5))
+        print(u_n(x_check, y_check))
+        print(u_np1(x_check, y_check))
+        print(u_ref(x_check, y_check))
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
-
-    if problem is ProblemType.DIRICHLET:
-        print("after solve:")
-        print(u_n(.5, .5))
-        print(u_np1(.5, .5))
-        print(u_ref(.5, .5))
 
     print("t={t}; dt={dt}".format(t=t, dt=dt(0)))
 
@@ -267,6 +265,13 @@ while precice.is_coupling_ongoing():
     elif problem is ProblemType.NEUMANN:
         # Neumann problem samples temperature on boundary from solution and sends temperature to Dirichlet problem
         t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)
+
+    if problem is ProblemType.DIRICHLET:
+        print("after solve:")
+        print(u_n(x_check, y_check))
+        print(u_np1(x_check, y_check))
+        print(u_ref(x_check, y_check))
+        print(fluxes(x_check, y_check))
 
     dt.assign(np.min([fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
 

@@ -11,6 +11,7 @@
     <data:scalar name="Temperature2"/>
     <data:scalar name="Flux0"/>
     <data:scalar name="Flux1"/>
+    <data:scalar name="Flux2"/>
 
     <!-- A common mesh that uses these data fields -->
     <mesh name="DirichletNodes">
@@ -19,6 +20,7 @@
         <use-data name="Temperature2"/>
         <use-data name="Flux0"/>
         <use-data name="Flux1"/>
+        <use-data name="Flux2"/>
     </mesh>
 
     <mesh name="NeumannNodes">
@@ -27,6 +29,7 @@
        <use-data name="Temperature2"/>   
        <use-data name="Flux0"/>
        <use-data name="Flux1"/>
+       <use-data name="Flux2"/>
     </mesh>
 
     <!-- Represents each solver using preCICE. In a coupled simulation, two participants have to be
@@ -40,6 +43,7 @@
       <!-- Define input/output of the solver.  -->
       <write-data name="Flux0" mesh="DirichletNodes"/>
       <write-data name="Flux1" mesh="DirichletNodes"/>
+      <write-data name="Flux2" mesh="DirichletNodes"/>
       <read-data  name="Temperature0" mesh="DirichletNodes"/>
       <read-data  name="Temperature1" mesh="DirichletNodes"/>
       <read-data  name="Temperature2" mesh="DirichletNodes"/>
@@ -54,6 +58,7 @@
       <write-data name="Temperature2" mesh="NeumannNodes"/>
       <read-data  name="Flux0"        mesh="NeumannNodes"/>
       <read-data  name="Flux1"        mesh="NeumannNodes"/>
+      <read-data  name="Flux2"        mesh="NeumannNodes"/>
     </participant>
 
     <!-- Communication method, use TCP sockets, Change network to "ib0" on SuperMUC -->
@@ -61,21 +66,24 @@
 
       <coupling-scheme:serial-implicit>
          <participants first="HeatDirichlet" second="HeatNeumann"/>
-         <max-time value=".2"/>
+         <max-time value="1"/>
          <timestep-length value=".2" valid-digits="8"/>
-         <max-iterations value="2"/>
+         <max-iterations value="100"/>
          <exchange data="Flux0"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
          <exchange data="Flux1"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
+         <exchange data="Flux2"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
          <exchange data="Temperature0" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
          <exchange data="Temperature1" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
          <exchange data="Temperature2" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
          <relative-convergence-measure data="Flux1"        mesh="NeumannNodes" limit="1e-5"/>
+         <relative-convergence-measure data="Flux2"        mesh="NeumannNodes" limit="1e-5"/>
          <relative-convergence-measure data="Temperature1" mesh="NeumannNodes" limit="1e-5"/>
          <relative-convergence-measure data="Temperature2" mesh="NeumannNodes" limit="1e-5"/>
          <extrapolation-order value="0"/>
          <post-processing:IQN-ILS> 
 	    <!--PostProc always done on the second participant-->
             <data name="Temperature1" mesh="NeumannNodes"/>
+            <data name="Temperature2" mesh="NeumannNodes"/>
             <initial-relaxation value="0.01"/>
             <max-used-iterations value="3"/>
             <timesteps-reused value="1"/>
