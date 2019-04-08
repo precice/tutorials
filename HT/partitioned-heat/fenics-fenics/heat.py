@@ -119,19 +119,12 @@ nx = 5
 ny = 10
 subcycle = Subcycling.NONE
 
-if problem is ProblemType.DIRICHLET:
-    nx = nx*3
-    adapter_config_filename = "precice-adapter-config-D-1.json"
-    other_adapter_config_filename = "precice-adapter-config-N-1.json"
-
-elif problem is ProblemType.NEUMANN:
-    ny = 20
-    adapter_config_filename = "precice-adapter-config-N-1.json"
-    other_adapter_config_filename = "precice-adapter-config-D-1.json"
-
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcycling.NONE:
     fenics_dt = .1  # time step size
+    d_subcycling = "N-WR11"
+    n_subcycling = "D-WR11"
+    wr_tag = "-WR11"
     error_tol = 10 ** -4  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcycling.MATCHING:
@@ -148,7 +141,21 @@ elif subcycle is Subcycling.DIFFERENT:
     elif problem is ProblemType.NEUMANN:
         fenics_dt = .05  # time step size
     error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
+    d_subcycling = "N-WR12"
+    n_subcycling = "D-WR12"
+    wr_tag = "-WR12"
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
+
+if problem is ProblemType.DIRICHLET:
+    nx = nx*3
+    adapter_config_filename = "precice-adapter-config-{d_subcycling}.json".format(d_subcycling=d_subcycling)
+    other_adapter_config_filename = "precice-adapter-config-{n_subcycling}.json".format(n_subcycling=n_subcycling)
+
+elif problem is ProblemType.NEUMANN:
+    ny = 20
+    adapter_config_filename = "precice-adapter-config-{n_subcycling}.json".format(n_subcycling=n_subcycling)
+    other_adapter_config_filename = "precice-adapter-config-{d_subcycling}.json".format(d_subcycling=d_subcycling)
+
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 y_bottom, y_top = 0, 1
