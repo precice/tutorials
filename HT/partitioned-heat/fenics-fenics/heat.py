@@ -26,7 +26,7 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
-    TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, near
+    TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, near, VectorFunctionSpace
 from enum import Enum
 from fenicsadapter import Adapter
 from errorcomputation import compute_errors
@@ -76,30 +76,24 @@ class CouplingBoundary(SubDomain):
             return False
 
 
-def fluxes_from_temperature_full_domain(F, V):
+def fluxes_from_temperature_full_domain(u, V, mesh):
     """
     compute flux from weak form (see p.3 in Toselli, Andrea, and Olof Widlund. Domain decomposition methods-algorithms and theory. Vol. 34. Springer Science & Business Media, 2006.)
-    :param F: weak form with known u^{n+1}
+    :param u: known temperature field
     :param V: function space
-    :param hy: spatial resolution perpendicular to flux direction
+    :param mesh: the underlying mesh
     :return:
     """
-    fluxes_vector = assemble(F)  # assemble weak form -> evaluate integral
-    v = TestFunction(V)
-    fluxes = Function(V)  # create function for flux
-    area = assemble(v * ds).get_local()
-    for i in range(area.shape[0]):
-        if area[i] != 0:  # put weight from assemble on function
-            fluxes.vector()[i] = fluxes_vector[i] / area[i]  # scale by surface area
-        else:
-            assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux
-            fluxes.vector()[i] = fluxes_vector[i]
-    return fluxes
+    degree = V.ufl_element().degree()
+    W = VectorFunctionSpace(mesh, 'P', degree)
+    grad_u_x, grad_u_y = project(grad(u), W).split()
+    return grad_u_x  # todo: this is not general! In the end we will need the normal flux.
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
+parser.add_argument("-wr", "--waveform", action='store_true')
 
 args = parser.parse_args()
 
@@ -117,7 +111,11 @@ if not (args.dirichlet or args.neumann):
 
 nx = 10
 ny = 10
-subcycle = Subcycling.MATCHING
+
+if args.waveform:
+    subcycle = Subcycling.DIFFERENT
+else:
+    subcycle = Subcycling.NONE
 
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcycling.NONE:
@@ -126,7 +124,6 @@ if subcycle is Subcycling.NONE:
     d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
     n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
     error_tol = 10 ** -4  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
-    # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcycling.MATCHING:
     fenics_dt = .1  # time step size
     wr_tag = "WR22"
@@ -140,10 +137,10 @@ elif subcycle is Subcycling.NONMATCHING:
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
 elif subcycle is Subcycling.DIFFERENT:
     if problem is ProblemType.DIRICHLET:
-        fenics_dt = .2  # time step size
-    elif problem is ProblemType.NEUMANN:
         fenics_dt = .1  # time step size
-    error_tol = 10 ** -1  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
+    elif problem is ProblemType.NEUMANN:
+        fenics_dt = .05  # time step size
+    error_tol = 10 ** -4
     wr_tag = "WR12"
     d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
     n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
@@ -172,14 +169,13 @@ elif problem is ProblemType.NEUMANN:
     p1 = Point(x_right, y_top)
 
 mesh = RectangleMesh(p0, p1, nx, ny)
-V = FunctionSpace(mesh, 'P', 1)
+V = FunctionSpace(mesh, 'P', 2)
 
 # Define boundary condition
 u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, t=0)
 u_D_function = interpolate(u_D, V)
 # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
-f_N = Expression('.1 * 2 * x[0]', degree=1)  # todo: this expression is scaled by the surface area!
-f_N_function = interpolate(f_N, V)
+f_N_function = fluxes_from_temperature_full_domain(u_D_function, V, mesh)
 
 coupling_boundary = CouplingBoundary()
 remaining_boundary = ComplementaryBoundary(coupling_boundary)
@@ -205,7 +201,7 @@ dt.assign(np.min([fenics_dt, precice_dt]))
 u = TrialFunction(V)
 v = TestFunction(V)
 f = Constant(beta - 2 - 2 * alpha)
-F = u * v * dx + dt * dot(grad(u), grad(v)) * dx - (u_n + dt * f) * v * dx
+F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 if problem is ProblemType.DIRICHLET:
     # apply Dirichlet boundary condition on coupling interface
@@ -218,7 +214,6 @@ a, L = lhs(F), rhs(F)
 
 # Time-stepping
 u_np1 = Function(V)
-F_known_u = u_np1 * v * dx + dt * dot(grad(u_np1), grad(v)) * dx - (u_n + dt * f) * v * dx
 u_np1.rename("Temperature", "")
 t = 0
 
@@ -260,7 +255,7 @@ while precice.is_coupling_ongoing():
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
-        fluxes = fluxes_from_temperature_full_domain(F_known_u, V)
+        fluxes = fluxes_from_temperature_full_domain(u_np1, V, mesh)
         t, n, precice_timestep_complete, precice_dt = precice.advance(fluxes, u_np1, u_n, t, dt(0), n)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem samples temperature on boundary from solution and sends temperature to Dirichlet problem
