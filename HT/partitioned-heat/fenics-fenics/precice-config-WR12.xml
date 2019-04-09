@@ -63,7 +63,7 @@
          <participants first="HeatDirichlet" second="HeatNeumann"/>
          <max-time value=".2"/>
          <timestep-length value=".2" valid-digits="8"/>
-         <max-iterations value="2"/>
+         <max-iterations value="100"/>
          <exchange data="Flux0"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
          <exchange data="Flux1"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
          <exchange data="Temperature0" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
@@ -76,6 +76,7 @@
          <post-processing:IQN-ILS> 
 	    <!--PostProc always done on the second participant-->
             <data name="Temperature1" mesh="NeumannNodes"/>
+            <data name="Temperature2" mesh="NeumannNodes"/>
             <initial-relaxation value="0.01"/>
             <max-used-iterations value="3"/>
             <timesteps-reused value="1"/>
