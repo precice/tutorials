@@ -61,7 +61,7 @@
 
       <coupling-scheme:serial-implicit>
          <participants first="HeatDirichlet" second="HeatNeumann"/>
-         <max-time value=".2"/>
+         <max-time value="1"/>
          <timestep-length value=".2" valid-digits="8"/>
          <max-iterations value="100"/>
          <exchange data="Flux0"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
@@ -69,9 +69,9 @@
          <exchange data="Temperature0" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
          <exchange data="Temperature1" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
          <exchange data="Temperature2" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
-         <relative-convergence-measure data="Flux1"        mesh="NeumannNodes" limit="1e-5"/>
-         <relative-convergence-measure data="Temperature1" mesh="NeumannNodes" limit="1e-5"/>
-         <relative-convergence-measure data="Temperature2" mesh="NeumannNodes" limit="1e-5"/>
+         <relative-convergence-measure data="Flux1"        mesh="NeumannNodes" limit="1e-10"/>
+         <relative-convergence-measure data="Temperature1" mesh="NeumannNodes" limit="1e-10"/>
+         <relative-convergence-measure data="Temperature2" mesh="NeumannNodes" limit="1e-10"/>
          <extrapolation-order value="0"/>
          <post-processing:IQN-ILS> 
 	    <!--PostProc always done on the second participant-->
