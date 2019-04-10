@@ -126,32 +126,26 @@ else:
 
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcycling.NONE:
-    fenics_dt = .1  # time step size
+    wr_factor = 1
     wr_tag = "WR11"
     d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
     n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
-    error_tol = 10 ** -12  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    error_tol = 10 ** -12
 elif subcycle is Subcycling.MATCHING:
-    fenics_dt = .1  # time step size
+    wr_factor = 2
     wr_tag = "WR22"
     d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
     n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
-    error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
-    # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
-elif subcycle is Subcycling.NONMATCHING:
-    fenics_dt = .03  # time step size
-    error_tol = 10 ** -1  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
-    # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
+    error_tol = 10 ** -2  # todo WR22 does not work as expected
 elif subcycle is Subcycling.DIFFERENT:
     if problem is ProblemType.DIRICHLET:
-        fenics_dt = .2  # time step size
+        wr_factor = 1
     elif problem is ProblemType.NEUMANN:
-        fenics_dt = .1  # time step size
-    error_tol = 10 ** -10  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
+        wr_factor = 2
+    error_tol = 10 ** -12
     wr_tag = "WR12"
     d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
     n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
-    # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
 
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
@@ -203,6 +197,7 @@ elif problem is ProblemType.NEUMANN:
                                     write_field=u_D_function, u_n=u_n)
 
 dt = Constant(0)
+fenics_dt = precice_dt / wr_factor
 dt.assign(np.min([fenics_dt, precice_dt]))
 
 # Define variational problem

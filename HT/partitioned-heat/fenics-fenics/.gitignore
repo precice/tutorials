@@ -2,6 +2,6 @@
 venv
 .idea
 *.pyc
-out
+out*
 *.log
 *events.json
