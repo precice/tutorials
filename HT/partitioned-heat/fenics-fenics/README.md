@@ -17,9 +17,12 @@ For all setups linear interpolation in time is used for each (micro-)timestep. T
 
 **WR12:** this case uses subcycling such that `2*dt_neumann = dt_dirichlet = T_window`.
 
-* ` python3 heat.py -d -wr`
-* ` python3 heat.py -n -wr`
+* ` python3 heat.py -d -wr 1 2`
+* ` python3 heat.py -n -wr 1 2`
 
 **WR22:** this case uses subcycling such that `2*dt_neumann = 2*dt_dirichlet = T_window`.
 
-* Cannot be run using command line parameters.
+* ` python3 heat.py -d -wr 2 1`
+* ` python3 heat.py -n -wr 2 1`
+
+**SCENARIO DOES NOT WORK AS EXPECTED!**

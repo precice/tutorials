@@ -49,6 +49,7 @@ class Subcycling(Enum):
     MATCHING = 1  # subcycling, where fenics_dt fits into precice_dt, mod(precice_dt, fenics_dt) == 0
     NONMATCHING = 2  # subcycling, where fenics_dt does not fit into precice_dt, mod(precice_dt, fenics_dt) != 0
     DIFFERENT = 3  # subcycling, where fenics_dt fits into precice_dt and fenics_dt differs for the two subdomains
+    WAVEFORM = 4  # use waveform relaxation
 
     # note: the modulo expressions above should be understood in an exact way (no floating point round off problems. For
     # details, see https://stackoverflow.com/questions/14763722/python-modulo-on-floats)
@@ -100,7 +101,7 @@ def fluxes_from_temperature_full_domain(F, V):
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
-parser.add_argument("-wr", "--waveform", action='store_true')
+parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
 
 args = parser.parse_args()
 
@@ -120,7 +121,7 @@ nx = 10
 ny = 10
 
 if args.waveform:
-    subcycle = Subcycling.DIFFERENT
+    subcycle = Subcycling.WAVEFORM
 else:
     subcycle = Subcycling.NONE
 
@@ -131,19 +132,13 @@ if subcycle is Subcycling.NONE:
     d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
     n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
     error_tol = 10 ** -12
-elif subcycle is Subcycling.MATCHING:
-    wr_factor = 2
-    wr_tag = "WR22"
-    d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
-    n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
-    error_tol = 10 ** -2  # todo WR22 does not work as expected
-elif subcycle is Subcycling.DIFFERENT:
+elif subcycle is Subcycling.WAVEFORM:
     if problem is ProblemType.DIRICHLET:
-        wr_factor = 1
+        wr_factor = args.waveform[0]
     elif problem is ProblemType.NEUMANN:
-        wr_factor = 2
+        wr_factor = args.waveform[1]
     error_tol = 10 ** -12
-    wr_tag = "WR12"
+    wr_tag = "WR{wr1}{wr2}".format(wr1=args.waveform[0], wr2=args.waveform[1])
     d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
     n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
 
