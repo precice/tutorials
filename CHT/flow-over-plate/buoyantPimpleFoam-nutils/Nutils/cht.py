@@ -13,7 +13,7 @@ def main(elemsize: 'mesh width in x and y direction' = 0.05,
   print("Running utils")
   
   # the mesh
-  grid = [numpy.linspace(a, b, round((b-a)/size)+1) for (a,b,size) in [(0,1,elemsize), (-.25,0,elemsize), (0,.05,.025)]]  
+  grid = [numpy.linspace(a, b, round((b-a)/size)+1) for (a,b,size) in [(0,1,elemsize), (-.25,0,elemsize), (0,.05,.05)]]  
   domain, geom = nutils.mesh.rectilinear(grid, periodic=[2])
 
   # nutils namespace
