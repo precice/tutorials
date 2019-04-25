@@ -1,7 +1,8 @@
 from fenics import *
+from fenics import near, inner
 from ufl import nabla_div, nabla_grad
 import matplotlib.pyplot as plt
-from fenicsadapter import Adapter
+from fenicsadapter import *
 from enum import Enum
 import argparse
 
@@ -20,6 +21,9 @@ class CouplingBoundary(SubDomain):
             return True
         else:
             return False
+        
+def ForcesFromStresses(sigma, n_vec):
+    return inner(sigma,n_vec)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
@@ -44,7 +48,6 @@ if problem is ProblemType.DIRICHLET:
     adapter_config_filename = "precice-adapter-config-D.json"
 
 elif problem is ProblemType.NEUMANN:
-    ny = 5
     adapter_config_filename = "precice-adapter-config-N.json"
 
 #Scaled varaibles
@@ -59,13 +62,13 @@ lambda_ = beta # Lame`s elasticty parameters
 g = gamma
 
 dt = .1  # time step size
-x_coupling = 0.5  # x coordinate of coupling interface
+x_coupling = L  # x coordinate of coupling interface
 
 #Mesh and function space
-if problem is ProblemType.DIRICHLET:
+if problem is ProblemType.NEUMANN:
     mesh = RectangleMesh(Point(0, 0), Point(L, W), nx, ny)
-elif problem is ProblemType.NEUMANN:
-    mesh = RectangleMesh(Point(0.5, 0), Point(L+0.5, W), nx, ny)
+elif problem is ProblemType.DIRICHLET:
+    mesh = RectangleMesh(Point(L, 0), Point(L+0.5, W), nx, ny)
 
 V = VectorFunctionSpace(mesh, 'P', 1)
 
@@ -74,18 +77,27 @@ tol = 1E-14
 def clamped_boundary(x, on_boundary):
     return on_boundary and x[0] < tol
 
-def top_boundary(x, on_boundary):
-    return on_boundary and x[1] >(W-tol)
+def coupled_boundary(x,on_boundary):
+    """
+    determines whether a node is on the counpling boundary
+    
+    """
+    return on_boundary and near(x[0], x_coupling, tol)
+
 
 # Define boundary condition. TODO: u_D and f_N currently dummy, just for preCICE comm. testing
-u_D = Expression(("x[0]", "x[1]"), degree=1)
+u_D = Expression(("0", "0"), degree=1)
 u_D_function = interpolate(u_D, V)
 
 f_N = Expression(("x[0]", "x[1]"), degree=1)
 f_N_function = interpolate(f_N, V)
 
+boundary_markers=MeshFunction("size_t", mesh, mesh.topology().dim()-1)
 coupling_boundary = CouplingBoundary()
 
+coupling_boundary.mark(boundary_markers, 5)
+
+#clamp the NEUMANN problem at the left end
 bc_c = DirichletBC(V, Constant((0, 0)), clamped_boundary)
 bcs = [bc_c]
 
@@ -122,7 +134,7 @@ if problem is ProblemType.DIRICHLET:
     bcs.append(precice.create_coupling_dirichlet_boundary_condition(V))
 if problem is ProblemType.NEUMANN:
     # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
-    L += precice.create_coupling_neumann_boundary_condition(v)
+    L += precice.create_coupling_neumann_boundary_condition(v, boundary_marker=5)
 
 u = Function(V)
 # TODO: This loop is incomplete. How to handle timesteping in "static" case with preCICE? See TODO.md
