@@ -203,7 +203,7 @@ a, L = lhs(F), rhs(F)
 
 # Time-stepping
 u_np1 = Function(V)
-F_known_u = u_np1 * v * dx + dt * dot(grad(u_np1), grad(v)) * dx - (u_n + dt * f) * v * dx
+F_known_u = u_np1 * v / dt * dx + dot(grad(u_np1), grad(v)) * dx - (u_n / dt + f) * v * dx
 u_np1.rename("Temperature", "")
 t = 0
 
