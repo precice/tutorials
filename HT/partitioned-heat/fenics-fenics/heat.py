@@ -190,7 +190,7 @@ dt.assign(np.min([fenics_dt, precice_dt]))
 u = TrialFunction(V)
 v = TestFunction(V)
 f = Constant(beta - 2 - 2 * alpha)
-F = u * v * dx + dt * dot(grad(u), grad(v)) * dx - (u_n + dt * f) * v * dx
+F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 if problem is ProblemType.DIRICHLET:
     # apply Dirichlet boundary condition on coupling interface
