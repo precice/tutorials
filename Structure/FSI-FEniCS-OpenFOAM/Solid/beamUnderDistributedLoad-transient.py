@@ -20,7 +20,7 @@ def Neumann_Boundary(x, on_boundary):
 # Dimensionless Geometry and material properties
 d=2 #number of dimensions
 H = 1
-W = 0.3
+W = 0.1
 rho = 0.2
 E=1000.0
 nu= 0.3
@@ -30,9 +30,9 @@ mu    = Constant(E / (2.0*(1.0 + nu)))
 lambda_ = Constant(E*nu / ((1.0 + nu)*(1.0 - 2.0*nu)))
 
 # create Mesh
-n_x_Direction=3
-n_y_Direction=10
-mesh = RectangleMesh(Point(0,0), Point(W,H), n_x_Direction,n_y_Direction)
+n_x_Direction=6
+n_y_Direction=20
+mesh = RectangleMesh(Point(-W/2,0), Point(W/2,H), n_x_Direction,n_y_Direction)
 
 
 #create Function Space
@@ -41,8 +41,9 @@ V = VectorFunctionSpace(mesh, 'P', 2)
 #BCs
 tol=1E-14
 
+# create subdomain that resembles the 
 
-
+## get the adapter ready
 
 #read fenics-adapter json-config-file
 adapter_config_filename = "precice-adapter-config-fsi-s.json"
@@ -75,7 +76,7 @@ dt = Constant(T/Nsteps)
 
 #Loading by an Expression: sinus loading dependend on x_0
 #p = Expression(('1*sin(2*pi*t) * x[0]','0'),degree=1, t=0)
-p = Expression( ('t<1 ? 0.01 : 0.01','0'),degree=1, t=0)
+#p = Expression( ('t<1 ? 0.01 : 0.01','0'),degree=1, t=0) #now precice coupling instead
 
 
 # Trial and Test Functions
@@ -90,15 +91,8 @@ v_old = Function(V)
 a_old = Function(V)
 
 
-# mark the boundary with the neumann BC
-boundary_subdomains = MeshFunction("size_t", 
-                                   mesh, mesh.topology().dim()-1)
-boundary_subdomains.set_all(0)
-force_boundary = AutoSubDomain(Neumann_Boundary)
-force_boundary.mark(boundary_subdomains, 3)
 
-#Define measure for boundary conditions integral
-dss=ds(subdomain_data=boundary_subdomains)
+force_boundary = AutoSubDomain(Neumann_Boundary)
 
 
 # clamp the beam at the bottom
@@ -173,7 +167,9 @@ def avg(x_old, x_new, alpha):
 a_new = update_a(du, u_old, v_old, a_old, ufl=True)
 v_new = update_a(a_new, u_old, v_old, a_old, ufl=True)
 
-res = m(avg(a_old,a_new,alpha_m), v) + k(avg(u_old,du, alpha_f), v) - Wext(v)
+res = m(avg(a_old,a_new,alpha_m), v) + k(avg(u_old,du, alpha_f), v)  #TODO: Wext(v) needs to be replaced by coupling
+
+res += precice.create_coupling_neumann_boundary_condition(v)# removed the marker , 3) #3 is the marker for the domain
 
 a_form= lhs(res)
 L_form= rhs(res)
@@ -182,6 +178,8 @@ L_form= rhs(res)
 
 
 # Prepare for time-stepping
+t=0.0
+n=0
 time = np.linspace(0,T,Nsteps+1)
 u_tip = np.zeros((Nsteps+1,1))
 E_ext = 0
@@ -192,22 +190,18 @@ displacement_out = File("%s.pvd")
 
 
 #time loop
-for n in range(Nsteps):
+while precice.is_coupling_ongoing():
     
-    t=time[n+1]
-    print("Time:",t)
-    
-    #evaluate Force field at alpha_f-average
-    p.t=t-float(alpha_f*dt)
-    
+     
     #solve for new displacements
     solve(a_form==L_form, u, bc)
+    
+    # call precice.advance
+    t, n, precice_timestep_complete, precice_dt = precice.advance(u, u, u_old, t, float(dt), n)
     
     update_fields(u, u_old, v_old, a_old)
     
     displacement_out << u
-    
-    p.t=t
     
     u_tip[n+1] = u(0.1,1.)[0]
     
