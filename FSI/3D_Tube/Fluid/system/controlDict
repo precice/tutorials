@@ -11,7 +11,8 @@ FoamFile
  object controlDict;
 }
 
-application pimpelDyMFoam;
+application pimpleFoam;
+//application pimpleDyMFoam;
 
 startFrom startTime;
 
