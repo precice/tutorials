@@ -29,6 +29,9 @@ Solver1="pimpleDyMFoam"
     echo "  Restoring 0/ from 0.orig/..."
         rm -rfv 0
         cp -r 0.orig 0
+        Solver1=$(getApplication)    # solver
+        echo "  ${Participant1} Solver: ${Solver1}."
+        echo "  ### WARNING ### Make sure to use the correct solver for your OpenFOAM version! (pimpleFoam for OpenFOAM v1806, OpenFOAM 6, or newer, vs pimpleDyMFoam for older) You may change this in your Fluid/system/controlDict file, if needed."
     cd ..
 
     if [ $parallel -eq 1 ]; then
@@ -37,7 +40,7 @@ Solver1="pimpleDyMFoam"
         echo "  Setting up the preCICE configuration file for a parallel simulation..."
         ln -s -f precice-config_parallel.xml precice-config.xml 
         cd ${Participant1}
-            nproc=4
+            nproc=$(getNumberOfProcessors)
         cd ..
         echo "  Starting the ${Participant1} participant in parallel..."
         mpirun -np ${nproc} ${Solver1} -parallel -case ${Participant1} > ${Participant1}.log 2>&1 &
@@ -57,7 +60,7 @@ Solver2="ccx_preCICE"
     echo "Starting the ${Participant2} participant..."
     export OMP_NUM_THREADS=1
     export CCX_NPROC_EQUATION_SOLVER=1
-   ${Solver2} -i ${Participant2}/tube -precice-participant Calculix > ${Participant2}.log 2>&1 &
+    ${Solver2} -i ${Participant2}/tube -precice-participant Calculix > ${Participant2}.log 2>&1 &
     PIDParticipant2=$!
 
 # Wait for all the participants to finish
@@ -91,3 +94,4 @@ else
     echo "You may now open '${Participant1}/${Participant1}.foam' in ParaView."
     # Note: ".foam" triggers the native OpenFOAM reader of ParaView.
     # Change to ".OpenFOAM" to use the OpenFOAM reader provided with OpenFOAM.
+fi
