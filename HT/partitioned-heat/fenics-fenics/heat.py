@@ -184,16 +184,14 @@ u_n.rename("Temperature", "")
 
 precice = Adapter(adapter_config_filename, other_adapter_config_filename)  # todo: how to avoid requiring both configs without Waveform Relaxation?
 
-if problem is ProblemType.DIRICHLET:
-    precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
-                                    write_field=f_N_function, u_n=u_n)
-elif problem is ProblemType.NEUMANN:
-    precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
-                                    write_field=u_D_function, u_n=u_n)
+beta_slope = beta
 
-dt = Constant(0)
-fenics_dt = precice_dt / wr_factor
-dt.assign(np.min([fenics_dt, precice_dt]))
+if problem is ProblemType.DIRICHLET:
+    dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
+                                    write_field=f_N_function, u_n=u_n, wr_factor=wr_factor, write_slope=0, read_slope=beta_slope)
+elif problem is ProblemType.NEUMANN:
+    dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
+                                    write_field=u_D_function, u_n=u_n, wr_factor=wr_factor, write_slope=beta_slope, read_slope=0)
 
 # Define variational problem
 u = TrialFunction(V)
@@ -267,7 +265,7 @@ while precice.is_coupling_ongoing():
         print(u_ref(x_check, y_check))
         print(fluxes(x_check, y_check))
 
-    dt.assign(np.min([fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
+    dt.assign(np.min([precice.fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
 
     if precice_timestep_complete:
         u_ref = interpolate(u_D, V)
