@@ -41,6 +41,23 @@ V = VectorFunctionSpace(mesh, 'P', 2)
 #BCs
 tol=1E-14
 
+# Trial and Test Functions
+du = TrialFunction(V)
+v = TestFunction(V)
+
+u = Function(V)
+
+# function known from previous timestep
+u_old = Function(V)
+v_old = Function(V)
+a_old = Function(V)
+
+
+f_N_function = interpolate(Expression(("0","0"), degree=1), V)
+u_function = interpolate(Expression(("0","0"), degree=1), V)
+
+coupling_boundary = AutoSubDomain(Neumann_Boundary)
+
 # create subdomain that resembles the 
 
 ## get the adapter ready
@@ -51,11 +68,11 @@ adapter_config_filename = "precice-adapter-config-fsi-s.json"
 # initialize the adapter
 precice = Adapter(adapter_config_filename)
 
-precice_dt = precice.initialize(coupling_subdomain=Neumann_Boundary, 
+precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, 
                                 mesh=mesh,
                                 read_field=f_N_function,
-                                write_field=u_D_function,
-                                u_n=u_n)
+                                write_field=u_function,
+                                u_n=u_old)
 
 
 
@@ -68,27 +85,11 @@ gamma   = Constant(0.5+alpha_f-alpha_m)
 beta    = Constant((gamma+0.5)**2/4.)
 
 
-#parameters for Time-Stepping
-T = 1.0
-Nsteps = 80
-dt = Constant(T/Nsteps)
-
-
 #Loading by an Expression: sinus loading dependend on x_0
 #p = Expression(('1*sin(2*pi*t) * x[0]','0'),degree=1, t=0)
 #p = Expression( ('t<1 ? 0.01 : 0.01','0'),degree=1, t=0) #now precice coupling instead
 
 
-# Trial and Test Functions
-du = TrialFunction(V)
-v = TestFunction(V)
-
-u = Function(V)
-
-# function known from previous timestep
-u_old = Function(V)
-v_old = Function(V)
-a_old = Function(V)
 
 
 
@@ -178,6 +179,12 @@ L_form= rhs(res)
 
 
 # Prepare for time-stepping
+
+#parameters for Time-Stepping
+T = 1.0
+Nsteps = 9
+dt = Constant(0.1)
+
 t=0.0
 n=0
 time = np.linspace(0,T,Nsteps+1)
@@ -199,15 +206,18 @@ while precice.is_coupling_ongoing():
     # call precice.advance
     t, n, precice_timestep_complete, precice_dt = precice.advance(u, u, u_old, t, float(dt), n)
     
-    update_fields(u, u_old, v_old, a_old)
-    
-    displacement_out << u
-    
-    u_tip[n+1] = u(0.1,1.)[0]
     
     
+    if precice_timestep_complete:
+        update_fields(u, u_old, v_old, a_old)
     
-
+        displacement_out << u
+    
+        u_tip[n+1] = u(0.,1.)[0]
+    
+    
+# stop coupling    
+precice.finalize()
 
 # Plot tip displacement evolution
 plt.figure()
