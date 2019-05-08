@@ -1,6 +1,6 @@
 # Tutorial for an CHT simulation of a flow over a heated plate using OpenFOAM and FEniCS
 
-This tutorial is described in the [preCICE wiki](https://github.com/precice/precice/wiki/CHT-with-OpenFOAM-and-FEniCS).
+This tutorial is described in the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-CHT:-Flow-over-a-heated-plate-with-OpenFOAM-and-FEniCS).
 
 ## Disclaimer
 

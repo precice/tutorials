@@ -1,6 +1,6 @@
 # Tutorial for a partitioned heat equation using FEniCS
 
-This tutorial is described in the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-a-partitioned-heat-equation-using-FEniCS).
+This tutorial is described in the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-solving-the-heat-equation-in-a-partitioned-fashion-using-FEniCS).
 
 ## Waveform relaxation (experimental)
 
@@ -24,5 +24,3 @@ For all setups linear interpolation in time is used for each (micro-)timestep. T
 
 * ` python3 heat.py -d -wr 2 1`
 * ` python3 heat.py -n -wr 2 1`
-
-**SCENARIO DOES NOT WORK AS EXPECTED!**
