@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
 <precice-configuration>
-
  
   <solver-interface dimensions="2">
     
@@ -104,6 +103,11 @@
          <relative-convergence-measure data="Temperature3" mesh="NeumannNodes" limit="1e-10"/>
          <relative-convergence-measure data="Temperature4" mesh="NeumannNodes" limit="1e-10"/>
          <relative-convergence-measure data="Temperature5" mesh="NeumannNodes" limit="1e-10"/>
+         <relative-convergence-measure data="Flux1" mesh="NeumannNodes" limit="1e-10"/>
+         <relative-convergence-measure data="Flux2" mesh="NeumannNodes" limit="1e-10"/>
+         <relative-convergence-measure data="Flux3" mesh="NeumannNodes" limit="1e-10"/>
+         <relative-convergence-measure data="Flux4" mesh="NeumannNodes" limit="1e-10"/>
+         <relative-convergence-measure data="Flux5" mesh="NeumannNodes" limit="1e-10"/>
          <extrapolation-order value="0"/>
          <post-processing:IQN-ILS> 
 	    <!--PostProc always done on the second participant-->
