@@ -6,25 +6,19 @@
   <solver-interface dimensions="2">
     
     <!-- Data fields that are exchanged between the solvers -->
-    <data:scalar name="Temperature0"/>
     <data:scalar name="Temperature1"/>
-    <data:scalar name="Flux0"/>
     <data:scalar name="Flux1"/>
     <data:scalar name="Flux2"/>
 
     <!-- A common mesh that uses these data fields -->
     <mesh name="DirichletNodes">
-        <use-data name="Temperature0"/>
         <use-data name="Temperature1"/>
-        <use-data name="Flux0"/>
         <use-data name="Flux1"/>
         <use-data name="Flux2"/>
     </mesh>
 
     <mesh name="NeumannNodes">
-       <use-data name="Temperature0"/>   
        <use-data name="Temperature1"/>   
-       <use-data name="Flux0"/>
        <use-data name="Flux1"/>
        <use-data name="Flux2"/>
     </mesh>
@@ -38,10 +32,8 @@
       <use-mesh name="DirichletNodes" provide="yes" />
       <use-mesh name="NeumannNodes" from="HeatNeumann" />
       <!-- Define input/output of the solver.  -->
-      <write-data name="Flux0" mesh="DirichletNodes"/>
       <write-data name="Flux1" mesh="DirichletNodes"/>
       <write-data name="Flux2" mesh="DirichletNodes"/>
-      <read-data  name="Temperature0" mesh="DirichletNodes"/>
       <read-data  name="Temperature1" mesh="DirichletNodes"/>
       <mapping:nearest-projection direction="write" from="DirichletNodes" to="NeumannNodes"   constraint="consistent" timing="initial"/>
       <mapping:nearest-projection direction="read"  from="NeumannNodes"   to="DirichletNodes" constraint="consistent" timing="initial"/>
@@ -49,9 +41,7 @@
     
     <participant name="HeatNeumann">
       <use-mesh name="NeumannNodes" provide="yes"/>
-      <write-data name="Temperature0" mesh="NeumannNodes"/>
       <write-data name="Temperature1" mesh="NeumannNodes"/>
-      <read-data  name="Flux0"        mesh="NeumannNodes"/>
       <read-data  name="Flux1"        mesh="NeumannNodes"/>
       <read-data  name="Flux2"        mesh="NeumannNodes"/>
     </participant>
@@ -64,21 +54,19 @@
          <max-time value="1"/>
          <timestep-length value=".2" valid-digits="8"/>
          <max-iterations value="100"/>
-         <exchange data="Flux0"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
          <exchange data="Flux1"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
          <exchange data="Flux2"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
-         <exchange data="Temperature0" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
          <exchange data="Temperature1" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
-         <relative-convergence-measure data="Flux1"        mesh="NeumannNodes" limit="1e-10"/>
-         <relative-convergence-measure data="Flux2"        mesh="NeumannNodes" limit="1e-10"/>
-         <relative-convergence-measure data="Temperature1" mesh="NeumannNodes" limit="1e-10"/>
+         <relative-convergence-measure data="Flux1"        mesh="NeumannNodes" limit="1e-12"/>
+         <relative-convergence-measure data="Flux2"        mesh="NeumannNodes" limit="1e-12"/>
+         <relative-convergence-measure data="Temperature1" mesh="NeumannNodes" limit="1e-12"/>
          <extrapolation-order value="0"/>
          <post-processing:IQN-ILS> 
 	    <!--PostProc always done on the second participant-->
             <data name="Temperature1" mesh="NeumannNodes"/>
-            <initial-relaxation value="0.01"/>
-            <max-used-iterations value="3"/>
-            <timesteps-reused value="1"/>
+            <initial-relaxation value="1.0"/>
+            <max-used-iterations value="50"/>
+            <timesteps-reused value="0"/>
             <filter type="QR2" limit="1e-3"/>
          </post-processing:IQN-ILS>
       </coupling-scheme:serial-implicit>

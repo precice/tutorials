@@ -51,15 +51,15 @@
          <max-iterations value="100"/>
          <exchange data="Flux1"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
          <exchange data="Temperature1" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
-         <relative-convergence-measure data="Flux1"        mesh="NeumannNodes" limit="1e-10"/>
-         <relative-convergence-measure data="Temperature1" mesh="NeumannNodes" limit="1e-10"/>
+         <relative-convergence-measure data="Flux1"        mesh="NeumannNodes" limit="1e-12"/>
+         <relative-convergence-measure data="Temperature1" mesh="NeumannNodes" limit="1e-12"/>
          <extrapolation-order value="0"/>
          <post-processing:IQN-ILS> 
 	    <!--PostProc always done on the second participant-->
             <data name="Temperature1" mesh="NeumannNodes"/>
-            <initial-relaxation value="0.01"/>
-            <max-used-iterations value="3"/>
-            <timesteps-reused value="1"/>
+            <initial-relaxation value="1.0"/>
+            <max-used-iterations value="50"/>
+            <timesteps-reused value="0"/>
             <filter type="QR2" limit="1e-3"/>
          </post-processing:IQN-ILS>
       </coupling-scheme:serial-implicit>
