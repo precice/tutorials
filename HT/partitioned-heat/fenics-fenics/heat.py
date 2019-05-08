@@ -184,14 +184,12 @@ u_n.rename("Temperature", "")
 
 precice = Adapter(adapter_config_filename, other_adapter_config_filename)  # todo: how to avoid requiring both configs without Waveform Relaxation?
 
-beta_slope = beta
-
 if problem is ProblemType.DIRICHLET:
     dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
-                                    write_field=f_N_function, u_n=u_n, wr_factor=wr_factor, write_slope=0, read_slope=beta_slope)
+                                    write_field=f_N_function, u_n=u_n, wr_factor=wr_factor)
 elif problem is ProblemType.NEUMANN:
     dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
-                                    write_field=u_D_function, u_n=u_n, wr_factor=wr_factor, write_slope=beta_slope, read_slope=0)
+                                    write_field=u_D_function, u_n=u_n, wr_factor=wr_factor)
 
 # Define variational problem
 u = TrialFunction(V)
