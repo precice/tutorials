@@ -87,7 +87,7 @@
       <coupling-scheme:serial-implicit>
          <participants first="HeatDirichlet" second="HeatNeumann"/>
          <max-time value="1"/>
-         <timestep-length value=".4" valid-digits="8"/>
+         <timestep-length value=".2" valid-digits="8"/>
          <max-iterations value="100"/>
          <exchange data="Flux1"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
          <exchange data="Flux2"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
@@ -99,15 +99,24 @@
          <exchange data="Temperature3" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
          <exchange data="Temperature4" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
          <exchange data="Temperature5" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
-         <relative-convergence-measure data="Temperature1" mesh="NeumannNodes" limit="1e-12"/>
+         <relative-convergence-measure data="Temperature1" mesh="NeumannNodes" limit="1e-10"/>
          <relative-convergence-measure data="Temperature2" mesh="NeumannNodes" limit="1e-10"/>
          <relative-convergence-measure data="Temperature3" mesh="NeumannNodes" limit="1e-10"/>
          <relative-convergence-measure data="Temperature4" mesh="NeumannNodes" limit="1e-10"/>
          <relative-convergence-measure data="Temperature5" mesh="NeumannNodes" limit="1e-10"/>
          <extrapolation-order value="0"/>
-         <post-processing:constant>
-            <relaxation value="0.5"/>
-         </post-processing:constant>
+         <post-processing:IQN-ILS> 
+	    <!--PostProc always done on the second participant-->
+            <data name="Temperature1" mesh="NeumannNodes"/>
+            <data name="Temperature2" mesh="NeumannNodes"/>
+            <data name="Temperature3" mesh="NeumannNodes"/>
+            <data name="Temperature4" mesh="NeumannNodes"/>
+            <data name="Temperature5" mesh="NeumannNodes"/>
+            <initial-relaxation value="1.0"/>
+            <max-used-iterations value="50"/>
+            <timesteps-reused value="0"/>
+            <filter type="QR2" limit="1e-3"/>
+         </post-processing:IQN-ILS>
       </coupling-scheme:serial-implicit>
     
   </solver-interface>
