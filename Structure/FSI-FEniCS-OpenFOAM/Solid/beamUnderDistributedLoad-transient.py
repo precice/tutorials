@@ -4,7 +4,24 @@ from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
 from fenicsadapter import Adapter
+from enum import Enum
 
+#Specify the case you want to calculate
+
+class StructureCase(Enum):
+    OPENFOAM=1
+    DUMMY2D = 2
+    DUMMY3D = 3
+    RFERENCE = 4
+    
+Case = StructureCase.OPENFOAM
+
+#if Case is StructureCase.OPENFOAM or StructureCase.DUMMY3D:
+#    dim=2.5 #2.5 means that 2D fenics is coupled via 3d preCICE
+#else:
+
+#this is done automatically by the adapter
+dim=2
 
 #define the two kinds of boundary: clamped and coupling Neumann Boundary
 def clamped_boundary(x, on_boundary):
@@ -16,6 +33,8 @@ def Neumann_Boundary(x, on_boundary):
     
     """
     return on_boundary and not(abs(x[1]<tol))
+
+
 
 # Dimensionless Geometry and material properties
 d=2 #number of dimensions
@@ -41,6 +60,9 @@ V = VectorFunctionSpace(mesh, 'P', 2)
 #BCs
 tol=1E-14
 
+dt = Constant(0.05)
+
+
 # Trial and Test Functions
 du = TrialFunction(V)
 v = TestFunction(V)
@@ -62,20 +84,23 @@ coupling_boundary = AutoSubDomain(Neumann_Boundary)
 
 ## get the adapter ready
 
-#read fenics-adapter json-config-file
-adapter_config_filename = "precice-adapter-config-fsi-s.json"
+#read fenics-adapter json-config-file)
+if Case is StructureCase.DUMMY2D:
+    adapter_config_filename = "precice-adapter-config-fsi-dummy.json"
+elif Case is StructureCase.OPENFOAM:
+    adapter_config_filename = "precice-adapter-config-fsi-s.json"
 
-# initialize the adapter
 precice = Adapter(adapter_config_filename)
 
 precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, 
                                 mesh=mesh,
                                 read_field=f_N_function,
                                 write_field=u_function,
-                                u_n=u_old)
+                                u_n=u_old,
+                                dimension=dim)
 
 
-
+assert(precice_dt == float(dt))
 
 #alpha method parameters
 
@@ -170,7 +195,12 @@ v_new = update_a(a_new, u_old, v_old, a_old, ufl=True)
 
 res = m(avg(a_old,a_new,alpha_m), v) + k(avg(u_old,du, alpha_f), v)  #TODO: Wext(v) needs to be replaced by coupling
 
-res += precice.create_coupling_neumann_boundary_condition(v)# removed the marker , 3) #3 is the marker for the domain
+if Case is not StructureCase.RFERENCE:
+    res += precice.create_coupling_neumann_boundary_condition(v)# removed the marker , 3) #3 is the marker for the domain
+
+if Case is StructureCase.RFERENCE:
+    p = Expression( ('1','0'),degree=1)
+    res -= dot(v,p)*ds
 
 a_form= lhs(res)
 L_form= rhs(res)
@@ -182,8 +212,7 @@ L_form= rhs(res)
 
 #parameters for Time-Stepping
 T = 1.0
-Nsteps = 9
-dt = Constant(0.1)
+Nsteps = 11
 
 t=0.0
 n=0
@@ -193,7 +222,8 @@ E_ext = 0
 
 
 
-displacement_out = File("%s.pvd")
+displacement_out = File("Solid/s.pvd")
+displacement_out << u
 
 
 #time loop
