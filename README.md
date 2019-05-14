@@ -11,6 +11,7 @@ The files in this repository are organized in the form `problem_type/geometry/so
       * `buoyantSimpleFoam-CalculiX`
    * `flow-over-plate`: A channel flow over a hot plate
       * `buoyantPimpleFoam-fenics`: for running see `README.md`
+      * `buoyantPimpleFoam-nutils`: for running see `README.md`
 * `HT`: Heat Transfer
    * `partitioned-heat`: Solving heat equation on a partitioned domain
       * `fenics-fenics`: for running see `README.md`
@@ -19,6 +20,8 @@ The files in this repository are organized in the form `problem_type/geometry/so
       * `SU2-CalculiX`
       * `OpenFOAM-CalculiX`
     * `cylinderFlap`: A cylinder with a flexible flap in a channel flow. The von Karman vortices cause the flap to oscillate. 
+      * `OpenFOAM-CalculiX`
+    * `3D_Tube`: A 3D expanding tube with a pressure inlet boundary condition.
       * `OpenFOAM-CalculiX`
 * `SSI`: Structure-Structure Interaction
    * `loaded_beam`: A partitioned elastic beam fixed at both ends. A mechanical force is applied to one partition.
