@@ -1,5 +1,9 @@
 #Import required libs
 from fenics import *
+from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
+TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad,\
+Identity, inner,dx, ds, sym, grad, lhs, rhs, dot, File, solve
+
 from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,7 +18,7 @@ class StructureCase(Enum):
     DUMMY3D = 3
     RFERENCE = 4
     
-Case = StructureCase.OPENFOAM
+Case = StructureCase.DUMMY3D
 
 #if Case is StructureCase.OPENFOAM or StructureCase.DUMMY3D:
 #    dim=2.5 #2.5 means that 2D fenics is coupled via 3d preCICE
@@ -60,9 +64,6 @@ V = VectorFunctionSpace(mesh, 'P', 2)
 #BCs
 tol=1E-14
 
-dt = Constant(0.05)
-
-
 # Trial and Test Functions
 du = TrialFunction(V)
 v = TestFunction(V)
@@ -85,22 +86,34 @@ coupling_boundary = AutoSubDomain(Neumann_Boundary)
 ## get the adapter ready
 
 #read fenics-adapter json-config-file)
-if Case is StructureCase.DUMMY2D:
-    adapter_config_filename = "precice-adapter-config-fsi-dummy.json"
-elif Case is StructureCase.OPENFOAM:
-    adapter_config_filename = "precice-adapter-config-fsi-s.json"
 
-precice = Adapter(adapter_config_filename)
+if Case is not StructureCase.RFERENCE:
+    
+    if Case is StructureCase.DUMMY2D:
+        adapter_config_filename = "precice-adapter-config-fsi-dummy.json"
+    elif Case is StructureCase.OPENFOAM:
+        adapter_config_filename = "precice-adapter-config-fsi-s.json"
+        
+    elif Case is StructureCase.DUMMY3D:
+        adapter_config_filename = "precice-adapter-config-fsi-dummy-3d.json"
+    else: 
+        raise Exception("This Case is not Implemented yet")
 
-precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, 
+    precice = Adapter(adapter_config_filename)
+
+    precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, 
                                 mesh=mesh,
                                 read_field=f_N_function,
                                 write_field=u_function,
                                 u_n=u_old,
                                 dimension=dim)
 
+    dt = Constant(precice_dt)
 
-assert(precice_dt == float(dt))
+else:
+    dt = Constant(0.05)
+
+
 
 #alpha method parameters
 
@@ -143,7 +156,7 @@ def k(u,v):
 
 # External Work
 def Wext(u_):
-    return dot(u_,p)*dss(3)
+    return dot(u_,p)*ds
 
 
 # Update functions
@@ -196,7 +209,7 @@ v_new = update_a(a_new, u_old, v_old, a_old, ufl=True)
 res = m(avg(a_old,a_new,alpha_m), v) + k(avg(u_old,du, alpha_f), v)  #TODO: Wext(v) needs to be replaced by coupling
 
 if Case is not StructureCase.RFERENCE:
-    res += precice.create_coupling_neumann_boundary_condition(v)# removed the marker , 3) #3 is the marker for the domain
+    res -= precice.create_coupling_neumann_boundary_condition(v)# removed the marker , 3) #3 is the marker for the domain
 
 if Case is StructureCase.RFERENCE:
     p = Expression( ('1','0'),degree=1)
@@ -212,42 +225,68 @@ L_form= rhs(res)
 
 #parameters for Time-Stepping
 T = 1.0
-Nsteps = 11
 
 t=0.0
 n=0
-time = np.linspace(0,T,Nsteps+1)
-u_tip = np.zeros((Nsteps+1,1))
+time = []
+u_tip = []
+time.append(0.0)
+u_tip.append(0.0)
 E_ext = 0
 
 
+if Case is StructureCase.DUMMY2D:
+    displacement_out = File("Solid/Dummy2D.pvd")
+    
+elif Case is StructureCase.DUMMY3D:
+    displacement_out = File("Solid/Dummy3D.pvd")
+elif Case is StructureCase.OPENFOAM:
+    displacement_out = File("Solid/FSI-S.pvd")
+    
+elif Case is StructureCase.RFERENCE:
+    displacement_out = File("Solid/ref.pvd")
+    
 
-displacement_out = File("Solid/s.pvd")
 displacement_out << u
 
 
-#time loop
-while precice.is_coupling_ongoing():
+#time loop for coupling
+
+if Case is not StructureCase.RFERENCE:
+
+    while precice.is_coupling_ongoing():
+        
+         
+        #solve for new displacements
+        solve(a_form==L_form, u, bc)
+        
+        # call precice.advance
+        t, n, precice_timestep_complete, precice_dt = precice.advance(u, u, u_old, t, float(dt), n)
+        
+        
+        
+        if precice_timestep_complete:
+            update_fields(u, u_old, v_old, a_old)
+        
+            displacement_out << u
+        
+            u_tip.append(u(0.,1.)[0])
+            time.append(t)
     
-     
-    #solve for new displacements
-    solve(a_form==L_form, u, bc)
+    # stop coupling    
+    precice.finalize()
     
-    # call precice.advance
-    t, n, precice_timestep_complete, precice_dt = precice.advance(u, u, u_old, t, float(dt), n)
-    
-    
-    
-    if precice_timestep_complete:
-        update_fields(u, u_old, v_old, a_old)
-    
+#time loop for reference calculation
+else:
+    while t<=0.5:
+        solve(a_form == L_form, u, bc)
+        
+        t=t+float(dt)
+        update_fields(u,u_old, v_old,a_old)
         displacement_out << u
-    
-        u_tip[n+1] = u(0.,1.)[0]
-    
-    
-# stop coupling    
-precice.finalize()
+        u_tip.append(u(0.,1.)[0])
+        time.append(t)
+
 
 # Plot tip displacement evolution
 plt.figure()
