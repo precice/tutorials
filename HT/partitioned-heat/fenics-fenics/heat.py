@@ -41,19 +41,6 @@ class ProblemType(Enum):
     DIRICHLET = 1  # Dirichlet problem
     NEUMANN = 2  # Neumann problem
 
-class Subcycling(Enum):
-    """
-    Enum defines which kind of subcycling is used
-    """
-    NONE = 0  # no subcycling, precice_dt == fenics_dt
-    MATCHING = 1  # subcycling, where fenics_dt fits into precice_dt, mod(precice_dt, fenics_dt) == 0
-    NONMATCHING = 2  # subcycling, where fenics_dt does not fit into precice_dt, mod(precice_dt, fenics_dt) != 0
-    DIFFERENT = 3  # subcycling, where fenics_dt fits into precice_dt and fenics_dt differs for the two subdomains
-    WAVEFORM = 4  # use waveform relaxation
-
-    # note: the modulo expressions above should be understood in an exact way (no floating point round off problems. For
-    # details, see https://stackoverflow.com/questions/14763722/python-modulo-on-floats)
-
 
 class ComplementaryBoundary(SubDomain):
     def __init__(self, subdomain):
@@ -120,27 +107,11 @@ if not (args.dirichlet or args.neumann):
 nx = 10
 ny = 10
 
-if args.waveform:
-    subcycle = Subcycling.WAVEFORM
-else:
-    subcycle = Subcycling.NONE
+error_tol = 10 ** -12
 
-# for all scenarios, we assume precice_dt == .1
-if subcycle is Subcycling.NONE:
-    wr_factor = 1
-    wr_tag = "WR11"
-    d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
-    n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
-    error_tol = 10 ** -12
-elif subcycle is Subcycling.WAVEFORM:
-    if problem is ProblemType.DIRICHLET:
-        wr_factor = args.waveform[0]
-    elif problem is ProblemType.NEUMANN:
-        wr_factor = args.waveform[1]
-    error_tol = 10 ** -12
-    wr_tag = "WR{wr1}{wr2}".format(wr1=args.waveform[0], wr2=args.waveform[1])
-    d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
-    n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
+wr_tag = "WR{wr1}{wr2}".format(wr1=args.waveform[0], wr2=args.waveform[1])
+d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
+n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
 
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
@@ -186,10 +157,10 @@ precice = Adapter(adapter_config_filename, other_adapter_config_filename)  # tod
 
 if problem is ProblemType.DIRICHLET:
     dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
-                                    write_field=f_N_function, u_n=u_n, wr_factor=wr_factor)
+                                    write_field=f_N_function, u_n=u_n)
 elif problem is ProblemType.NEUMANN:
     dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
-                                    write_field=u_D_function, u_n=u_n, wr_factor=wr_factor)
+                                    write_field=u_D_function, u_n=u_n)
 
 # Define variational problem
 u = TrialFunction(V)
