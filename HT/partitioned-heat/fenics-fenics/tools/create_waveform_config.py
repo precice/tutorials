@@ -1,11 +1,11 @@
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 import argparse
 import numpy as np
-import os
+import os, stat
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
-parser.add_argument("-dT", "--window-size", default=1, type=float)
+parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 parser.add_argument("-T", "--simulation-time", default=10, type=float)
 parser.add_argument("-tol", "--tolerance", default='1e-12', type=str)
 args = parser.parse_args()
@@ -36,12 +36,13 @@ env = Environment(
 precice_config_template = env.get_template('precice-config.xml')
 precice_adapter_D_template = env.get_template('precice-adapter-config-D.json')
 precice_adapter_N_template = env.get_template('precice-adapter-config-N.json')
+runall_template = env.get_template("runall.sh")
 
 wr_tag = "WR{N_Dirichlet}{N_Neumann}".format(N_Dirichlet=N_Dirichlet,
-                                              N_Neumann=N_Neumann)
-window_size = "dT{dT}".format(dT=args.window_size)
+                                             N_Neumann=N_Neumann)
+window_tag = "dT{dT}".format(dT=args.window_size)
 total_time = args.simulation_time
-target_path = os.path.join("experiments", wr_tag, window_size)
+target_path = os.path.join("experiments", wr_tag, window_tag)
 
 if not os.path.exists(target_path):
     os.makedirs(target_path)
@@ -53,7 +54,7 @@ with open(os.path.join( target_path, precice_config_name), "w") as file:
                                               fluxes=fluxes,
                                               convergence_limit=args.tolerance,
                                               total_time=total_time,
-                                              window_size=window_size))
+                                              window_size=args.window_size))
 
 with open(os.path.join( target_path, 'precice-adapter-config-D.json'), "w") as file:
     file.write(precice_adapter_D_template.render(N_Dirichlet=N_Dirichlet,
@@ -62,3 +63,12 @@ with open(os.path.join( target_path, 'precice-adapter-config-D.json'), "w") as f
 with open(os.path.join( target_path, 'precice-adapter-config-N.json'), "w") as file:
     file.write(precice_adapter_N_template.render(N_Neumann=N_Neumann,
                                                  precice_config_name=precice_config_name))
+
+runall_path = os.path.join( target_path, 'runall.sh')
+with open(runall_path, "w") as file:
+    file.write(runall_template.render(wr_left=N_Dirichlet,
+                                      wr_right=N_Neumann,
+                                      window_size=args.window_size))
+
+st = os.stat(runall_path)
+os.chmod(runall_path, st.st_mode | stat.S_IEXEC)
