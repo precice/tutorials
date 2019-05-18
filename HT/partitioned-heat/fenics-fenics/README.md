@@ -24,3 +24,13 @@ For all setups linear interpolation in time is used for each (micro-)timestep. T
 
 * ` python3 heat.py -d -wr 2 1`
 * ` python3 heat.py -n -wr 2 1`
+
+### running the experiments
+
+In the folder `experiments` you can find experiments with different timestep size and waveform configuration. If you traverse down the folder structure, you will find preCICE and adapter config files for running the experiments. All the output will be generated in that folder.
+
+Example for running:
+
+`cd experiments/WR12/dT0.1`
+`python3 ../../../heat.py -d -wr 1 2 -dT 0.1`
+`python3 ../../../heat.py -n -wr 1 2 -dT 0.1`
