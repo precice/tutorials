@@ -32,6 +32,7 @@ from fenicsadapter import Adapter
 from errorcomputation import compute_errors
 import argparse
 import numpy as np
+import os
 
 
 class ProblemType(Enum):
@@ -89,6 +90,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
+parser.add_argument("-dT", "--window-size", default=1, type=float)
 
 args = parser.parse_args()
 
@@ -110,17 +112,20 @@ ny = 10
 error_tol = 10 ** -12
 
 wr_tag = "WR{wr1}{wr2}".format(wr1=args.waveform[0], wr2=args.waveform[1])
-d_subcycling = "D-{wr_tag}".format(wr_tag=wr_tag)
-n_subcycling = "N-{wr_tag}".format(wr_tag=wr_tag)
+window_size = "dT{dT}".format(dT=args.window_size)
+d_subcycling = "D".format(wr_tag=wr_tag)
+n_subcycling = "N".format(wr_tag=wr_tag)
+
+configs_path = os.path.join("experiments", wr_tag, window_size)
 
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
-    adapter_config_filename = "precice-adapter-config-{d_subcycling}.json".format(d_subcycling=d_subcycling)
-    other_adapter_config_filename = "precice-adapter-config-{n_subcycling}.json".format(n_subcycling=n_subcycling)
+    adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
+    other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-N.json")
 
 elif problem is ProblemType.NEUMANN:
-    adapter_config_filename = "precice-adapter-config-{n_subcycling}.json".format(n_subcycling=n_subcycling)
-    other_adapter_config_filename = "precice-adapter-config-{d_subcycling}.json".format(d_subcycling=d_subcycling)
+    adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-N.json")
+    other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
 
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta

@@ -14,4 +14,4 @@ Run `python3 create_waveform_config.py -wr 1 2` for creating the configuration f
 * `precice-adapter-config-D.json`
 * `precice-adapter-config-N.json`
 
-The templates that are used for generating these files can be found in `templates`.
+The templates that are used for generating these files can be found in `templates`. The generated files are created in `experiments/WRXX/dT00/*`.
