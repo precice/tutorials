@@ -6,6 +6,7 @@ import os
 parser = argparse.ArgumentParser()
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
 parser.add_argument("-dT", "--window-size", default=1, type=float)
+parser.add_argument("-T", "--simulation-time", default=10, type=float)
 parser.add_argument("-tol", "--tolerance", default='1e-12', type=str)
 args = parser.parse_args()
 
@@ -21,9 +22,6 @@ define timestepping setup. Be aware of the following relationships:
 1. N_Neumann * dt_Neumann = N_Dirichlet * dt_Dirichlet = window_size
 2. window_size * N_coupling = total_time
 """
-total_time = 1
-dt = .1
-window_size = dt * np.max([N_Neumann, N_Dirichlet])
 
 for i in range(N_Neumann):
     temperatures.append("Temperature{i}".format(i=i+1))
@@ -42,7 +40,7 @@ precice_adapter_N_template = env.get_template('precice-adapter-config-N.json')
 wr_tag = "WR{N_Dirichlet}{N_Neumann}".format(N_Dirichlet=N_Dirichlet,
                                               N_Neumann=N_Neumann)
 window_size = "dT{dT}".format(dT=args.window_size)
-
+total_time = args.simulation_time
 target_path = os.path.join("experiments", wr_tag, window_size)
 
 if not os.path.exists(target_path):
