@@ -18,7 +18,7 @@ class StructureCase(Enum):
     DUMMY3D = 3
     RFERENCE = 4
     
-Case = StructureCase.DUMMY3D
+Case = StructureCase.OPENFOAM
 
 #if Case is StructureCase.OPENFOAM or StructureCase.DUMMY3D:
 #    dim=2.5 #2.5 means that 2D fenics is coupled via 3d preCICE
@@ -44,8 +44,8 @@ def Neumann_Boundary(x, on_boundary):
 d=2 #number of dimensions
 H = 1
 W = 0.1
-rho = 0.2
-E=1000.0
+rho = 1000
+E=100000.0
 nu= 0.3
 
 mu    = Constant(E / (2.0*(1.0 + nu)))
@@ -68,15 +68,16 @@ tol=1E-14
 du = TrialFunction(V)
 v = TestFunction(V)
 
-u = Function(V)
+u_np1 = Function(V)
+saved_u_old = Function(V)
 
 # function known from previous timestep
-u_old = Function(V)
-v_old = Function(V)
-a_old = Function(V)
+u_n = Function(V)
+v_n = Function(V)
+a_n = Function(V)
 
 
-f_N_function = interpolate(Expression(("0","0"), degree=1), V)
+f_N_function = interpolate(Expression(("1","0"), degree=1), V)
 u_function = interpolate(Expression(("0","0"), degree=1), V)
 
 coupling_boundary = AutoSubDomain(Neumann_Boundary)
@@ -105,7 +106,7 @@ if Case is not StructureCase.RFERENCE:
                                 mesh=mesh,
                                 read_field=f_N_function,
                                 write_field=u_function,
-                                u_n=u_old,
+                                u_n=u_n,
                                 dimension=dim)
 
     dt = Constant(precice_dt)
@@ -203,16 +204,17 @@ def avg(x_old, x_new, alpha):
     return alpha*x_old + (1-alpha)*x_new
 
 # residual
-a_new = update_a(du, u_old, v_old, a_old, ufl=True)
-v_new = update_a(a_new, u_old, v_old, a_old, ufl=True)
+a_np1 = update_a(du, u_n, v_n, a_n, ufl=True)
+v_np1 = update_v(a_np1, u_n, v_n, a_n, ufl=True)
 
-res = m(avg(a_old,a_new,alpha_m), v) + k(avg(u_old,du, alpha_f), v)  #TODO: Wext(v) needs to be replaced by coupling
+res = m(avg(a_n,a_np1,alpha_m), v) + k(avg(u_n,du, alpha_f), v)  #TODO: Wext(v) needs to be replaced by coupling
 
 if Case is not StructureCase.RFERENCE:
     res -= precice.create_coupling_neumann_boundary_condition(v)# removed the marker , 3) #3 is the marker for the domain
+    #res -= dot(v, Expression( ('1','0'),degree=2)) * ds
 
 if Case is StructureCase.RFERENCE:
-    p = Expression( ('1','0'),degree=1)
+    p = Expression( ('1','0'),degree=2)
     res -= dot(v,p)*ds
 
 a_form= lhs(res)
@@ -224,7 +226,7 @@ L_form= rhs(res)
 # Prepare for time-stepping
 
 #parameters for Time-Stepping
-T = 1.0
+#T = 1.0
 
 t=0.0
 n=0
@@ -236,18 +238,18 @@ E_ext = 0
 
 
 if Case is StructureCase.DUMMY2D:
-    displacement_out = File("Solid/Dummy2D.pvd")
+    displacement_out = File("Solid/Dummy2DOut/u_2dd.pvd")
     
 elif Case is StructureCase.DUMMY3D:
-    displacement_out = File("Solid/Dummy3D.pvd")
+    displacement_out = File("Solid/Dummy3DOut/u_3dd.pvd")
 elif Case is StructureCase.OPENFOAM:
-    displacement_out = File("Solid/FSI-S.pvd")
+    displacement_out = File("Solid/FSI-S/u_fsi.pvd")
     
 elif Case is StructureCase.RFERENCE:
-    displacement_out = File("Solid/ref.pvd")
+    displacement_out = File("Reference/u_ref.pvd")
     
 
-displacement_out << u
+displacement_out << u_n
 
 
 #time loop for coupling
@@ -258,19 +260,22 @@ if Case is not StructureCase.RFERENCE:
         
          
         #solve for new displacements
-        solve(a_form==L_form, u, bc)
         
+
+        solve(a_form == L_form, u_np1, bc)
         # call precice.advance
-        t, n, precice_timestep_complete, precice_dt = precice.advance(u, u, u_old, t, float(dt), n)
+        t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, float(dt), n)
         
         
         
         if precice_timestep_complete:
-            update_fields(u, u_old, v_old, a_old)
+            
+            update_fields(u_np1, saved_u_old, v_n, a_n)
+            
+            if n % 10==0:
+                displacement_out << u_n
         
-            displacement_out << u
-        
-            u_tip.append(u(0.,1.)[0])
+            u_tip.append(u_n(0.,1.)[0])
             time.append(t)
     
     # stop coupling    
@@ -279,12 +284,12 @@ if Case is not StructureCase.RFERENCE:
 #time loop for reference calculation
 else:
     while t<=0.5:
-        solve(a_form == L_form, u, bc)
+        solve(a_form == L_form, u_np1, bc)
         
         t=t+float(dt)
-        update_fields(u,u_old, v_old,a_old)
-        displacement_out << u
-        u_tip.append(u(0.,1.)[0])
+        update_fields(u_np1,u_n, v_n,a_n)
+        displacement_out << u_n
+        u_tip.append(u_n(0.,1.)[0])
         time.append(t)
 
 
