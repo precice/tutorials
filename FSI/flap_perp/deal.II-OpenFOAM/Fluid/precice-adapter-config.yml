@@ -3,7 +3,7 @@ participant: Fluid
 precice-config-file: precice-config.xml
 
 interfaces:
-- mesh: Fluid-Mesh-Faces
+- mesh: Fluid-Mesh-Centers
   locations: faceCenters
   patches:
   - flap
