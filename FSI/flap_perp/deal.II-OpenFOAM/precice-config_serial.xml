@@ -34,7 +34,7 @@
 	<write-data name="Force" mesh="Fluid-Mesh-Centers"/>
        <mapping:rbf-thin-plate-splines direction="write" from="Fluid-Mesh-Centers" to="Solid_faces" constraint="conservative" z-dead="true"/>
         <mapping:rbf-thin-plate-splines direction="read" from="Solid_nodes" to="Fluid-Mesh-Nodes" constraint="consistent"/>
-        <watch-point mesh="Solid_nodes" name="point1" coordinate="-0.05;0;1" />
+        <watch-point mesh="Solid_nodes" name="flap_tip" coordinate="-0.05;1;0" />
     </participant>
 
     <participant name="Solid">
