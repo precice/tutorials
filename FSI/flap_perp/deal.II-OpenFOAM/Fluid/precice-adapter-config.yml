@@ -1,0 +1,19 @@
+participant: Fluid
+
+precice-config-file: precice-config.xml
+
+interfaces:
+- mesh: Fluid-Mesh-Faces
+  locations: faceCenters
+  patches:
+  - flap
+  write-data: Force
+  provideMeshConnectivity: false
+- mesh: Fluid-Mesh-Nodes
+  locations: faceNodes
+  patches:
+  - flap
+  read-data: Displacement
+  provideMeshConnectivity: false
+
+FSIenabled: true
