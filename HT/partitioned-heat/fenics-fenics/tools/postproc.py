@@ -46,3 +46,7 @@ for wr in evaluated_wr:
 
 for line in table:
     print(line)
+
+from tabulate import tabulate
+
+print(tabulate(table[1:], headers = table[0]))
