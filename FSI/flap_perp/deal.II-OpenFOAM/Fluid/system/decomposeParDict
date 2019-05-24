@@ -1,24 +1,17 @@
-FoamFile
-{
+FoamFile {
     version 2.0;
-    format ascii;
     class dictionary;
-    location system;
     object decomposeParDict;
+    format ascii;
 }
 
-    numberOfSubdomains 6;
-    
-    method hierarchical;
-    hierarchicalCoeffs
-    {
-        n (3 2 1);
-        delta 0.001;
-        order xyz;
-    }
+numberOfSubdomains 4;
 
-    distributed false;
-    roots
-    (
-    );
+method          simple;
+
+simpleCoeffs
+{
+    n               (2 1 1);
+    delta           0.001;
+}
 
