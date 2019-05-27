@@ -44,3 +44,6 @@ if [ $parallel -eq 1 ]; then
 else
     $solver -case Fluid
 fi
+
+# Workaround for issue #26
+./removeObsoleteFolders.sh
