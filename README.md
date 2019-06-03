@@ -22,6 +22,7 @@ The files in this repository are organized in the form `problem_type/geometry/so
       * `deal.II-OpenFOAM`: for running see the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM)
     * `cylinderFlap`: A cylinder with a flexible flap in a channel flow. The von Karman vortices cause the flap to oscillate. 
       * `OpenFOAM-CalculiX`
+      * `deal.II-OpenFOAM`: for running see the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM)
     * `3D_Tube`: A 3D expanding tube with a pressure inlet boundary condition.
       * `OpenFOAM-CalculiX`
 * `SSI`: Structure-Structure Interaction
