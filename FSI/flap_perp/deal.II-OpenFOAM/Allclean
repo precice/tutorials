@@ -25,7 +25,7 @@ rm -f ${Participant1}_reconstructPar.log
 
 # Participant 2: Solid (deal.II)
 Participant2="Solid"
-cd  ./dealii_output
+cd  ./Solid/dealii_output
     # Clean the case
     echo "Cleaning Solid case"
     rm -f *.vtk
