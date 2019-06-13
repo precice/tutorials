@@ -35,6 +35,7 @@ checkMesh -case Fluid
 # Run
 cd Fluid
 	solver=$(getApplication)
+    echo "  ### WARNING ### Make sure to use the correct solver for your OpenFOAM version! (pimpleFoam for OpenFOAM v1806, OpenFOAM 6, or newer, vs pimpleDyMFoam for older) You may change this in your Fluid/system/controlDict file, if needed."
 cd ..
 if [ $parallel -eq 1 ]; then
     decomposePar -force -case Fluid
