@@ -21,8 +21,8 @@
     <mesh name="Solid_nodes">
         <use-data name="Displacement"/>
     </mesh>
-   <mesh name="Solid_faces">
-       <use-data name="Force"/>
+    <mesh name="Solid_faces">
+        <use-data name="Force"/>
     </mesh>
 
     <participant name="Fluid">
@@ -32,20 +32,17 @@
         <use-mesh name="Solid_nodes" from="Solid"/>
         <use-mesh name="Solid_faces" from="Solid"/>
         <read-data name="Displacement" mesh="Fluid-Mesh-Nodes"/>
-	<write-data name="Force" mesh="Fluid-Mesh-Centers"/>
-       <mapping:petrbf-thin-plate-splines direction="write" from="Fluid-Mesh-Centers" to="Solid_faces" constraint="conservative" z-dead="true"/>
+        <write-data name="Force" mesh="Fluid-Mesh-Centers"/>
+        <mapping:petrbf-thin-plate-splines direction="write" from="Fluid-Mesh-Centers" to="Solid_faces" constraint="conservative" z-dead="true"/>
         <mapping:petrbf-thin-plate-splines direction="read" from="Solid_nodes" to="Fluid-Mesh-Nodes" constraint="consistent"/>
         <watch-point mesh="Solid_nodes" name="flap_tip" coordinate="-0.05;1;0" />
     </participant>
 
     <participant name="Solid">
-	<master:mpi-single/>
-        <use-mesh name="Fluid-Mesh-Centers" from="Fluid"/>
-        <use-mesh name="Fluid-Mesh-Nodes" from="Fluid"/>
         <use-mesh name="Solid_nodes" provide="yes"/>
         <use-mesh name="Solid_faces" provide="yes"/>
-        <read-data name="Force"  mesh="Solid_faces"/>
-	<write-data name="Displacement" mesh="Solid_nodes"/>
+        <read-data name="Force" mesh="Solid_faces"/>
+        <write-data name="Displacement" mesh="Solid_nodes"/>
     </participant>
 
     <m2n:sockets from="Fluid" to="Solid" distribution-type="gather-scatter"/>
@@ -62,16 +59,15 @@
         <relative-convergence-measure limit="1e-4" data="Force" mesh="Solid_faces"/>
         <extrapolation-order value="2"/>
 
-             <post-processing:IQN-ILS>
-                <data name="Displacement" mesh="Solid_nodes"/>
-                <preconditioner type="residual-sum"/>
-                <filter type="QR1" limit="1e-6"/>
-                <initial-relaxation value="0.1"/>
-                <max-used-iterations value="50"/>
-                <timesteps-reused value="10"/>
-            </post-processing:IQN-ILS>
-
-      </coupling-scheme:serial-implicit>
+        <post-processing:IQN-ILS>
+            <data name="Displacement" mesh="Solid_nodes"/>
+            <preconditioner type="residual-sum"/>
+            <filter type="QR1" limit="1e-6"/>
+            <initial-relaxation value="0.1"/>
+            <max-used-iterations value="50"/>
+            <timesteps-reused value="10"/>
+        </post-processing:IQN-ILS>
+    </coupling-scheme:serial-implicit>
 
     </solver-interface>
 
