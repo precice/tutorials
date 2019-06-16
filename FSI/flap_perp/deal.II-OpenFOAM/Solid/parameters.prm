@@ -49,10 +49,10 @@ subsection precice configuration
     # Name of the participant in the precice-config.xml file
     set Participant         = Solid
 	
-    # Name of the node based coupling mesh in the precice-config.xml file
+    # Name of the node-based coupling mesh in the precice-config.xml file
     set Node mesh name      = Solid_nodes
 	
-    # Name of the face based coupling mesh in the precice-config.xml file
+    # Name of the face-based coupling mesh in the precice-config.xml file
     set Face mesh name      = Solid_faces
 
     # Name of the read data in the precice-config.xml file

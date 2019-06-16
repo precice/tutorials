@@ -28,7 +28,7 @@ Participant2="Solid"
 cd  ./Solid/dealii_output
     # Clean the case
     echo "Cleaning Solid case"
-    rm -fv *.vtk
+    rm -fv solution-*.vtk
 cd ../..
 
 # Remove the preCICE-related log files
