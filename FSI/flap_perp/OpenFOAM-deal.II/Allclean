@@ -31,6 +31,8 @@ cd  ./Solid/dealii_output
     rm -fv solution-*.vtk
 cd ../..
 
+rm -fv ${Participant2}.log
+
 # Remove the preCICE-related log files
 echo "Deleting the preCICE log files..."
 rm -fv \
