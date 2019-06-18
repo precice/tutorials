@@ -5,5 +5,8 @@
       "coupling_mesh_name": "NeumannNodes",
       "write_data_name": "Temperature",
       "read_data_name": "Flux"
+    },
+  "waveform": {
+      "n_substeps": 2
     }
 }

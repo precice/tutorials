@@ -32,6 +32,7 @@ from fenicsadapter import Adapter
 from errorcomputation import compute_errors
 import argparse
 import numpy as np
+import os
 
 
 class ProblemType(Enum):
@@ -40,17 +41,6 @@ class ProblemType(Enum):
     """
     DIRICHLET = 1  # Dirichlet problem
     NEUMANN = 2  # Neumann problem
-
-class Subcyling(Enum):
-    """
-    Enum defines which kind of subcycling is used
-    """
-    NONE = 0  # no subcycling, precice_dt == fenics_dt
-    MATCHING = 1  # subcycling, where fenics_dt fits into precice_dt, mod(precice_dt, fenics_dt) == 0
-    NONMATCHING = 2  # subcycling, where fenics_dt does not fit into precice_dt, mod(precice_dt, fenics_dt) != 0
-
-    # note: the modulo expressions above should be understood in an exact way (no floating point round off problems. For
-    # details, see https://stackoverflow.com/questions/14763722/python-modulo-on-floats)
 
 
 class ComplementaryBoundary(SubDomain):
@@ -99,11 +89,10 @@ def fluxes_from_temperature_full_domain(F, V):
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
+parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
+parser.add_argument("-dT", "--window-size", default=1, type=float)
 
 args = parser.parse_args()
-
-
-config_file_name = "precice-config.xml"  # TODO should be moved into config, see https://github.com/precice/fenics-adapter/issues/5 , in case file doesnt not exsist open will fail
 
 # coupling parameters
 if args.dirichlet:
@@ -117,31 +106,26 @@ if not (args.dirichlet or args.neumann):
 
 # Create mesh and define function space
 
-nx = 5
+nx = 10
 ny = 10
-subcycle = Subcyling.NONE
+
+error_tol = 10 ** -12
+
+wr_tag = "WR{wr1}{wr2}".format(wr1=args.waveform[0], wr2=args.waveform[1])
+window_size = "dT{dT}".format(dT=args.window_size)
+d_subcycling = "D".format(wr_tag=wr_tag)
+n_subcycling = "N".format(wr_tag=wr_tag)
+
+configs_path = os.path.join("experiments", wr_tag, window_size)
 
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
-    adapter_config_filename = "precice-adapter-config-D.json"
+    adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
+    other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-N.json")
 
 elif problem is ProblemType.NEUMANN:
-    ny = 20
-    adapter_config_filename = "precice-adapter-config-N.json"
-
-# for all scenarios, we assume precice_dt == .1
-if subcycle is Subcyling.NONE:
-    fenics_dt = .1  # time step size
-    error_tol = 10 ** -4  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
-    # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
-elif subcycle is Subcyling.MATCHING:
-    fenics_dt = .01  # time step size
-    error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
-    # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
-elif subcycle is Subcyling.NONMATCHING:
-    fenics_dt = .03  # time step size
-    error_tol = 10 ** -1  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
-    # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
+    adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-N.json")
+    other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
 
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
@@ -174,17 +158,14 @@ bcs = [DirichletBC(V, u_D, remaining_boundary)]
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
-precice = Adapter(adapter_config_filename)
+precice = Adapter(adapter_config_filename, other_adapter_config_filename)  # todo: how to avoid requiring both configs without Waveform Relaxation?
 
 if problem is ProblemType.DIRICHLET:
-    precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
+    dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
                                     write_field=f_N_function, u_n=u_n)
 elif problem is ProblemType.NEUMANN:
-    precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
+    dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
                                     write_field=u_D_function, u_n=u_n)
-
-dt = Constant(0)
-dt.assign(np.min([fenics_dt, precice_dt]))
 
 # Define variational problem
 u = TrialFunction(V)
@@ -229,18 +210,36 @@ u_D.t = t + dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a be
 
 while precice.is_coupling_ongoing():
 
+    x_check, y_check = 1.5, 0.5
+
+    if problem is ProblemType.DIRICHLET:
+        u_ref = interpolate(u_D, V)
+        print("before solve:")
+        print(u_n(x_check, y_check))
+        print(u_np1(x_check, y_check))
+        print(u_ref(x_check, y_check))
+
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
+
+    print("t={t}; dt={dt}".format(t=t, dt=dt(0)))
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
         fluxes = fluxes_from_temperature_full_domain(F_known_u, V)
         t, n, precice_timestep_complete, precice_dt = precice.advance(fluxes, u_np1, u_n, t, dt(0), n)
     elif problem is ProblemType.NEUMANN:
-        # Neumann problem obtains sends temperature on boundary to Dirichlet problem
+        # Neumann problem samples temperature on boundary from solution and sends temperature to Dirichlet problem
         t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)
 
-    dt.assign(np.min([fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
+    if problem is ProblemType.DIRICHLET:
+        print("after solve:")
+        print(u_n(x_check, y_check))
+        print(u_np1(x_check, y_check))
+        print(u_ref(x_check, y_check))
+        print(fluxes(x_check, y_check))
+
+    dt.assign(np.min([precice.fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
 
     if precice_timestep_complete:
         u_ref = interpolate(u_D, V)

@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+
+<precice-configuration>
+
+  <solver-interface dimensions="2">
+
+    <!-- Data fields that are exchanged between the solvers -->
+    {% for temperature in temperatures -%}
+    <data:scalar name="{{temperature}}"/>
+    {% endfor -%}
+    {% for flux in fluxes -%}
+    <data:scalar name="{{flux}}"/>
+    {% endfor -%}
+
+    <!-- A common mesh that uses these data fields -->
+    <mesh name="DirichletNodes">
+    {% for temperature in temperatures -%}
+      <use-data name="{{temperature}}"/>
+    {% endfor -%}
+    {% for flux in fluxes -%}
+      <use-data name="{{flux}}"/>
+    {% endfor -%}
+    </mesh>
+
+    <mesh name="NeumannNodes">
+    {% for temperature in temperatures -%}
+      <use-data name="{{temperature}}"/>
+    {% endfor -%}
+    {% for flux in fluxes -%}
+      <use-data name="{{flux}}"/>
+    {% endfor -%}
+    </mesh>
+
+    <!-- Represents each solver using preCICE. In a coupled simulation, two participants have to be
+         defined. The name of the participant has to match the name given on construction of the
+         precice::SolverInterface object used by the participant. -->
+
+    <participant name="HeatDirichlet">
+      <!-- Makes the named mesh available to the participant. Mesh is provided by the solver directly. -->
+      <use-mesh name="DirichletNodes" provide="yes" />
+      <use-mesh name="NeumannNodes" from="HeatNeumann" />
+      <!-- Define input/output of the solver.  -->
+      {% for flux in fluxes -%}
+        <write-data name="{{flux}}" mesh="DirichletNodes"/>
+      {% endfor -%}
+      {% for temperature in temperatures -%}
+        <read-data  name="{{temperature}}" mesh="DirichletNodes"/>
+      {% endfor -%}
+      <mapping:nearest-projection direction="write" from="DirichletNodes" to="NeumannNodes"   constraint="consistent" timing="initial"/>
+      <mapping:nearest-projection direction="read"  from="NeumannNodes"   to="DirichletNodes" constraint="consistent" timing="initial"/>
+    </participant>
+
+    <participant name="HeatNeumann">
+      <use-mesh name="NeumannNodes" provide="yes"/>
+      {% for temperature in temperatures -%}
+        <write-data name="{{temperature}}" mesh="NeumannNodes"/>
+      {% endfor -%}
+      {% for flux in fluxes -%}
+        <read-data  name="{{flux}}"        mesh="NeumannNodes"/>
+      {% endfor -%}
+    </participant>
+
+    <!-- Communication method, use TCP sockets, Change network to "ib0" on SuperMUC -->
+    <m2n:sockets distribution-type="gather-scatter" from="HeatDirichlet" to="HeatNeumann" network="lo"/>
+    <coupling-scheme:serial-implicit>
+      <participants first="HeatDirichlet" second="HeatNeumann"/>
+      <max-time value="{{total_time}}"/>
+      <timestep-length value="{{window_size}}" valid-digits="8"/>
+      <max-iterations value="100"/>
+      {% for temperature in temperatures -%}
+      <exchange data="{{temperature}}" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
+      {% endfor -%}
+      {% for flux in fluxes -%}
+      <exchange data="{{flux}}"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
+      {% endfor -%}
+      {% for temperature in temperatures -%}
+      <relative-convergence-measure data="{{temperature}}" mesh="NeumannNodes" limit="{{convergence_limit}}"/>
+      {% endfor -%}
+      {% for flux in fluxes -%}
+      <relative-convergence-measure data="{{flux}}" mesh="NeumannNodes" limit="{{convergence_limit}}"/>
+      {% endfor -%}
+      <extrapolation-order value="0"/>
+      <post-processing:IQN-ILS>
+	    <!--PostProc always done on the second participant-->
+        {% for temperature in temperatures -%}
+        <data name="{{temperature}}" mesh="NeumannNodes"/>
+        {% endfor -%}
+        <initial-relaxation value="1.0"/>
+        <max-used-iterations value="50"/>
+        <timesteps-reused value="0"/>
+        <filter type="QR2" limit="1e-3"/>
+      </post-processing:IQN-ILS>
+    </coupling-scheme:serial-implicit>
+  </solver-interface>
+</precice-configuration>

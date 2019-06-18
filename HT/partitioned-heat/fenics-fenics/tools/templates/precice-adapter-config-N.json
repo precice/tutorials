@@ -1,0 +1,12 @@
+{
+  "solver_name": "HeatNeumann",
+  "config_file_name": "{{precice_config_name}}",
+  "interface": {
+      "coupling_mesh_name": "NeumannNodes",
+      "write_data_name": "Temperature",
+      "read_data_name": "Flux"
+    },
+  "waveform": {
+      "n_substeps": {{N_Neumann}}
+    }
+}
