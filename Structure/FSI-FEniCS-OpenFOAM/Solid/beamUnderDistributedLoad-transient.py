@@ -36,7 +36,7 @@ def Neumann_Boundary(x, on_boundary):
     determines whether a node is on the coupling boundary
     
     """
-    return on_boundary and not(abs(x[1]<tol))
+    return on_boundary and (not(abs(x[1]<tol)) or abs(abs(x[0])-W/2)<tol)
 
 
 
@@ -44,8 +44,8 @@ def Neumann_Boundary(x, on_boundary):
 d=2 #number of dimensions
 H = 1
 W = 0.1
-rho = 1000
-E=100000.0
+rho = 3000
+E=400000.0
 nu= 0.3
 
 mu    = Constant(E / (2.0*(1.0 + nu)))
@@ -53,8 +53,8 @@ mu    = Constant(E / (2.0*(1.0 + nu)))
 lambda_ = Constant(E*nu / ((1.0 + nu)*(1.0 - 2.0*nu)))
 
 # create Mesh
-n_x_Direction=6
-n_y_Direction=20
+n_x_Direction=5
+n_y_Direction=25
 mesh = RectangleMesh(Point(-W/2,0), Point(W/2,H), n_x_Direction,n_y_Direction)
 
 
@@ -273,7 +273,7 @@ if Case is not StructureCase.RFERENCE:
             update_fields(u_np1, saved_u_old, v_n, a_n)
             
             if n % 10==0:
-                displacement_out << u_n
+                displacement_out << (u_n,t)
         
             u_tip.append(u_n(0.,1.)[0])
             time.append(t)
@@ -288,7 +288,7 @@ else:
         
         t=t+float(dt)
         update_fields(u_np1,u_n, v_n,a_n)
-        displacement_out << u_n
+        displacement_out << (u_n, t)
         u_tip.append(u_n(0.,1.)[0])
         time.append(t)
 
