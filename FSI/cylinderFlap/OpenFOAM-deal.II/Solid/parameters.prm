@@ -10,7 +10,7 @@ subsection Time
     set Time step size        = 0.005
 
     # Write results every x timesteps
-    set Output interval       = 5
+    set Output interval       = 20
 
     # Time integration scheme 
     # 0 = forward, 1 = backward
