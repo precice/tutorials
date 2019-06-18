@@ -4,7 +4,7 @@ This tutorial is described in the [preCICE wiki](https://github.com/precice/prec
 
 ## Waveform relaxation (experimental)
 
-This branch of the tutorial uses the fenics-adapter waveform bindings. If you want to run this tutorial, you have to install the version of the FEniCS-adapter that can be found on [this branch](https://github.com/precice/fenics-adapter/tree/WaveformBindingsDraft). Further information on waveform relaxation in the FEniCS-adapter can be found in issue https://github.com/precice/fenics-adapter/issues/16 and milestone https://github.com/precice/fenics-adapter/milestone/2.
+This branch of the tutorial uses the fenics-adapter waveform bindings. If you want to run this tutorial, you have to install the version of the FEniCS-adapter that can be found on [this branch](https://github.com/precice/fenics-adapter/tree/CoupledProblems2019). Further information on waveform relaxation in the FEniCS-adapter can be found in issue https://github.com/precice/fenics-adapter/issues/16 and milestone https://github.com/precice/fenics-adapter/milestone/2.
 
 ### Setup description and how to run the examples
 
