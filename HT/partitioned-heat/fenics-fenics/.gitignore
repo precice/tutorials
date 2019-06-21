@@ -5,3 +5,4 @@ venv
 out*
 *.log
 *events.json
+experiments
