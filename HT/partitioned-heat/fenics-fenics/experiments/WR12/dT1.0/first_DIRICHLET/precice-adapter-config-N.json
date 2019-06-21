@@ -7,6 +7,6 @@
       "read_data_name": "Flux"
     },
   "waveform": {
-      "n_substeps": 1
+      "n_substeps": 2
     }
 }
