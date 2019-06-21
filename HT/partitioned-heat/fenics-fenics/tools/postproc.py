@@ -1,5 +1,6 @@
 import os
 from participants import Participant
+import itertools
 
 evaluated_wr = [11, 12, 13, 15, 21, 22, 23, 25, 31, 32, 33, 35, 51, 52, 53, 55, 101, 102, 103, 105, 110, 210, 310, 510, 1010]
 evaluated_dT = [1.0, 0.5, 0.2, 0.1]
@@ -12,11 +13,10 @@ for wr, dT, first_participant in itertools.product(evaluated_wr, evaluated_dT, f
     print(wr)
     print(dT)
     print(first_participant)
-    wr_tag = "WR{N_Dirichlet}{N_Neumann}".format(N_Dirichlet=N_Dirichlet, N_Neumann=N_Neumann)
-    window_tag = "dT{dT}".format(dT=args.window_size)
-    first_participant_tag = "first_{}".format(first_participant.name)
-
-    folder = os.path.join("experiments", wr_tag, window_tag, first_participant_tag)
+    wr_tag = "WR{wr}".format(wr=wr)
+    window_tag = "dT{dT}".format(dT=dT)
+    first_participant_tag = "first_{}".format(first_participant)
+    folder = os.path.join("../experiments", wr_tag, window_tag, first_participant_tag)
     
     try:
         with open(os.path.join(folder, "precice-HeatDirichlet-iterations.log")) as file:
@@ -27,7 +27,7 @@ for wr, dT, first_participant in itertools.product(evaluated_wr, evaluated_dT, f
             total_iterations = float(lastline[1])
             avg_its = total_iterations / number_of_windows
             data.append({"WR": wr, "dT": dT, "first": first_participant, "#steps": number_of_windows, "#it": total_iterations, "#it/#steps": avg_its})
-     except FileNotFoundError:
+    except FileNotFoundError:
         data.append({"WR": wr, "dT": dT, "first": first_participant, "#steps": "-", "#it": "-", "#it/#steps": "-"})
 
 table = []
@@ -37,18 +37,20 @@ table.append(["#it/#steps"] + keys)
 structured_data = dict()
 
 for d in data[1:]:
-    wrkey = "WR{wr}".format(wr=d["WR"])
+    print(d)
+    wrfirstkey = "WR{wr}, first={first}".format(wr=d["WR"], first=d["first"])
+    print(wrfirstkey)
     try:
-        structured_data[wrkey]
+        structured_data[wrfirstkey]
     except KeyError:
-        structured_data[wrkey] = dict()
+        structured_data[wrfirstkey] = dict()
     dTkey = "dT{dT}".format(dT=d["dT"])
-    structured_data[wrkey][dTkey] = d["#it/#steps"]
+    structured_data[wrfirstkey][dTkey] = d["#it/#steps"]
     
-for wr in evaluated_wr:
-    wrkey = "WR{wr}".format(wr=wr)
-    structured_data[wrkey]
-    table.append([wrkey] + [structured_data[wrkey][dtkey] for dtkey in keys])
+for wr, first in itertools.product(evaluated_wr, first_participants):
+    wrfirstkey = "WR{wr}, first={first}".format(wr=wr, first=first)
+    structured_data[wrfirstkey]
+    table.append([wrfirstkey] + [structured_data[wrfirstkey][dtkey] for dtkey in keys])
 
 for line in table:
     print(line)
