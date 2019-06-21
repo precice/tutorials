@@ -25,7 +25,7 @@ There are many different parameters for our experiments:
 * Number of substeps left, `wr_lefts = [1,2,3,5,10]`
 * Number of substeps right, `wr_rights = [1,2,3,5,10]`
 * Size of the window, `window_sizes = [1.0, 0.5, 0.2, 0.1]`
-* First participant, `first_participants = [Participant.DIRICHLET.name, Participant.NEUMANN.name]`
+* Coupling schemes, `coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name, CouplingScheme.SERIAL_FIRST_NEUMANN.name, CouplingScheme.PARALLEL.name]`
 
 Other parameters are fixed. E.g.:
 
@@ -42,3 +42,6 @@ Other parameters are fixed. E.g.:
 5. copy `runexperiments.sh` to `$ROOT`
 6. running `$ROOT/runexperiments.sh` will run all experiments with the configuration files in `$ROOT/experiments`
 
+### Postprocessing
+
+Run `python3 postproc.py` from **this folder**

@@ -1,9 +1,7 @@
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 import argparse
-import numpy as np
 import os, stat
-from enum import Enum
-from participants import Participant
+from coupling_schemes import CouplingScheme
 
 
 parser = argparse.ArgumentParser()
@@ -11,7 +9,7 @@ parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 parser.add_argument("-T", "--simulation-time", default=10, type=float)
 parser.add_argument("-tol", "--tolerance", default='1e-12', type=str)
-parser.add_argument("-first", "--first-participant", default="DIRICHLET", type=str)
+parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_FIRST_DIRICHLET.name, type=str)
 args = parser.parse_args()
 
 temperatures = []
@@ -19,12 +17,14 @@ fluxes = []
 
 N_Dirichlet = args.waveform[0]
 N_Neumann = args.waveform[1]
-if args.first_participant == Participant.DIRICHLET.name:
-    first_participant = Participant.DIRICHLET
-elif args.first_participant == Participant.NEUMANN.name:
-    first_participant = Participant.NEUMANN
+if args.coupling_scheme == CouplingScheme.SERIAL_FIRST_DIRICHLET.name:
+    coupling_scheme = CouplingScheme.SERIAL_FIRST_DIRICHLET
+elif args.coupling_scheme == CouplingScheme.SERIAL_FIRST_NEUMANN.name:
+    coupling_scheme = CouplingScheme.SERIAL_FIRST_NEUMANN
+elif args.coupling_scheme == CouplingScheme.PARALLEL.name:
+    coupling_scheme = CouplingScheme.PARALLEL
 else:
-    raise Exception("invalid input {} for --first-participant".format(args.first_participant))
+    raise Exception("invalid input {} for --coupling-scheme".format(args.coupling_scheme))
 
 """
 define timestepping setup. Be aware of the following relationships:
@@ -44,10 +44,12 @@ env = Environment(
     autoescape=select_autoescape(['xml', 'json'])
 )
 
-if first_participant == Participant.DIRICHLET:
-    precice_config_template = env.get_template('precice-config_firstDirichlet.xml')
-elif first_participant == Participant.NEUMANN:
-    precice_config_template = env.get_template('precice-config_firstNeumann.xml')
+if coupling_scheme == CouplingScheme.SERIAL_FIRST_DIRICHLET:
+    precice_config_template = env.get_template('precice-config_serialImplicit_firstDirichlet.xml')
+elif coupling_scheme == CouplingScheme.SERIAL_FIRST_NEUMANN:
+    precice_config_template = env.get_template('precice-config_serialImplicit_firstNeumann.xml')
+elif coupling_scheme == CouplingScheme.PARALLEL:
+    precice_config_template = env.get_template('precice-config_parallelImplicit.xml')
 
 precice_adapter_D_template = env.get_template('precice-adapter-config-D.json')
 precice_adapter_N_template = env.get_template('precice-adapter-config-N.json')
@@ -56,9 +58,9 @@ runall_template = env.get_template("runall.sh")
 wr_tag = "WR{N_Dirichlet}{N_Neumann}".format(N_Dirichlet=N_Dirichlet,
                                              N_Neumann=N_Neumann)
 window_tag = "dT{dT}".format(dT=args.window_size)
-first_participant_tag = "first_{}".format(first_participant.name)
+coupling_tag = "{}".format(coupling_scheme.name)
 total_time = args.simulation_time
-target_path = os.path.join("experiments", wr_tag, window_tag, first_participant_tag)
+target_path = os.path.join("experiments", wr_tag, window_tag, coupling_tag)
 
 if not os.path.exists(target_path):
     os.makedirs(target_path)
@@ -85,7 +87,7 @@ with open(runall_path, "w") as file:
     file.write(runall_template.render(wr_left=N_Dirichlet,
                                       wr_right=N_Neumann,
                                       window_size=args.window_size,
-                                      first_participant=first_participant.name))
+                                      coupling_scheme=coupling_scheme.name))
 
 st = os.stat(runall_path)
 os.chmod(runall_path, st.st_mode | stat.S_IEXEC)

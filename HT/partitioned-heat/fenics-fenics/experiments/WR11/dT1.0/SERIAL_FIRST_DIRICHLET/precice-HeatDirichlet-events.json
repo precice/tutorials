@@ -1,0 +1,6679 @@
+{
+  "Finalized": "2019-06-21T19:29:59.755",
+  "Initialized": "2019-06-21T19:29:44.510",
+  "Name": "",
+  "Ranks": [
+    {
+      "Finalized": "2019-06-21T19:29:59.755",
+      "Initialized": "2019-06-21T19:29:44.510",
+      "StateChanges": [
+        {
+          "Name": "_GLOBAL",
+          "State": 1,
+          "Timestamp": 0
+        },
+        {
+          "Name": "_GLOBAL",
+          "State": 0,
+          "Timestamp": 15244
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 135
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 208
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 231
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 300
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 351
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 376
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 400
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 467
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 497
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 571
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 610
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 636
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 660
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 727
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 758
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 827
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 863
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 935
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 971
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 1047
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 1089
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 1118
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 1142
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 1215
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 1253
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 1279
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 1311
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 1387
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 1418
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 1487
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 1522
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 1592
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 1648
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 1675
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 1699
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 1766
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 1797
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 1867
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 1901
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 1975
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 2012
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 2083
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 2110
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 2179
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 2213
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 2284
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 2340
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 2369
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 2395
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 2467
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 2506
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 2535
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 2560
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 2627
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 2670
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 2704
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 2727
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 2795
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 2829
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 2899
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 2938
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 2963
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 2988
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 3060
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 3114
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 3142
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 3165
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 3240
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 3295
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 3321
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 3345
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 3415
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 3443
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 3515
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 3553
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 3583
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 3607
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 3679
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 3710
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 3782
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 3817
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 3887
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 3929
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 3963
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 3987
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 4059
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 4097
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 4124
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 4147
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 4215
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 4243
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 4315
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 4356
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 4382
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 4407
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 4474
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 4508
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 4581
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 4638
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 4665
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 4689
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 4759
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 4785
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 4855
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 4889
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 4963
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 4997
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 5067
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 5105
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 5185
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 5239
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 5268
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 5292
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 5359
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 5397
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 5475
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 5510
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 5579
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 5617
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 5642
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 5666
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 5735
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 5765
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 5841
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 5897
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 5923
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 5948
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 6014
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 6046
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 6123
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 6166
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 6194
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 6218
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 6286
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 6313
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 6393
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 6448
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 6476
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 6500
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 6575
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 6606
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 6675
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 6717
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 6752
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 6775
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 6844
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 6900
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 6926
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 6951
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 7018
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 7050
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 7118
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 7152
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 7218
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 7252
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 7324
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 7376
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 7404
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 7428
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 7499
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 7534
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 7602
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 7636
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 7713
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 7770
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 7799
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 7823
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 7895
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 7923
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 7995
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 8034
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 8063
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 8088
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 8158
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 8190
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 8263
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 8314
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 8349
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 8373
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 8442
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 8477
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 8544
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 8601
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 8627
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 8651
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 8719
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 8749
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 8818
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 8853
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 8922
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 8948
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 9018
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 9056
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 9128
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 9183
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 9211
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 9235
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 9306
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 9337
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 9407
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 9437
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 9507
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 9541
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 9614
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 9649
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 9719
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 9770
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 9806
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 9830
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 9904
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 9962
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 9987
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 10012
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 10078
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 10110
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 10179
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 10214
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 10282
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 10320
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 10394
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 10421
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 10492
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 10547
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 10574
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 10599
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 10670
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 10701
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 10779
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 10817
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 10892
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 10947
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 10976
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 11000
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 11075
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 11109
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 11183
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 11221
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 11248
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 11280
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 11359
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 11389
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 11464
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 11518
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 11543
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 11567
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 11634
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 11668
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 11735
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 11769
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 11843
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 11885
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 11911
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 11935
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 12003
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 12033
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 12103
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 12140
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 12210
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 12241
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 12315
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 12353
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 12423
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 12460
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 12530
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 12562
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 12635
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 12672
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 12742
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 12773
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 12842
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 12876
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 12946
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 12979
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 13047
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 13085
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 13159
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 13197
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 13225
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 13250
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 13318
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 13342
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 13415
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 13450
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 13524
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 13581
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 13610
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 13634
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 13705
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 13766
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 13800
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 13825
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 13894
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 13930
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 13998
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 14036
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 14102
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 14136
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 14211
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 14253
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 14280
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 14304
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 14375
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 14409
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 14484
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 14541
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 14568
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 14592
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 14663
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 14697
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 14771
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 14807
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 14879
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 14910
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 14982
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 15020
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 15090
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 15121
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 15195
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 135
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 135
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 232
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 232
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 351
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 351
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 400
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 400
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 497
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 497
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 610
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 610
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 660
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 660
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 758
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 758
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 863
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 863
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 971
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 971
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 1089
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 1089
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 1142
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 1142
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 1254
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 1254
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 1311
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 1311
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 1418
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 1418
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 1522
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 1522
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 1648
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 1648
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 1699
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 1699
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 1797
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 1797
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 1901
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 1901
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 2012
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 2012
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 2110
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 2110
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 2213
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 2213
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 2340
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 2340
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 2395
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 2395
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 2506
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 2506
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 2560
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 2560
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 2670
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 2670
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 2728
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 2728
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 2829
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 2829
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 2938
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 2938
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 2988
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 2988
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 3114
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 3114
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 3165
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 3165
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 3295
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 3295
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 3345
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 3345
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 3443
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 3443
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 3553
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 3553
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 3607
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 3607
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 3711
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 3711
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 3817
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 3817
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 3929
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 3929
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 3988
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 3988
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 4097
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 4097
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 4147
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 4147
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 4243
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 4243
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 4356
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 4356
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 4407
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 4407
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 4508
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 4508
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 4638
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 4638
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 4689
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 4689
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 4785
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 4785
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 4890
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 4890
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 4997
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 4997
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 5105
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 5105
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 5240
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 5240
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 5292
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 5292
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 5397
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 5397
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 5510
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 5510
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 5617
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 5617
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 5666
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 5666
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 5766
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 5766
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 5897
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 5897
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 5948
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 5948
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 6046
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 6046
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 6166
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 6166
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 6219
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 6219
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 6313
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 6313
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 6448
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 6448
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 6500
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 6500
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 6606
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 6606
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 6717
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 6717
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 6775
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 6775
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 6900
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 6900
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 6952
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 6952
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 7050
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 7050
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 7153
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 7153
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 7252
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 7252
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 7376
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 7376
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 7428
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 7428
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 7534
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 7534
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 7637
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 7637
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 7770
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 7770
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 7823
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 7823
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 7923
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 7923
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 8034
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 8034
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 8088
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 8088
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 8190
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 8190
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 8314
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 8314
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 8373
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 8373
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 8477
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 8477
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 8602
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 8602
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 8652
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 8652
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 8749
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 8750
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 8854
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 8854
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 8949
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 8949
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 9056
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 9056
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 9183
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 9183
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 9235
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 9235
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 9337
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 9337
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 9437
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 9437
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 9542
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 9542
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 9649
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 9649
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 9771
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 9771
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 9830
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 9830
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 9962
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 9962
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 10012
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 10012
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 10110
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 10110
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 10214
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 10215
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 10320
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 10320
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 10421
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 10421
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 10547
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 10547
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 10599
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 10599
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 10701
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 10701
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 10817
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 10817
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 10948
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 10948
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 11000
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 11000
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 11109
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 11109
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 11221
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 11221
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 11280
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 11280
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 11390
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 11390
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 11518
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 11518
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 11567
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 11567
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 11668
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 11669
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 11769
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 11769
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 11885
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 11885
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 11936
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 11936
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 12033
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 12034
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 12141
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 12141
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 12241
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 12241
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 12353
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 12353
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 12461
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 12461
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 12562
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 12562
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 12673
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 12673
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 12773
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 12773
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 12876
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 12876
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 12979
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 12979
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 13085
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 13085
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 13197
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 13197
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 13250
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 13250
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 13343
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 13343
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 13450
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 13451
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 13581
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 13581
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 13635
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 13635
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 13766
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 13766
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 13825
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 13825
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 13930
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 13930
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 14036
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 14036
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 14136
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 14136
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 14254
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 14254
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 14304
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 14304
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 14409
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 14409
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 14541
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 14541
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 14593
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 14593
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 14697
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 14697
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 14807
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 14807
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 14910
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 14910
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 15020
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 15020
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 15121
+        },
+        {
+          "Name": "advance/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 15121
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 207
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 207
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 299
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 299
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 376
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 376
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 466
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 466
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 570
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 570
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 635
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 635
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 726
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 726
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 826
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 826
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 934
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 934
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 1046
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 1046
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 1118
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 1118
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 1214
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 1214
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 1279
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 1279
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 1386
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 1386
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 1486
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 1486
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 1591
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 1591
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 1675
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 1675
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 1766
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 1766
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 1866
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 1866
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 1974
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 1975
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 2082
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 2082
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 2178
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 2178
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 2283
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 2283
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 2369
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 2369
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 2466
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 2466
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 2535
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 2535
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 2626
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 2626
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 2704
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 2704
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 2794
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 2794
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 2898
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 2898
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 2963
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 2963
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 3059
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 3059
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 3141
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 3141
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 3239
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 3239
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 3321
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 3321
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 3414
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 3414
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 3514
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 3515
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 3583
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 3583
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 3678
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 3678
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 3782
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 3782
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 3887
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 3887
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 3963
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 3963
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 4058
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 4058
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 4123
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 4123
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 4214
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 4214
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 4314
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 4314
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 4382
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 4382
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 4474
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 4474
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 4579
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 4580
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 4665
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 4665
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 4758
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 4758
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 4854
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 4854
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 4962
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 4962
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 5066
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 5066
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 5184
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 5184
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 5268
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 5268
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 5358
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 5358
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 5474
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 5474
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 5578
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 5578
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 5642
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 5642
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 5734
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 5734
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 5840
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 5840
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 5923
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 5923
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 6014
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 6014
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 6122
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 6123
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 6194
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 6194
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 6286
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 6286
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 6391
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 6392
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 6476
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 6476
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 6574
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 6574
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 6674
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 6674
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 6752
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 6752
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 6843
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 6843
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 6926
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 6926
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 7018
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 7018
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 7118
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 7118
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 7218
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 7218
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 7323
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 7323
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 7404
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 7404
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 7498
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 7498
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 7602
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 7602
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 7711
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 7712
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 7799
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 7799
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 7894
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 7894
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 7994
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 7995
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 8063
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 8063
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 8158
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 8158
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 8263
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 8263
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 8349
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 8349
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 8442
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 8442
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 8543
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 8543
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 8627
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 8627
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 8718
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 8718
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 8818
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 8818
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 8922
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 8922
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 9018
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 9018
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 9127
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 9127
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 9211
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 9211
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 9306
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 9306
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 9406
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 9406
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 9506
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 9506
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 9614
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 9614
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 9719
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 9719
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 9805
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 9805
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 9903
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 9903
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 9987
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 9987
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 10078
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 10078
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 10178
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 10178
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 10282
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 10282
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 10394
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 10394
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 10491
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 10491
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 10574
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 10574
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 10670
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 10670
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 10778
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 10778
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 10891
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 10891
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 10976
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 10976
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 11074
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 11074
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 11182
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 11182
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 11248
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 11248
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 11358
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 11358
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 11463
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 11463
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 11543
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 11543
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 11634
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 11634
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 11734
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 11734
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 11842
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 11842
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 11911
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 11911
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 12002
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 12002
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 12102
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 12102
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 12210
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 12210
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 12314
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 12314
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 12422
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 12422
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 12530
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 12530
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 12634
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 12634
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 12742
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 12742
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 12842
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 12842
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 12946
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 12946
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 13046
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 13046
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 13158
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 13158
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 13225
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 13225
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 13318
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 13318
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 13414
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 13414
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 13523
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 13524
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 13609
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 13609
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 13704
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 13704
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 13800
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 13800
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 13894
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 13894
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 13998
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 13998
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 14102
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 14102
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 14211
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 14211
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 14280
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 14280
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 14374
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 14374
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 14483
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 14483
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 14568
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 14568
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 14662
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 14662
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 14770
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 14770
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 14878
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 14878
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 14982
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 14982
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 15090
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 15090
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 15194
+        },
+        {
+          "Name": "advance/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 15195
+        },
+        {
+          "Name": "configure",
+          "State": 1,
+          "Timestamp": 0
+        },
+        {
+          "Name": "configure",
+          "State": 0,
+          "Timestamp": 0
+        },
+        {
+          "Name": "finalize",
+          "State": 1,
+          "Timestamp": 15201
+        },
+        {
+          "Name": "finalize",
+          "State": 0,
+          "Timestamp": 15244
+        },
+        {
+          "Name": "initialize",
+          "State": 1,
+          "Timestamp": 5
+        },
+        {
+          "Name": "initialize",
+          "State": 0,
+          "Timestamp": 52
+        },
+        {
+          "Name": "initialize/m2n.requestMasterConnection",
+          "State": 1,
+          "Timestamp": 5
+        },
+        {
+          "Name": "initialize/m2n.requestMasterConnection",
+          "State": 0,
+          "Timestamp": 6
+        },
+        {
+          "Name": "initialize/m2n.requestSlavesConnection",
+          "State": 1,
+          "Timestamp": 51
+        },
+        {
+          "Name": "initialize/m2n.requestSlavesConnection",
+          "State": 0,
+          "Timestamp": 51
+        },
+        {
+          "Name": "initialize/partition.feedbackMesh.DirichletNodes",
+          "State": 1,
+          "Timestamp": 51
+        },
+        {
+          "Name": "initialize/partition.feedbackMesh.DirichletNodes",
+          "State": 0,
+          "Timestamp": 51
+        },
+        {
+          "Name": "initialize/partition.receiveGlobalMesh.NeumannNodes",
+          "State": 1,
+          "Timestamp": 7
+        },
+        {
+          "Name": "initialize/partition.receiveGlobalMesh.NeumannNodes",
+          "State": 0,
+          "Timestamp": 50
+        },
+        {
+          "Name": "initializeData",
+          "State": 1,
+          "Timestamp": 53
+        },
+        {
+          "Name": "initializeData",
+          "State": 0,
+          "Timestamp": 56
+        },
+        {
+          "Name": "initializeData/map.np.computeMapping.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 53
+        },
+        {
+          "Name": "initializeData/map.np.computeMapping.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 54
+        },
+        {
+          "Name": "initializeData/map.np.computeMapping.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 54
+        },
+        {
+          "Name": "initializeData/map.np.computeMapping.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 55
+        },
+        {
+          "Name": "initializeData/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 1,
+          "Timestamp": 54
+        },
+        {
+          "Name": "initializeData/map.np.mapData.FromDirichletNodesToNeumannNodes",
+          "State": 0,
+          "Timestamp": 54
+        },
+        {
+          "Name": "initializeData/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 1,
+          "Timestamp": 55
+        },
+        {
+          "Name": "initializeData/map.np.mapData.FromNeumannNodesToDirichletNodes",
+          "State": 0,
+          "Timestamp": 55
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 208
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 231
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 300
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 351
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 376
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 400
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 467
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 497
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 571
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 610
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 636
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 660
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 727
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 758
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 827
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 863
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 935
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 971
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 1047
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 1089
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 1118
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 1142
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 1215
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 1253
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 1279
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 1311
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 1387
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 1418
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 1487
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 1522
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 1592
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 1648
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 1675
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 1699
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 1766
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 1797
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 1867
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 1901
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 1975
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 2012
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 2083
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 2110
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 2179
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 2213
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 2284
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 2340
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 2369
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 2395
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 2466
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 2506
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 2535
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 2560
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 2627
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 2670
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 2704
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 2727
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 2795
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 2828
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 2899
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 2938
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 2963
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 2988
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 3060
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 3114
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 3142
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 3165
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 3240
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 3294
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 3321
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 3345
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 3415
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 3442
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 3515
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 3553
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 3583
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 3607
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 3679
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 3710
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 3782
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 3817
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 3887
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 3929
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 3963
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 3987
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 4059
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 4097
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 4124
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 4147
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 4215
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 4243
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 4315
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 4356
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 4382
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 4407
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 4474
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 4508
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 4581
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 4638
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 4665
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 4689
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 4758
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 4785
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 4855
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 4889
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 4963
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 4997
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 5067
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 5105
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 5185
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 5239
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 5268
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 5292
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 5359
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 5397
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 5475
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 5510
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 5579
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 5617
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 5642
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 5666
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 5735
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 5765
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 5841
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 5897
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 5923
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 5948
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 6014
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 6046
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 6123
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 6166
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 6194
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 6218
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 6286
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 6313
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 6393
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 6448
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 6476
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 6500
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 6575
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 6606
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 6675
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 6717
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 6752
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 6775
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 6844
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 6900
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 6926
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 6951
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 7018
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 7050
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 7118
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 7152
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 7218
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 7252
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 7324
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 7376
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 7404
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 7428
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 7499
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 7534
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 7602
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 7636
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 7713
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 7770
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 7799
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 7823
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 7895
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 7923
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 7995
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 8034
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 8063
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 8088
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 8158
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 8190
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 8263
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 8314
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 8349
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 8373
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 8442
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 8477
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 8544
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 8601
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 8627
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 8651
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 8719
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 8749
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 8818
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 8853
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 8922
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 8948
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 9018
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 9056
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 9128
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 9183
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 9211
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 9235
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 9306
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 9337
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 9407
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 9437
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 9507
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 9541
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 9614
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 9649
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 9719
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 9770
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 9806
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 9830
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 9904
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 9962
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 9987
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 10011
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 10078
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 10110
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 10179
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 10214
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 10282
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 10320
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 10394
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 10421
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 10492
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 10547
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 10574
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 10599
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 10670
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 10701
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 10779
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 10817
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 10892
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 10947
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 10976
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 11000
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 11075
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 11109
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 11183
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 11221
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 11248
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 11280
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 11359
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 11389
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 11464
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 11518
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 11543
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 11567
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 11634
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 11668
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 11735
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 11769
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 11843
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 11885
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 11911
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 11935
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 12003
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 12033
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 12102
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 12140
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 12210
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 12241
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 12314
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 12353
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 12423
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 12460
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 12530
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 12562
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 12635
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 12672
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 12742
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 12773
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 12842
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 12876
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 12946
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 12978
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 13047
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 13085
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 13159
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 13197
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 13225
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 13250
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 13318
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 13342
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 13415
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 13450
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 13524
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 13581
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 13610
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 13634
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 13705
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 13766
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 13800
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 13825
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 13894
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 13930
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 13998
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 14036
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 14102
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 14136
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 14211
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 14253
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 14280
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 14304
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 14374
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 14409
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 14484
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 14540
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 14568
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 14592
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 14663
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 14697
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 14771
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 14807
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 14879
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 14910
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 14982
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 15020
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 15090
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 15121
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 15195
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 15201
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 1,
+          "Timestamp": 0
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 2,
+          "Timestamp": 5
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 1,
+          "Timestamp": 52
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 2,
+          "Timestamp": 53
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 1,
+          "Timestamp": 55
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 0,
+          "Timestamp": 135
+        }
+      ],
+      "Timings": {
+        "_GLOBAL": {
+          "Count": 1,
+          "Data": {},
+          "Max": 15244,
+          "Min": 15244,
+          "TimeRatio": 1.0,
+          "Total": 15244
+        },
+        "advance": {
+          "Count": 159,
+          "Data": {},
+          "Max": 79,
+          "Min": 25,
+          "TimeRatio": 0.6266071897139859,
+          "Total": 9552
+        },
+        "advance/map.np.mapData.FromDirichletNodesToNeumannNodes": {
+          "Count": 159,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0002623983206507478,
+          "Total": 4
+        },
+        "advance/map.np.mapData.FromNeumannNodesToDirichletNodes": {
+          "Count": 159,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0004591970611388087,
+          "Total": 7
+        },
+        "configure": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "finalize": {
+          "Count": 1,
+          "Data": {},
+          "Max": 42,
+          "Min": 42,
+          "TimeRatio": 0.0027551823668328524,
+          "Total": 42
+        },
+        "initialize": {
+          "Count": 1,
+          "Data": {},
+          "Max": 47,
+          "Min": 47,
+          "TimeRatio": 0.003083180267646287,
+          "Total": 47
+        },
+        "initialize/m2n.requestMasterConnection": {
+          "Count": 1,
+          "Data": {},
+          "Max": 1,
+          "Min": 1,
+          "TimeRatio": 6.559958016268695e-05,
+          "Total": 1
+        },
+        "initialize/m2n.requestSlavesConnection": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initialize/partition.feedbackMesh.DirichletNodes": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initialize/partition.receiveGlobalMesh.NeumannNodes": {
+          "Count": 1,
+          "Data": {},
+          "Max": 43,
+          "Min": 43,
+          "TimeRatio": 0.0028207819469955393,
+          "Total": 43
+        },
+        "initializeData": {
+          "Count": 1,
+          "Data": {},
+          "Max": 2,
+          "Min": 2,
+          "TimeRatio": 0.0001311991603253739,
+          "Total": 2
+        },
+        "initializeData/map.np.computeMapping.FromDirichletNodesToNeumannNodes": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initializeData/map.np.computeMapping.FromNeumannNodesToDirichletNodes": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initializeData/map.np.mapData.FromDirichletNodesToNeumannNodes": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initializeData/map.np.mapData.FromNeumannNodesToDirichletNodes": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "solver.advance": {
+          "Count": 159,
+          "Data": {},
+          "Max": 60,
+          "Min": 6,
+          "TimeRatio": 0.3612568879559171,
+          "Total": 5507
+        },
+        "solver.initialize": {
+          "Count": 1,
+          "Data": {},
+          "Max": 85,
+          "Min": 85,
+          "TimeRatio": 0.005575964313828391,
+          "Total": 85
+        }
+      }
+    }
+  ]
+}

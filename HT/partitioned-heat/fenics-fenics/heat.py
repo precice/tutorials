@@ -33,11 +33,7 @@ from errorcomputation import compute_errors
 import argparse
 import numpy as np
 import os
-
-
-class Participant(Enum):
-    DIRICHLET = 1
-    NEUMANN = 2
+from tools.coupling_schemes import CouplingScheme
 
 
 class ProblemType(Enum):
@@ -96,7 +92,7 @@ parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
-parser.add_argument("-first", "--first-participant", default=Participant.DIRICHLET.name, type=str)
+parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_FIRST_DIRICHLET.name, type=str)
 
 args = parser.parse_args()
 
@@ -119,11 +115,11 @@ error_tol = 10 ** -12
 
 wr_tag = "WR{wr1}{wr2}".format(wr1=args.waveform[0], wr2=args.waveform[1])
 window_size = "dT{dT}".format(dT=args.window_size)
-first_participant = "first_{}".format(args.first_participant)
+coupling_scheme = "{}".format(args.coupling_scheme)
 d_subcycling = "D".format(wr_tag=wr_tag)
 n_subcycling = "N".format(wr_tag=wr_tag)
 
-configs_path = os.path.join("experiments", wr_tag, window_size, first_participant)
+configs_path = os.path.join("experiments", wr_tag, window_size, coupling_scheme)
 
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
@@ -205,7 +201,6 @@ error_out = File("out/error%s.pvd" % precice._solver_name)
 
 # output solution and reference solution at t=0, n=0
 n = 0
-print('output u^%d and u_ref^%d' % (n, n))
 temperature_out << u_n
 ref_out << u_ref
 
@@ -219,17 +214,8 @@ while precice.is_coupling_ongoing():
 
     x_check, y_check = 1.5, 0.5
 
-    if problem is ProblemType.DIRICHLET:
-        u_ref = interpolate(u_D, V)
-        print("before solve:")
-        print(u_n(x_check, y_check))
-        print(u_np1(x_check, y_check))
-        print(u_ref(x_check, y_check))
-
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
-
-    print("t={t}; dt={dt}".format(t=t, dt=dt(0)))
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
@@ -239,22 +225,13 @@ while precice.is_coupling_ongoing():
         # Neumann problem samples temperature on boundary from solution and sends temperature to Dirichlet problem
         t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)
 
-    if problem is ProblemType.DIRICHLET:
-        print("after solve:")
-        print(u_n(x_check, y_check))
-        print(u_np1(x_check, y_check))
-        print(u_ref(x_check, y_check))
-        print(fluxes(x_check, y_check))
-
     dt.assign(np.min([precice.fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
 
     if precice_timestep_complete:
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
-        print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
-        print('output u^%d and u_ref^%d' % (n, n))
         temperature_out << u_n
         ref_out << u_ref
         error_out << error_pointwise
