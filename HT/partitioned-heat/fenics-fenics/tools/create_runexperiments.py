@@ -4,9 +4,9 @@ import numpy as np
 import os, stat
 from participants import Participant
 
-wr_lefts = [2]
-wr_rights = [2,3,5]
-window_sizes = [1.0, 0.5, 0.2, 0.1]
+wr_lefts = [1, 2, 5]
+wr_rights = [1, 2, 5]
+window_sizes = [1.0, 0.5]
 first_participants = [Participant.DIRICHLET.name, Participant.NEUMANN.name]
 
 env = Environment(

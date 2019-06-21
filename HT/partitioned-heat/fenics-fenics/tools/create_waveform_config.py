@@ -84,7 +84,8 @@ runall_path = os.path.join( target_path, 'runall.sh')
 with open(runall_path, "w") as file:
     file.write(runall_template.render(wr_left=N_Dirichlet,
                                       wr_right=N_Neumann,
-                                      window_size=args.window_size))
+                                      window_size=args.window_size,
+                                      first_participant=first_participant.name))
 
 st = os.stat(runall_path)
 os.chmod(runall_path, st.st_mode | stat.S_IEXEC)

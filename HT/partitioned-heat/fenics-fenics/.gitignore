@@ -6,3 +6,4 @@ out*
 *.log
 *events.json
 experiments
+runexperiments.sh

@@ -35,6 +35,11 @@ import numpy as np
 import os
 
 
+class Participant(Enum):
+    DIRICHLET = 1
+    NEUMANN = 2
+
+
 class ProblemType(Enum):
     """
     Enum defines problem type. Details see above.
@@ -91,6 +96,7 @@ parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
+parser.add_argument("-first", "--first-participant", default=Participant.DIRICHLET.name, type=str)
 
 args = parser.parse_args()
 
@@ -113,10 +119,11 @@ error_tol = 10 ** -12
 
 wr_tag = "WR{wr1}{wr2}".format(wr1=args.waveform[0], wr2=args.waveform[1])
 window_size = "dT{dT}".format(dT=args.window_size)
+first_participant = "first_{}".format(args.first_participant)
 d_subcycling = "D".format(wr_tag=wr_tag)
 n_subcycling = "N".format(wr_tag=wr_tag)
 
-configs_path = os.path.join("experiments", wr_tag, window_size)
+configs_path = os.path.join("experiments", wr_tag, window_size, first_participant)
 
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
