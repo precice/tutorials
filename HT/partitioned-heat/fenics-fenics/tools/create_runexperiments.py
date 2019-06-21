@@ -7,7 +7,7 @@ from participants import Participant
 wr_lefts = [2]
 wr_rights = [2,3,5]
 window_sizes = [1.0, 0.5, 0.2, 0.1]
-first_participans = [Participant.DIRICHLET.name, Participant.NEUMANN.name]
+first_participants = [Participant.DIRICHLET.name, Participant.NEUMANN.name]
 
 env = Environment(
     loader=FileSystemLoader('./templates')
