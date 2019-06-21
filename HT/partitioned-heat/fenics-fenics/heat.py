@@ -90,7 +90,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
-parser.add_argument("-dT", "--window-size", default=1, type=float)
+parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 
 args = parser.parse_args()
 
