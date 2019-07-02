@@ -1,7 +1,7 @@
 #! /bin/bash 
 
 
-ln -sf precice-config-parallel.xml precice-config.xml
+ln -sf precice-config_parallel.xml precice-config.xml
 
 tmux has-session -t PreciceSU2-Calculix-newtonParallel 2>/dev/null
 if [ "$?" -eq 1 ] ; then 
