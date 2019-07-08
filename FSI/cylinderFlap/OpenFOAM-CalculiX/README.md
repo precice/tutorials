@@ -4,6 +4,8 @@ This tutorial is described in the [preCICE wiki](https://github.com/precice/prec
 
 It is known to work with OpenFOAM 4.1, 5.0, v1712, v1806 and CalculiX 2.13 with CGX, but it should also work with newer versions. Have a look on issues concerning [OpenFOAM 6 / dev](https://github.com/precice/openfoam-adapter/issues/21) and [OpenFOAM v1812](https://github.com/precice/openfoam-adapter/issues/59).
 
+The case files are prepared for the latest versions of OpenFOAM and use the solver `pimpleFoam`. **In case you are using a previous OpenFOAM version** you need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file.
+
 You may run the coupled simulation in serial using the script `Allrun` or in parallel with `Allrun -parallel` (`Allrun_parallel` is a shortcut to this). The output of each step will be redirected to log files. You can cleanup the simulation using `Allclean`.
 
 If you prefer to run the two simulations in two different terminals and watch their output on the screen, use the (simpler) scripts `runFluid` (or `runFluid -parallel`) and `runSolid`. Please always run the script `runFluid` first.
