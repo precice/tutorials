@@ -41,7 +41,7 @@ rm -fv ${Participant2}.log
 
 # Remove the precice-events-files
 rm -fv precice-fenics-events.json
-rm -fv precice-fluid-events.json
+rm -fv precice-Fluid-events.json
 
 # Remove the preCICE-related log files
 echo "Deleting the preCICE log files..."
