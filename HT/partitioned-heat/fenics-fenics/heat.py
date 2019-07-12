@@ -99,6 +99,7 @@ def fluxes_from_temperature_full_domain(F, V):
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
+parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
 
 args = parser.parse_args()
 
@@ -145,7 +146,7 @@ elif subcycle is Subcyling.NONMATCHING:
 
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
-gamma = 0.0  # parameter gamma, dependence of heat flux on time
+gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
 x_coupling = 1.5  # x coordinate of coupling interface
