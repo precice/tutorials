@@ -1,0 +1,68 @@
+# Dockerfile for building preCICE on ubuntu 18.04
+
+# Using ubuntu 18.04 as basis
+FROM ubuntu:18.04
+
+# Installing necessary dependacies for preCICE, boost 1.65 from apt-get
+RUN apt-get -qq update && apt-get -qq install \
+    build-essential \
+    libboost-all-dev \
+    libeigen3-dev \
+    libxml2-dev \
+    petsc-dev \
+    git \
+    python-numpy \
+    python-dev \
+    wget \
+    bzip2 \
+    cmake && \
+    rm -rf /var/lib/apt/lists/*
+
+# Rebuild image if force_rebuild after that command
+ARG CACHEBUST
+
+# create user precice
+RUN useradd -ms /bin/bash precice
+USER precice
+WORKDIR /home/precice
+
+# Setting some environment variables for installing preCICE
+ENV CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH:/usr/include/eigen3" \
+    CPATH="/usr/include/eigen3:${CPATH}" \
+    PETSC_DIR="/usr/lib/petscdir/3.6.2/" \
+    PETSC_ARCH="x86_64-linux-gnu-real"
+
+# Building preCICE
+ARG branch=develop
+RUN git clone --branch $branch https://github.com/precice/precice.git /home/precice/precice
+WORKDIR /home/precice/precice
+# Some parameters for the build, you can set them in the build command e.g.
+# sudo docker build Dockerfile.precice --build-arg petsc_para=yes --build-arg mpi_para=yes .
+# this will result in
+# cmake -DPETSC=yes -DMPI=yes -DPYTHON=no -DCMAKE_CXX_COMPILER=mpicxx -j2 /precice
+ARG petsc_para=no
+ARG mpi_para=yes
+ARG python_para=no
+# Build preCICE and clean-up generated object files
+RUN mkdir /home/precice/precice-build && \
+    cd /home/precice/precice-build && \
+    mkdir /home/precice/precice-install && \
+    cmake -DBUILD_SHARED_LIBS=ON \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+          -DCMAKE_INSTALL_PREFIX=/home/precice/precice-install \
+          -DPETSC=$petsc_para \
+          -DMPI=$mpi_para \
+          -DPYTHON=$python_para \
+          /home/precice/precice && \
+    make -j$(nproc) && \
+    make test_base && \
+    make install && \
+    rm -r /home/precice/precice-build
+
+# Setting preCICE environment variables
+ENV PRECICE_ROOT="/home/precice/precice" \
+    PKG_CONFIG_PATH="/home/precice/precice-install/lib/pkgconfig" \
+    LD_LIBRARY_PATH="/home/precice/precice-install/lib:${LD_LIBRARY_PATH}" \
+    LIBRARY_PATH="/home/precice/precice-install/lib:${LIBRARY_PATH}" \
+    CPATH="/home/precice/precice-install/include:${CPATH}" \
+    CMAKE_PREFIX_PATH="/home/precice/precice-install/lib/cmake/precice:${CMAKE_PREFIX_PATH}"
