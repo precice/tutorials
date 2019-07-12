@@ -94,6 +94,7 @@ parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_FIRST_DIRICHLET.name, type=str)
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
+parser.add_argument("-tol", "--error-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
 
 args = parser.parse_args()
 
@@ -112,7 +113,7 @@ if not (args.dirichlet or args.neumann):
 nx = 10
 ny = 10
 
-error_tol = 10 ** -12
+error_tol = args.error_tolerance
 
 wr_tag = "WR{wr1}{wr2}".format(wr1=args.waveform[0], wr2=args.waveform[1])
 window_size = "dT{dT}".format(dT=args.window_size)
