@@ -93,6 +93,7 @@ parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='ne
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_FIRST_DIRICHLET.name, type=str)
+parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
 
 args = parser.parse_args()
 
@@ -132,7 +133,7 @@ elif problem is ProblemType.NEUMANN:
 
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
-gamma = 0.0  # parameter gamma, dependence of heat flux on time
+gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
 x_coupling = 1.5  # x coordinate of coupling interface
