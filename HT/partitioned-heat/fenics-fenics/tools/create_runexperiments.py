@@ -4,7 +4,7 @@ from coupling_schemes import CouplingScheme
 
 wr_lefts = [1, 2, 5, 10]
 wr_rights = [1, 2, 5, 10]
-window_sizes = [1.0, 0.5, 0.2]
+window_sizes = [1.0, 0.5, 0.2, 0.1]
 coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name, CouplingScheme.SERIAL_FIRST_NEUMANN.name, CouplingScheme.PARALLEL.name]
 
 env = Environment(

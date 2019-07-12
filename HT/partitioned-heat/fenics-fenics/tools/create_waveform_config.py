@@ -8,8 +8,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 parser.add_argument("-T", "--simulation-time", default=10, type=float)
-parser.add_argument("-tol", "--tolerance", default='1e-12', type=str)
+parser.add_argument("-qntol", "--quasi-newton-tolerance", help="set accepted error in the quasi newton scheme", default='1e-12', type=str)
 parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_FIRST_DIRICHLET.name, type=str)
+parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
+parser.add_argument("-stol", "--solver-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
 args = parser.parse_args()
 
 temperatures = []
@@ -70,7 +72,7 @@ precice_config_name = "precice-config.xml"
 with open(os.path.join( target_path, precice_config_name), "w") as file:
     file.write(precice_config_template.render(temperatures=temperatures,
                                               fluxes=fluxes,
-                                              convergence_limit=args.tolerance,
+                                              convergence_limit=args.quasi_newton_tolerance,
                                               total_time=total_time,
                                               window_size=args.window_size))
 
@@ -87,7 +89,9 @@ with open(runall_path, "w") as file:
     file.write(runall_template.render(wr_left=N_Dirichlet,
                                       wr_right=N_Neumann,
                                       window_size=args.window_size,
-                                      coupling_scheme=coupling_scheme.name))
+                                      coupling_scheme=coupling_scheme.name,
+				      gamma=args.gamma,
+                                      error_tolerance=args.solver_tolerance))
 
 st = os.stat(runall_path)
 os.chmod(runall_path, st.st_mode | stat.S_IEXEC)

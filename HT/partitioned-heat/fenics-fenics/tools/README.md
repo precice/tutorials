@@ -35,7 +35,7 @@ Other parameters are fixed. E.g.:
 
 *Note:* `$ROOT` denotes `tutorials/partitionced-heat/fenics-fenics/`
 
-1. running `python3 create_all_configs.py` will create a file `config_creation.sh`
+1. running `python3 create_all_configs.py` will create a file `config_creation.sh`. Optional parameters for setting `gamma` and/or `solver_tolerance` may be used.
 2. running `./config_creation.sh` will execute `python3 create_waveform_config.py` for all possible configurations and will create all configs in the `experiments` folder
 3. copy the `experiments` folder to `tutorials/partitionced-heat/fenics-fenics/`
 4. running `python3 create_runexperiments.py` will create a file `runexperiments.sh`
