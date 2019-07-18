@@ -14,7 +14,7 @@ session=PreciceSU2-Calculix-newtonParallel
 window=${session}:0
 pane_su2=${window}.0
 pane_Calculix=${window}.1
-tmux send-keys -t "$pane_su2" C-z '( time mpirun -n 2 Fluid/SU2_CFD euler_config_coupled.cfg ) 2>&1  | tee Su2.log' Enter
+tmux send-keys -t "$pane_su2" C-z '( time mpirun -n 2 SU2_CFD Fluid/euler_config_coupled.cfg ) 2>&1  | tee Su2.log' Enter
 tmux select-pane -t "$pane_su2"
 tmux select-window -t "$window"
 tmux send-keys -t "$pane_Calculix" C-z '( time ccx_preCICE -i Solid/flap -precice-participant  Calculix ) 2>&1  | tee Calculix.log' Enter 
@@ -24,7 +24,7 @@ tmux attach-session -t "$session"
 
 tmux detach -s "$session" 
 
-SU2_SOL euler_config_coupled_mergeSolution.cfg
+SU2_SOL Fluid/euler_config_coupled_mergeSolution.cfg
 
 rm -rf Output
 mkdir Output
