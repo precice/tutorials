@@ -26,7 +26,8 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
-    TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, near
+    TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, near, \
+    VectorFunctionSpace
 from enum import Enum
 from fenicsadapter import Adapter
 from errorcomputation import compute_errors
@@ -53,14 +54,10 @@ class Subcyling(Enum):
     # details, see https://stackoverflow.com/questions/14763722/python-modulo-on-floats)
 
 
-class ComplementaryBoundary(SubDomain):
-    def __init__(self, subdomain):
-        self.complement = subdomain
-        SubDomain.__init__(self)
-
+class OuterBoundary(SubDomain):
     def inside(self, x, on_boundary):
         tol = 1E-14
-        if on_boundary and not self.complement.inside(x, on_boundary):
+        if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
             return True
         else:
             return False
@@ -69,31 +66,26 @@ class ComplementaryBoundary(SubDomain):
 class CouplingBoundary(SubDomain):
     def inside(self, x, on_boundary):
         tol = 1E-14
-        if on_boundary and near(x[0], x_coupling, tol) and not near(x[1], y_bottom, tol) and not near(x[1], y_top, tol):
+        if on_boundary and near(x[0], x_coupling, tol):
             return True
         else:
             return False
 
 
-def fluxes_from_temperature_full_domain(F, V):
+def determine_gradient(V_g, u, flux):
     """
-    compute flux from weak form (see p.3 in Toselli, Andrea, and Olof Widlund. Domain decomposition methods-algorithms and theory. Vol. 34. Springer Science & Business Media, 2006.)
-    :param F: weak form with known u^{n+1}
-    :param V: function space
-    :param hy: spatial resolution perpendicular to flux direction
+    compute flux following http://hplgit.github.io/INF5620/doc/pub/fenics_tutorial1.1/tu2.html#tut-poisson-gradu
+    :param mesh
+    :param u: solution where gradient is to be determined
     :return:
     """
-    fluxes_vector = assemble(F)  # assemble weak form -> evaluate integral
-    v = TestFunction(V)
-    fluxes = Function(V)  # create function for flux
-    area = assemble(v * ds).get_local()
-    for i in range(area.shape[0]):
-        if area[i] != 0:  # put weight from assemble on function
-            fluxes.vector()[i] = fluxes_vector[i] / area[i]  # scale by surface area
-        else:
-            assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux
-            fluxes.vector()[i] = fluxes_vector[i]
-    return fluxes
+
+    w = TrialFunction(V_g)
+    v = TestFunction(V_g)
+
+    a = inner(w, v) * dx
+    L = inner(grad(u), v) * dx
+    solve(a == L, flux)
 
 
 parser = argparse.ArgumentParser()
@@ -133,7 +125,7 @@ elif problem is ProblemType.NEUMANN:
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcyling.NONE:
     fenics_dt = .1  # time step size
-    error_tol = 10 ** -4  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    error_tol = 10 ** -3  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcyling.MATCHING:
     fenics_dt = .01  # time step size
@@ -159,7 +151,7 @@ elif problem is ProblemType.NEUMANN:
     p1 = Point(x_right, y_top)
 
 mesh = RectangleMesh(p0, p1, nx, ny)
-V = FunctionSpace(mesh, 'P', 1)
+V = FunctionSpace(mesh, 'P', 2)
 
 # Define boundary condition
 u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
@@ -169,7 +161,7 @@ f_N = Expression('2 * gamma*t*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma
 f_N_function = interpolate(f_N, V)
 
 coupling_boundary = CouplingBoundary()
-remaining_boundary = ComplementaryBoundary(coupling_boundary)
+remaining_boundary = OuterBoundary()
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
 # Define initial value
@@ -205,7 +197,6 @@ a, L = lhs(F), rhs(F)
 
 # Time-stepping
 u_np1 = Function(V)
-F_known_u = u_np1 * v / dt * dx + dot(grad(u_np1), grad(v)) * dx - (u_n / dt + f) * v * dx
 u_np1.rename("Temperature", "")
 t = 0
 
@@ -213,9 +204,9 @@ t = 0
 u_ref = interpolate(u_D, V)
 u_ref.rename("reference", " ")
 
-temperature_out = File("out/%s.pvd" % precice._solver_name)
-ref_out = File("out/ref%s.pvd" % precice._solver_name)
-error_out = File("out/error%s.pvd" % precice._solver_name)
+temperature_out = File("out/%s.pvd" % precice.get_solver_name())
+ref_out = File("out/ref%s.pvd" % precice.get_solver_name())
+error_out = File("out/error%s.pvd" % precice.get_solver_name())
 
 # output solution and reference solution at t=0, n=0
 n = 0
@@ -230,6 +221,10 @@ error_out << error_pointwise
 u_D.t = t + dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
 f.t = t + dt(0)
 
+V_g = VectorFunctionSpace(mesh, 'P', 1)
+flux = Function(V_g)
+flux.rename("Flux", "")
+
 while precice.is_coupling_ongoing():
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
@@ -237,8 +232,9 @@ while precice.is_coupling_ongoing():
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
-        fluxes = fluxes_from_temperature_full_domain(F_known_u, V)
-        t, n, precice_timestep_complete, precice_dt = precice.advance(fluxes, u_np1, u_n, t, dt(0), n)
+        determine_gradient(V_g, u_np1, flux)
+        flux_x, flux_y = flux.split()
+        t, n, precice_timestep_complete, precice_dt = precice.advance(flux_x, u_np1, u_n, t, dt(0), n)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
         t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)
