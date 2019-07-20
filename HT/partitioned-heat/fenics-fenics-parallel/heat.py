@@ -83,17 +83,58 @@ def fluxes_from_temperature_full_domain(F, V):
     :param hy: spatial resolution perpendicular to flux direction
     :return:
     """
+    print("rank {rank} of {size}: enters fluxes_from_temperature_full_domain".format(rank=MPI.rank(MPI.comm_world), size=MPI.size(MPI.comm_world)))
     fluxes_vector = assemble(F)  # assemble weak form -> evaluate integral
+    print("rank {rank} of {size}: first assembly done".format(rank=MPI.rank(MPI.comm_world),
+                                                                                     size=MPI.size(MPI.comm_world)))
     v = TestFunction(V)
-    fluxes = Function(V)  # create function for flux
+    myrank = MPI.rank(MPI.comm_world)
+    fluxes = MPI.size(MPI.comm_world) * [None]
+    fluxes[myrank] = Function(V)  # create function for flux
     area = assemble(v * ds).get_local()
+    """
+    print("rank {rank} of {size}: second assembly done".format(rank=MPI.rank(MPI.comm_world),
+                                                                                     size=MPI.size(MPI.comm_world)))
+    print("rank {rank} has to visit {n_vertices} vertices.".format(rank=MPI.rank(MPI.comm_world), n_vertices=fluxes_vector.__len__()))
     for i in range(area.shape[0]):
+        print("rank {rank}: fluxes_vector[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i, value=fluxes_vector[i]))
+        print("rank {rank}: area[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i,
+                                                               value=area[i]))
+        print("rank {rank}: fluxes.vector()[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i,
+                                                                 value=fluxes[myrank].vector()[i]))
+    for i in range(area.shape[0]):
+        print("rank {rank} of {size}: visits DoF {i}".format(rank=MPI.rank(MPI.comm_world),
+                                                                   size=MPI.size(MPI.comm_world),
+                                                             i=i))
         if area[i] != 0:  # put weight from assemble on function
-            fluxes.vector()[i] = fluxes_vector[i] / area[i]  # scale by surface area
+            print("rank {rank} of {size}: case 1".format(rank=MPI.rank(MPI.comm_world),
+                                                                                     size=MPI.size(MPI.comm_world)))
+            print("rank {rank}: fluxes_vector[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i,
+                                                                   value=fluxes_vector[i]))
+            print("rank {rank}: area[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i,
+                                                          value=area[i]))
+            print("rank {rank}: fluxes.vector()[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i,
+                                                                     value=fluxes[myrank].vector()[i]))
+            fluxes[myrank].vector()[i] = fluxes_vector[i] / area[i]  # scale by surface area
+            print("rank {rank}: fluxes.vector()[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i,
+                                                                     value=fluxes[myrank].vector()[i]))
+            print("rank {rank} of {size}: computation done".format(rank=MPI.rank(MPI.comm_world),
+                                                                                     size=MPI.size(MPI.comm_world)))
         else:
+            print("rank {rank} of {size}: case 2".format(rank=MPI.rank(MPI.comm_world),
+                                                                                     size=MPI.size(MPI.comm_world)))
             assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux
-            fluxes.vector()[i] = fluxes_vector[i]
-    return fluxes
+            fluxes[myrank].vector()[i] = fluxes_vector[i]
+        print("rank {rank} of {size}: completed DoF {i}".format(rank=MPI.rank(MPI.comm_world),
+                                                             size=MPI.size(MPI.comm_world),
+                                                             i=i))
+    print("rank {rank} of {size}: waits...".format(rank=MPI.rank(MPI.comm_world),
+                                                   size=MPI.size(MPI.comm_world)))
+    """
+    MPI.barrier(MPI.comm_world)
+    print("rank {rank} of {size}: exits fluxes_from_temperature_full_domain".format(rank=MPI.rank(MPI.comm_world),
+                                                                                     size=MPI.size(MPI.comm_world)))
+    return fluxes_vector#[myrank]
 
 
 parser = argparse.ArgumentParser()
@@ -128,6 +169,8 @@ if not (args.dirichlet or args.neumann):
 nx = 5
 ny = 10
 subcycle = Subcyling.NONE
+
+assert(MPI.initialized())
 
 if problem is ProblemType.DIRICHLET:
     nx = nx*3
@@ -189,7 +232,7 @@ elif problem is ProblemType.NEUMANN:
 
 print("Hello from rank {rank} of {size}.".format(rank=MPI.rank(MPI.comm_world), size=MPI.size(MPI.comm_world)))
 
-precice = fenicsadapter.core.Adapter(solver_name, 0, 1)
+precice = fenicsadapter.core.Adapter(solver_name, MPI.rank(MPI.comm_world), MPI.size(MPI.comm_world))
 precice.configure(config_file_name)
 precice.set_coupling_mesh(mesh_name, mesh, coupling_boundary)
 precice_dt = precice.initialize()
@@ -239,7 +282,7 @@ error_out = File("out/error%s.pvd" % solver_name)
 # output solution and reference solution at t=0, n=0
 t = 0
 n = 0
-print('output u^%d and u_ref^%d' % (n, n))
+print('{rank}:output u^{iteration} and u_ref^{iteration}'.format(rank=MPI.rank(MPI.comm_world), iteration=n))
 temperature_out << u_n
 ref_out << u_ref
 
@@ -259,17 +302,18 @@ if precice.is_action_required(fenicsadapter.core.action_write_iteration_checkpoi
 while precice.is_coupling_ongoing():
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
+    print('{rank} of {size}:starts solving'.format(rank=MPI.rank(MPI.comm_world), size=MPI.size(MPI.comm_world)))
     solve(a == L, u_np1, bcs)
+    print('{rank}:done solving'.format(rank=MPI.rank(MPI.comm_world)))
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
         write_field = fluxes_from_temperature_full_domain(F_known_u, V)
-        #t, n, precice_timestep_complete, precice_dt = precice.advance(fluxes, u_np1, u_n, t, dt(0), n)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
         write_field = u_np1
-        #t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)
-
+    MPI.barrier(MPI.comm_world)
+    print('{rank} of {size}:before write'.format(rank=MPI.rank(MPI.comm_world), size=MPI.size(MPI.comm_world)))
     precice.write_block_scalar_data(write_data_name, mesh_name, write_field)
     precice_dt = precice.advance(dt)
     dt.assign(np.min([fenics_dt, precice_dt]))
@@ -311,3 +355,5 @@ while precice.is_coupling_ongoing():
 
 # Hold plot
 precice.finalize()
+
+assert(MPI.finalized())
