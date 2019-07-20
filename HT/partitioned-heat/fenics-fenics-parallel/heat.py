@@ -25,8 +25,9 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 """
 
 from __future__ import print_function, division
+import fenics
 from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
-    TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, near, MPI
+    TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, near, MPI, VectorFunctionSpace
 from enum import Enum
 import fenicsadapter.core
 from errorcomputation import compute_errors
@@ -53,14 +54,10 @@ class Subcyling(Enum):
     # details, see https://stackoverflow.com/questions/14763722/python-modulo-on-floats)
 
 
-class ComplementaryBoundary(SubDomain):
-    def __init__(self, subdomain):
-        self.complement = subdomain
-        SubDomain.__init__(self)
-
+class OuterBoundary(SubDomain):
     def inside(self, x, on_boundary):
         tol = 1E-14
-        if on_boundary and not self.complement.inside(x, on_boundary):
+        if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
             return True
         else:
             return False
@@ -69,72 +66,26 @@ class ComplementaryBoundary(SubDomain):
 class CouplingBoundary(SubDomain):
     def inside(self, x, on_boundary):
         tol = 1E-14
-        if on_boundary and near(x[0], x_coupling, tol) and not near(x[1], y_bottom, tol) and not near(x[1], y_top, tol):
+        if on_boundary and near(x[0], x_coupling, tol):
             return True
         else:
             return False
 
 
-def fluxes_from_temperature_full_domain(F, V):
+def determine_gradient(V_g, u, flux):
     """
-    compute flux from weak form (see p.3 in Toselli, Andrea, and Olof Widlund. Domain decomposition methods-algorithms and theory. Vol. 34. Springer Science & Business Media, 2006.)
-    :param F: weak form with known u^{n+1}
-    :param V: function space
-    :param hy: spatial resolution perpendicular to flux direction
+    compute flux following http://hplgit.github.io/INF5620/doc/pub/fenics_tutorial1.1/tu2.html#tut-poisson-gradu
+    :param mesh
+    :param u: solution where gradient is to be determined
     :return:
     """
-    print("rank {rank} of {size}: enters fluxes_from_temperature_full_domain".format(rank=MPI.rank(MPI.comm_world), size=MPI.size(MPI.comm_world)))
-    fluxes_vector = assemble(F)  # assemble weak form -> evaluate integral
-    print("rank {rank} of {size}: first assembly done".format(rank=MPI.rank(MPI.comm_world),
-                                                                                     size=MPI.size(MPI.comm_world)))
-    v = TestFunction(V)
-    myrank = MPI.rank(MPI.comm_world)
-    fluxes = MPI.size(MPI.comm_world) * [None]
-    fluxes[myrank] = Function(V)  # create function for flux
-    area = assemble(v * ds).get_local()
-    """
-    print("rank {rank} of {size}: second assembly done".format(rank=MPI.rank(MPI.comm_world),
-                                                                                     size=MPI.size(MPI.comm_world)))
-    print("rank {rank} has to visit {n_vertices} vertices.".format(rank=MPI.rank(MPI.comm_world), n_vertices=fluxes_vector.__len__()))
-    for i in range(area.shape[0]):
-        print("rank {rank}: fluxes_vector[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i, value=fluxes_vector[i]))
-        print("rank {rank}: area[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i,
-                                                               value=area[i]))
-        print("rank {rank}: fluxes.vector()[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i,
-                                                                 value=fluxes[myrank].vector()[i]))
-    for i in range(area.shape[0]):
-        print("rank {rank} of {size}: visits DoF {i}".format(rank=MPI.rank(MPI.comm_world),
-                                                                   size=MPI.size(MPI.comm_world),
-                                                             i=i))
-        if area[i] != 0:  # put weight from assemble on function
-            print("rank {rank} of {size}: case 1".format(rank=MPI.rank(MPI.comm_world),
-                                                                                     size=MPI.size(MPI.comm_world)))
-            print("rank {rank}: fluxes_vector[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i,
-                                                                   value=fluxes_vector[i]))
-            print("rank {rank}: area[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i,
-                                                          value=area[i]))
-            print("rank {rank}: fluxes.vector()[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i,
-                                                                     value=fluxes[myrank].vector()[i]))
-            fluxes[myrank].vector()[i] = fluxes_vector[i] / area[i]  # scale by surface area
-            print("rank {rank}: fluxes.vector()[{i}]={value}".format(rank=MPI.rank(MPI.comm_world), i=i,
-                                                                     value=fluxes[myrank].vector()[i]))
-            print("rank {rank} of {size}: computation done".format(rank=MPI.rank(MPI.comm_world),
-                                                                                     size=MPI.size(MPI.comm_world)))
-        else:
-            print("rank {rank} of {size}: case 2".format(rank=MPI.rank(MPI.comm_world),
-                                                                                     size=MPI.size(MPI.comm_world)))
-            assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux
-            fluxes[myrank].vector()[i] = fluxes_vector[i]
-        print("rank {rank} of {size}: completed DoF {i}".format(rank=MPI.rank(MPI.comm_world),
-                                                             size=MPI.size(MPI.comm_world),
-                                                             i=i))
-    print("rank {rank} of {size}: waits...".format(rank=MPI.rank(MPI.comm_world),
-                                                   size=MPI.size(MPI.comm_world)))
-    """
-    MPI.barrier(MPI.comm_world)
-    print("rank {rank} of {size}: exits fluxes_from_temperature_full_domain".format(rank=MPI.rank(MPI.comm_world),
-                                                                                     size=MPI.size(MPI.comm_world)))
-    return fluxes_vector#[myrank]
+
+    w = TrialFunction(V_g)
+    v = TestFunction(V_g)
+
+    a = inner(w, v) * dx
+    L = inner(grad(u), v) * dx
+    solve(a == L, flux)
 
 
 parser = argparse.ArgumentParser()
@@ -181,7 +132,7 @@ elif problem is ProblemType.NEUMANN:
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcyling.NONE:
     fenics_dt = .1  # time step size
-    error_tol = 10 ** -4  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    error_tol = 10 ** -3  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcyling.MATCHING:
     fenics_dt = .01  # time step size
@@ -216,7 +167,7 @@ f_N = Expression('2 * x[0]', degree=1)
 f_N_function = interpolate(f_N, V)
 
 coupling_boundary = CouplingBoundary()
-remaining_boundary = ComplementaryBoundary(coupling_boundary)
+remaining_boundary = OuterBoundary()
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
 # Define initial value
@@ -278,6 +229,7 @@ u_ref.rename("reference", " ")
 temperature_out = File("out/%s.pvd" % solver_name)
 ref_out = File("out/ref%s.pvd" % solver_name)
 error_out = File("out/error%s.pvd" % solver_name)
+flux_out = File("out/my_flux%s.pvd" % solver_name)
 
 # output solution and reference solution at t=0, n=0
 t = 0
@@ -291,6 +243,11 @@ error_out << error_pointwise
 
 # set t_1 = t_0 + dt, this gives u_D^1
 u_D.t = t + dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
+
+V_g = VectorFunctionSpace(mesh, 'P', 1)
+flux = Function(V_g)
+flux.rename("Flux", "")
+write_fields = dict()
 
 # write checkpoint
 if precice.is_action_required(fenicsadapter.core.action_write_iteration_checkpoint()):
@@ -308,11 +265,18 @@ while precice.is_coupling_ongoing():
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
-        write_field = fluxes_from_temperature_full_domain(F_known_u, V)
+        determine_gradient(V_g, u_np1, flux)
+        flux_out << flux
+        flux_x, flux_y = flux.split(deepcopy=True)
+        write_field = flux_x
+
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
         write_field = u_np1
-    MPI.barrier(MPI.comm_world)
+
+    for v in fenics.vertices(mesh):  # TODO: this loop has no real purpose, however, if we do not execute it, the program hangs later on...
+        write_field(v.x(0), v.x(1))
+    
     print('{rank} of {size}:before write'.format(rank=MPI.rank(MPI.comm_world), size=MPI.size(MPI.comm_world)))
     precice.write_block_scalar_data(write_data_name, mesh_name, write_field)
     precice_dt = precice.advance(dt)
