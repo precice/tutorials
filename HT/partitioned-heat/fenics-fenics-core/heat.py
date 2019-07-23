@@ -26,7 +26,8 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
-    TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, near
+    TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, \
+    near, MeshFunction, FacetNormal, vertices
 from enum import Enum
 import fenicsadapter.core
 from errorcomputation import compute_errors
@@ -66,7 +67,7 @@ class ComplementaryBoundary(SubDomain):
             return False
 
 
-class CouplingBoundary(SubDomain):
+class ClosedCouplingBoundary(SubDomain):
     def inside(self, x, on_boundary):
         tol = 1E-14
         if on_boundary and near(x[0], x_coupling, tol) and not near(x[1], y_bottom, tol) and not near(x[1], y_top, tol):
@@ -75,25 +76,83 @@ class CouplingBoundary(SubDomain):
             return False
 
 
-def fluxes_from_temperature_full_domain(F, V):
+class OpenCouplingBoundary(SubDomain):
+    def inside(self, x, on_boundary):
+        tol = 1E-14
+        if on_boundary and near(x[0], x_coupling, tol):
+            return True
+        else:
+            return False
+
+
+class NoFluxBoundary(SubDomain):
+    def inside(self, x, on_boundary):
+        tol = 1E-14
+        if not near(x[0], x_coupling, tol):
+            return True
+        else:
+            return False
+
+
+def determine_flux_on_straight_line(u_np1, u_n, f, mesh, dt):
     """
-    compute flux from weak form (see p.3 in Toselli, Andrea, and Olof Widlund. Domain decomposition methods-algorithms and theory. Vol. 34. Springer Science & Business Media, 2006.)
-    :param F: weak form with known u^{n+1}
-    :param V: function space
-    :param hy: spatial resolution perpendicular to flux direction
+    Computes flux on a limited part of the domain (currently hard-coded).
+    Following approach from https://fenicsproject.discourse.group/t/compute-gradient-of-scalar-field-on-boundarymesh/1172/2
+    :param u_np1: new solution
+    :param u_n: old solution
+    :param f: right hans side of pde
+    :param mesh: domain mesh
+    :param dt: timestep size
     :return:
     """
-    fluxes_vector = assemble(F)  # assemble weak form -> evaluate integral
-    v = TestFunction(V)
-    fluxes = Function(V)  # create function for flux
-    area = assemble(v * ds).get_local()
-    for i in range(area.shape[0]):
-        if area[i] != 0:  # put weight from assemble on function
-            fluxes.vector()[i] = fluxes_vector[i] / area[i]  # scale by surface area
-        else:
-            assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux
-            fluxes.vector()[i] = fluxes_vector[i]
-    return fluxes
+    V_q = FunctionSpace(mesh, "P", 1)
+    flux = TrialFunction(V_q)
+    v = TestFunction(V_q)
+
+    # Mark parts of the boundary to which integrals will need to be restricted.
+    # (Parts not explicitly marked are flagged with zero.)
+    FLUX_BDRY = 1
+    COMPLEMENT_FLUX_BDRY = 2
+    boundaryMarkers = MeshFunction("size_t", mesh, mesh.topology().dim() - 1,
+                                   COMPLEMENT_FLUX_BDRY)
+    OpenCouplingBoundary().mark(boundaryMarkers, FLUX_BDRY)
+    ds_marked = ds(subdomain_data=boundaryMarkers)
+
+    # Boundary conditions to apply to the flux solution when we are only
+    # interested in flux on the right side of the domain:
+    antiBCs = [DirichletBC(V_q, Constant(0.0), NoFluxBoundary()), ]
+
+    ################################################################################
+
+    # The trick:  Since we want to use the corner nodes to approximate the
+    # flux on our boundary of interest, test functions will end up being
+    # nonzero on an $O(h)$ part of the complement of the boundary of interest.
+    # Thus we need to integrate a consistency term on that part of the boundary.
+    dudt = (u_np1 - u_n) / dt
+    F = 0
+    F += dot(grad(u_np1), grad(v)) * dx
+    F += dudt * v * dx
+    F += -f * v * dx
+
+    n = FacetNormal(mesh)
+    consistencyTerm = inner(grad(u_np1), n) * v * ds_marked(COMPLEMENT_FLUX_BDRY)
+    FBdry = flux * v * ds_marked(FLUX_BDRY) - F + consistencyTerm
+
+    ################################################################################
+
+    # Get $\mathbf{q}\cdot\mathbf{n}$ on the boundary of interest with and
+    # without the consistency term:
+    def solveFor_qn_h(FBdry, BCs, V):
+        aBdry = lhs(FBdry)
+        LBdry = rhs(FBdry)
+        ABdry = assemble(aBdry, keep_diagonal=True)
+        bBdry = assemble(LBdry)
+        [BC.apply(ABdry, bBdry) for BC in BCs]
+        qn_h = Function(V)
+        solve(ABdry, qn_h.vector(), bBdry)
+        return qn_h
+
+    return solveFor_qn_h(FBdry, antiBCs, V_q)
 
 
 parser = argparse.ArgumentParser()
@@ -138,7 +197,7 @@ elif problem is ProblemType.NEUMANN:
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcyling.NONE:
     fenics_dt = .1  # time step size
-    error_tol = 10 ** -4  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    error_tol = 10 ** -12  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcyling.MATCHING:
     fenics_dt = .01  # time step size
@@ -163,7 +222,7 @@ elif problem is ProblemType.NEUMANN:
     p1 = Point(x_right, y_top)
 
 mesh = RectangleMesh(p0, p1, nx, ny)
-V = FunctionSpace(mesh, 'P', 1)
+V = FunctionSpace(mesh, 'P', 2)
 
 # Define boundary condition
 u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, t=0)
@@ -172,10 +231,7 @@ u_D_function = interpolate(u_D, V)
 f_N = Expression('2 * x[0]', degree=1)
 f_N_function = interpolate(f_N, V)
 
-coupling_boundary = CouplingBoundary()
-remaining_boundary = ComplementaryBoundary(coupling_boundary)
-
-bcs = [DirichletBC(V, u_D, remaining_boundary)]
+bcs = [DirichletBC(V, u_D, ComplementaryBoundary(ClosedCouplingBoundary()))]
 # Define initial value
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
@@ -189,7 +245,7 @@ elif problem is ProblemType.NEUMANN:
 
 precice = fenicsadapter.core.Adapter(solver_name, 0, 1)
 precice.configure(config_file_name)
-precice.set_coupling_mesh(mesh_name, mesh, coupling_boundary)
+precice.set_coupling_mesh(mesh_name, mesh, OpenCouplingBoundary())
 precice_dt = precice.initialize()
 
 if precice.is_action_required(fenicsadapter.core.action_write_initial_data()):
@@ -214,7 +270,7 @@ F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 if problem is ProblemType.DIRICHLET:
     # apply Dirichlet boundary condition on coupling interface
-    bcs.append(DirichletBC(V, coupling_expression, coupling_boundary))
+    bcs.append(DirichletBC(V, coupling_expression, OpenCouplingBoundary()))
 if problem is ProblemType.NEUMANN:
     # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
     F += coupling_expression * v * ds
@@ -261,12 +317,10 @@ while precice.is_coupling_ongoing():
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
-        write_field = fluxes_from_temperature_full_domain(F_known_u, V)
-        #t, n, precice_timestep_complete, precice_dt = precice.advance(fluxes, u_np1, u_n, t, dt(0), n)
+        write_field = determine_flux_on_straight_line(u_np1, u_n, f, mesh, dt)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
         write_field = u_np1
-        #t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)
 
     precice.write_block_scalar_data(write_data_name, mesh_name, write_field)
     precice_dt = precice.advance(dt)
