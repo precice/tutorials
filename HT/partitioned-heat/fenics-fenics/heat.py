@@ -125,7 +125,7 @@ elif problem is ProblemType.NEUMANN:
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcyling.NONE:
     fenics_dt = .1  # time step size
-    error_tol = 10 ** -3  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    error_tol = 10 ** -12  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcyling.MATCHING:
     fenics_dt = .01  # time step size
