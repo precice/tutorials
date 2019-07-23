@@ -27,7 +27,7 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 from __future__ import print_function, division
 from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
     TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, \
-    near, MeshFunction, FacetNormal, vertices
+    near, MeshFunction, FacetNormal, VectorFunctionSpace
 from enum import Enum
 import fenicsadapter.core
 from errorcomputation import compute_errors
@@ -94,70 +94,26 @@ class NoFluxBoundary(SubDomain):
             return False
 
 
-def determine_flux_on_straight_line(u_np1, u_n, f, mesh, dt):
+def determine_gradient(V_g, u, flux):
     """
-    Computes flux on a limited part of the domain (currently hard-coded).
-    Following approach from https://fenicsproject.discourse.group/t/compute-gradient-of-scalar-field-on-boundarymesh/1172/2
-    :param u_np1: new solution
-    :param u_n: old solution
-    :param f: right hans side of pde
-    :param mesh: domain mesh
-    :param dt: timestep size
+    compute flux following http://hplgit.github.io/INF5620/doc/pub/fenics_tutorial1.1/tu2.html#tut-poisson-gradu
+    :param mesh
+    :param u: solution where gradient is to be determined
     :return:
     """
-    V_q = FunctionSpace(mesh, "P", 1)
-    flux = TrialFunction(V_q)
-    v = TestFunction(V_q)
 
-    # Mark parts of the boundary to which integrals will need to be restricted.
-    # (Parts not explicitly marked are flagged with zero.)
-    FLUX_BDRY = 1
-    COMPLEMENT_FLUX_BDRY = 2
-    boundaryMarkers = MeshFunction("size_t", mesh, mesh.topology().dim() - 1,
-                                   COMPLEMENT_FLUX_BDRY)
-    OpenCouplingBoundary().mark(boundaryMarkers, FLUX_BDRY)
-    ds_marked = ds(subdomain_data=boundaryMarkers)
+    w = TrialFunction(V_g)
+    v = TestFunction(V_g)
 
-    # Boundary conditions to apply to the flux solution when we are only
-    # interested in flux on the right side of the domain:
-    antiBCs = [DirichletBC(V_q, Constant(0.0), NoFluxBoundary()), ]
-
-    ################################################################################
-
-    # The trick:  Since we want to use the corner nodes to approximate the
-    # flux on our boundary of interest, test functions will end up being
-    # nonzero on an $O(h)$ part of the complement of the boundary of interest.
-    # Thus we need to integrate a consistency term on that part of the boundary.
-    dudt = (u_np1 - u_n) / dt
-    F = 0
-    F += dot(grad(u_np1), grad(v)) * dx
-    F += dudt * v * dx
-    F += -f * v * dx
-
-    n = FacetNormal(mesh)
-    consistencyTerm = inner(grad(u_np1), n) * v * ds_marked(COMPLEMENT_FLUX_BDRY)
-    FBdry = flux * v * ds_marked(FLUX_BDRY) - F + consistencyTerm
-
-    ################################################################################
-
-    # Get $\mathbf{q}\cdot\mathbf{n}$ on the boundary of interest with and
-    # without the consistency term:
-    def solveFor_qn_h(FBdry, BCs, V):
-        aBdry = lhs(FBdry)
-        LBdry = rhs(FBdry)
-        ABdry = assemble(aBdry, keep_diagonal=True)
-        bBdry = assemble(LBdry)
-        [BC.apply(ABdry, bBdry) for BC in BCs]
-        qn_h = Function(V)
-        solve(ABdry, qn_h.vector(), bBdry)
-        return qn_h
-
-    return solveFor_qn_h(FBdry, antiBCs, V_q)
+    a = inner(w, v) * dx
+    L = inner(grad(u), v) * dx
+    solve(a == L, flux)
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
+parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
 
 args = parser.parse_args()
 
@@ -210,6 +166,7 @@ elif subcycle is Subcyling.NONMATCHING:
 
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
+gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
 x_coupling = 1.5  # x coordinate of coupling interface
@@ -225,10 +182,10 @@ mesh = RectangleMesh(p0, p1, nx, ny)
 V = FunctionSpace(mesh, 'P', 2)
 
 # Define boundary condition
-u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, t=0)
+u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 u_D_function = interpolate(u_D, V)
 # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
-f_N = Expression('2 * x[0]', degree=1)
+f_N = Expression('2 * gamma*t*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
 f_N_function = interpolate(f_N, V)
 
 bcs = [DirichletBC(V, u_D, ComplementaryBoundary(ClosedCouplingBoundary()))]
@@ -265,7 +222,7 @@ dt.assign(np.min([fenics_dt, precice_dt]))
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-f = Constant(beta - 2 - 2 * alpha)
+f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 if problem is ProblemType.DIRICHLET:
@@ -279,7 +236,6 @@ a, L = lhs(F), rhs(F)
 
 # Time-stepping
 u_np1 = Function(V)
-F_known_u = u_np1 * v / dt * dx + dot(grad(u_np1), grad(v)) * dx - (u_n / dt + f) * v * dx
 u_np1.rename("Temperature", "")
 
 # reference solution at t=0
@@ -302,6 +258,11 @@ error_out << error_pointwise
 
 # set t_1 = t_0 + dt, this gives u_D^1
 u_D.t = t + dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
+f.t = t + dt(0)
+
+V_g = VectorFunctionSpace(mesh, 'P', 1)
+flux = Function(V_g)
+flux.rename("Flux", "")
 
 # write checkpoint
 if precice.is_action_required(fenicsadapter.core.action_write_iteration_checkpoint()):
@@ -317,7 +278,9 @@ while precice.is_coupling_ongoing():
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
-        write_field = determine_flux_on_straight_line(u_np1, u_n, f, mesh, dt)
+        determine_gradient(V_g, u_np1, flux)
+        flux_x, flux_y = flux.split()
+        write_field = flux_x
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
         write_field = u_np1
@@ -360,6 +323,7 @@ while precice.is_coupling_ongoing():
 
     # Update dirichlet BC
     u_D.t = t + dt(0)
+    f.t = t + dt(0)
 
 # Hold plot
 precice.finalize()
