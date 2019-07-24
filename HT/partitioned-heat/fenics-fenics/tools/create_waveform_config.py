@@ -86,8 +86,8 @@ with open(os.path.join( target_path, 'precice-adapter-config-N.json'), "w") as f
 
 runall_path = os.path.join( target_path, 'runall.sh')
 with open(runall_path, "w") as file:
-    file.write(runall_template.render(wr_left=N_Dirichlet,
-                                      wr_right=N_Neumann,
+    file.write(runall_template.render(wr_dirichlet=N_Dirichlet,
+                                      wr_neumann=N_Neumann,
                                       window_size=args.window_size,
                                       coupling_scheme=coupling_scheme.name,
 				      gamma=args.gamma,

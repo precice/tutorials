@@ -44,6 +44,14 @@ class ProblemType(Enum):
     NEUMANN = 2  # Neumann problem
 
 
+class DomainPart(Enum):
+    """
+    Enum defines which part of the domain [x_left, x_right] x [y_bottom, y_top] we compute.
+    """
+    LEFT = 1  # left part of domain
+    RIGHT = 2  # right part of domain
+
+
 class ComplementaryBoundary(SubDomain):
     def __init__(self, subdomain):
         self.complement = subdomain
@@ -95,6 +103,8 @@ parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_FIRST_DIRICHLET.name, type=str)
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
 parser.add_argument("-tol", "--error-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
+parser.add_argument("-dl", "--domain-left", help="right part of the domain is being computed", dest='domain_left', action='store_true')
+parser.add_argument("-dr", "--domain-right", help="left part of the domain is being computed", dest='domain_right', action='store_true')
 
 args = parser.parse_args()
 
@@ -107,6 +117,22 @@ if args.dirichlet and args.neumann:
     raise Exception("you can only choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
 if not (args.dirichlet or args.neumann):
     raise Exception("you have to choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
+
+
+# coupling parameters
+if args.domain_left:
+    domain_part = DomainPart.LEFT
+if args.domain_right:
+    domain_part = DomainPart.RIGHT
+if args.dirichlet and args.neumann:
+    raise Exception("you can only choose to either compute the left part of the domain (option -dl) or the right part (option -dr)")
+if not (args.domain_left or args.domain_right):
+    print("Default domain partitioning is used: Left part of domain is a Dirichlet-type problem; right part is a Neumann-type problem")
+    if problem is ProblemType.DIRICHLET:
+        domain_part = DomainPart.LEFT
+    elif problem is ProblemType.NEUMANN:
+        domain_part = DomainPart.RIGHT
+
 
 # Create mesh and define function space
 
@@ -123,11 +149,12 @@ n_subcycling = "N".format(wr_tag=wr_tag)
 
 configs_path = os.path.join("experiments", wr_tag, window_size, coupling_scheme)
 
-if problem is ProblemType.DIRICHLET:
+if domain_part is DomainPart.LEFT:
     nx = nx*3
+
+if problem is ProblemType.DIRICHLET:
     adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
     other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-N.json")
-
 elif problem is ProblemType.NEUMANN:
     adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-N.json")
     other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
@@ -139,10 +166,10 @@ y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
 x_coupling = 1.5  # x coordinate of coupling interface
 
-if problem is ProblemType.DIRICHLET:
+if domain_part is DomainPart.LEFT:
     p0 = Point(x_left, y_bottom)
     p1 = Point(x_coupling, y_top)
-elif problem is ProblemType.NEUMANN:
+elif domain_part is DomainPart.RIGHT:
     p0 = Point(x_coupling, y_bottom)
     p1 = Point(x_right, y_top)
 
