@@ -42,6 +42,15 @@ class ProblemType(Enum):
     DIRICHLET = 1  # Dirichlet problem
     NEUMANN = 2  # Neumann problem
 
+
+class DomainPart(Enum):
+    """
+    Enum defines which part of the domain [x_left, x_right] x [y_bottom, y_top] we compute.
+    """
+    LEFT = 1  # left part of domain
+    RIGHT = 2  # right part of domain
+
+
 class Subcyling(Enum):
     """
     Enum defines which kind of subcycling is used
@@ -92,6 +101,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
+parser.add_argument("-dl", "--domain-left", help="right part of the domain is being computed", dest='domain_left', action='store_true')
+parser.add_argument("-dr", "--domain-right", help="left part of the domain is being computed", dest='domain_right', action='store_true')
 
 args = parser.parse_args()
 
@@ -108,18 +119,36 @@ if args.dirichlet and args.neumann:
 if not (args.dirichlet or args.neumann):
     raise Exception("you have to choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
 
+
+# coupling parameters
+if args.domain_left:
+    domain_part = DomainPart.LEFT
+if args.domain_right:
+    domain_part = DomainPart.RIGHT
+if args.dirichlet and args.neumann:
+    raise Exception("you can only choose to either compute the left part of the domain (option -dl) or the right part (option -dr)")
+if not (args.domain_left or args.domain_right):
+    print("Default domain partitioning is used: Left part of domain is a Dirichlet-type problem; right part is a Neumann-type problem")
+    if problem is ProblemType.DIRICHLET:
+        domain_part = DomainPart.LEFT
+    elif problem is ProblemType.NEUMANN:
+        domain_part = DomainPart.RIGHT
+
+
 # Create mesh and define function space
 
 nx = 5
 ny = 10
 subcycle = Subcyling.NONE
 
-if problem is ProblemType.DIRICHLET:
+if domain_part is DomainPart.LEFT:
     nx = nx*3
-    adapter_config_filename = "precice-adapter-config-D.json"
-
-elif problem is ProblemType.NEUMANN:
+elif domain_part is DomainPart.RIGHT:
     ny = 20
+
+if problem is ProblemType.DIRICHLET:
+    adapter_config_filename = "precice-adapter-config-D.json"
+elif problem is ProblemType.NEUMANN:
     adapter_config_filename = "precice-adapter-config-N.json"
 
 # for all scenarios, we assume precice_dt == .1
@@ -143,10 +172,10 @@ y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
 x_coupling = 1.5  # x coordinate of coupling interface
 
-if problem is ProblemType.DIRICHLET:
+if domain_part is DomainPart.LEFT:
     p0 = Point(x_left, y_bottom)
     p1 = Point(x_coupling, y_top)
-elif problem is ProblemType.NEUMANN:
+elif domain_part is DomainPart.RIGHT:
     p0 = Point(x_coupling, y_bottom)
     p1 = Point(x_right, y_top)
 
@@ -234,6 +263,8 @@ while precice.is_coupling_ongoing():
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
         determine_gradient(V_g, u_np1, flux)
         flux_x, flux_y = flux.split()
+        if domain_part is DomainPart.RIGHT:
+            flux_x = -1 * flux_x
         t, n, precice_timestep_complete, precice_dt = precice.advance(flux_x, u_np1, u_n, t, dt(0), n)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
