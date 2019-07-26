@@ -114,6 +114,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
+parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
+
 
 args = parser.parse_args()
 
@@ -150,10 +152,14 @@ if problem is ProblemType.DIRICHLET:
 elif problem is ProblemType.NEUMANN:
     ny = 20
 
-# for all scenarios, we assume precice_dt == .1
-if subcycle is Subcyling.NONE:
+if subcycle is Subcyling.NONE and not args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
-    error_tol = 10 ** -12  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    error_tol = 10 ** -7  # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
+    interpolation_strategy = fenicsadapter.core.ExactInterpolationExpression
+elif subcycle is Subcyling.NONE and args.arbitrary_coupling_interface:
+    fenics_dt = .1  # time step size
+    error_tol = 10 ** -3 # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    interpolation_strategy = fenicsadapter.core.GeneralInterpolationExpression
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcyling.MATCHING:
     fenics_dt = .01  # time step size
@@ -200,7 +206,7 @@ elif problem is ProblemType.NEUMANN:
     write_field = u_D_function
     read_field = f_N_function
 
-precice = fenicsadapter.core.Adapter(solver_name, 0, 1)
+precice = fenicsadapter.core.Adapter(solver_name, 0, 1, interpolation_strategy=interpolation_strategy)
 precice.configure(config_file_name)
 precice.set_coupling_mesh(mesh_name, mesh, OpenCouplingBoundary())
 precice_dt = precice.initialize()
