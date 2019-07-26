@@ -13,7 +13,7 @@ evaluated_wr = [11, 12,      15, 110, 21, 22,     25, 210,            51, 52,   
 evaluated_dT = [1.0, 0.5, 0.2, 0.1]
 coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name, CouplingScheme.SERIAL_FIRST_NEUMANN.name, CouplingScheme.PARALLEL.name]
 
-
+simulationTime = 10.0
 data = []
 data.append(["WR", "dT", "cpl", "#steps", "#it", "#it/#steps"])
 prefix = args.prefix
@@ -26,11 +26,21 @@ for wr, dT, coupling_scheme in itertools.product(evaluated_wr, evaluated_dT, cou
         with open(os.path.join(folder, "precice-HeatDirichlet-iterations.log")) as file:
             for line in file.readlines():
                 lastline = line
-            lastline = lastline.split("  ")
-            number_of_windows = float(lastline[0])
-            total_iterations = float(lastline[1])
-            avg_its = total_iterations / number_of_windows
-            data.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "#steps": number_of_windows, "#it": total_iterations, "#it/#steps": avg_its})
+            try:
+                lastline = lastline.split("  ")
+                number_of_windows = float(lastline[0])
+                total_iterations = float(lastline[1])
+                avg_its = total_iterations / number_of_windows
+                if number_of_windows == simulationTime / dT:
+                    data.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "#steps": number_of_windows, "#it": total_iterations, "#it/#steps": avg_its})
+                else:
+                    print("File {name} erroneous.".format(
+                        name=os.path.join(folder, "precice-HeatDirichlet-iterations.log")))
+                    data.append(
+                        {"WR": wr, "dT": dT, "cpl": coupling_scheme, "#steps": "-", "#it": "-", "#it/#steps": "x"})
+            except AttributeError:
+                print("File {name} erroneous.".format(name=os.path.join(folder, "precice-HeatDirichlet-iterations.log")))
+                data.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "#steps": "-", "#it": "-", "#it/#steps": "x"})
     except FileNotFoundError:
         data.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "#steps": "-", "#it": "-", "#it/#steps": "-"})
 
