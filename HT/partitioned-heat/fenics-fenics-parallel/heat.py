@@ -251,11 +251,20 @@ u_np1.rename("Temperature", "")
 
 # reference solution at t=0
 u_ref = interpolate(u_D, V)
-u_ref.rename("reference", " ")
+u_ref.rename("reference", "")
+
+# mark mesh w.r.t ranks
+mesh_rank = MeshFunction("size_t", mesh, mesh.topology().dim())
+if problem is ProblemType.NEUMANN:
+    mesh_rank.set_all(MPI.rank(MPI.comm_world) + 4)
+else:
+    mesh_rank.set_all(MPI.rank(MPI.comm_world) + 0)
+mesh_rank.rename("myRank", "")
 
 temperature_out = File("out/%s.pvd" % solver_name)
 ref_out = File("out/ref%s.pvd" % solver_name)
 error_out = File("out/error%s.pvd" % solver_name)
+ranks = File("out/ranks%s.pvd.pvd" % solver_name)
 
 # output solution and reference solution at t=0, n=0
 t = 0
@@ -263,6 +272,7 @@ n = 0
 print('{rank}:output u^{iteration} and u_ref^{iteration}'.format(rank=MPI.rank(MPI.comm_world), iteration=n))
 temperature_out << u_n
 ref_out << u_ref
+ranks << mesh_rank
 
 error_total, error_pointwise = compute_errors(u_n, u_ref, V)
 error_out << error_pointwise
