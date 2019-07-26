@@ -27,7 +27,8 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 from __future__ import print_function, division
 import fenics
 from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
-    TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, near, MPI, VectorFunctionSpace
+    TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, \
+    near, MeshFunction, FacetNormal, VectorFunctionSpace, MPI
 from enum import Enum
 import fenicsadapter.core
 from errorcomputation import compute_errors
@@ -54,19 +55,41 @@ class Subcyling(Enum):
     # details, see https://stackoverflow.com/questions/14763722/python-modulo-on-floats)
 
 
-class OuterBoundary(SubDomain):
+class ComplementaryBoundary(SubDomain):
+    def __init__(self, subdomain):
+        self.complement = subdomain
+        SubDomain.__init__(self)
+
     def inside(self, x, on_boundary):
         tol = 1E-14
-        if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
+        if on_boundary and not self.complement.inside(x, on_boundary):
             return True
         else:
             return False
 
 
-class CouplingBoundary(SubDomain):
+class ClosedCouplingBoundary(SubDomain):
+    def inside(self, x, on_boundary):
+        tol = 1E-14
+        if on_boundary and near(x[0], x_coupling, tol) and not near(x[1], y_bottom, tol) and not near(x[1], y_top, tol):
+            return True
+        else:
+            return False
+
+
+class OpenCouplingBoundary(SubDomain):
     def inside(self, x, on_boundary):
         tol = 1E-14
         if on_boundary and near(x[0], x_coupling, tol):
+            return True
+        else:
+            return False
+
+
+class NoFluxBoundary(SubDomain):
+    def inside(self, x, on_boundary):
+        tol = 1E-14
+        if not near(x[0], x_coupling, tol):
             return True
         else:
             return False
@@ -91,6 +114,9 @@ def determine_gradient(V_g, u, flux):
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
+parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
+parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
+
 
 args = parser.parse_args()
 
@@ -127,12 +153,16 @@ if problem is ProblemType.DIRICHLET:
     nx = nx*3
 
 elif problem is ProblemType.NEUMANN:
-    ny = 20
+    ny = 10
 
-# for all scenarios, we assume precice_dt == .1
-if subcycle is Subcyling.NONE:
+if subcycle is Subcyling.NONE and not args.arbitrary_coupling_interface:
+    fenics_dt = .1  # time step size
+    error_tol = 10 ** -7  # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
+    interpolation_strategy = fenicsadapter.core.ExactInterpolationExpression
+elif subcycle is Subcyling.NONE and args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
     error_tol = 10 ** -3  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    interpolation_strategy = fenicsadapter.core.GeneralInterpolationExpression
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcyling.MATCHING:
     fenics_dt = .01  # time step size
@@ -145,6 +175,7 @@ elif subcycle is Subcyling.NONMATCHING:
 
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
+gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
 x_coupling = 1.5  # x coordinate of coupling interface
@@ -157,19 +188,16 @@ elif problem is ProblemType.NEUMANN:
     p1 = Point(x_right, y_top)
 
 mesh = RectangleMesh(p0, p1, nx, ny)
-V = FunctionSpace(mesh, 'P', 1)
+V = FunctionSpace(mesh, 'P', 2)
 
 # Define boundary condition
-u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, t=0)
+u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 u_D_function = interpolate(u_D, V)
 # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
-f_N = Expression('2 * x[0]', degree=1)
+f_N = Expression('2 * gamma*t*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
 f_N_function = interpolate(f_N, V)
 
-coupling_boundary = CouplingBoundary()
-remaining_boundary = OuterBoundary()
-
-bcs = [DirichletBC(V, u_D, remaining_boundary)]
+bcs = [DirichletBC(V, u_D, ComplementaryBoundary(ClosedCouplingBoundary()))]
 # Define initial value
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
@@ -183,9 +211,9 @@ elif problem is ProblemType.NEUMANN:
 
 print("Hello from rank {rank} of {size}.".format(rank=MPI.rank(MPI.comm_world), size=MPI.size(MPI.comm_world)))
 
-precice = fenicsadapter.core.Adapter(solver_name, MPI.rank(MPI.comm_world), MPI.size(MPI.comm_world))
+precice = fenicsadapter.core.Adapter(solver_name, MPI.rank(MPI.comm_world), MPI.size(MPI.comm_world), interpolation_strategy=interpolation_strategy)
 precice.configure(config_file_name)
-precice.set_coupling_mesh(mesh_name, mesh, coupling_boundary)
+precice.set_coupling_mesh(mesh_name, mesh, OpenCouplingBoundary())
 precice_dt = precice.initialize()
 
 if precice.is_action_required(fenicsadapter.core.action_write_initial_data()):
@@ -205,12 +233,12 @@ dt.assign(np.min([fenics_dt, precice_dt]))
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-f = Constant(beta - 2 - 2 * alpha)
+f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 if problem is ProblemType.DIRICHLET:
     # apply Dirichlet boundary condition on coupling interface
-    bcs.append(DirichletBC(V, coupling_expression, coupling_boundary))
+    bcs.append(DirichletBC(V, coupling_expression, OpenCouplingBoundary()))
 if problem is ProblemType.NEUMANN:
     # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
     F += coupling_expression * v * ds
@@ -219,7 +247,6 @@ a, L = lhs(F), rhs(F)
 
 # Time-stepping
 u_np1 = Function(V)
-F_known_u = u_np1 * v / dt * dx + dot(grad(u_np1), grad(v)) * dx - (u_n / dt + f) * v * dx
 u_np1.rename("Temperature", "")
 
 # reference solution at t=0
@@ -229,7 +256,6 @@ u_ref.rename("reference", " ")
 temperature_out = File("out/%s.pvd" % solver_name)
 ref_out = File("out/ref%s.pvd" % solver_name)
 error_out = File("out/error%s.pvd" % solver_name)
-flux_out = File("out/my_flux%s.pvd" % solver_name)
 
 # output solution and reference solution at t=0, n=0
 t = 0
@@ -243,11 +269,11 @@ error_out << error_pointwise
 
 # set t_1 = t_0 + dt, this gives u_D^1
 u_D.t = t + dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
+f.t = t + dt(0)
 
 V_g = VectorFunctionSpace(mesh, 'P', 1)
 flux = Function(V_g)
 flux.rename("Flux", "")
-write_fields = dict()
 
 # write checkpoint
 if precice.is_action_required(fenicsadapter.core.action_write_iteration_checkpoint()):
@@ -266,17 +292,15 @@ while precice.is_coupling_ongoing():
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
         determine_gradient(V_g, u_np1, flux)
-        flux_out << flux
         flux_x, flux_y = flux.split(deepcopy=True)
         write_field = flux_x
-
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
         write_field = u_np1
 
     for v in fenics.vertices(mesh):  # TODO: this loop has no real purpose, however, if we do not execute it, the program hangs later on...
         write_field(v.x(0), v.x(1))
-    
+
     print('{rank} of {size}:before write'.format(rank=MPI.rank(MPI.comm_world), size=MPI.size(MPI.comm_world)))
     precice.write_block_scalar_data(write_data_name, mesh_name, write_field)
     precice_dt = precice.advance(dt)
@@ -316,8 +340,7 @@ while precice.is_coupling_ongoing():
 
     # Update dirichlet BC
     u_D.t = t + dt(0)
+    f.t = t + dt(0)
 
 # Hold plot
 precice.finalize()
-
-assert(MPI.finalized())
