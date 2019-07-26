@@ -29,7 +29,7 @@ from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Exp
     TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, near, \
     VectorFunctionSpace
 from enum import Enum
-from fenicsadapter import Adapter
+from fenicsadapter import Adapter, ExactInterpolationExpression, GeneralInterpolationExpression
 from errorcomputation import compute_errors
 import argparse
 import numpy as np
@@ -101,6 +101,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
+parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
 parser.add_argument("-dl", "--domain-left", help="right part of the domain is being computed", dest='domain_left', action='store_true')
 parser.add_argument("-dr", "--domain-right", help="left part of the domain is being computed", dest='domain_right', action='store_true')
 
@@ -152,9 +153,14 @@ elif problem is ProblemType.NEUMANN:
     adapter_config_filename = "precice-adapter-config-N.json"
 
 # for all scenarios, we assume precice_dt == .1
-if subcycle is Subcyling.NONE:
+if subcycle is Subcyling.NONE and not args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
-    error_tol = 10 ** -3  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    error_tol = 10 ** -7  # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
+    interpolation_strategy = ExactInterpolationExpression
+elif subcycle is Subcyling.NONE and args.arbitrary_coupling_interface:
+    fenics_dt = .1  # time step size
+    error_tol = 10 ** -3 # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    interpolation_strategy = GeneralInterpolationExpression
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcyling.MATCHING:
     fenics_dt = .01  # time step size
@@ -197,7 +203,7 @@ bcs = [DirichletBC(V, u_D, remaining_boundary)]
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
-precice = Adapter(adapter_config_filename)
+precice = Adapter(adapter_config_filename, interpolation_strategy=interpolation_strategy)
 
 if problem is ProblemType.DIRICHLET:
     precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
