@@ -9,13 +9,21 @@ parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 parser.add_argument("-T", "--simulation-time", default=10, type=float)
 parser.add_argument("-qntol", "--quasi-newton-tolerance", help="set accepted error in the quasi newton scheme", default='1e-12', type=str)
-parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_FIRST_DIRICHLET.name, type=str)
+parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_FIRST_DIRICHLET.name, type=str, choices=[cpl_scheme.name for cpl_scheme in CouplingScheme])
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
 parser.add_argument("-stol", "--solver-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
+parser.add_argument("-dd", "--domain-decomposition", help="set kind of domain decomposition being used", default="DN", type=str, choices=['DN', 'ND'])
 args = parser.parse_args()
 
 temperatures = []
 fluxes = []
+
+if args.domain_decomposition == "DN":
+    side_dirichlet = "-dl"  # Dirichlet problem is solved on left subdomain
+    side_neumann = "-dr"  # Neumann problem is solved on right subdomain
+elif args.domain_decomposition == "ND":
+    side_dirichlet = "-dr"  # Dirichlet problem is solved on right subdomain
+    side_neumann = "-dl"  # Neumann problem is solved on left subdomain    
 
 N_Dirichlet = args.waveform[0]
 N_Neumann = args.waveform[1]
@@ -88,6 +96,8 @@ runall_path = os.path.join( target_path, 'runall.sh')
 with open(runall_path, "w") as file:
     file.write(runall_template.render(wr_dirichlet=N_Dirichlet,
                                       wr_neumann=N_Neumann,
+                                      domain_decomposition_dirichlet=side_dirichlet,
+                                      domain_decomposition_neumann=side_neumann,
                                       window_size=args.window_size,
                                       coupling_scheme=coupling_scheme.name,
 				      gamma=args.gamma,
