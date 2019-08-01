@@ -251,6 +251,8 @@ elif Case is StructureCase.RFERENCE:
     displacement_out = File("Reference/u_ref.pvd")
     
 
+u_n.rename("Displacement", "")
+u_np1.rename("Displacement", "")
 displacement_out << u_n
 
 
