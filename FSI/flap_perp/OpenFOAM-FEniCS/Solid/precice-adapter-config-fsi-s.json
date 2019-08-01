@@ -1,6 +1,6 @@
 {
   "solver_name": "fenics",
-  "config_file_name": "precice-config.xml",
+  "config_file_name": "../precice-config.xml",
   "interface": {
       "coupling_mesh_name": "Solid",
       "write_data_name": "Displacements0",
