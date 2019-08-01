@@ -30,8 +30,8 @@
         <use-mesh name="Solid" from="fenics"/>
         <write-data name="Forces0" mesh="Fluid-Mesh-Faces"/>
         <read-data name="Displacements0" mesh="Fluid-Mesh-Nodes"/>
-        <mapping:petrbf-thin-plate-splines direction="write" from="Fluid-Mesh-Faces" to="Solid" constraint="conservative" y-dead="true"/>
-        <mapping:petrbf-thin-plate-splines direction="read" from="Solid" to="Fluid-Mesh-Nodes" constraint="consistent" y-dead="true"/>
+        <mapping:petrbf-thin-plate-splines direction="write" from="Fluid-Mesh-Faces" to="Solid" constraint="conservative" z-dead="true"/>
+        <mapping:petrbf-thin-plate-splines direction="read" from="Solid" to="Fluid-Mesh-Nodes" constraint="consistent" z-dead="true"/>
         <watch-point mesh="Solid" name="point1" coordinate="-0.05;0;1" />
     </participant>
 

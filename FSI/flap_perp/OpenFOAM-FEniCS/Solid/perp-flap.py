@@ -44,8 +44,8 @@ def Neumann_Boundary(x, on_boundary):
 d=2 #number of dimensions
 H = 1
 W = 0.1
-rho = 1000
-E=100000.0
+rho = 3000
+E=400000.0
 nu= 0.3
 
 mu    = Constant(E / (2.0*(1.0 + nu)))
@@ -53,9 +53,11 @@ mu    = Constant(E / (2.0*(1.0 + nu)))
 lambda_ = Constant(E*nu / ((1.0 + nu)*(1.0 - 2.0*nu)))
 
 # create Mesh
-n_x_Direction=5
-n_y_Direction=25
+n_x_Direction=3
+n_y_Direction=20
 mesh = RectangleMesh(Point(-W/2,0), Point(W/2,H), n_x_Direction,n_y_Direction)
+
+h=Constant(H/n_y_Direction)
 
 
 #create Function Space
@@ -210,7 +212,7 @@ v_np1 = update_v(a_np1, u_n, v_n, a_n, ufl=True)
 res = m(avg(a_n,a_np1,alpha_m), v) + k(avg(u_n,du, alpha_f), v)  #TODO: Wext(v) needs to be replaced by coupling
 
 if Case is not StructureCase.RFERENCE:
-    res -= precice.create_coupling_neumann_boundary_condition(v)# removed the marker , 3) #3 is the marker for the domain
+    res -= 1/h * precice.create_coupling_neumann_boundary_condition(v)# removed the marker , 3) #3 is the marker for the domain
     #res -= dot(v, Expression( ('1','0'),degree=2)) * ds
 
 if Case is StructureCase.RFERENCE:
