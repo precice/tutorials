@@ -5,3 +5,6 @@ Fluid
 !Fluid/system
 !Fluid/Fluid.foam
 !Fluid/precice-adapter-config.yml
+Solid/FSI-S
+*.log
+precice-fenics-events.json
