@@ -36,7 +36,6 @@ checkMesh -case Fluid
 
 # Run
 cd Fluid
-
 	#make the z-axis the y-axis such that the simulation is in the xy-plane
 	transformPoints -rotate '((0 0 1) (0 1 0))'
 	solver=$(getApplication)

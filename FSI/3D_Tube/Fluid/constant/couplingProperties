@@ -1,0 +1,15 @@
+FoamFile
+{
+ version 2.0;
+ format ascii;
+ root "";
+ case "";
+ instance "";
+ local "";
+ class dictionary;
+ object couplingProperties;
+}
+
+movingSolidPatches (auto1);
+
+movingFluidPatches (auto1);

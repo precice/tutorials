@@ -32,9 +32,8 @@ cp -r Fluid/0.orig/ Fluid/0/
 blockMesh -case Fluid
 checkMesh -case Fluid
 
-# cd Fluid
-
-# transformPoints -rotate '((0 1 0) (0 0 1))'
+cd Fluid
+transformPoints -rotate '((0 1 0) (0 0 1))'
 
 # Run
 cd Fluid
@@ -49,3 +48,4 @@ else
 fi
 
 # Workaround for issue #26
+./removeObsoleteFolders.sh
