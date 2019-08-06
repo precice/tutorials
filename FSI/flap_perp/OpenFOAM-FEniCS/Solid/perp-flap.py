@@ -2,7 +2,7 @@
 from fenics import *
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
 TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad,\
-Identity, inner,dx, ds, sym, grad, lhs, rhs, dot, File, solve
+Identity, inner,dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource
 
 from ufl import nabla_div
 import numpy as np
@@ -18,7 +18,7 @@ class StructureCase(Enum):
     DUMMY3D = 3
     RFERENCE = 4
     
-Case = StructureCase.OPENFOAM
+Case = StructureCase.RFERENCE
 
 #if Case is StructureCase.OPENFOAM or StructureCase.DUMMY3D:
 #    dim=2.5 #2.5 means that 2D fenics is coupled via 3d preCICE
@@ -211,7 +211,10 @@ v_np1 = update_v(a_np1, u_n, v_n, a_n, ufl=True)
 
 res = m(avg(a_n,a_np1,alpha_m), v) + k(avg(u_n,du, alpha_f), v)  #TODO: Wext(v) needs to be replaced by coupling
 
-if Case is not StructureCase.RFERENCE:
+if Case is StructureCase.OPENFOAM:
+    Forces_x, Forces_y = precice.create_force_boundary_condition(V)
+
+elif Case is not StructureCase.RFERENCE:
     res -= 1/h * precice.create_coupling_neumann_boundary_condition(v)# removed the marker , 3) #3 is the marker for the domain
     #res -= dot(v, Expression( ('1','0'),degree=2)) * ds
 
@@ -258,7 +261,35 @@ displacement_out << u_n
 
 #time loop for coupling
 
-if Case is not StructureCase.RFERENCE:
+if Case is StructureCase.OPENFOAM:
+    
+    while precice.is_coupling_ongoing():
+        A, b = assemble_system(a_form, L_form, bc)
+
+        b_forces = b.copy() # b is the same for every iteration, only forces change
+        
+        for ps in Forces_x:
+            ps.apply(b_forces)
+        for ps in Forces_y:
+            ps.apply(b_forces)
+            
+        assert(b is not b_forces)
+        solve(A, u_np1.vector(), b_forces)
+        
+        t, n, precice_timestep_complete, precice_dt, Forces_x, Forces_y = precice.advance(u_np1, u_np1, u_n, t, float(dt), n)
+        
+        
+        if precice_timestep_complete:
+            
+            update_fields(u_np1, saved_u_old, v_n, a_n)
+            
+            if n % 10==0:
+                displacement_out << (u_n,t)
+        
+            u_tip.append(u_n(0.,1.)[0])
+            time.append(t)
+    
+elif Case is not StructureCase.RFERENCE:
 
     while precice.is_coupling_ongoing():
         
@@ -288,7 +319,16 @@ if Case is not StructureCase.RFERENCE:
 #time loop for reference calculation
 else:
     while t<=0.5:
+        
         solve(a_form == L_form, u_np1, bc)
+        
+        A, b = assemble_system(a_form, L_form, bc)
+        
+        ps=[]
+        ps.append(PointSource())
+        
+        for p in ps:
+            p.apply(b)
         
         t=t+float(dt)
         update_fields(u_np1,u_n, v_n,a_n)
@@ -298,6 +338,8 @@ else:
 
 
 # Plot tip displacement evolution
+        
+displacement_out << u_n 
 plt.figure()
 plt.plot(time, u_tip)
 plt.xlabel("Time")
