@@ -3,12 +3,36 @@ from fenics import *
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
 TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad,\
 Identity, inner,dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource
+import dolfin
 
 from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
 from fenicsadapter import Adapter
 from enum import Enum
+
+
+def extract_boundary_vertices(mesh, subdomain):
+    """Extracts vertices which lie on the boundary.
+    :return: stack of vertices
+    """
+    n = 0
+    vertices_x = []
+    vertices_y = []
+
+    if not issubclass(type(subdomain), SubDomain):
+        raise Exception("no correct coupling interface defined!")
+
+    for v in dolfin.vertices(mesh):
+        if subdomain.inside(v.point(), True):
+            n += 1
+            vertices_x.append(v.x(0))
+            vertices_y.append(v.x(1))
+
+    return np.array(vertices_x), np.array(vertices_y), n
+
+
+
 
 #Specify the case you want to calculate
 
@@ -17,8 +41,9 @@ class StructureCase(Enum):
     DUMMY2D = 2
     DUMMY3D = 3
     RFERENCE = 4
+    PSREF = 5
     
-Case = StructureCase.RFERENCE
+Case = StructureCase.OPENFOAM
 
 #if Case is StructureCase.OPENFOAM or StructureCase.DUMMY3D:
 #    dim=2.5 #2.5 means that 2D fenics is coupled via 3d preCICE
@@ -36,11 +61,18 @@ def Neumann_Boundary(x, on_boundary):
     determines whether a node is on the coupling boundary
     
     """
-    return on_boundary and (not(abs(x[1]<tol)) or abs(abs(x[0])-W/2)<tol)
+    return on_boundary and ((abs(x[1]-1)<tol) or abs(abs(x[0])-W/2)<tol)
 
 
+def top(x, on_boundary):
+    return on_boundary and abs(x[1]-1)<tol
+TopDomain = AutoSubDomain(top)
 
-# Dimensionless Geometry and material properties
+def left(x, on_boundary):
+    return on_boundary and abs(x[0]+0.05)<tol and x[1]>=0.0
+LeftDomain=AutoSubDomain(left)
+
+# Geometry and material properties
 d=2 #number of dimensions
 H = 1
 W = 0.1
@@ -53,8 +85,8 @@ mu    = Constant(E / (2.0*(1.0 + nu)))
 lambda_ = Constant(E*nu / ((1.0 + nu)*(1.0 - 2.0*nu)))
 
 # create Mesh
-n_x_Direction=3
-n_y_Direction=20
+n_x_Direction=5
+n_y_Direction=50
 mesh = RectangleMesh(Point(-W/2,0), Point(W/2,H), n_x_Direction,n_y_Direction)
 
 h=Constant(H/n_y_Direction)
@@ -90,7 +122,7 @@ coupling_boundary = AutoSubDomain(Neumann_Boundary)
 
 #read fenics-adapter json-config-file)
 
-if Case is not StructureCase.RFERENCE:
+if Case is not StructureCase.RFERENCE and Case is not StructureCase.PSREF:
     
     if Case is StructureCase.DUMMY2D:
         adapter_config_filename = "precice-adapter-config-fsi-dummy.json"
@@ -114,7 +146,7 @@ if Case is not StructureCase.RFERENCE:
     dt = Constant(precice_dt)
 
 else:
-    dt = Constant(0.05)
+    dt = Constant(0.1)
 
 
 
@@ -214,13 +246,23 @@ res = m(avg(a_n,a_np1,alpha_m), v) + k(avg(u_n,du, alpha_f), v)  #TODO: Wext(v) 
 if Case is StructureCase.OPENFOAM:
     Forces_x, Forces_y = precice.create_force_boundary_condition(V)
 
-elif Case is not StructureCase.RFERENCE:
+elif Case is StructureCase.DUMMY2D or Case is StructureCase.DUMMY3D:
     res -= 1/h * precice.create_coupling_neumann_boundary_condition(v)# removed the marker , 3) #3 is the marker for the domain
     #res -= dot(v, Expression( ('1','0'),degree=2)) * ds
 
-if Case is StructureCase.RFERENCE:
-    p = Expression( ('1','0'),degree=2)
-    res -= dot(v,p)*ds
+elif Case is StructureCase.RFERENCE:
+    # TODO: Maybe add boundary_markers
+    
+
+    bm= MeshFunction("size_t", mesh, mesh.topology().dim()-1)
+    bm.set_all(0)
+    TopDomain.mark(bm,2)
+    dss=ds(subdomain_data = bm)
+    p = Constant( (F/W,0))
+    res -= dot(v,p)*dss(2)
+
+F=5
+
 
 a_form= lhs(res)
 L_form= rhs(res)
@@ -252,6 +294,8 @@ elif Case is StructureCase.OPENFOAM:
     
 elif Case is StructureCase.RFERENCE:
     displacement_out = File("Reference/u_ref.pvd")
+elif Case is StructureCase.PSREF:
+    displacement_out = File("PSREF/u_psref.pvd")
     
 
 u_n.rename("Displacement", "")
@@ -289,7 +333,7 @@ if Case is StructureCase.OPENFOAM:
             u_tip.append(u_n(0.,1.)[0])
             time.append(t)
     
-elif Case is not StructureCase.RFERENCE:
+elif Case is StructureCase.DUMMY2D or Case is StructureCase.DUMMY3D:
 
     while precice.is_coupling_ongoing():
         
@@ -317,18 +361,33 @@ elif Case is not StructureCase.RFERENCE:
     precice.finalize()
     
 #time loop for reference calculation
-else:
-    while t<=0.5:
+elif Case is StructureCase.PSREF:
+    while t<=5.5:
         
-        solve(a_form == L_form, u_np1, bc)
-        
+        x_coords, y_coords, n = extract_boundary_vertices(mesh, TopDomain)
+        plt.scatter(x_coords, y_coords)
         A, b = assemble_system(a_form, L_form, bc)
+        b_forces = b.copy()
+        ps=list()
+        f=2*F/n
+#        for i in range(n):
+#            ps.append(PointSource(V.sub(0), Point(x_coords[i], y_coords[i]), f))
+#        
+#        ps.append(PointSource(V.sub(0), Point(0.05,0.5),2.5))
+       # ps.append(PointSource(V.sub(0), Point(0.05,1),2.5))
+       # ps.append(PointSource(V.sub(0), Point(-0.05,0.5),2.5))
+        x_coords, y_coords, n = extract_boundary_vertices(mesh, LeftDomain)
         
-        ps=[]
-        ps.append(PointSource())
-        
+        f=2*F/n
+
+        for i in range(n):
+            ps.append(PointSource(V.sub(0), Point(x_coords[i], y_coords[i]), f))
+      
+        plt.scatter(x_coords, y_coords)
         for p in ps:
-            p.apply(b)
+            p.apply(b_forces)
+            
+        solve(A, u_np1.vector(),b_forces)
         
         t=t+float(dt)
         update_fields(u_np1,u_n, v_n,a_n)
@@ -336,6 +395,17 @@ else:
         u_tip.append(u_n(0.,1.)[0])
         time.append(t)
 
+elif Case is StructureCase.RFERENCE:
+    while t<=5.5:
+        
+        solve(a_form == L_form, u_np1, bc)
+            
+            
+        t=t+float(dt)
+        update_fields(u_np1,u_n, v_n,a_n)
+        displacement_out << (u_n, t)
+        u_tip.append(u_n(0.,1.)[0])
+        time.append(t)    
 
 # Plot tip displacement evolution
         
