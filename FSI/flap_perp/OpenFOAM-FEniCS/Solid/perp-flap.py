@@ -135,13 +135,15 @@ if Case is not StructureCase.RFERENCE and Case is not StructureCase.PSREF:
         raise Exception("This Case is not Implemented yet")
 
     precice = Adapter(adapter_config_filename)
-
+    
+    clamped_boundary_domain=AutoSubDomain(clamped_boundary)
     precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, 
                                 mesh=mesh,
                                 read_field=f_N_function,
                                 write_field=u_function,
                                 u_n=u_n,
-                                dimension=dim)
+                                dimension=dim,
+                                dirichlet_boundary=clamped_boundary_domain)
 
     dt = Constant(precice_dt)
 
