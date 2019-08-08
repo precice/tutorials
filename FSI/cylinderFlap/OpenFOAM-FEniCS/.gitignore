@@ -6,7 +6,7 @@ Fluid
 !Fluid/Fluid.foam
 !Fluid/precice-adapter-config.yml
 Solid
-!Solid/perp-flap.py
+!Solid/cyl-flap.py
 !Solid/precice-adapter-config-fsi-s.json
 *.log
 precice-fenics-events.json

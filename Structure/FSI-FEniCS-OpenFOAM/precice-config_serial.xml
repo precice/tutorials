@@ -54,7 +54,7 @@
 
     <coupling-scheme:serial-implicit>
             <timestep-length value="1.e-2" />
-            <max-time value="0.5"/>
+            <max-time value="5."/>
             <participants first="Fluid" second="fenics"/>
             <exchange data="Forces0" mesh="Solid" from="Fluid" to="fenics"/>
             <exchange data="Displacements0" mesh="Solid" from="fenics" to="Fluid" />

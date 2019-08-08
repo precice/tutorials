@@ -20,11 +20,7 @@ class StructureCase(Enum):
     
 Case = StructureCase.OPENFOAM
 
-#if Case is StructureCase.OPENFOAM or StructureCase.DUMMY3D:
-#    dim=2.5 #2.5 means that 2D fenics is coupled via 3d preCICE
-#else:
 
-#this is done automatically by the adapter
 dim=2
 
 #define the two kinds of boundary: clamped and coupling Neumann Boundary
@@ -44,8 +40,8 @@ def Neumann_Boundary(x, on_boundary):
 d=2 #number of dimensions
 H = 1
 W = 0.1
-rho = 3000
-E=400000.0
+rho = 1000
+E=100000.0
 nu= 0.3
 
 mu    = Constant(E / (2.0*(1.0 + nu)))

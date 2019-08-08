@@ -54,14 +54,14 @@ dim=2
 
 #define the two kinds of boundary: clamped and coupling Neumann Boundary
 def clamped_boundary(x, on_boundary):
-    return on_boundary and abs(x[1])<tol
+    return on_boundary and abs(x[0]-0.25)<tol
 
 def Neumann_Boundary(x, on_boundary):
     """
     determines whether a node is on the coupling boundary
     
     """
-    return on_boundary and ((abs(x[1]-1)<tol) or abs(abs(x[0])-W/2)<tol)
+    return on_boundary and (abs(x[1]-0.2-H/2)<tol or abs(x[1]-0.2+H/2)<tol or abs(x[0]-0.25-L)<tol)
 
 
 def top(x, on_boundary):
@@ -74,20 +74,20 @@ LeftDomain=AutoSubDomain(left)
 
 # Geometry and material properties
 d=2 #number of dimensions
-H = 1
-W = 0.1
-rho = 3000
-E=400000.0
-nu= 0.3
+H = 0.02
+L = 0.35
+rho = 1000
+E=5600000.0
+nu= 0.4
 
 mu    = Constant(E / (2.0*(1.0 + nu)))
 
 lambda_ = Constant(E*nu / ((1.0 + nu)*(1.0 - 2.0*nu)))
 
 # create Mesh
-n_x_Direction=5
-n_y_Direction=50
-mesh = RectangleMesh(Point(-W/2,0), Point(W/2,H), n_x_Direction,n_y_Direction)
+n_x_Direction=20
+n_y_Direction=4
+mesh = RectangleMesh(Point(0.25,0.2-H/2), Point(0.25+L,0.2+H/2), n_x_Direction,n_y_Direction)
 
 h=Constant(H/n_y_Direction)
 
@@ -253,8 +253,6 @@ elif Case is StructureCase.DUMMY2D or Case is StructureCase.DUMMY3D:
     #res -= dot(v, Expression( ('1','0'),degree=2)) * ds
 
 elif Case is StructureCase.RFERENCE:
-    # TODO: Maybe add boundary_markers
-    
 
     bm= MeshFunction("size_t", mesh, mesh.topology().dim()-1)
     bm.set_all(0)
@@ -332,7 +330,7 @@ if Case is StructureCase.OPENFOAM:
             if n % 10==0:
                 displacement_out << (u_n,t)
         
-            u_tip.append(u_n(0.,1.)[0])
+            u_tip.append(u_n(0.6,0.2)[1])
             time.append(t)
     
 elif Case is StructureCase.DUMMY2D or Case is StructureCase.DUMMY3D:
