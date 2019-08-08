@@ -10,4 +10,4 @@ Solid
 !Solid/precice-adapter-config-fsi-s.json
 *.log
 precice-fenics-events.json
-precice-fluid-events.json
+precice-Fluid-events.json
