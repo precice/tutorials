@@ -10,8 +10,8 @@ FoamFile
 convertToMeters 1;
 
 // Geometry parameters
-f -0.005;   // z-front
-b 0.005;    // z-back
+f -0.5;   // z-front
+b 0.5;    // z-back
 
 // Grid refinement parameters
 H1 13;      // Nx first block
