@@ -53,3 +53,5 @@ fi
 
 # Workaround for issue #26
 ./removeObsoleteFolders.sh
+
+rm -r Fluid/0/
