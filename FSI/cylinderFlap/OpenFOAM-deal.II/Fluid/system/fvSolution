@@ -61,19 +61,19 @@ PIMPLE
 
     nOuterCorrectors 50;
 
-    residualControl
-    {
-	    U
-    	{
-    		tolerance 5e-5;
-    		relTol	  0;
-    	}
-	    p
-    	{
-    		tolerance 5e-4;
-    		relTol	  0;
-    	}
-    }
+//    residualControl
+//    {
+//	    U
+//    	{
+//    		tolerance 5e-5;
+//    		relTol	  0;
+//    	}
+//	    p
+//    	{
+//    		tolerance 5e-4;
+//    		relTol	  0;
+//    	}
+//    }
 }
 
 potentialFlow
