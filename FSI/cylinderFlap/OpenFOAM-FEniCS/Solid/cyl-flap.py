@@ -230,7 +230,7 @@ while precice.is_coupling_ongoing():
         
         update_fields(u_np1, saved_u_old, v_n, a_n)
         
-        if n % 10==0:
+        if n % 20==0:
             displacement_out << (u_n,t)
     
         u_tip.append(u_n(0.6,0.2)[1])
