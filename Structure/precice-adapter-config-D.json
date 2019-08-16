@@ -1,0 +1,9 @@
+{
+  "solver_name": "StructureDirichlet",
+  "config_file_name": "precice-config.xml",
+  "interface": {
+      "coupling_mesh_name": "DirichletNodes",
+      "write_data_name": "Force",
+      "read_data_name": "Displacement"
+    }
+}
