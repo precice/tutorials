@@ -96,6 +96,7 @@ parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal depen
 parser.add_argument("-tol", "--error-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
 parser.add_argument("-dl", "--domain-left", help="right part of the domain is being computed", dest='domain_left', action='store_true')
 parser.add_argument("-dr", "--domain-right", help="left part of the domain is being computed", dest='domain_right', action='store_true')
+parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l) or sinusoidal (s) dependence on time", type=str)
 
 args = parser.parse_args()
 
@@ -151,7 +152,7 @@ elif problem is ProblemType.NEUMANN:
     other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
 
 alpha = 3  # parameter alpha
-beta = 1.3  # parameter beta
+beta = 0  # parameter beta
 gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
@@ -168,15 +169,26 @@ mesh = RectangleMesh(p0, p1, nx, ny)
 V = FunctionSpace(mesh, 'P', 2)
 
 # Define boundary condition
-u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
+if args.time_dependence == "l":
+    print("Linear")
+    u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
+elif args.time_dependence == "s":
+    print("Sinusoidal")
+    u_D = Expression('1 + gamma*sin(t)*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 u_D_function = interpolate(u_D, V)
 # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
 if (domain_part is DomainPart.LEFT and problem is ProblemType.DIRICHLET) or \
         (domain_part is DomainPart.RIGHT and problem is ProblemType.NEUMANN):
-    f_N = Expression('2 * gamma*t*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
+    if args.time_dependence == "l":
+        f_N = Expression('2 * gamma*t*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
+    elif args.time_dependence == "s":
+        f_N = Expression('2 * gamma*sin(t)*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
 elif (domain_part is DomainPart.RIGHT and problem is ProblemType.DIRICHLET) or \
         (domain_part is DomainPart.LEFT and problem is ProblemType.NEUMANN):
-    f_N = Expression('-2 * gamma*t*x[0] - 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
+    if args.time_dependence == "l":
+        f_N = Expression('-2 * gamma*t*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
+    elif args.time_dependence == "s":
+        f_N = Expression('-2 * gamma*sin(t)*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
 f_N_function = interpolate(f_N, V)
 
 coupling_boundary = CouplingBoundary()
@@ -199,7 +211,13 @@ elif problem is ProblemType.NEUMANN:
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
+if args.time_dependence == "l":
+    f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha,
+                   beta=beta, gamma=gamma, t=0)
+elif args.time_dependence == "s":
+    f = Expression('beta + gamma * x[0] * x[0] * cos(t) - 2 * gamma * sin(t) - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha,
+                   beta=beta, gamma=gamma, t=0)
+
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 if problem is ProblemType.DIRICHLET:
