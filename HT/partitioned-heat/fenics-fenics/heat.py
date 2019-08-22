@@ -96,7 +96,7 @@ parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal depen
 parser.add_argument("-tol", "--error-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
 parser.add_argument("-dl", "--domain-left", help="right part of the domain is being computed", dest='domain_left', action='store_true')
 parser.add_argument("-dr", "--domain-right", help="left part of the domain is being computed", dest='domain_right', action='store_true')
-parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l) or sinusoidal (s) dependence on time", type=str)
+parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l) or sinusoidal (s) dependence on time", type=str, default="s")
 
 args = parser.parse_args()
 
