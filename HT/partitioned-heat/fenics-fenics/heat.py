@@ -26,9 +26,9 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
-    TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, VectorFunctionSpace, interpolate, near
+    TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, assemble, project, near, VectorFunctionSpace
 from enum import Enum
-from fenicsadapter import Adapter, ExactInterpolationExpression
+from fenicsadapter import Adapter, ExactInterpolationExpression, GeneralInterpolationExpression
 from errorcomputation import compute_errors
 import argparse
 import numpy as np
@@ -97,6 +97,7 @@ parser.add_argument("-tol", "--error-tolerance", help="set accepted error of num
 parser.add_argument("-dl", "--domain-left", help="right part of the domain is being computed", dest='domain_left', action='store_true')
 parser.add_argument("-dr", "--domain-right", help="left part of the domain is being computed", dest='domain_right', action='store_true')
 parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l) or sinusoidal (s) dependence on time", type=str, default="l")
+parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
 
 args = parser.parse_args()
 
@@ -143,6 +144,8 @@ configs_path = os.path.join("experiments", wr_tag, window_size, coupling_scheme)
 
 if domain_part is DomainPart.LEFT:
     nx = nx*3
+elif domain_part is DomainPart.RIGHT:
+    ny = 20
 
 if problem is ProblemType.DIRICHLET:
     adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
@@ -263,8 +266,6 @@ determine_gradient(V_g, u_n, flux)
 flux_out << flux
 
 while precice.is_coupling_ongoing():
-
-    x_check, y_check = 1.5, 0.5
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
