@@ -2,7 +2,8 @@
 
 ## Running
 
-Use `precice-config.xml` from this folder. Don't forget to modify `../Solid/precice-adapter-config-fsi-s.json` correspondingly.
+Use `precice-config.xml` and `precice-adapter-config-fsi-s.json` from this folder.
+You will have to replace `adapter_config_filename = "precice-adapter-config-fsi-s.json"` with `adapter_config_filename = "../tools/precice-adapter-config-fsi-s.json"` in `Solid/cyl-flap.py`.
 
 Run the following commands from `tutorials/FSI/cylinderFlap/OpenFOAM-FEniCS`:
 
