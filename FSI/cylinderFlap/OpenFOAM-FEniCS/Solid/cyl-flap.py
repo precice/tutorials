@@ -90,7 +90,7 @@ coupling_boundary = AutoSubDomain(remaining_boundary)
 # get the adapter ready
 
 # read fenics-adapter json-config-file)
-adapter_config_filename = "precice-adapter-config-fsi-s.json"
+adapter_config_filename = "../tools/precice-adapter-config-fsi-s.json"
 
 # create Adapter
 precice = Adapter(adapter_config_filename)
