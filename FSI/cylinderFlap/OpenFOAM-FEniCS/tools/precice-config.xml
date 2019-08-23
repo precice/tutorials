@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<precice-configuration>
+
+    <log>
+      <sink type="stream" output="stdout"  filter= "%Severity% > debug" format="preCICE:%ColorizedSeverity% %Message%" enabled="true" />
+    </log>
+
+    <solver-interface dimensions="3" >
+
+        <data:vector name="Forces0"/>
+        <data:vector name="Displacements0"/>
+
+        <mesh name="Excitement-Mesh">
+            <use-data name="Forces0"/>
+            <use-data name="Displacements0"/>
+        </mesh>
+
+        <mesh name="Solid">
+            <use-data name="Forces0"/>
+            <use-data name="Displacements0"/>
+        </mesh>
+
+        <participant name="Excitement">
+            <use-mesh name="Excitement-Mesh" provide="yes"/>
+            <use-mesh name="Solid" from="fenics"/>
+            <write-data name="Forces0" mesh="Excitement-Mesh"/>
+            <read-data name="Displacements0" mesh="Excitement-Mesh"/>
+            <mapping:petrbf-thin-plate-splines direction="write" from="Excitement-Mesh" to="Solid" constraint="conservative" z-dead="true"/>
+            <mapping:petrbf-thin-plate-splines direction="read" from="Solid" to="Excitement-Mesh" constraint="consistent" z-dead="true"/>
+        </participant>
+
+        <participant name="fenics">
+            <use-mesh name="Solid" provide="yes"/>
+            <read-data name="Forces0" mesh="Solid"/>
+            <write-data name="Displacements0" mesh="Solid"/>
+            <watch-point mesh="Solid" name="point1" coordinate="0.6;0.2;0." />
+        </participant>
+
+        <m2n:sockets from="Excitement" to="fenics" distribution-type="gather-scatter"/>
+
+        <coupling-scheme:serial-explicit>
+            <participants first="Excitement" second="fenics" />
+            <max-time value="1"/>
+            <timestep-length value="0.1" />
+            <exchange data="Forces0" mesh="Solid" from="Excitement" to="fenics"/>
+            <exchange data="Displacements0" mesh="Solid" from="fenics" to="Excitement" initialize="0"/>
+        </coupling-scheme:serial-explicit>
+    </solver-interface>
+
+</precice-configuration>
