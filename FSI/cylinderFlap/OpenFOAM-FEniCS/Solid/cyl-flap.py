@@ -249,4 +249,5 @@ plt.xlabel("Time")
 plt.ylabel("Tip displacement")
 plt.show()
 
-
+output_file = open("subiteration_out.txt", "a")
+output_file.write("{};{}\n".format(u_tip[-1], dt(0)))
