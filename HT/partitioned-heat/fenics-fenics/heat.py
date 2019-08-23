@@ -28,7 +28,7 @@ from __future__ import print_function, division
 from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
     TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, VectorFunctionSpace, interpolate, near
 from enum import Enum
-from fenicsadapter import Adapter
+from fenicsadapter import Adapter, ExactInterpolationExpression
 from errorcomputation import compute_errors
 import argparse
 import numpy as np
@@ -96,7 +96,7 @@ parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal depen
 parser.add_argument("-tol", "--error-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
 parser.add_argument("-dl", "--domain-left", help="right part of the domain is being computed", dest='domain_left', action='store_true')
 parser.add_argument("-dr", "--domain-right", help="left part of the domain is being computed", dest='domain_right', action='store_true')
-parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l) or sinusoidal (s) dependence on time", type=str, default="s")
+parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l) or sinusoidal (s) dependence on time", type=str, default="l")
 
 args = parser.parse_args()
 
@@ -152,7 +152,7 @@ elif problem is ProblemType.NEUMANN:
     other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
 
 alpha = 3  # parameter alpha
-beta = 0  # parameter beta
+beta = 1.3  # parameter beta
 gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
@@ -199,7 +199,7 @@ bcs = [DirichletBC(V, u_D, remaining_boundary)]
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
-precice = Adapter(adapter_config_filename, other_adapter_config_filename)  # todo: how to avoid requiring both configs without Waveform Relaxation?
+precice = Adapter(adapter_config_filename, other_adapter_config_filename, interpolation_strategy=ExactInterpolationExpression   )  # todo: how to avoid requiring both configs without Waveform Relaxation?
 
 if problem is ProblemType.DIRICHLET:
     dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
