@@ -27,4 +27,4 @@ Based on the results of the simulation above, one can perform a convergence stud
 
 The convergence study is based on the results stored in `out.txt`. Here the final displacement of the tip is used as the basis. The error is estimated by computing the absolute difference between each result and a reference solution. The result of the simulation with the smallest time step is used as reference solution.
 
-!()[convergenceStudy.png]
+![](convergenceStudy.png)
