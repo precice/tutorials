@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+
+<precice-configuration>
+
+    <log>
+      <sink type="stream" output="stdout"  filter= "%Severity% > debug" format="preCICE:%ColorizedSeverity% %Message%" enabled="true" />
+    </log>
+
+    <solver-interface dimensions="3" >
+
+        <data:vector name="Forces1"/>
+        <data:vector name="Displacements1"/>
+        <data:vector name="Displacements2"/>
+        <data:vector name="Displacements3"/>
+        <data:vector name="Displacements4"/>
+        <data:vector name="Displacements5"/>
+
+        <mesh name="Excitement-Mesh">
+            <use-data name="Forces1"/>
+            <use-data name="Displacements1"/>
+            <use-data name="Displacements2"/>
+            <use-data name="Displacements3"/>
+            <use-data name="Displacements4"/>
+            <use-data name="Displacements5"/>
+        </mesh>
+
+        <mesh name="Solid">
+            <use-data name="Forces1"/>
+            <use-data name="Displacements1"/>
+            <use-data name="Displacements2"/>
+            <use-data name="Displacements3"/>
+            <use-data name="Displacements4"/>
+            <use-data name="Displacements5"/>
+        </mesh>
+
+        <participant name="Excitement">
+            <use-mesh name="Excitement-Mesh" provide="yes"/>
+            <use-mesh name="Solid" from="fenics"/>
+            <write-data name="Forces1" mesh="Excitement-Mesh"/>
+            <read-data name="Displacements1" mesh="Excitement-Mesh"/>
+            <read-data name="Displacements2" mesh="Excitement-Mesh"/>
+            <read-data name="Displacements3" mesh="Excitement-Mesh"/>
+            <read-data name="Displacements4" mesh="Excitement-Mesh"/>
+            <read-data name="Displacements5" mesh="Excitement-Mesh"/>
+            <mapping:petrbf-thin-plate-splines direction="write" from="Excitement-Mesh" to="Solid" constraint="conservative" z-dead="true"/>
+            <mapping:petrbf-thin-plate-splines direction="read" from="Solid" to="Excitement-Mesh" constraint="consistent" z-dead="true"/>
+        </participant>
+
+        <participant name="fenics">
+            <use-mesh name="Solid" provide="yes"/>
+            <read-data name="Forces1" mesh="Solid"/>
+            <write-data name="Displacements1" mesh="Solid"/>
+            <write-data name="Displacements2" mesh="Solid"/>
+            <write-data name="Displacements3" mesh="Solid"/>
+            <write-data name="Displacements4" mesh="Solid"/>
+            <write-data name="Displacements5" mesh="Solid"/>
+            <watch-point mesh="Solid" name="point1" coordinate="0.6;0.2;0." />
+        </participant>
+
+        <m2n:sockets from="Excitement" to="fenics" distribution-type="gather-scatter"/>
+
+        <coupling-scheme:serial-implicit>
+            <participants first="Excitement" second="fenics" />
+            <max-time value="1"/>
+            <max-iterations value="1"/>
+            <timestep-length value="1" />
+            <relative-convergence-measure data="Forces1" mesh="Solid" limit="1e-12"/>
+            <exchange data="Forces1" mesh="Solid" from="Excitement" to="fenics"/>
+            <exchange data="Displacements1" mesh="Solid" from="fenics" to="Excitement"/>
+            <exchange data="Displacements2" mesh="Solid" from="fenics" to="Excitement"/>
+            <exchange data="Displacements3" mesh="Solid" from="fenics" to="Excitement"/>
+            <exchange data="Displacements4" mesh="Solid" from="fenics" to="Excitement"/>
+            <exchange data="Displacements5" mesh="Solid" from="fenics" to="Excitement"/>
+        </coupling-scheme:serial-implicit>
+    </solver-interface>
+
+</precice-configuration>

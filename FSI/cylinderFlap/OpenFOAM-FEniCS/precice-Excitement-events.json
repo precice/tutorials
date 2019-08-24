@@ -1,0 +1,907 @@
+{
+  "Finalized": "2019-08-24T17:20:06.398",
+  "Initialized": "2019-08-24T17:20:02.597",
+  "Name": "",
+  "Ranks": [
+    {
+      "Finalized": "2019-08-24T17:20:06.398",
+      "Initialized": "2019-08-24T17:20:02.597",
+      "StateChanges": [
+        {
+          "Name": "_GLOBAL",
+          "State": 1,
+          "Timestamp": 0
+        },
+        {
+          "Name": "_GLOBAL",
+          "State": 0,
+          "Timestamp": 3801
+        },
+        {
+          "Name": "advance",
+          "State": 1,
+          "Timestamp": 68
+        },
+        {
+          "Name": "advance",
+          "State": 0,
+          "Timestamp": 342
+        },
+        {
+          "Name": "advance/map.pet.AO.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 327
+        },
+        {
+          "Name": "advance/map.pet.AO.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 327
+        },
+        {
+          "Name": "advance/map.pet.computeMapping.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 326
+        },
+        {
+          "Name": "advance/map.pet.computeMapping.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 335
+        },
+        {
+          "Name": "advance/map.pet.computeRescaling.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 335
+        },
+        {
+          "Name": "advance/map.pet.computeRescaling.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 335
+        },
+        {
+          "Name": "advance/map.pet.createMatrices.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 327
+        },
+        {
+          "Name": "advance/map.pet.createMatrices.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 327
+        },
+        {
+          "Name": "advance/map.pet.fillA.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 335
+        },
+        {
+          "Name": "advance/map.pet.fillA.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 335
+        },
+        {
+          "Name": "advance/map.pet.fillC.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 334
+        },
+        {
+          "Name": "advance/map.pet.fillC.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 335
+        },
+        {
+          "Name": "advance/map.pet.mapData.FromExcitement-MeshToSolid",
+          "State": 1,
+          "Timestamp": 69
+        },
+        {
+          "Name": "advance/map.pet.mapData.FromExcitement-MeshToSolid",
+          "State": 0,
+          "Timestamp": 69
+        },
+        {
+          "Name": "advance/map.pet.mapData.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 335
+        },
+        {
+          "Name": "advance/map.pet.mapData.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 337
+        },
+        {
+          "Name": "advance/map.pet.mapData.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 337
+        },
+        {
+          "Name": "advance/map.pet.mapData.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 338
+        },
+        {
+          "Name": "advance/map.pet.mapData.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 338
+        },
+        {
+          "Name": "advance/map.pet.mapData.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 339
+        },
+        {
+          "Name": "advance/map.pet.mapData.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 340
+        },
+        {
+          "Name": "advance/map.pet.mapData.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 341
+        },
+        {
+          "Name": "advance/map.pet.mapData.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 341
+        },
+        {
+          "Name": "advance/map.pet.mapData.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 342
+        },
+        {
+          "Name": "advance/map.pet.postFill.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 335
+        },
+        {
+          "Name": "advance/map.pet.postFill.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 335
+        },
+        {
+          "Name": "advance/map.pet.preComputeMapping.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 327
+        },
+        {
+          "Name": "advance/map.pet.preComputeMapping.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 327
+        },
+        {
+          "Name": "advance/map.pet.preallocA.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 335
+        },
+        {
+          "Name": "advance/map.pet.preallocA.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 335
+        },
+        {
+          "Name": "advance/map.pet.preallocC.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 327
+        },
+        {
+          "Name": "advance/map.pet.preallocC.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 334
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 336
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 336
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 336
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 336
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 337
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 337
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 337
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 338
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 338
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 338
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 338
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 338
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 338
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 339
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 339
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 339
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 339
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 339
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 340
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 340
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 340
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 340
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 341
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 341
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 341
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 341
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 341
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 342
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 342
+        },
+        {
+          "Name": "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 342
+        },
+        {
+          "Name": "advance/map.pet.solverInit.FromSolidToExcitement-Mesh",
+          "State": 1,
+          "Timestamp": 335
+        },
+        {
+          "Name": "advance/map.pet.solverInit.FromSolidToExcitement-Mesh",
+          "State": 0,
+          "Timestamp": 335
+        },
+        {
+          "Name": "configure",
+          "State": 1,
+          "Timestamp": 0
+        },
+        {
+          "Name": "configure",
+          "State": 0,
+          "Timestamp": 0
+        },
+        {
+          "Name": "initialize",
+          "State": 1,
+          "Timestamp": 1
+        },
+        {
+          "Name": "initialize",
+          "State": 0,
+          "Timestamp": 52
+        },
+        {
+          "Name": "initialize/m2n.requestMasterConnection",
+          "State": 1,
+          "Timestamp": 1
+        },
+        {
+          "Name": "initialize/m2n.requestMasterConnection",
+          "State": 0,
+          "Timestamp": 3
+        },
+        {
+          "Name": "initialize/m2n.requestSlavesConnection",
+          "State": 1,
+          "Timestamp": 51
+        },
+        {
+          "Name": "initialize/m2n.requestSlavesConnection",
+          "State": 0,
+          "Timestamp": 51
+        },
+        {
+          "Name": "initialize/partition.feedbackMesh.Excitement-Mesh",
+          "State": 1,
+          "Timestamp": 51
+        },
+        {
+          "Name": "initialize/partition.feedbackMesh.Excitement-Mesh",
+          "State": 0,
+          "Timestamp": 51
+        },
+        {
+          "Name": "initialize/partition.receiveGlobalMesh.Solid",
+          "State": 1,
+          "Timestamp": 3
+        },
+        {
+          "Name": "initialize/partition.receiveGlobalMesh.Solid",
+          "State": 0,
+          "Timestamp": 50
+        },
+        {
+          "Name": "initializeData",
+          "State": 1,
+          "Timestamp": 52
+        },
+        {
+          "Name": "initializeData",
+          "State": 0,
+          "Timestamp": 67
+        },
+        {
+          "Name": "initializeData/map.pet.AO.FromExcitement-MeshToSolid",
+          "State": 1,
+          "Timestamp": 53
+        },
+        {
+          "Name": "initializeData/map.pet.AO.FromExcitement-MeshToSolid",
+          "State": 0,
+          "Timestamp": 53
+        },
+        {
+          "Name": "initializeData/map.pet.computeMapping.FromExcitement-MeshToSolid",
+          "State": 1,
+          "Timestamp": 52
+        },
+        {
+          "Name": "initializeData/map.pet.computeMapping.FromExcitement-MeshToSolid",
+          "State": 0,
+          "Timestamp": 67
+        },
+        {
+          "Name": "initializeData/map.pet.computeRescaling.FromExcitement-MeshToSolid",
+          "State": 1,
+          "Timestamp": 66
+        },
+        {
+          "Name": "initializeData/map.pet.computeRescaling.FromExcitement-MeshToSolid",
+          "State": 0,
+          "Timestamp": 67
+        },
+        {
+          "Name": "initializeData/map.pet.createMatrices.FromExcitement-MeshToSolid",
+          "State": 1,
+          "Timestamp": 52
+        },
+        {
+          "Name": "initializeData/map.pet.createMatrices.FromExcitement-MeshToSolid",
+          "State": 0,
+          "Timestamp": 52
+        },
+        {
+          "Name": "initializeData/map.pet.fillA.FromExcitement-MeshToSolid",
+          "State": 1,
+          "Timestamp": 66
+        },
+        {
+          "Name": "initializeData/map.pet.fillA.FromExcitement-MeshToSolid",
+          "State": 0,
+          "Timestamp": 66
+        },
+        {
+          "Name": "initializeData/map.pet.fillC.FromExcitement-MeshToSolid",
+          "State": 1,
+          "Timestamp": 65
+        },
+        {
+          "Name": "initializeData/map.pet.fillC.FromExcitement-MeshToSolid",
+          "State": 0,
+          "Timestamp": 66
+        },
+        {
+          "Name": "initializeData/map.pet.mapData.FromExcitement-MeshToSolid",
+          "State": 1,
+          "Timestamp": 67
+        },
+        {
+          "Name": "initializeData/map.pet.mapData.FromExcitement-MeshToSolid",
+          "State": 0,
+          "Timestamp": 67
+        },
+        {
+          "Name": "initializeData/map.pet.postFill.FromExcitement-MeshToSolid",
+          "State": 1,
+          "Timestamp": 66
+        },
+        {
+          "Name": "initializeData/map.pet.postFill.FromExcitement-MeshToSolid",
+          "State": 0,
+          "Timestamp": 66
+        },
+        {
+          "Name": "initializeData/map.pet.preComputeMapping.FromExcitement-MeshToSolid",
+          "State": 1,
+          "Timestamp": 52
+        },
+        {
+          "Name": "initializeData/map.pet.preComputeMapping.FromExcitement-MeshToSolid",
+          "State": 0,
+          "Timestamp": 52
+        },
+        {
+          "Name": "initializeData/map.pet.preallocA.FromExcitement-MeshToSolid",
+          "State": 1,
+          "Timestamp": 66
+        },
+        {
+          "Name": "initializeData/map.pet.preallocA.FromExcitement-MeshToSolid",
+          "State": 0,
+          "Timestamp": 66
+        },
+        {
+          "Name": "initializeData/map.pet.preallocC.FromExcitement-MeshToSolid",
+          "State": 1,
+          "Timestamp": 53
+        },
+        {
+          "Name": "initializeData/map.pet.preallocC.FromExcitement-MeshToSolid",
+          "State": 0,
+          "Timestamp": 65
+        },
+        {
+          "Name": "initializeData/map.pet.solverInit.FromExcitement-MeshToSolid",
+          "State": 1,
+          "Timestamp": 66
+        },
+        {
+          "Name": "initializeData/map.pet.solverInit.FromExcitement-MeshToSolid",
+          "State": 0,
+          "Timestamp": 66
+        },
+        {
+          "Name": "solver.advance",
+          "State": 1,
+          "Timestamp": 342
+        },
+        {
+          "Name": "solver.advance",
+          "State": 0,
+          "Timestamp": 342
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 1,
+          "Timestamp": 0
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 2,
+          "Timestamp": 1
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 1,
+          "Timestamp": 52
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 2,
+          "Timestamp": 52
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 1,
+          "Timestamp": 67
+        },
+        {
+          "Name": "solver.initialize",
+          "State": 0,
+          "Timestamp": 68
+        }
+      ],
+      "Timings": {
+        "_GLOBAL": {
+          "Count": 1,
+          "Data": {},
+          "Max": 3801,
+          "Min": 3801,
+          "TimeRatio": 1.0,
+          "Total": 3801
+        },
+        "advance": {
+          "Count": 1,
+          "Data": {},
+          "Max": 273,
+          "Min": 273,
+          "TimeRatio": 0.0718232044198895,
+          "Total": 273
+        },
+        "advance/map.pet.AO.FromSolidToExcitement-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "advance/map.pet.computeMapping.FromSolidToExcitement-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 8,
+          "Min": 8,
+          "TimeRatio": 0.002104709287029729,
+          "Total": 8
+        },
+        "advance/map.pet.computeRescaling.FromSolidToExcitement-Mesh": {
+          "Count": 1,
+          "Data": {
+            "Iterations": [
+              25
+            ]
+          },
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "advance/map.pet.createMatrices.FromSolidToExcitement-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "advance/map.pet.fillA.FromSolidToExcitement-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "advance/map.pet.fillC.FromSolidToExcitement-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "advance/map.pet.mapData.FromExcitement-MeshToSolid": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "advance/map.pet.mapData.FromSolidToExcitement-Mesh": {
+          "Count": 5,
+          "Data": {},
+          "Max": 1,
+          "Min": 1,
+          "TimeRatio": 0.0013154433043935806,
+          "Total": 5
+        },
+        "advance/map.pet.postFill.FromSolidToExcitement-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "advance/map.pet.preComputeMapping.FromSolidToExcitement-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "advance/map.pet.preallocA.FromSolidToExcitement-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "advance/map.pet.preallocC.FromSolidToExcitement-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 7,
+          "Min": 7,
+          "TimeRatio": 0.001841620626151013,
+          "Total": 7
+        },
+        "advance/map.pet.solveConsistent.FromSolidToExcitement-Mesh": {
+          "Count": 15,
+          "Data": {
+            "Iterations": [
+              0,
+              53,
+              90,
+              0,
+              53,
+              89,
+              0,
+              53,
+              90,
+              0,
+              52,
+              90,
+              0,
+              55,
+              89
+            ]
+          },
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0007892659826361484,
+          "Total": 3
+        },
+        "advance/map.pet.solverInit.FromSolidToExcitement-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "configure": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initialize": {
+          "Count": 1,
+          "Data": {},
+          "Max": 50,
+          "Min": 50,
+          "TimeRatio": 0.013154433043935806,
+          "Total": 50
+        },
+        "initialize/m2n.requestMasterConnection": {
+          "Count": 1,
+          "Data": {},
+          "Max": 1,
+          "Min": 1,
+          "TimeRatio": 0.00026308866087871614,
+          "Total": 1
+        },
+        "initialize/m2n.requestSlavesConnection": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initialize/partition.feedbackMesh.Excitement-Mesh": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initialize/partition.receiveGlobalMesh.Solid": {
+          "Count": 1,
+          "Data": {},
+          "Max": 47,
+          "Min": 47,
+          "TimeRatio": 0.012365167061299658,
+          "Total": 47
+        },
+        "initializeData": {
+          "Count": 1,
+          "Data": {},
+          "Max": 15,
+          "Min": 15,
+          "TimeRatio": 0.003946329913180742,
+          "Total": 15
+        },
+        "initializeData/map.pet.AO.FromExcitement-MeshToSolid": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initializeData/map.pet.computeMapping.FromExcitement-MeshToSolid": {
+          "Count": 1,
+          "Data": {},
+          "Max": 14,
+          "Min": 14,
+          "TimeRatio": 0.003683241252302026,
+          "Total": 14
+        },
+        "initializeData/map.pet.computeRescaling.FromExcitement-MeshToSolid": {
+          "Count": 1,
+          "Data": {
+            "Iterations": [
+              25
+            ]
+          },
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initializeData/map.pet.createMatrices.FromExcitement-MeshToSolid": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initializeData/map.pet.fillA.FromExcitement-MeshToSolid": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initializeData/map.pet.fillC.FromExcitement-MeshToSolid": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initializeData/map.pet.mapData.FromExcitement-MeshToSolid": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initializeData/map.pet.postFill.FromExcitement-MeshToSolid": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initializeData/map.pet.preComputeMapping.FromExcitement-MeshToSolid": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initializeData/map.pet.preallocA.FromExcitement-MeshToSolid": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "initializeData/map.pet.preallocC.FromExcitement-MeshToSolid": {
+          "Count": 1,
+          "Data": {},
+          "Max": 12,
+          "Min": 12,
+          "TimeRatio": 0.0031570639305445935,
+          "Total": 12
+        },
+        "initializeData/map.pet.solverInit.FromExcitement-MeshToSolid": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "solver.advance": {
+          "Count": 1,
+          "Data": {},
+          "Max": 0,
+          "Min": 0,
+          "TimeRatio": 0.0,
+          "Total": 0
+        },
+        "solver.initialize": {
+          "Count": 1,
+          "Data": {},
+          "Max": 2,
+          "Min": 2,
+          "TimeRatio": 0.0005261773217574323,
+          "Total": 2
+        }
+      }
+    }
+  ]
+}

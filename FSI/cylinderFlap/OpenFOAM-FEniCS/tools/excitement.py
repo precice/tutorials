@@ -37,8 +37,8 @@ except SystemExit:
 configuration_file_name = args.configurationFileName
 participant_name = "Excitement"
 mesh_name = "Excitement-Mesh"
-write_data_name = "Forces0"
-read_data_name = "Displacements0"
+write_data_name = "Forces1"
+read_data_name = "Displacements1"
 
 n = 1
 
@@ -62,6 +62,7 @@ t = 0
 
 if interface.is_action_required(precice.action_write_initial_data()):
     forces = compute_force(t + dt)
+    print("write initial forces: {}".format(forces))
     interface.write_block_vector_data(write_data_id, vertex_ids, forces)
     interface.fulfilled_action(precice.action_write_initial_data())
 

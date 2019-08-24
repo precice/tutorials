@@ -1,0 +1,12 @@
+{
+  "solver_name": "Excitement",
+  "config_file_name": "precice-config.xml",  
+  "interface": {
+      "coupling_mesh_name": "Excitement-Mesh",
+      "write_data_name": "Forces",
+      "read_data_name": "Displacements"
+  },
+  "waveform": {
+      "n_substeps": 1
+  }
+}

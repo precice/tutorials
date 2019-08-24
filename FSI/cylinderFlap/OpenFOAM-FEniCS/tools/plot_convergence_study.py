@@ -49,9 +49,30 @@ errors = np.abs(u_values - reference_value)
 u_values = np.array(u_values)
 dt_values = np.array(dt_values)
 
-plt.loglog(dt_values, errors, '.', label='num w subiterations')
+plt.loglog(dt_values, errors, '^', label='num w subiterations')
+
+u_values, dt_values = outfile_to_data("../wr_out.txt")
+
+errors = np.abs(u_values - reference_value)
+
+u_values = np.array(u_values)
+dt_values = np.array(dt_values)
+
+plt.loglog(dt_values, errors, 'x', label='num w waveform')
+
+u_values, dt_values = outfile_to_data("../wr5_out.txt")
+
+errors = np.abs(u_values - reference_value)
+
+u_values = np.array(u_values)
+dt_values = np.array(dt_values)
+
+plt.loglog(dt_values, errors, '2', label='num w5 waveform5 (dt excitation = 5 * dt solid solver)')
+
 plt.loglog(dt_values[1:], dt_values[1:], '--', label='O(h^1)')
 plt.loglog(dt_values[1:], dt_values[1:]**2, ':', label='O(h^2)')
+plt.xlabel("dt solid solver")
+plt.ylabel("tip error")
 plt.legend()
 plt.show()
 

@@ -56,7 +56,7 @@ mu = Constant(E / (2.0*(1.0 + nu)))  # second Lame constant
 
 # create Mesh
 n_x_Direction = 20  # DoFs in x direction
-n_y_Direction = 4  # DoFs in y direction
+n_y_Direction = 5  # DoFs in y direction
 mesh = RectangleMesh(Point(x_left, y_bottom),
                      Point(x_right, y_top),
                      n_x_Direction,
@@ -79,7 +79,7 @@ v_n = Function(V)
 a_n = Function(V)
 
 # initial value for force and displacement field
-f_N_function = interpolate(Expression(("1", "0"), degree=1), V)
+f_N_function = interpolate(Expression(("0", "0"), degree=1), V)
 u_function = interpolate(Expression(("0", "0"), degree=1), V)
 
 # define coupling boundary
@@ -90,27 +90,23 @@ coupling_boundary = AutoSubDomain(remaining_boundary)
 # get the adapter ready
 
 # read fenics-adapter json-config-file)
-adapter_config_filename = "../tools/precice-adapter-config-fsi-s.json"
+this_adapter_config_filename = "../tools/precice-adapter-config-fsi-s.json"
+other_adapter_config_filename = "../tools/precice-adapter-config-excite.json"
 
 # create Adapter
-precice = Adapter(adapter_config_filename)
+precice = Adapter(this_adapter_config_filename, other_adapter_config_filename)
 
 # create subdomains used by the adapter
 clamped_boundary_domain = AutoSubDomain(left_boundary)
 force_boundary = AutoSubDomain(remaining_boundary)
 
-precice_dt = precice.initialize(coupling_subdomain=coupling_boundary,
+dt = precice.initialize(coupling_subdomain=coupling_boundary,
                                 mesh=mesh,
                                 read_field=f_N_function,
                                 write_field=u_function,
                                 u_n=u_n,
                                 dimension=dim,
                                 dirichlet_boundary=clamped_boundary_domain)
-
-fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
-#fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
-dt = Constant(np.min([precice_dt, fenics_dt]))
-
 
 # generalized alpha method (time stepping) parameters
 alpha_m = Constant(0.2)
@@ -218,7 +214,10 @@ while precice.is_coupling_ongoing():
     A, b = assemble_system(a_form, L_form, bc)
 
     b_forces = b.copy() # b is the same for every iteration, only forces change
-    
+    print("### Forces being applied:")
+    print(Forces_x)
+    print(Forces_y)
+    print("###")
     for ps in Forces_x:
         ps.apply(b_forces)
     for ps in Forces_y:
@@ -228,13 +227,14 @@ while precice.is_coupling_ongoing():
     solve(A, u_np1.vector(), b_forces)
     
     t, n, precice_timestep_complete, precice_dt, Forces_x, Forces_y = precice.advance(u_np1, u_np1, u_n, t, float(dt), n)
-    dt = Constant(np.min([precice_dt, fenics_dt]))
+    print(dt(0))
+    dt.assign(np.min([precice.fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
 
-    if precice_timestep_complete:
+    if True:#precice_timestep_complete:
         
         update_fields(u_np1, saved_u_old, v_n, a_n)
         
-        if n % 20==0:
+        if True:#n % 20==0:
             displacement_out << (u_n, t)
     
         u_tip.append(u_n(0.6, 0.2)[1])
@@ -249,5 +249,5 @@ plt.xlabel("Time")
 plt.ylabel("Tip displacement")
 plt.show()
 
-output_file = open("subiteration_out.txt", "a")
+output_file = open("wr5_out.txt", "a")
 output_file.write("{};{}\n".format(u_tip[-1], dt(0)))
