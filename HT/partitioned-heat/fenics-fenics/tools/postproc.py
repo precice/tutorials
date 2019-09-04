@@ -38,7 +38,7 @@ for wr, dT, coupling_scheme in itertools.product(evaluated_wr, evaluated_dT, cou
                         name=os.path.join(folder, "precice-HeatDirichlet-iterations.log")))
                     data.append(
                         {"WR": wr, "dT": dT, "cpl": coupling_scheme, "#steps": "-", "#it": "-", "#it/#steps": "x"})
-            except AttributeError:
+            except (AttributeError, ValueError):
                 print("File {name} erroneous.".format(name=os.path.join(folder, "precice-HeatDirichlet-iterations.log")))
                 data.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "#steps": "-", "#it": "-", "#it/#steps": "x"})
     except FileNotFoundError:

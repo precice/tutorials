@@ -96,7 +96,8 @@ parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal depen
 parser.add_argument("-tol", "--error-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
 parser.add_argument("-dl", "--domain-left", help="right part of the domain is being computed", dest='domain_left', action='store_true')
 parser.add_argument("-dr", "--domain-right", help="left part of the domain is being computed", dest='domain_right', action='store_true')
-parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l) or sinusoidal (s) dependence on time", type=str, default="l")
+parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q) or sinusoidal (s) dependence on time", type=str, default="l")
+parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
 parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
 
 args = parser.parse_args()
@@ -175,6 +176,9 @@ V = FunctionSpace(mesh, 'P', 2)
 if args.time_dependence == "l":
     print("Linear")
     u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
+if args.time_dependence == "q":
+    print("Quadratic")
+    u_D = Expression('1 + gamma * t * t * x[0] * x[0] + (1-gamma) * x[0] * x[0] + alpha * x[1] * x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 elif args.time_dependence == "s":
     print("Sinusoidal")
     u_D = Expression('1 + gamma*sin(t)*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
@@ -183,15 +187,19 @@ u_D_function = interpolate(u_D, V)
 if (domain_part is DomainPart.LEFT and problem is ProblemType.DIRICHLET) or \
         (domain_part is DomainPart.RIGHT and problem is ProblemType.NEUMANN):
     if args.time_dependence == "l":
-        f_N = Expression('2 * gamma*t*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
+        f_N = Expression('2 * gamma * t * x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
+    if args.time_dependence == "q":
+        f_N = Expression('2 * gamma * t * t * x[0] + 2 * (1-gamma) * x[0] ', degree=1, gamma=gamma, t=0)
     elif args.time_dependence == "s":
-        f_N = Expression('2 * gamma*sin(t)*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
+        f_N = Expression('2 * gamma * sin(t) * x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
 elif (domain_part is DomainPart.RIGHT and problem is ProblemType.DIRICHLET) or \
         (domain_part is DomainPart.LEFT and problem is ProblemType.NEUMANN):
     if args.time_dependence == "l":
-        f_N = Expression('-2 * gamma*t*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
+        f_N = Expression('-2 * gamma * t * x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
+    if args.time_dependence == "q":
+        f_N = Expression('-2 * gamma * t * t * x[0] + 2 * (1-gamma) * x[0] ', degree=1, gamma=gamma, t=0)
     elif args.time_dependence == "s":
-        f_N = Expression('-2 * gamma*sin(t)*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
+        f_N = Expression('-2 * gamma * sin(t) * x[0] + 2 * (1-gamma) * x[0] ', degree=1, gamma=gamma, t=0)
 f_N_function = interpolate(f_N, V)
 
 coupling_boundary = CouplingBoundary()
@@ -206,36 +214,47 @@ precice = Adapter(adapter_config_filename, other_adapter_config_filename, interp
 
 if problem is ProblemType.DIRICHLET:
     dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
-                                    write_field=f_N_function, u_n=u_n)
+                            write_field=f_N_function, u_n=u_n)
 elif problem is ProblemType.NEUMANN:
     dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
-                                    write_field=u_D_function, u_n=u_n)
+                            write_field=u_D_function, u_n=u_n)
 
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
 if args.time_dependence == "l":
-    f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha,
-                   beta=beta, gamma=gamma, t=0)
+    f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
+    f_n = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
+if args.time_dependence == "q":
+    f = Expression('beta + 2 * gamma * x[0] * x[0] * t - 2 * gamma * t * t- 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
+    f_n = Expression('beta + 2 * gamma * x[0] * x[0] * t - 2 * gamma * t * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 elif args.time_dependence == "s":
-    f = Expression('beta + gamma * x[0] * x[0] * cos(t) - 2 * gamma * sin(t) - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha,
-                   beta=beta, gamma=gamma, t=0)
+    f = Expression('beta + gamma * x[0] * x[0] * cos(t) - 2 * gamma * sin(t) - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
+    f_n = Expression('beta + gamma * x[0] * x[0] * cos(t) - 2 * gamma * sin(t) - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 
-F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
+t = 0
+
+if args.method == "ie":
+    F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
+elif args.method == "tr":
+    F = u * v / dt * dx + dot(grad(u), grad(v)) / 2 * dx + dot(grad(u_n), grad(v)) / 2 * dx - (u_n / dt + f / 2 + f_n / 2) * v * dx
 
 if problem is ProblemType.DIRICHLET:
     # apply Dirichlet boundary condition on coupling interface
-    bcs.append(precice.create_coupling_dirichlet_boundary_condition(V))
+    bcs.append(precice.create_coupling_dirichlet_boundary_condition(V, dt))
 if problem is ProblemType.NEUMANN:
     # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
-    F += precice.create_coupling_neumann_boundary_condition(v)
+    
+    if args.method == "tr":
+        F += 0.5 * precice.create_coupling_neumann_boundary_condition(v, dt) + 0.5 * precice.create_coupling_neumann_boundary_condition(v, Constant(0))
+    elif args.method == "ie":
+        F += precice.create_coupling_neumann_boundary_condition(v, dt)
 
 a, L = lhs(F), rhs(F)
 
 # Time-stepping
 u_np1 = Function(V)
 u_np1.rename("Temperature", "")
-t = 0
 
 # reference solution at t=0
 u_ref = interpolate(u_D, V)
@@ -255,8 +274,9 @@ error_total, error_pointwise = compute_errors(u_n, u_ref, V)
 error_out << error_pointwise
 
 # set t_1 = t_0 + dt, this gives u_D^1
-u_D.t = t + dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
-f.t = t + dt(0)
+u_D.t = t+dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
+f.t = t+dt(0)
+f_n.t = t
 
 V_g = VectorFunctionSpace(mesh, 'P', 1)
 flux = Function(V_g)
@@ -282,6 +302,7 @@ while precice.is_coupling_ongoing():
         # Neumann problem samples temperature on boundary from solution and sends temperature to Dirichlet problem
         t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)
 
+
     dt.assign(np.min([precice.fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
 
     if precice_timestep_complete:
@@ -294,10 +315,10 @@ while precice.is_coupling_ongoing():
         error_out << error_pointwise
         flux_out << flux
 
-
     # Update dirichlet BC
     u_D.t = t + dt(0)
     f.t = t + dt(0)
+    f_n.t = t
 
 # Hold plot
 precice.finalize()
