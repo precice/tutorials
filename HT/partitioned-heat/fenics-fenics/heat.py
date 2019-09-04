@@ -25,31 +25,16 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 """
 
 from __future__ import print_function, division
-from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
-    TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, assemble, project, near, VectorFunctionSpace
-from enum import Enum
+from fenics import Function, SubDomain, FunctionSpace, Constant, DirichletBC, \
+    TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, near, VectorFunctionSpace
 from fenicsadapter import Adapter, ExactInterpolationExpression, GeneralInterpolationExpression
 from errorcomputation import compute_errors
+from my_enums import ProblemType, DomainPart
+from problem_setup import get_problem_setup
 import argparse
 import numpy as np
 import os
 from tools.coupling_schemes import CouplingScheme
-
-
-class ProblemType(Enum):
-    """
-    Enum defines problem type. Details see above.
-    """
-    DIRICHLET = 1  # Dirichlet problem
-    NEUMANN = 2  # Neumann problem
-
-
-class DomainPart(Enum):
-    """
-    Enum defines which part of the domain [x_left, x_right] x [y_bottom, y_top] we compute.
-    """
-    LEFT = 1  # left part of domain
-    RIGHT = 2  # right part of domain
 
 
 class OuterBoundary(SubDomain):
@@ -143,11 +128,6 @@ n_subcycling = "N".format(wr_tag=wr_tag)
 
 configs_path = os.path.join("experiments", wr_tag, window_size, coupling_scheme)
 
-if domain_part is DomainPart.LEFT:
-    nx = nx*3
-elif domain_part is DomainPart.RIGHT:
-    ny = 20
-
 if problem is ProblemType.DIRICHLET:
     adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
     other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-N.json")
@@ -155,51 +135,12 @@ elif problem is ProblemType.NEUMANN:
     adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-N.json")
     other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
 
-alpha = 3  # parameter alpha
-beta = 1.3  # parameter beta
-gamma = args.gamma  # parameter gamma, dependence of heat flux on time
-y_bottom, y_top = 0, 1
-x_left, x_right = 0, 2
-x_coupling = 1.5  # x coordinate of coupling interface
-
-if domain_part is DomainPart.LEFT:
-    p0 = Point(x_left, y_bottom)
-    p1 = Point(x_coupling, y_top)
-elif domain_part is DomainPart.RIGHT:
-    p0 = Point(x_coupling, y_bottom)
-    p1 = Point(x_right, y_top)
-
-mesh = RectangleMesh(p0, p1, nx, ny)
+mesh = get_geometry(domain_part)
 V = FunctionSpace(mesh, 'P', 2)
 
-# Define boundary condition
-if args.time_dependence == "l":
-    print("Linear")
-    u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
-if args.time_dependence == "q":
-    print("Quadratic")
-    u_D = Expression('1 + gamma * t * t * x[0] * x[0] + (1-gamma) * x[0] * x[0] + alpha * x[1] * x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
-elif args.time_dependence == "s":
-    print("Sinusoidal")
-    u_D = Expression('1 + gamma*sin(t)*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
+f_np1, f_n, u_D, f_N = get_problem_setup(args, domain_part, problem)
+
 u_D_function = interpolate(u_D, V)
-# Define flux in x direction on coupling interface (grad(u_D) in normal direction)
-if (domain_part is DomainPart.LEFT and problem is ProblemType.DIRICHLET) or \
-        (domain_part is DomainPart.RIGHT and problem is ProblemType.NEUMANN):
-    if args.time_dependence == "l":
-        f_N = Expression('2 * gamma * t * x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
-    if args.time_dependence == "q":
-        f_N = Expression('2 * gamma * t * t * x[0] + 2 * (1-gamma) * x[0] ', degree=1, gamma=gamma, t=0)
-    elif args.time_dependence == "s":
-        f_N = Expression('2 * gamma * sin(t) * x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
-elif (domain_part is DomainPart.RIGHT and problem is ProblemType.DIRICHLET) or \
-        (domain_part is DomainPart.LEFT and problem is ProblemType.NEUMANN):
-    if args.time_dependence == "l":
-        f_N = Expression('-2 * gamma * t * x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
-    if args.time_dependence == "q":
-        f_N = Expression('-2 * gamma * t * t * x[0] + 2 * (1-gamma) * x[0] ', degree=1, gamma=gamma, t=0)
-    elif args.time_dependence == "s":
-        f_N = Expression('-2 * gamma * sin(t) * x[0] + 2 * (1-gamma) * x[0] ', degree=1, gamma=gamma, t=0)
 f_N_function = interpolate(f_N, V)
 
 coupling_boundary = CouplingBoundary()
@@ -222,22 +163,13 @@ elif problem is ProblemType.NEUMANN:
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-if args.time_dependence == "l":
-    f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
-    f_n = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
-if args.time_dependence == "q":
-    f = Expression('beta + 2 * gamma * x[0] * x[0] * t - 2 * gamma * t * t- 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
-    f_n = Expression('beta + 2 * gamma * x[0] * x[0] * t - 2 * gamma * t * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
-elif args.time_dependence == "s":
-    f = Expression('beta + gamma * x[0] * x[0] * cos(t) - 2 * gamma * sin(t) - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
-    f_n = Expression('beta + gamma * x[0] * x[0] * cos(t) - 2 * gamma * sin(t) - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 
 t = 0
 
 if args.method == "ie":
-    F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
+    F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f_np1) * v * dx
 elif args.method == "tr":
-    F = u * v / dt * dx + dot(grad(u), grad(v)) / 2 * dx + dot(grad(u_n), grad(v)) / 2 * dx - (u_n / dt + f / 2 + f_n / 2) * v * dx
+    F = u * v / dt * dx + dot(grad(u), grad(v)) / 2 * dx + dot(grad(u_n), grad(v)) / 2 * dx - (u_n / dt + f_np1 / 2 + f_n / 2) * v * dx
 
 if problem is ProblemType.DIRICHLET:
     # apply Dirichlet boundary condition on coupling interface
@@ -275,7 +207,7 @@ error_out << error_pointwise
 
 # set t_1 = t_0 + dt, this gives u_D^1
 u_D.t = t+dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
-f.t = t+dt(0)
+f_np1.t = t + dt(0)
 f_n.t = t
 
 V_g = VectorFunctionSpace(mesh, 'P', 1)
@@ -302,7 +234,6 @@ while precice.is_coupling_ongoing():
         # Neumann problem samples temperature on boundary from solution and sends temperature to Dirichlet problem
         t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)
 
-
     dt.assign(np.min([precice.fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
 
     if precice_timestep_complete:
@@ -317,7 +248,7 @@ while precice.is_coupling_ongoing():
 
     # Update dirichlet BC
     u_D.t = t + dt(0)
-    f.t = t + dt(0)
+    f_np1.t = t + dt(0)
     f_n.t = t
 
 # Hold plot
