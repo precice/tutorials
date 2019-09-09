@@ -25,34 +25,16 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 """
 
 from __future__ import print_function, division
-from fenics import Function, SubDomain, FunctionSpace, Constant, DirichletBC, \
-    TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, near, VectorFunctionSpace
+from fenics import Function, FunctionSpace, Constant, DirichletBC, \
+    TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace
 from fenicsadapter import Adapter, ExactInterpolationExpression, GeneralInterpolationExpression
 from errorcomputation import compute_errors
 from my_enums import ProblemType, DomainPart
-from problem_setup import get_problem_setup
+from problem_setup import get_problem_setup, get_geometry, OuterBoundary, CouplingBoundary
 import argparse
 import numpy as np
 import os
 from tools.coupling_schemes import CouplingScheme
-
-
-class OuterBoundary(SubDomain):
-    def inside(self, x, on_boundary):
-        tol = 1E-14
-        if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
-            return True
-        else:
-            return False
-
-
-class CouplingBoundary(SubDomain):
-    def inside(self, x, on_boundary):
-        tol = 1E-14
-        if on_boundary and near(x[0], x_coupling, tol):
-            return True
-        else:
-            return False
 
 
 def determine_gradient(V_g, u, flux):
@@ -77,7 +59,9 @@ parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='ne
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_FIRST_DIRICHLET.name, type=str)
-parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
+parser.add_argument("-gamma", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
+parser.add_argument("-alpha", "--alpha", help="parameter gamma to set temporal dependence of heat flux", default=3.0, type=float)
+parser.add_argument("-beta", "--beta", help="parameter gamma to set temporal dependence of heat flux", default=1.3, type=float)
 parser.add_argument("-tol", "--error-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
 parser.add_argument("-dl", "--domain-left", help="right part of the domain is being computed", dest='domain_left', action='store_true')
 parser.add_argument("-dr", "--domain-right", help="left part of the domain is being computed", dest='domain_right', action='store_true')
@@ -113,11 +97,6 @@ if not (args.domain_left or args.domain_right):
         domain_part = DomainPart.RIGHT
 
 
-# Create mesh and define function space
-
-nx = 10
-ny = 10
-
 error_tol = args.error_tolerance
 
 wr_tag = "WR{wr1}{wr2}".format(wr1=args.waveform[0], wr2=args.waveform[1])
@@ -135,9 +114,11 @@ elif problem is ProblemType.NEUMANN:
     adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-N.json")
     other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
 
+# Create mesh and define function space
 mesh = get_geometry(domain_part)
 V = FunctionSpace(mesh, 'P', 2)
 
+# Get Expressions defining boundary conditions, right hand side and analytical solution of the problem
 f_np1, f_n, u_D, f_N = get_problem_setup(args, domain_part, problem)
 
 u_D_function = interpolate(u_D, V)
@@ -253,3 +234,8 @@ while precice.is_coupling_ongoing():
 
 # Hold plot
 precice.finalize()
+print(error)
+print(dt(0))
+
+with open("errors_{scheme}_{total_time}_{participant}".format(scheme=args.method, total_time=t, participant=problem.name), 'a') as outfile:
+    outfile.write("{}, {}\n".format(dt(0), error))

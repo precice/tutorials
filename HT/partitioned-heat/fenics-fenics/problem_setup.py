@@ -1,12 +1,34 @@
 import sympy as sp
 from my_enums import DomainPart, ProblemType
-from fenics import Expression, RectangleMesh, Point
+from fenics import Expression, RectangleMesh, Point, SubDomain, near
+
+y_bottom, y_top = 0, 1
+x_left, x_right = 0, 2
+x_coupling = 1.5  # x coordinate of coupling interface
+
+
+class OuterBoundary(SubDomain):
+    def inside(self, x, on_boundary):
+        tol = 1E-14
+        if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
+            return True
+        else:
+            return False
+
+
+class CouplingBoundary(SubDomain):
+    def inside(self, x, on_boundary):
+        tol = 1E-14
+        if on_boundary and near(x[0], x_coupling, tol):
+            return True
+        else:
+            return False
 
 
 def get_problem_setup(args, domain_part, problem):
 
-    alpha = 3  # parameter alpha
-    beta = 1.3  # parameter beta
+    alpha = args.alpha  # parameter alpha
+    beta = args.beta  # parameter beta
     gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 
     # Define boundary condition
@@ -42,14 +64,13 @@ def get_problem_setup(args, domain_part, problem):
 
 def get_geometry(domain_part):
 
+    nx = 10
+    ny = 10
+
     if domain_part is DomainPart.LEFT:
         nx = nx * 3
     elif domain_part is DomainPart.RIGHT:
         ny = 20
-
-    y_bottom, y_top = 0, 1
-    x_left, x_right = 0, 2
-    x_coupling = 1.5  # x coordinate of coupling interface
 
     if domain_part is DomainPart.LEFT:
         p0 = Point(x_left, y_bottom)
