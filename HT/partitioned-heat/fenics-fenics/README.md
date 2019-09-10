@@ -15,15 +15,22 @@ For all setups linear interpolation in time is used for each (micro-)timestep. T
 * ` python3 heat.py -d`
 * ` python3 heat.py -n`
 
-**WR12:** this case uses subcycling such that `2*dt_neumann = dt_dirichlet = T_window`.
+**WR12:** this case uses waveform relaxation such that `2*dt_neumann = dt_dirichlet = T_window`.
 
 * ` python3 heat.py -d -wr 1 2`
 * ` python3 heat.py -n -wr 1 2`
 
-**WR22:** this case uses subcycling such that `2*dt_neumann = 2*dt_dirichlet = T_window`.
+**WR22:** this case uses waveform relaxation such that `2*dt_neumann = 2*dt_dirichlet = T_window`.
 
 * ` python3 heat.py -d -wr 2 1`
 * ` python3 heat.py -n -wr 2 1`
+
+### Plain Subcycling
+
+For comparison, you can also run the case where plain subcycling is used (i.e. no interpolation between samples from (micro-)timesteps, only the sample at the end of the window is exchanged).
+
+* Make sure to install `fenics-adapter` from master (i.e. without waveform relaxation)
+* don't run `heat.py` but `heat_subcycling.py` from this folder.
 
 ### running the experiments
 
