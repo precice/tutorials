@@ -57,6 +57,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
+parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", type=str)
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_FIRST_DIRICHLET.name, type=str)
 parser.add_argument("-gamma", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
@@ -132,7 +133,7 @@ bcs = [DirichletBC(V, u_D, remaining_boundary)]
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
-precice = Adapter(adapter_config_filename, other_adapter_config_filename, interpolation_strategy=ExactInterpolationExpression   )  # todo: how to avoid requiring both configs without Waveform Relaxation?
+precice = Adapter(adapter_config_filename, other_adapter_config_filename, interpolation_strategy=ExactInterpolationExpression, wr_interpolation_strategy=args.waveform_interpolation_strategy)  # todo: how to avoid requiring both configs without Waveform Relaxation?
 
 if problem is ProblemType.DIRICHLET:
     dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
