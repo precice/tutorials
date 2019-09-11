@@ -7,12 +7,12 @@ interfaces:
   locations: faceCenters
   patches:
   - flap
-  write-data: Forces0
+  write-data: Forces1
 - mesh: Fluid-Mesh-Nodes
   locations: faceNodes
   patches:
   - flap
-  read-data: Displacements0
+  read-data: Displacements1
 
 FSIenabled: true
 

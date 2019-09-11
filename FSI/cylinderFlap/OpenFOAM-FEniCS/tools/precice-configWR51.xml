@@ -61,9 +61,9 @@
 
         <coupling-scheme:serial-implicit>
             <participants first="Excitement" second="fenics" />
-            <max-time value=".2"/>
+            <max-time value="1"/>
             <max-iterations value="1"/>
-            <timestep-length value="0.05" />
+            <timestep-length value="0.5" />
             <relative-convergence-measure data="Forces1" mesh="Solid" limit="1e-12"/>
             <exchange data="Forces1" mesh="Solid" from="Excitement" to="fenics"/>
             <exchange data="Displacements1" mesh="Solid" from="fenics" to="Excitement"/>

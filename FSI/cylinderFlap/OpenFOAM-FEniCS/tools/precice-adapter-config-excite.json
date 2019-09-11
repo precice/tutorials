@@ -1,6 +1,6 @@
 {
   "solver_name": "Excitement",
-  "config_file_name": "precice-config.xml",  
+  "config_file_name": "precice-configWR51.xml",  
   "interface": {
       "coupling_mesh_name": "Excitement-Mesh",
       "write_data_name": "Forces",
