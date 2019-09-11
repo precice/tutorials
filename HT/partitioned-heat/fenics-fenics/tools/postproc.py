@@ -5,13 +5,14 @@ from tabulate import tabulate
 import argparse
 
 parser = argparse.ArgumentParser(description='Postprocessing of results')
-parser.add_argument('--prefix', '-p', help='Path prefix for results', type=str, default='..')
+parser.add_argument('--prefix', '-p', help='Path prefix for results', type=str, default='../experiments')
 args = parser.parse_args()
 
 #evaluated_wr = [11, 12, 13, 15,      21, 22, 23, 25, 31, 32, 33, 35, 51, 52, 53, 55, 101, 102, 103, 105, 110, 210, 310, 510, 1010]
-evaluated_wr = [11, 12,      15, 110, 21, 22,     25, 210,            51, 52,     55,                                    510, 101, 102, 105, 1010]
+evaluated_wr = [11, 12,      15, 21, 22,     25,            51, 52,     55                                   ]
 evaluated_dT = [1.0, 0.5, 0.2, 0.1]
-coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name, CouplingScheme.SERIAL_FIRST_NEUMANN.name, CouplingScheme.PARALLEL.name]
+#coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name, CouplingScheme.SERIAL_FIRST_NEUMANN.name, CouplingScheme.PARALLEL.name]
+coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name]
 
 simulationTime = 10.0
 data = []
@@ -21,7 +22,7 @@ prefix = args.prefix
 for wr, dT, coupling_scheme in itertools.product(evaluated_wr, evaluated_dT, coupling_schemes):
     wr_tag = "WR{wr}".format(wr=wr)
     window_tag = "dT{dT}".format(dT=dT)
-    folder = os.path.join(prefix, "experiments", wr_tag, window_tag, coupling_scheme)
+    folder = os.path.join(prefix, wr_tag, window_tag, coupling_scheme)
     try:
         with open(os.path.join(folder, "precice-HeatDirichlet-iterations.log")) as file:
             for line in file.readlines():
@@ -61,7 +62,8 @@ for d in data[1:]:
     
 for wr, cpl in itertools.product(evaluated_wr, coupling_schemes):
     wrcplkey = "WR{wr}, cpl={cpl}".format(wr=wr, cpl=cpl)
+    wrkey = "WR{wr}".format(wr=wr)
     structured_data[wrcplkey]
-    table.append([wrcplkey] + [structured_data[wrcplkey][dtkey] for dtkey in keys])
+    table.append([wrkey] + [structured_data[wrcplkey][dtkey] for dtkey in keys])
 
-print(tabulate(table[1:], headers = table[0],tablefmt="pipe"))
+print(tabulate(table[1:], headers = table[0],tablefmt="latex_booktabs",floatfmt="2.2f"))

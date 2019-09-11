@@ -6,6 +6,7 @@ from coupling_schemes import CouplingScheme
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
+parser.add_argument("-subs", "--plain-subcycling", help="if set, do not interpolate between samples, but use plain subcycling for coupling", dest='plain_subcycling', action='store_true')
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 parser.add_argument("-T", "--simulation-time", default=10, type=float)
 parser.add_argument("-qntol", "--quasi-newton-tolerance", help="set accepted error in the quasi newton scheme", default='1e-12', type=str)
@@ -43,11 +44,17 @@ define timestepping setup. Be aware of the following relationships:
 2. window_size * N_coupling = total_time
 """
 
-for i in range(N_Neumann):
-    temperatures.append("Temperature{i}".format(i=i+1))
+if not args.plain_subcycling:
+    for i in range(N_Neumann):
+        temperatures.append("Temperature{i}".format(i=i+1))
+else:
+    temperatures.append("Temperature")
 
-for i in range(N_Dirichlet):
-    fluxes.append("Flux{i}".format(i=i+1))
+if not args.plain_subcycling:
+    for i in range(N_Dirichlet):
+        fluxes.append("Flux{i}".format(i=i+1))
+else:
+    fluxes.append("Flux")
 
 env = Environment(
     loader=FileSystemLoader('./templates'),
