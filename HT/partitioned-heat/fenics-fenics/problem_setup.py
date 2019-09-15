@@ -25,24 +25,27 @@ class CouplingBoundary(SubDomain):
             return False
 
 
-def get_problem_setup(args, domain_part, problem):
+def get_manufactured_solution(time_dependence, alpha, beta, gamma):
+    x, y, t, dt = sp.symbols('x[0], x[1], t, dt')
+    # Define analytical solution
+    if time_dependence == "l":
+        p = 1
+        g = (1 + t)**p  # g_pol
+    if time_dependence == "q":
+        p = 2
+        g = (1 + t)**p  # g_pol
+    elif time_dependence == "s":
+        g = sp.sin(t)  # g_tri
+    manufactured_solution = 1 + gamma * g * x**2 + (1-gamma) * x**2 + alpha * y**2 + beta * t
+    print("manufactured solution = {}".format(manufactured_solution))
+    return manufactured_solution
 
-    alpha = args.alpha  # parameter alpha
-    beta = args.beta  # parameter beta
-    gamma = args.gamma  # parameter gamma, dependence of heat flux on time
+
+def get_problem_setup(args, domain_part, problem):
 
     # Define boundary condition
     x, y, t, dt = sp.symbols('x[0], x[1], t, dt')
-
-    # Define analytical solution
-    if args.time_dependence == "l":
-        p = 1
-        u_analytical = 1 + gamma * (1 + t)**p * x**2 + (1-gamma) * x**2 + alpha * y**2 + beta * t
-    if args.time_dependence == "q":
-        p = 2
-        u_analytical = 1 + gamma * (1 + t)**p * x**2 + (1-gamma) * x**2 + alpha * y**2 + beta * t
-    elif args.time_dependence == "s":
-        u_analytical = 1 + gamma * sp.sin(t) * x**2 + (1-gamma) * x**2 + alpha * y**2 + beta * t
+    u_analytical = get_manufactured_solution(args.time_dependence, args.alpha, args.beta, args.gamma)
     u_D = Expression(sp.printing.ccode(u_analytical), degree=2, t=0)
 
     # Compute corresponding right-hand side
