@@ -1,6 +1,6 @@
 from jinja2 import Environment, FileSystemLoader
 import os, stat
-from coupling_schemes import CouplingScheme
+from tools.coupling_schemes import CouplingScheme
 from problem_setup import get_manufactured_solution
 from tools.postproc_errors import create_error_table
 from tools.postproc import create_qn_table
@@ -18,14 +18,14 @@ parser.add_argument("-subs", "--plain-subcycling", help="if set, do not interpol
 parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q) or sinusoidal (s) dependence on time", type=str, default="l")
 parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
 parser.add_argument("-exec", "--executable", help="choose name of executable", default='heat.py')
-parser.add_argument('--prefix', '-p', help='Path prefix for results', type=str, default=os.path.join(os.path.dirname(os.path.realpath(__file__)),'../experiments'))
+parser.add_argument('--prefix', '-p', help='Path prefix for results', type=str, default=os.path.join(os.path.dirname(os.path.realpath(__file__)),'experiments'))
 
 args = parser.parse_args()
 
 manufactured_solution = sp.latex(get_manufactured_solution(args.time_dependence, args.alpha, args.beta, args.gamma).subs("x[0]","x").subs("x[1]","y"))
 
 env = Environment(
-    loader=FileSystemLoader(os.path.join(os.path.dirname(os.path.realpath(__file__)),'templates'))
+    loader=FileSystemLoader(os.path.join(os.path.dirname(os.path.realpath(__file__)),'tools', 'templates'))
 )
 
 experiment_path = os.path.realpath(args.prefix)

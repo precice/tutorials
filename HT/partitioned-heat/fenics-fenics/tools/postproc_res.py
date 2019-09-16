@@ -1,5 +1,5 @@
 import os
-from coupling_schemes import CouplingScheme
+from tools.coupling_schemes import CouplingScheme
 import itertools
 import argparse
 from matplotlib import pyplot as plt
