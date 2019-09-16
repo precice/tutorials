@@ -5,7 +5,7 @@ import argparse
 
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
-x_coupling = 1.5  # x coordinate of coupling interface
+x_coupling = 1  # x coordinate of coupling interface
 
 
 class OuterBoundary(SubDomain):
@@ -70,11 +70,6 @@ def get_geometry(domain_part):
 
     nx = 10
     ny = 10
-
-    if domain_part is DomainPart.LEFT:
-        nx = nx * 3
-    elif domain_part is DomainPart.RIGHT:
-        ny = 20
 
     if domain_part is DomainPart.LEFT:
         p0 = Point(x_left, y_bottom)
