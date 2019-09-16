@@ -72,7 +72,7 @@ try:
                                       waveform_bindings_hash=waveform_bindings_hash,
                                       precice_hash=precice_hash,
                                       method=args.method,
-                                      executable=args.executable,
+                                      executable=args.executable.replace('_','\_'),
                                       time_dependence=args.time_dependence))
 
 except UnicodeEncodeError:
