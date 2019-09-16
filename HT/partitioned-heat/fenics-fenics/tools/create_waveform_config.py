@@ -48,13 +48,13 @@ define timestepping setup. Be aware of the following relationships:
 2. window_size * N_coupling = total_time
 """
 
-if not args.plain_subcycling:
+if args.executable == "heat.py":
     for i in range(N_Neumann):
         temperatures.append("Temperature{i}".format(i=i+1))
 else:
     temperatures.append("Temperature")
 
-if not args.plain_subcycling:
+if args.executable == "heat.py":
     for i in range(N_Dirichlet):
         fluxes.append("Flux{i}".format(i=i+1))
 else:
