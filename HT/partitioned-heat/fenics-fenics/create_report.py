@@ -51,7 +51,10 @@ waveform_bindings_path = os.path.expanduser(os.path.join(args.code_prefix, "wave
 
 tutorials_hash = subprocess.check_output(["git", "describe", "--always", "--dirty"]).strip().decode() + " from " + subprocess.check_output(["git", "ls-remote", "--get-url"]).strip().decode()
 adapter_hash = subprocess.check_output(["git", "-C", adapter_path, "describe", "--always", "--dirty"]).strip().decode() + " from " + subprocess.check_output(["git", "-C", adapter_path, "ls-remote", "--get-url"]).strip().decode()
-waveform_bindings_hash = subprocess.check_output(["git", "-C", waveform_bindings_path, "describe", "--always", "--dirty"]).strip().decode() + " from " + subprocess.check_output(["git", "-C", waveform_bindings_path, "ls-remote", "--get-url"]).strip().decode()
+if args.executable == "heat.py":
+    waveform_bindings_hash = subprocess.check_output(["git", "-C", waveform_bindings_path, "describe", "--always", "--dirty"]).strip().decode() + " from " + subprocess.check_output(["git", "-C", waveform_bindings_path, "ls-remote", "--get-url"]).strip().decode()
+else:
+    waveform_bindings_hash = "/"
 precice_hash = subprocess.check_output(["git", "-C", precice_path, "describe", "--always", "--dirty"]).strip().decode() + " from " + subprocess.check_output(["git", "-C", precice_path, "ls-remote", "--get-url"]).strip().decode()
 
 try:
