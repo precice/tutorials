@@ -19,6 +19,7 @@ parser.add_argument("-t", "--time-dependence", help="choose whether there is a l
 parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
 parser.add_argument("-exec", "--executable", help="choose name of executable", default='heat.py')
 parser.add_argument('--prefix', '-p', help='Path prefix for results', type=str, default=os.path.join(os.path.dirname(os.path.realpath(__file__)),'experiments'))
+parser.add_argument('--code-prefix', '-cp', help='Path prefix for code', type=str, default='~')
 
 args = parser.parse_args()
 
@@ -43,9 +44,9 @@ qn_table, _, _ = create_qn_table(experiment_path, evaluated_wr, evaluated_dT, co
 report_template = env.get_template('report.md')
 
 import subprocess
-adapter_path = os.path.expanduser(os.path.join("~", "fenics-adapter"))
-precice_path = os.path.expanduser(os.path.join("~", "precice"))
-waveform_bindings_path = os.path.expanduser(os.path.join("~", "waveform-bindings"))
+adapter_path = os.path.expanduser(os.path.join(args.code_prefix, "fenics-adapter"))
+precice_path = os.path.expanduser(os.path.join(args.code_prefix, "precice"))
+waveform_bindings_path = os.path.expanduser(os.path.join(args.code_prefix, "waveform-bindings"))
 
 tutorials_hash = subprocess.check_output(["git", "describe", "--always", "--dirty"]).strip().decode() + " from " + subprocess.check_output(["git", "ls-remote", "--get-url"]).strip().decode()
 adapter_hash = subprocess.check_output(["git", "-C", adapter_path, "describe", "--always", "--dirty"]).strip().decode() + " from " + subprocess.check_output(["git", "-C", adapter_path, "ls-remote", "--get-url"]).strip().decode()
