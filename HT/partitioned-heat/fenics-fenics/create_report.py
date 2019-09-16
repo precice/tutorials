@@ -7,6 +7,7 @@ from tools.postproc import create_qn_table
 import argparse
 import sympy as sp
 import datetime
+import codecs
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-gamma", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=1.0, type=float)
@@ -62,7 +63,7 @@ precice_hash = "???"
 
 try:
 
-    with open('report.md', "w") as file:
+    with codecs.open('report.md', "w", 'utf-8') as file:
         file.write(report_template.render(date=str(datetime.datetime.now()),
                                       alpha=args.alpha,
                                       beta=args.beta,
