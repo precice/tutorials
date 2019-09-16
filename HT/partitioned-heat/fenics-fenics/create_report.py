@@ -49,17 +49,10 @@ adapter_path = os.path.expanduser(os.path.join(args.code_prefix, "fenics-adapter
 precice_path = os.path.expanduser(os.path.join(args.code_prefix, "precice"))
 waveform_bindings_path = os.path.expanduser(os.path.join(args.code_prefix, "waveform-bindings"))
 
-"""
 tutorials_hash = subprocess.check_output(["git", "describe", "--always", "--dirty"]).strip().decode() + " from " + subprocess.check_output(["git", "ls-remote", "--get-url"]).strip().decode()
 adapter_hash = subprocess.check_output(["git", "-C", adapter_path, "describe", "--always", "--dirty"]).strip().decode() + " from " + subprocess.check_output(["git", "-C", adapter_path, "ls-remote", "--get-url"]).strip().decode()
 waveform_bindings_hash = subprocess.check_output(["git", "-C", waveform_bindings_path, "describe", "--always", "--dirty"]).strip().decode() + " from " + subprocess.check_output(["git", "-C", waveform_bindings_path, "ls-remote", "--get-url"]).strip().decode()
 precice_hash = subprocess.check_output(["git", "-C", precice_path, "describe", "--always", "--dirty"]).strip().decode() + " from " + subprocess.check_output(["git", "-C", precice_path, "ls-remote", "--get-url"]).strip().decode()
-"""
-
-tutorials_hash = "???"
-adapter_hash = "???"
-waveform_bindings_hash = "???"
-precice_hash = "???"
 
 try:
 
