@@ -45,3 +45,16 @@ Other parameters are fixed. E.g.:
 ### Postprocessing
 
 Run `python3 postproc.py` from **this folder**
+
+### Create a report
+
+Go to parent folder of this one and run the following commands:
+
+```
+cd ..
+python3 tools/create_report.py -p experiments
+pandoc report.md -o report.pdf
+```
+
+*Remark* use the `-p` flag to provide the path to the folder containing the experiments.
+

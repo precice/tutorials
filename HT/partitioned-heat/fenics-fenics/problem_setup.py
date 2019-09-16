@@ -1,6 +1,7 @@
 import sympy as sp
 from my_enums import DomainPart, ProblemType
 from fenics import Expression, RectangleMesh, Point, SubDomain, near
+import argparse
 
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
@@ -83,3 +84,17 @@ def get_geometry(domain_part):
         p1 = Point(x_right, y_top)
 
     return RectangleMesh(p0, p1, nx, ny)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-gamma", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=1.0, type=float)
+    parser.add_argument("-alpha", "--alpha", help="parameter gamma to set temporal dependence of heat flux", default=3.0, type=float)
+    parser.add_argument("-beta", "--beta", help="parameter gamma to set temporal dependence of heat flux", default=1.2, type=float)
+    parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q) or sinusoidal (s) dependence on time", type=str, default="l")
+    parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
+    args = parser.parse_args()
+    u = get_manufactured_solution(args.time_dependence, args.alpha, args.beta, args.gamma)
+    u = u.subs('x[0]', 'x').subs('x[1]','y')
+    print(sp.latex(u))
+
