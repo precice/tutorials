@@ -12,10 +12,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-gamma", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=1.0, type=float)
 parser.add_argument("-alpha", "--alpha", help="parameter gamma to set temporal dependence of heat flux", default=3.0, type=float)
 parser.add_argument("-beta", "--beta", help="parameter gamma to set temporal dependence of heat flux", default=1.2, type=float)
-parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q) or sinusoidal (s) dependence on time", type=str, default="l")
 parser.add_argument("-stol", "--solver-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
 parser.add_argument("-ctol", "--coupling-tolerance", help="set accepted error of QN coupling", default=10**-12, type=float)
 parser.add_argument("-subs", "--plain-subcycling", help="if set, do not interpolate between samples, but use plain subcycling for coupling", dest='plain_subcycling', action='store_true')
+parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q) or sinusoidal (s) dependence on time", type=str, default="l")
+parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
+parser.add_argument("-exec", "--executable", help="choose name of executable", default='heat.py')
 parser.add_argument('--prefix', '-p', help='Path prefix for results', type=str, default=os.path.join(os.path.dirname(os.path.realpath(__file__)),'../experiments'))
 
 args = parser.parse_args()
@@ -61,5 +63,8 @@ with open('report.md', "w") as file:
                                       tutorials_hash=tutorials_hash,
                                       adapter_hash=adapter_hash,
                                       waveform_bindings_hash=waveform_bindings_hash,
-                                      precice_hash=precice_hash))
+                                      precice_hash=precice_hash,
+                                      method=args.method,
+                                      executable=args.executable,
+                                      time_dependence=args.time_dependence))
 

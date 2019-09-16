@@ -1,2 +1,2 @@
-python3 ../../../../heat.py -d {{domain_decomposition_dirichlet}} -wr {{ wr_dirichlet }} {{ wr_neumann }} -dT {{ window_size }} -cpl {{ coupling_scheme }} -g {{gamma}} -tol {{error_tolerance}} &
-python3 ../../../../heat.py -n {{domain_decomposition_neumann}} -wr {{ wr_dirichlet }} {{ wr_neumann }} -dT {{ window_size }} -cpl {{ coupling_scheme }} -g {{gamma}} -tol {{error_tolerance}}
+python3 ../../../../{{executable}} -d {{domain_decomposition_dirichlet}} -wr {{ wr_dirichlet }} {{ wr_neumann }} -dT {{ window_size }} -cpl {{ coupling_scheme }} -g {{gamma}} -tol {{error_tolerance}} -mth {{method}} -t {{time_dependence}} &
+python3 ../../../../{{executable}} -n {{domain_decomposition_neumann}} -wr {{ wr_dirichlet }} {{ wr_neumann }} -dT {{ window_size }} -cpl {{ coupling_scheme }} -g {{gamma}} -tol {{error_tolerance}} -mth {{method}} -t {{time_dependence}}

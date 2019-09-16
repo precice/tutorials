@@ -14,6 +14,10 @@ parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_F
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=1.0, type=float)
 parser.add_argument("-stol", "--solver-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
 parser.add_argument("-dd", "--domain-decomposition", help="set kind of domain decomposition being used", default="DN", type=str, choices=['DN', 'ND'])
+parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q) or sinusoidal (s) dependence on time", type=str, default="l")
+parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
+parser.add_argument("-exec", "--executable", help="choose name of executable", default='heat.py')
+
 args = parser.parse_args()
 
 temperatures = []
@@ -108,7 +112,10 @@ with open(runall_path, "w") as file:
                                       window_size=args.window_size,
                                       coupling_scheme=coupling_scheme.name,
 				      gamma=args.gamma,
-                                      error_tolerance=args.solver_tolerance))
+                                      error_tolerance=args.solver_tolerance,
+                                      method=args.method,
+                                      time_dependence=args.time_dependence,
+                                      executable=args.executable))
 
 st = os.stat(runall_path)
 os.chmod(runall_path, st.st_mode | stat.S_IEXEC)

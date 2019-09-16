@@ -12,6 +12,9 @@ abstract: ---
 \item $\alpha = {{alpha}}$
 \item $\beta = {{beta}}$
 \item $\gamma = {{gamma}}$
+\item \texttt{-mth = {{method}}}
+\item \texttt{-exec = {{executable}}}
+\item \texttt{-t = {{time_dependence}}}
 \end{itemize}
 
 ## Manufactured Solution
