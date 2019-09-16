@@ -60,8 +60,10 @@ adapter_hash = "???"
 waveform_bindings_hash = "???"
 precice_hash = "???"
 
-with open('report.md', "w") as file:
-    file.write(report_template.render(date=str(datetime.datetime.now()),
+try:
+
+    with open('report.md', "w") as file:
+        file.write(report_template.render(date=str(datetime.datetime.now()),
                                       alpha=args.alpha,
                                       beta=args.beta,
                                       gamma=args.gamma,
@@ -76,3 +78,18 @@ with open('report.md', "w") as file:
                                       executable=args.executable,
                                       time_dependence=args.time_dependence))
 
+except UnicodeEncodeError:
+    print(str(datetime.datetime.now()))
+    print(args.alpha)
+    print(args.beta)
+    print(args.gamma)
+    print(manufactured_solution)
+    print(qn_table)
+    print(error_table)
+    print(tutorials_hash)
+    print(adapter_hash)
+    print(waveform_bindings_hash)
+    print(precice_hash)
+    print(args.method)
+    print(args.executable)
+    print(args.time_dependence)
