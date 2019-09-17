@@ -75,7 +75,9 @@ try:
                                       method=args.method,
                                       executable=args.executable.replace('_','\_'),
                                       time_dependence=args.time_dependence,
-                                      waveform_interpolation_strategy=args.waveform_interpolation_strategy))
+                                      waveform_interpolation_strategy=args.waveform_interpolation_strategy,
+                                      coupling_tolerance=args.coupling_tolerance,
+                                      solver_tolerance=args.solver_tolerance))
 
 except UnicodeEncodeError:
     print(str(datetime.datetime.now()))

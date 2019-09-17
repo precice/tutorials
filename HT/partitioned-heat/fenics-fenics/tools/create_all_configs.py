@@ -6,6 +6,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=1.0, type=float)
 parser.add_argument("-stol", "--solver-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
+parser.add_argument("-qntol", "--quasi-newton-tolerance", help="set accepted error in the quasi newton scheme", default='1e-12', type=str)
 parser.add_argument("-dd", "--domain-decomposition", help="set kind of domain decomposition being used", default="DN", type=str, choices=['DN', 'ND'])
 parser.add_argument("-subs", "--plain-subcycling", help="if set, do not interpolate between samples, but use plain subcycling for coupling", dest='plain_subcycling', action='store_true')
 parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q) or sinusoidal (s) dependence on time", type=str, default="l")
@@ -44,7 +45,8 @@ with open('config_creation.sh', "w") as file:
                                        time_dependence=args.time_dependence,
                                        method=args.method,
                                        executable=args.executable,
-                                       waveform_interpolation_strategy=args.waveform_interpolation_strategy))
+                                       waveform_interpolation_strategy=args.waveform_interpolation_strategy,
+                                       quasi_newton_tolerance=args.quasi_newton_tolerance))
 
 st = os.stat('config_creation.sh')
 os.chmod('config_creation.sh', st.st_mode | stat.S_IEXEC)

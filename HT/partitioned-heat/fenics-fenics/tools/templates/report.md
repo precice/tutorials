@@ -16,6 +16,8 @@ abstract: ---
 \item \texttt{-exec = {{executable}}}
 \item \texttt{-t = {{time_dependence}}}
 \item \texttt{-wri = {{waveform_interpolation_strategy}}}
+\item \texttt{-ctol = {{coupling_tolerance}}}
+\item \texttt{-stol = {{solver_tolerance}}}
 \end{itemize}
 
 ## Manufactured Solution
