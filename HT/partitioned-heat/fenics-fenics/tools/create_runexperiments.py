@@ -2,9 +2,17 @@ from jinja2 import Environment, FileSystemLoader
 import os, stat
 from coupling_schemes import CouplingScheme
 
-wr_lefts = [1, 2, 5]
-wr_rights = [1, 2, 5]
-window_sizes = [1.0, 0.5, 0.2, 0.1]
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-wrl", "--wr-lefts", nargs='+', help="Choose WR setups on left half of domain", default=[1, 2, 5])
+parser.add_argument("-wrr", "--wr-rights", nargs='+', help="Choose WR setups on left half of domain", default=[1, 2, 5])
+parser.add_argument("-Dts", "--window-sizes", nargs='+', help="Choose Window Sizes being computed", default=[1.0, 0.5, 0.2, 0.1])
+args = parser.parse_args()
+
+wr_lefts = args.wr_lefts
+wr_rights = args.wr_rights
+window_sizes = args.window_sizes
 #coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name, CouplingScheme.SERIAL_FIRST_NEUMANN.name, CouplingScheme.PARALLEL.name]
 coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name]
 

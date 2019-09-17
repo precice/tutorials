@@ -17,6 +17,7 @@ parser.add_argument("-dd", "--domain-decomposition", help="set kind of domain de
 parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q) or sinusoidal (s) dependence on time", type=str, default="l")
 parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
 parser.add_argument("-exec", "--executable", help="choose name of executable", default='heat.py')
+parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", choices=['linear', 'quadratic', 'cubic'], type=str)
 
 args = parser.parse_args()
 
@@ -115,7 +116,8 @@ with open(runall_path, "w") as file:
                                       error_tolerance=args.solver_tolerance,
                                       method=args.method,
                                       time_dependence=args.time_dependence,
-                                      executable=args.executable))
+                                      executable=args.executable,
+                                      waveform_interpolation_strategy=args.waveform_interpolation_strategy))
 
 st = os.stat(runall_path)
 os.chmod(runall_path, st.st_mode | stat.S_IEXEC)

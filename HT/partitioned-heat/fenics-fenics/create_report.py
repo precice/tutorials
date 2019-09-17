@@ -19,6 +19,7 @@ parser.add_argument("-subs", "--plain-subcycling", help="if set, do not interpol
 parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q) or sinusoidal (s) dependence on time", type=str, default="l")
 parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
 parser.add_argument("-exec", "--executable", help="choose name of executable", default='heat.py')
+parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", choices=['linear', 'quadratic', 'cubic'], type=str)
 parser.add_argument('--prefix', '-p', help='Path prefix for results', type=str, default=os.path.join(os.path.dirname(os.path.realpath(__file__)),'experiments'))
 parser.add_argument('--code-prefix', '-cp', help='Path prefix for code', type=str, default='~')
 
@@ -33,7 +34,7 @@ env = Environment(
 experiment_path = os.path.realpath(args.prefix)
 
 evaluated_wr = [11, 12, 15, 21, 22, 25, 51, 52, 55]
-evaluated_dT = [1.0, 0.5, 0.2, 0.1]
+evaluated_dT = [5.0, 2.0, 1.0, 0.5, 0.2, 0.1]
 coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name]
 
 print("parse experiments from {}".format(experiment_path))
@@ -73,7 +74,8 @@ try:
                                       precice_hash=precice_hash,
                                       method=args.method,
                                       executable=args.executable.replace('_','\_'),
-                                      time_dependence=args.time_dependence))
+                                      time_dependence=args.time_dependence,
+                                      waveform_interpolation_strategy=args.waveform_interpolation_strategy))
 
 except UnicodeEncodeError:
     print(str(datetime.datetime.now()))

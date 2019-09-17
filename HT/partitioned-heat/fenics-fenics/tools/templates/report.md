@@ -15,6 +15,7 @@ abstract: ---
 \item \texttt{-mth = {{method}}}
 \item \texttt{-exec = {{executable}}}
 \item \texttt{-t = {{time_dependence}}}
+\item \texttt{-wri = {{waveform_interpolation_strategy}}}
 \end{itemize}
 
 ## Manufactured Solution

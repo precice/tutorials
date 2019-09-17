@@ -34,6 +34,7 @@ from problem_setup import get_problem_setup, get_geometry, OuterBoundary, Coupli
 import argparse
 import numpy as np
 import os
+import sdc.simple_sdc
 from tools.coupling_schemes import CouplingScheme
 
 
@@ -57,7 +58,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
-parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", type=str)
+parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", choices=['linear', 'quadratic', 'cubic'], type=str)
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_FIRST_DIRICHLET.name, type=str)
 parser.add_argument("-gamma", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=1.0, type=float)
@@ -67,7 +68,7 @@ parser.add_argument("-tol", "--error-tolerance", help="set accepted error of num
 parser.add_argument("-dl", "--domain-left", help="right part of the domain is being computed", dest='domain_left', action='store_true')
 parser.add_argument("-dr", "--domain-right", help="left part of the domain is being computed", dest='domain_right', action='store_true')
 parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q) or sinusoidal (s) dependence on time", type=str, default="l")
-parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
+parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie', choices=['ie', 'tr', 'sdc'])
 parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
 
 args = parser.parse_args()
@@ -152,10 +153,29 @@ if args.method == "ie":
     F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f_np1) * v * dx
 elif args.method == "tr":
     F = u * v / dt * dx + dot(grad(u), grad(v)) / 2 * dx + dot(grad(u_n), grad(v)) / 2 * dx - (u_n / dt + f_np1 / 2 + f_n / 2) * v * dx
+elif args.method == "sdc":
+    times = sdc.simple_sdc.x * dt
+    dts = times[1:] - times[:-1]
+    F = []
+    for i in range(dts.size):
+        F_i = u * v / dts[i] * dx + dot(grad(u), grad(v)) * dx - (u_n / dts[i] + f_np1) * v * dx
+        F.append(F_i)
+
+if args.method == "sdc":
+    bc_non_coupling = bcs[0]
+    bcs = []
+    for i in range(times.size):
+        bcs.append([])
+        bcs[i].append(bc_non_coupling)
 
 if problem is ProblemType.DIRICHLET:
     # apply Dirichlet boundary condition on coupling interface
-    bcs.append(precice.create_coupling_dirichlet_boundary_condition(V, dt))
+    if args.method == "tr" or args.method == "ie":
+        bcs.append(precice.create_coupling_dirichlet_boundary_condition(V, dt))
+    elif args.method == "sdc":
+        for i in range(times.size):
+            bcs[i].append(precice.create_coupling_dirichlet_boundary_condition(V, times[i]))
+
 if problem is ProblemType.NEUMANN:
     # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
     
@@ -163,8 +183,9 @@ if problem is ProblemType.NEUMANN:
         F += 0.5 * precice.create_coupling_neumann_boundary_condition(v, dt) + 0.5 * precice.create_coupling_neumann_boundary_condition(v, Constant(0))
     elif args.method == "ie":
         F += precice.create_coupling_neumann_boundary_condition(v, dt)
-
-a, L = lhs(F), rhs(F)
+    elif args.method == "sdc":
+        for i in range(dts.size):
+            F[i] += precice.create_coupling_neumann_boundary_condition(v, times[i + 1])
 
 # Time-stepping
 u_np1 = Function(V)
@@ -199,10 +220,45 @@ flux.rename("Flux", "")
 determine_gradient(V_g, u_n, flux)
 flux_out << flux
 
+# only needed for SDC
+
+
+def implicit_euler(y0, t0, dt_step, weak_form, bc_expr, bc):
+    u_n.assign(y0)
+    bc_expr.t = t0 + dt_step
+    f_np1.t = t0 + dt_step
+    y1 = Function(V)
+    solve(lhs(weak_form) == rhs(weak_form), y1, bc)
+    return y1
+
+
+def black_box_implicit_euler(y0, t0, dt_step, i):
+    r_val = implicit_euler(y0, t0, dt_step, F[i], u_D, bcs[i+1])
+    return r_val
+
+
+def compute_rhs(y0, t0, i):
+    from fenics import div
+    w = TrialFunction(V)
+    v = TestFunction(V)
+    u_D.t = t0
+    f_n.t = t0  # does this interfere with use of f at other places?
+    a = w * v * dx
+    L = (div(grad(y0)) + f_n) * v * dx
+    u_rhs = Function(V)
+    solve(a == L, u_rhs, bcs[i])
+    return u_rhs
+
+# ending here
+
+
 while precice.is_coupling_ongoing():
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
-    solve(a == L, u_np1, bcs)
+    if args.method == 'ie' or args.method =='tr':
+        solve(lhs(F) == rhs(F), u_np1, bcs)
+    elif args.method == 'sdc':
+        u_np1 = sdc.simple_sdc.sdc_step(u_n, t, black_box_implicit_euler, compute_rhs, dt(0), V)
 
     determine_gradient(V_g, u_np1, flux)
 
