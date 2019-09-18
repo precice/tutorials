@@ -13,6 +13,7 @@ parser.add_argument("-t", "--time-dependence", help="choose whether there is a l
 parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
 parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", choices=['linear', 'quadratic', 'cubic'], type=str)
 parser.add_argument("-exec", "--executable", help="choose name of executable", default='heat.py')
+parser.add_argument("-pp", "--post-processing", help="specify postprocessing scheme used by preCICE", default="quasinewton", choices=['none', 'underrelaxation', 'quasinewton', 'passive'], type=str)
 
 args = parser.parse_args()
 
@@ -46,7 +47,8 @@ with open('config_creation.sh', "w") as file:
                                        method=args.method,
                                        executable=args.executable,
                                        waveform_interpolation_strategy=args.waveform_interpolation_strategy,
-                                       quasi_newton_tolerance=args.quasi_newton_tolerance))
+                                       quasi_newton_tolerance=args.quasi_newton_tolerance,
+                                       post_processing=args.post_processing))
 
 st = os.stat('config_creation.sh')
 os.chmod('config_creation.sh', st.st_mode | stat.S_IEXEC)

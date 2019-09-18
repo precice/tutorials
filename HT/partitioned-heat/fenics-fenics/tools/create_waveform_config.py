@@ -18,6 +18,8 @@ parser.add_argument("-t", "--time-dependence", help="choose whether there is a l
 parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
 parser.add_argument("-exec", "--executable", help="choose name of executable", default='heat.py')
 parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", choices=['linear', 'quadratic', 'cubic'], type=str)
+parser.add_argument("-pp", "--post-processing", help="specify postprocessing scheme used by preCICE", default="quasinewton", choices=['none', 'underrelaxation', 'passive', 'quasinewton'], type=str)
+
 
 args = parser.parse_args()
 
@@ -66,12 +68,22 @@ env = Environment(
     autoescape=select_autoescape(['xml', 'json'])
 )
 
-if coupling_scheme == CouplingScheme.SERIAL_FIRST_DIRICHLET:
-    precice_config_template = env.get_template('precice-config_serialImplicit_firstDirichlet.xml')
-elif coupling_scheme == CouplingScheme.SERIAL_FIRST_NEUMANN:
-    precice_config_template = env.get_template('precice-config_serialImplicit_firstNeumann.xml')
-elif coupling_scheme == CouplingScheme.PARALLEL:
-    precice_config_template = env.get_template('precice-config_parallelImplicit.xml')
+if args.post_processing == "quasinewton":
+    if coupling_scheme == CouplingScheme.SERIAL_FIRST_DIRICHLET:
+        precice_config_template = env.get_template('precice-config_serialImplicit_firstDirichlet.xml')
+    elif coupling_scheme == CouplingScheme.SERIAL_FIRST_NEUMANN:
+        precice_config_template = env.get_template('precice-config_serialImplicit_firstNeumann.xml')
+    elif coupling_scheme == CouplingScheme.PARALLEL:
+        precice_config_template = env.get_template('precice-config_parallelImplicit.xml')
+if args.post_processing == "passive":
+    if coupling_scheme == CouplingScheme.SERIAL_FIRST_DIRICHLET:
+        precice_config_template = env.get_template('precice-config_serialImplicit_firstDirichlet_passive.xml')
+elif args.post_processing == "underrelaxation":
+    if coupling_scheme == CouplingScheme.SERIAL_FIRST_DIRICHLET:
+        precice_config_template = env.get_template('precice-config_serialImplicit_firstDirichlet_underrelaxation.xml')
+elif args.post_processing == "none":
+    if coupling_scheme == CouplingScheme.SERIAL_FIRST_DIRICHLET:
+        precice_config_template = env.get_template('precice-config_serialImplicit_firstDirichlet_no_PostProc.xml')
 
 precice_adapter_D_template = env.get_template('precice-adapter-config-D.json')
 precice_adapter_N_template = env.get_template('precice-adapter-config-N.json')
