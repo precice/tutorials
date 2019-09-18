@@ -7,7 +7,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-wrl", "--wr-lefts", nargs='+', help="Choose WR setups on left half of domain", default=[1, 2, 5])
 parser.add_argument("-wrr", "--wr-rights", nargs='+', help="Choose WR setups on left half of domain", default=[1, 2, 5])
-parser.add_argument("-Dts", "--window-sizes", nargs='+', help="Choose Window Sizes being computed", default=[1.0, 0.5, 0.2, 0.1])
+parser.add_argument("-Dts", "--window-sizes", nargs='+', help="Choose Window Sizes being computed", default=[5.0, 2.0, 1.0, 0.5, 0.2, 0.1])
 args = parser.parse_args()
 
 wr_lefts = args.wr_lefts
