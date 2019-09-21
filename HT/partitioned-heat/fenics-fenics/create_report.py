@@ -22,6 +22,7 @@ parser.add_argument("-exec", "--executable", help="choose name of executable", d
 parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", choices=['linear', 'quadratic', 'cubic'], type=str)
 parser.add_argument('--prefix', '-p', help='Path prefix for results', type=str, default=os.path.join(os.path.dirname(os.path.realpath(__file__)),'experiments'))
 parser.add_argument('--code-prefix', '-cp', help='Path prefix for code', type=str, default='~')
+parser.add_argument("-pp", "--post-processing", help="specify postprocessing scheme used by preCICE", default="quasinewton", choices=['none', 'underrelaxation', 'passive', 'quasinewton'], type=str)
 
 args = parser.parse_args()
 
@@ -77,7 +78,8 @@ try:
                                       time_dependence=args.time_dependence,
                                       waveform_interpolation_strategy=args.waveform_interpolation_strategy,
                                       coupling_tolerance=args.coupling_tolerance,
-                                      solver_tolerance=args.solver_tolerance))
+                                      solver_tolerance=args.solver_tolerance,
+                                      post_processing=args.post_processing))
 
 except UnicodeEncodeError:
     print(str(datetime.datetime.now()))
