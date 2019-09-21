@@ -22,8 +22,8 @@ if args.plain_subcycling:
 else:
     use_subcycling = ""
 
-wr_lefts = [1, 2, 5]
-wr_rights = [1, 2, 5]
+wr_lefts = [1, 2, 3, 5]
+wr_rights = [1, 2, 3, 5]
 window_sizes = [5.0, 2.0, 1.0, 0.5, 0.2, 0.1]
 #coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name, CouplingScheme.SERIAL_FIRST_NEUMANN.name, CouplingScheme.PARALLEL.name]
 coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name]
