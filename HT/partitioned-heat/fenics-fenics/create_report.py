@@ -34,7 +34,7 @@ env = Environment(
 
 experiment_path = os.path.realpath(args.prefix)
 
-evaluated_wr = [11, 12, 15, 21, 22, 25, 51, 52, 55]
+evaluated_wr = [11, 12, 13, 15, 21, 22, 23, 25, 31, 32, 33, 35, 51, 52, 53, 55]
 evaluated_dT = [5.0, 2.0, 1.0, 0.5, 0.2, 0.1]
 coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name]
 
