@@ -8,7 +8,6 @@ parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal depen
 parser.add_argument("-stol", "--solver-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
 parser.add_argument("-qntol", "--quasi-newton-tolerance", help="set accepted error in the quasi newton scheme", default='1e-12', type=str)
 parser.add_argument("-dd", "--domain-decomposition", help="set kind of domain decomposition being used", default="DN", type=str, choices=['DN', 'ND'])
-parser.add_argument("-subs", "--plain-subcycling", help="if set, do not interpolate between samples, but use plain subcycling for coupling", dest='plain_subcycling', action='store_true')
 parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q) or sinusoidal (s) dependence on time", type=str, default="l")
 parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
 parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", choices=['linear', 'quadratic', 'cubic'], type=str)
@@ -16,11 +15,6 @@ parser.add_argument("-exec", "--executable", help="choose name of executable", d
 parser.add_argument("-pp", "--post-processing", help="specify postprocessing scheme used by preCICE", default="quasinewton", choices=['none', 'underrelaxation', 'quasinewton', 'passive'], type=str)
 
 args = parser.parse_args()
-
-if args.plain_subcycling:
-    use_subcycling = "--plain-subcycling"
-else:
-    use_subcycling = ""
 
 wr_lefts = [1, 2, 3, 5]
 wr_rights = [1, 2, 3, 5]
@@ -42,7 +36,6 @@ with open('config_creation.sh', "w") as file:
 				       gamma=args.gamma,
                                        solver_tolerance=args.solver_tolerance,
                                        domain_decomposition=args.domain_decomposition,
-                                       plain_subcycling=use_subcycling,
                                        time_dependence=args.time_dependence,
                                        method=args.method,
                                        executable=args.executable,

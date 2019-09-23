@@ -6,7 +6,6 @@ from coupling_schemes import CouplingScheme
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
-parser.add_argument("-subs", "--plain-subcycling", help="if set, do not interpolate between samples, but use plain subcycling for coupling", dest='plain_subcycling', action='store_true')
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 parser.add_argument("-T", "--simulation-time", default=10, type=float)
 parser.add_argument("-qntol", "--quasi-newton-tolerance", help="set accepted error in the quasi newton scheme", default='1e-12', type=str)
