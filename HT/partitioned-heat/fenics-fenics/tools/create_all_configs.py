@@ -12,7 +12,7 @@ parser.add_argument("-t", "--time-dependence", help="choose whether there is a l
 parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
 parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", choices=['linear', 'quadratic', 'cubic'], type=str)
 parser.add_argument("-exec", "--executable", help="choose name of executable", default='heat.py')
-parser.add_argument("-pp", "--post-processing", help="specify postprocessing scheme used by preCICE", default="quasinewton", choices=['none', 'underrelaxation', 'quasinewton', 'passive'], type=str)
+parser.add_argument("-pp", "--post-processing", help="specify postprocessing scheme used by preCICE", default="qn-active", choices=['none', 'underrelaxation', 'qn-passive', 'qn-passive-fair', 'qn-active', 'qn-active-fair'], type=str)
 
 args = parser.parse_args()
 
