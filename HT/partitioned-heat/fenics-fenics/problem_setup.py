@@ -69,10 +69,7 @@ def get_problem_setup(args, domain_part, problem):
     return f_np1, f_n, u_D, f_N
 
 
-def get_geometry(domain_part):
-
-    nx = 10
-    ny = 10
+def get_geometry(domain_part, nx, ny):
 
     if domain_part is DomainPart.LEFT:
         p0 = Point(x_left, y_bottom)
