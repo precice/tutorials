@@ -29,13 +29,16 @@ class CouplingBoundary(SubDomain):
 def get_manufactured_solution(time_dependence, alpha, beta, gamma):
     x, y, t, dt = sp.symbols('x[0], x[1], t, dt')
     # Define analytical solution
-    if time_dependence == "l":
+    if time_dependence == "l":  # linear
         p = 1
-        g = (1 + t)**p  # g_pol
-    if time_dependence == "q":
+        g = (t + 1)**p  # g_pol
+    elif time_dependence == "q":  # quadratic
         p = 2
-        g = (1 + t)**p  # g_pol
-    elif time_dependence == "s":
+        g = (t + 1)**p  # g_pol
+    elif time_dependence == "c":  # cubic
+        p = 3
+        g = (t + 1)**p  # g_pol
+    elif time_dependence == "s":  # sinusoidal
         g = sp.sin(t)  # g_tri
     manufactured_solution = 1 + gamma * g * x**2 + (1-gamma) * x**2 + alpha * y**2 + beta * t
     print("manufactured solution = {}".format(manufactured_solution))
