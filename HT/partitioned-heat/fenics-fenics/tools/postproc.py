@@ -10,7 +10,7 @@ def create_qn_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes):
     simulationTime = 10.0
     data = []
     data.append(["WR", "dT", "cpl", "#steps", "#it", "#it/#steps"])
-
+    print(evaluated_dT)
     for wr, dT, coupling_scheme in itertools.product(evaluated_wr, evaluated_dT, coupling_schemes):
         wr_tag = "WR{wr}".format(wr=wr)
         window_tag = "dT{dT}".format(dT=dT)
@@ -25,38 +25,36 @@ def create_qn_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes):
                     total_iterations = float(lastline[1])
                     avg_its = total_iterations / number_of_windows
                     if number_of_windows == simulationTime / dT:
-                        data.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "#steps": number_of_windows, "#it": total_iterations, "#it/#steps": avg_its})
+                        data.append({"WR": wr, "dT": dT, "#steps": number_of_windows, "#it": total_iterations, "#it/#steps": avg_its})
                     else:
                         print("File {name} erroneous.".format(
                             name=os.path.join(folder, "precice-HeatDirichlet-iterations.log")))
                         data.append(
-                            {"WR": wr, "dT": dT, "cpl": coupling_scheme, "#steps": "-", "#it": "-", "#it/#steps": "x"})
+                            {"WR": wr, "dT": dT, "#steps": "-", "#it": "-", "#it/#steps": "x"})
                 except (AttributeError, ValueError):
                     print("File {name} erroneous.".format(name=os.path.join(folder, "precice-HeatDirichlet-iterations.log")))
-                    data.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "#steps": "-", "#it": "-", "#it/#steps": "x"})
+                    data.append({"WR": wr, "dT": dT, "#steps": "-", "#it": "-", "#it/#steps": "x"})
         except FileNotFoundError:
-            data.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "#steps": "-", "#it": "-", "#it/#steps": "-"})
+            data.append({"WR": wr, "dT": dT, "#steps": "-", "#it": "-", "#it/#steps": "-"})
 
     table = []
-    keys = ["dT{dT}".format(dT=dT) for dT in evaluated_dT]
-    table.append(["#it/#steps"] + keys)
+    keys = [ "WR{wr}".format(wr=wr) for wr in evaluated_wr]
+    table.append(["dT"] + keys)
 
     structured_data = dict()
 
     for d in data[1:]:
-        wrcplkey = "WR{wr}, cpl={cpl}".format(wr=d["WR"], cpl=d["cpl"])
+        wrkey = "WR{wr}".format(wr=d["WR"])
         try:
-            structured_data[wrcplkey]
+            structured_data[wrkey]
         except KeyError:
-            structured_data[wrcplkey] = dict()
-        dTkey = "dT{dT}".format(dT=d["dT"])
-        structured_data[wrcplkey][dTkey] = d["#it/#steps"]
+            structured_data[wrkey] = dict()
+        dTkey = d["dT"]
+        structured_data[wrkey][dTkey] = d["#it/#steps"]
 
-    for wr, cpl in itertools.product(evaluated_wr, coupling_schemes):
-        wrcplkey = "WR{wr}, cpl={cpl}".format(wr=wr, cpl=cpl)
-        wrkey = "WR{wr}".format(wr=wr)
-        structured_data[wrcplkey]
-        table.append([wrkey] + [structured_data[wrcplkey][dtkey] for dtkey in keys])
+    dTkeys = [dT for dT in evaluated_dT]
+    for dTkey in dTkeys:
+        table.append([dTkey] + [structured_data[key][dTkey] for key in keys])
 
     return tabulate(table[1:], headers=table[0], tablefmt="latex_booktabs", floatfmt=".2f"), structured_data, keys
 
@@ -78,4 +76,22 @@ if __name__ == '__main__':
 
     table, data, keys = create_qn_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes)
 
-    print(table)
+    headers = ['dT'] + list(data.keys())
+    data_dict = []       
+    for dT in evaluated_dT:
+        dict_line = dict()
+        dict_line['dT'] = dT
+        for key in data.keys():
+            dict_line[key] = data[key][dT]
+        data_dict.append(dict_line)
+
+    print(headers)
+    print(data_dict)
+
+    import csv
+    csv_file = "iterations_raw.csv"
+    with open(csv_file, 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=headers)
+        writer.writeheader()
+        for data in data_dict:
+            writer.writerow(data)

@@ -30,11 +30,11 @@ def create_error_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes):
                     lastline = lastline.split(", ")
                     dt = float(lastline[0])
                     error = float(lastline[1])
-                    data_D.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "error": error})
+                    data_D.append({"WR": wr, "dT": dT, "error": error})
             except FileNotFoundError:
-                data_D.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "error": "-"})
+                data_D.append({"WR": wr, "dT": dT, "error": "-"})
         else:
-            data_D.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "error": "-"})
+            data_D.append({"WR": wr, "dT": dT, "error": "-"})
 
         assert(glob.glob(path_N).__len__() <= 1)
         if(glob.glob(path_N).__len__() == 1):
@@ -45,39 +45,36 @@ def create_error_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes):
                     lastline = lastline.split(", ")
                     dt = float(lastline[0])
                     error = float(lastline[1])
-                    data_N.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "error": error})
+                    data_N.append({"WR": wr, "dT": dT, "error": error})
             except FileNotFoundError:
-                data_N.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "error": "-"})
+                data_N.append({"WR": wr, "dT": dT, "error": "-"})
         else:
-            data_N.append({"WR": wr, "dT": dT, "cpl": coupling_scheme, "error": "-"})
+            data_N.append({"WR": wr, "dT": dT, "error": "-"})
 
     table = []
-    keys = ["dT{dT}".format(dT=dT) for dT in evaluated_dT]
-    table.append(["error"] + keys)
+    keys = [ "WR{wr}".format(wr=wr) for wr in evaluated_wr]
+    table.append(["dT"] + keys)
 
     structured_data = dict()
 
     for d_D, d_N in zip(data_D[1:],data_N[1:]):
-        wrcplkey = "WR{wr}, cpl={cpl}".format(wr=d_D["WR"], cpl=d_D["cpl"])
+        wrkey = "WR{wr}".format(wr=d_D["WR"])
 
         try:
-            structured_data[wrcplkey]
+            structured_data[wrkey]
         except KeyError:
-            structured_data[wrcplkey] = dict()
-        dTkey = "dT{dT}".format(dT=d_D["dT"])
+            structured_data[wrkey] = dict()
+        dTkey = d_D["dT"]
         try:
-            structured_data[wrcplkey][dTkey] = np.sqrt(np.sum([d_D["error"], d_N["error"]]))
-            #structured_data[wrcplkey][dTkey] = d_D["error"]
+            structured_data[wrkey][dTkey] = float(np.sqrt(np.sum([d_D["error"], d_N["error"]])))
         except TypeError:
-            structured_data[wrcplkey][dTkey] = '-'
+            structured_data[wrkey][dTkey] = np.nan
 
-    for wr, cpl in itertools.product(evaluated_wr, coupling_schemes):
-        wrcplkey = "WR{wr}, cpl={cpl}".format(wr=wr, cpl=cpl)
-        wrkey = "WR{wr}".format(wr=wr)
-        structured_data[wrcplkey]
-        table.append([wrkey] + [structured_data[wrcplkey][dtkey] for dtkey in keys])
+    dTkeys = [dT for dT in evaluated_dT]
+    for dTkey in dTkeys:
+        table.append([dTkey] + [structured_data[key][dTkey] for key in keys])
 
-    return tabulate(table[1:], headers = table[0],tablefmt="latex_booktabs", floatfmt=".2e"), structured_data, keys
+    return tabulate(table[1:], headers = table[0],tablefmt="latex_booktabs", floatfmt=".2e"), structured_data, dTkeys
 
 
 if __name__ == '__main__':
@@ -88,23 +85,43 @@ if __name__ == '__main__':
 
     #evaluated_wr = [11, 12, 13, 15,      21, 22, 23, 25, 31, 32, 33, 35, 51, 52, 53, 55, 101, 102, 103, 105, 110, 210, 310, 510, 1010]
     evaluated_wr = [11, 12,      15, 21, 22,     25,            51, 52,     55                                   ]
-    evaluated_dT = [1.0, 0.5, 0.2, 0.1]
+    evaluated_dT = [5.0, 2.0, 1.0, 0.5, 0.2]
     #evaluated_dT = [1.0, 0.5]
     #coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name, CouplingScheme.SERIAL_FIRST_NEUMANN.name, CouplingScheme.PARALLEL.name]
     coupling_schemes = [CouplingScheme.SERIAL_FIRST_DIRICHLET.name]
 
     prefix = args.prefix
 
-    table, data, keys = create_error_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes)
+    table, data, dTkeys = create_error_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes)
 
     print(table)
 
     import itertools
     marker = itertools.cycle((',', '+', '.', 'o', '*'))
 
-    for wr, cpl in itertools.product(evaluated_wr, coupling_schemes):
-        wrcplkey = "WR{wr}, cpl={cpl}".format(wr=wr, cpl=cpl)
-        plt.loglog(evaluated_dT, [data[wrcplkey][dtkey] for dtkey in keys], label=wrcplkey, marker=next(marker))
+    for key in data.keys():
+        print("{}:{}".format(key,data[key]))
+        plt.loglog(evaluated_dT, [data[key][dTkey] for dTkey in dTkeys], label=key, marker=next(marker))
+
+    headers = ['dT'] + list(data.keys())
+    data_dict = []       
+    for dT in evaluated_dT:
+        dict_line = dict()
+        dict_line['dT'] = dT
+        for key in data.keys():
+            dict_line[key] = data[key][dT]
+        data_dict.append(dict_line)
+
+    print(headers)
+    print(data_dict)
+
+    import csv
+    csv_file = "errors_raw.csv"
+    with open(csv_file, 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=headers)
+        writer.writeheader()
+        for data in data_dict:
+            writer.writerow(data)
 
     plt.legend()
     plt.grid()
