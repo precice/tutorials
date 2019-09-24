@@ -3,6 +3,7 @@ title: Report for simulation run on {{date}}
 author: Benjamin Rüth
 header-includes: |
     \usepackage{booktabs}
+    \usepackage{lscape}
 abstract: ---
 ---
 
@@ -36,14 +37,20 @@ u_\text{exact} = {{manufactured_solution}}
 \item \texttt{precice: {{precice_hash}}}
 \end{itemize}
 
+\begin{landscape}
 \begin{table}
 \centering
+\begin{tiny}
 {{qn_table}}
+\end{tiny}
 \caption{QN Iterations}
 \end{table}
 
 \begin{table}
 \centering
+\begin{tiny}
 {{error_table}}
+\end{tiny}
 \caption{Errors}
 \end{table}
+\end{landscape}
