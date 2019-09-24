@@ -74,6 +74,24 @@ def create_error_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes):
     for dTkey in dTkeys:
         table.append([dTkey] + [structured_data[key][dTkey] for key in keys])
 
+    data_dict = []       
+    for dT in evaluated_dT:
+        dict_line = dict()
+        dict_line['dT'] = dT
+        for key in structured_data.keys():
+            dict_line[key] = structured_data[key][dT]
+        data_dict.append(dict_line)
+
+    import csv
+    headers = ['dT'] + list(structured_data.keys())
+    csv_file = "errors_raw.csv"
+    with open(csv_file, 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=headers)
+        writer.writeheader()
+        for data in data_dict:
+            writer.writerow(data)
+
+
     return tabulate(table[1:], headers = table[0],tablefmt="latex_booktabs", floatfmt=".2e"), structured_data, dTkeys
 
 
@@ -94,34 +112,12 @@ if __name__ == '__main__':
 
     table, data, dTkeys = create_error_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes)
 
-    print(table)
-
     import itertools
     marker = itertools.cycle((',', '+', '.', 'o', '*'))
 
     for key in data.keys():
         print("{}:{}".format(key,data[key]))
         plt.loglog(evaluated_dT, [data[key][dTkey] for dTkey in dTkeys], label=key, marker=next(marker))
-
-    headers = ['dT'] + list(data.keys())
-    data_dict = []       
-    for dT in evaluated_dT:
-        dict_line = dict()
-        dict_line['dT'] = dT
-        for key in data.keys():
-            dict_line[key] = data[key][dT]
-        data_dict.append(dict_line)
-
-    print(headers)
-    print(data_dict)
-
-    import csv
-    csv_file = "errors_raw.csv"
-    with open(csv_file, 'w') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=headers)
-        writer.writeheader()
-        for data in data_dict:
-            writer.writerow(data)
 
     plt.legend()
     plt.grid()
