@@ -18,6 +18,8 @@ parser.add_argument("-mth", "--method", help="time stepping method being used", 
 parser.add_argument("-exec", "--executable", help="choose name of executable", default='heat.py')
 parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", choices=['linear', 'quadratic', 'cubic'], type=str)
 parser.add_argument("-pp", "--post-processing", help="specify postprocessing scheme used by preCICE", default="qn-active", choices=['none', 'underrelaxation', 'qn-passive', 'qn-passive-fair', 'qn-active', 'qn-active-fair'], type=str)
+parser.add_argument("--config-max-used-iterations", help="precice-cnfig: set <max-used-iterations value/> in the <post-processing:IQN-ILS>", default=20, type=int)
+parser.add_argument("--config-max-iterations", help="precice-cnfig: set <max-iterations value/> in the <coupling-scheme:serial-implicit>", default=200, type=int)
 
 
 args = parser.parse_args()
@@ -111,7 +113,9 @@ with open(os.path.join( target_path, precice_config_name), "w") as file:
                                               fluxes=fluxes,
                                               convergence_limit=args.quasi_newton_tolerance,
                                               total_time=total_time,
-                                              window_size=args.window_size))
+                                              window_size=args.window_size,
+                                              config_max_iterations=args.config_max_iterations,
+                                              config_max_used_iterations=args.config_max_used_iterations))
 
 with open(os.path.join( target_path, 'precice-adapter-config-D.json'), "w") as file:
     file.write(precice_adapter_D_template.render(N_Dirichlet=N_Dirichlet,

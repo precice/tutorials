@@ -66,7 +66,7 @@
       <participants second="HeatDirichlet" first="HeatNeumann"/>
       <max-time value="{{total_time}}"/>
       <timestep-length value="{{window_size}}" valid-digits="8"/>
-      <max-iterations value="100"/>
+      <max-iterations value="{{config_max_iterations}}"/>
       {% for temperature in temperatures -%}
       <exchange data="{{temperature}}" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true" />
       {% endfor -%}
@@ -90,7 +90,7 @@
         {% endfor -%}
         <preconditioner type="residual-sum"/>
         <initial-relaxation value="1.0"/>
-        <max-used-iterations value="50"/>
+        <max-used-iterations value="{{config_max_used_iterations}}"/>
         <timesteps-reused value="0"/>
         <filter type="QR2" limit="1e-3"/>
       </post-processing:IQN-ILS>
