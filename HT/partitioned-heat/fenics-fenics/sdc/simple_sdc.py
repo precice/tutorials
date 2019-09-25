@@ -7,7 +7,7 @@ M = 3
 x, w = gauss_lobatto(M, n_digits=30)
 
 # number of correction sweeps
-K = 2
+K = 4
 
 # expected order
 p = 2*M-2
