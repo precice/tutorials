@@ -71,7 +71,7 @@ parser.add_argument("-mth", "--method", help="time stepping method being used", 
 parser.add_argument("-nx", "--nx", help="number of DoFs in x direction", type=int, default=20)
 parser.add_argument("-ny", "--ny", help="number of DoFs in y direction", type=int, default=20)
 parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
-parser.add_argument("-ovtk", "--output-vtk", help="provide vtk output', action='store_true')
+parser.add_argument("-ovtk", "--output-vtk", help="provide vtk output", action='store_true')
 
 args = parser.parse_args()
 
