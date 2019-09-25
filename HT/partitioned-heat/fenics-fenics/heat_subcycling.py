@@ -71,6 +71,7 @@ parser.add_argument("-mth", "--method", help="time stepping method being used", 
 parser.add_argument("-nx", "--nx", help="number of DoFs in x direction", type=int, default=20)
 parser.add_argument("-ny", "--ny", help="number of DoFs in y direction", type=int, default=20)
 parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
+parser.add_argument("-ovtk", "--output-vtk", help="provide vtk output', action='store_true')
 
 args = parser.parse_args()
 
@@ -182,18 +183,10 @@ u_np1.rename("Temperature", "")
 u_ref = interpolate(u_D, V)
 u_ref.rename("reference", " ")
 
-temperature_out = File("out/%s.pvd" % precice._solver_name)
-ref_out = File("out/ref%s.pvd" % precice._solver_name)
-error_out = File("out/error%s.pvd" % precice._solver_name)
-flux_out = File("out/flux%s.pvd" % precice._solver_name)
-
 # output solution and reference solution at t=0, n=0
 n = 0
-temperature_out << u_n
-ref_out << u_ref
 
 error_total, error_pointwise = compute_errors(u_n, u_ref, V)
-error_out << error_pointwise
 
 # set t_1 = t_0 + dt, this gives u_D^1
 u_D.t = t+dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
@@ -205,7 +198,16 @@ flux = Function(V_g)
 flux.rename("Flux", "")
 
 determine_gradient(V_g, u_n, flux)
-flux_out << flux
+
+if args.output_vtk:
+    temperature_out = File("out/%s.pvd" % precice._solver_name)
+    ref_out = File("out/ref%s.pvd" % precice._solver_name)
+    error_out = File("out/error%s.pvd" % precice._solver_name)
+    flux_out = File("out/flux%s.pvd" % precice._solver_name)
+    temperature_out << u_n
+    ref_out << u_ref
+    error_out << error_pointwise
+    flux_out << flux
 
 while precice.is_coupling_ongoing():
 
@@ -231,10 +233,11 @@ while precice.is_coupling_ongoing():
         u_ref.rename("reference", " ")
         # output solution and reference solution at t_n+1
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
-        temperature_out << u_n
-        ref_out << u_ref
-        error_out << error_pointwise
-        flux_out << flux
+        if args.output_vtk:
+            temperature_out << u_n
+            ref_out << u_ref
+            error_out << error_pointwise
+            flux_out << flux
 
     # Update dirichlet BC
     u_D.t = t + dt(0)
