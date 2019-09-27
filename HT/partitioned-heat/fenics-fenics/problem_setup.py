@@ -26,6 +26,15 @@ class CouplingBoundary(SubDomain):
             return False
 
 
+class CompleteBoundary(SubDomain):
+    def inside(self, x, on_boundary):
+        tol = 1E-14
+        if on_boundary:
+            return True
+        else:
+            return False
+
+
 def get_manufactured_solution(time_dependence, alpha, beta, gamma):
     x, y, t, dt = sp.symbols('x[0], x[1], t, dt')
     # Define analytical solution
@@ -65,6 +74,8 @@ def get_problem_setup(args, domain_part, problem):
     elif (domain_part is DomainPart.RIGHT and problem is ProblemType.DIRICHLET) or \
             (domain_part is DomainPart.LEFT and problem is ProblemType.NEUMANN):
         f_N = Expression(sp.printing.ccode(-flux_analytical), degree=1, t=0)
+    else:
+        f_N = Expression("0", degree=0)
 
     return f_np1, f_n, u_D, f_N
 
@@ -76,6 +87,9 @@ def get_geometry(domain_part, nx, ny):
         p1 = Point(x_coupling, y_top)
     elif domain_part is DomainPart.RIGHT:
         p0 = Point(x_coupling, y_bottom)
+        p1 = Point(x_right, y_top)
+    elif domain_part is DomainPart.ALL:
+        p0 = Point(x_left, y_bottom)
         p1 = Point(x_right, y_top)
 
     return RectangleMesh(p0, p1, nx, ny)
