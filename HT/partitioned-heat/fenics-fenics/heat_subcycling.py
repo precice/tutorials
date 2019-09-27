@@ -244,10 +244,14 @@ while precice.is_coupling_ongoing():
     f_np1.t = t + dt(0)
     f_n.t = t
 
-# Hold plot
-precice.finalize()
-print(error)
+print(t)
+u_D.t = t
+u_ref = interpolate(u_D, V)
+error_last, _ = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
+print(error_last)
 print(dt(0))
 
+precice.finalize()
+
 with open("errors_{participant}".format(participant=problem.name), 'a') as outfile:
-    outfile.write("{}, {}\n".format(dt(0), error))
+    outfile.write("{}, {}\n".format(dt(0), error_last))
