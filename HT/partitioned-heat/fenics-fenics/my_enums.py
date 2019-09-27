@@ -15,3 +15,4 @@ class DomainPart(Enum):
     """
     LEFT = 1  # left part of domain
     RIGHT = 2  # right part of domain
+    ALL = 3  # complete domain

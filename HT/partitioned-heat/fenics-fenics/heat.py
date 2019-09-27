@@ -30,7 +30,7 @@ from fenics import Function, FunctionSpace, Constant, DirichletBC, \
 from fenicsadapter import Adapter, ExactInterpolationExpression, GeneralInterpolationExpression
 from errorcomputation import compute_errors
 from my_enums import ProblemType, DomainPart
-from problem_setup import get_problem_setup, get_geometry, OuterBoundary, CouplingBoundary
+from problem_setup import get_problem_setup, get_geometry, OuterBoundary, CouplingBoundary, CompleteBoundary
 import argparse
 import numpy as np
 import os
@@ -61,6 +61,7 @@ parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='ne
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
 parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", choices=['linear', 'quadratic', 'cubic'], type=str)
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
+parser.add_argument("-T", "--total-time", default=10, type=float)
 parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_FIRST_DIRICHLET.name, type=str)
 parser.add_argument("-gamma", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=1.0, type=float)
 parser.add_argument("-alpha", "--alpha", help="parameter gamma to set temporal dependence of heat flux", default=3.0, type=float)
@@ -74,34 +75,38 @@ parser.add_argument("-nx", "--nx", help="number of DoFs in x direction", type=in
 parser.add_argument("-ny", "--ny", help="number of DoFs in y direction", type=int, default=20)
 parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
 parser.add_argument("-ovtk", "--output-vtk", help="provide vtk output", action='store_true')
+parser.add_argument("-m", "--monolithic", help="switch to monolithic case", action='store_true')
 
 args = parser.parse_args()
 
-# coupling parameters
-if args.dirichlet:
-    problem = ProblemType.DIRICHLET
-if args.neumann:
-    problem = ProblemType.NEUMANN
-if args.dirichlet and args.neumann:
-    raise Exception("you can only choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
-if not (args.dirichlet or args.neumann):
-    raise Exception("you have to choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
+if not args.monolithic:
+    # coupling parameters
+    if args.dirichlet:
+        problem = ProblemType.DIRICHLET
+    if args.neumann:
+        problem = ProblemType.NEUMANN
+    if args.dirichlet and args.neumann:
+        raise Exception("you can only choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
+    if not (args.dirichlet or args.neumann):
+        raise Exception("you have to choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
 
 
-# coupling parameters
-if args.domain_left:
-    domain_part = DomainPart.LEFT
-if args.domain_right:
-    domain_part = DomainPart.RIGHT
-if args.dirichlet and args.neumann:
-    raise Exception("you can only choose to either compute the left part of the domain (option -dl) or the right part (option -dr)")
-if not (args.domain_left or args.domain_right):
-    print("Default domain partitioning is used: Left part of domain is a Dirichlet-type problem; right part is a Neumann-type problem")
-    if problem is ProblemType.DIRICHLET:
+    # coupling parameters
+    if args.domain_left:
         domain_part = DomainPart.LEFT
-    elif problem is ProblemType.NEUMANN:
+    if args.domain_right:
         domain_part = DomainPart.RIGHT
-
+    if args.dirichlet and args.neumann:
+        raise Exception("you can only choose to either compute the left part of the domain (option -dl) or the right part (option -dr)")
+    if not (args.domain_left or args.domain_right):
+        print("Default domain partitioning is used: Left part of domain is a Dirichlet-type problem; right part is a Neumann-type problem")
+        if problem is ProblemType.DIRICHLET:
+            domain_part = DomainPart.LEFT
+        elif problem is ProblemType.NEUMANN:
+            domain_part = DomainPart.RIGHT
+else:
+    domain_part = DomainPart.ALL
+    problem = ProblemType.DIRICHLET
 
 error_tol = args.error_tolerance
 
@@ -111,17 +116,25 @@ coupling_scheme = "{}".format(args.coupling_scheme)
 d_subcycling = "D".format(wr_tag=wr_tag)
 n_subcycling = "N".format(wr_tag=wr_tag)
 
-configs_path = os.path.join("experiments", wr_tag, window_size, coupling_scheme)
+t_total = args.total_time
 
-if problem is ProblemType.DIRICHLET:
-    adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
-    other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-N.json")
-elif problem is ProblemType.NEUMANN:
-    adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-N.json")
-    other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
+if not args.monolithic:
+    configs_path = os.path.join("experiments", wr_tag, window_size, coupling_scheme)
+
+    if problem is ProblemType.DIRICHLET:
+        adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
+        other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-N.json")
+    elif problem is ProblemType.NEUMANN:
+        adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-N.json")
+        other_adapter_config_filename = os.path.join(configs_path, "precice-adapter-config-D.json")
 
 # Create mesh and define function space
-mesh = get_geometry(domain_part, args.nx, args.ny)
+nx = args.nx
+ny = args.ny
+if args.monolithic:
+    nx *= 2
+
+mesh = get_geometry(domain_part, nx, ny)
 V = FunctionSpace(mesh, 'P', 2)
 
 # Get Expressions defining boundary conditions, right hand side and analytical solution of the problem
@@ -130,22 +143,27 @@ f_np1, f_n, u_D, f_N = get_problem_setup(args, domain_part, problem)
 u_D_function = interpolate(u_D, V)
 f_N_function = interpolate(f_N, V)
 
-coupling_boundary = CouplingBoundary()
-remaining_boundary = OuterBoundary()
+if args.monolithic:
+    complete_boundary = CompleteBoundary()
+    bcs = [DirichletBC(V, u_D, complete_boundary)]
+else:
+    coupling_boundary = CouplingBoundary()
+    remaining_boundary = OuterBoundary()
+    bcs = [DirichletBC(V, u_D, remaining_boundary)]
 
-bcs = [DirichletBC(V, u_D, remaining_boundary)]
 # Define initial value
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
-precice = Adapter(adapter_config_filename, other_adapter_config_filename, interpolation_strategy=ExactInterpolationExpression, wr_interpolation_strategy=args.waveform_interpolation_strategy)  # todo: how to avoid requiring both configs without Waveform Relaxation?
+if not args.monolithic:
+    precice = Adapter(adapter_config_filename, other_adapter_config_filename, interpolation_strategy=ExactInterpolationExpression, wr_interpolation_strategy=args.waveform_interpolation_strategy)  # todo: how to avoid requiring both configs without Waveform Relaxation?
 
-if problem is ProblemType.DIRICHLET:
-    dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
-                            write_field=f_N_function, u_n=u_n)
-elif problem is ProblemType.NEUMANN:
-    dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
-                            write_field=u_D_function, u_n=u_n)
+    if problem is ProblemType.DIRICHLET:
+        dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function, write_field=f_N_function, u_n=u_n)
+    elif problem is ProblemType.NEUMANN:
+        dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function, write_field=u_D_function, u_n=u_n)
+else:
+    dt = Constant(args.window_size)
 
 # Define variational problem
 u = TrialFunction(V)
@@ -172,24 +190,25 @@ if args.method == "sdc":
         bcs.append([])
         bcs[i].append(bc_non_coupling)
 
-if problem is ProblemType.DIRICHLET:
-    # apply Dirichlet boundary condition on coupling interface
-    if args.method == "tr" or args.method == "ie":
-        bcs.append(precice.create_coupling_dirichlet_boundary_condition(V, dt))
-    elif args.method == "sdc":
-        for i in range(times.size):
-            bcs[i].append(precice.create_coupling_dirichlet_boundary_condition(V, times[i]))
+if not args.monolithic:
+    if problem is ProblemType.DIRICHLET:
+        # apply Dirichlet boundary condition on coupling interface
+        if args.method == "tr" or args.method == "ie":
+            bcs.append(precice.create_coupling_dirichlet_boundary_condition(V, dt))
+        elif args.method == "sdc":
+            for i in range(times.size):
+                bcs[i].append(precice.create_coupling_dirichlet_boundary_condition(V, times[i]))
 
-if problem is ProblemType.NEUMANN:
-    # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
+    if problem is ProblemType.NEUMANN:
+        # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
     
-    if args.method == "tr":
-        F += 0.5 * precice.create_coupling_neumann_boundary_condition(v, dt) + 0.5 * precice.create_coupling_neumann_boundary_condition(v, Constant(0))
-    elif args.method == "ie":
-        F += precice.create_coupling_neumann_boundary_condition(v, dt)
-    elif args.method == "sdc":
-        for i in range(dts.size):
-            F[i] += precice.create_coupling_neumann_boundary_condition(v, times[i + 1])
+        if args.method == "tr":
+            F += 0.5 * precice.create_coupling_neumann_boundary_condition(v, dt) + 0.5 * precice.create_coupling_neumann_boundary_condition(v, Constant(0))
+        elif args.method == "ie":
+            F += precice.create_coupling_neumann_boundary_condition(v, dt)
+        elif args.method == "sdc":
+            for i in range(dts.size):
+                F[i] += precice.create_coupling_neumann_boundary_condition(v, times[i + 1])
 
 # Time-stepping
 u_np1 = Function(V)
@@ -217,10 +236,10 @@ flux.rename("Flux", "")
 determine_gradient(V_g, u_n, flux)
 
 if args.output_vtk:
-    temperature_out = File("out/%s.pvd" % precice._solver_name)
-    ref_out = File("out/ref%s.pvd" % precice._solver_name)
-    error_out = File("out/error%s.pvd" % precice._solver_name)
-    flux_out = File("out/flux%s.pvd" % precice._solver_name)
+    temperature_out = File("out/%s.pvd" % problem.name)
+    ref_out = File("out/ref%s.pvd" % problem.name)
+    error_out = File("out/error%s.pvd" % problem.name)
+    flux_out = File("out/flux%s.pvd" % problem.name)
     temperature_out << u_n
     ref_out << u_ref
     error_out << error_pointwise
@@ -249,6 +268,7 @@ def compute_rhs(y0, t0, i):
     v = TestFunction(V)
     u_D.t = t0
     f_n.t = t0  # does this interfere with use of f at other places?
+    u_D_function = interpolate(u_D, V)
     a = w * v * dx
     L = (div(grad(y0)) + f_n) * v * dx
     u_rhs = Function(V)
@@ -257,8 +277,15 @@ def compute_rhs(y0, t0, i):
 
 # ending here
 
+time_loop = True
+precice_timestep_complete = False
 
-while precice.is_coupling_ongoing():
+if args.monolithic:
+    time_loop = t < t_total
+else:
+    time_loop = precice.is_coupling_ongoing()
+
+while time_loop:
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     if args.method == 'ie' or args.method =='tr':
@@ -266,21 +293,26 @@ while precice.is_coupling_ongoing():
     elif args.method == 'sdc':
         u_np1 = sdc.simple_sdc.sdc_step(u_n, t, black_box_implicit_euler, compute_rhs, dt(0), V)
 
-    determine_gradient(V_g, u_np1, flux)
+    if not args.monolithic:
+        determine_gradient(V_g, u_np1, flux)
 
-    if problem is ProblemType.DIRICHLET:
-        # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
-        flux_x, flux_y = flux.split()
-        if domain_part is DomainPart.RIGHT:
-            flux_x.assign(-flux_x)
-        t, n, precice_timestep_complete, precice_dt = precice.advance(flux_x, u_np1, u_n, t, dt(0), n)
-    elif problem is ProblemType.NEUMANN:
-        # Neumann problem samples temperature on boundary from solution and sends temperature to Dirichlet problem
-        t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)
+        if problem is ProblemType.DIRICHLET:
+            # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
+            flux_x, flux_y = flux.split()
+            if domain_part is DomainPart.RIGHT:
+                flux_x.assign(-flux_x)
+            t, n, precice_timestep_complete, precice_dt = precice.advance(flux_x, u_np1, u_n, t, dt(0), n)
+        elif problem is ProblemType.NEUMANN:
+            # Neumann problem samples temperature on boundary from solution and sends temperature to Dirichlet problem
+            t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)
+    
+        dt.assign(np.min([precice.fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
+    else:
+        u_n.assign(u_np1)
+        t += dt(0)
+        n += 1
 
-    dt.assign(np.min([precice.fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
-
-    if precice_timestep_complete:
+    if precice_timestep_complete or args.monolithic:
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
         # output solution and reference solution at t_n+1
@@ -296,10 +328,20 @@ while precice.is_coupling_ongoing():
     f_np1.t = t + dt(0)
     f_n.t = t
 
-# Hold plot
-precice.finalize()
-print(error)
+    if args.monolithic:
+        time_loop = t < t_total
+    else:
+        time_loop = precice.is_coupling_ongoing()
+
+print(t)
+u_D.t = t
+u_ref = interpolate(u_D, V)
+error_last, _ = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
+print(error_last)
 print(dt(0))
 
+if not args.monolithic:
+    precice.finalize()
+
 with open("errors_{scheme}_{total_time}_{participant}".format(scheme=args.method, total_time=t, participant=problem.name), 'a') as outfile:
-    outfile.write("{}, {}\n".format(dt(0), error))
+    outfile.write("{}, {}\n".format(dt(0), error_last))
