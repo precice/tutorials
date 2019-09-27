@@ -48,7 +48,7 @@ def get_manufactured_solution(time_dependence, alpha, beta, gamma):
         p = 3
         g = (t + 1)**p  # g_pol
     elif time_dependence == "s":  # sinusoidal
-        g = sp.sin(t) + sp.cos(t) # g_tri
+        g = sp.sin(t) # g_tri
     manufactured_solution = 1 + gamma * g * x**2 + (1-gamma) * x**2 + alpha * y**2 + beta * t
     print("manufactured solution = {}".format(manufactured_solution))
     return manufactured_solution
