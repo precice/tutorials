@@ -9,7 +9,7 @@ parser.add_argument("-qntol", "--quasi-newton-tolerance", help="set accepted err
 parser.add_argument("-dd", "--domain-decomposition", help="set kind of domain decomposition being used", default="DN", type=str, choices=['DN', 'ND'])
 parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q) or sinusoidal (s) dependence on time", type=str, default="l")
 parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie')
-parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", choices=['linear', 'quadratic', 'cubic'], type=str)
+parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", choices=['linear', 'quadratic', 'cubic', 'quartic'], type=str)
 parser.add_argument("-exec", "--executable", help="choose name of executable", default='heat.py')
 parser.add_argument("-pp", "--post-processing", help="specify postprocessing scheme used by preCICE", default="qn-active", choices=['none', 'underrelaxation', 'qn-passive', 'qn-passive-fair', 'qn-active', 'qn-active-fair'], type=str)
 parser.add_argument("-m", "--monolithic", dest='monolithic', help="switch to monolithic case", action='store_true')
