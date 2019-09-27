@@ -4,7 +4,6 @@ author: Benjamin Rüth
 header-includes: |
     \usepackage{booktabs}
     \usepackage{lscape}
-abstract: ---
 ---
 
 ## Input parameters
