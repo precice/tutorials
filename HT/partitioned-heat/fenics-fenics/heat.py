@@ -25,63 +25,15 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 """
 
 from __future__ import print_function, division
-from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
-    TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, near, \
-    VectorFunctionSpace
-from enum import Enum
+from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
+    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace
 from fenicsadapter import Adapter, ExactInterpolationExpression, GeneralInterpolationExpression
 from errorcomputation import compute_errors
+from my_enums import ProblemType, DomainPart, Subcyling
 import argparse
 import numpy as np
 import mshr
-
-
-class ProblemType(Enum):
-    """
-    Enum defines problem type. Details see above.
-    """
-    DIRICHLET = 1  # Dirichlet problem
-    NEUMANN = 2  # Neumann problem
-
-
-class DomainPart(Enum):
-    """
-    Enum defines which part of the domain [x_left, x_right] x [y_bottom, y_top] we compute.
-    """
-    LEFT = 1  # left part of domain in simple interface case
-    RIGHT = 2  # right part of domain in simple interface case
-    CIRCULAR = 3 # circular part of domain in complex interface case
-    REST = 4 # domain excluding circular part of complex interface case
-
-
-class Subcyling(Enum):
-    """
-    Enum defines which kind of subcycling is used
-    """
-    NONE = 0  # no subcycling, precice_dt == fenics_dt
-    MATCHING = 1  # subcycling, where fenics_dt fits into precice_dt, mod(precice_dt, fenics_dt) == 0
-    NONMATCHING = 2  # subcycling, where fenics_dt does not fit into precice_dt, mod(precice_dt, fenics_dt) != 0
-
-    # note: the modulo expressions above should be understood in an exact way (no floating point round off problems. For
-    # details, see https://stackoverflow.com/questions/14763722/python-modulo-on-floats)
-
-
-class OuterBoundary(SubDomain):
-    def inside(self, x, on_boundary):
-        tol = 1E-14
-        if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
-            return True
-        else:
-            return False
-
-
-class CouplingBoundary(SubDomain):
-    def inside(self, x, on_boundary):
-        tol = 1E-14
-        if on_boundary and near(x[0], x_coupling, tol):
-            return True
-        else:
-            return False
+from problem_setup import OuterBoundary, CouplingBoundary, get_geometry, get_problem_setup
 
 
 def determine_gradient(V_g, u, flux):
@@ -128,39 +80,9 @@ if not (args.dirichlet or args.neumann):
 
 
 # coupling parameters
-domain_part = ''
 
-if args.simple_interface:
-    if args.domain_left:
-        domain_part = DomainPart.LEFT
-    if args.domain_right:
-        domain_part = DomainPart.RIGHT
-    if args.dirichlet and args.neumann:
-        raise Exception("you can only choose to either compute the left part of the domain (option -dl) or the right part (option -dr)")
-    if not (args.domain_left or args.domain_right):
-        print("Default domain partitioning for simple interface is used: Left part of domain is a Dirichlet-type problem; right part is a Neumann-type problem")
-        if problem is ProblemType.DIRICHLET:
-            domain_part = DomainPart.LEFT
-        elif problem is ProblemType.NEUMANN:
-            domain_part = DomainPart.RIGHT
-
-if args.complex_interface:
-    if args.domain_circular:
-        domain_part = DomainPart.CIRCULAR
-    if args.domain_rest:
-        domain_part = DomainPart.REST
-    if args.dirichlet and args.neumann:
-        raise Exception("you can only choose to either compute the circular part of the domain (option -dc) or the residual part (option -dnc)")
-    if not (args.domain_circular or args.domain_rest):
-        print("Default domain partitioning for complex interface is used: Circular part of domain is a Dirichlet-type problem; Rest of the domain is a Neumann-type problem")
-        if problem is ProblemType.DIRICHLET:
-            domain_part = DomainPart.CIRCULAR
-        elif problem is ProblemType.NEUMANN:
-            domain_part = DomainPart.REST
 
 # Create mesh and define function space
-mesh = ''
-
 if problem is ProblemType.DIRICHLET:
     adapter_config_filename = "precice-adapter-config-D.json"
 elif problem is ProblemType.NEUMANN:
@@ -187,49 +109,12 @@ elif subcycle is Subcyling.NONMATCHING:
     error_tol = 10 ** -1  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
 
-nx = 5
-ny = 10
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 gamma = args.gamma  # parameter gamma, dependence of heat flux on time
-y_bottom, y_top = 0, 1
-x_left, x_right = 0, 2
-x_coupling = 1.5  # x coordinate of coupling interface
-radius = 0.05
-midpoint = Point(0.5, 0.5)
-low_resolution = 2
-high_resolution = 10
-n_vertices = 10
 
-if domain_part is DomainPart.LEFT:
-    nx = nx*3
-elif domain_part is DomainPart.RIGHT:
-    ny = 20
-
-if domain_part is DomainPart.CIRCULAR:
-    n_vertices = n_vertices*3
-elif domain_part is DomainPart.REST:
-    n_vertices = 20
-
-if args.simple_interface:
-    if domain_part is DomainPart.LEFT:
-        p0 = Point(x_left, y_bottom)
-        p1 = Point(x_coupling, y_top)
-    elif domain_part is DomainPart.RIGHT:
-        p0 = Point(x_coupling, y_bottom)
-        p1 = Point(x_right, y_top)
-    mesh = RectangleMesh(p0, p1, nx, ny)
-
-if args.complex_interface:
-    p0 = Point(x_left, y_bottom)
-    p1 = Point(x_right, y_top)
-    whole_domain = mshr.Rectangle(p0, p1)
-    if domain_part is DomainPart.CIRCULAR:
-        circular_domain = mshr.Circle(midpoint, radius, n_vertices)
-        mesh = mshr.generate_mesh(circular_domain, high_resolution, "cgal")
-    elif domain_part is DomainPart.REST:
-        circular_domain = mshr.Circle(midpoint, radius, n_vertices)
-        mesh = mshr.generate_mesh(whole_domain - circular_domain, low_resolution, "cgal")
+domain_part = get_problem_setup(args, problem)
+mesh = get_geometry(args, domain_part)
 
 V = FunctionSpace(mesh, 'P', 2)
 
