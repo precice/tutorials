@@ -20,10 +20,10 @@ parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify i
 parser.add_argument("-pp", "--post-processing", help="specify postprocessing scheme used by preCICE", default="qn-active", choices=['none', 'underrelaxation', 'qn-passive', 'qn-passive-fair', 'qn-active', 'qn-active-fair'], type=str)
 parser.add_argument("--config-max-used-iterations", help="precice-cnfig: set <max-used-iterations value/> in the <post-processing:IQN-ILS>", default=20, type=int)
 parser.add_argument("--config-max-iterations", help="precice-cnfig: set <max-iterations value/> in the <coupling-scheme:serial-implicit>", default=200, type=int)
-
+parser.add_argument("-m", "--monolithic", dest='monolithic', help="switch to monolithic case", action='store_true')
+parser.add_argument("-p", "--partitioned", dest='monolithic', help="switch to partitioned case", action='store_false')
 
 args = parser.parse_args()
-
 temperatures = []
 fluxes = []
 
@@ -94,7 +94,11 @@ elif args.post_processing == "none":
 
 precice_adapter_D_template = env.get_template('precice-adapter-config-D.json')
 precice_adapter_N_template = env.get_template('precice-adapter-config-N.json')
-runall_template = env.get_template("runall.sh")
+
+if args.monolithic:
+    run_template = env.get_template("run_monolithic.sh")
+else:
+    run_template = env.get_template("run_partitioned.sh")
 
 wr_tag = "WR{N_Dirichlet}{N_Neumann}".format(N_Dirichlet=N_Dirichlet,
                                              N_Neumann=N_Neumann)
@@ -125,20 +129,21 @@ with open(os.path.join( target_path, 'precice-adapter-config-N.json'), "w") as f
     file.write(precice_adapter_N_template.render(N_Neumann=N_Neumann,
                                                  precice_config_name=precice_config_name))
 
-runall_path = os.path.join( target_path, 'runall.sh')
-with open(runall_path, "w") as file:
-    file.write(runall_template.render(wr_dirichlet=N_Dirichlet,
-                                      wr_neumann=N_Neumann,
-                                      domain_decomposition_dirichlet=side_dirichlet,
-                                      domain_decomposition_neumann=side_neumann,
-                                      window_size=args.window_size,
-                                      coupling_scheme=coupling_scheme.name,
-				      gamma=args.gamma,
-                                      error_tolerance=args.solver_tolerance,
-                                      method=args.method,
-                                      time_dependence=args.time_dependence,
-                                      executable=args.executable,
-                                      waveform_interpolation_strategy=args.waveform_interpolation_strategy))
+run_path = os.path.join( target_path, 'runall.sh')
+with open(run_path, "w") as file:
+    file.write(run_template.render(wr_dirichlet=N_Dirichlet,
+                                   wr_neumann=N_Neumann,
+                                   domain_decomposition_dirichlet=side_dirichlet,
+                                   domain_decomposition_neumann=side_neumann,
+                                   window_size=args.window_size,
+                                   coupling_scheme=coupling_scheme.name,
+		                   gamma=args.gamma,
+                                   error_tolerance=args.solver_tolerance,
+                                   method=args.method,
+                                   time_dependence=args.time_dependence,
+                                   simulation_time=args.simulation_time,
+                                   executable=args.executable,
+                                   waveform_interpolation_strategy=args.waveform_interpolation_strategy))
 
-st = os.stat(runall_path)
-os.chmod(runall_path, st.st_mode | stat.S_IEXEC)
+st = os.stat(run_path)
+os.chmod(run_path, st.st_mode | stat.S_IEXEC)

@@ -13,6 +13,7 @@ abstract: ---
 \item $\alpha = {{alpha}}$
 \item $\beta = {{beta}}$
 \item $\gamma = {{gamma}}$
+\item case: \texttt{ {{case_flag}} }
 \item \texttt{-mth = {{method}}}
 \item \texttt{-exec = {{executable}}}
 \item \texttt{-t = {{time_dependence}}}
@@ -20,6 +21,7 @@ abstract: ---
 \item \texttt{-ctol = {{coupling_tolerance}}}
 \item \texttt{-stol = {{solver_tolerance}}}
 \item \texttt{-pp = {{post_processing}}}
+\item \texttt{-T = {{simulation_time}}}
 \end{itemize}
 
 ## Manufactured Solution

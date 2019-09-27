@@ -5,9 +5,8 @@ from tabulate import tabulate
 import argparse
 
 
-def create_qn_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes):
+def create_qn_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes, simulation_time=10):
 
-    simulationTime = 10.0
     data = []
     data.append(["WR", "dT", "cpl", "#steps", "#it", "#it/#steps"])
     print(evaluated_dT)
@@ -24,7 +23,7 @@ def create_qn_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes):
                     number_of_windows = float(lastline[0])
                     total_iterations = float(lastline[1])
                     avg_its = total_iterations / number_of_windows
-                    if number_of_windows == simulationTime / dT:
+                    if number_of_windows == simulation_time / float(dT):
                         data.append({"WR": wr, "dT": dT, "#steps": number_of_windows, "#it": total_iterations, "#it/#steps": avg_its})
                     else:
                         print("File {name} erroneous.".format(

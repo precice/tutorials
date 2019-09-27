@@ -7,9 +7,8 @@ import glob
 import matplotlib.pyplot as plt
 import numpy as np
 
-def create_error_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes):
+def create_error_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes, simulation_time=10):
 
-    simulationTime = 10.0
     data_D = []
     data_D.append(["WR", "dT", "cpl", "error"])
     data_N = []
@@ -66,13 +65,15 @@ def create_error_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes):
             structured_data[wrkey] = dict()
         dTkey = d_D["dT"]
         try:
-            structured_data[wrkey][dTkey] = float(np.sqrt(np.sum([d_D["error"], d_N["error"]])))
+            structured_data[wrkey][dTkey] = float(np.sqrt(np.sum([d_D["error"], d_N["error"]])))  # partitioned
         except TypeError:
-            structured_data[wrkey][dTkey] = np.nan
+            try:
+                structured_data[wrkey][dTkey] = float(np.sqrt(np.sum([d_D["error"]])))  # monolithic
+            except TypeError:
+                structured_data[wrkey][dTkey] = np.nan
 
-    dTkeys = [dT for dT in evaluated_dT]
-    for dTkey in dTkeys:
-        table.append([dTkey] + [structured_data[key][dTkey] for key in keys])
+    for dT in evaluated_dT:
+        table.append([dT] + [structured_data[key][dT] for key in keys])
 
     data_dict = []       
     for dT in evaluated_dT:
@@ -92,7 +93,7 @@ def create_error_table(prefix, evaluated_wr, evaluated_dT, coupling_schemes):
             writer.writerow(data)
 
 
-    return tabulate(table[1:], headers = table[0],tablefmt="latex_booktabs", floatfmt=".2e"), structured_data, dTkeys
+    return tabulate(table[1:], headers = table[0],tablefmt="latex_booktabs", floatfmt=".2e"), structured_data, evaluated_dT
 
 
 if __name__ == '__main__':
