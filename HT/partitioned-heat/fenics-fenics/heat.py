@@ -124,7 +124,10 @@ f_N = Expression('2 * gamma*t*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma
 f_N_function = interpolate(f_N, V)
 
 coupling_boundary = CouplingBoundary()
+coupling_boundary.get_user_input_args(args)
+
 remaining_boundary = OuterBoundary()
+remaining_boundary.get_user_input_args(args)
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
 # Define initial value

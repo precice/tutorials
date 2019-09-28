@@ -2,7 +2,6 @@
 Problem setup for HT fenics-fenics tutorial
 """
 
-import numpy as np
 from fenics import SubDomain, Point, RectangleMesh, near
 from my_enums import DomainPart, ProblemType
 import mshr
@@ -10,25 +9,47 @@ import mshr
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
 x_coupling = 1.5  # x coordinate of coupling interface
+radius = 0.05
+midpoint = Point(0.5, 0.5)
 
 
 class OuterBoundary(SubDomain):
+    def get_user_input_args(self, args):
+        self._simple_interface = args.simple_interface
+        self._complex_interface = args.complex_interface
+
     def inside(self, x, on_boundary):
         tol = 1E-14
-        if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
-            return True
-        else:
-            return False
+        if self._simple_interface:
+            if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
+                return True
+            else:
+                return False
+        if self._complex_interface:
+            if on_boundary and not x[0]**2 + x[1]**2 - radius**2 < tol:
+                return True
+            else:
+                return False
 
 
 class CouplingBoundary(SubDomain):
+    def get_user_input_args(self, args):
+        self._simple_interface = args.simple_interface
+        self._complex_interface = args.complex_interface
+
     def inside(self, x, on_boundary):
         tol = 1E-14
-        if on_boundary and near(x[0], x_coupling, tol):
-            print("Returning True from CouplingBoundary")
-            return True
-        else:
-            return False
+        if self._simple_interface:
+            if on_boundary and near(x[0], x_coupling, tol):
+                return True
+            else:
+                return False
+        if self._complex_interface:
+            point = Point(x[0], x[1])
+            if on_boundary and point.distance(midpoint)**2 - radius**2 < tol:
+                return True
+            else:
+                return False
 
 
 def get_problem_setup(args, problem):
@@ -64,8 +85,6 @@ def get_problem_setup(args, problem):
 def get_geometry(args, domain_part):
     nx = 5
     ny = 10
-    radius = 0.05
-    midpoint = Point(0.5, 0.5)
     low_resolution = 2
     high_resolution = 10
     n_vertices = 10
