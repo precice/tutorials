@@ -25,6 +25,7 @@ class CouplingBoundary(SubDomain):
     def inside(self, x, on_boundary):
         tol = 1E-14
         if on_boundary and near(x[0], x_coupling, tol):
+            print("Returning True from CouplingBoundary")
             return True
         else:
             return False
@@ -33,33 +34,31 @@ class CouplingBoundary(SubDomain):
 def get_problem_setup(args, problem):
     if args.simple_interface:
         if args.domain_left:
-            domain_part = DomainPart.LEFT
+            return DomainPart.LEFT
         if args.domain_right:
-            domain_part = DomainPart.RIGHT
+            return DomainPart.RIGHT
         if args.dirichlet and args.neumann:
             raise Exception("you can only choose to either compute the left part of the domain (option -dl) or the right part (option -dr)")
         if not (args.domain_left or args.domain_right):
             print("Default domain partitioning for simple interface is used: Left part of domain is a Dirichlet-type problem; right part is a Neumann-type problem")
             if problem is ProblemType.DIRICHLET:
-                domain_part = DomainPart.LEFT
+                return DomainPart.LEFT
             elif problem is ProblemType.NEUMANN:
-                domain_part = DomainPart.RIGHT
+                return DomainPart.RIGHT
 
     if args.complex_interface:
         if args.domain_circular:
-            domain_part = DomainPart.CIRCULAR
+            return DomainPart.CIRCULAR
         if args.domain_rest:
-            domain_part = DomainPart.REST
+            return DomainPart.REST
         if args.dirichlet and args.neumann:
             raise Exception("you can only choose to either compute the circular part of the domain (option -dc) or the residual part (option -dnc)")
         if not (args.domain_circular or args.domain_rest):
             print("Default domain partitioning for complex interface is used: Circular part of domain is a Dirichlet-type problem; Rest of the domain is a Neumann-type problem")
             if problem is ProblemType.DIRICHLET:
-                domain_part = DomainPart.CIRCULAR
+                return DomainPart.CIRCULAR
             elif problem is ProblemType.NEUMANN:
-                domain_part = DomainPart.REST
-
-    return domain_part
+                return DomainPart.REST
 
 
 def get_geometry(args, domain_part):
@@ -88,7 +87,7 @@ def get_geometry(args, domain_part):
         elif domain_part is DomainPart.RIGHT:
             p0 = Point(x_coupling, y_bottom)
             p1 = Point(x_right, y_top)
-        mesh = RectangleMesh(p0, p1, nx, ny)
+        return RectangleMesh(p0, p1, nx, ny)
 
     if args.complex_interface:
         p0 = Point(x_left, y_bottom)
@@ -96,9 +95,8 @@ def get_geometry(args, domain_part):
         whole_domain = mshr.Rectangle(p0, p1)
         if domain_part is DomainPart.CIRCULAR:
             circular_domain = mshr.Circle(midpoint, radius, n_vertices)
-            mesh = mshr.generate_mesh(circular_domain, high_resolution, "cgal")
+            return mshr.generate_mesh(circular_domain, high_resolution, "cgal")
         elif domain_part is DomainPart.REST:
             circular_domain = mshr.Circle(midpoint, radius, n_vertices)
-            mesh = mshr.generate_mesh(whole_domain - circular_domain, low_resolution, "cgal")
+            return mshr.generate_mesh(whole_domain - circular_domain, low_resolution, "cgal")
 
-    return mesh

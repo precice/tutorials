@@ -32,7 +32,6 @@ from errorcomputation import compute_errors
 from my_enums import ProblemType, DomainPart, Subcyling
 import argparse
 import numpy as np
-import mshr
 from problem_setup import OuterBoundary, CouplingBoundary, get_geometry, get_problem_setup
 
 
@@ -79,9 +78,6 @@ if not (args.dirichlet or args.neumann):
     raise Exception("you have to choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
 
 
-# coupling parameters
-
-
 # Create mesh and define function space
 if problem is ProblemType.DIRICHLET:
     adapter_config_filename = "precice-adapter-config-D.json"
@@ -113,7 +109,9 @@ alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 
+print("problem = {}".format(problem))
 domain_part = get_problem_setup(args, problem)
+print("domain_part = {}".format(domain_part))
 mesh = get_geometry(args, domain_part)
 
 V = FunctionSpace(mesh, 'P', 2)
