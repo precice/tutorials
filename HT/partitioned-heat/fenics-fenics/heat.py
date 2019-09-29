@@ -93,7 +93,7 @@ if subcycle is Subcyling.NONE and not args.arbitrary_coupling_interface:
     interpolation_strategy = ExactInterpolationExpression
 elif subcycle is Subcyling.NONE and args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
-    error_tol = 10 ** -3 # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    error_tol = 10 ** -3  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
     interpolation_strategy = GeneralInterpolationExpression
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcyling.MATCHING:
