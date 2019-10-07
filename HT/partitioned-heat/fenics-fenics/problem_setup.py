@@ -107,7 +107,7 @@ def get_geometry(args, domain_part):
     elif domain_part is DomainPart.RECTANGLE:
         n_vertices = n_vertices
 
-    if args.interface == ['simple']:
+    if domain_part is DomainPart.LEFT or domain_part is DomainPart.RIGHT:
         if domain_part is DomainPart.LEFT:
             p0 = Point(x_left, y_bottom)
             p1 = Point(x_coupling, y_top)
@@ -116,7 +116,7 @@ def get_geometry(args, domain_part):
             p1 = Point(x_right, y_top)
         mesh = RectangleMesh(p0, p1, nx, ny)
 
-    if args.interface == ['complex']:
+    if domain_part is DomainPart.CIRCULAR or domain_part is DomainPart.RECTANGLE:
         p0 = Point(x_left, y_bottom)
         p1 = Point(x_right, y_top)
         whole_domain = mshr.Rectangle(p0, p1)
