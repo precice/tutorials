@@ -32,7 +32,7 @@ from errorcomputation import compute_errors
 from my_enums import ProblemType, DomainPart, Subcyling
 import argparse
 import numpy as np
-from problem_setup import OuterBoundary, CouplingBoundary, get_geometry, get_problem_setup
+from problem_setup import get_geometry, get_problem_setup
 
 
 def determine_gradient(V_g, u, flux):
@@ -56,8 +56,8 @@ parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
 parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
-parser.add_argument("-interface", metavar="interface_type string", type=str, nargs=1, help="Type of coupling interface case to be solved. Options: simple, complex", dest='interface')
-parser.add_argument("-domain", metavar='domain_type string', type=str, nargs=1, help="Specifying part of the domain being solved. For simple interface the options are left, right, for complex interface the options are circular, rest", dest='domain')
+parser.add_argument("-interface", metavar="interface_type string", type=str, nargs=1, choices=['simple', 'complex'], help="Type of coupling interface case to be solved. Options: simple, complex", dest='interface')
+parser.add_argument("-domain", metavar='domain_type string', type=str, nargs=1, choices=['left', 'right', 'circular', 'rectangle'], help="Specifying part of the domain being solved. For simple interface the options are left, right, for complex interface the options are circular, rest", dest='domain')
 
 args = parser.parse_args()
 
@@ -98,7 +98,7 @@ elif problem is ProblemType.NEUMANN:
     adapter_config_filename = "precice-adapter-config-N.json"
 
 print("domain_part = {}".format(domain_part))
-mesh = get_geometry(args, domain_part)
+mesh, coupling_boundary, remaining_boundary = get_geometry(args, domain_part)
 
 V = FunctionSpace(mesh, 'P', 2)
 
@@ -108,12 +108,6 @@ u_D_function = interpolate(u_D, V)
 # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
 f_N = Expression('2 * gamma*t*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
 f_N_function = interpolate(f_N, V)
-
-coupling_boundary = CouplingBoundary()
-coupling_boundary.get_user_input_args(args)
-
-remaining_boundary = OuterBoundary()
-remaining_boundary.get_user_input_args(args)
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
 # Define initial value

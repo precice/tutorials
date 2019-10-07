@@ -63,7 +63,6 @@ def get_problem_setup(args):
 
     if args.interface == ['simple']:
         if args.domain == ['left']:
-            print("Reaching command return DomainPart.LEFT")
             return DomainPart.LEFT, problem
         if args.domain == ['right']:
             return DomainPart.RIGHT, problem
@@ -79,11 +78,11 @@ def get_problem_setup(args):
     if args.interface == ['complex']:
         if args.domain == ['circular']:
             return DomainPart.CIRCULAR, problem
-        if args.domain == ['rest']:
+        if args.domain == ['rectangle']:
             return DomainPart.RECTANGLE, problem
         if args.dirichlet and args.neumann:
             raise Exception("you can only choose to either compute the circular part of the domain (option -dc) or the residual part (option -dnc)")
-        if not (args.domain == ['circular'] or args.domain == ['rest']):
+        if not (args.domain == ['circular'] or args.domain == ['rectangle']):
             print("Default domain partitioning for complex interface is used: Circular part of domain is a Dirichlet-type problem; Rest of the domain is a Neumann-type problem")
             if problem is ProblemType.DIRICHLET:
                 return DomainPart.CIRCULAR, problem
@@ -115,7 +114,7 @@ def get_geometry(args, domain_part):
         elif domain_part is DomainPart.RIGHT:
             p0 = Point(x_coupling, y_bottom)
             p1 = Point(x_right, y_top)
-        return RectangleMesh(p0, p1, nx, ny)
+        mesh = RectangleMesh(p0, p1, nx, ny)
 
     if args.interface == ['complex']:
         p0 = Point(x_left, y_bottom)
@@ -123,8 +122,16 @@ def get_geometry(args, domain_part):
         whole_domain = mshr.Rectangle(p0, p1)
         if domain_part is DomainPart.CIRCULAR:
             circular_domain = mshr.Circle(midpoint, radius, n_vertices)
-            return mshr.generate_mesh(circular_domain, high_resolution, "cgal")
+            mesh = mshr.generate_mesh(circular_domain, high_resolution, "cgal")
         elif domain_part is DomainPart.RECTANGLE:
             circular_domain = mshr.Circle(midpoint, radius, n_vertices)
-            return mshr.generate_mesh(whole_domain - circular_domain, low_resolution, "cgal")
+            mesh = mshr.generate_mesh(whole_domain - circular_domain, low_resolution, "cgal")
+
+    coupling_boundary = CouplingBoundary()
+    coupling_boundary.get_user_input_args(args)
+
+    remaining_boundary = OuterBoundary()
+    remaining_boundary.get_user_input_args(args)
+
+    return mesh, coupling_boundary, remaining_boundary
 
