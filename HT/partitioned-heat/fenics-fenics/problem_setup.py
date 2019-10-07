@@ -51,35 +51,44 @@ class CouplingBoundary(SubDomain):
                 return False
 
 
-def get_problem_setup(args, problem):
+def get_problem_setup(args):
+    if args.dirichlet:
+        problem = ProblemType.DIRICHLET
+    if args.neumann:
+        problem = ProblemType.NEUMANN
+    if args.dirichlet and args.neumann:
+        raise Exception("you can only choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
+    if not (args.dirichlet or args.neumann):
+        raise Exception("you have to choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
+
     if args.interface == ['simple']:
         if args.domain == ['left']:
             print("Reaching command return DomainPart.LEFT")
-            return DomainPart.LEFT
+            return DomainPart.LEFT, problem
         if args.domain == ['right']:
-            return DomainPart.RIGHT
+            return DomainPart.RIGHT, problem
         if args.dirichlet and args.neumann:
             raise Exception("you can only choose to either compute the left part of the domain (option -dl) or the right part (option -dr)")
         if not (args.domain == ['left'] or args.domain == ['right']):
             print("Default domain partitioning for simple interface is used: Left part of domain is a Dirichlet-type problem; right part is a Neumann-type problem")
             if problem is ProblemType.DIRICHLET:
-                return DomainPart.LEFT
+                return DomainPart.LEFT, problem
             elif problem is ProblemType.NEUMANN:
-                return DomainPart.RIGHT
+                return DomainPart.RIGHT, problem
 
     if args.interface == ['complex']:
         if args.domain == ['circular']:
-            return DomainPart.CIRCULAR
+            return DomainPart.CIRCULAR, problem
         if args.domain == ['rest']:
-            return DomainPart.REST
+            return DomainPart.RECTANGLE, problem
         if args.dirichlet and args.neumann:
             raise Exception("you can only choose to either compute the circular part of the domain (option -dc) or the residual part (option -dnc)")
         if not (args.domain == ['circular'] or args.domain == ['rest']):
             print("Default domain partitioning for complex interface is used: Circular part of domain is a Dirichlet-type problem; Rest of the domain is a Neumann-type problem")
             if problem is ProblemType.DIRICHLET:
-                return DomainPart.CIRCULAR
+                return DomainPart.CIRCULAR, problem
             elif problem is ProblemType.NEUMANN:
-                return DomainPart.REST
+                return DomainPart.RECTANGLE, problem
 
 
 def get_geometry(args, domain_part):
@@ -96,7 +105,7 @@ def get_geometry(args, domain_part):
 
     if domain_part is DomainPart.CIRCULAR:
         n_vertices = n_vertices
-    elif domain_part is DomainPart.REST:
+    elif domain_part is DomainPart.RECTANGLE:
         n_vertices = n_vertices
 
     if args.interface == ['simple']:
@@ -115,7 +124,7 @@ def get_geometry(args, domain_part):
         if domain_part is DomainPart.CIRCULAR:
             circular_domain = mshr.Circle(midpoint, radius, n_vertices)
             return mshr.generate_mesh(circular_domain, high_resolution, "cgal")
-        elif domain_part is DomainPart.REST:
+        elif domain_part is DomainPart.RECTANGLE:
             circular_domain = mshr.Circle(midpoint, radius, n_vertices)
             return mshr.generate_mesh(whole_domain - circular_domain, low_resolution, "cgal")
 

@@ -15,7 +15,7 @@ class DomainPart(Enum):
     LEFT = 1  # left part of domain in simple interface case
     RIGHT = 2  # right part of domain in simple interface case
     CIRCULAR = 3  # circular part of domain in complex interface case
-    REST = 4  # domain excluding circular part of complex interface case
+    RECTANGLE = 4  # domain excluding circular part of complex interface case
 
 
 class Subcyling(Enum):

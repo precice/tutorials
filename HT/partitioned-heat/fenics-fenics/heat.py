@@ -56,29 +56,12 @@ parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
 parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
-parser.add_argument("-interface", metavar="interface_type string", type=str, nargs=1, help="Type of geometric interface to be solved: simple or complex", dest='interface')
-parser.add_argument("-domain", metavar='domain_type string', type=str, nargs=1, help="Part of domain being solved. For simple interface the options are left and right, for complex interface the options are circular and rest", dest='domain')
+parser.add_argument("-interface", metavar="interface_type string", type=str, nargs=1, help="Type of coupling interface case to be solved. Options: simple, complex", dest='interface')
+parser.add_argument("-domain", metavar='domain_type string', type=str, nargs=1, help="Specifying part of the domain being solved. For simple interface the options are left, right, for complex interface the options are circular, rest", dest='domain')
 
 args = parser.parse_args()
 
 config_file_name = "precice-config.xml"  # TODO should be moved into config, see https://github.com/precice/fenics-adapter/issues/5 , in case file doesnt not exsist open will fail
-
-# coupling parameters
-if args.dirichlet:
-    problem = ProblemType.DIRICHLET
-if args.neumann:
-    problem = ProblemType.NEUMANN
-if args.dirichlet and args.neumann:
-    raise Exception("you can only choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
-if not (args.dirichlet or args.neumann):
-    raise Exception("you have to choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
-
-
-# Create mesh and define function space
-if problem is ProblemType.DIRICHLET:
-    adapter_config_filename = "precice-adapter-config-D.json"
-elif problem is ProblemType.NEUMANN:
-    adapter_config_filename = "precice-adapter-config-N.json"
 
 subcycle = Subcyling.NONE
 
@@ -105,8 +88,15 @@ alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 
+domain_part, problem = get_problem_setup(args)
 print("problem = {}".format(problem))
-domain_part = get_problem_setup(args, problem)
+
+# Create mesh and define function space
+if problem is ProblemType.DIRICHLET:
+    adapter_config_filename = "precice-adapter-config-D.json"
+elif problem is ProblemType.NEUMANN:
+    adapter_config_filename = "precice-adapter-config-N.json"
+
 print("domain_part = {}".format(domain_part))
 mesh = get_geometry(args, domain_part)
 
