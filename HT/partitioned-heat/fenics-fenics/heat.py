@@ -51,17 +51,13 @@ def determine_gradient(V_g, u, flux):
     solve(a == L, flux)
 
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description='Solving heat equation for simple or complex interface case')
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
 parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
-parser.add_argument("-dl", "--domain-left", help="right part of the domain is being computed", dest='domain_left', action='store_true')
-parser.add_argument("-dr", "--domain-right", help="left part of the domain is being computed", dest='domain_right', action='store_true')
-parser.add_argument("-is", "--simple_interface", help="Interface defined is a straight line", dest='simple_interface', action='store_true')
-parser.add_argument("-ic", "--complex_interface", help="Interface defined is circular", dest='complex_interface', action='store_true')
-parser.add_argument("-dc", "--domain_circular", help="domain inside circular part is being computed", dest='domain_circular', action='store_true')
-parser.add_argument("-dnc", "--domain_rest", help="domain excluding circular part is being computed", dest='domain_rest', action='store_true')
+parser.add_argument("-interface", metavar="interface_type string", type=str, nargs=1, help="Type of geometric interface to be solved: simple or complex", dest='interface')
+parser.add_argument("-domain", metavar='domain_type string', type=str, nargs=1, help="Part of domain being solved. For simple interface the options are left and right, for complex interface the options are circular and rest", dest='domain')
 
 args = parser.parse_args()
 
