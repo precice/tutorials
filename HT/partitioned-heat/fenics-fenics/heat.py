@@ -26,13 +26,13 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
-    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace
+    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, FacetNormal
 from fenicsadapter import Adapter, ExactInterpolationExpression, GeneralInterpolationExpression
 from errorcomputation import compute_errors
-from my_enums import ProblemType, DomainPart, Subcyling
+from my_enums import ProblemType, Subcyling
 import argparse
 import numpy as np
-from problem_setup import get_geometry, get_problem_setup
+from problem_setup import get_geometry, get_problem_setup, get_facet_normal
 
 
 def determine_gradient(V_g, u, flux):
@@ -89,7 +89,7 @@ beta = 1.3  # parameter beta
 gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 
 domain_part, problem = get_problem_setup(args)
-print("problem = {}".format(problem))
+# print("problem = {}".format(problem))
 
 # Create mesh and define function space
 if problem is ProblemType.DIRICHLET:
@@ -97,7 +97,7 @@ if problem is ProblemType.DIRICHLET:
 elif problem is ProblemType.NEUMANN:
     adapter_config_filename = "precice-adapter-config-N.json"
 
-print("domain_part = {}".format(domain_part))
+# print("domain_part = {}".format(domain_part))
 mesh, coupling_boundary, remaining_boundary = get_geometry(args, domain_part)
 
 V = FunctionSpace(mesh, 'P', 2)
@@ -171,6 +171,11 @@ V_g = VectorFunctionSpace(mesh, 'P', 1)
 flux = Function(V_g)
 flux.rename("Flux", "")
 
+# Mark mesh facets and define facet normals
+normals = get_facet_normal(mesh)
+fid = File('normal.pvd')
+fid << normals
+
 while precice.is_coupling_ongoing():
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
@@ -179,10 +184,12 @@ while precice.is_coupling_ongoing():
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
         determine_gradient(V_g, u_np1, flux)
-        flux_x, flux_y = flux.split()
+        """
         if domain_part is DomainPart.RIGHT:
             flux_x = -1 * flux_x
-        t, n, precice_timestep_complete, precice_dt = precice.advance(flux_x, u_np1, u_n, t, dt(0), n)
+        """
+        flux = dot(flux, normals)
+        t, n, precice_timestep_complete, precice_dt = precice.advance(flux, u_np1, u_n, t, dt(0), n)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
         t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)

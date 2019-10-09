@@ -2,7 +2,7 @@
 Problem setup for HT fenics-fenics tutorial
 """
 
-from fenics import SubDomain, Point, RectangleMesh, near
+from fenics import SubDomain, Point, RectangleMesh, near, Function, VectorFunctionSpace, Expression
 from my_enums import DomainPart, ProblemType
 import mshr
 
@@ -135,3 +135,37 @@ def get_geometry(args, domain_part):
 
     return mesh, coupling_boundary, remaining_boundary
 
+
+def get_facet_normal(mesh):
+    """
+    Manually calculate FacetNormal function
+    :param mesh: fenics mesh
+    :return: vector of facet normals of mesh
+    """
+    """
+    if not mesh.type().dim() == 1:
+        raise ValueError('Only works for 2-D mesh')
+    """
+    vertices = mesh.coordinates()
+    cells = mesh.cells()
+
+    vec1 = vertices[cells[:, 1]] - vertices[cells[:, 0]]
+    normals = vec1[:, [1, 0]] * np.array([1, -1])
+    normals /= np.sqrt((normals**2).sum(axis=1))[:, np.newaxis]
+
+    # Ensure outward pointing normal
+    mesh.init_cell_orientations(Expression(('x[0]', 'x[1]'), degree=1))
+    normals[mesh.cell_orientations() == 1] *= -1
+
+    V = VectorFunctionSpace(mesh, 'DG', 0)
+    norm = Function(V)
+    nv = norm.vector()
+
+    for n in (0, 1):
+        dofmap = V.sub(n).dofmap()
+        for i in range(dofmap.global_dimension()):
+            dof_indices = dofmap.cell_dofs(i)
+            assert len(dof_indices) == 1
+            nv[dof_indices[0]] = normals[i, n]
+
+    return norm
