@@ -27,7 +27,7 @@ class OuterBoundary(SubDomain):
                 return False
         elif self._interface == 'complex':
             point = Point(x[0], x[1])
-            if on_boundary and point.distance(midpoint)**2 - radius**2 > tol or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
+            if on_boundary and not point.distance(midpoint)**2 - radius**2 < tol:
                 return True
             else:
                 return False
