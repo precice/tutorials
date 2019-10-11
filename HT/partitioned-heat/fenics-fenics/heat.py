@@ -32,7 +32,7 @@ from errorcomputation import compute_errors
 from my_enums import ProblemType, Subcyling
 import argparse
 import numpy as np
-from problem_setup import get_geometry, get_problem_setup, get_facet_normal
+from problem_setup import get_geometry, get_problem_setup, DomainPart
 
 
 def determine_gradient(V_g, u, flux):
@@ -72,7 +72,7 @@ if subcycle is Subcyling.NONE and not args.arbitrary_coupling_interface:
     interpolation_strategy = ExactInterpolationExpression
 elif subcycle is Subcyling.NONE and args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
-    error_tol = 10 ** -3  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    error_tol = 10 ** -1  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
     interpolation_strategy = GeneralInterpolationExpression
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcyling.MATCHING:
@@ -98,13 +98,14 @@ elif problem is ProblemType.NEUMANN:
     adapter_config_filename = "precice-adapter-config-N.json"
 
 V = FunctionSpace(mesh, 'P', 2)
+V_g = VectorFunctionSpace(mesh, 'P', 1)
 
 # Define boundary condition
 u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 u_D_function = interpolate(u_D, V)
 # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
-f_N = Expression('2 * gamma*t*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
-f_N_function = interpolate(f_N, V)
+f_N = Expression(("2 * gamma*t*x[0] + 2 * (1-gamma)*x[0]", "2 * alpha*x[1]"), degree=1, gamma=gamma, alpha=alpha, t=0)
+f_N_function = interpolate(f_N, V_g)
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
 # Define initial value
@@ -134,7 +135,7 @@ if problem is ProblemType.DIRICHLET:
     bcs.append(precice.create_coupling_dirichlet_boundary_condition(V))
 if problem is ProblemType.NEUMANN:
     # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
-    F += precice.create_coupling_neumann_boundary_condition(v)
+    F += precice.create_coupling_neumann_boundary_condition(v, V_g)
 
 a, L = lhs(F), rhs(F)
 
@@ -164,14 +165,8 @@ error_out << error_pointwise
 u_D.t = t + dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
 f.t = t + dt(0)
 
-V_g = VectorFunctionSpace(mesh, 'P', 1)
 flux = Function(V_g)
 flux.rename("Flux", "")
-
-# Mark mesh facets and define facet normals
-normals = get_facet_normal(mesh)
-fid = File('normal.pvd')
-fid << normals
 
 while precice.is_coupling_ongoing():
 
@@ -181,11 +176,6 @@ while precice.is_coupling_ongoing():
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
         determine_gradient(V_g, u_np1, flux)
-        """
-        if domain_part is DomainPart.RIGHT:
-            flux_x = -1 * flux_x
-        """
-        flux = dot(flux, normals)
         t, n, precice_timestep_complete, precice_dt = precice.advance(flux, u_np1, u_n, t, dt(0), n)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
