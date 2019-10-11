@@ -14,46 +14,45 @@ radius = 0.2
 midpoint = Point(0.5, 0.5)
 
 
-class OuterBoundary(SubDomain):
+class ExcludeStraightBoundary(SubDomain):
     def get_user_input_args(self, args):
         self._interface = args.interface
 
     def inside(self, x, on_boundary):
         tol = 1E-14
-        if self._interface == 'simple':
-            if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
-                return True
-            else:
-                return False
-        elif self._interface == 'complex':
-            point = Point(x[0], x[1])
-            if on_boundary and not point.distance(midpoint)**2 - radius**2 < tol:
-                return True
-            else:
-                return False
+        if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
+            return True
         else:
-            raise Exception("invalid!")
+            return False
 
 
-class CouplingBoundary(SubDomain):
-    def get_user_input_args(self, args):
-        self._interface = args.interface
-
+class ExcludeCircleBoundary(SubDomain):
     def inside(self, x, on_boundary):
         tol = 1E-14
-        if self._interface == 'simple':
-            if on_boundary and near(x[0], x_coupling, tol):
-                return True
-            else:
-                return False
-        elif self._interface == 'complex':
-            point = Point(x[0], x[1])
-            if on_boundary and point.distance(midpoint)**2 - radius**2 < tol:
-                return True
-            else:
-                return False
+        point = Point(x[0], x[1])
+        if on_boundary and not point.distance(midpoint)**2 - radius**2 < tol:
+            return True
         else:
-            raise Exception("invalid!")
+            return False
+
+
+class StraightBoundary(SubDomain):
+    def inside(self, x, on_boundary):
+        tol = 1E-14
+        if on_boundary and near(x[0], x_coupling, tol):
+            return True
+        else:
+            return False
+
+
+class CircleBoundary(SubDomain):
+    def inside(self, x, on_boundary):
+        tol = 1E-14
+        point = Point(x[0], x[1])
+        if on_boundary and point.distance(midpoint)**2 - radius**2 < tol:
+            return True
+        else:
+            return False
 
 
 def get_problem_setup(args):
@@ -102,7 +101,7 @@ def get_problem_setup(args):
         raise Exception("invalid interface provided: args.interface = {}".format(args.interface))
 
 
-def get_geometry(args, domain_part):
+def get_geometry(domain_part):
     nx = 5
     ny = 10
     low_resolution = 5
@@ -130,6 +129,9 @@ def get_geometry(args, domain_part):
         else:
             raise Exception("invalid control flow!")
         mesh = RectangleMesh(p0, p1, nx, ny)
+        coupling_boundary = StraightBoundary()
+        remaining_boundary = ExcludeStraightBoundary()
+
     elif domain_part is DomainPart.CIRCULAR or domain_part is DomainPart.RECTANGLE:
         p0 = Point(x_left, y_bottom)
         p1 = Point(x_right, y_top)
@@ -142,14 +144,11 @@ def get_geometry(args, domain_part):
             mesh = mshr.generate_mesh(whole_domain - circular_domain, low_resolution, "cgal")
         else:
             raise Exception("invalid control flow!")
+        coupling_boundary = CircleBoundary()
+        remaining_boundary = ExcludeCircleBoundary()
+
     else:
         raise Exception("invalid control flow!")
-
-    coupling_boundary = CouplingBoundary()
-    coupling_boundary.get_user_input_args(args)
-
-    remaining_boundary = OuterBoundary()
-    remaining_boundary.get_user_input_args(args)
 
     return mesh, coupling_boundary, remaining_boundary
 

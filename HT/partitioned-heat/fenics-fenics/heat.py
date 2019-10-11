@@ -89,16 +89,13 @@ beta = 1.3  # parameter beta
 gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 
 domain_part, problem = get_problem_setup(args)
-# print("problem = {}".format(problem))
+mesh, coupling_boundary, remaining_boundary = get_geometry(domain_part)
 
 # Create mesh and define function space
 if problem is ProblemType.DIRICHLET:
     adapter_config_filename = "precice-adapter-config-D.json"
 elif problem is ProblemType.NEUMANN:
     adapter_config_filename = "precice-adapter-config-N.json"
-
-# print("domain_part = {}".format(domain_part))
-mesh, coupling_boundary, remaining_boundary = get_geometry(args, domain_part)
 
 V = FunctionSpace(mesh, 'P', 2)
 
