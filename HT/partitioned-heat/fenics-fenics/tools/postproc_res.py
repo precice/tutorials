@@ -10,7 +10,7 @@ parser.add_argument('--evaluated_wr_right', '-wrr', type=int, default=1)
 parser.add_argument('--evaluated_dT', '-dT', type=float, default=1.0)
 parser.add_argument('--gamma', '-g', type=float, default=0.0)
 parser.add_argument('--coupling_scheme', '-cpl', type=str, default='d')
-#parser.add_argument('--prefix', '-p', help='Path prefix for results', type=str, default='..')
+parser.add_argument('--prefix', '-p', help='Path prefix for results', type=str, default='.')
 args = parser.parse_args()
 
 #evaluated_wr = [11, 12, 13, 15,      21, 22, 23, 25, 31, 32, 33, 35, 51, 52, 53, 55, 101, 102, 103, 105, 110, 210, 310, 510, 1010]
@@ -28,10 +28,13 @@ if args.coupling_scheme == 'n':
 if args.coupling_scheme == 'p':
     coupling_schemes = [CouplingScheme.PARALLEL.name]
 
+prefix = args.prefix
+"""
 if args.gamma == 0.0:
     prefix = "/home/benjamin/2019paperqnwr/PartitionedHeatEquation/experiments_gamma_0_2019_7_13_afternoon/"
 elif args.gamma == 1.0:
     prefix = "/home/benjamin/2019paperqnwr/PartitionedHeatEquation/experiments_gamma_1_2019_7_14_morning/"
+"""
 
 for wr_left, wr_right, dT, coupling_scheme in itertools.product(evaluated_wr_left, evaluated_wr_right, evaluated_dT, coupling_schemes):
     wr_tag = "WR{wr_left}{wr_right}".format(wr_left=wr_left, wr_right=wr_right)
