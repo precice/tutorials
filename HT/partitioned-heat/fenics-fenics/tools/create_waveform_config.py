@@ -22,6 +22,7 @@ parser.add_argument("--config-max-used-iterations", help="precice-cnfig: set <ma
 parser.add_argument("--config-max-iterations", help="precice-cnfig: set <max-iterations value/> in the <coupling-scheme:serial-implicit>", default=200, type=int)
 parser.add_argument("-m", "--monolithic", dest='monolithic', help="switch to monolithic case", action='store_true')
 parser.add_argument("-p", "--partitioned", dest='monolithic', help="switch to partitioned case", action='store_false')
+parser.add_argument("--sdc-K", help="number of correction sweeps used for SDC", default=16)
 
 args = parser.parse_args()
 temperatures = []
@@ -143,7 +144,8 @@ with open(run_path, "w") as file:
                                    time_dependence=args.time_dependence,
                                    simulation_time=args.simulation_time,
                                    executable=args.executable,
-                                   waveform_interpolation_strategy=args.waveform_interpolation_strategy))
+                                   waveform_interpolation_strategy=args.waveform_interpolation_strategy,
+                                   sdc_K=args.sdc_K))
 
 st = os.stat(run_path)
 os.chmod(run_path, st.st_mode | stat.S_IEXEC)

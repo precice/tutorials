@@ -18,6 +18,7 @@ parser.add_argument("-T", "--simulation-time", default=10, type=float)
 parser.add_argument("-Dts", "--window-sizes", nargs='+', help="Choose Window Sizes being computed", default=[5.0, 2.0, 1.0, 0.5, 0.2, 0.1])
 parser.add_argument("-wrl", "--wr-lefts", nargs='+', help="Choose WR setups on left half of domain", default=[1, 2, 3, 5])
 parser.add_argument("-wrr", "--wr-rights", nargs='+', help="Choose WR setups on left half of domain", default=[1, 2, 3, 5])
+parser.add_argument("--sdc-K", help="number of correction sweeps used for SDC", default=16)
 
 args = parser.parse_args()
 
@@ -57,7 +58,8 @@ with open('config_creation.sh', "w") as file:
                                        quasi_newton_tolerance=args.quasi_newton_tolerance,
                                        post_processing=args.post_processing,
                                        case_flag=case_flag,
-                                       simulation_time=args.simulation_time))
+                                       simulation_time=args.simulation_time,
+                                       sdc_K=args.sdc_K))
 
 st = os.stat('config_creation.sh')
 os.chmod('config_creation.sh', st.st_mode | stat.S_IEXEC)

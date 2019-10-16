@@ -6,9 +6,6 @@ import numpy as np
 M = 3
 x, w = gauss_lobatto(M, n_digits=30)
 
-# number of correction sweeps
-K = 16
-
 # expected order
 p = 2*M-2
 
@@ -32,7 +29,7 @@ for j in range(M):
         Q[m, j] = np.polyval(cint, x[m]) - np.polyval(cint, 0.0)
 
 
-def sdc_step(y0, t0, black_box_implicit_euler, f, dt, V):
+def sdc_step(y0, t0, black_box_implicit_euler, f, dt, V, K=16):
     from fenics import Function
     # initialize with implicit euler
     y = [[Function(V) for _ in range(M)] for _ in range(K+1)]

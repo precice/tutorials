@@ -69,8 +69,9 @@ parser.add_argument("-beta", "--beta", help="parameter gamma to set temporal dep
 parser.add_argument("-tol", "--error-tolerance", help="set accepted error of numerical solution w.r.t analytical solution", default=10**-12, type=float)
 parser.add_argument("-dl", "--domain-left", help="right part of the domain is being computed", dest='domain_left', action='store_true')
 parser.add_argument("-dr", "--domain-right", help="left part of the domain is being computed", dest='domain_right', action='store_true')
-parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q), cubic (c) or sinusoidal (s) dependence on time", type=str, default="l", choices=['l', 'q', 'c', 's'])
+parser.add_argument("-t", "--time-dependence", help="choose whether there is a linear (l), quadratic (q), cubic (c) or sinusoidal (s) dependence on time", type=str, default="l", choices=['l', 'q', 'c', 'qrt', 's'])
 parser.add_argument("-mth", "--method", help="time stepping method being used", default='ie', choices=['ie', 'tr', 'sdc'])
+parser.add_argument("--sdc-K", help="number of correction sweeps used for SDC", type=int, default=16)
 parser.add_argument("-nx", "--nx", help="number of DoFs in x direction", type=int, default=20)
 parser.add_argument("-ny", "--ny", help="number of DoFs in y direction", type=int, default=20)
 parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
@@ -291,7 +292,7 @@ while time_loop:
     if args.method == 'ie' or args.method =='tr':
         solve(lhs(F) == rhs(F), u_np1, bcs)
     elif args.method == 'sdc':
-        u_np1 = sdc.simple_sdc.sdc_step(u_n, t, black_box_implicit_euler, compute_rhs, dt(0), V)
+        u_np1 = sdc.simple_sdc.sdc_step(u_n, t, black_box_implicit_euler, compute_rhs, dt(0), V, K=args.sdc_K)
 
     if not args.monolithic:
         determine_gradient(V_g, u_np1, flux)
