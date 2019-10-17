@@ -57,7 +57,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-wr", "--waveform", nargs=2, default=[1, 1], type=int)
-parser.add_argument("-wri", "--waveform-interpolation-strategy", help="specify interpolation strategy used by waveform relaxation", default="linear", choices=['linear', 'quadratic', 'cubic'], type=str)  # this is a don't-care argument
+parser.add_argument("-wri", "--waveform-interpolation-strategy", help="This is a don't care argument", type=str)  # this is a don't-care argument
+parser.add_argument("--sdc-K", help="This is a don't care argument", type=int)  # this is a don't-care argument
 parser.add_argument("-dT", "--window-size", default=1.0, type=float)
 parser.add_argument("-cpl", "--coupling-scheme", default=CouplingScheme.SERIAL_FIRST_DIRICHLET.name, type=str)
 parser.add_argument("-gamma", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=1.0, type=float)
