@@ -106,7 +106,7 @@ def get_geometry(domain_part):
     ny = 10
     low_resolution = 5
     high_resolution = 5
-    n_vertices = 3
+    n_vertices = 20
 
     if domain_part is DomainPart.LEFT:
         nx = nx*3
