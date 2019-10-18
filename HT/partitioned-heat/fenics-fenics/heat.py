@@ -70,7 +70,7 @@ if subcycle is Subcyling.NONE and not args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
     error_tol = 10 ** -2  # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
     # interpolation_strategy = ExactInterpolationExpression
-    interpolation_strategy = GeneralInterpolationExpression
+    interpolation_strategy = ExactInterpolationExpression
 elif subcycle is Subcyling.NONE and args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
     error_tol = 10 ** -1  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
