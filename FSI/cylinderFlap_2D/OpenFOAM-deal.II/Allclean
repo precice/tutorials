@@ -47,6 +47,7 @@ rm -fv \
     Events-${Participant1}.log Events-${Participant2}.log \
     EventTimings-${Participant1}.log EventTimings-${Participant2}.log
 
+rm -rfv precice-run
 rm -fv .${Participant1}-${Participant2}.address
 
 echo "Cleaning complete!"
