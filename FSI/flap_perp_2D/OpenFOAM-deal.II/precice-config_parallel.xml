@@ -6,7 +6,7 @@
         <sink type="stream" output="stdout"  filter= "(%Severity% > debug)" enabled="true" />	
     </log>
 
-    <solver-interface dimensions="3">
+    <solver-interface dimensions="2">
 
     <data:vector name="Force"/>
     <data:vector name="Displacement"/>
