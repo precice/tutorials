@@ -33,7 +33,7 @@
         <use-mesh name="Solid_faces" from="Solid"/>
         <read-data name="Displacement" mesh="Fluid-Mesh-Nodes"/>
         <write-data name="Force" mesh="Fluid-Mesh-Centers"/>
-        <mapping:petrbf-thin-plate-splines direction="write" from="Fluid-Mesh-Centers" to="Solid_faces" constraint="conservative" z-dead="true"/>
+        <mapping:petrbf-thin-plate-splines direction="write" from="Fluid-Mesh-Centers" to="Solid_faces" constraint="conservative"/>
         <mapping:petrbf-thin-plate-splines direction="read" from="Solid_nodes" to="Fluid-Mesh-Nodes" constraint="consistent"/>
         <watch-point mesh="Solid_nodes" name="flap_tip" coordinate="-0.05;1;0" />
     </participant>
