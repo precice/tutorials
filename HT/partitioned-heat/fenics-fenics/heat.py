@@ -26,7 +26,7 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Constant, DirichletBC, \
-    TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, set_log_level
+    TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, set_log_level, project
 from fenicsadapter import Adapter, ExactInterpolationExpression, GeneralInterpolationExpression
 from errorcomputation import compute_errors
 from my_enums import ProblemType, DomainPart
@@ -265,15 +265,8 @@ def black_box_implicit_euler(y0, t0, dt_step, i):
 
 def compute_rhs(y0, t0, i):
     from fenics import div
-    w = TrialFunction(V)
-    v = TestFunction(V)
-    u_D.t = t0
     f_n.t = t0  # does this interfere with use of f at other places?
-    u_D_function = interpolate(u_D, V)
-    a = w * v * dx
-    L = (div(grad(y0)) + f_n) * v * dx
-    u_rhs = Function(V)
-    solve(a == L, u_rhs, bcs[i])
+    u_rhs = project((div(grad(y0)) + f_n), V)
     return u_rhs
 
 # ending here
