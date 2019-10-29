@@ -2,7 +2,7 @@
 
 This tutorial is described in the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM).
 
-It is known to work with OpenFOAM 4.1, 5.0, v1712, and v1806, but it should also work with newer versions. Have a look on issues concerning [OpenFOAM 6 / dev](https://github.com/precice/openfoam-adapter/issues/21) and [OpenFOAM v1812](https://github.com/precice/openfoam-adapter/issues/59).
+It is known to work with OpenFOAM 4.1, 5.0, v1712, and v1806, but it should also work with newer versions. Have a look into our [Notes on OpenFOAM](https://github.com/precice/openfoam-adapter/wiki/Notes-on-OpenFOAM).
 
 You may run the coupled simulation in serial using the script `Allrun` or (OpenFOAM) in parallel with `Allrun -parallel`. The output of each step will be redirected to log files. You can cleanup the simulation using `Allclean`.
 
