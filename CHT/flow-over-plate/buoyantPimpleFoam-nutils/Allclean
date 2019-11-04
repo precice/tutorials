@@ -40,8 +40,9 @@ cd ${Participant2}
 cd ..
 
 
-# Remove the preCICE address file
-rm -fv .${Participant1}-${Participant2}.address
+# Remove the preCICE address files
+rm -rfv precice-run
+rm -fv .*.address
 
 echo "Cleaning complete!"
 #------------------------------------------------------------------------------
