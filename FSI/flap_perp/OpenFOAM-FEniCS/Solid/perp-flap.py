@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from fenicsadapter import Adapter
 from enum import Enum
+import cProfile, pstats
 
 
 #define the two kinds of boundary: clamped and coupling Neumann Boundary
@@ -23,7 +24,8 @@ def Neumann_Boundary(x, on_boundary):
     """
     return on_boundary and ((abs(x[1]-1)<tol) or abs(abs(x[0])-W/2)<tol)
 
-
+pr= cProfile.Profile()
+pr.enable()
 
 # Geometry and material properties
 dim=2 #number of dimensions
@@ -38,8 +40,8 @@ mu    = Constant(E / (2.0*(1.0 + nu)))
 lambda_ = Constant(E*nu / ((1.0 + nu)*(1.0 - 2.0*nu)))
 
 # create Mesh
-n_x_Direction=5
-n_y_Direction=50
+n_x_Direction=4
+n_y_Direction=40
 mesh = RectangleMesh(Point(-W/2,0), Point(W/2,H), n_x_Direction,n_y_Direction)
 
 h=Constant(H/n_y_Direction)
@@ -69,6 +71,14 @@ u_function = interpolate(Expression(("0","0"), degree=1), V)
 
 coupling_boundary = AutoSubDomain(Neumann_Boundary)
 
+def empty(x, on_boundary):
+    return False
+empty_domain = AutoSubDomain(empty)
+
+def non_dir_boundary(x, on_boundary):
+    return on_boundary and not clamped_boundary(x, on_boundary)
+non_dir_domain = AutoSubDomain(non_dir_boundary)
+
 # create subdomain that resembles the 
 
 ## get the adapter ready
@@ -97,8 +107,8 @@ bc = DirichletBC(V, Constant((0,0)), clamped_boundary)
 
 #alpha method parameters
 
-alpha_m = Constant(0.2)
-alpha_f = Constant(0.4)
+alpha_m = Constant(0.0)
+alpha_f = Constant(0.0)
 gamma   = Constant(0.5+alpha_f-alpha_m)
 beta    = Constant((gamma+0.5)**2/4.)
 
@@ -196,6 +206,30 @@ u_n.rename("Displacement", "")
 u_np1.rename("Displacement", "")
 displacement_out << u_n
 
+# stress computation
+def local_project(v, V, u=None):
+    """Element-wise projection using LocalSolver"""
+    dv = TrialFunction(V)
+    v_ = TestFunction(V)
+    a_proj = inner(dv, v_)*dx
+    b_proj = inner(v, v_)*dx
+    solver = LocalSolver(a_proj, b_proj)
+    solver.factorize()
+    if u is None:
+        u = Function(V)
+        solver.solve_local_rhs(u)
+        return u
+    else:
+        solver.solve_local_rhs(u)
+        return
+    
+Vsig = TensorFunctionSpace(mesh, "CG", 1)
+sig = Function(Vsig, name="sigma")
+
+xdmf_file = XDMFFile("elastodynamics-results.xdmf")
+xdmf_file.parameters["flush_output"] = True
+xdmf_file.parameters["functions_share_mesh"] = True
+xdmf_file.parameters["rewrite_function_mesh"] = False
 
 #time loop for coupling
 
@@ -221,13 +255,22 @@ while precice.is_coupling_ongoing():
         update_fields(u_np1, saved_u_old, v_n, a_n)
         
         if n % 10==0:
+            local_project(sigma(u_n), Vsig, sig)
+
             displacement_out << (u_n,t)
-    
+            xdmf_file.write(u_n,t)
+            xdmf_file.write(sig,t)
         u_tip.append(u_n(0.,1.)[0])
         time.append(t)
     
-# Plot tip displacement evolution
-        
+    
+precice.finalize()
+# Plot tip displacement evolution    
+pr.disable()
+pr.dump_stats('prof_data')
+pr2=pstats.Stats('prof_data')
+pr2.sort_stats('cumulative')
+pr2.print_stats()
 displacement_out << u_n 
 plt.figure()
 plt.plot(time, u_tip)

@@ -206,6 +206,27 @@ u_np1.rename("Displacement", "")
 displacement_out << u_n
 
 
+# stress computation
+def local_project(v, V, u=None):
+    """Element-wise projection using LocalSolver"""
+    dv = TrialFunction(V)
+    v_ = TestFunction(V)
+    a_proj = inner(dv, v_)*dx
+    b_proj = inner(v, v_)*dx
+    solver = LocalSolver(a_proj, b_proj)
+    solver.factorize()
+    if u is None:
+        u = Function(V)
+        solver.solve_local_rhs(u)
+        return u
+    else:
+        solver.solve_local_rhs(u)
+        return
+    
+Vsig = TensorFunctionSpace(mesh, "DG", 0)
+sig = Function(Vsig, name="sigma")
+
+
 #time loop for coupling
 
 
@@ -231,7 +252,9 @@ while precice.is_coupling_ongoing():
         update_fields(u_np1, saved_u_old, v_n, a_n)
         
         if n % 20==0:
-            displacement_out << (u_n,t)
+            local_project(sigma(u_n), Vsig, sig)
+            displacement_out << (u_n,sig,t)
+
     
         u_tip.append(u_n(0.6,0.2)[1])
         time.append(t)
@@ -246,5 +269,4 @@ plt.plot(time, u_tip)
 plt.xlabel("Time")
 plt.ylabel("Tip displacement")
 plt.show()
-
 
