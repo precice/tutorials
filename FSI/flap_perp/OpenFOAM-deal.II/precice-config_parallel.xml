@@ -57,7 +57,6 @@
         <max-iterations value="50"/>
         <relative-convergence-measure limit="1e-4" data="Displacement" mesh="Solid_nodes"/>
         <relative-convergence-measure limit="1e-4" data="Force" mesh="Solid_faces"/>
-        <extrapolation-order value="2"/>
 
         <post-processing:IQN-ILS>
             <data name="Displacement" mesh="Solid_nodes"/>

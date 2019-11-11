@@ -49,7 +49,6 @@
            <max-iterations value="50"/>
            <relative-convergence-measure limit="1e-3" data="DisplacementDeltas0" mesh="Calculix_Mesh"/>
            <relative-convergence-measure limit="1e-3" data="Forces0" mesh="Calculix_Mesh"/>
-           <extrapolation-order value="2"/>
 
            <post-processing:IQN-ILS>
             <data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>

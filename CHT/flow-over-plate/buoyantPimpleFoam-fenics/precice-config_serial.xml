@@ -46,7 +46,6 @@
         <exchange data="Temperature" mesh="Fluid-Mesh" from="Fluid" to="Solid"/>
         <exchange data="Heat-Flux" mesh="Fluid-Mesh" from="Solid" to="Fluid"/>
         <relative-convergence-measure limit="1.0e-6" data="Temperature" mesh="Fluid-Mesh"/>
-        <extrapolation-order value="0"/>
         <post-processing:IQN-ILS>
             <data mesh="Fluid-Mesh" name="Heat-Flux" />
             <initial-relaxation value="0.01" />
