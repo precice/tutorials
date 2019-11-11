@@ -25,60 +25,14 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 """
 
 from __future__ import print_function, division
-from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
-    TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, near, \
-    VectorFunctionSpace
-from enum import Enum
+from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
+    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, FacetNormal
 from fenicsadapter import Adapter, ExactInterpolationExpression, GeneralInterpolationExpression
 from errorcomputation import compute_errors
+from my_enums import ProblemType, Subcyling
 import argparse
 import numpy as np
-
-
-class ProblemType(Enum):
-    """
-    Enum defines problem type. Details see above.
-    """
-    DIRICHLET = 1  # Dirichlet problem
-    NEUMANN = 2  # Neumann problem
-
-
-class DomainPart(Enum):
-    """
-    Enum defines which part of the domain [x_left, x_right] x [y_bottom, y_top] we compute.
-    """
-    LEFT = 1  # left part of domain
-    RIGHT = 2  # right part of domain
-
-
-class Subcyling(Enum):
-    """
-    Enum defines which kind of subcycling is used
-    """
-    NONE = 0  # no subcycling, precice_dt == fenics_dt
-    MATCHING = 1  # subcycling, where fenics_dt fits into precice_dt, mod(precice_dt, fenics_dt) == 0
-    NONMATCHING = 2  # subcycling, where fenics_dt does not fit into precice_dt, mod(precice_dt, fenics_dt) != 0
-
-    # note: the modulo expressions above should be understood in an exact way (no floating point round off problems. For
-    # details, see https://stackoverflow.com/questions/14763722/python-modulo-on-floats)
-
-
-class OuterBoundary(SubDomain):
-    def inside(self, x, on_boundary):
-        tol = 1E-14
-        if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
-            return True
-        else:
-            return False
-
-
-class CouplingBoundary(SubDomain):
-    def inside(self, x, on_boundary):
-        tol = 1E-14
-        if on_boundary and near(x[0], x_coupling, tol):
-            return True
-        else:
-            return False
+from problem_setup import get_geometry, get_problem_setup, DomainPart
 
 
 def determine_gradient(V_g, u, flux):
@@ -97,69 +51,29 @@ def determine_gradient(V_g, u, flux):
     solve(a == L, flux)
 
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description='Solving heat equation for simple or complex interface case')
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
-parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", dest='arbitrary_coupling_interface', action='store_true')
-parser.add_argument("-dl", "--domain-left", help="right part of the domain is being computed", dest='domain_left', action='store_true')
-parser.add_argument("-dr", "--domain-right", help="left part of the domain is being computed", dest='domain_right', action='store_true')
+parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", action='store_true')
+parser.add_argument("-i", "--interface", metavar="interface_type string", type=str, choices=['simple', 'complex'], help="Type of coupling interface case to be solved. Options: simple, complex", default="simple")
+parser.add_argument("-dom", "--domain", metavar='domain_type string', type=str, choices=['left', 'right', 'circular', 'rectangle'], help="Specifying part of the domain being solved. For simple interface the options are left, right, for complex interface the options are circular, rest")
 
 args = parser.parse_args()
 
-
 config_file_name = "precice-config.xml"  # TODO should be moved into config, see https://github.com/precice/fenics-adapter/issues/5 , in case file doesnt not exsist open will fail
 
-# coupling parameters
-if args.dirichlet:
-    problem = ProblemType.DIRICHLET
-if args.neumann:
-    problem = ProblemType.NEUMANN
-if args.dirichlet and args.neumann:
-    raise Exception("you can only choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
-if not (args.dirichlet or args.neumann):
-    raise Exception("you have to choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
-
-
-# coupling parameters
-if args.domain_left:
-    domain_part = DomainPart.LEFT
-if args.domain_right:
-    domain_part = DomainPart.RIGHT
-if args.dirichlet and args.neumann:
-    raise Exception("you can only choose to either compute the left part of the domain (option -dl) or the right part (option -dr)")
-if not (args.domain_left or args.domain_right):
-    print("Default domain partitioning is used: Left part of domain is a Dirichlet-type problem; right part is a Neumann-type problem")
-    if problem is ProblemType.DIRICHLET:
-        domain_part = DomainPart.LEFT
-    elif problem is ProblemType.NEUMANN:
-        domain_part = DomainPart.RIGHT
-
-
-# Create mesh and define function space
-
-nx = 5
-ny = 10
 subcycle = Subcyling.NONE
-
-if domain_part is DomainPart.LEFT:
-    nx = nx*3
-elif domain_part is DomainPart.RIGHT:
-    ny = 20
-
-if problem is ProblemType.DIRICHLET:
-    adapter_config_filename = "precice-adapter-config-D.json"
-elif problem is ProblemType.NEUMANN:
-    adapter_config_filename = "precice-adapter-config-N.json"
 
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcyling.NONE and not args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
     error_tol = 10 ** -7  # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
+    # interpolation_strategy = ExactInterpolationExpression
     interpolation_strategy = ExactInterpolationExpression
 elif subcycle is Subcyling.NONE and args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
-    error_tol = 10 ** -3 # error low, if we do not subcycle. In theory we would obtain the analytical solution.
+    error_tol = 10 ** -3  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
     interpolation_strategy = GeneralInterpolationExpression
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcyling.MATCHING:
@@ -174,29 +88,25 @@ elif subcycle is Subcyling.NONMATCHING:
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 gamma = args.gamma  # parameter gamma, dependence of heat flux on time
-y_bottom, y_top = 0, 1
-x_left, x_right = 0, 2
-x_coupling = 1.5  # x coordinate of coupling interface
 
-if domain_part is DomainPart.LEFT:
-    p0 = Point(x_left, y_bottom)
-    p1 = Point(x_coupling, y_top)
-elif domain_part is DomainPart.RIGHT:
-    p0 = Point(x_coupling, y_bottom)
-    p1 = Point(x_right, y_top)
+domain_part, problem = get_problem_setup(args)
+mesh, coupling_boundary, remaining_boundary = get_geometry(domain_part)
 
-mesh = RectangleMesh(p0, p1, nx, ny)
+# Create mesh and define function space
+if problem is ProblemType.DIRICHLET:
+    adapter_config_filename = "precice-adapter-config-D.json"
+elif problem is ProblemType.NEUMANN:
+    adapter_config_filename = "precice-adapter-config-N.json"
+
 V = FunctionSpace(mesh, 'P', 2)
+V_g = VectorFunctionSpace(mesh, 'P', 1)
 
 # Define boundary condition
 u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 u_D_function = interpolate(u_D, V)
 # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
-f_N = Expression('2 * gamma*t*x[0] + 2 * (1-gamma)*x[0] ', degree=1, gamma=gamma, t=0)
-f_N_function = interpolate(f_N, V)
-
-coupling_boundary = CouplingBoundary()
-remaining_boundary = OuterBoundary()
+f_N = Expression(("2 * gamma*t*x[0] + 2 * (1-gamma)*x[0]", "2 * alpha*x[1]"), degree=1, gamma=gamma, alpha=alpha, t=0)
+f_N_function = interpolate(f_N, V_g)
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
 # Define initial value
@@ -226,7 +136,7 @@ if problem is ProblemType.DIRICHLET:
     bcs.append(precice.create_coupling_dirichlet_boundary_condition(V))
 if problem is ProblemType.NEUMANN:
     # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
-    F += precice.create_coupling_neumann_boundary_condition(v)
+    F += precice.create_coupling_neumann_boundary_condition(v, V_g)
 
 a, L = lhs(F), rhs(F)
 
@@ -256,7 +166,6 @@ error_out << error_pointwise
 u_D.t = t + dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
 f.t = t + dt(0)
 
-V_g = VectorFunctionSpace(mesh, 'P', 1)
 flux = Function(V_g)
 flux.rename("Flux", "")
 
@@ -268,10 +177,7 @@ while precice.is_coupling_ongoing():
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
         determine_gradient(V_g, u_np1, flux)
-        flux_x, flux_y = flux.split()
-        if domain_part is DomainPart.RIGHT:
-            flux_x = -1 * flux_x
-        t, n, precice_timestep_complete, precice_dt = precice.advance(flux_x, u_np1, u_n, t, dt(0), n)
+        t, n, precice_timestep_complete, precice_dt = precice.advance(flux, u_np1, u_n, t, dt(0), n)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
         t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)

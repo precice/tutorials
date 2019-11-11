@@ -10,7 +10,7 @@
     
     <!-- Data fields that are exchanged between the solvers -->
     <data:scalar name="Temperature"/>
-    <data:scalar name="Flux"/>
+    <data:vector name="Flux"/>
 
     <!-- A common mesh that uses these data fields -->
     <mesh name="DirichletNodes">

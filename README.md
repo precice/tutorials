@@ -19,9 +19,13 @@ The files in this repository are organized in the form `problem_type/geometry/so
    * `flap_perp`: A flap attached on the walls of a channel, perpendicular to the flow
       * `SU2-CalculiX`
       * `OpenFOAM-CalculiX`
-      * `deal.II-OpenFOAM`: for running see the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM)
+      * `OpenFOAM-deal.II`: for running see the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM)
+    * `flap_perp_2D`: 2D version of flap_perp
+      * `OpenFOAM-deal.II`: for running see the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM)
     * `cylinderFlap`: A cylinder with a flexible flap in a channel flow. The von Karman vortices cause the flap to oscillate. 
       * `OpenFOAM-CalculiX`
+      * `OpenFOAM-deal.II`: for running see the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM)
+    * `cylinderFlap_2D`: 2D version of flap_perp
       * `OpenFOAM-deal.II`: for running see the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM)
     * `3D_Tube`: A 3D expanding tube with a pressure inlet boundary condition.
       * `OpenFOAM-CalculiX`

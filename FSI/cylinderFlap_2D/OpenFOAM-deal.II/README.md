@@ -1,4 +1,4 @@
-# Tutorial for an FSI simulation of a cylinder-flap scenario
+# Tutorial for an FSI simulation of a cylinder-flap scenario 
 
 This tutorial is described in the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM).
 
