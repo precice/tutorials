@@ -51,12 +51,10 @@ def main(elemsize: 'mesh width in x and y direction' = 0.05,
   couplingsampleGP = couplinginterface.sample('gauss', degree=degree*2)
   couplingsampleCC = couplinginterface.sample('uniform', 4) # number of sub-samples for better mapping
 
-  verticesGP = couplingsampleGP.eval(ns.x).ravel()
-  verticesCC = couplingsampleCC.eval(ns.x).ravel()
-  dataIndicesGP = numpy.zeros(couplingsampleGP.npoints)
-  dataIndicesCC = numpy.zeros(couplingsampleCC.npoints)
-  interface.set_mesh_vertices(meshIDGP, couplingsampleGP.npoints, verticesGP, dataIndicesGP)
-  interface.set_mesh_vertices(meshIDCC, couplingsampleCC.npoints, verticesCC, dataIndicesCC)
+  verticesGP = couplingsampleGP.eval(ns.x)
+  verticesCC = couplingsampleCC.eval(ns.x)
+  dataIndicesGP = interface.set_mesh_vertices(meshIDGP, verticesGP)
+  dataIndicesCC = interface.set_mesh_vertices(meshIDCC, verticesCC)
 
   # coupling data
   writeData = "Heat-Flux"
@@ -89,8 +87,7 @@ def main(elemsize: 'mesh width in x and y direction' = 0.05,
   
     # read temperature from interface
     if interface.is_read_data_available():  
-      readdata = numpy.zeros(couplingsampleGP.npoints)
-      interface.read_block_scalar_data(readdataID, couplingsampleGP.npoints, dataIndicesGP, readdata)
+      readdata = interface.read_block_scalar_data(readdataID, dataIndicesGP)
       coupledata = couplingsampleGP.asfunction(readdata)
 
       sqr = couplingsampleGP.integral((ns.u - coupledata)**2)
@@ -111,7 +108,7 @@ def main(elemsize: 'mesh width in x and y direction' = 0.05,
     if interface.is_write_data_required(dt):
       fluxvalues = res.eval(lhs0=lhs0, lhs=lhs, dt=dt)
       writedata = couplingsampleCC.eval('-flux' @ ns, fluxdofs=fluxdofs(fluxvalues))
-      interface.write_block_scalar_data(writedataID, couplingsampleCC.npoints, dataIndicesCC, writedata)
+      interface.write_block_scalar_data(writedataID, dataIndicesCC, writedata)
 
     # do the coupling
     precice_dt = interface.advance(dt)
