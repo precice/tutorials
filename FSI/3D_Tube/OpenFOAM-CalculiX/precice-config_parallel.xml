@@ -2,9 +2,9 @@
 
 <precice-configuration>
 
-    <!-- <log>
-        <sink type="stream" output="stdout" filter="%Severity% > debug" enabled="true"/>
-    </log>	-->	
+    <log>
+        <sink filter="%Severity% > debug" format="---[precice] %ColorizedSeverity% %Message%" enabled="true"/>
+    </log>
 
    <solver-interface dimensions="3">
 
@@ -25,7 +25,8 @@
       </mesh>
 
       <participant name="Fluid">
-         <use-mesh name="Calculix_Mesh" from="Calculix"/>
+	 <master:mpi-single/>
+         <use-mesh name="Calculix_Mesh" from="Calculix" safety-factor="1.5"/>
          <use-mesh name="Fluid-Mesh-Nodes" provide="yes"/>
          <use-mesh name="Fluid-Mesh-Faces" provide="yes"/>
          <write-data name="Forces0" mesh="Fluid-Mesh-Faces"/>
@@ -61,7 +62,7 @@
             <max-used-iterations value="10"/>
             <timesteps-reused value="1"/>
            </post-processing:IQN-IMVJ>		
-       
+	 
       </coupling-scheme:serial-implicit>
 
    </solver-interface>

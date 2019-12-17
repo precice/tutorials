@@ -2,15 +2,15 @@
 
 <precice-configuration>
 
-  <log enabled="1">
-    <sink filter="%Severity% > debug" />
-  </log>
+    <log>
+        <sink filter="%Severity% > debug" format="---[precice] %ColorizedSeverity% %Message%" enabled="true"/>
+    </log>
   
   <solver-interface dimensions="2">
     
     <!-- Data fields that are exchanged between the solvers -->
     <data:scalar name="Temperature"/>
-    <data:scalar name="Flux"/>
+    <data:vector name="Flux"/>
 
     <!-- A common mesh that uses these data fields -->
     <mesh name="DirichletNodes">
