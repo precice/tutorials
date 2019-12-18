@@ -50,10 +50,10 @@
     <exchange data="Temperature" mesh="OpenFOAM-Mesh" from="OpenFOAM" to="Nutils"/>
     <exchange data="Heat-Flux" mesh="OpenFOAM-Mesh" from="Nutils" to="OpenFOAM"/>
     <relative-convergence-measure limit="1.0e-5" data="Temperature" mesh="OpenFOAM-Mesh"/>
-    <post-processing:aitken>
+    <acceleration:aitken>
       <data mesh="OpenFOAM-Mesh" name="Heat-Flux" />
       <initial-relaxation value="0.01" />
-    </post-processing:aitken>
+    </acceleration:aitken>
   </coupling-scheme:serial-implicit>
 
   </solver-interface>

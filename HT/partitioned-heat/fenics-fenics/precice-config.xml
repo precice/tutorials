@@ -57,14 +57,14 @@
          <relative-convergence-measure data="Flux"        mesh="NeumannNodes" limit="1e-5"/>
          <relative-convergence-measure data="Temperature" mesh="NeumannNodes" limit="1e-5"/>
          <extrapolation-order value="0"/>
-         <post-processing:IQN-ILS> 
+         <acceleration:IQN-ILS> 
 	    <!--PostProc always done on the second participant-->
             <data name="Temperature" mesh="NeumannNodes"/>
             <initial-relaxation value="0.01"/>
             <max-used-iterations value="3"/>
             <timesteps-reused value="1"/>
             <filter type="QR2" limit="1e-3"/>
-         </post-processing:IQN-ILS>
+         </acceleration:IQN-ILS>
       </coupling-scheme:serial-implicit>
     
   </solver-interface>

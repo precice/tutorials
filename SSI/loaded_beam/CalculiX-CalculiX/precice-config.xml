@@ -54,7 +54,7 @@
            <relative-convergence-measure limit="1e-4" data="Forces0" mesh="Calculix_Mesh2"/>
 <!--           <extrapolation-order value="2"/>-->
 
-           <post-processing:IQN-ILS>
+           <acceleration:IQN-ILS>
             <data name="Displacements0" mesh="Calculix_Mesh2"/>
             <data name="Forces0" mesh="Calculix_Mesh2"/>
             <preconditioner type="residual-sum"/>
@@ -62,13 +62,13 @@
             <initial-relaxation value="0.1"/>
             <max-used-iterations value="60"/>
             <timesteps-reused value="10"/>
-           </post-processing:IQN-ILS>
+           </acceleration:IQN-ILS>
 
-<!--            <post-processing:aitken>-->
+<!--            <acceleration:aitken>-->
 <!--              <data name="Displacements0" mesh="Calculix_Mesh2"/>-->
 <!--			  <data name="Forces0" mesh="Calculix_Mesh2"/>-->
 <!--              <initial-relaxation value="0.5"/>-->
-<!--           </post-processing:aitken> -->
+<!--           </acceleration:aitken> -->
            
 <!--	  </coupling-scheme:parallel-explicit>-->
       </coupling-scheme:parallel-implicit>

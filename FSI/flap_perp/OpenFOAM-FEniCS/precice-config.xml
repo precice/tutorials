@@ -64,14 +64,14 @@
             <relative-convergence-measure limit="1e-2" data="Forces0" mesh="Solid"/>
             <extrapolation-order value="2"/>
  
-            <post-processing:IQN-ILS>
+            <acceleration:IQN-ILS>
                 <data name="Displacements0" mesh="Solid"/>
                 <preconditioner type="residual-sum"/>
                 <filter type="QR1" limit="1e-6"/>
                 <initial-relaxation value="0.01"/> 
                 <max-used-iterations value="50"/>
                 <timesteps-reused value="2"/> 
-            </post-processing:IQN-ILS> 
+            </acceleration:IQN-ILS> 
 
     </coupling-scheme:serial-implicit>
 
