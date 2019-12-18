@@ -3,7 +3,7 @@
 <precice-configuration>
 
     <log>
-        <sink type="stream" output="stdout" filter="%Severity% > debug" enabled="true"/>
+        <sink filter="%Severity% > debug" format="---[precice] %ColorizedSeverity% %Message%" enabled="true"/>
     </log>
 
     <solver-interface dimensions="3">
@@ -30,8 +30,8 @@
         <use-mesh name="Solid" from="fenics"/>
         <write-data name="Forces0" mesh="Fluid-Mesh-Faces"/>
         <read-data name="Displacements0" mesh="Fluid-Mesh-Nodes"/>
-        <mapping:petrbf-thin-plate-splines direction="write" from="Fluid-Mesh-Faces" to="Solid" constraint="conservative" y-dead="true"/>
-        <mapping:petrbf-thin-plate-splines direction="read" from="Solid" to="Fluid-Mesh-Nodes" constraint="consistent" y-dead="true"/>
+        <mapping:petrbf-thin-plate-splines direction="write" from="Fluid-Mesh-Faces" to="Solid" constraint="conservative" z-dead="true"/>
+        <mapping:petrbf-thin-plate-splines direction="read" from="Solid" to="Fluid-Mesh-Nodes" constraint="consistent" z-dead="true"/>
     </participant>
 
     <participant name="fenics">
@@ -44,8 +44,8 @@
     <m2n:sockets from="Fluid" to="fenics" distribution-type="gather-scatter"/>
 
     <coupling-scheme:serial-implicit>
-            <timestep-length value="0.001" />
-            <max-time value="30"/>
+            <timestep-length value="0.005" />
+            <max-time value="10"/>
             <participants first="Fluid" second="fenics"/>
             <exchange data="Forces0" mesh="Solid" from="Fluid" to="fenics"/>
             <exchange data="Displacements0" mesh="Solid" from="fenics" to="Fluid" initialize="0" />
