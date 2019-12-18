@@ -45,7 +45,7 @@
     </participant>
 
     <!-- Communication method, use TCP sockets, Change network to "ib0" on SuperMUC -->
-    <m2n:sockets distribution-type="gather-scatter" from="HeatDirichlet" to="HeatNeumann" network="lo"/>
+    <m2n:sockets from="HeatDirichlet" to="HeatNeumann" network="lo"/>
 
       <coupling-scheme:serial-implicit>
          <participants first="HeatDirichlet" second="HeatNeumann"/>
