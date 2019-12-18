@@ -63,7 +63,6 @@
             <max-iterations value="50"/>
             <absolute-convergence-measure limit="1e-6" data="Displacements0" mesh="Solid"/>
             <relative-convergence-measure limit="1e-2" data="Forces0" mesh="Solid"/>
-            <extrapolation-order value="2"/>
  
             <post-processing:IQN-ILS>
                 <data name="Displacements0" mesh="Solid"/>

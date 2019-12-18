@@ -20,14 +20,14 @@
 
       <participant name="Calculix1">
          <use-mesh name="Calculix_Mesh1" provide="yes"/>
-		 <use-mesh name="Calculix_Mesh2" from="Calculix2"/>
+     <use-mesh name="Calculix_Mesh2" from="Calculix2"/>
          <write-data name="Forces0" mesh="Calculix_Mesh1"/>
          <read-data  name="Displacements0"      mesh="Calculix_Mesh1"/>
          <mapping:nearest-neighbor
             direction="write" from="Calculix_Mesh1" to="Calculix_Mesh2"
             constraint="conservative" timing="initial"/>
          <mapping:nearest-neighbor
-	        direction="read" from="Calculix_Mesh2" to="Calculix_Mesh1"
+          direction="read" from="Calculix_Mesh2" to="Calculix_Mesh1"
             constraint="consistent" timing="initial"/>
       </participant>
 
@@ -40,37 +40,27 @@
       <m2n:sockets from="Calculix1" to="Calculix2"  exchange-directory="../" distribution-type="gather-scatter"/>
       
       <coupling-scheme:parallel-implicit>
-<!--      <coupling-scheme:parallel-explicit>-->
 
-           <participants first="Calculix1" second="Calculix2"/>
-           <max-timesteps value="50"/>
-           <timestep-length value="1e-2"/>
-		   <exchange data="Displacements0" mesh="Calculix_Mesh2" from="Calculix2" to="Calculix1" />
-           <exchange data="Forces0" mesh="Calculix_Mesh2" from="Calculix1" to="Calculix2"/>
+         <participants first="Calculix1" second="Calculix2"/>
+         <max-timesteps value="50"/>
+         <timestep-length value="1e-2"/>
+         <exchange data="Displacements0" mesh="Calculix_Mesh2" from="Calculix2" to="Calculix1" />
+         <exchange data="Forces0" mesh="Calculix_Mesh2" from="Calculix1" to="Calculix2"/>
+         
+         <max-iterations value="50"/>
+         <relative-convergence-measure limit="1e-4" data="Displacements0" mesh="Calculix_Mesh2"/>
+         <relative-convergence-measure limit="1e-4" data="Forces0" mesh="Calculix_Mesh2"/>
+
+         <post-processing:IQN-ILS>
+           <data name="Displacements0" mesh="Calculix_Mesh2"/>
+           <data name="Forces0" mesh="Calculix_Mesh2"/>
+           <preconditioner type="residual-sum"/>
+           <filter type="QR2" limit="1e-3"/>
+           <initial-relaxation value="0.1"/>
+           <max-used-iterations value="60"/>
+           <timesteps-reused value="10"/>
+         </post-processing:IQN-ILS>
            
-<!--           <max-iterations value="50"/>-->
-<!--      	   <min-iteration-convergence-measure min-iterations="5" data="Displacements0" mesh="Calculix_Mesh2"/>-->
-           <relative-convergence-measure limit="1e-4" data="Displacements0" mesh="Calculix_Mesh2"/>
-           <relative-convergence-measure limit="1e-4" data="Forces0" mesh="Calculix_Mesh2"/>
-<!--           <extrapolation-order value="2"/>-->
-
-           <post-processing:IQN-ILS>
-            <data name="Displacements0" mesh="Calculix_Mesh2"/>
-            <data name="Forces0" mesh="Calculix_Mesh2"/>
-            <preconditioner type="residual-sum"/>
-            <filter type="QR2" limit="1e-3"/>
-            <initial-relaxation value="0.1"/>
-            <max-used-iterations value="60"/>
-            <timesteps-reused value="10"/>
-           </post-processing:IQN-ILS>
-
-<!--            <post-processing:aitken>-->
-<!--              <data name="Displacements0" mesh="Calculix_Mesh2"/>-->
-<!--			  <data name="Forces0" mesh="Calculix_Mesh2"/>-->
-<!--              <initial-relaxation value="0.5"/>-->
-<!--           </post-processing:aitken> -->
-           
-<!--	  </coupling-scheme:parallel-explicit>-->
       </coupling-scheme:parallel-implicit>
 
    </solver-interface>
