@@ -40,7 +40,7 @@
     <write-data name="Heat-Flux" mesh="Nutils-Mesh-CC" />
   </participant>    
 
-  <m2n:sockets from="OpenFOAM" to="Nutils" exchange-directory=".." distribution-type="gather-scatter"/>
+  <m2n:sockets from="OpenFOAM" to="Nutils" exchange-directory=".."/>
 
   <coupling-scheme:serial-implicit>
     <timestep-length value="0.01"/>
