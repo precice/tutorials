@@ -43,7 +43,7 @@
          <participants first="Calculix1" second="Calculix2"/>
          <max-timesteps value="50"/>
          <timestep-length value="1e-2"/>
-		     <exchange data="Displacements0" mesh="Calculix_Mesh2" from="Calculix2" to="Calculix1" />
+         <exchange data="Displacements0" mesh="Calculix_Mesh2" from="Calculix2" to="Calculix1" />
          <exchange data="Forces0" mesh="Calculix_Mesh2" from="Calculix1" to="Calculix2"/>
          <max-iterations value="50"/>
 <!--      	   <min-iteration-convergence-measure min-iterations="5" data="Displacements0" mesh="Calculix_Mesh2"/>-->
