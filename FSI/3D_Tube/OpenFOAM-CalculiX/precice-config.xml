@@ -25,7 +25,6 @@
       </mesh>
 
       <participant name="Fluid">
-	 <master:mpi-single/>
          <use-mesh name="Calculix_Mesh" from="Calculix" safety-factor="1.5"/>
          <use-mesh name="Fluid-Mesh-Nodes" provide="yes"/>
          <use-mesh name="Fluid-Mesh-Faces" provide="yes"/>
@@ -37,12 +36,12 @@
 
       <participant name="Calculix">
          <use-mesh name="Calculix_Mesh" provide="yes"/>
-        <use-mesh name="Fluid-Mesh-Faces" from="Fluid"/>
+         <use-mesh name="Fluid-Mesh-Faces" from="Fluid"/>
          <write-data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
          <read-data  name="Forces0" mesh="Calculix_Mesh"/>
       </participant>
 
-      <m2n:sockets from="Fluid" to="Calculix" distribution-type="gather-scatter"/>
+      <m2n:sockets from="Fluid" to="Calculix" />
       
       <coupling-scheme:serial-implicit>
            <participants first="Fluid" second="Calculix"/>
