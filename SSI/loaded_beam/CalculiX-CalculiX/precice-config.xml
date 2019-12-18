@@ -37,7 +37,7 @@
          <read-data  name="Forces0"      mesh="Calculix_Mesh2"/>
       </participant>
 
-      <m2n:sockets from="Calculix1" to="Calculix2"  exchange-directory="../" distribution-type="gather-scatter"/>
+      <m2n:sockets from="Calculix1" to="Calculix2"  exchange-directory="../" />
       
       <coupling-scheme:parallel-implicit>
 <!--      <coupling-scheme:parallel-explicit>-->
