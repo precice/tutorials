@@ -18,7 +18,7 @@ class DomainPart(Enum):
     RECTANGLE = 4  # domain excluding circular part of complex interface case
 
 
-class Subcyling(Enum):
+class Subcycling(Enum):
     """
     Enum defines which kind of subcycling is used
     """

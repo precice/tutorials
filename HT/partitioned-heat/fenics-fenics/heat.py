@@ -26,13 +26,13 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
-    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, FacetNormal
-from fenicsadapter import Adapter, ExactInterpolationExpression, GeneralInterpolationExpression
+    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace
+from fenicsadapter import Adapter
 from errorcomputation import compute_errors
-from my_enums import ProblemType, Subcyling
+from my_enums import ProblemType, Subcycling
 import argparse
 import numpy as np
-from problem_setup import get_geometry, get_problem_setup, DomainPart
+from problem_setup import get_geometry, get_problem_setup
 
 
 def determine_gradient(V_g, u, flux):
@@ -63,24 +63,25 @@ args = parser.parse_args()
 
 config_file_name = "precice-config.xml"  # TODO should be moved into config, see https://github.com/precice/fenics-adapter/issues/5 , in case file doesnt not exsist open will fail
 
-subcycle = Subcyling.NONE
+subcycle = Subcycling.NONE
+fenics_dt = 0.0
 
 # for all scenarios, we assume precice_dt == .1
-if subcycle is Subcyling.NONE and not args.arbitrary_coupling_interface:
+if subcycle is Subcycling.NONE and not args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
     error_tol = 10 ** -7  # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
     # interpolation_strategy = ExactInterpolationExpression
-    interpolation_strategy = ExactInterpolationExpression
-elif subcycle is Subcyling.NONE and args.arbitrary_coupling_interface:
+    # interpolation_strategy = ExactInterpolationExpression
+elif subcycle is Subcycling.NONE and args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
     error_tol = 10 ** -3  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
-    interpolation_strategy = GeneralInterpolationExpression
+    # interpolation_strategy = GeneralInterpolationExpression
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
-elif subcycle is Subcyling.MATCHING:
+elif subcycle is Subcycling.MATCHING:
     fenics_dt = .01  # time step size
     error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
-elif subcycle is Subcyling.NONMATCHING:
+elif subcycle is Subcycling.NONMATCHING:
     fenics_dt = .03  # time step size
     error_tol = 10 ** -1  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
@@ -91,6 +92,8 @@ gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 
 domain_part, problem = get_problem_setup(args)
 mesh, coupling_boundary, remaining_boundary = get_geometry(domain_part)
+
+adapter_config_filename = None
 
 # Create mesh and define function space
 if problem is ProblemType.DIRICHLET:
@@ -113,14 +116,9 @@ bcs = [DirichletBC(V, u_D, remaining_boundary)]
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
-precice = Adapter(adapter_config_filename, interpolation_strategy=interpolation_strategy)
+precice = Adapter(adapter_config_filename)
 
-if problem is ProblemType.DIRICHLET:
-    precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function,
-                                    write_field=f_N_function, u_n=u_n)
-elif problem is ProblemType.NEUMANN:
-    precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=f_N_function,
-                                    write_field=u_D_function, u_n=u_n)
+precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, u_n=u_n)
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -174,15 +172,40 @@ while precice.is_coupling_ongoing():
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
 
+    state = precice.initialize_solver_state(u_n, t, n)
+
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
         determine_gradient(V_g, u_np1, flux)
-        t, n, precice_timestep_complete, precice_dt = precice.advance(flux, u_np1, u_n, t, dt(0), n)
+        precice.write(flux)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
-        t, n, precice_timestep_complete, precice_dt = precice.advance(u_np1, u_np1, u_n, t, dt(0), n)
+        precice.write(u_np1)
 
-    dt.assign(np.min([fenics_dt, precice_dt]))  # todo we could also consider deciding on time stepping size inside the adapter
+    precice_dt = precice.advance_coupling(dt(0), fenics_dt)
+    dt.assign(precice_dt)
+
+    precice.read()
+
+    precice.update_boundary_condition()
+
+    solver_state_has_been_restored = False
+
+    if precice.is_action_required(precice.action_read_iteration_checkpoint()):
+        assert (not precice.is_timestep_complete())  # avoids invalid control flow
+        precice.restore_solver_state_from_checkpoint(state)
+        solver_state_has_been_restored = True
+    else:
+        precice.advance_solver_state(state, u_np1, dt)
+
+    if precice.is_action_required(precice.action_write_iteration_checkpoint()):
+        assert (not solver_state_has_been_restored)  # avoids invalid control flow
+        assert (precice.is_timestep_complete())  # avoids invalid control flow
+        precice.save_solver_state_to_checkpoint(state)
+
+    precice_timestep_complete = precice.is_timestep_complete()
+
+    _, t, n = state.get_state()
 
     if precice_timestep_complete:
         u_ref = interpolate(u_D, V)
