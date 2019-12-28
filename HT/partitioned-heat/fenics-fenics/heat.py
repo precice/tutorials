@@ -34,7 +34,6 @@ import argparse
 import numpy as np
 from problem_setup import get_geometry, get_problem_setup
 
-
 def determine_gradient(V_g, u, flux):
     """
     compute flux following http://hplgit.github.io/INF5620/doc/pub/fenics_tutorial1.1/tu2.html#tut-poisson-gradu
@@ -118,7 +117,7 @@ u_n.rename("Temperature", "")
 
 precice = Adapter(adapter_config_filename)
 
-precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, u_n=u_n)
+precice_dt = precice.initialize(coupling_boundary, mesh, u_n)
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -167,11 +166,14 @@ f.t = t + dt(0)
 flux = Function(V_g)
 flux.rename("Flux", "")
 
+t_new, n_new = 0
+
 while precice.is_coupling_ongoing():
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
 
+    # Intializing solver state
     state = precice.initialize_solver_state(u_n, t, n)
 
     if problem is ProblemType.DIRICHLET:
@@ -182,30 +184,35 @@ while precice.is_coupling_ongoing():
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
         precice.write(u_np1)
 
+    # API call to advance coupling, also returns the optimum time step value
     precice_dt = precice.advance_coupling(dt(0), fenics_dt)
-    dt.assign(precice_dt)
 
+    # read data
     precice.read()
 
     precice.update_boundary_condition()
 
     solver_state_has_been_restored = False
 
-    if precice.is_action_required(precice.action_read_iteration_checkpoint()):
+    if precice.is_action_required(precice.restore_to_checkpoint()):
         assert (not precice.is_timestep_complete())  # avoids invalid control flow
         precice.restore_solver_state_from_checkpoint(state)
         solver_state_has_been_restored = True
     else:
         precice.advance_solver_state(state, u_np1, dt)
 
-    if precice.is_action_required(precice.action_write_iteration_checkpoint()):
+    if precice.is_action_required(precice.write_checkpoint()):
         assert (not solver_state_has_been_restored)  # avoids invalid control flow
         assert (precice.is_timestep_complete())  # avoids invalid control flow
         precice.save_solver_state_to_checkpoint(state)
 
     precice_timestep_complete = precice.is_timestep_complete()
 
+    # This function returns the updated values of t and n to be used for the next iteration
     _, t, n = state.get_state()
+
+    # Assign optimal dt value from the advance function to simulation dt
+    dt.assign(precice_dt)
 
     if precice_timestep_complete:
         u_ref = interpolate(u_D, V)
