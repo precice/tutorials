@@ -117,7 +117,10 @@ u_n.rename("Temperature", "")
 
 precice = Adapter(adapter_config_filename)
 
-precice_dt = precice.initialize(coupling_boundary, mesh, u_n)
+if problem is ProblemType.DIRICHLET:
+    precice_dt = precice.initialize(coupling_boundary, mesh, u_n, u_D_function, f_N_function)
+elif problem is ProblemType.NEUMANN:
+    precice_dt = precice.initialize(coupling_boundary, mesh, u_n, f_N_function, u_D_function)
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
