@@ -63,7 +63,6 @@ args = parser.parse_args()
 config_file_name = "precice-config.xml"  # TODO should be moved into config, see https://github.com/precice/fenics-adapter/issues/5 , in case file doesnt not exsist open will fail
 
 subcycle = Subcycling.NONE
-fenics_dt = 0.0
 
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcycling.NONE and not args.arbitrary_coupling_interface:
@@ -122,6 +121,8 @@ if problem is ProblemType.DIRICHLET:
 elif problem is ProblemType.NEUMANN:
     precice_dt = precice.initialize(coupling_boundary, mesh, u_n, f_N_function, u_D_function)
 
+precice.set_interpolation_type("cubic_spline")
+
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
 
@@ -169,7 +170,8 @@ f.t = t + dt(0)
 flux = Function(V_g)
 flux.rename("Flux", "")
 
-t_new, n_new = 0
+t_new = 0
+n_new = 0
 
 while precice.is_coupling_ongoing():
 
@@ -188,7 +190,9 @@ while precice.is_coupling_ongoing():
         precice.write(u_np1)
 
     # API call to advance coupling, also returns the optimum time step value
-    precice_dt = precice.advance_coupling(dt(0), fenics_dt)
+    precice_dt = precice.advance_coupling(dt(0))
+
+    dt.assign(np.min([fenics_dt, precice_dt]))
 
     # read data
     precice.read()
@@ -215,7 +219,7 @@ while precice.is_coupling_ongoing():
     _, t, n = state.get_state()
 
     # Assign optimal dt value from the advance function to simulation dt
-    dt.assign(precice_dt)
+    # dt.assign(precice_dt)
 
     if precice_timestep_complete:
         u_ref = interpolate(u_D, V)
