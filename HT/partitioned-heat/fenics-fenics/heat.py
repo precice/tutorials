@@ -190,7 +190,7 @@ while precice.is_coupling_ongoing():
         precice.write(u_np1)
 
     # API call to advance coupling, also returns the optimum time step value
-    precice_dt = precice.advance_coupling(dt(0))
+    precice_dt = precice.advance(dt(0))
 
     dt.assign(np.min([fenics_dt, precice_dt]))
 
@@ -201,7 +201,7 @@ while precice.is_coupling_ongoing():
 
     solver_state_has_been_restored = False
 
-    if precice.is_action_required(precice.restore_to_checkpoint()):
+    if precice.is_action_required(precice.read_checkpoint()):
         assert (not precice.is_timestep_complete())  # avoids invalid control flow
         precice.restore_solver_state_from_checkpoint(state)
         solver_state_has_been_restored = True
