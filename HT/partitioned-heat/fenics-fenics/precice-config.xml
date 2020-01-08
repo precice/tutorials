@@ -36,7 +36,7 @@
       <read-data  name="Flux"        mesh="NeumannNodes"/>
     </participant>
 
-    <m2n:sockets distribution-type="gather-scatter" from="HeatDirichlet" to="HeatNeumann"/>
+    <m2n:sockets from="HeatDirichlet" to="HeatNeumann"/>
 
       <coupling-scheme:serial-implicit>
          <participants first="HeatDirichlet" second="HeatNeumann"/>
