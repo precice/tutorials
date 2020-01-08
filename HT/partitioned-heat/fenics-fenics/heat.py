@@ -68,12 +68,9 @@ subcycle = Subcycling.NONE
 if subcycle is Subcycling.NONE and not args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
     error_tol = 10 ** -7  # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
-    # interpolation_strategy = ExactInterpolationExpression
-    # interpolation_strategy = ExactInterpolationExpression
 elif subcycle is Subcycling.NONE and args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
     error_tol = 10 ** -3  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
-    # interpolation_strategy = GeneralInterpolationExpression
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
 elif subcycle is Subcycling.MATCHING:
     fenics_dt = .01  # time step size
@@ -170,16 +167,13 @@ f.t = t + dt(0)
 flux = Function(V_g)
 flux.rename("Flux", "")
 
-t_new = 0
-n_new = 0
-
 while precice.is_coupling_ongoing():
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
 
-    # Intializing solver state
-    state = precice.initialize_solver_state(u_n, t, n)
+    # Get current solver state
+    state = precice.get_solver_state(u_n, t, n)
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
