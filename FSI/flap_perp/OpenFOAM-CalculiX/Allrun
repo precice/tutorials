@@ -48,16 +48,12 @@ Participant1="Fluid"
     if [ $parallel -eq 1 ]; then
         echo "  Decomposing the case..."
         decomposePar -force -case ${Participant1} > ${Participant1}_decomposePar.log 2>&1
-        echo "  Setting up the preCICE configuration file for a parallel simulation..."
-        ln -s -f precice-config_parallel.xml precice-config.xml 
         cd ${Participant1}
             nproc=$(getNumberOfProcessors)
         cd ..
         echo "  Starting the ${Participant1} participant in parallel..."
         mpirun -np ${nproc} ${Solver1} -parallel -case ${Participant1} > ${Participant1}.log 2>&1 &
     else
-        echo "  Setting up the preCICE configuration file for a serial simulation..."
-        ln -s -f precice-config_serial.xml precice-config.xml
         echo "  Starting the ${Participant1} participant in serial..."
         ${Solver1} -case ${Participant1} > ${Participant1}.log 2>&1 &
     fi

@@ -11,10 +11,6 @@ if [ ! -f Solid/all.msh ]; then
     exit
 fi
 
-# Link to the precice-config for the serial run
-echo "Setting up the preCICE configuration file for a serial simulation"
-ln -s -f precice-config_serial.xml precice-config.xml
-
 # Participant 1: Inner-Fluid
 Participant1="Inner-Fluid"
 Solver1="buoyantSimpleFoam"

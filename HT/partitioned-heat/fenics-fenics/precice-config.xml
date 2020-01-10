@@ -36,7 +36,7 @@
       <read-data  name="Flux"        mesh="NeumannNodes"/>
     </participant>
 
-    <m2n:sockets distribution-type="gather-scatter" from="HeatDirichlet" to="HeatNeumann"/>
+    <m2n:sockets from="HeatDirichlet" to="HeatNeumann"/>
 
       <coupling-scheme:serial-implicit>
          <participants first="HeatDirichlet" second="HeatNeumann"/>
@@ -47,13 +47,13 @@
          <exchange data="Temperature" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
          <relative-convergence-measure data="Flux"        mesh="NeumannNodes" limit="1e-5"/>
          <relative-convergence-measure data="Temperature" mesh="NeumannNodes" limit="1e-5"/>
-         <post-processing:IQN-ILS> 
+         <acceleration:IQN-ILS> 
             <data name="Temperature" mesh="NeumannNodes"/>
             <initial-relaxation value="0.01"/>
             <max-used-iterations value="3"/>
             <timesteps-reused value="1"/>
             <filter type="QR2" limit="1e-3"/>
-         </post-processing:IQN-ILS>
+         </acceleration:IQN-ILS>
       </coupling-scheme:serial-implicit>
     
   </solver-interface>
