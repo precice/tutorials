@@ -15,9 +15,6 @@ if [ "$1" = "-parallel" ]; then
     parallel=1
 fi
 
-# Link to the precice-config for the serial run
-echo "Setting up the preCICE configuration file for a serial simulation"
-
 # =============== Participant 1: Fluid ===========================
 Participant1="Fluid"
 Solver1="pimpleDyMFoam"
