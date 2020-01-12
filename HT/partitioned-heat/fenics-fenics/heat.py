@@ -118,7 +118,7 @@ if problem is ProblemType.DIRICHLET:
 elif problem is ProblemType.NEUMANN:
     precice_dt = precice.initialize(coupling_boundary, mesh, u_n, f_N_function, u_D_function)
 
-precice.set_interpolation_type("cubic_spline")
+precice.set_interpolation_type(1)
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -169,11 +169,15 @@ flux.rename("Flux", "")
 
 while precice.is_coupling_ongoing():
 
+    print("Start of Iteration {}: precice function _is_timestep_complete = {}".format(n,precice.is_timestep_complete()))
+    if precice.is_action_required(precice.action_write_checkpoint()):
+        precice.store_checkpoint()
+
+    # read data
+    precice.read()
+
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
-
-    # Get current solver state
-    state = precice.get_solver_state(u_n, t, n)
 
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
@@ -188,34 +192,19 @@ while precice.is_coupling_ongoing():
 
     dt.assign(np.min([fenics_dt, precice_dt]))
 
-    # read data
-    precice.read()
-
     precice.update_boundary_condition()
 
-    solver_state_has_been_restored = False
+    print("Iteration {}: precice function _is_timestep_complete = {}".format(n, precice.is_timestep_complete()))
+    print("Iteration {}: precice action action_read_iteration_checkpoint = {}".format(n, precice.action_read_checkpoint()))
 
-    if precice.is_action_required(precice.read_checkpoint()):
-        assert (not precice.is_timestep_complete())  # avoids invalid control flow
-        precice.restore_solver_state_from_checkpoint(state)
-        solver_state_has_been_restored = True
+    if precice.is_action_required(precice.action_read_checkpoint()):
+        precice.retrieve_checkpoint()
     else:
-        precice.advance_solver_state(state, u_np1, dt)
+        precice.end_timestep(u_np1, dt)
+        t += dt
+        n += 1
 
-    if precice.is_action_required(precice.write_checkpoint()):
-        assert (not solver_state_has_been_restored)  # avoids invalid control flow
-        assert (precice.is_timestep_complete())  # avoids invalid control flow
-        precice.save_solver_state_to_checkpoint(state)
-
-    precice_timestep_complete = precice.is_timestep_complete()
-
-    # This function returns the updated values of t and n to be used for the next iteration
-    _, t, n = state.get_state()
-
-    # Assign optimal dt value from the advance function to simulation dt
-    # dt.assign(precice_dt)
-
-    if precice_timestep_complete:
+    if precice.is_timestep_complete():
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
