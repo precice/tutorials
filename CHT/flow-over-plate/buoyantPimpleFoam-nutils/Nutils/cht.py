@@ -38,8 +38,7 @@ def main(elemsize: 'mesh width in x and y direction' = 0.05,
   participantName = "Nutils"
   solverProcessIndex = 0
   solverProcessSize = 1
-  interface = precice.Interface(participantName, solverProcessIndex, solverProcessSize)
-  interface.configure(configFileName)
+  interface = precice.Interface(participantName, configFileName, solverProcessIndex, solverProcessSize)
 
   # define coupling meshes
   meshNameGP = "Nutils-Mesh-GP" # Gauss points
