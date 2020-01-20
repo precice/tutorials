@@ -27,12 +27,14 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
     File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace
-from fenicsadapter import Adapter
+from fenicsadapter import Adapter, InterpolationType
 from errorcomputation import compute_errors
 from my_enums import ProblemType, Subcycling
 import argparse
 import numpy as np
 from problem_setup import get_geometry, get_problem_setup
+import dolfin
+from dolfin import FacetNormal, dot
 
 def determine_gradient(V_g, u, flux):
     """
@@ -118,7 +120,7 @@ if problem is ProblemType.DIRICHLET:
 elif problem is ProblemType.NEUMANN:
     precice_dt = precice.initialize(coupling_boundary, mesh, u_n, f_N_function, u_D_function)
 
-precice.set_interpolation_type(1)
+precice.set_interpolation_type(InterpolationType.CUBIC_SPLINE)
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -131,10 +133,27 @@ F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 if problem is ProblemType.DIRICHLET:
     # apply Dirichlet boundary condition on coupling interface
-    bcs.append(precice.create_coupling_dirichlet_boundary_condition(V))
+    coupling_bc_expression = precice.create_coupling_boundary_condition(V)
+    bcs.append(dolfin.DirichletBC(V, coupling_bc_expression, coupling_boundary))
 if problem is ProblemType.NEUMANN:
     # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
-    F += precice.create_coupling_neumann_boundary_condition(v, V_g)
+    if not V_g:
+        V_g = v.function_space()
+
+    coupling_bc_expression = precice.create_coupling_boundary_condition(V_g)
+
+    if not boundary_marker:  # there is only 1 Neumann-BC which is at the coupling boundary -> integration over whole boundary
+        if coupling_bc_expression.is_scalar_valued():
+            F += test_functions * coupling_bc_expression * dolfin.ds  # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
+        elif coupling_bc_expression.is_vector_valued():
+            n = FacetNormal(mesh)
+            F += -test_functions * dot(n, coupling_bc_expression) * dolfin.ds
+        else:
+            raise Exception("invalid!")
+    else:  # For multiple Neumann BCs integration should only be performed over the respective domain.
+        # TODO: fix the problem here
+        raise Exception("Boundary markers are not implemented yet")
+        # return dot(coupling_bc_expression, v) * dolfin.dss(boundary_marker)
 
 a, L = lhs(F), rhs(F)
 
@@ -169,7 +188,6 @@ flux.rename("Flux", "")
 
 while precice.is_coupling_ongoing():
 
-    print("Start of Iteration {}: precice function _is_timestep_complete = {}".format(n,precice.is_timestep_complete()))
     if precice.is_action_required(precice.action_write_checkpoint()):
         precice.store_checkpoint()
 
@@ -193,9 +211,6 @@ while precice.is_coupling_ongoing():
     dt.assign(np.min([fenics_dt, precice_dt]))
 
     precice.update_boundary_condition()
-
-    print("Iteration {}: precice function _is_timestep_complete = {}".format(n, precice.is_timestep_complete()))
-    print("Iteration {}: precice action action_read_iteration_checkpoint = {}".format(n, precice.action_read_checkpoint()))
 
     if precice.is_action_required(precice.action_read_checkpoint()):
         precice.retrieve_checkpoint()
