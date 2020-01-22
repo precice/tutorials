@@ -131,6 +131,9 @@ v = TestFunction(V)
 f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
+boundary_marker = False
+coupling_bc_expression = None
+
 if problem is ProblemType.DIRICHLET:
     # apply Dirichlet boundary condition on coupling interface
     coupling_bc_expression = precice.create_coupling_boundary_condition(V)
@@ -144,10 +147,10 @@ if problem is ProblemType.NEUMANN:
 
     if not boundary_marker:  # there is only 1 Neumann-BC which is at the coupling boundary -> integration over whole boundary
         if coupling_bc_expression.is_scalar_valued():
-            F += test_functions * coupling_bc_expression * dolfin.ds  # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
+            F += v * coupling_bc_expression * dolfin.ds  # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
         elif coupling_bc_expression.is_vector_valued():
             n = FacetNormal(mesh)
-            F += -test_functions * dot(n, coupling_bc_expression) * dolfin.ds
+            F += -v * dot(n, coupling_bc_expression) * dolfin.ds
         else:
             raise Exception("invalid!")
     else:  # For multiple Neumann BCs integration should only be performed over the respective domain.
@@ -210,7 +213,7 @@ while precice.is_coupling_ongoing():
 
     dt.assign(np.min([fenics_dt, precice_dt]))
 
-    precice.update_boundary_condition()
+    precice.update_boundary_condition(coupling_bc_expression)
 
     if precice.is_action_required(precice.action_read_checkpoint()):
         precice.retrieve_checkpoint()
