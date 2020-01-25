@@ -1,0 +1,63 @@
+#-----------------------------------------------------------
+# Author1: Nithin Adidela, IIT Goa
+# email: nithin.adiela.16003@iitgoa.ac.in
+
+# Author2: Revanth Sharma Kollegala, IIT Goa
+# email: revanth.sharma.16003@iitgoa.ac.in
+
+# Author3: Y Sudhakar, IIT Goa
+# email: sudhakar@iitgoa.ac.in
+
+# Inspired by the contribution by Derek Risseeuw (TU Delft).
+#-----------------------------------------------------------
+#!/bin/bash
+#For the beam elements
+valu c 0.35
+valu h 0.02
+valu dz 1.
+valu nd 0.005
+
+pnt p1 0.25 0.19 -0.005
+pnt p2 0.25 0.19 0.005
+line l1 p1 p2 1
+seta fix1 all
+swep fix1 fix1 tra 0 h 0 1
+seta fix1 all
+comp fix1 do
+
+swep all flap tra c 0 0 1
+seta surface s A002 A003 A004
+comp surface do 
+
+
+seta length l L00A L00B L008 L009
+seta width l L002 L003 L006 L007
+seta height l l1 L001 L004 L005
+
+
+div length auto nd
+div width auto nd
+div height auto nd
+elty all he20r
+mesh all
+
+send all abq
+send fix1 abq nam
+send surface abq nam
+
+view elem
+# #rot z
+#rot r 50
+#rot u 50
+
+plot f all
+
+#sys mv surface.nam interface_beam.nam
+#sys mv fix1.nam fix1_beam.nam
+
+# Add thing here for the boundary condition
+# sys echo 
+# quit
+
+# plus la all
+# plus pa all

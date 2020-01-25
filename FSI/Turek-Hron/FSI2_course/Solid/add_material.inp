@@ -1,0 +1,25 @@
+**-----------------------------------------------------------
+** Author1: Nithin Adidela, IIT Goa
+** email: nithin.adiela.16003@iitgoa.ac.in
+
+** Author2: Revanth Sharma Kollegala, IIT Goa
+** email: revanth.sharma.16003@iitgoa.ac.in
+
+** Author3: Y Sudhakar, IIT Goa
+** email: sudhakar@iitgoa.ac.in
+
+** Inspired by the contribution by Derek Risseeuw (TU Delft).
+**-----------------------------------------------------------
+
+*MATERIAL,NAME=User
+*ELASTIC
+1.4000E+06,0.4
+
+
+*DENSITY
+1.0000E+04
+*EXPANSION
+0.0000E+00
+
+*SOLID SECTION,MATERIAL=User,ELSET=Eall
+

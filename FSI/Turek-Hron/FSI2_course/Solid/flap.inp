@@ -1,0 +1,44 @@
+**-----------------------------------------------------------
+** Author1: Nithin Adidela, IIT Goa
+** email: nithin.adiela.16003@iitgoa.ac.in
+
+** Author2: Revanth Sharma Kollegala, IIT Goa
+** email: revanth.sharma.16003@iitgoa.ac.in
+
+** Author3: Y Sudhakar, IIT Goa
+** email: sudhakar@iitgoa.ac.in
+
+** Inspired by the contribution by Derek Risseeuw (TU Delft).
+**-----------------------------------------------------------
+*INCLUDE, INPUT=Solid/all.msh
+*INCLUDE, INPUT=Solid/fix1.nam
+*INCLUDE, INPUT=Solid/surface.nam
+*INCLUDE, INPUT=Solid/add_material.inp
+**------------------------------
+** additional support for sides
+**------------------------------
+
+*STEP, NLGEOM, INC=10000000
+*DYNAMIC,DIRECT
+5.E-3, 100.0
+
+*BOUNDARY
+Nall, 3, 5
+
+** fix on the lower boundary from x to z.  
+*BOUNDARY
+Nfix1, 1, 6
+** fix on all nodes for translation in z-dir, rotation about x- and y-axis
+*BOUNDARY
+Nall, 3, 3, 0 
+Nall, 4, 4, 0 
+Nall, 5, 5, 0 
+*CLOAD
+ Nsurface, 1, 0.0
+ Nsurface, 2, 0.0
+ Nsurface, 3, 0.0
+*NODE FILE
+ U, RF
+*EL FILE
+ S, E
+*END STEP

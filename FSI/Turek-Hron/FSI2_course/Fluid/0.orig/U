@@ -1,0 +1,80 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+
+# Author1: Nithin Adidela, IIT Goa
+# email: nithin.adiela.16003@iitgoa.ac.in
+
+# Author2: Revanth Sharma Kollegala, IIT Goa
+# email: revanth.sharma.16003@iitgoa.ac.in
+
+# Author3: Y Sudhakar, IIT Goa
+# email: sudhakar@iitgoa.ac.in
+
+# Inspired by the contribution by Derek Risseeuw (TU Delft).
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+
+    cylinder
+    {
+        type            noSlip;
+    }    
+
+    flap
+    {
+        type            movingWallVelocity;
+        value           uniform (0 0 0);
+    }
+
+    top
+    {
+        type            noSlip;
+    }
+
+    bottom
+    {
+        type            noSlip;
+    }
+
+    inlet
+    {
+     
+     type            groovyBC;
+     variables "yp=pts().y;minY=min(yp);maxY=max(yp);para=-1.5*(maxY-pos().y)*(pos().y-minY)/(0.25*pow(maxY-minY,2))*normal();";
+     valueExpression "1*para";
+     value           uniform (1 0 0);
+   }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    front
+    {
+        type            empty;
+    }
+    back
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //
