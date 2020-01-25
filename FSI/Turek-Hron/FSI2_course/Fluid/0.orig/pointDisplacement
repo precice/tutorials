@@ -1,0 +1,76 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+
+# Author1: Nithin Adidela, IIT Goa
+# email: nithin.adiela.16003@iitgoa.ac.in
+
+# Author2: Revanth Sharma Kollegala, IIT Goa
+# email: revanth.sharma.16003@iitgoa.ac.in
+
+# Author3: Y Sudhakar, IIT Goa
+# email: sudhakar@iitgoa.ac.in
+
+# Inspired by the contribution by Derek Risseeuw (TU Delft).
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       pointVectorField;
+    object      pointDisplacement;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 0 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    inlet
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    outlet
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    cylinder
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+    flap
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+    
+    top
+    {
+        type            slip;
+    }
+
+    bottom
+    {
+        type            slip;
+    }
+    front
+    {
+        type            empty;
+    }
+    back
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //
