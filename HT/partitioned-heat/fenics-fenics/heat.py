@@ -116,9 +116,9 @@ u_n.rename("Temperature", "")
 precice = Adapter(adapter_config_filename)
 
 if problem is ProblemType.DIRICHLET:
-    precice_dt = precice.initialize(coupling_boundary, mesh, u_n, u_D_function, f_N_function)
+    precice_dt = precice.initialize(coupling_boundary, mesh, u_D_function, f_N_function)
 elif problem is ProblemType.NEUMANN:
-    precice_dt = precice.initialize(coupling_boundary, mesh, u_n, f_N_function, u_D_function)
+    precice_dt = precice.initialize(coupling_boundary, mesh, f_N_function, u_D_function)
 
 precice.set_interpolation_type(InterpolationType.CUBIC_SPLINE)
 
@@ -192,7 +192,7 @@ flux.rename("Flux", "")
 while precice.is_coupling_ongoing():
 
     if precice.is_action_required(precice.action_write_checkpoint()):
-        precice.store_checkpoint()
+        precice.store_checkpoint(u_n, t, n)
 
     # read data
     precice.read()
@@ -215,10 +215,13 @@ while precice.is_coupling_ongoing():
 
     precice.update_boundary_condition(coupling_bc_expression)
 
-    if precice.is_action_required(precice.action_read_checkpoint()):
-        precice.retrieve_checkpoint()
-    else:
-        precice.end_timestep(u_np1, dt)
+    if precice.is_action_required(precice.action_read_checkpoint()):  # roll back to checkpoint
+        u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
+        u_n.assign(u_cp)
+        t = t_cp
+        n = n_cp
+    else:  # go to next timestep
+        u_n.assign(u_np1)
         t += dt
         n += 1
 
