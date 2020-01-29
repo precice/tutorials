@@ -48,7 +48,7 @@
     <m2n:sockets from="Fluid" to="Solid" />
 
     <coupling-scheme:serial-implicit>
-        <timestep-length value="0.005"/>
+        <time-window-size value="0.005"/>
         <max-time value="10"/>
         <participants first="Fluid" second="Solid"/>
         <exchange data="Force" mesh="Solid_faces" from="Fluid" to="Solid"/>
@@ -65,7 +65,7 @@
             <filter type="QR1" limit="1e-6"/>
             <initial-relaxation value="0.1"/>
             <max-used-iterations value="50"/>
-            <timesteps-reused value="10"/>
+            <time-windows-reused value="10"/>
         </acceleration:IQN-ILS>
     </coupling-scheme:serial-implicit>
 

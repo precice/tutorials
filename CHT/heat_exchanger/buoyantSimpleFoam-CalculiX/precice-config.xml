@@ -70,7 +70,7 @@
     </participant>
     <m2n:sockets to="Inner-Fluid" from="Solid" exchange-directory="." />
     <coupling-scheme:parallel-explicit>
-      <timestep-length value="1"/>
+      <time-window-size value="1"/>
       <max-time value="500"/>
       <participants first="Solid" second="Inner-Fluid"/>
       <exchange data="Sink-Temperature-Solid" mesh="Solid-to-Inner-Fluid" from="Solid" to="Inner-Fluid" initialize="yes"/>
@@ -80,7 +80,7 @@
     </coupling-scheme:parallel-explicit>
     <m2n:sockets to="Outer-Fluid" from="Solid" exchange-directory="." />
     <coupling-scheme:parallel-explicit>
-      <timestep-length value="1"/>
+      <time-window-size value="1"/>
       <max-time value="500"/>
       <participants first="Solid" second="Outer-Fluid"/>
       <exchange data="Sink-Temperature-Solid" mesh="Solid-to-Outer-Fluid" from="Solid" to="Outer-Fluid" initialize="yes"/>

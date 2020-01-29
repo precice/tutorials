@@ -45,8 +45,8 @@
       
       <coupling-scheme:serial-implicit>
            <participants first="Fluid" second="Calculix"/>
-           <max-timesteps value="100"/>
-           <timestep-length value="1e-4" />
+           <max-time-windows value="100"/>
+           <time-window-size value="1e-4" />
            <exchange data="Forces0" mesh="Calculix_Mesh" from="Fluid" to="Calculix"/>
            <exchange data="DisplacementDeltas0" mesh="Calculix_Mesh" from="Calculix" to="Fluid" />
            <max-iterations value="30"/>
@@ -58,7 +58,7 @@
             <preconditioner type="residual-sum"/>
             <initial-relaxation value="0.1"/>
             <max-used-iterations value="10"/>
-            <timesteps-reused value="1"/>
+            <time-windows-reused value="1"/>
            </acceleration:IQN-IMVJ>		
 	 
       </coupling-scheme:serial-implicit>
