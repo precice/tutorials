@@ -43,7 +43,7 @@
   <m2n:sockets from="OpenFOAM" to="Nutils" exchange-directory=".."/>
 
   <coupling-scheme:serial-implicit>
-    <timestep-length value="0.01"/>
+    <time-window-size value="0.01"/>
     <max-time value="1"/>
     <max-iterations value="30"/>
     <participants first="OpenFOAM" second="Nutils"/>
