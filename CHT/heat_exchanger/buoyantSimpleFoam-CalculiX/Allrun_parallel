@@ -11,10 +11,6 @@ if [ ! -f Solid/all.msh ]; then
     exit
 fi
 
-# Link to the precice-config for the parallel run
-echo "Setting up the preCICE configuration file for a parallel simulation"
-ln -s -f precice-config_parallel.xml precice-config.xml
-
 # Participant 1: inner-fluid
 Participant1="Inner-Fluid"
 Solver1="buoyantSimpleFoam"

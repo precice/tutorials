@@ -20,14 +20,6 @@ fi
 
 echo "Preparing and running the Fluid participant..."
 
-# Prepare
-if [ $parallel -eq 1 ]; then
-    ln -s -f precice-config_parallel.xml precice-config.xml
-else
-    ln -s -f precice-config_serial.xml precice-config.xml
-fi
-
-
 
 rm -rfv Fluid/0/
 cp -r Fluid/0.orig/ Fluid/0/
