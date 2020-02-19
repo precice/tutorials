@@ -14,7 +14,7 @@
     <data:vector name="Forces0" />
 
     <!-- A common mesh that uses these data fields -->
-    <mesh name="ASTE-Mesh" flip-normals="no">
+    <mesh name="MeshA" flip-normals="no">
       <use-data name="Forces0" />
     </mesh>
 
@@ -22,35 +22,32 @@
       <use-data name="Forces0" />
     </mesh>
     
-    <m2n:sockets from="ASTE" to="fenics" network="lo" exchange-directory=".."  distribution-type="point-to-point" />
+    <m2n:sockets from="A" to="fenics"/> 
 
-    <participant name="ASTE">
-      <use-mesh name="ASTE-Mesh" provide="yes" />
-      <write-data name="Forces0" mesh="ASTE-Mesh" />
-
-      <export:vtk timestep-interval="1" directory="vtkA/" normals="0"/>
-      <master:mpi-single />
+    <participant name="A">
+      <use-mesh name="MeshA" provide="yes" />
+      <use-mesh name="Solid" provide="no" from="fenics" />
+      <write-data name="Forces0" mesh="MeshA"/>
+      <mapping:nearest-neighbor constraint="conservative" direction="write" from="MeshA" to="Solid" />
+      <export:vtk every-n-time-windows="1" directory="vtkA/" normals="0"/>
     </participant>
     
     <participant name="fenics">
-      <use-mesh name="ASTE-Mesh" provide="no" from="A" />
       <use-mesh name="Solid" provide="yes" />
-      <read-data name="Forces0" mesh="MeshB" />
-      <mapping:nearest-neighbor constraint="conservative" direction="read" from="ASTE-Mesh" to="Solid" />
+      <read-data name="Forces0" mesh="Solid" />
       <!-- <mapping:rbf-gaussian shape-parameter="4" constraint="consistent" direction="read" from="MeshA" to="MeshB" x-dead="false" y-dead="false" z-dead="false" /> -->
       <!-- <mapping:petrbf-gaussian shape-parameter="5600" solver-rtol="1e-9" constraint="consistent" direction="read" from="MeshA" to="MeshB" x-dead="true" y-dead="false" z-dead="false" polynomial="separate" preallocation="tree"/> -->
       <!-- <mapping:petrbf-volume-splines solver-rtol="1e-9" constraint="consistent" direction="read" from="MeshA" to="MeshB" x-dead="false" y-dead="false" z-dead="false" /> -->
-      <export:vtk timestep-interval="1" directory="vtkB/" normals="0"/>
-      <master:mpi-single />
+      <export:vtk every-n-time-windows="1" directory="vtkB/" normals="0"/>
     </participant>
 
     
-    <coupling-scheme:parallel-explicit>
+    <coupling-scheme:serial-explicit>
       <participants first="ASTE" second="fenics" />
       <max-time value="5.0" />
-      <timestep-length value="1.e-2" />
+      <time-window-size value="1.e-2" />
       <exchange data="Forces0" mesh="Solid" from="ASTE" to="fenics" />
-    </coupling-scheme:parallel-explicit>
+    </coupling-scheme:serial-explicit>
     
   </solver-interface>
   
