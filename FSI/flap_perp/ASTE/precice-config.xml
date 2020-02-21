@@ -11,15 +11,15 @@
   <solver-interface dimensions="3">
     
     <!-- Data fields that are exchanged between the solvers -->
-    <data:vector name="Forces0" />
+    <data:vector name="Data" />
 
     <!-- A common mesh that uses these data fields -->
     <mesh name="MeshA" flip-normals="no">
-      <use-data name="Forces0" />
+      <use-data name="Data" />
     </mesh>
 
     <mesh name="Solid" flip-normals="no">
-      <use-data name="Forces0" />
+      <use-data name="Data" />
     </mesh>
     
     <m2n:sockets from="A" to="fenics"/> 
@@ -27,14 +27,14 @@
     <participant name="A">
       <use-mesh name="MeshA" provide="yes" />
       <use-mesh name="Solid" provide="no" from="fenics" />
-      <write-data name="Forces0" mesh="MeshA"/>
+      <write-data name="Data" mesh="MeshA"/>
       <mapping:nearest-neighbor constraint="conservative" direction="write" from="MeshA" to="Solid" />
       <export:vtk every-n-time-windows="1" directory="vtkA/" normals="0"/>
     </participant>
     
     <participant name="fenics">
       <use-mesh name="Solid" provide="yes" />
-      <read-data name="Forces0" mesh="Solid" />
+      <read-data name="Data" mesh="Solid" />
       <!-- <mapping:rbf-gaussian shape-parameter="4" constraint="consistent" direction="read" from="MeshA" to="MeshB" x-dead="false" y-dead="false" z-dead="false" /> -->
       <!-- <mapping:petrbf-gaussian shape-parameter="5600" solver-rtol="1e-9" constraint="consistent" direction="read" from="MeshA" to="MeshB" x-dead="true" y-dead="false" z-dead="false" polynomial="separate" preallocation="tree"/> -->
       <!-- <mapping:petrbf-volume-splines solver-rtol="1e-9" constraint="consistent" direction="read" from="MeshA" to="MeshB" x-dead="false" y-dead="false" z-dead="false" /> -->
@@ -43,10 +43,10 @@
 
     
     <coupling-scheme:serial-explicit>
-      <participants first="ASTE" second="fenics" />
+      <participants first="A" second="fenics" />
       <max-time value="5.0" />
       <time-window-size value="1.e-2" />
-      <exchange data="Forces0" mesh="Solid" from="ASTE" to="fenics" />
+      <exchange data="Data" mesh="Solid" from="A" to="fenics" />
     </coupling-scheme:serial-explicit>
     
   </solver-interface>
