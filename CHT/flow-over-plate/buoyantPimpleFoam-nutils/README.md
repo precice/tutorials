@@ -28,7 +28,7 @@ $ pip3 install mkl
 For running this tutorial, you further have to install
 
 * **preCICE**, see [preCICE wiki](https://github.com/precice/precice/wiki/Building).
-* **Python bindings**, see [bindings readme](https://github.com/precice/precice/tree/develop/src/precice/bindings/python)
+* **Python bindings**, see [`precice/python-bindings`](https://github.com/precice/python-bindings)
 * **OpenFOAM**, see [Notes on OpenFOAM](https://github.com/precice/openfoam-adapter/wiki/Notes-on-OpenFOAM).
 * **OpenFOAM adapter**, see [OpenFOAM adapter wiki](https://github.com/precice/openfoam-adapter/wiki/Building). If you have problems compiling, see the [troubleshooting section](https://github.com/precice/precice/wiki/CHT-with-OpenFOAM-and-FEniCS#troubleshooting) below.
 
