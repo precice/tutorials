@@ -3,7 +3,7 @@
 <precice-configuration>
 
   <log>
-    <sink type="stream" output="stdout"  filter= "%Severity% > debug" format="preCICE:%ColorizedSeverity% %Message%" enabled="true" />	
+    <sink filter= "%Severity% > debug and %Rank% = 0" format="---[precice] %ColorizedSeverity% %Message%" enabled="true" />	
   </log>
 
   <solver-interface dimensions="3">
@@ -40,20 +40,20 @@
     <write-data name="Heat-Flux" mesh="Nutils-Mesh-CC" />
   </participant>    
 
-  <m2n:sockets from="OpenFOAM" to="Nutils" exchange-directory=".." distribution-type="gather-scatter"/>
+  <m2n:sockets from="OpenFOAM" to="Nutils" exchange-directory=".."/>
 
   <coupling-scheme:serial-implicit>
-    <timestep-length value="0.01"/>
+    <time-window-size value="0.01"/>
     <max-time value="1"/>
     <max-iterations value="30"/>
     <participants first="OpenFOAM" second="Nutils"/>
     <exchange data="Temperature" mesh="OpenFOAM-Mesh" from="OpenFOAM" to="Nutils"/>
     <exchange data="Heat-Flux" mesh="OpenFOAM-Mesh" from="Nutils" to="OpenFOAM"/>
     <relative-convergence-measure limit="1.0e-5" data="Temperature" mesh="OpenFOAM-Mesh"/>
-    <post-processing:aitken>
+    <acceleration:aitken>
       <data mesh="OpenFOAM-Mesh" name="Heat-Flux" />
       <initial-relaxation value="0.01" />
-    </post-processing:aitken>
+    </acceleration:aitken>
   </coupling-scheme:serial-implicit>
 
   </solver-interface>

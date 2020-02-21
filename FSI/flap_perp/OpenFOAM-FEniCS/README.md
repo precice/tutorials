@@ -11,9 +11,12 @@ You can run the tutorial from this directory by typing ```python3 Solid/perp-fla
 
 ## Different OpenFOAM versions
 
-* you are using OpenFOAM 5 or older: just use the master branch of this repository together with the master branch of the OpenFOAM Adapter
-* you are using OpenFOAM 6: use the branch called `OpenFOAM6` of this repository together with the branch called `OpenFOAM6` of the OpenFOAM Adapter
-* you are using something else: more version of the OpenFOAM-Adapter are provided as branches of the adapter repository. However, this tutorial has not been tested with other versions of OpenFOAM.
+For the different OpenFOAM versions supported by the OpenFOAM adapter, have a look into our [Notes on OpenFOAM](https://github.com/precice/openfoam-adapter/wiki/Notes-on-OpenFOAM).
+
+For this tutorial:
+* if you are using OpenFOAM 5 or older: just use the master branch of this repository together with the master branch of the OpenFOAM Adapter
+* if you are using OpenFOAM 6: use the branch called `OpenFOAM6` of this repository together with the branch called `OpenFOAM6` of the OpenFOAM Adapter
+* if you are using something else: more version of the OpenFOAM-Adapter are provided as branches of the adapter repository. However, this tutorial has not been tested with other versions of OpenFOAM.
 
 For more information, please refer to [this issue](https://github.com/precice/tutorials/issues/40).
 

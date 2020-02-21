@@ -1,8 +1,6 @@
 #! /bin/bash 
 
 
-ln -sf precice-config_serial.xml precice-config.xml
-
 tmux has-session -t PreciceSU2-Calculix-newtonParallel 2>/dev/null
 if [ "$?" -eq 1 ] ; then 
     tmux new-session -d -s 'PreciceSU2-Calculix-newtonParallel'
