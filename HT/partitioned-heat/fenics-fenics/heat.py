@@ -115,12 +115,12 @@ u_n.rename("Temperature", "")
 
 precice = Adapter(adapter_config_filename)
 
-if problem is ProblemType.DIRICHLET:
-    precice_dt = precice.initialize(coupling_boundary, mesh, u_D_function, f_N_function)
-elif problem is ProblemType.NEUMANN:
-    precice_dt = precice.initialize(coupling_boundary, mesh, f_N_function, u_D_function)
-
 precice.set_interpolation_type(InterpolationType.CUBIC_SPLINE)
+
+if problem is ProblemType.DIRICHLET:
+    precice_dt = precice.initialize(coupling_boundary, mesh, u_D_function, f_N_function, V)
+elif problem is ProblemType.NEUMANN:
+    precice_dt = precice.initialize(coupling_boundary, mesh, f_N_function, u_D_function, V_g)
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -136,14 +136,11 @@ coupling_bc_expression = None
 
 if problem is ProblemType.DIRICHLET:
     # apply Dirichlet boundary condition on coupling interface
-    coupling_bc_expression = precice.create_coupling_boundary_condition(V)
+    coupling_bc_expression = precice.create_coupling_boundary_condition()
     bcs.append(dolfin.DirichletBC(V, coupling_bc_expression, coupling_boundary))
 if problem is ProblemType.NEUMANN:
     # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
-    if not V_g:
-        V_g = v.function_space()
-
-    coupling_bc_expression = precice.create_coupling_boundary_condition(V_g)
+    coupling_bc_expression = precice.create_coupling_boundary_condition()
 
     if not boundary_marker:  # there is only 1 Neumann-BC which is at the coupling boundary -> integration over whole boundary
         if coupling_bc_expression.is_scalar_valued():
@@ -191,11 +188,11 @@ flux.rename("Flux", "")
 
 while precice.is_coupling_ongoing():
 
-    if precice.is_action_required(precice.action_write_checkpoint()):
+    if precice.is_action_required(precice.action_write_checkpoint()):  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
 
-    # read data
-    precice.read()
+    # read data from preCICE and provide an updated coupling function to modify boundary conditions
+    updated_coupling_function = precice.read()
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
@@ -208,12 +205,32 @@ while precice.is_coupling_ongoing():
         # Neumann problem obtains sends temperature on boundary to Dirichlet problem
         precice.write(u_np1)
 
-    # API call to advance coupling, also returns the optimum time step value
+    # Call to advance coupling, also returns the optimum time step value
     precice_dt = precice.advance(dt(0))
 
     dt.assign(np.min([fenics_dt, precice_dt]))
 
-    precice.update_boundary_condition(coupling_bc_expression)
+    # Removing boundary update and handing the task to user via read and manual updating
+    # precice.update_boundary_condition(coupling_bc_expression)
+
+    # Updating boundary condition at coupling interface
+    if problem is ProblemType.DIRICHLET:
+        # modify Dirichlet boundary condition on coupling interface
+        bcs.append(dolfin.DirichletBC(V, updated_coupling_function, coupling_boundary))
+    if problem is ProblemType.NEUMANN:
+        # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
+        if not boundary_marker:  # there is only 1 Neumann-BC which is at the coupling boundary -> integration over whole boundary
+            if updated_coupling_function.is_scalar_valued():
+                F += v * updated_coupling_function * dolfin.ds  # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
+            elif updated_coupling_function.is_vector_valued():
+                n = FacetNormal(mesh)
+                F += -v * dot(n, updated_coupling_function) * dolfin.ds
+            else:
+                raise Exception("invalid!")
+        else:  # For multiple Neumann BCs integration should only be performed over the respective domain.
+            # TODO: fix the problem here
+            raise Exception("Boundary markers are not implemented yet")
+            # return dot(coupling_bc_expression, v) * dolfin.dss(boundary_marker)
 
     if precice.is_action_required(precice.action_read_checkpoint()):  # roll back to checkpoint
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
