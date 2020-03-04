@@ -146,8 +146,8 @@ if problem is ProblemType.NEUMANN:
         if coupling_bc_expression.is_scalar_valued():
             F += v * coupling_bc_expression * dolfin.ds  # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
         elif coupling_bc_expression.is_vector_valued():
-            n = FacetNormal(mesh)
-            F += -v * dot(n, coupling_bc_expression) * dolfin.ds
+            normal = FacetNormal(mesh)
+            F += -v * dot(normal, coupling_bc_expression) * dolfin.ds
         else:
             raise Exception("invalid!")
     else:  # For multiple Neumann BCs integration should only be performed over the respective domain.
@@ -223,8 +223,8 @@ while precice.is_coupling_ongoing():
             if updated_coupling_function.is_scalar_valued():
                 F += v * updated_coupling_function * dolfin.ds  # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
             elif updated_coupling_function.is_vector_valued():
-                n = FacetNormal(mesh)
-                F += -v * dot(n, updated_coupling_function) * dolfin.ds
+                normal = FacetNormal(mesh)
+                F += -v * dot(normal, updated_coupling_function) * dolfin.ds
             else:
                 raise Exception("invalid!")
         else:  # For multiple Neumann BCs integration should only be performed over the respective domain.
