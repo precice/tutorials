@@ -8,7 +8,7 @@ The base simulation for this tutorial is the OpenFOAM-FEniCS perpendicular flap 
 
 To run this tutorial you need to install the following components:
 - [preCICE](https://github.com/precice/precice/wiki/Get-preCICE)
-- [ASTE](https://github.com/precice/aste/tree/develop)
+- [aste](https://github.com/precice/aste/tree/develop)
 - [FEniCS](https://fenicsproject.org/)
 - [FEniCS-Adapter](https://github.com/precice/fenics-adapter)
 - OpenFOAM, e.g. [OpenFOAM 7](https://openfoam.org/version/7/)
@@ -39,7 +39,7 @@ To convert the files to the correct format, open the ```preCICE-output``` folder
 #### The quick way to run 
 Copy perp_flap.py from OpenFOAM-FEniCS/Solid to aste/Solid
 
-run in two terminals ```python3 Solid/perp_flap.py``` and ```preciceMap -v -c precice-config.xml -p A --mesh preCICE-output/Solid-fenics --vectordata```
+run in two terminals ```python3 Solid/perp-flap.py``` and ```preciceMap -v -c precice-config.xml -p A --mesh preCICE-output/Solid-fenics --vectordata```
 
 Read on if you want to know what to change in the configuration files starting from the OpenFOAM-FEniCS tutorial.
 
@@ -77,10 +77,18 @@ Last, you need to change the coupling scheme to an explicit scheme:
 ```
 
 ### Run
-Finally, run the tutorial in two shells with ```python3 Solid/perp_flap.py``` and ```preciceMap -v -c precice-config.xml -p A --mesh preCICE-output/Solid-fenics --vectordata```.
 
+Finally, run the tutorial in two shells with ```python3 Solid/perp-flap.py``` and ```preciceMap -v -c precice-config.xml -p A --mesh preCICE-output/Solid-fenics --vectordata```.
 
+### Play Around
 
+If you want to explore more possibilities of the Replay-Mode here are some ideas:
+
+- Export the output at the Fluid participant. Instead of ```preCICE-output/Solid-fenics.*``` the files containing the forces will be ```preCICE-output/Fluid-Mesh-Faces-Fluid.*```
+
+- Export the forces in the [Calculix-Openfoam-tutorial](https://github.com/precice/tutorials/tree/master/FSI/flap_perp/OpenFOAM-CalculiX) with the same geometry and feed them to FEniCS with aste. 
+
+- If you are familiar with the OpenFOAM-Adapter you can also substitute FEniCS with aste such that aste writes previously exported displacements to OpenFOAM.
 
 
 
