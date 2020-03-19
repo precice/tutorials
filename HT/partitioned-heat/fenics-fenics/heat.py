@@ -194,25 +194,6 @@ while precice.is_coupling_ongoing():
     # read data from preCICE and provide an updated coupling function to modify boundary conditions
     updated_coupling_function = precice.read()
 
-    # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
-    solve(a == L, u_np1, bcs)
-
-    if problem is ProblemType.DIRICHLET:
-        # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
-        determine_gradient(V_g, u_np1, flux)
-        precice.write(flux)
-    elif problem is ProblemType.NEUMANN:
-        # Neumann problem obtains sends temperature on boundary to Dirichlet problem
-        precice.write(u_np1)
-
-    # Call to advance coupling, also returns the optimum time step value
-    precice_dt = precice.advance(dt(0))
-
-    dt.assign(np.min([fenics_dt, precice_dt]))
-
-    # Removing boundary update and handing the task to user via read and manual updating
-    # precice.update_boundary_condition(coupling_bc_expression)
-
     # Updating boundary condition at coupling interface
     if problem is ProblemType.DIRICHLET:
         # modify Dirichlet boundary condition on coupling interface
@@ -232,6 +213,25 @@ while precice.is_coupling_ongoing():
             raise Exception("Boundary markers are not implemented yet")
             # return dot(coupling_bc_expression, v) * dolfin.dss(boundary_marker)
 
+    # Assign the correct time step
+    dt.assign(np.min([fenics_dt, precice_dt]))
+
+    # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
+    solve(a == L, u_np1, bcs)
+
+    # Write data to preCICE according to which problem is being solved
+    if problem is ProblemType.DIRICHLET:
+        # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
+        determine_gradient(V_g, u_np1, flux)
+        precice.write(flux)
+    elif problem is ProblemType.NEUMANN:
+        # Neumann problem obtains sends temperature on boundary to Dirichlet problem
+        precice.write(u_np1)
+
+    # Call to advance coupling, also returns the optimum time step value
+    precice_dt = precice.advance(dt(0))
+
+    # Either revert to old step if timestep has not converged or move to next timestep
     if precice.is_action_required(precice.action_read_checkpoint()):  # roll back to checkpoint
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
         u_n.assign(u_cp)
