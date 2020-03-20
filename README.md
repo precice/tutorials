@@ -12,6 +12,7 @@ The files in this repository are organized in the form `problem_type/geometry/so
    * `flow-over-plate`: A channel flow over a hot plate
       * `buoyantPimpleFoam-fenics`: for running see `README.md`
       * `buoyantPimpleFoam-nutils`: for running see `README.md`
+      * `buoyantSimpleFoam-Aster` : for running see the [preCICE wiki](https://github.com/precice/code_aster-adapter/wiki/Flow-over-plate-Code_Aster-Tutorial)
 * `HT`: Heat Transfer
    * `partitioned-heat`: Solving heat equation on a partitioned domain
       * `fenics-fenics`: for running see `README.md`
