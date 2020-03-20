@@ -18,13 +18,14 @@ Participant2="Fluid"
 cd ${Participant2}
   cleanCase
   touch Fluid.foam
+  # Remove the log files
+  rm -fv ${Participant2}_blockMesh.log
+  rm -fv ${Participant2}_checkMesh.log
+  rm -fv ${Participant2}_decomposePar.log
+  rm -fv ${Participant2}.log
+  rm -fv ${Participant2}_reconstructPar.log
 cd ..
-# Remove the log files
-rm -fv ${Participant2}_blockMesh.log
-rm -fv ${Participant2}_checkMesh.log
-rm -fv ${Participant2}_decomposePar.log
-rm -fv ${Participant2}.log
-rm -fv ${Participant2}_reconstructPar.log
+
 
 # Remove the preCICE-related log files
 echo "Deleting the preCICE log files..."
