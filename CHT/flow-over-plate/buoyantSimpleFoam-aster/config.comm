@@ -1,5 +1,5 @@
 settings = \
-{'base-path': tutorial_root+'/tutorials/buoyantSimpleFoam-aster',
+{'base-path': tutorial_root,
  'couplings': [['Solid-Interface', 'Fluid-Interface']],
  'participants': {'Fluid': {'directory': 'Fluid',
                             'domain-decomposed': False,

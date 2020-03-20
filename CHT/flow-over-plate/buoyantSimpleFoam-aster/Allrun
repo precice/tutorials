@@ -50,7 +50,7 @@ Participant1="Fluid"
 # =============== Participant 2: Solid ===========================
 Participant2="Solid"
 export PRECICE_PARTICIPANT=${Participant2}
-export TUTORIAL_ROOT=${PWD%/*/*}
+export TUTORIAL_ROOT=${PWD}
 
     # Run
     echo "  Starting the ${Participant2} participant..."

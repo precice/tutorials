@@ -41,7 +41,7 @@
       <read-data mesh="Fluid-Interface" name="Heat-Transfer-Coefficient-Solid"/>
       <mapping:nearest-neighbor constraint="consistent" direction="read" to="Fluid-Interface" from="Solid-Interface-Nodes"/>
     </participant>
-    <m2n:sockets to="Fluid" from="Solid" exchange-directory="/home/michel/Desktop/Code_Aster-Adapter-Dummy/buoyantSimpleFoam-aster"/>
+    <m2n:sockets to="Fluid" from="Solid" exchange-directory=".."/>
     <coupling-scheme:serial-explicit>
       <time-window-size value="1"/>
       <max-time-windows value="100"/>
