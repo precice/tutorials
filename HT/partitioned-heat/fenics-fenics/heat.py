@@ -62,26 +62,33 @@ parser.add_argument("-dom", "--domain", metavar='domain_type string', type=str, 
 
 args = parser.parse_args()
 
-config_file_name = "precice-config.xml"  # TODO should be moved into config, see https://github.com/precice/fenics-adapter/issues/5 , in case file doesnt not exsist open will fail
+config_file_name = "precice-config.xml"  # TODO should be moved into config, see https://github.com/precice/fenics-adapter/issues/5 , in case file doesnt not exist open will fail
 
 subcycle = Subcycling.NONE
+
+fenics_dt = None
+error_tol = None
 
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcycling.NONE and not args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
     error_tol = 10 ** -7  # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
+    print("Subcycling = NO, Arbitrary coupling interface = NO, error tolerance = {}".format(error_tol))
 elif subcycle is Subcycling.NONE and args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
     error_tol = 10 ** -3  # error low, if we do not subcycle. In theory we would obtain the analytical solution.
     # TODO For reasons, why we currently still have a relatively high error, see milestone https://github.com/precice/fenics-adapter/milestone/1
+    print("Subcycling = NO, Arbitrary coupling interface = YES, error tolerance = {}".format(error_tol))
 elif subcycle is Subcycling.MATCHING:
     fenics_dt = .01  # time step size
     error_tol = 10 ** -2  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
+    print("Subcycling = YES, Matching. error tolerance = {}".format(error_tol))
 elif subcycle is Subcycling.NONMATCHING:
     fenics_dt = .03  # time step size
     error_tol = 10 ** -1  # error increases. If we use subcycling, we cannot assume that we still get the exact solution.
     # TODO Using waveform relaxation, we should be able to obtain the exact solution here, as well.
+    print("Subcycling = YES, Non-matching. error tolerance = {}".format(error_tol))
 
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
@@ -117,10 +124,15 @@ precice = Adapter(adapter_config_filename)
 
 precice.set_interpolation_type(InterpolationType.CUBIC_SPLINE)
 
+precice_dt = precice.initialize(coupling_boundary, mesh)
+
+boundary_marker = False
+coupling_function = None
+
 if problem is ProblemType.DIRICHLET:
-    precice_dt = precice.initialize(coupling_boundary, mesh, u_D_function, f_N_function, V)
+    coupling_function = precice.initialize_data(u_D_function, f_N_function, V)
 elif problem is ProblemType.NEUMANN:
-    precice_dt = precice.initialize(coupling_boundary, mesh, f_N_function, u_D_function, V_g)
+    coupling_function = precice.initialize_data(f_N_function, u_D_function, V_g)
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -130,30 +142,6 @@ u = TrialFunction(V)
 v = TestFunction(V)
 f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
-
-boundary_marker = False
-coupling_bc_expression = None
-
-if problem is ProblemType.DIRICHLET:
-    # apply Dirichlet boundary condition on coupling interface
-    coupling_bc_expression = precice.create_coupling_boundary_condition()
-    bcs.append(dolfin.DirichletBC(V, coupling_bc_expression, coupling_boundary))
-if problem is ProblemType.NEUMANN:
-    # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
-    coupling_bc_expression = precice.create_coupling_boundary_condition()
-
-    if not boundary_marker:  # there is only 1 Neumann-BC which is at the coupling boundary -> integration over whole boundary
-        if coupling_bc_expression.is_scalar_valued():
-            F += v * coupling_bc_expression * dolfin.ds  # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
-        elif coupling_bc_expression.is_vector_valued():
-            normal = FacetNormal(mesh)
-            F += -v * dot(normal, coupling_bc_expression) * dolfin.ds
-        else:
-            raise Exception("invalid!")
-    else:  # For multiple Neumann BCs integration should only be performed over the respective domain.
-        # TODO: fix the problem here
-        raise Exception("Boundary markers are not implemented yet")
-        # return dot(coupling_bc_expression, v) * dolfin.dss(boundary_marker)
 
 a, L = lhs(F), rhs(F)
 
@@ -192,20 +180,20 @@ while precice.is_coupling_ongoing():
         precice.store_checkpoint(u_n, t, n)
 
     # read data from preCICE and provide an updated coupling function to modify boundary conditions
-    updated_coupling_function = precice.read()
+    coupling_function = precice.read()
 
     # Updating boundary condition at coupling interface
     if problem is ProblemType.DIRICHLET:
         # modify Dirichlet boundary condition on coupling interface
-        bcs.append(dolfin.DirichletBC(V, updated_coupling_function, coupling_boundary))
+        bcs.append(dolfin.DirichletBC(V, coupling_function, coupling_boundary))
     if problem is ProblemType.NEUMANN:
         # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
         if not boundary_marker:  # there is only 1 Neumann-BC which is at the coupling boundary -> integration over whole boundary
-            if updated_coupling_function.is_scalar_valued():
-                F += v * updated_coupling_function * dolfin.ds  # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
-            elif updated_coupling_function.is_vector_valued():
+            if coupling_function.is_scalar_valued():
+                F += v * coupling_function * dolfin.ds  # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
+            elif coupling_function.is_vector_valued():
                 normal = FacetNormal(mesh)
-                F += -v * dot(normal, updated_coupling_function) * dolfin.ds
+                F += -v * dot(normal, coupling_function) * dolfin.ds
             else:
                 raise Exception("invalid!")
         else:  # For multiple Neumann BCs integration should only be performed over the respective domain.
@@ -219,13 +207,16 @@ while precice.is_coupling_ongoing():
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
 
+    print("u_np1 after solve in step {}:".format(n))
+    print(u_np1.compute_vertex_values(mesh))
+
     # Write data to preCICE according to which problem is being solved
     if problem is ProblemType.DIRICHLET:
-        # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
+        # Dirichlet problem reads temperature and writes flux on boundary to Neumann problem
         determine_gradient(V_g, u_np1, flux)
         precice.write(flux)
     elif problem is ProblemType.NEUMANN:
-        # Neumann problem obtains sends temperature on boundary to Dirichlet problem
+        # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
         precice.write(u_np1)
 
     # Call to advance coupling, also returns the optimum time step value
@@ -242,9 +233,10 @@ while precice.is_coupling_ongoing():
         t += dt
         n += 1
 
-    if precice.is_timestep_complete():
+    if precice.is_time_window_complete():
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
+        print('Computing error for: n = %d, t = %.2f' % (n, t))
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
@@ -253,7 +245,7 @@ while precice.is_coupling_ongoing():
         ref_out << u_ref
         error_out << error_pointwise
 
-    # Update dirichlet BC
+    # Update Dirichlet BC
     u_D.t = t + dt(0)
     f.t = t + dt(0)
 
