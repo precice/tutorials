@@ -26,9 +26,6 @@ Participant1="Fluid"
     echo "Preparing the ${Participant1} participant..."
 
     cd $Participant1
-    echo "  Restoring 0/ from 0.orig/..."
-        #rm -rfv 0
-        #cp -r 0.orig 0
         blockMesh > ${Participant1}_blockMesh.log 2>&1
     cd ..
 
