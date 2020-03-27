@@ -1,0 +1,70 @@
+# Mesh and model
+
+MESH = LIRE_MAILLAGE(UNITE=20, FORMAT='MED',);
+
+MESH = DEFI_GROUP(
+	reuse=MESH,
+	MAILLAGE=MESH,
+	CREA_GROUP_NO=_F(
+		TOUT_GROUP_MA='OUI',
+		),
+);
+
+MODEL = AFFE_MODELE(
+	MAILLAGE=MESH,
+	AFFE=_F(TOUT='OUI',
+	PHENOMENE='THERMIQUE',
+	MODELISATION='3D',),
+);
+
+# Materials
+
+MAT = [None] * 1
+
+COND = DEFI_CONSTANTE(VALE=100)
+RHO_CP = DEFI_CONSTANTE(VALE=100)
+
+MAT[0] = DEFI_MATERIAU(THER=_F(LAMBDA=100, RHO_CP=100),);
+
+MATS = AFFE_MATERIAU(
+	MAILLAGE=MESH,
+	AFFE=_F(
+		TOUT='OUI',
+		MATER=MAT[0],
+	),
+);
+
+# Boundary conditions
+
+BC = [None] * 2
+
+BC[0] = AFFE_CHAR_THER(
+	MODELE=MODEL,
+	TEMP_IMPO=_F(
+		GROUP_MA='bottom',
+		TEMP=310,
+	),
+);
+
+BC[1] = AFFE_CHAR_THER(
+	MODELE=MODEL,
+	FLUX_REP=(
+		_F(GROUP_MA='left', FLUN=0.0,),
+		_F(GROUP_MA='right', FLUN=0.0,),
+		_F(GROUP_MA='back', FLUN=0.0,),
+		_F(GROUP_MA='front', FLUN=0.0,),
+	),
+);
+
+# Initial condition
+
+INIT_T=CREA_CHAMP(
+	TYPE_CHAM='NOEU_TEMP_R',
+	AFFE=_F(
+		NOM_CMP=('TEMP'),
+		TOUT='OUI',
+		VALE=(310.0),
+	),
+	OPERATION='AFFE',
+	MODELE=MODEL,
+);
