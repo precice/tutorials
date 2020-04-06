@@ -94,21 +94,21 @@ alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 
+# Create mesh and separate mesh components for grid, boundary and coupling interface
 domain_part, problem = get_problem_setup(args)
 mesh, coupling_boundary, remaining_boundary = get_geometry(domain_part)
 
 adapter_config_filename = None
-
-# Create mesh and define function space
 if problem is ProblemType.DIRICHLET:
     adapter_config_filename = "precice-adapter-config-D.json"
 elif problem is ProblemType.NEUMANN:
     adapter_config_filename = "precice-adapter-config-N.json"
 
+# Define function space using mesh
 V = FunctionSpace(mesh, 'P', 2)
 V_g = VectorFunctionSpace(mesh, 'P', 1)
 
-# Define boundary condition
+# Define boundary conditions
 u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 u_D_function = interpolate(u_D, V)
 # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
@@ -116,24 +116,27 @@ f_N = Expression(("2 * gamma*t*x[0] + 2 * (1-gamma)*x[0]", "2 * alpha*x[1]"), de
 f_N_function = interpolate(f_N, V_g)
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
+
 # Define initial value
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
+# Adapter definition and initialization
 precice = Adapter(adapter_config_filename)
-
+# Selecting interpolation strategy
 precice.set_interpolation_type(InterpolationType.CUBIC_SPLINE)
-
 precice_dt = precice.initialize(coupling_boundary, mesh)
 
 boundary_marker = False
 coupling_function = None
 
+# Initialize data to non-standard initial values according to which problem is being solved
 if problem is ProblemType.DIRICHLET:
     coupling_function = precice.initialize_data(u_D_function, f_N_function, V)
 elif problem is ProblemType.NEUMANN:
     coupling_function = precice.initialize_data(f_N_function, u_D_function, V_g)
 
+# Assigning appropriate dt
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
 
@@ -179,7 +182,7 @@ while precice.is_coupling_ongoing():
     if precice.is_action_required(precice.action_write_checkpoint()):  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
 
-    # read data from preCICE and provide an updated coupling function to modify boundary conditions
+    # read data from preCICE and get a coupling function
     coupling_function = precice.read()
 
     # Updating boundary condition at coupling interface
@@ -187,7 +190,7 @@ while precice.is_coupling_ongoing():
         # modify Dirichlet boundary condition on coupling interface
         bcs.append(dolfin.DirichletBC(V, coupling_function, coupling_boundary))
     if problem is ProblemType.NEUMANN:
-        # apply Neumann boundary condition on coupling interface, modify weak form correspondingly
+        # modify Neumann boundary condition on coupling interface, modify weak form correspondingly
         if not boundary_marker:  # there is only 1 Neumann-BC which is at the coupling boundary -> integration over whole boundary
             if coupling_function.is_scalar_valued():
                 F += v * coupling_function * dolfin.ds  # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
@@ -207,17 +210,14 @@ while precice.is_coupling_ongoing():
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
 
-    print("u_np1 after solve in step {}:".format(n))
-    print(u_np1.compute_vertex_values(mesh))
-
     # Write data to preCICE according to which problem is being solved
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem reads temperature and writes flux on boundary to Neumann problem
         determine_gradient(V_g, u_np1, flux)
-        precice.write(flux)
+        precice.write(flux.copy())
     elif problem is ProblemType.NEUMANN:
         # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
-        precice.write(u_np1)
+        precice.write(u_np1.copy())
 
     # Call to advance coupling, also returns the optimum time step value
     precice_dt = precice.advance(dt(0))
@@ -228,7 +228,7 @@ while precice.is_coupling_ongoing():
         u_n.assign(u_cp)
         t = t_cp
         n = n_cp
-    else:  # go to next timestep
+    else:
         u_n.assign(u_np1)
         t += dt
         n += 1
