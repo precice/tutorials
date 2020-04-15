@@ -35,9 +35,7 @@
     <participant name="fenics">
       <use-mesh name="Solid" provide="yes" />
       <read-data name="Data" mesh="Solid" />
-      <!-- <mapping:rbf-gaussian shape-parameter="4" constraint="consistent" direction="read" from="MeshA" to="MeshB" x-dead="false" y-dead="false" z-dead="false" /> -->
-      <!-- <mapping:petrbf-gaussian shape-parameter="5600" solver-rtol="1e-9" constraint="consistent" direction="read" from="MeshA" to="MeshB" x-dead="true" y-dead="false" z-dead="false" polynomial="separate" preallocation="tree"/> -->
-      <!-- <mapping:petrbf-volume-splines solver-rtol="1e-9" constraint="consistent" direction="read" from="MeshA" to="MeshB" x-dead="false" y-dead="false" z-dead="false" /> -->
+
       <export:vtk every-n-time-windows="1" directory="vtkB/" normals="0"/>
     </participant>
 
