@@ -39,7 +39,6 @@
         <use-mesh name="Solid" provide="yes"/>
         <read-data name="Forces0" mesh="Solid"/>
         <write-data name="Displacements0" mesh="Solid"/>
-        <export:vtk directory="preCICE-output" />
     </participant>
 
     <m2n:sockets from="Fluid" to="fenics"/>
