@@ -1,6 +1,7 @@
 ## Overview
 
-This tutorial is an example how the Artificial Solver Testing Environment (aste) can be used. The idea is that you run a coupled simulation with two regular solvers and save the coupling data in every timestep. Then, this data is converted to aste-format. Finally, aste substitutes one of the solvers and the simulation can be "replayed" using only one solver and aste with the prior results.
+This tutorial is an example how the Artificial Solver Testing Environment (aste) can be used. The idea is that you run a coupled simulation with two regular solvers and save the coupling data in every timestep. Then, this data is converted to aste-format. Finally, aste substitutes one of the solvers and the simulation can be "replayed" using only one solver and aste with the previously computed results.
+
 
 The base simulation for this tutorial is the OpenFOAM-FEniCS perpendicular flap tutorial. aste then substitutes OpenFOAM.
 
@@ -89,7 +90,6 @@ If you want to explore more possibilities of the Replay-Mode here are some ideas
 - Export the forces in the [Calculix-Openfoam-tutorial](https://github.com/precice/tutorials/tree/master/FSI/flap_perp/OpenFOAM-CalculiX) with the same geometry and feed them to FEniCS with aste. 
 
 - If you are familiar with the OpenFOAM-Adapter you can also substitute FEniCS with aste such that aste writes previously exported displacements to OpenFOAM.
-
 
 
 
