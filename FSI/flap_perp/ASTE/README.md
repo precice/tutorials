@@ -30,14 +30,14 @@ To generate a vtk output in preCICE, add the following line to the `precice-conf
 
 Then, the simulation can be run in two terminals with `bash ./runFluid` and `python3 Solid/perp_flap.py`.
 
-The exports are in the ```preCICE-output``` directory.
+The exports are in the `preCICE-output` directory.
 
 ### Converting the output to aste format.
 
-Copy the `preCICE-output` folder to the root directory of the aste tutorial ``tutorials/FSI/flap_perp/ASTE`.
-To convert the files to the correct format, open the ```preCICE-output``` folder and run
+Copy the `preCICE-output` folder to the root directory of the aste tutorial `tutorials/FSI/flap_perp/ASTE`.
+To convert the files to the correct format, open the `preCICE-output` folder and run
 
-```precice_to_aste.py -n 500 -f Forces0 --datadim 3```
+`precice_to_aste.py Solid-fenics -n 500 -f Forces0 --datadim 3`
 
 ### Replay of the simulation with aste
 
@@ -87,7 +87,7 @@ Last, you need to change the coupling scheme to an explicit scheme:
       <exchange data="Data" mesh="Solid" from="A" to="fenics" />
 ```
 
-### Run
+#### Run
 
 Finally, run the tutorial in two shells with `python3 Solid/perp-flap.py` and `preciceMap -v -c precice-config.xml -p A --mesh preCICE-output/Solid-fenics --vectordata`.
 
