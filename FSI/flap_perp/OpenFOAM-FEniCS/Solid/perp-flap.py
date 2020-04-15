@@ -24,6 +24,7 @@ def Neumann_Boundary(x, on_boundary):
     """
     return on_boundary and ((abs(x[1]-1)<tol) or abs(abs(x[0])-W/2)<tol)
 
+
 pr= cProfile.Profile()
 pr.enable()
 
@@ -277,4 +278,3 @@ plt.plot(time, u_tip)
 plt.xlabel("Time")
 plt.ylabel("Tip displacement")
 plt.show()
-
