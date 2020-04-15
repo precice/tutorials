@@ -10,7 +10,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from fenicsadapter import Adapter
 from enum import Enum
-import cProfile, pstats
 
 
 # define the two kinds of boundary: clamped and coupling Neumann Boundary
@@ -25,8 +24,7 @@ def Neumann_Boundary(x, on_boundary):
     return on_boundary and ((abs(x[1]-1)<tol) or abs(abs(x[0])-W/2)<tol)
 
 
-pr= cProfile.Profile()
-pr.enable()
+
 
 # Geometry and material properties
 dim=2 #number of dimensions
@@ -72,15 +70,6 @@ u_function = interpolate(Expression(("0","0"), degree=1), V)
 
 coupling_boundary = AutoSubDomain(Neumann_Boundary)
 
-def empty(x, on_boundary):
-    return False
-empty_domain = AutoSubDomain(empty)
-
-def non_dir_boundary(x, on_boundary):
-    return on_boundary and not clamped_boundary(x, on_boundary)
-non_dir_domain = AutoSubDomain(non_dir_boundary)
-
-# create subdomain that resembles the 
 
 ## get the adapter ready
 
@@ -266,12 +255,8 @@ while precice.is_coupling_ongoing():
     
     
 precice.finalize()
+
 # Plot tip displacement evolution    
-pr.disable()
-pr.dump_stats('prof_data')
-pr2=pstats.Stats('prof_data')
-pr2.sort_stats('cumulative')
-pr2.print_stats()
 displacement_out << u_n 
 plt.figure()
 plt.plot(time, u_tip)
