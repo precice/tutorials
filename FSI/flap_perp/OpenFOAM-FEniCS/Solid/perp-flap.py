@@ -13,7 +13,7 @@ from enum import Enum
 import cProfile, pstats
 
 
-#define the two kinds of boundary: clamped and coupling Neumann Boundary
+# define the two kinds of boundary: clamped and coupling Neumann Boundary
 def clamped_boundary(x, on_boundary):
     return on_boundary and abs(x[1])<tol
 
@@ -277,5 +277,4 @@ plt.plot(time, u_tip)
 plt.xlabel("Time")
 plt.ylabel("Tip displacement")
 plt.show()
-
 
