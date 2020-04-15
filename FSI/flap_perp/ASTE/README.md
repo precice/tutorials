@@ -15,7 +15,8 @@ To run this tutorial you need to install the following components:
 - OpenFOAM, e.g. [OpenFOAM 7](https://openfoam.org/version/7/)
 - [OpenFOAM Adapter](https://github.com/precice/openfoam-adapter/wiki/Building) matching the OpenFOAM version.
 
-Make sure to add aste/build to the ```PATH``` such that the python scripts and ```preciceMap``` can be found from anywhere on your system.
+Make sure to add `aste/build` to the `PATH` such that the python scripts and `preciceMap` can be found from anywhere on your system.
+
 
 ## Step-by-Step explanations
 
@@ -90,6 +91,5 @@ If you want to explore more possibilities of the Replay-Mode here are some ideas
 - Export the forces in the [Calculix-Openfoam-tutorial](https://github.com/precice/tutorials/tree/master/FSI/flap_perp/OpenFOAM-CalculiX) with the same geometry and feed them to FEniCS with aste. 
 
 - If you are familiar with the OpenFOAM-Adapter you can also substitute FEniCS with aste such that aste writes previously exported displacements to OpenFOAM.
-
 
 
