@@ -25,7 +25,6 @@ def Neumann_Boundary(x, on_boundary):
 
 
 
-
 # Geometry and material properties
 dim=2 #number of dimensions
 H = 1
@@ -71,9 +70,9 @@ u_function = interpolate(Expression(("0","0"), degree=1), V)
 coupling_boundary = AutoSubDomain(Neumann_Boundary)
 
 
-## get the adapter ready
+# get the adapter ready
 
-#read fenics-adapter json-config-file)
+# read fenics-adapter json-config-file)
 
 adapter_config_filename = "precice-adapter-config-fsi-s.json"
            
@@ -95,7 +94,7 @@ force_boundary = AutoSubDomain(Neumann_Boundary)
 # clamp the beam at the bottom
 bc = DirichletBC(V, Constant((0,0)), clamped_boundary)
 
-#alpha method parameters
+# alpha method parameters
 
 alpha_m = Constant(0.0)
 alpha_f = Constant(0.0)
@@ -180,7 +179,7 @@ L_form= rhs(res)
 
 # Prepare for time-stepping
 
-#parameters for Time-Stepping
+# parameters for Time-Stepping
 t=0.0
 n=0
 time = []
@@ -221,7 +220,7 @@ xdmf_file.parameters["flush_output"] = True
 xdmf_file.parameters["functions_share_mesh"] = True
 xdmf_file.parameters["rewrite_function_mesh"] = False
 
-#time loop for coupling
+# time loop for coupling
 
   
 while precice.is_coupling_ongoing():
