@@ -41,8 +41,8 @@ mu    = Constant(E / (2.0*(1.0 + nu)))
 lambda_ = Constant(E*nu / ((1.0 + nu)*(1.0 - 2.0*nu)))
 
 # create Mesh
-n_x_Direction=4
-n_y_Direction=40
+n_x_Direction=5
+n_y_Direction=50
 mesh = RectangleMesh(Point(-W/2,0), Point(W/2,H), n_x_Direction,n_y_Direction)
 
 h=Constant(H/n_y_Direction)
