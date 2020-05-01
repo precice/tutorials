@@ -37,7 +37,7 @@ The exports are in the `preCICE-output` directory.
 Copy the `preCICE-output` folder to the root directory of the aste tutorial `tutorials/FSI/flap_perp/ASTE`.
 To convert the files to the correct format, open the `preCICE-output` folder and run
 
-`precice_to_aste.py Solid-fenics -n 500 -f Forces0 --datadim 3`
+`precice_to_aste.py Solid-fenics -n 500 -t Forces0 --datadim 3`
 
 ### Replay of the simulation with aste
 
