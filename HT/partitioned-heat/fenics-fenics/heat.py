@@ -72,7 +72,7 @@ error_tol = None
 # for all scenarios, we assume precice_dt == .1
 if subcycle is Subcycling.NONE and not args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
-    error_tol = 10 ** -7  # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
+    error_tol = 10 ** -6  # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
     print("Subcycling = NO, Arbitrary coupling interface = NO, error tolerance = {}".format(error_tol))
 elif subcycle is Subcycling.NONE and args.arbitrary_coupling_interface:
     fenics_dt = .1  # time step size
@@ -128,13 +128,13 @@ precice.set_interpolation_type(InterpolationType.CUBIC_SPLINE)
 precice_dt = precice.initialize(coupling_boundary, mesh)
 
 boundary_marker = False
-coupling_function = None
+coupling_expression = None
 
 # Initialize data to non-standard initial values according to which problem is being solved
 if problem is ProblemType.DIRICHLET:
-    coupling_function = precice.initialize_data(u_D_function, f_N_function, V)
+    coupling_expression = precice.initialize_data(u_D_function, f_N_function, V)
 elif problem is ProblemType.NEUMANN:
-    coupling_function = precice.initialize_data(f_N_function, u_D_function, V_g)
+    coupling_expression = precice.initialize_data(f_N_function, u_D_function, V_g)
 
 # Assigning appropriate dt
 dt = Constant(0)
@@ -145,6 +145,25 @@ u = TrialFunction(V)
 v = TestFunction(V)
 f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
+
+# Set boundary conditions at coupling interface once wrt to the coupling expression
+if problem is ProblemType.DIRICHLET:
+    # modify Dirichlet boundary condition on coupling interface
+    bcs = [DirichletBC(V, coupling_expression, coupling_boundary), DirichletBC(V, u_D, remaining_boundary)]
+if problem is ProblemType.NEUMANN:
+    # modify Neumann boundary condition on coupling interface, modify weak form correspondingly
+    if not boundary_marker:  # there is only 1 Neumann-BC which is at the coupling boundary -> integration over whole boundary
+        if coupling_expression.is_scalar_valued():
+            F += v * coupling_expression * dolfin.ds  # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
+        elif coupling_expression.is_vector_valued():
+            normal = FacetNormal(mesh)
+            F += -v * dot(normal, coupling_expression) * dolfin.ds
+        else:
+            raise Exception("invalid!")
+    else:  # For multiple Neumann BCs integration should only be performed over the respective domain.
+        # TODO: fix the problem here
+        raise Exception("Boundary markers are not implemented yet")
+        # return dot(coupling_bc_expression, v) * dolfin.dss(boundary_marker)
 
 a, L = lhs(F), rhs(F)
 
@@ -157,6 +176,7 @@ t = 0
 u_ref = interpolate(u_D, V)
 u_ref.rename("reference", " ")
 
+# Generating output files
 temperature_out = File("out/%s.pvd" % precice.get_solver_name())
 ref_out = File("out/ref%s.pvd" % precice.get_solver_name())
 error_out = File("out/error%s.pvd" % precice.get_solver_name())
@@ -182,27 +202,12 @@ while precice.is_coupling_ongoing():
     if precice.is_action_required(precice.action_write_checkpoint()):  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
 
-    # read data from preCICE and get a coupling function
-    coupling_function = precice.read()
+    # read data from preCICE and get a new coupling expression
+    read_data = precice.read()
 
-    # Updating boundary condition at coupling interface
-    if problem is ProblemType.DIRICHLET:
-        # modify Dirichlet boundary condition on coupling interface
-        bcs.append(dolfin.DirichletBC(V, coupling_function, coupling_boundary))
-    if problem is ProblemType.NEUMANN:
-        # modify Neumann boundary condition on coupling interface, modify weak form correspondingly
-        if not boundary_marker:  # there is only 1 Neumann-BC which is at the coupling boundary -> integration over whole boundary
-            if coupling_function.is_scalar_valued():
-                F += v * coupling_function * dolfin.ds  # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
-            elif coupling_function.is_vector_valued():
-                normal = FacetNormal(mesh)
-                F += -v * dot(normal, coupling_function) * dolfin.ds
-            else:
-                raise Exception("invalid!")
-        else:  # For multiple Neumann BCs integration should only be performed over the respective domain.
-            # TODO: fix the problem here
-            raise Exception("Boundary markers are not implemented yet")
-            # return dot(coupling_bc_expression, v) * dolfin.dss(boundary_marker)
+    # Update the coupling expression with the new read data
+    # Boundary conditions are modified implicitly via this coupling_expression
+    precice.update_coupling_expression(coupling_expression, read_data)
 
     # Assign the correct time step
     dt.assign(np.min([fenics_dt, precice_dt]))
@@ -248,6 +253,9 @@ while precice.is_coupling_ongoing():
     # Update Dirichlet BC
     u_D.t = t + dt(0)
     f.t = t + dt(0)
+
+    # Trial: Reset coupling function
+    coupling_function = None
 
 # Hold plot
 precice.finalize()
