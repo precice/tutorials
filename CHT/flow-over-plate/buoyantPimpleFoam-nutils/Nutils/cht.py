@@ -38,8 +38,7 @@ def main(elemsize: 'mesh width in x and y direction' = 0.05,
   participantName = "Nutils"
   solverProcessIndex = 0
   solverProcessSize = 1
-  interface = precice.Interface(participantName, solverProcessIndex, solverProcessSize)
-  interface.configure(configFileName)
+  interface = precice.Interface(participantName, configFileName, solverProcessIndex, solverProcessSize)
 
   # define coupling meshes
   meshNameGP = "Nutils-Mesh-GP" # Gauss points
@@ -96,7 +95,7 @@ def main(elemsize: 'mesh width in x and y direction' = 0.05,
     # save checkpoint
     if interface.is_action_required(precice.action_write_iteration_checkpoint()):
       lhscheckpoint = lhs0
-      interface.fulfilled_action(precice.action_write_iteration_checkpoint())
+      interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
       
     # potentially adjust non-matching timestep sizes  
     dt = min(dt, precice_dt)  
@@ -115,7 +114,7 @@ def main(elemsize: 'mesh width in x and y direction' = 0.05,
 
     # read checkpoint if required
     if interface.is_action_required(precice.action_read_iteration_checkpoint()):
-      interface.fulfilled_action(precice.action_read_iteration_checkpoint())
+      interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
       lhs0 = lhscheckpoint
     else: # go to next timestep and visualize
       bezier = domain.sample('bezier', 2)

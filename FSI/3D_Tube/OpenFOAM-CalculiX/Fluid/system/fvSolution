@@ -124,7 +124,7 @@ FoamFile
 	    maxIter 100;
         }
 
-	pcorr
+	"pcorr.*"
         {
             solver GAMG;
             agglomerator faceAreaPair;
