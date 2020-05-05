@@ -129,12 +129,16 @@ precice_dt = precice.initialize(coupling_boundary, mesh)
 
 boundary_marker = False
 coupling_expression = None
+initial_data = None
 
 # Initialize data to non-standard initial values according to which problem is being solved
 if problem is ProblemType.DIRICHLET:
-    coupling_expression = precice.initialize_data(u_D_function, f_N_function, V)
+    initial_data = precice.initialize_data(u_D_function, f_N_function, V)
 elif problem is ProblemType.NEUMANN:
-    coupling_expression = precice.initialize_data(f_N_function, u_D_function, V_g)
+    initial_data = precice.initialize_data(f_N_function, u_D_function, V_g)
+
+coupling_expression = precice.create_coupling_expression()
+precice.update_coupling_expression(coupling_expression, initial_data)
 
 # Assigning appropriate dt
 dt = Constant(0)
@@ -253,9 +257,6 @@ while precice.is_coupling_ongoing():
     # Update Dirichlet BC
     u_D.t = t + dt(0)
     f.t = t + dt(0)
-
-    # Trial: Reset coupling function
-    coupling_function = None
 
 # Hold plot
 precice.finalize()
