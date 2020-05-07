@@ -36,12 +36,13 @@ from problem_setup import get_geometry, get_problem_setup
 import dolfin
 from dolfin import FacetNormal, dot
 
+
 def determine_gradient(V_g, u, flux):
     """
     compute flux following http://hplgit.github.io/INF5620/doc/pub/fenics_tutorial1.1/tu2.html#tut-poisson-gradu
-    :param mesh
+    :param V_g:
     :param u: solution where gradient is to be determined
-    :return:
+    :param flux:
     """
 
     w = TrialFunction(V_g)
@@ -55,10 +56,16 @@ def determine_gradient(V_g, u, flux):
 parser = argparse.ArgumentParser(description='Solving heat equation for simple or complex interface case')
 parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
-parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0, type=float)
-parser.add_argument("-a", "--arbitrary-coupling-interface", help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1", action='store_true')
-parser.add_argument("-i", "--interface", metavar="interface_type string", type=str, choices=['simple', 'complex'], help="Type of coupling interface case to be solved. Options: simple, complex", default="simple")
-parser.add_argument("-dom", "--domain", metavar='domain_type string', type=str, choices=['left', 'right', 'circular', 'rectangle'], help="Specifying part of the domain being solved. For simple interface the options are left, right, for complex interface the options are circular, rest")
+parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0,
+                    type=float)
+parser.add_argument("-a", "--arbitrary-coupling-interface",
+                    help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1",
+                    action='store_true')
+parser.add_argument("-i", "--interface", metavar="interface_type string", type=str, choices=['simple', 'complex'],
+                    help="Type of coupling interface case to be solved. Options: simple, complex", default="simple")
+parser.add_argument("-dom", "--domain", metavar='domain_type string', type=str,
+                    choices=['left', 'right', 'circular', 'rectangle'],
+                    help="Specifying part of the domain being solved. For simple interface the options are left, right, for complex interface the options are circular, rest")
 
 args = parser.parse_args()
 
@@ -109,13 +116,12 @@ V = FunctionSpace(mesh, 'P', 2)
 V_g = VectorFunctionSpace(mesh, 'P', 1)
 
 # Define boundary conditions
-u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
+u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha,
+                 beta=beta, gamma=gamma, t=0)
 u_D_function = interpolate(u_D, V)
 # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
 f_N = Expression(("2 * gamma*t*x[0] + 2 * (1-gamma)*x[0]", "2 * alpha*x[1]"), degree=1, gamma=gamma, alpha=alpha, t=0)
 f_N_function = interpolate(f_N, V_g)
-
-bcs = [DirichletBC(V, u_D, remaining_boundary)]
 
 # Define initial value
 u_n = interpolate(u_D, V)
@@ -128,8 +134,7 @@ precice.set_interpolation_type(InterpolationType.CUBIC_SPLINE)
 precice_dt = precice.initialize(coupling_boundary, mesh)
 
 boundary_marker = False
-coupling_expression = None
-initial_data = None
+coupling_expression, initial_data, bcs = None, None, None
 
 # Initialize data to non-standard initial values according to which problem is being solved
 if problem is ProblemType.DIRICHLET:
@@ -140,14 +145,14 @@ elif problem is ProblemType.NEUMANN:
 coupling_expression = precice.create_coupling_expression()
 precice.update_coupling_expression(coupling_expression, initial_data)
 
-# Assigning appropriate dt
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
 
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
+f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha,
+               beta=beta, gamma=gamma, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 # Set boundary conditions at coupling interface once wrt to the coupling expression
@@ -206,14 +211,12 @@ while precice.is_coupling_ongoing():
     if precice.is_action_required(precice.action_write_checkpoint()):  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
 
-    # read data from preCICE and get a new coupling expression
     read_data = precice.read()
 
     # Update the coupling expression with the new read data
     # Boundary conditions are modified implicitly via this coupling_expression
     precice.update_coupling_expression(coupling_expression, read_data)
 
-    # Assign the correct time step
     dt.assign(np.min([fenics_dt, precice_dt]))
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
@@ -228,16 +231,14 @@ while precice.is_coupling_ongoing():
         # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
         precice.write(u_np1.copy())
 
-    # Call to advance coupling, also returns the optimum time step value
     precice_dt = precice.advance(dt(0))
 
-    # Either revert to old step if timestep has not converged or move to next timestep
     if precice.is_action_required(precice.action_read_checkpoint()):  # roll back to checkpoint
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
         u_n.assign(u_cp)
         t = t_cp
         n = n_cp
-    else:
+    else:  # update solution
         u_n.assign(u_np1)
         t += dt
         n += 1

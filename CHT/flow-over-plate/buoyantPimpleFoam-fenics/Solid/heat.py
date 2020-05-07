@@ -26,18 +26,19 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, SubDomain, RectangleMesh, BoxMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
-    TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, near
-from fenicsadapter import Adapter
+    TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, \
+    near
+from fenicsadapter import Adapter, InterpolationType
 import numpy as np
 
 
 class ComplementaryBoundary(SubDomain):
     """Determines if a point is at the complementary boundary with tolerance of
     1E-14.
-
     :func inside(): returns True if point belongs to the boundary, otherwise
                     returns False
     """
+
     def __init__(self, subdomain):
         self.complement = subdomain
         SubDomain.__init__(self)
@@ -52,10 +53,10 @@ class ComplementaryBoundary(SubDomain):
 
 class TopBoundary(SubDomain):
     """Determines if the point is at the top boundary with tolerance of 1E-14.
-
     :func inside(): returns True if point belongs to the boundary, otherwise
                     returns False
     """
+
     def inside(self, x, on_boundary):
         tol = 1E-14
         if on_boundary and near(x[1], y_top, tol):
@@ -71,13 +72,13 @@ class BottomBoundary(SubDomain):
     :func inside(): returns True if point belongs to the boundary, otherwise
                     returns False
     """
+
     def inside(self, x, on_boundary):
         tol = 1E-14
         if on_boundary and near(x[1], y_bottom, tol):
             return True
         else:
             return False
-
 
 
 def fluxes_from_temperature_full_domain(F, V, k):
@@ -98,7 +99,7 @@ def fluxes_from_temperature_full_domain(F, V, k):
         if area[i] != 0:  # put weight from assemble on function
             fluxes.vector()[i] = - k * fluxes_vector[i] / area[i]  # scale by surface area
         else:
-            assert(abs(fluxes_vector[i]) < 10**-10)  # for non surface parts, we expect zero flux
+            assert (abs(fluxes_vector[i]) < 10 ** -10)  # for non surface parts, we expect zero flux
             fluxes.vector()[i] = - k * fluxes_vector[i]
     return fluxes
 
@@ -138,20 +139,33 @@ bottom_boundary = BottomBoundary()
 u_n = interpolate(u_D, V)
 u_n.rename("T", "")
 
-#start preCICE adapter
-precice = Adapter()
-precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, mesh=mesh, read_field=u_D_function, write_field=f_N_function,
-                   u_n=u_n)
-dt = np.min([fenics_dt, precice_dt])  # todo we could also consider deciding on time stepping size inside the adapter
-bcs = [DirichletBC(V, u_D, bottom_boundary)]
+adapter_config_filename = "precice-adapter-config.json"
+
+# Adapter definition and initialization
+precice = Adapter(adapter_config_filename)
+# Selecting interpolation strategy
+precice.set_interpolation_type(InterpolationType.RBF)
+precice_dt = precice.initialize(coupling_boundary, mesh)
+
+# Initialized data to be used in setting the FEniCS Expression at coupling boundary
+initial_data = precice.initialize_data(u_D_function, f_N_function, V)
+
+# Create a FEniCS Expression to define and control the coupling boundary values
+coupling_expression = precice.create_coupling_expression()
+precice.update_coupling_expression(coupling_expression, initial_data)
+
+# Assigning appropriate dt
+dt = Constant(0)
+dt.assign(np.min([fenics_dt, precice_dt]))
 
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
 F = u * v / dt * dx + alpha * dot(grad(u), grad(v)) * dx - u_n * v / dt * dx
 
+# apply constant Dirichlet boundary condition at bottom edge
 # apply Dirichlet boundary condition on coupling interface
-bcs.append(precice.create_coupling_dirichlet_boundary_condition(V))
+bcs = [DirichletBC(V, coupling_expression, coupling_boundary), DirichletBC(V, u_D, bottom_boundary)]
 
 a, L = lhs(F), rhs(F)
 
@@ -161,26 +175,47 @@ F_known_u = u_np1 * v / dt * dx + alpha * dot(grad(u_np1), grad(v)) * dx - u_n *
 t = 0
 u_D.t = t + dt
 
-file_out = File("Solid/VTK/%s.pvd" % precice._solver_name)
-n=0
+file_out = File("Solid/VTK/%s.pvd" % precice.get_solver_name())
+n = 0
 
 while precice.is_coupling_ongoing():
+
+    if precice.is_action_required(precice.action_write_checkpoint()):  # write checkpoint
+        precice.store_checkpoint(u_n, t, n)
+
+    read_data = precice.read()
+
+    # Update the coupling expression with the new read data
+    # Boundary conditions are modified implicitly via this coupling_expression
+    precice.update_coupling_expression(coupling_expression, read_data)
+
+    dt.assign(np.min([fenics_dt, precice_dt]))
 
     # Compute solution
     solve(a == L, u_np1, bcs)
 
     # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
     fluxes = fluxes_from_temperature_full_domain(F_known_u, V, k)
-    t, n, precice_timestep_is_complete, precice_dt = precice.advance(fluxes, u_np1, u_n, t, dt, n)
+    precice.write(fluxes.copy())
 
-    dt = np.min([fenics_dt, precice_dt])  # todo we could also consider deciding on time stepping size inside the adapter
+    precice_dt = precice.advance(dt(0))
 
-    if precice_timestep_is_complete:
-        if abs(t % dt_out) < 10e-5 or abs(t % dt_out) < 10e-5:  # just a very complicated way to only produce output if t is a multiple of dt_out
+    if precice.is_action_required(precice.action_read_checkpoint()):  # roll back to checkpoint
+        u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
+        u_n.assign(u_cp)
+        t = t_cp
+        n = n_cp
+    else:  # update solution
+        u_n.assign(u_np1)
+        t += dt
+        n += 1
+
+    if precice.is_time_window_complete():
+        # if abs(t % dt_out) < 10e-5:  # output if t is a multiple of dt_out
             file_out << u_n
 
     # Update dirichlet BC
-    u_D.t = t + dt
+    u_D.t = t + dt(0)
 
 file_out << u_n
 
