@@ -1,8 +1,8 @@
-#Import required libs
+# Import required libs
 from fenics import *
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
-TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad,\
-Identity, inner,dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource
+    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, \
+    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource
 import dolfin
 
 from ufl import nabla_div
@@ -50,8 +50,8 @@ tol = 1E-14
 rho = 1000  # density
 E = 5600000.0  # Young's modulus
 nu = 0.4  # Poisson's ratio
-lambda_ = Constant(E*nu / ((1.0 + nu)*(1.0 - 2.0*nu)))  # first Lame constant
-mu = Constant(E / (2.0*(1.0 + nu)))  # second Lame constant
+lambda_ = Constant(E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)))  # first Lame constant
+mu = Constant(E / (2.0 * (1.0 + nu)))  # second Lame constant
 
 # create Mesh
 n_x_Direction = 20  # DoFs in x direction
@@ -81,11 +81,6 @@ u_function = interpolate(Expression(("0", "0"), degree=1), V)
 # define coupling boundary
 coupling_boundary = AutoSubDomain(remaining_boundary)
 
-# create subdomain that resembles the 
-
-# get the adapter ready
-
-# read fenics-adapter json-config-file)
 adapter_config_filename = "precice-adapter-config-fsi-s.json"
 
 # create Adapter
@@ -102,14 +97,14 @@ precice_dt = precice.initialize(coupling_boundary, mesh, dim)
 initial_data = precice.initialize_data(f_N_function, u_function, V)
 
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
-#fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
+# fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
 # generalized alpha method (time stepping) parameters
 alpha_m = Constant(0.2)
 alpha_f = Constant(0.4)
 gamma = Constant(0.5 + alpha_f - alpha_m)
-beta = Constant((gamma + 0.5)**2 * 0.25)
+beta = Constant((gamma + 0.5) ** 2 * 0.25)
 
 # clamp (u == 0) the beam at the left
 bc = DirichletBC(V, Constant((0, 0)), left_boundary)
@@ -117,17 +112,17 @@ bc = DirichletBC(V, Constant((0, 0)), left_boundary)
 
 # Define strain
 def epsilon(u):
-    return 0.5*(nabla_grad(u) + nabla_grad(u).T)
+    return 0.5 * (nabla_grad(u) + nabla_grad(u).T)
 
 
 # Define Stress tensor
 def sigma(u):
-    return lambda_*nabla_div(u)*Identity(dim) + 2*mu*epsilon(u)
+    return lambda_ * nabla_div(u) * Identity(dim) + 2 * mu * epsilon(u)
 
 
 # Define Mass form
 def m(u, v):
-    return rho*inner(u, v)*dx
+    return rho * inner(u, v) * dx
 
 
 # Elastic stiffness form
@@ -142,8 +137,8 @@ def update_acceleration(u, u_old, v_old, a_old, ufl=True):
     else:
         dt_ = float(dt)
         beta_ = float(beta)
-    
-    return (u - u_old - dt_ * v_old) / beta / dt_**2 - .5 * (1-2*beta_) / beta_ * a_old
+
+    return (u - u_old - dt_ * v_old) / beta / dt_ ** 2 - .5 * (1 - 2 * beta_) / beta_ * a_old
 
 
 def update_velocity(a, u_old, v_old, a_old, ufl=True):
@@ -153,27 +148,27 @@ def update_velocity(a, u_old, v_old, a_old, ufl=True):
     else:
         dt_ = float(dt)
         gamma_ = float(gamma)
-    
+
     return v_old + dt_ * ((1 - gamma_) * a_old + gamma_ * a)
 
 
 def update_fields(u, u_old, v_old, a_old):
     """Update all fields at the end of a timestep."""
-    
+
     u_vec, u0_vec = u.vector(), u_old.vector()
     v0_vec, a0_vec = v_old.vector(), a_old.vector()
-    
+
     # call update functions
     a_vec = update_acceleration(u_vec, u0_vec, v0_vec, a0_vec, ufl=False)
     v_vec = update_velocity(a_vec, u0_vec, v0_vec, a0_vec, ufl=False)
-    
+
     # assign u->u_old
     v_old.vector()[:], a_old.vector()[:] = v_vec, a_vec
     u_old.vector()[:] = u.vector()
 
 
 def avg(x_old, x_new, alpha):
-    return alpha*x_old + (1-alpha)*x_new
+    return alpha * x_old + (1 - alpha) * x_new
 
 
 # residual
@@ -217,15 +212,15 @@ while precice.is_coupling_ongoing():
     A, b = assemble_system(a_form, L_form, bc)
 
     b_forces = b.copy()  # b is the same for every iteration, only forces change
-    
+
     for ps in Forces_x:
         ps.apply(b_forces)
     for ps in Forces_y:
         ps.apply(b_forces)
-        
-    assert(b is not b_forces)
+
+    assert (b is not b_forces)
     solve(A, u_np1.vector(), b_forces)
-    
+
     dt = Constant(np.min([precice_dt, fenics_dt]))
 
     # Write new displacements to preCICE
@@ -247,19 +242,16 @@ while precice.is_coupling_ongoing():
 
     if precice.is_time_window_complete():
         update_fields(u_np1, saved_u_old, v_n, a_n)
-        
         if n % 20 == 0:
             displacement_out << (u_n, t)
-    
+
         u_tip.append(u_n(0.6, 0.2)[1])
         time.append(t)
 
 # Plot tip displacement evolution
-displacement_out << u_n 
+displacement_out << u_n
 plt.figure()
 plt.plot(time, u_tip)
 plt.xlabel("Time")
 plt.ylabel("Tip displacement")
 plt.show()
-
-
