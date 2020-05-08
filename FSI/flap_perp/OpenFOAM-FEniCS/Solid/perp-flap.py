@@ -1,10 +1,8 @@
 #Import required libs
-from fenics import *
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
-TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad,\
-Identity, inner,dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource
+    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, Identity, inner,dx, ds, sym, grad, lhs, \
+    rhs, dot, File, solve, PointSource, XDMFFile, TensorFunctionSpace, LocalSolver, assemble_system
 import dolfin
-
 from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
