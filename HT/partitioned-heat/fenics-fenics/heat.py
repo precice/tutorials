@@ -155,6 +155,8 @@ f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 *
                beta=beta, gamma=gamma, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
+bcs = [DirichletBC(V, u_D, remaining_boundary)]
+
 # Set boundary conditions at coupling interface once wrt to the coupling expression
 if problem is ProblemType.DIRICHLET:
     # modify Dirichlet boundary condition on coupling interface
