@@ -22,9 +22,14 @@ Make sure to add `aste/build` to the `PATH` such that the python scripts and `pr
 
 The base case for this tutorial is the OpenFOAM-FEniCS perpendicular flap tutorial. So let's start in the the root-directory of that simulation [`tutorials/FSI/flap_perp/OpenFOAM-FEniCS`](https://github.com/precice/tutorials/tree/master/FSI/flap_perp/OpenFOAM-FEniCS).
 
-To generate vtk output in preCICE, add the following line to the `precice-config.xml` in `tutorials/FSI/flap_perp/OpenFOAM-FEniCS` after [line 41](https://github.com/precice/tutorials/blob/develop/FSI/flap_perp/OpenFOAM-FEniCS/precice-config.xml#L41) in the Solid participant:
+To generate vtk output in preCICE, add the statement `<export:vtk directory="preCICE-output" />` to the `precice-config.xml` in `tutorials/FSI/flap_perp/OpenFOAM-FEniCS` in the Solid participant. The result should look the following way:
 ```
-<export:vtk directory="preCICE-output" />
+<participant name="fenics">
+    <use-mesh name="Solid" provide="yes"/>
+    <read-data name="Forces0" mesh="Solid"/>
+    <write-data name="Displacements0" mesh="Solid"/>
+    <export:vtk directory="preCICE-output" />
+</participant>
 ```
 Then, run the simulation as explained in the [`README.md`](https://github.com/precice/tutorials/blob/develop/FSI/flap_perp/OpenFOAM-FEniCS/README.md) of the case.
 
