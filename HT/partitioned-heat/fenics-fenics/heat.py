@@ -27,7 +27,7 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
     File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace
-from fenicsadapter import Adapter, InterpolationType
+from fenicsadapter import Adapter
 from errorcomputation import compute_errors
 from my_enums import ProblemType, Subcycling
 import argparse
@@ -129,18 +129,21 @@ u_n.rename("Temperature", "")
 
 # Adapter definition and initialization
 precice = Adapter(adapter_config_filename)
-# Selecting interpolation strategy
-precice.set_interpolation_type(InterpolationType.CUBIC_SPLINE)
-precice_dt = precice.initialize(coupling_boundary, mesh)
+
+# Initialize the adapter according to the specific participant
+if problem is ProblemType.DIRICHLET:
+    precice_dt = precice.initialize(coupling_boundary, mesh, u_D_function, V)
+elif problem is ProblemType.NEUMANN:
+    precice_dt = precice.initialize(coupling_boundary, mesh, f_N_function, V_g)
 
 boundary_marker = False
 coupling_expression, initial_data, bcs = None, None, None
 
 # Initialize data to non-standard initial values according to which problem is being solved
 if problem is ProblemType.DIRICHLET:
-    initial_data = precice.initialize_data(u_D_function, f_N_function, V)
+    initial_data = precice.initialize_data(f_N_function)
 elif problem is ProblemType.NEUMANN:
-    initial_data = precice.initialize_data(f_N_function, u_D_function, V_g)
+    initial_data = precice.initialize_data(u_D_function)
 
 coupling_expression = precice.create_coupling_expression()
 precice.update_coupling_expression(coupling_expression, initial_data)
