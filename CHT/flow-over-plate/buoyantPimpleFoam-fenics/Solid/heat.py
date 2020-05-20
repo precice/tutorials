@@ -28,7 +28,7 @@ from __future__ import print_function, division
 from fenics import Function, SubDomain, RectangleMesh, BoxMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
     TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, \
     near
-from fenicsadapter import Adapter, InterpolationType
+from fenicsadapter import Adapter
 import numpy as np
 
 
@@ -144,11 +144,11 @@ adapter_config_filename = "precice-adapter-config.json"
 # Adapter definition and initialization
 precice = Adapter(adapter_config_filename)
 # Selecting interpolation strategy
-precice.set_interpolation_type(InterpolationType.RBF)
-precice_dt = precice.initialize(coupling_boundary, mesh)
+
+precice_dt = precice.initialize(coupling_boundary, mesh, u_D_function, V)
 
 # Initialized data to be used in setting the FEniCS Expression at coupling boundary
-initial_data = precice.initialize_data(u_D_function, f_N_function, V)
+initial_data = precice.initialize_data(f_N_function)
 
 # Create a FEniCS Expression to define and control the coupling boundary values
 coupling_expression = precice.create_coupling_expression()

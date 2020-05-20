@@ -145,8 +145,7 @@ if problem is ProblemType.DIRICHLET:
 elif problem is ProblemType.NEUMANN:
     initial_data = precice.initialize_data(u_D_function)
 
-coupling_expression = precice.create_coupling_expression()
-precice.update_coupling_expression(coupling_expression, initial_data)
+coupling_expression = precice.create_coupling_expression(initial_data)
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
