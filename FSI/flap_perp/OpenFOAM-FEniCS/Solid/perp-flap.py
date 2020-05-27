@@ -77,9 +77,6 @@ force_boundary = AutoSubDomain(neumann_boundary)
 # Initialize the coupling interface
 precice_dt = precice.initialize(coupling_boundary, mesh, f_N_function, V, dim)
 
-# Set the initial values at the coupling interface
-initial_data = precice.initialize_data(u_function)
-
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
@@ -171,7 +168,7 @@ v_np1 = update_v(a_np1, u_n, v_n, a_n, ufl=True)
 
 res = m(avg(a_n, a_np1, alpha_m), v) + k(avg(u_n, du, alpha_f), v)  # TODO: Next(v) needs to be replaced by coupling
 
-Forces_x, Forces_y = precice.create_point_sources(clamped_boundary_domain, initial_data)
+Forces_x, Forces_y = precice.create_point_sources(clamped_boundary_domain)
 
 a_form = lhs(res)
 L_form = rhs(res)
@@ -197,7 +194,7 @@ while precice.is_coupling_ongoing():
         precice.store_checkpoint(u_n, t, n)
 
     # read data from preCICE and get a new coupling expression
-    read_data = precice.read()
+    read_data = precice.read_data()
 
     # Update the point sources on the coupling boundary with the new read data
     Forces_x, Forces_y = precice.update_point_sources(read_data)
@@ -217,7 +214,7 @@ while precice.is_coupling_ongoing():
     dt = Constant(np.min([precice_dt, fenics_dt]))
 
     # Write new displacements to preCICE
-    precice.write(u_np1.copy())
+    precice.write_data(u_np1.copy())
 
     # Call to advance coupling, also returns the optimum time step value
     precice_dt = precice.advance(dt(0))
@@ -248,3 +245,5 @@ plt.plot(time, u_tip)
 plt.xlabel("Time")
 plt.ylabel("Tip displacement")
 plt.show()
+
+precice.finalize()

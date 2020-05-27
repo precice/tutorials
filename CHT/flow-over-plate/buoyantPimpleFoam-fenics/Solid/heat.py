@@ -147,12 +147,8 @@ precice = Adapter(adapter_config_filename)
 
 precice_dt = precice.initialize(coupling_boundary, mesh, u_D_function, V)
 
-# Initialized data to be used in setting the FEniCS Expression at coupling boundary
-initial_data = precice.initialize_data(f_N_function)
-
 # Create a FEniCS Expression to define and control the coupling boundary values
 coupling_expression = precice.create_coupling_expression()
-precice.update_coupling_expression(coupling_expression, initial_data)
 
 # Assigning appropriate dt
 dt = Constant(0)
@@ -183,7 +179,7 @@ while precice.is_coupling_ongoing():
     if precice.is_action_required(precice.action_write_checkpoint()):  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
 
-    read_data = precice.read()
+    read_data = precice.read_data()
 
     # Update the coupling expression with the new read data
     # Boundary conditions are modified implicitly via this coupling_expression
@@ -196,7 +192,7 @@ while precice.is_coupling_ongoing():
 
     # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
     fluxes = fluxes_from_temperature_full_domain(F_known_u, V, k)
-    precice.write(fluxes.copy())
+    precice.write_data(fluxes.copy())
 
     precice_dt = precice.advance(dt(0))
 

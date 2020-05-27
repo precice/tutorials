@@ -137,15 +137,8 @@ elif problem is ProblemType.NEUMANN:
     precice_dt = precice.initialize(coupling_boundary, mesh, f_N_function, V_g)
 
 boundary_marker = False
-coupling_expression, initial_data, bcs = None, None, None
 
-# Initialize data to non-standard initial values according to which problem is being solved
-if problem is ProblemType.DIRICHLET:
-    initial_data = precice.initialize_data(f_N_function)
-elif problem is ProblemType.NEUMANN:
-    initial_data = precice.initialize_data(u_D_function)
-
-coupling_expression = precice.create_coupling_expression(initial_data)
+coupling_expression = precice.create_coupling_expression()
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -215,7 +208,7 @@ while precice.is_coupling_ongoing():
     if precice.is_action_required(precice.action_write_checkpoint()):  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
 
-    read_data = precice.read()
+    read_data = precice.read_data()
 
     # Update the coupling expression with the new read data
     # Boundary conditions are modified implicitly via this coupling_expression
@@ -230,10 +223,10 @@ while precice.is_coupling_ongoing():
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem reads temperature and writes flux on boundary to Neumann problem
         determine_gradient(V_g, u_np1, flux)
-        precice.write(flux.copy())
+        precice.write_data(flux.copy())
     elif problem is ProblemType.NEUMANN:
         # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
-        precice.write(u_np1.copy())
+        precice.write_data(u_np1.copy())
 
     precice_dt = precice.advance(dt(0))
 
