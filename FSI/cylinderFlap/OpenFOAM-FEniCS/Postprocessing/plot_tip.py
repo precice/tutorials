@@ -10,6 +10,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 fenics_watchpoint = np.loadtxt('../precice-fenics-watchpoint-point1.log', skiprows = 1)
+ccx_watchpoint = np.loadtxt('/home/richyrich/Bachelorarbeit/OpenFOAM-CalculiX/precice-Fluid-watchpoint-point1.log', skiprows = 1)
+
 
 plt.plot(fenics_watchpoint[:, 0], fenics_watchpoint[:, 8])
-plt.show()
+
+#plt.plot(ccx_watchpoint[:,0],ccx_watchpoint[:,8])

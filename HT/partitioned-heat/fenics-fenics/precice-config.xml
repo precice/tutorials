@@ -45,8 +45,8 @@
          <max-iterations value="100"/>
          <exchange data="Flux"        mesh="NeumannNodes" from="HeatDirichlet" to="HeatNeumann" />
          <exchange data="Temperature" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
-         <relative-convergence-measure data="Flux"        mesh="NeumannNodes" limit="1e-4"/>
-         <relative-convergence-measure data="Temperature" mesh="NeumannNodes" limit="1e-4"/>
+         <relative-convergence-measure data="Flux"        mesh="NeumannNodes" limit="1e-5"/>
+         <relative-convergence-measure data="Temperature" mesh="NeumannNodes" limit="1e-5"/>
          <acceleration:IQN-ILS> 
             <data name="Temperature" mesh="NeumannNodes"/>
             <initial-relaxation value="0.01"/>
