@@ -80,10 +80,8 @@ u_function = interpolate(Expression(("0", "0"), degree=1), V)
 # define coupling boundary
 coupling_boundary = AutoSubDomain(remaining_boundary)
 
-adapter_config_filename = "precice-adapter-config-fsi-s.json"
-
 # create Adapter
-precice = Adapter(adapter_config_filename)
+precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
 
 # create subdomains used by the adapter
 clamped_boundary_domain = AutoSubDomain(left_boundary)

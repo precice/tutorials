@@ -69,8 +69,6 @@ parser.add_argument("-dom", "--domain", metavar='domain_type string', type=str,
 
 args = parser.parse_args()
 
-config_file_name = "precice-config.xml"  # TODO should be moved into config, see https://github.com/precice/fenics-adapter/issues/5 , in case file doesnt not exist open will fail
-
 subcycle = Subcycling.NONE
 
 fenics_dt = None

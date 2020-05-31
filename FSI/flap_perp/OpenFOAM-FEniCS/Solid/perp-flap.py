@@ -129,7 +129,7 @@ def update_a(u, u_old, v_old, a_old, ufl=True):
 
 
 # Update velocity
-def update_v(a, u_old, v_old, a_old, ufl=True):
+def update_v(a, v_old, a_old, ufl=True):
     if ufl:
         dt_ = dt
         gamma_ = gamma
