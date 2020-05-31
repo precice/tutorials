@@ -81,25 +81,25 @@ class BottomBoundary(SubDomain):
             return False
 
 
-def fluxes_from_temperature_full_domain(F, V, k):
+def fluxes_from_temperature_full_domain(f, v_vec, k):
     """Computes flux from weak form (see p.3 in Toselli, Andrea, and Olof
     Widlund. Domain decomposition methods-algorithms and theory. Vol. 34.
     Springer Science & Business Media, 2006.).
 
-    :param F: weak form with known u^{n+1}
-    :param V: function space
+    :param f: weak form with known u^{n+1}
+    :param v_vec: vector function space
     :param k: thermal conductivity
     :return: fluxes function
     """
-    fluxes_vector = assemble(F)  # assemble weak form -> evaluate integral
-    v = TestFunction(V)
-    fluxes = Function(V)  # create function for flux
+    fluxes_vector = assemble(f)  # assemble weak form -> evaluate integral
+    v = TestFunction(v_vec)
+    fluxes = Function(v_vec)  # create function for flux
     area = assemble(v * ds).get_local()
     for i in range(area.shape[0]):
         if area[i] != 0:  # put weight from assemble on function
             fluxes.vector()[i] = - k * fluxes_vector[i] / area[i]  # scale by surface area
         else:
-            assert (abs(fluxes_vector[i]) < 10 ** -10)  # for non surface parts, we expect zero flux
+            assert (abs(fluxes_vector[i]) < 1E-9)  # for non surface parts, we expect zero flux
             fluxes.vector()[i] = - k * fluxes_vector[i]
     return fluxes
 
@@ -139,11 +139,8 @@ bottom_boundary = BottomBoundary()
 u_n = interpolate(u_D, V)
 u_n.rename("T", "")
 
-adapter_config_filename = "precice-adapter-config.json"
-
 # Adapter definition and initialization
-precice = Adapter(adapter_config_filename)
-# Selecting interpolation strategy
+precice = Adapter(adapter_config_filename="precice-adapter-config.json")
 
 precice_dt = precice.initialize(coupling_boundary, mesh, u_D_function, V)
 
@@ -171,7 +168,7 @@ F_known_u = u_np1 * v / dt * dx + alpha * dot(grad(u_np1), grad(v)) * dx - u_n *
 t = 0
 u_D.t = t + dt
 
-file_out = File("Solid/VTK/%s.pvd" % precice.get_solver_name())
+file_out = File("Solid/VTK/%s.pvd" % precice.get_participant_name())
 n = 0
 
 while precice.is_coupling_ongoing():
@@ -182,7 +179,6 @@ while precice.is_coupling_ongoing():
     read_data = precice.read_data()
 
     # Update the coupling expression with the new read data
-    # Boundary conditions are modified implicitly via this coupling_expression
     precice.update_coupling_expression(coupling_expression, read_data)
 
     dt.assign(np.min([fenics_dt, precice_dt]))
@@ -192,7 +188,7 @@ while precice.is_coupling_ongoing():
 
     # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
     fluxes = fluxes_from_temperature_full_domain(F_known_u, V, k)
-    precice.write_data(fluxes.copy())
+    precice.write_data(fluxes)
 
     precice_dt = precice.advance(dt(0))
 

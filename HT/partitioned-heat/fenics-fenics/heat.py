@@ -40,9 +40,9 @@ from dolfin import FacetNormal, dot
 def determine_gradient(V_g, u, flux):
     """
     compute flux following http://hplgit.github.io/INF5620/doc/pub/fenics_tutorial1.1/tu2.html#tut-poisson-gradu
-    :param V_g:
+    :param V_g: Vector function space
     :param u: solution where gradient is to be determined
-    :param flux:
+    :param flux: returns calculated flux into this value
     """
 
     w = TrialFunction(V_g)
@@ -105,12 +105,6 @@ gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 domain_part, problem = get_problem_setup(args)
 mesh, coupling_boundary, remaining_boundary = get_geometry(domain_part)
 
-adapter_config_filename = None
-if problem is ProblemType.DIRICHLET:
-    adapter_config_filename = "precice-adapter-config-D.json"
-elif problem is ProblemType.NEUMANN:
-    adapter_config_filename = "precice-adapter-config-N.json"
-
 # Define function space using mesh
 V = FunctionSpace(mesh, 'P', 2)
 V_g = VectorFunctionSpace(mesh, 'P', 1)
@@ -127,18 +121,21 @@ f_N_function = interpolate(f_N, V_g)
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
-# Adapter definition and initialization
-precice = Adapter(adapter_config_filename)
+precice, precice_dt, initial_data = None, 0.0, None
 
 # Initialize the adapter according to the specific participant
 if problem is ProblemType.DIRICHLET:
+    precice = Adapter(adapter_config_filename="precice-adapter-config-D.json")
     precice_dt = precice.initialize(coupling_boundary, mesh, u_D_function, V)
+    initial_data = precice.initialize_data(f_N_function)
 elif problem is ProblemType.NEUMANN:
+    precice = Adapter(adapter_config_filename="precice-adapter-config-N.json")
     precice_dt = precice.initialize(coupling_boundary, mesh, f_N_function, V_g)
+    initial_data = precice.initialize_data(u_D_function)
 
 boundary_marker = False
 
-coupling_expression = precice.create_coupling_expression()
+coupling_expression = precice.create_coupling_expression(initial_data)
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -146,7 +143,7 @@ dt.assign(np.min([fenics_dt, precice_dt]))
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-f = Expression('beta + gamma * x[0] * x[0] - 2 * gamma * t - 2 * (1-gamma) - 2 * alpha', degree=2, alpha=alpha,
+f = Expression('beta + gamma*x[0]*x[0] - 2*gamma*t - 2*(1-gamma) - 2*alpha', degree=2, alpha=alpha,
                beta=beta, gamma=gamma, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
@@ -183,9 +180,9 @@ u_ref = interpolate(u_D, V)
 u_ref.rename("reference", " ")
 
 # Generating output files
-temperature_out = File("out/%s.pvd" % precice.get_solver_name())
-ref_out = File("out/ref%s.pvd" % precice.get_solver_name())
-error_out = File("out/error%s.pvd" % precice.get_solver_name())
+temperature_out = File("out/%s.pvd" % precice.get_participant_name())
+ref_out = File("out/ref%s.pvd" % precice.get_participant_name())
+error_out = File("out/error%s.pvd" % precice.get_participant_name())
 
 # output solution and reference solution at t=0, n=0
 n = 0
@@ -223,10 +220,10 @@ while precice.is_coupling_ongoing():
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem reads temperature and writes flux on boundary to Neumann problem
         determine_gradient(V_g, u_np1, flux)
-        precice.write_data(flux.copy())
+        precice.write_data(flux)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
-        precice.write_data(u_np1.copy())
+        precice.write_data(u_np1)
 
     precice_dt = precice.advance(dt(0))
 

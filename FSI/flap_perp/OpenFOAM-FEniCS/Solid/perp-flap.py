@@ -1,8 +1,7 @@
 # Import required libs
-from fenics import *
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
     TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, \
-    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource
+    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system
 import dolfin
 
 from ufl import nabla_div
@@ -67,9 +66,7 @@ u_function = interpolate(Expression(("0", "0"), degree=1), V)
 
 coupling_boundary = AutoSubDomain(neumann_boundary)
 
-adapter_config_filename = "precice-adapter-config-fsi-s.json"
-
-precice = Adapter(adapter_config_filename)
+precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
 
 clamped_boundary_domain = AutoSubDomain(clamped_boundary)
 force_boundary = AutoSubDomain(neumann_boundary)
@@ -88,7 +85,7 @@ bc = DirichletBC(V, Constant((0, 0)), clamped_boundary)
 alpha_m = Constant(0.2)
 alpha_f = Constant(0.4)
 gamma = Constant(0.5 + alpha_f - alpha_m)
-beta = Constant((gamma + 0.5) ** 2 / 4.)
+beta = Constant((gamma + 0.5)**2 / 4.)
 
 
 # Define strain
@@ -166,7 +163,7 @@ def avg(x_old, x_new, alpha):
 a_np1 = update_a(du, u_n, v_n, a_n, ufl=True)
 v_np1 = update_v(a_np1, u_n, v_n, a_n, ufl=True)
 
-res = m(avg(a_n, a_np1, alpha_m), v) + k(avg(u_n, du, alpha_f), v)  # TODO: Next(v) needs to be replaced by coupling
+res = m(avg(a_n, a_np1, alpha_m), v) + k(avg(u_n, du, alpha_f), v)
 
 Forces_x, Forces_y = precice.create_point_sources(clamped_boundary_domain)
 
@@ -214,7 +211,7 @@ while precice.is_coupling_ongoing():
     dt = Constant(np.min([precice_dt, fenics_dt]))
 
     # Write new displacements to preCICE
-    precice.write_data(u_np1.copy())
+    precice.write_data(u_np1)
 
     # Call to advance coupling, also returns the optimum time step value
     precice_dt = precice.advance(dt(0))

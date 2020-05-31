@@ -1,5 +1,5 @@
 {
-  "solver_name": "HeatNeumann",
+  "participant_name": "HeatNeumann",
   "config_file_name": "precice-config.xml",
   "interface": {
       "coupling_mesh_name": "NeumannNodes",
