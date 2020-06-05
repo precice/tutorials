@@ -3,64 +3,79 @@
 # --------------------------------------
 
 subsection Time
-    # End time
-    set End time              = 10
+  # End time
+  set End time        = 15
 
-    # Time step size
-    set Time step size        = 0.005
+  # Time step size
+  set Time step size  = 0.001
 
-    # Write results every x timesteps
-    set Output interval       = 20
-
-    # Time integration scheme 
-    # 0 = forward, 1 = backward
-    set theta                 = 0.5
+  # Output interval
+  set Output interval = 500
 end
 
-subsection Material properties
-    # mu (shear modulus)
-    set mu                   = 0.5e6 
+subsection Discretization
+  # Newmark beta
+  set beta    = 0.25
 
-    # lambda
-    set lambda               = 2e6
+  # Newmark gamma
+  set gamma   = 0.5
 
-    # density
-    set density              = 1000
+  # Polynomial degree of the FE system
+  set Polynomial degree   = 4
 end
 
-subsection Finite element system
-    # Polynomial degree of the FE system
-    set Polynomial degree   = 1
+subsection System properties
+  # Poisson's ratio
+  set Poisson's ratio = 0.4
 
-    # Gauss quadrature order
-    set Quadrature order    = 3
+  # Shear modulus
+  set Shear modulus   = 2.0e6
+
+  # Density
+  set rho	      = 1000
+
+  # Body forces x,y,z
+  set body forces     = 0.0,0.0,0.0
+end
+
+subsection Linear solver
+  # Linear solver iterations (multiples of the system matrix size)
+  set Max iteration multiplier  = 1
+
+  # Linear solver residual (scaled by residual norm)
+  set Residual                  = 1e-6
+
+  # Type of solver used to solve the linear system
+  set Solver type               = Direct
+end
+
+subsection Nonlinear solver
+  # Number of Newton-Raphson iterations allowed
+  set Max iterations Newton-Raphson = 10
+
+  # Displacement error tolerance
+  set Tolerance displacement        = 1.0e-6
+
+  # Force residual tolerance
+  set Tolerance force               = 1.0e-9
 end
 
 subsection precice configuration
     # Cases: FSI3 or PF for perpendicular flap
     set Scenario            = FSI3
 
-    # Whether preCICE is used for coupling to another solver
-    set Enable precice      = true
-
     # Name of the precice configuration file
     set precice config-file = precice-config.xml
-	
+
     # Name of the participant in the precice-config.xml file
-    set Participant         = Solid
-	
-    # Name of the node based coupling mesh in the precice-config.xml file
-    set Node mesh name      = Solid_nodes
-	
-    # Name of the face based coupling mesh in the precice-config.xml file
-    set Face mesh name      = Solid_faces
+    set Participant name    = Solid
+
+    # Name of the coupling mesh in the precice-config.xml file
+    set Mesh name           = Solid_mesh
 
     # Name of the read data in the precice-config.xml file
-    set Read data name      = Force
-	
+    set Read data name      = Stress
+
     # Name of the write data in the precice-config.xml file
     set Write data name     = Displacement
-	
-    # Boundary mesh ID of the coupling interface in deal.II
-    set Interface mesh ID   = 6
 end
