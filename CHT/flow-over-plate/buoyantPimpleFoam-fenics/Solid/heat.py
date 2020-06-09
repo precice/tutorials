@@ -142,7 +142,7 @@ u_n.rename("T", "")
 # Adapter definition and initialization
 precice = Adapter(adapter_config_filename="precice-adapter-config.json")
 
-precice_dt = precice.initialize(coupling_boundary, mesh, u_D_function, V)
+precice_dt = precice.initialize(coupling_boundary, mesh, V)
 
 # Create a FEniCS Expression to define and control the coupling boundary values
 coupling_expression = precice.create_coupling_expression()

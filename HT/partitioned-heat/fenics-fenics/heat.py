@@ -124,11 +124,11 @@ precice, precice_dt, initial_data = None, 0.0, None
 # Initialize the adapter according to the specific participant
 if problem is ProblemType.DIRICHLET:
     precice = Adapter(adapter_config_filename="precice-adapter-config-D.json")
-    precice_dt = precice.initialize(coupling_boundary, mesh, u_D_function, V)
+    precice_dt = precice.initialize(coupling_boundary, mesh, V)
     initial_data = precice.initialize_data(f_N_function)
 elif problem is ProblemType.NEUMANN:
     precice = Adapter(adapter_config_filename="precice-adapter-config-N.json")
-    precice_dt = precice.initialize(coupling_boundary, mesh, f_N_function, V_g)
+    precice_dt = precice.initialize(coupling_boundary, mesh, V_g)
     initial_data = precice.initialize_data(u_D_function)
 
 boundary_marker = False
