@@ -27,7 +27,7 @@ subsection System properties
   set mu              = 153846
 
   # lambda
-  set lambda          = 2e6
+  set lambda          = 230769
 
   # density
   set rho             = 3000
