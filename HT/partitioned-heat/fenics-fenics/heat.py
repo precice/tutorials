@@ -150,7 +150,7 @@ bcs = [DirichletBC(V, u_D, remaining_boundary)]
 # Set boundary conditions at coupling interface once wrt to the coupling expression
 if problem is ProblemType.DIRICHLET:
     # modify Dirichlet boundary condition on coupling interface
-    bcs = [DirichletBC(V, coupling_expression, coupling_boundary), DirichletBC(V, u_D, remaining_boundary)]
+    bcs.append(DirichletBC(V, coupling_expression, coupling_boundary))
 if problem is ProblemType.NEUMANN:
     # modify Neumann boundary condition on coupling interface, modify weak form correspondingly
     if not boundary_marker:  # there is only 1 Neumann-BC which is at the coupling boundary -> integration over whole boundary
@@ -206,7 +206,6 @@ while precice.is_coupling_ongoing():
     read_data = precice.read_data()
 
     # Update the coupling expression with the new read data
-    # Boundary conditions are modified implicitly via this coupling_expression
     precice.update_coupling_expression(coupling_expression, read_data)
 
     dt.assign(np.min([fenics_dt, precice_dt]))
@@ -238,7 +237,6 @@ while precice.is_coupling_ongoing():
     if precice.is_time_window_complete():
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
-        print('Computing error for: n = %d, t = %.2f' % (n, t))
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
