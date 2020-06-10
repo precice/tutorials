@@ -10,7 +10,7 @@ If you prefer to run the two simulations in two different terminals and watch th
 
 Before starting the deal.II program, it needs to be compiled and copied in the `Solid` directory. Information about building is collected in the [deal.II wiki](https://github.com/precice/dealii-adapter/wiki/Building). Use the following command to run the deal.II solver afterwards:
 ```
-./Solid/coupled_elasto_dynamics ./Solid/parameters.prm
+./runSolid -nonlinear
 ```
 
 There is an [open issue](https://github.com/precice/openfoam-adapter/issues/26) that leads to additional "empty" result directories when running with some OpenFOAM versions, leading to inconveniences during post-processing. Please run the script `removeObsoleteSolvers.sh` to delete the additional files.

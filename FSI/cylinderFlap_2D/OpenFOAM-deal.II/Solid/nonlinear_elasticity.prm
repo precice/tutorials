@@ -45,7 +45,7 @@ subsection Linear solver
   # Linear solver residual (scaled by residual norm)
   set Residual                  = 1e-6
 
-  # Type of solver used to solve the linear system
+  # Linear solver: CG or Direct
   set Solver type               = Direct
 end
 
@@ -61,21 +61,21 @@ subsection Nonlinear solver
 end
 
 subsection precice configuration
-    # Cases: FSI3 or PF for perpendicular flap
-    set Scenario            = FSI3
+  # Cases: FSI3 or PF for perpendicular flap
+  set Scenario            = FSI3
 
-    # Name of the precice configuration file
-    set precice config-file = precice-config.xml
+  # Name of the precice configuration file
+  set precice config-file = precice-config.xml
 
-    # Name of the participant in the precice-config.xml file
-    set Participant name    = Solid
+  # Name of the participant in the precice-config.xml file
+  set Participant name    = Solid
 
-    # Name of the coupling mesh in the precice-config.xml file
-    set Mesh name           = Solid_mesh
+  # Name of the coupling mesh in the precice-config.xml file
+  set Mesh name           = Solid_mesh
 
-    # Name of the read data in the precice-config.xml file
-    set Read data name      = Stress
+  # Name of the read data in the precice-config.xml file
+  set Read data name      = Stress
 
-    # Name of the write data in the precice-config.xml file
-    set Write data name     = Displacement
+  # Name of the write data in the precice-config.xml file
+  set Write data name     = Displacement
 end
