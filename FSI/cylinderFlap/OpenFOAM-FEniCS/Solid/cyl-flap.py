@@ -194,7 +194,7 @@ displacement_out << u_n
 # time loop for coupling
 while precice.is_coupling_ongoing():
 
-    if precice.is_action_required(precice.action_write_checkpoint()):  # write checkpoint
+    if precice.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
 
     # read data from preCICE and get a new coupling expression
@@ -224,7 +224,7 @@ while precice.is_coupling_ongoing():
     precice_dt = precice.advance(dt(0))
 
     # Either revert to old step if timestep has not converged or move to next timestep
-    if precice.is_action_required(precice.action_read_checkpoint()):  # roll back to checkpoint
+    if precice.is_action_required(precice.action_read_iteration_checkpoint()):  # roll back to checkpoint
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
         u_n.assign(u_cp)
         t = t_cp
