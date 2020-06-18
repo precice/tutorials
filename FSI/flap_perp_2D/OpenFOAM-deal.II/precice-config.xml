@@ -24,21 +24,19 @@
     </mesh>
 
     <participant name="Fluid">
-        <use-mesh name="Fluid-Mesh-Centers" provide="yes"/>
         <use-mesh name="Fluid-Mesh-Nodes" provide="yes"/>
         <use-mesh name="Solid_mesh" from="Solid"/>
         <read-data name="Displacement" mesh="Fluid-Mesh-Nodes"/>
-        <write-data name="Stress" mesh="Fluid-Mesh-Centers"/>
         <export:vtk directory="coupling_data" />
         <mapping:rbf-thin-plate-splines direction="read" from="Solid_mesh" to="Fluid-Mesh-Nodes" constraint="consistent"/>
     </participant>
 
     <participant name="Solid">
         <use-mesh name="Solid_mesh" provide="yes"/>
+        <use-mesh name="Fluid-Mesh-Centers" from="Fluid"/>
         <read-data name="Stress"  mesh="Solid_mesh"/>
-        <write-data name="Displacement" mesh="Solid_mesh"/>
         <watch-point mesh="Solid_mesh" name="flap_tip" coordinate="-0.05;1;0" />
-        <mapping:rbf-thin-plate-splines direction="write" from="Fluid-Mesh-Centers" to="Solid_mesh" constraint="consistent" />
+        <mapping:rbf-thin-plate-splines direction="read" from="Fluid-Mesh-Centers" to="Solid_mesh" constraint="consistent" />
     </participant>
 
     <m2n:sockets from="Fluid" to="Solid" />
