@@ -25,8 +25,10 @@
 
     <participant name="Fluid">
         <use-mesh name="Fluid-Mesh-Nodes" provide="yes"/>
+        <use-mesh name="Fluid-Mesh-Centers" provide="yes"/>
         <use-mesh name="Solid_mesh" from="Solid"/>
-        <read-data name="Displacement" mesh="Fluid-Mesh-Nodes"/>
+	<read-data name="Displacement" mesh="Fluid-Mesh-Nodes"/>
+        <write-data name="Stress" mesh="Fluid-Mesh-Centers"/>
         <export:vtk directory="coupling_data" />
         <mapping:rbf-thin-plate-splines direction="read" from="Solid_mesh" to="Fluid-Mesh-Nodes" constraint="consistent"/>
     </participant>
@@ -34,7 +36,9 @@
     <participant name="Solid">
         <use-mesh name="Solid_mesh" provide="yes"/>
         <use-mesh name="Fluid-Mesh-Centers" from="Fluid"/>
-        <read-data name="Stress"  mesh="Solid_mesh"/>
+        <use-mesh name="Fluid-Mesh-Nodes" from="Fluid"/>
+	<read-data name="Stress"  mesh="Solid_mesh"/>
+  	<write-data name="Displacement" mesh="Solid_mesh"/>
         <watch-point mesh="Solid_mesh" name="flap_tip" coordinate="-0.05;1;0" />
         <mapping:rbf-thin-plate-splines direction="read" from="Fluid-Mesh-Centers" to="Solid_mesh" constraint="consistent" />
     </participant>
@@ -50,7 +54,7 @@
 
         <max-iterations value="50"/>
         <relative-convergence-measure limit="1e-4" data="Displacement" mesh="Solid_mesh"/>
-        <relative-convergence-measure limit="1e-4" data="Stress" mesh="Solid_mesh"/>
+	<relative-convergence-measure limit="1e-4" data="Stress" mesh="Solid_mesh"/>
         <extrapolation-order value="2"/>
 
         <acceleration:IQN-ILS>
