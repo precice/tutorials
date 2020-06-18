@@ -27,7 +27,7 @@ interfaces
     
     writeData
     (
-      Force
+      Stress
     );
   };
   
