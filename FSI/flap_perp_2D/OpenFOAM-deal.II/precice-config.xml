@@ -50,15 +50,15 @@
         <max-time value="5"/>
         <participants first="Fluid" second="Solid"/>
         <exchange data="Stress" mesh="Solid_mesh" from="Fluid" to="Solid"/>
-        <exchange data="Displacement" mesh="Solid_mesh" from="Solid" to="Fluid" initialize="0"/>
+        <exchange data="Displacement" mesh="Fluid-Mesh-Nodes" from="Solid" to="Fluid" initialize="0"/>
 
         <max-iterations value="50"/>
-        <relative-convergence-measure limit="1e-4" data="Displacement" mesh="Solid_mesh"/>
 	<relative-convergence-measure limit="1e-4" data="Stress" mesh="Solid_mesh"/>
+        <relative-convergence-measure limit="1e-4" data="Displacement" mesh="Fluid-Mesh-Nodes"/>
         <extrapolation-order value="2"/>
 
         <acceleration:IQN-ILS>
-            <data name="Displacement" mesh="Solid_mesh"/>
+            <data name="Displacement" mesh="Fluid-Mesh-Nodes"/>
             <preconditioner type="residual-sum"/>
             <filter type="QR1" limit="1e-6"/>
             <initial-relaxation value="0.1"/>
