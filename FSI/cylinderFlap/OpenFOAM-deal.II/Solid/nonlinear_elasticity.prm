@@ -7,10 +7,10 @@ subsection Time
   set End time        = 15
 
   # Time step size
-  set Time step size  = 0.001
+  set Time step size  = 0.002
 
   # Output interval
-  set Output interval = 500
+  set Output interval = 100
 end
 
 subsection Discretization
