@@ -30,7 +30,9 @@ cd  ./Solid/dealii_output
     # Clean the case
     echo "Cleaning Solid case"
     rm -fv solution-*.vtk
-cd ../..
+cd ..
+    rm -fv solution-*.vtk
+cd ..
 
 rm -fv ${Participant2}.log
 
