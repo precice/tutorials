@@ -58,11 +58,11 @@ Participant1="Fluid"
 
 # =============== Participant 2: Solid ===========================
 Participant2="Solid"
-Solver2="coupled_elasto_dynamics"
+Solver2="nonlinear_elasticity"
 
     # Run
     echo "  Starting the ${Participant2} participant..."
-    ${Participant2}/${Solver2}  ${Participant2}/parameters.prm > ${Participant2}.log  2>&1 &
+    ./runSolid -nonlinear > ${Participant2}.log  2>&1 &
     PIDParticipant2=$!
 
 
