@@ -29,7 +29,6 @@
         <use-mesh name="Solid_mesh" from="Solid"/>
 	<read-data name="Displacement" mesh="Fluid-Mesh-Nodes"/>
         <write-data name="Stress" mesh="Fluid-Mesh-Centers"/>
-        <!--export:vtk directory="coupling_data" /-->
         <mapping:rbf-thin-plate-splines direction="read" from="Solid_mesh" to="Fluid-Mesh-Nodes" constraint="consistent"/>
     </participant>
 
