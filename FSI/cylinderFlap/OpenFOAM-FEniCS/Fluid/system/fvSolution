@@ -61,19 +61,31 @@ PIMPLE
 
     nOuterCorrectors 50;
 
-    // residualControl
-    // {
-    //	    U
-    //	{
-    //		tolerance 5e-5;
-    //		relTol	  0;
-    //	}
-    //      p
-    //	{
-    // 		tolerance 5e-4;
-    // 		relTol	  0;
-    // 	}
-    // }
+    // OpenFOAM (.com), OpenFOAM 5 or older (.org)
+    /*
+    residualControl
+    {
+        U
+        {
+            tolerance 5e-5;
+            relTol      0;
+        }
+        p
+        {
+            tolerance 5e-4;
+            relTol      0;
+        }
+    }
+    */
+
+    // OpenFOAM 6 (.org) or newer
+    /*
+    residualControl
+    {
+        U 5e-5;
+        p 5e-4;
+    }
+    */
 }
 
 potentialFlow
