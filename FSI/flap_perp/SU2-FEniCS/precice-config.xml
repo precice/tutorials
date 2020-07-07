@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+
+<precice-configuration>
+
+    <log>
+        <sink filter="%Severity% > debug and %Rank% = 0" format="---[precice] %ColorizedSeverity% %Message%" enabled="true"/>
+    </log>
+
+   <solver-interface dimensions="2">
+      <data:vector name="Forces0"/>
+      <data:vector name="DisplacementDeltas0"/>
+
+      <mesh name="SU2_Mesh0">
+         <use-data name="Forces0"/>
+         <use-data name="DisplacementDeltas0"/>
+      </mesh>
+
+      <mesh name="FEniCS_Mesh">
+         <use-data name="DisplacementDeltas0"/>
+         <use-data name="Forces0"/>
+      </mesh>
+
+      <participant name="SU2_CFD">
+         <use-mesh name="FEniCS_Mesh" from="FEniCS"/>
+         <use-mesh name="SU2_Mesh0" provide="yes"/>
+         <write-data name="Forces0" mesh="SU2_Mesh0"/>
+         <read-data  name="DisplacementDeltas0" mesh="SU2_Mesh0"/>
+         <mapping:nearest-neighbor
+            direction="write" from="SU2_Mesh0" to="FEniCS_Mesh"
+            constraint="conservative" timing="initial"/>
+         <mapping:nearest-neighbor
+	        direction="read" from="FEniCS_Mesh" to="SU2_Mesh0"
+            constraint="consistent" timing="initial"/>
+      </participant>
+
+      <participant name="FEniCS">
+         <use-mesh name="FEniCS_Mesh" provide="yes"/>
+         <write-data name="DisplacementDeltas0" mesh="FEniCS_Mesh"/>
+         <read-data  name="Forces0"      mesh="FEniCS_Mesh"/>
+        <watch-point mesh="FEniCS_Mesh" name="point1" coordinate="-0.05;0.01;1" />
+      </participant>
+
+      <m2n:sockets from="SU2_CFD" to="FEniCS"  exchange-directory="../" />
+      
+      <coupling-scheme:parallel-implicit>
+      <!--coupling-scheme:serial-implicit-->
+           <participants first="SU2_CFD" second="FEniCS"/>
+           <max-time-windows value="400"/>
+           <time-window-size value="1e-2" />
+           <exchange data="Forces0" mesh="FEniCS_Mesh" from="SU2_CFD" to="FEniCS"/>
+           <exchange data="DisplacementDeltas0" mesh="FEniCS_Mesh" from="FEniCS" to="SU2_CFD" />
+           <max-iterations value="50"/>
+           <relative-convergence-measure limit="1e-3" data="DisplacementDeltas0" mesh="FEniCS_Mesh"/>
+           <relative-convergence-measure limit="1e-3" data="Forces0" mesh="FEniCS_Mesh"/>
+           <extrapolation-order value="2"/>
+
+           <acceleration:IQN-ILS>
+            <data name="DisplacementDeltas0" mesh="FEniCS_Mesh"/>
+            <data name="Forces0" mesh="FEniCS_Mesh"/>
+            <preconditioner type="residual-sum"/>
+            <filter type="QR1" limit="1e-6"/>
+            <initial-relaxation value="0.5"/>
+            <max-used-iterations value="40"/>
+            <time-windows-reused value="10"/>
+           </acceleration:IQN-ILS>
+
+           <!-- <acceleration:aitken>
+              <data name="DisplacementDeltas0" mesh="FEniCS_Mesh"/>
+              <initial-relaxation value="0.9"/>
+           </acceleration:aitken> -->
+           
+      </coupling-scheme:parallel-implicit>
+      <!--/coupling-scheme:serial-implicit-->
+
+
+
+
+
+
+   </solver-interface>
+
+</precice-configuration>

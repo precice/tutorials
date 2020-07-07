@@ -1,0 +1,5 @@
+---[precice] [0m This is preCICE version 2.0.2
+---[precice] [0m Revision info: v2.0.2-63-g47747abf
+---[precice] [0m Configuring preCICE with configuration "/home/ishaan/tutorials/FSI/flap_perp/SU2-FEniCS/Solid/../precice-config.xml"
+---[precice] [0m I am participant "FEniCS"
+---[precice] [31mERROR: [0m Mesh with name "Solid" is not defined!
