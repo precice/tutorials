@@ -30,22 +30,22 @@
         <use-mesh name="Solid" from="Calculix"/>
         <write-data name="Forces0" mesh="Fluid-Mesh-Faces"/>
         <read-data name="Displacements0" mesh="Fluid-Mesh-Nodes"/>
-        <mapping:rbf-thin-plate-splines direction="write" from="Fluid-Mesh-Faces" to="Solid" constraint="conservative" y-dead="true" />
+        <mapping:rbf-thin-plate-splines direction="write" from="Fluid-Mesh-Faces" to="Solid" constraint="conservative" z-dead="true" />
         <mapping:rbf-thin-plate-splines direction="read" from="Solid" to="Fluid-Mesh-Nodes" constraint="consistent"/>
+        <!--<watch-point mesh="Solid" name="point1" coordinate="-0.05;0;1" />-->
     </participant>
 
     <participant name="Calculix">
         <use-mesh name="Solid" provide="yes"/>
         <read-data name="Forces0" mesh="Solid"/>
         <write-data name="Displacements0" mesh="Solid"/>
-        <watch-point mesh="Solid" name="point1" coordinate="-0.05;0;1" />
     </participant>
 
     <m2n:sockets from="Fluid" to="Calculix" />
 
     <coupling-scheme:serial-explicit>
         <time-window-size value="1e-2"/>
-        <max-time value="5"/>
+        <max-time value="1"/>
         <participants first="Fluid" second="Calculix"/>
         <exchange data="Forces0" mesh="Solid" from="Fluid" to="Calculix"/>
         <exchange data="Displacements0" mesh="Solid" from="Calculix" to="Fluid"/>

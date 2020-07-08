@@ -11,9 +11,9 @@
 echo "Preparing and running the Solid participant..."
 
 # Prepare in silent mode
-cd Solid
-    cgx -bg pre_flap.fbd
-cd -
+# cd Solid
+#     cgx -bg pre_flap.fbd
+# cd -
 
 # Run
 ccx_preCICE -i Solid/flap -precice-participant Calculix

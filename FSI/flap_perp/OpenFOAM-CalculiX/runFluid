@@ -22,7 +22,7 @@ echo "Preparing and running the Fluid participant..."
 
 rm -rfv Fluid/0/
 cp -r Fluid/0.orig/ Fluid/0/
-blockMesh -case Fluid
+# blockMesh -case Fluid
 checkMesh -case Fluid
 
 # Run
