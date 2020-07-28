@@ -8,7 +8,7 @@ You may run the coupled simulation in serial using the script `Allrun` or (OpenF
 
 If you prefer to run the two simulations in two different terminals and watch their output on the screen, use the (simpler) scripts `runFluid` (or `runFluid -parallel`).
 
-Before starting the deal.II program, it needs to be compiled and copied in this case directory. Information about building is collected in the [deal.II wiki](https://github.com/precice/dealii-adapter/wiki/Building). You can Use the following command to run e.g. the linear deal.II solver afterwards:
+Before starting the deal.II program, it needs to be compiled and copied in this case directory. Information about building is collected in the [deal.II wiki](https://github.com/precice/dealii-adapter/wiki/Building). You can use the following command to run e.g. the linear deal.II solver afterwards:
 ```
 ./runSolid -linear
 ```
