@@ -40,7 +40,7 @@
         <watch-point mesh="Calculix_Mesh" name="point1" coordinate="-0.05;0.01;1" />
       </participant>
 
-      <m2n:sockets from="SU2_CFD" to="Calculix"  exchange-directory="../" />
+      <m2n:sockets from="SU2_CFD" to="Calculix" />
       
       <coupling-scheme:parallel-implicit>
       <!--coupling-scheme:serial-implicit-->
