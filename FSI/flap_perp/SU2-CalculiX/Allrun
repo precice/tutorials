@@ -1,8 +1,5 @@
 #!/bin/bash
 
-cd ${0%/*} || exit 1                        # Run from this directory
-. $WM_PROJECT_DIR/bin/tools/RunFunctions    # Tutorial run functions
-
 # This script prepares and runs all the participants in one terminal,
 # forwarding the solvers' output to log files.
 # Alternatively, you may execute the scripts "runSolid" and "runFluid"
