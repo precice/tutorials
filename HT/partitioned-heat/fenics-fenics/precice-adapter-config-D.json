@@ -5,6 +5,6 @@
       "coupling_mesh_name": "DirichletNodes",
       "write_data_name": "Flux",
       "read_data_name": "Temperature",
-      "interpolation_type": "cubic_spline"
+      "interpolation_type": "rbf_segregated"
     }
 }
