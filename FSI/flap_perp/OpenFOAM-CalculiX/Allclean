@@ -29,13 +29,12 @@ rm -fv ${Participant1}_reconstructPar.log
 Participant2="Solid"
 cd ${Participant2}
     # Clean the case
-	rm -fv *.nam
-	rm -fv *.msh
     rm -fv *.log
     rm -fv flap.cvg
     rm -fv flap.dat
     rm -fv flap.frd
     rm -fv flap.sta
+    rm -fv flap.12d
 cd ..
 # Remove the log files
 rm -fv spooles.out
