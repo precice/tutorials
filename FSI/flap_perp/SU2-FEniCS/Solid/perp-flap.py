@@ -194,7 +194,7 @@ while precice.is_coupling_ongoing():
     read_data = precice.read_data()
 
     # Update the point sources on the coupling boundary with the new read data
-    Forces_x, Forces_y = precice.update_point_sources(read_data)
+    Forces_x, Forces_y = precice.get_point_sources(read_data)
 
     A, b = assemble_system(a_form, L_form, bc)
 

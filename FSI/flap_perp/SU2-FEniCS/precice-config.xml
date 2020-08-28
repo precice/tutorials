@@ -37,7 +37,7 @@
          <use-mesh name="FEniCS_Mesh" provide="yes"/>
          <write-data name="DisplacementDeltas0" mesh="FEniCS_Mesh"/>
          <read-data  name="Forces0"      mesh="FEniCS_Mesh"/>
-        <watch-point mesh="FEniCS_Mesh" name="point1" coordinate="-0.05;0.01;1" />
+        <watch-point mesh="FEniCS_Mesh" name="point1" coordinate="-0.05;1" />
       </participant>
 
       <m2n:sockets from="SU2_CFD" to="FEniCS"  exchange-directory="../" />
