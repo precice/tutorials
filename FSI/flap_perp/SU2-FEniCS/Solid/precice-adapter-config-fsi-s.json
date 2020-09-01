@@ -3,7 +3,7 @@
   "config_file_name": "../precice-config.xml",
   "interface": {
       "coupling_mesh_name": "FEniCS_Mesh",
-      "write_data_name": "Displacements0",
+      "write_data_name": "DisplacementDeltas0",
       "read_data_name": "Forces0"
     }
 }

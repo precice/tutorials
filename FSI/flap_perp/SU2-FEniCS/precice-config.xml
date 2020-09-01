@@ -72,11 +72,6 @@
       </coupling-scheme:parallel-implicit>
       <!--/coupling-scheme:serial-implicit-->
 
-
-
-
-
-
    </solver-interface>
 
 </precice-configuration>
