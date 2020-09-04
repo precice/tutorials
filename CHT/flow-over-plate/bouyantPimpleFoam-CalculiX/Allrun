@@ -1,0 +1,35 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# This script prepares and runs all the participants in one terminal,
+# forwarding the solvers' output to log files.
+
+# Participant 1: OpenFOAM
+Participant1="OpenFOAM"
+cd ${Participant1}
+    echo "Starting the ${Participant1} participant..."
+    ./runFluid > ${Participant1}.log 2>&1 &
+    PIDParticipant1=$!
+cd ..
+
+# Participant 2: Nutils
+Participant2="Nutils"
+cd ${Participant2}
+    echo "Starting the ${Participant2} participant..."
+    ./runSolid > ${Participant2}.log 2>&1 &
+    PIDParticipant2=$!
+
+cd ..
+
+# Wait for all the participants to finish
+echo "Waiting for the participants to exit..."
+echo "(you may run 'tail -f ${Participant1}/${Participant1}.log' in another terminal to check the progress)"
+wait ${PIDParticipant1}
+wait ${PIDParticipant2}
+if [ $? -ne 0 ] || [ "$(grep -c -E "error:" ${Participant1}.log)" -ne 0 ] || [ "$(grep -c -E "error:" ${Participant2}.log)" -ne 0 ]; then
+    echo ""
+    echo "Something went wrong... See the log files for more."
+else
+    echo ""
+    echo "The simulation completed!"
+fi
