@@ -1,8 +1,5 @@
 #!/bin/bash
 
-cd ${0%/*} || exit 1                        # Run from this directory
-. $WM_PROJECT_DIR/bin/tools/RunFunctions    # Tutorial run functions
-
 # This script prepares and runs all the participants in one terminal,
 # forwarding the solvers' output to log files.
 # Alternatively, you may execute the scripts "runSolid" and "runFluid"
@@ -38,20 +35,20 @@ PIDParticipant1=$!
 Participant2="Solid"
 Solver2="ccx_preCICE"
 
-    # You can use CalculiX CGX to setup the structural simulation from sratch.
-    # This will re-generate the all.msh, fix1_beam.nam, interface_beam.nam files.
-    #
-    # # Prepare in silent mode
-    # echo "Preparing the ${Participant2} participant..."
-    # cd ${Participant2}
-    #     echo "  Executing cgx (provided by CalculiX, make sure this exists)..."
-    #     cgx -bg pre_flap.fbd > prepare_flap.log 2>&1
-    # cd ..
+# You can use CalculiX CGX to setup the structural simulation from sratch.
+# This will re-generate the all.msh, fix1_beam.nam, interface_beam.nam files.
+#
+# # Prepare in silent mode
+# echo "Preparing the ${Participant2} participant..."
+# cd ${Participant2}
+#     echo "  Executing cgx (provided by CalculiX, make sure this exists)..."
+#     cgx -bg pre_flap.fbd > prepare_flap.log 2>&1
+# cd ..
 
-    # Run
-    echo "  Starting the ${Participant2} participant..."
-    ${Solver2} -i ${Participant2}/flap -precice-participant Calculix > ${Participant2}.log  2>&1 &
-    PIDParticipant2=$!
+# Run
+echo "  Starting the ${Participant2} participant..."
+${Solver2} -i ${Participant2}/flap -precice-participant Calculix > ${Participant2}.log  2>&1 &
+PIDParticipant2=$!
 
 
 # =============== Wait for all the participants to finish =======
