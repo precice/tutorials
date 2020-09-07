@@ -1,4 +1,6 @@
+** *INCLUDE, INPUT=Solid/Mesh_Coarse_OUT.inp
 *INCLUDE, INPUT=Solid/all.msh
+*INCLUDE, INPUT=Solid/all.nam
 *INCLUDE, INPUT=Solid/fix1.nam
 *INCLUDE, INPUT=Solid/interface.nam
 
@@ -15,6 +17,7 @@
 
 
 *SOLID SECTION, Elset=Eall, Material=EL
+** *SOLID SECTION, Elset=C3D8, Material=EL
 
 *INITIAL CONDITIONs, TYPE=TEMPERATURE
 Nall, 400.

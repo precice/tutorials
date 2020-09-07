@@ -1,0 +1,41 @@
+*INCLUDE, INPUT=Solid/Mesh_Fine_OUT.inp
+*INCLUDE, INPUT=Solid/all.msh
+*INCLUDE, INPUT=all.nam
+*INCLUDE, INPUT=Solid/fix1.nam
+*INCLUDE, INPUT=Solid/interface.nam
+
+*MATERIAL, Name=EL
+** Material Properties
+*ELASTIC
+ 400000, 0.3
+*DENSITY
+ 3000
+*SPECIFIC HEAT
+446
+*CONDUCTIVITY
+50.,0
+
+
+*SOLID SECTION, Elset=C3D8, Material=EL
+
+*INITIAL CONDITIONs, TYPE=TEMPERATURE
+Nall, 400.
+
+*STEP, NLGEOM, INC=1000000
+*HEAT TRANSFER, DIRECT, STEADY STATE
+1.E-2, 10.0
+
+*BOUNDARY
+Ninterface, 11, 11, 300.
+
+*DFLUX
+*INCLUDE, INPUT=Solid/interface.dfl
+
+*FILM
+*INCLUDE, INPUT=Solid/interface.flm
+ 
+*NODE FILE
+NT
+
+
+*END STEP
