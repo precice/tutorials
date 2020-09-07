@@ -1,6 +1,6 @@
 *INCLUDE, INPUT=Solid/all.msh
-*INCLUDE, INPUT=Solid/fix1_beam.nam
-*INCLUDE, INPUT=Solid/interface_beam.nam
+*INCLUDE, INPUT=Solid/fix1.nam
+*INCLUDE, INPUT=Solid/interface.nam
 
 *MATERIAL, Name=EL
 ** Material Properties

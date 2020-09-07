@@ -3,7 +3,7 @@ participants:
     CalculiX:
         interfaces:
         - nodes-mesh: Solid
-          patch: surface
+          patch: interface
           read-data: [Temperature]
           write-data: [Heat-Flux]
           
