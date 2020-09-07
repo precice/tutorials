@@ -30,11 +30,11 @@ Participant2="Solid"
 cd ${Participant2}
     # Clean the case
     rm -fv *.log
-    rm -fv flap.cvg
-    rm -fv flap.dat
-    rm -fv flap.frd
-    rm -fv flap.sta
-    rm -fv flap.12d
+    rm -fv *.cvg
+    rm -fv *.dat
+    rm -fv *.frd
+    rm -fv *.sta
+    rm -fv *.12d
 cd ..
 # Remove the log files
 rm -fv spooles.out
