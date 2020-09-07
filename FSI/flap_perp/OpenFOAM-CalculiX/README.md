@@ -1,44 +1,19 @@
-## flap_perp_Salome_XY
+# Tutorial for an FSI simulation of an elastic flap perpendicular to a channel flow
 
+This tutorial is described in the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-OpenFOAM-and-CalculiX).
 
-- In this case, all the geometries and meshes are created with Salome
-- There are a few changes made to `runFluid`, `runSolid`, `Allrun` and `Allclean`. These particularly have some commands commented out so as to not delete important files.
-- This case has same orientation as that of preCICE tutorial case.
-- This case is oriented in the XY direction.
+The case files are prepared for the latest versions of OpenFOAM and use the solver `pimpleFoam`. **In case you are using a previous OpenFOAM version** you need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. Have a look into our [Notes on OpenFOAM](https://github.com/precice/openfoam-adapter/wiki/Notes-on-OpenFOAM).
 
-### To run this case
+You may run the coupled simulation in serial using the script `Allrun` or in parallel with `Allrun -parallel` (`Allrun_parallel` is a shortcut to this). The output of each step will be redirected to log files. You can cleanup the simulation using `Allclean`.
 
-- Either run `./Allrun` in a terminal or
-- run the Fluid and Solid participants in different terminals using the commands `./runFluid` and `./runSolid` respectively
+If you prefer to run the two simulations in two different terminals and watch their output on the screen, use the (simpler) scripts `runFluid` (or `runFluid -parallel`) and `runSolid`. Please always run the script `runFluid` first.
 
+There is an [open issue](https://github.com/precice/openfoam-adapter/issues/26) that leads to additional "empty" result directories when running with some OpenFOAM versions, leading to inconveniences during post-processing. Please run the script `removeObsoleteSolvers.sh` to delete the additional files.
 
-### Fluid
+You may adjust the end time in the precice-config_*.xml, or interupt the execution earlier if you want.
 
-- The geometry Salome file (`.hdf`) and the mesh file (`.unv`) are available. If by chance an error comes where `polymesh` is missing, in the Fluid directory run `ideasUnvToFoam Mesh_name.unv` from the case directory, this should create the required files
-- If there is an error for frontAndBack (`empty`), modify `Fluid/constant/polymesh/boundary` file as per precice case.
-- The Fluid folder is used from preCICE flap tutorial case.
-- `blockMeshdict` is renamed.
+This case was contributed by Derek Risseeuw (TU Delft).
 
+## Disclaimer
 
-### CalculiX
-
-- The `flap.hdf` is the Salome file. `flap.unv` is the mesh file for CalculiX.
-- use [`CalculiX4Caelinux` CalculiX launcher](http://calculixforwin.blogspot.com/2015/05/calculix-launcher.html) or [`unv2ccx`](https://github.com/calculix/unv2ccx/releases)
-- Once the `.unv` file is converted. Copied the `flap.inp` file from preCICE tutorial case. In the `CalculiX4Caelinux`, open the `Mesh_name_OUT.inp` in pre-processor. 
-- While on the `cgx` window, type `prnt se`. This will list out all the group names.
-- Use following commands
-```
-send all abq
-send fix abq nam
-send interface abq nam
-
-sys mv interface.nam interface_beam.nam
-sys mv fix.nam fix1_beam.nam
-```
-
-- Modified the names of the datasets as need. Adapt `config.yml`.
-- Modified the names of boundary, load etc in `flap.inp`
-
-
-
-
+This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM® and OpenCFD® trade marks.
