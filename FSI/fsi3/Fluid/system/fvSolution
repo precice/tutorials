@@ -85,10 +85,13 @@ PIMPLE
     	}
     }
 }
-
+PISO
+{
+    nNonOrthogonalCorrectors 1;
+}
 potentialFlow
 {
-    nNonOrthogonalCorrectors 2;
+    nNonOrthogonalCorrectors 1;
 }
 
 
