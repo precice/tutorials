@@ -10,16 +10,16 @@
 
     <solver-interface dimensions="3">
 
-    <data:scalar name="Temperature"/>
+    <data:scalar name="Sink-Temperature"/>
     <data:scalar name="Heat-Flux"/>
 
     <mesh name="OpenFOAM-Mesh">
-        <use-data name="Temperature"/>
+        <use-data name="Sink-Temperature"/>
         <use-data name="Heat-Flux"/>
     </mesh>
 
     <mesh name="Solid">
-        <use-data name="Temperature"/>
+        <use-data name="Sink-Temperature"/>
         <use-data name="Heat-Flux"/>
     </mesh>
 
@@ -27,14 +27,14 @@
         <use-mesh name="OpenFOAM-Mesh" provide="yes"/>
         <use-mesh name="Solid" from="CalculiX"/>
         <read-data name="Heat-Flux" mesh="OpenFOAM-Mesh"/>
-        <write-data name="Temperature" mesh="OpenFOAM-Mesh"/>
+        <write-data name="Sink-Temperature" mesh="OpenFOAM-Mesh"/>
         <mapping:nearest-neighbor direction="read" from="Solid" to="OpenFOAM-Mesh" constraint="consistent" timing="initial"/>
     </participant>
 
     <participant name="CalculiX">
         <use-mesh name="OpenFOAM-Mesh" from="OpenFOAM"/>
         <use-mesh name="Solid" provide="yes"/>
-        <read-data name="Temperature" mesh="Solid"/>
+        <read-data name="Sink-Temperature" mesh="Solid"/>
         <write-data name="Heat-Flux" mesh="Solid"/>
         <mapping:nearest-neighbor direction="read" from="OpenFOAM-Mesh" to="Solid" constraint="consistent" timing="initial"/>
     </participant>
@@ -46,9 +46,9 @@
         <max-time value="1"/>
         <max-iterations value="200"/>
         <participants first="OpenFOAM" second="CalculiX"/>
-        <exchange data="Temperature" mesh="OpenFOAM-Mesh" from="OpenFOAM" to="CalculiX"/>
+        <exchange data="Sink-Temperature" mesh="OpenFOAM-Mesh" from="OpenFOAM" to="CalculiX"/>
         <exchange data="Heat-Flux" mesh="Solid" from="CalculiX" to="OpenFOAM"/>
-        <relative-convergence-measure limit="1.0e-6" data="Temperature" mesh="OpenFOAM-Mesh"/>
+        <relative-convergence-measure limit="1.0e-6" data="Sink-Temperature" mesh="OpenFOAM-Mesh"/>
         <extrapolation-order value="2"/>
         <acceleration:IQN-ILS>
             <data mesh="Solid" name="Heat-Flux" />

@@ -3,6 +3,7 @@
 *INCLUDE, INPUT=Solid/all.nam
 *INCLUDE, INPUT=Solid/fix1.nam
 *INCLUDE, INPUT=Solid/interface.nam
+*INCLUDE, INPUT=Solid/interface.sur
 
 *MATERIAL, Name=EL
 ** Material Properties
