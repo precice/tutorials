@@ -1,0 +1,1798 @@
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -4.54699e-08  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.120935, Final residual = 0.00368056, No Iterations 3
+time step continuity errors : sum local = 1.29506e-05, global = 2.52134e-09, cumulative = 8.1732e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0427701, Final residual = 0.0020109, No Iterations 15
+time step continuity errors : sum local = 6.31252e-06, global = 5.59122e-08, cumulative = 8.22911e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.021532, Final residual = 7.99479e-08, No Iterations 82
+time step continuity errors : sum local = 2.38766e-10, global = 3.87239e-12, cumulative = 8.22911e-06
+ExecutionTime = 111.31 s  ClockTime = 146 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 291 | t 0.290383 of 0.5 | dt 0.001 | max dt 0.000617445 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0178798 max: 1.29328
+Interface Courant Number mean: 0.00212837 max: 0.943548
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 5.49361e-05
+Time = 0.280441
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 2.38466e-07, Final residual = 2.27019e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.82188e-07, Final residual = 1.68772e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 7.9818e-07, No Iterations 90
+time step continuity errors : sum local = 1.56177e-15, global = -1.83158e-17, cumulative = 8.22911e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00215625, Final residual = 6.22541e-10, No Iterations 3
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -3.63231e-11  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -4.73761e-08  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.199751, Final residual = 0.006822, No Iterations 3
+time step continuity errors : sum local = 2.08146e-05, global = 1.69637e-09, cumulative = 8.23081e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0522185, Final residual = 0.00258681, No Iterations 15
+time step continuity errors : sum local = 7.28812e-06, global = 6.34843e-08, cumulative = 8.29429e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0294062, Final residual = 8.8868e-08, No Iterations 85
+time step continuity errors : sum local = 2.39844e-10, global = -9.4861e-12, cumulative = 8.29428e-06
+ExecutionTime = 111.36 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 291 | t 0.290438 of 0.5 | dt 0.001 | max dt 0.00056237 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0196251 max: 1.35257
+Interface Courant Number mean: 0.0023553 max: 0.969127
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 5.65614e-05
+Time = 0.280498
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 2.28633e-07, Final residual = 2.18641e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.72685e-07, Final residual = 1.60824e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.15043e-07, No Iterations 90
+time step continuity errors : sum local = 1.58913e-15, global = -3.58621e-17, cumulative = 8.29428e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00223539, Final residual = 1.20194e-09, No Iterations 3
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -3.54661e-11  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -1.10957e-07  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.228396, Final residual = 0.0106575, No Iterations 3
+time step continuity errors : sum local = 2.71009e-05, global = 1.56924e-09, cumulative = 8.29585e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0600153, Final residual = 0.00286873, No Iterations 14
+time step continuity errors : sum local = 8.27207e-06, global = 3.10264e-08, cumulative = 8.32688e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0286338, Final residual = 8.24892e-08, No Iterations 86
+time step continuity errors : sum local = 2.5894e-10, global = -6.45798e-12, cumulative = 8.32687e-06
+ExecutionTime = 111.4 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 291 | t 0.290494 of 0.5 | dt 0.001 | max dt 0.000505684 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0211585 max: 1.39403
+Interface Courant Number mean: 0.00245099 max: 0.972157
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 5.7941e-05
+Time = 0.280556
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 2.19964e-07, Final residual = 2.11261e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.64026e-07, Final residual = 1.53488e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 9.70827e-07, No Iterations 90
+time step continuity errors : sum local = 1.88144e-15, global = -9.04104e-17, cumulative = 8.32687e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00232255, Final residual = 3.50222e-09, No Iterations 3
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -3.45697e-11  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -1.49983e-07  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.138969, Final residual = 0.00586846, No Iterations 5
+time step continuity errors : sum local = 2.03746e-05, global = 1.07826e-09, cumulative = 8.32795e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0506071, Final residual = 0.00245809, No Iterations 16
+time step continuity errors : sum local = 9.006e-06, global = 1.89752e-07, cumulative = 8.5177e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0224977, Final residual = 8.03667e-08, No Iterations 86
+time step continuity errors : sum local = 3.15449e-10, global = -4.39538e-12, cumulative = 8.5177e-06
+ExecutionTime = 111.45 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 291 | t 0.290552 of 0.5 | dt 0.001 | max dt 0.000447502 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0229563 max: 1.45809
+Interface Courant Number mean: 0.00285288 max: 0.995104
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 5.7941e-05
+Time = 0.280614
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 2.12333e-07, Final residual = 2.04711e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.56093e-07, Final residual = 1.46708e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 7.68142e-07, No Iterations 91
+time step continuity errors : sum local = 1.50365e-15, global = -4.76412e-17, cumulative = 8.5177e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00240727, Final residual = 7.61458e-09, No Iterations 3
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -3.36433e-11  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -2.07981e-08  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.141653, Final residual = 0.00467665, No Iterations 5
+time step continuity errors : sum local = 1.97853e-05, global = 1.30536e-09, cumulative = 8.519e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0413058, Final residual = 0.00205146, No Iterations 50
+time step continuity errors : sum local = 9.10682e-06, global = 4.35877e-07, cumulative = 8.95488e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0148681, Final residual = 8.45507e-08, No Iterations 85
+time step continuity errors : sum local = 4.45774e-10, global = -8.00207e-12, cumulative = 8.95487e-06
+ExecutionTime = 111.49 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 291 | t 0.290611 of 0.5 | dt 0.001 | max dt 0.000389276 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0247188 max: 1.53724
+Interface Courant Number mean: 0.00291731 max: 1.01443
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 5.68875e-05
+Time = 0.28067
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 2.05579e-07, Final residual = 1.98886e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.48812e-07, Final residual = 1.40446e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 7.98016e-07, No Iterations 91
+time step continuity errors : sum local = 1.64687e-15, global = -5.02997e-17, cumulative = 8.95487e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00245445, Final residual = 3.70037e-12, No Iterations 4
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -3.26832e-11  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -6.63431e-08  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.095314, Final residual = 0.00301268, No Iterations 5
+time step continuity errors : sum local = 1.59411e-05, global = 9.74908e-10, cumulative = 8.95585e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0296707, Final residual = 0.00147945, No Iterations 48
+time step continuity errors : sum local = 8.16674e-06, global = 1.05978e-06, cumulative = 1.00156e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0120504, Final residual = 9.25352e-08, No Iterations 84
+time step continuity errors : sum local = 5.81235e-10, global = -2.03772e-11, cumulative = 1.00156e-05
+ExecutionTime = 111.54 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 291 | t 0.290668 of 0.5 | dt 0.001 | max dt 0.000332159 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0264317 max: 1.7113
+Interface Courant Number mean: 0.0032073 max: 1.04554
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 5.42416e-05
+Time = 0.280725
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.99577e-07, Final residual = 1.93666e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.42128e-07, Final residual = 1.34623e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.26481e-07, No Iterations 91
+time step continuity errors : sum local = 1.80203e-15, global = -3.95219e-17, cumulative = 1.00156e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00233844, Final residual = 9.06139e-09, No Iterations 3
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -3.17055e-11  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -2.2225e-08  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0591467, Final residual = 0.00272642, No Iterations 28
+time step continuity errors : sum local = 1.62535e-05, global = -4.14783e-06, cumulative = 5.86778e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0255049, Final residual = 0.00108772, No Iterations 26
+time step continuity errors : sum local = 6.15548e-06, global = -1.39587e-06, cumulative = 4.47191e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0103984, Final residual = 7.09772e-08, No Iterations 82
+time step continuity errors : sum local = 4.2053e-10, global = -5.55941e-12, cumulative = 4.4719e-06
+ExecutionTime = 111.59 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 291 | t 0.290722 of 0.5 | dt 0.001 | max dt 0.00027775 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0269962 max: 1.82755
+Interface Courant Number mean: 0.00316826 max: 1.00712
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 5.36145e-05
+Time = 0.280778
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.9421e-07, Final residual = 1.88981e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.35946e-07, Final residual = 1.29197e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 9.82848e-07, No Iterations 90
+time step continuity errors : sum local = 2.05415e-15, global = -4.88354e-17, cumulative = 4.4719e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00232141, Final residual = 7.33056e-09, No Iterations 3
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -3.06949e-11  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -2.06284e-07  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0560052, Final residual = 0.00257214, No Iterations 49
+time step continuity errors : sum local = 1.51426e-05, global = -9.70574e-07, cumulative = 3.50133e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0266386, Final residual = 0.00127657, No Iterations 28
+time step continuity errors : sum local = 6.0779e-06, global = 1.5587e-06, cumulative = 5.06003e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00977246, Final residual = 7.74243e-08, No Iterations 82
+time step continuity errors : sum local = 3.89306e-10, global = -4.80919e-12, cumulative = 5.06002e-06
+ExecutionTime = 111.64 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 291 | t 0.290776 of 0.5 | dt 0.001 | max dt 0.000223892 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0279684 max: 1.97661
+Interface Courant Number mean: 0.00316716 max: 1.04128
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 5.12316e-05
+Time = 0.28083
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.89399e-07, Final residual = 1.84737e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.30216e-07, Final residual = 1.2413e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 5.83161e-07, No Iterations 91
+time step continuity errors : sum local = 1.18121e-15, global = -7.42337e-18, cumulative = 5.06002e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00224069, Final residual = 4.17683e-09, No Iterations 3
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -6.15441e-08  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -2.30138e-06  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0577502, Final residual = 0.00272006, No Iterations 48
+time step continuity errors : sum local = 1.33171e-05, global = -9.80289e-07, cumulative = 4.07973e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.026874, Final residual = 0.00129498, No Iterations 26
+time step continuity errors : sum local = 5.37693e-06, global = 1.20103e-06, cumulative = 5.28076e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0110801, Final residual = 9.82045e-08, No Iterations 82
+time step continuity errors : sum local = 4.25763e-10, global = -3.01417e-12, cumulative = 5.28076e-06
+ExecutionTime = 111.7 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 291 | t 0.290828 of 0.5 | dt 0.001 | max dt 0.000172403 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0275914 max: 2.09044
+Interface Courant Number mean: 0.00319644 max: 0.93442
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 4.8779e-05
+Time = 0.280878
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.85049e-07, Final residual = 1.80852e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.24891e-07, Final residual = 1.19384e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 5.98096e-07, No Iterations 91
+time step continuity errors : sum local = 1.18473e-15, global = -2.43941e-17, cumulative = 5.28076e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00216303, Final residual = 1.9103e-09, No Iterations 3
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -3.13109e-08  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -4.38133e-06  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0615629, Final residual = 0.00254877, No Iterations 49
+time step continuity errors : sum local = 1.06745e-05, global = -8.07007e-07, cumulative = 4.47375e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0302581, Final residual = 0.0013861, No Iterations 18
+time step continuity errors : sum local = 4.71377e-06, global = 3.45637e-07, cumulative = 4.81939e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0117545, Final residual = 9.21458e-08, No Iterations 84
+time step continuity errors : sum local = 3.2288e-10, global = 9.04068e-12, cumulative = 4.8194e-06
+ExecutionTime = 111.75 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 291 | t 0.290877 of 0.5 | dt 0.001 | max dt 0.000123388 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.026699 max: 2.12627
+Interface Courant Number mean: 0.00320728 max: 0.935156
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 4.58376e-05
+Time = 0.280924
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.81072e-07, Final residual = 1.77257e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.19925e-07, Final residual = 1.14957e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 7.35034e-07, No Iterations 91
+time step continuity errors : sum local = 1.34031e-15, global = -3.42309e-17, cumulative = 4.8194e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00211171, Final residual = 6.58558e-10, No Iterations 3
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -1.2102e-08  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -6.2373e-06  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0786905, Final residual = 0.00372675, No Iterations 14
+time step continuity errors : sum local = 1.22413e-05, global = -1.21357e-07, cumulative = 4.69804e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0269025, Final residual = 0.00125903, No Iterations 18
+time step continuity errors : sum local = 3.90525e-06, global = -9.60212e-07, cumulative = 3.73783e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00948566, Final residual = 8.16051e-08, No Iterations 84
+time step continuity errors : sum local = 2.58656e-10, global = 6.26902e-12, cumulative = 3.73783e-06
+ExecutionTime = 111.8 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 291 | t 0.290922 of 0.5 | dt 0.001 | max dt 7.75054e-05 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0253684 max: 2.05071
+Interface Courant Number mean: 0.00309631 max: 1.00559
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 4.44894e-05
+Time = 0.280969
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.77399e-07, Final residual = 1.73876e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.15312e-07, Final residual = 1.10811e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 7.76782e-07, No Iterations 92
+time step continuity errors : sum local = 1.36295e-15, global = -1.64165e-17, cumulative = 3.73783e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00207887, Final residual = 2.66596e-10, No Iterations 3
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -6.74701e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -5.29908e-06  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0705161, Final residual = 0.00334683, No Iterations 11
+time step continuity errors : sum local = 9.75004e-06, global = 2.75793e-09, cumulative = 3.74059e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0284318, Final residual = 0.00133836, No Iterations 17
+time step continuity errors : sum local = 3.8884e-06, global = 2.5804e-07, cumulative = 3.99863e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00976086, Final residual = 9.07582e-08, No Iterations 83
+time step continuity errors : sum local = 2.69169e-10, global = 1.90979e-11, cumulative = 3.99865e-06
+ExecutionTime = 111.87 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 291 | t 0.290967 of 0.5 | dt 0.001 | max dt 3.28013e-05 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0250042 max: 1.98529
+Interface Courant Number mean: 0.00308535 max: 1.09863
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The solver's timestep cannot be larger than the coupling timestep. Adjusting from 0.000040 to 0.000033
+
+deltaT = 3.27223e-05
+Time = 0.281001
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.73951e-07, Final residual = 1.7062e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.11015e-07, Final residual = 1.06908e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 7.62284e-07, No Iterations 92
+time step continuity errors : sum local = 9.84473e-16, global = -6.07205e-18, cumulative = 3.99865e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00157783, Final residual = 2.20207e-11, No Iterations 3
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -4.97204e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219769  Min(alpha.water) = -2.28603e-06  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0790109, Final residual = 0.00346988, No Iterations 5
+time step continuity errors : sum local = 6.26191e-06, global = -2.9288e-10, cumulative = 3.99836e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0197275, Final residual = 0.000943056, No Iterations 49
+time step continuity errors : sum local = 1.70979e-06, global = -5.44687e-08, cumulative = 3.94389e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00594039, Final residual = 9.53992e-08, No Iterations 83
+time step continuity errors : sum local = 1.60099e-10, global = 2.50778e-12, cumulative = 3.94389e-06
+ExecutionTime = 111.93 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  Mapping Forces0 conservative from Fluid-Mesh-Faces (ID 0) to Solid (ID 2) for dimension 0) with polynomial set to separate
+---[precice]  Mapping Forces0 conservative from Fluid-Mesh-Faces (ID 0) to Solid (ID 2) for dimension 1) with polynomial set to separate
+---[precice]  Mapping Forces0 conservative from Fluid-Mesh-Faces (ID 0) to Solid (ID 2) for dimension 2) with polynomial set to separate
+---[precice]  Time window completed
+---[precice]  Mapping Displacements0 consistent from Solid (ID 2) to Fluid-Mesh-Nodes (ID 1) for dimension 0) with polynomial set to separate
+---[precice]  Mapping Displacements0 consistent from Solid (ID 2) to Fluid-Mesh-Nodes (ID 1) for dimension 1) with polynomial set to separate
+---[precice]  Mapping Displacements0 consistent from Solid (ID 2) to Fluid-Mesh-Nodes (ID 1) for dimension 2) with polynomial set to separate
+---[precice]  it 1 | dt# 292 | t 0.291 of 0.5 | dt 0.001 | max dt 0.001 | ongoing yes | dt complete yes | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0185252 max: 1.4437
+Interface Courant Number mean: 0.00211196 max: 0.882651
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 3.62848e-05
+Time = 0.281038
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 0.3564, Final residual = 9.86027e-07, No Iterations 106
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.314003, Final residual = 9.95646e-07, No Iterations 172
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 7.38236e-07, No Iterations 95
+time step continuity errors : sum local = 9.81873e-10, global = 2.85943e-12, cumulative = 3.94389e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.0115194, Final residual = 6.33391e-09, No Iterations 4
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.03773e-06  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -9.45978e-07  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.601419, Final residual = 0.0289357, No Iterations 60
+time step continuity errors : sum local = 9.11972e-05, global = 5.50698e-07, cumulative = 4.49459e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0195915, Final residual = 0.000920458, No Iterations 48
+time step continuity errors : sum local = 0.00016818, global = -1.33578e-05, cumulative = -8.86318e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00627999, Final residual = 9.69604e-08, No Iterations 77
+time step continuity errors : sum local = 1.60759e-08, global = 4.23473e-11, cumulative = -8.86314e-06
+ExecutionTime = 112.02 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291036 of 0.5 | dt 0.001 | max dt 0.00096357 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.081247 max: 2.13144
+Interface Courant Number mean: 0.00663696 max: 1.85866
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 1.94834e-05
+Time = 0.281057
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 0.0327995, Final residual = 9.92403e-07, No Iterations 85
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.103963, Final residual = 9.6426e-07, No Iterations 30
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.61725e-07, No Iterations 91
+time step continuity errors : sum local = 6.79191e-10, global = -1.86306e-11, cumulative = -8.86316e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00492251, Final residual = 3.66735e-10, No Iterations 3
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.4561e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.43856e-09  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0626581, Final residual = 0.00263819, No Iterations 57
+time step continuity errors : sum local = 0.0001388, global = 3.60769e-06, cumulative = -5.25547e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0305971, Final residual = 0.00145589, No Iterations 9
+time step continuity errors : sum local = 0.000110009, global = -3.25939e-06, cumulative = -8.51486e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00736178, Final residual = 9.24458e-08, No Iterations 76
+time step continuity errors : sum local = 6.90523e-09, global = 6.74688e-11, cumulative = -8.51479e-06
+ExecutionTime = 112.1 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291056 of 0.5 | dt 0.001 | max dt 0.000944048 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0208105 max: 0.819113
+Interface Courant Number mean: 0.00509327 max: 0.704305
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.22459e-05
+Time = 0.281079
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 0.00521067, Final residual = 9.99774e-07, No Iterations 38
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.0319771, Final residual = 9.84543e-07, No Iterations 18
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 9.57218e-07, No Iterations 84
+time step continuity errors : sum local = 1.88735e-11, global = 6.62593e-13, cumulative = -8.51479e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00209749, Final residual = 3.88858e-11, No Iterations 3
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.39e-11  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.38001e-11  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0223496, Final residual = 0.00108092, No Iterations 56
+time step continuity errors : sum local = 0.00010465, global = -2.81163e-06, cumulative = -1.13264e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.139604, Final residual = 0.00590725, No Iterations 6
+time step continuity errors : sum local = 4.01155e-05, global = 5.27023e-07, cumulative = -1.07994e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0534416, Final residual = 7.36497e-08, No Iterations 83
+time step continuity errors : sum local = 3.34262e-10, global = 9.10978e-12, cumulative = -1.07994e-05
+ExecutionTime = 112.15 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291078 of 0.5 | dt 0.001 | max dt 0.000921799 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0148432 max: 0.945796
+Interface Courant Number mean: 0.00233026 max: 0.782178
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.50579e-05
+Time = 0.281104
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 0.00102629, Final residual = 9.84792e-07, No Iterations 21
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.00422182, Final residual = 8.84823e-07, No Iterations 13
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 7.20164e-07, No Iterations 85
+time step continuity errors : sum local = 2.04907e-12, global = 2.91639e-14, cumulative = -1.07994e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00188944, Final residual = 3.20361e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.33441e-11  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -5.30969e-10  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.111615, Final residual = 0.00486214, No Iterations 12
+time step continuity errors : sum local = 2.07326e-05, global = -6.09105e-08, cumulative = -1.08603e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0419312, Final residual = 0.00207654, No Iterations 10
+time step continuity errors : sum local = 5.59344e-06, global = 3.86085e-08, cumulative = -1.08217e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0144716, Final residual = 9.39812e-08, No Iterations 79
+time step continuity errors : sum local = 2.33528e-10, global = -1.1657e-11, cumulative = -1.08217e-05
+ExecutionTime = 112.21 s  ClockTime = 147 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291103 of 0.5 | dt 0.001 | max dt 0.000896709 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0160304 max: 1.07842
+Interface Courant Number mean: 0.00245517 max: 0.869017
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.78858e-05
+Time = 0.281132
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 0.000167399, Final residual = 9.37801e-07, No Iterations 6
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.000852917, Final residual = 8.69456e-07, No Iterations 8
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.88106e-07, No Iterations 86
+time step continuity errors : sum local = 4.1588e-13, global = 3.10552e-14, cumulative = -1.08217e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00188118, Final residual = 1.56621e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -5.10903e-10  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.48658e-08  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0880712, Final residual = 0.00389427, No Iterations 2
+time step continuity errors : sum local = 1.16261e-05, global = -1.96987e-07, cumulative = -1.10187e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0243224, Final residual = 0.00121463, No Iterations 10
+time step continuity errors : sum local = 3.206e-06, global = -1.35305e-08, cumulative = -1.10322e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00880428, Final residual = 8.76484e-08, No Iterations 78
+time step continuity errors : sum local = 2.20315e-10, global = 3.81799e-12, cumulative = -1.10322e-05
+ExecutionTime = 112.25 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291131 of 0.5 | dt 0.001 | max dt 0.000868767 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0177037 max: 1.17349
+Interface Courant Number mean: 0.00279619 max: 1.08077
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.57781e-05
+Time = 0.281158
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 2.84017e-05, Final residual = 8.26647e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.000262677, Final residual = 8.21375e-07, No Iterations 5
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 6.6467e-07, No Iterations 86
+time step continuity errors : sum local = 5.91076e-14, global = 1.84553e-15, cumulative = -1.10322e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00159732, Final residual = 8.18897e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -4.81235e-10  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -4.76347e-10  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0619553, Final residual = 0.00203797, No Iterations 3
+time step continuity errors : sum local = 4.45186e-06, global = -3.09102e-08, cumulative = -1.10631e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.020116, Final residual = 0.000998752, No Iterations 28
+time step continuity errors : sum local = 2.06726e-06, global = 6.31692e-07, cumulative = -1.04314e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00676683, Final residual = 8.65179e-08, No Iterations 77
+time step continuity errors : sum local = 1.69423e-10, global = -1.73937e-12, cumulative = -1.04314e-05
+ExecutionTime = 112.31 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291157 of 0.5 | dt 0.001 | max dt 0.000842966 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0162902 max: 1.06224
+Interface Courant Number mean: 0.00247621 max: 1.05435
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.44251e-05
+Time = 0.281183
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 6.65388e-06, Final residual = 6.26927e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 5.73936e-05, Final residual = 7.72149e-07, No Iterations 3
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.50133e-07, No Iterations 87
+time step continuity errors : sum local = 2.44917e-14, global = 8.14916e-16, cumulative = -1.04314e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00146149, Final residual = 5.81106e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -4.507e-10  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.58836e-08  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0649549, Final residual = 0.00301676, No Iterations 2
+time step continuity errors : sum local = 5.15687e-06, global = -2.42402e-08, cumulative = -1.04557e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0188916, Final residual = 0.00080078, No Iterations 4
+time step continuity errors : sum local = 1.29979e-06, global = -7.85528e-09, cumulative = -1.04635e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0059358, Final residual = 9.1498e-08, No Iterations 77
+time step continuity errors : sum local = 1.4637e-10, global = 2.1527e-12, cumulative = -1.04635e-05
+ExecutionTime = 112.35 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291181 of 0.5 | dt 0.001 | max dt 0.000818516 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0153743 max: 0.990569
+Interface Courant Number mean: 0.00240311 max: 0.965728
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.5265e-05
+Time = 0.281208
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.40933e-06, Final residual = 5.19412e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.04146e-05, Final residual = 6.36906e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 6.724e-07, No Iterations 90
+time step continuity errors : sum local = 1.06306e-14, global = 2.64954e-16, cumulative = -1.04635e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00150277, Final residual = 6.55652e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -4.21022e-10  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.68151e-07  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0688313, Final residual = 0.00304123, No Iterations 2
+time step continuity errors : sum local = 4.94247e-06, global = -2.26639e-08, cumulative = -1.04862e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0181004, Final residual = 0.00077654, No Iterations 11
+time step continuity errors : sum local = 1.1863e-06, global = -8.55212e-10, cumulative = -1.0487e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00574963, Final residual = 7.67322e-08, No Iterations 77
+time step continuity errors : sum local = 1.18595e-10, global = -2.5262e-12, cumulative = -1.0487e-05
+ExecutionTime = 112.41 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291207 of 0.5 | dt 0.001 | max dt 0.000793224 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0158481 max: 1.00742
+Interface Courant Number mean: 0.00242958 max: 0.985624
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.56333e-05
+Time = 0.281233
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 7.10788e-07, Final residual = 4.67578e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 3.0428e-06, Final residual = 4.09696e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.56459e-07, No Iterations 89
+time step continuity errors : sum local = 1.05109e-14, global = 5.46051e-16, cumulative = -1.0487e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00150428, Final residual = 7.00152e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -3.92027e-10  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.96068e-07  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0570485, Final residual = 0.00269933, No Iterations 2
+time step continuity errors : sum local = 4.20696e-06, global = -6.6111e-09, cumulative = -1.04937e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0131011, Final residual = 0.000595456, No Iterations 19
+time step continuity errors : sum local = 9.08135e-07, global = -5.03504e-08, cumulative = -1.0544e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00413624, Final residual = 7.19426e-08, No Iterations 77
+time step continuity errors : sum local = 1.12427e-10, global = 9.09741e-14, cumulative = -1.0544e-05
+ExecutionTime = 112.45 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291232 of 0.5 | dt 0.001 | max dt 0.000767591 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0160045 max: 1.00193
+Interface Courant Number mean: 0.00241385 max: 0.982044
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.6091e-05
+Time = 0.28126
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 5.20737e-07, Final residual = 4.29145e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.20105e-06, Final residual = 3.05952e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 6.29365e-07, No Iterations 87
+time step continuity errors : sum local = 6.82209e-15, global = 1.1443e-16, cumulative = -1.0544e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00151205, Final residual = 7.47076e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -3.60677e-10  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.08412e-06  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0572046, Final residual = 0.0019965, No Iterations 3
+time step continuity errors : sum local = 3.22089e-06, global = -9.63251e-10, cumulative = -1.0545e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.015109, Final residual = 0.000713503, No Iterations 11
+time step continuity errors : sum local = 1.12101e-06, global = 2.32941e-09, cumulative = -1.05426e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00512701, Final residual = 6.74397e-08, No Iterations 76
+time step continuity errors : sum local = 1.0677e-10, global = 6.71142e-12, cumulative = -1.05426e-05
+ExecutionTime = 112.5 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291259 of 0.5 | dt 0.001 | max dt 0.000741489 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0162109 max: 1.00139
+Interface Courant Number mean: 0.00238285 max: 0.981295
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.65668e-05
+Time = 0.281286
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 4.52453e-07, Final residual = 3.96672e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 6.1548e-07, Final residual = 2.48442e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 9.71499e-07, No Iterations 86
+time step continuity errors : sum local = 9.63456e-15, global = 3.24887e-16, cumulative = -1.05426e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00148525, Final residual = 8.03159e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -3.2783e-10  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.1849e-06  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0547363, Final residual = 0.00222462, No Iterations 2
+time step continuity errors : sum local = 3.59154e-06, global = -2.49706e-09, cumulative = -1.05451e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0162145, Final residual = 0.000646902, No Iterations 47
+time step continuity errors : sum local = 1.03535e-06, global = -5.98813e-08, cumulative = -1.0605e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00522452, Final residual = 8.18099e-08, No Iterations 78
+time step continuity errors : sum local = 1.36701e-10, global = -2.02463e-12, cumulative = -1.0605e-05
+ExecutionTime = 112.55 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291285 of 0.5 | dt 0.001 | max dt 0.000714901 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0163571 max: 0.988151
+Interface Courant Number mean: 0.00236653 max: 0.966743
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.74023e-05
+Time = 0.281313
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 4.09339e-07, Final residual = 3.67947e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 4.1102e-07, Final residual = 2.1127e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.49203e-07, No Iterations 86
+time step continuity errors : sum local = 7.90573e-15, global = 4.77743e-16, cumulative = -1.0605e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00150109, Final residual = 1.17788e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.96982e-10  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.00472e-06  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0497805, Final residual = 0.00223718, No Iterations 2
+time step continuity errors : sum local = 3.90931e-06, global = -4.64389e-09, cumulative = -1.06097e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0164219, Final residual = 0.000800241, No Iterations 7
+time step continuity errors : sum local = 1.39198e-06, global = -5.44961e-10, cumulative = -1.06102e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00529592, Final residual = 9.5317e-08, No Iterations 78
+time step continuity errors : sum local = 1.6582e-10, global = -2.55461e-12, cumulative = -1.06102e-05
+ExecutionTime = 112.6 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291313 of 0.5 | dt 0.001 | max dt 0.00068742 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0166867 max: 0.986969
+Interface Courant Number mean: 0.00268812 max: 0.986969
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.77524e-05
+Time = 0.281341
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 3.76692e-07, Final residual = 3.42207e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 3.15766e-07, Final residual = 1.84536e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.14518e-07, No Iterations 86
+time step continuity errors : sum local = 7.04215e-15, global = 5.41977e-17, cumulative = -1.06102e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00154372, Final residual = 1.65079e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.74898e-10  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -5.27402e-06  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0464725, Final residual = 0.00215478, No Iterations 3
+time step continuity errors : sum local = 3.85765e-06, global = 1.78523e-09, cumulative = -1.06084e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.016071, Final residual = 0.000619224, No Iterations 10
+time step continuity errors : sum local = 1.0937e-06, global = 2.86611e-09, cumulative = -1.06056e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00490182, Final residual = 8.85761e-08, No Iterations 78
+time step continuity errors : sum local = 1.55555e-10, global = -5.90727e-12, cumulative = -1.06056e-05
+ExecutionTime = 112.64 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.29134 of 0.5 | dt 0.001 | max dt 0.000659656 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0167027 max: 0.970386
+Interface Courant Number mean: 0.00263558 max: 0.970386
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.85768e-05
+Time = 0.28137
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 3.49128e-07, Final residual = 3.18992e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 2.62027e-07, Final residual = 1.63982e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 9.79672e-07, No Iterations 86
+time step continuity errors : sum local = 8.07168e-15, global = -5.06382e-17, cumulative = -1.06056e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00161801, Final residual = 2.38703e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -4.59349e-08  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.4844e-06  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0491719, Final residual = 0.00186606, No Iterations 8
+time step continuity errors : sum local = 3.44371e-06, global = -2.16676e-09, cumulative = -1.06077e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0199088, Final residual = 0.000990898, No Iterations 21
+time step continuity errors : sum local = 1.77634e-06, global = -2.33736e-07, cumulative = -1.08415e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00654805, Final residual = 7.86271e-08, No Iterations 79
+time step continuity errors : sum local = 1.43074e-10, global = -2.08131e-12, cumulative = -1.08415e-05
+ExecutionTime = 112.69 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291369 of 0.5 | dt 0.001 | max dt 0.000631056 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0169458 max: 0.966964
+Interface Courant Number mean: 0.00276722 max: 0.966964
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.94546e-05
+Time = 0.281399
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 3.24732e-07, Final residual = 2.97993e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 2.26081e-07, Final residual = 1.47508e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 6.54672e-07, No Iterations 87
+time step continuity errors : sum local = 5.09356e-15, global = -3.3961e-17, cumulative = -1.08415e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00161312, Final residual = 2.92961e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -4.05862e-08  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -7.81784e-07  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0595725, Final residual = 0.0024677, No Iterations 7
+time step continuity errors : sum local = 4.82401e-06, global = -1.54379e-09, cumulative = -1.0843e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0206633, Final residual = 0.000780941, No Iterations 11
+time step continuity errors : sum local = 1.44787e-06, global = 7.11341e-08, cumulative = -1.07719e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00611399, Final residual = 7.27576e-08, No Iterations 78
+time step continuity errors : sum local = 1.36534e-10, global = 3.53216e-12, cumulative = -1.07719e-05
+ExecutionTime = 112.74 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291398 of 0.5 | dt 0.001 | max dt 0.000601503 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0172002 max: 0.966154
+Interface Courant Number mean: 0.00302958 max: 0.966154
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 3.03913e-05
+Time = 0.28143
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 3.02877e-07, Final residual = 2.7892e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.99488e-07, Final residual = 1.33922e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 7.48968e-07, No Iterations 87
+time step continuity errors : sum local = 5.50949e-15, global = -9.57701e-18, cumulative = -1.07719e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00162198, Final residual = 2.51769e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -3.43561e-08  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -4.43267e-07  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0551031, Final residual = 0.00272739, No Iterations 3
+time step continuity errors : sum local = 5.38787e-06, global = 6.86914e-10, cumulative = -1.07712e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0200879, Final residual = 0.000913909, No Iterations 28
+time step continuity errors : sum local = 1.75729e-06, global = -7.11049e-07, cumulative = -1.14822e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00587933, Final residual = 8.44549e-08, No Iterations 78
+time step continuity errors : sum local = 1.65946e-10, global = -3.68488e-12, cumulative = -1.14822e-05
+ExecutionTime = 112.78 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291429 of 0.5 | dt 0.001 | max dt 0.000571017 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0174374 max: 0.971028
+Interface Courant Number mean: 0.00324538 max: 0.971028
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 3.12786e-05
+Time = 0.281461
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 2.83143e-07, Final residual = 2.6155e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.78491e-07, Final residual = 1.22511e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.61789e-07, No Iterations 87
+time step continuity errors : sum local = 6.00375e-15, global = -5.9841e-17, cumulative = -1.14822e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00161272, Final residual = 1.633e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.76295e-08  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.41025e-07  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0456937, Final residual = 0.00198492, No Iterations 8
+time step continuity errors : sum local = 4.16688e-06, global = -2.44011e-09, cumulative = -1.14847e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0173033, Final residual = 0.000855655, No Iterations 26
+time step continuity errors : sum local = 1.75834e-06, global = -4.63116e-07, cumulative = -1.19478e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00495758, Final residual = 6.90417e-08, No Iterations 79
+time step continuity errors : sum local = 1.44591e-10, global = -2.31645e-12, cumulative = -1.19478e-05
+ExecutionTime = 112.83 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.29146 of 0.5 | dt 0.001 | max dt 0.000539719 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0176474 max: 0.975397
+Interface Courant Number mean: 0.0034631 max: 0.975397
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 3.19815e-05
+Time = 0.281493
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 2.6524e-07, Final residual = 2.45704e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.61277e-07, Final residual = 1.12792e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.74735e-07, No Iterations 87
+time step continuity errors : sum local = 5.73292e-15, global = -3.16354e-17, cumulative = -1.19478e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00163258, Final residual = 1.34829e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.17905e-08  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -4.84299e-08  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0449125, Final residual = 0.00217531, No Iterations 9
+time step continuity errors : sum local = 4.83964e-06, global = -4.36035e-09, cumulative = -1.19522e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0176613, Final residual = 0.000867082, No Iterations 27
+time step continuity errors : sum local = 1.8872e-06, global = -4.54057e-07, cumulative = -1.24062e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00505227, Final residual = 6.93726e-08, No Iterations 79
+time step continuity errors : sum local = 1.53991e-10, global = -4.59889e-13, cumulative = -1.24062e-05
+ExecutionTime = 112.87 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291492 of 0.5 | dt 0.001 | max dt 0.000507651 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0177603 max: 0.976961
+Interface Courant Number mean: 0.0035745 max: 0.976961
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 3.27195e-05
+Time = 0.281526
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 2.48956e-07, Final residual = 2.31236e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.46872e-07, Final residual = 1.04413e-07, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 9.1726e-07, No Iterations 87
+time step continuity errors : sum local = 5.73403e-15, global = 1.35717e-17, cumulative = -1.24062e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00166437, Final residual = 1.55221e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.65527e-08  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.22238e-07  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0374272, Final residual = 0.00165585, No Iterations 28
+time step continuity errors : sum local = 3.91512e-06, global = 1.57324e-06, cumulative = -1.0833e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0171174, Final residual = 0.000821688, No Iterations 26
+time step continuity errors : sum local = 1.86559e-06, global = 8.83842e-08, cumulative = -1.07446e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.00481097, Final residual = 7.35615e-08, No Iterations 79
+time step continuity errors : sum local = 1.68222e-10, global = 5.95934e-13, cumulative = -1.07446e-05
+ExecutionTime = 112.92 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291525 of 0.5 | dt 0.001 | max dt 0.000474916 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0179354 max: 0.984185
+Interface Courant Number mean: 0.00425071 max: 0.984185
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 3.32328e-05
+Time = 0.281559
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 2.34136e-07, Final residual = 2.17992e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.34604e-07, Final residual = 9.71353e-08, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 6.96831e-07, No Iterations 88
+time step continuity errors : sum local = 4.14789e-15, global = -1.06442e-17, cumulative = -1.07446e-05
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00163263, Final residual = 1.58587e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.21042e-08  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.55828e-08  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0368108, Final residual = 0.00181409, No Iterations 27
+time step continuity errors : sum local = 4.26123e-06, global = 1.42584e-06, cumulative = -9.31875e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0153658, Final residual = 0.000701314, No Iterations 26
+time step continuity errors : sum local = 1.60375e-06, global = 2.84604e-08, cumulative = -9.29029e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00398415, Final residual = 9.49243e-08, No Iterations 78
+time step continuity errors : sum local = 2.19927e-10, global = -2.97237e-12, cumulative = -9.29029e-06
+ExecutionTime = 112.98 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291558 of 0.5 | dt 0.001 | max dt 0.00044167 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0179863 max: 0.98813
+Interface Courant Number mean: 0.00422999 max: 0.98813
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 3.363e-05
+Time = 0.281593
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 2.20593e-07, Final residual = 2.05845e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.24009e-07, Final residual = 9.0745e-08, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.67404e-07, No Iterations 88
+time step continuity errors : sum local = 4.93327e-15, global = 3.60752e-17, cumulative = -9.29029e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00165312, Final residual = 1.47737e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -8.48779e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -8.48779e-09  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0539733, Final residual = 0.00258085, No Iterations 9
+time step continuity errors : sum local = 6.12917e-06, global = 7.50086e-09, cumulative = -9.28279e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0161113, Final residual = 0.000803773, No Iterations 22
+time step continuity errors : sum local = 1.82181e-06, global = 7.31466e-07, cumulative = -8.55132e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00366408, Final residual = 7.78539e-08, No Iterations 77
+time step continuity errors : sum local = 1.78659e-10, global = -6.05505e-12, cumulative = -8.55133e-06
+ExecutionTime = 113.03 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291592 of 0.5 | dt 0.001 | max dt 0.000408038 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0180134 max: 0.989813
+Interface Courant Number mean: 0.00417059 max: 0.989813
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 3.39012e-05
+Time = 0.281626
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 2.08188e-07, Final residual = 1.94691e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.14751e-07, Final residual = 8.51124e-08, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 6.38293e-07, No Iterations 89
+time step continuity errors : sum local = 3.44089e-15, global = 7.0355e-17, cumulative = -8.55133e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00167177, Final residual = 1.27095e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -5.86793e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -5.86793e-09  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0480813, Final residual = 0.00172254, No Iterations 8
+time step continuity errors : sum local = 3.93273e-06, global = -1.17661e-09, cumulative = -8.5525e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0174899, Final residual = 0.000743393, No Iterations 17
+time step continuity errors : sum local = 1.65687e-06, global = 4.15722e-08, cumulative = -8.51093e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00398574, Final residual = 7.1892e-08, No Iterations 75
+time step continuity errors : sum local = 1.61941e-10, global = 2.64674e-12, cumulative = -8.51093e-06
+ExecutionTime = 113.08 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291626 of 0.5 | dt 0.001 | max dt 0.000374062 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0180324 max: 0.977425
+Interface Courant Number mean: 0.00397907 max: 0.977425
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 3.46016e-05
+Time = 0.281661
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.96826e-07, Final residual = 1.8444e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 1.0662e-07, Final residual = 8.01358e-08, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.50185e-07, No Iterations 88
+time step continuity errors : sum local = 4.41089e-15, global = -3.71602e-17, cumulative = -8.51093e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00169566, Final residual = 1.04662e-09, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -5.15626e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -5.15626e-09  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.046621, Final residual = 0.00217552, No Iterations 4
+time step continuity errors : sum local = 5.09147e-06, global = 2.6798e-08, cumulative = -8.48413e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0191965, Final residual = 0.00081717, No Iterations 9
+time step continuity errors : sum local = 1.87356e-06, global = 1.65826e-08, cumulative = -8.46755e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00477544, Final residual = 9.11023e-08, No Iterations 75
+time step continuity errors : sum local = 2.08937e-10, global = 5.33091e-12, cumulative = -8.46754e-06
+ExecutionTime = 113.12 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291661 of 0.5 | dt 0.001 | max dt 0.000339378 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0183534 max: 0.968765
+Interface Courant Number mean: 0.0038845 max: 0.968765
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 3.56367e-05
+Time = 0.281697
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.86392e-07, Final residual = 1.75006e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 9.94593e-08, Final residual = 7.56996e-08, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 9.05199e-07, No Iterations 88
+time step continuity errors : sum local = 4.62872e-15, global = -2.40046e-17, cumulative = -8.46754e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00174865, Final residual = 7.65043e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -4.29229e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -4.29229e-09  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0390538, Final residual = 0.00192294, No Iterations 9
+time step continuity errors : sum local = 4.63222e-06, global = 7.1782e-09, cumulative = -8.46036e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0196828, Final residual = 0.000975005, No Iterations 9
+time step continuity errors : sum local = 2.30604e-06, global = 8.78744e-08, cumulative = -8.37249e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00495083, Final residual = 8.19109e-08, No Iterations 76
+time step continuity errors : sum local = 1.95645e-10, global = -5.28141e-13, cumulative = -8.37249e-06
+ExecutionTime = 113.16 s  ClockTime = 148 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291696 of 0.5 | dt 0.001 | max dt 0.000303661 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0189499 max: 0.961883
+Interface Courant Number mean: 0.00401323 max: 0.961883
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 3.69038e-05
+Time = 0.281734
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.76787e-07, Final residual = 1.66301e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 9.30954e-08, Final residual = 7.17235e-08, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.17708e-07, No Iterations 89
+time step continuity errors : sum local = 4.14949e-15, global = 6.5161e-17, cumulative = -8.37249e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.001839, Final residual = 4.81397e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -3.39355e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -3.39355e-09  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0458943, Final residual = 0.00214813, No Iterations 18
+time step continuity errors : sum local = 5.39595e-06, global = 2.89892e-07, cumulative = -8.0826e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0188896, Final residual = 0.00085462, No Iterations 23
+time step continuity errors : sum local = 2.1089e-06, global = 2.18268e-07, cumulative = -7.86433e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00471486, Final residual = 6.20604e-08, No Iterations 77
+time step continuity errors : sum local = 1.54675e-10, global = -2.85891e-13, cumulative = -7.86433e-06
+ExecutionTime = 113.21 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291733 of 0.5 | dt 0.001 | max dt 0.000266612 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0196977 max: 0.969729
+Interface Courant Number mean: 0.00418225 max: 0.969729
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 3.79195e-05
+Time = 0.281771
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.67931e-07, Final residual = 1.58242e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 8.74306e-08, Final residual = 6.8154e-08, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 6.96699e-07, No Iterations 90
+time step continuity errors : sum local = 3.49159e-15, global = 6.46033e-17, cumulative = -7.86433e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00187827, Final residual = 5.82118e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.55935e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.55935e-09  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0465111, Final residual = 0.0022071, No Iterations 22
+time step continuity errors : sum local = 5.76556e-06, global = 1.12477e-06, cumulative = -6.73956e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0180078, Final residual = 0.000806869, No Iterations 24
+time step continuity errors : sum local = 2.05233e-06, global = 2.53177e-07, cumulative = -6.48639e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00437651, Final residual = 6.18329e-08, No Iterations 77
+time step continuity errors : sum local = 1.58012e-10, global = 3.741e-12, cumulative = -6.48638e-06
+ExecutionTime = 113.26 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291771 of 0.5 | dt 0.001 | max dt 0.000228556 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0202565 max: 0.965629
+Interface Courant Number mean: 0.0041767 max: 0.965629
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 3.91835e-05
+Time = 0.281811
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.59739e-07, Final residual = 1.50778e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 8.23669e-08, Final residual = 6.49305e-08, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 7.03741e-07, No Iterations 90
+time step continuity errors : sum local = 3.54459e-15, global = 6.1885e-17, cumulative = -6.48638e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00187425, Final residual = 6.63832e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.33406e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.33406e-09  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0496559, Final residual = 0.00239094, No Iterations 8
+time step continuity errors : sum local = 6.49072e-06, global = 1.43769e-08, cumulative = -6.47201e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0199052, Final residual = 0.000947138, No Iterations 46
+time step continuity errors : sum local = 2.50759e-06, global = 1.29877e-07, cumulative = -6.34213e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00566797, Final residual = 6.22074e-08, No Iterations 77
+time step continuity errors : sum local = 1.60862e-10, global = -2.89607e-13, cumulative = -6.34213e-06
+ExecutionTime = 113.31 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291811 of 0.5 | dt 0.001 | max dt 0.000189287 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.021057 max: 0.969661
+Interface Courant Number mean: 0.00410729 max: 0.969661
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 4.03416e-05
+Time = 0.281851
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.52156e-07, Final residual = 1.43858e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 7.78187e-08, Final residual = 6.20136e-08, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 6.72749e-07, No Iterations 90
+time step continuity errors : sum local = 3.41607e-15, global = 4.93312e-17, cumulative = -6.34213e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00187934, Final residual = 6.49071e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.0279e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -2.0279e-09  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0592028, Final residual = 0.00284158, No Iterations 24
+time step continuity errors : sum local = 7.72349e-06, global = 2.52007e-06, cumulative = -3.82206e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0250573, Final residual = 0.00123143, No Iterations 25
+time step continuity errors : sum local = 3.23151e-06, global = 7.39615e-07, cumulative = -3.08245e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00630445, Final residual = 7.34474e-08, No Iterations 77
+time step continuity errors : sum local = 1.9061e-10, global = 5.3816e-13, cumulative = -3.08245e-06
+ExecutionTime = 113.36 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291851 of 0.5 | dt 0.001 | max dt 0.000148877 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0218618 max: 0.985819
+Interface Courant Number mean: 0.00422824 max: 0.985819
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 4.0745e-05
+Time = 0.281892
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.45127e-07, Final residual = 1.37438e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 7.37212e-08, Final residual = 5.93472e-08, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 9.03717e-07, No Iterations 89
+time step continuity errors : sum local = 4.54902e-15, global = 4.49321e-17, cumulative = -3.08245e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00188357, Final residual = 6.08131e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.68987e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.68987e-09  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.05836, Final residual = 0.00291433, No Iterations 23
+time step continuity errors : sum local = 7.39588e-06, global = 1.39781e-06, cumulative = -1.68464e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.024896, Final residual = 0.00111224, No Iterations 24
+time step continuity errors : sum local = 2.6922e-06, global = 5.52491e-07, cumulative = -1.13215e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00613618, Final residual = 8.05947e-08, No Iterations 77
+time step continuity errors : sum local = 1.94353e-10, global = 2.9561e-12, cumulative = -1.13215e-06
+ExecutionTime = 113.41 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291892 of 0.5 | dt 0.001 | max dt 0.000107955 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0223011 max: 0.97979
+Interface Courant Number mean: 0.00426162 max: 0.97979
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 4.15808e-05
+Time = 0.281933
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.38617e-07, Final residual = 1.31462e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 7.00068e-08, Final residual = 5.69174e-08, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 9.56263e-07, No Iterations 85
+time step continuity errors : sum local = 4.80996e-15, global = -2.36659e-16, cumulative = -1.13215e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.0019265, Final residual = 5.82239e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.36579e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.36579e-09  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0699072, Final residual = 0.00305808, No Iterations 8
+time step continuity errors : sum local = 7.43518e-06, global = 1.29163e-08, cumulative = -1.11923e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0238418, Final residual = 0.00108291, No Iterations 9
+time step continuity errors : sum local = 2.55467e-06, global = -2.89013e-08, cumulative = -1.14813e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.00616721, Final residual = 7.80355e-08, No Iterations 77
+time step continuity errors : sum local = 1.85706e-10, global = 1.08982e-12, cumulative = -1.14813e-06
+ExecutionTime = 113.46 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291934 of 0.5 | dt 0.001 | max dt 6.63698e-05 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0230027 max: 0.979745
+Interface Courant Number mean: 0.0047228 max: 0.979745
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 4.22339e-05
+Time = 0.281976
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.32563e-07, Final residual = 1.25901e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 6.66422e-08, Final residual = 5.46858e-08, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.21658e-07, No Iterations 89
+time step continuity errors : sum local = 4.1053e-15, global = 1.29176e-16, cumulative = -1.14813e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00187346, Final residual = 5.57849e-10, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.28208e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.24635e-09  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.0732795, Final residual = 0.00284222, No Iterations 8
+time step continuity errors : sum local = 6.84417e-06, global = 1.82256e-08, cumulative = -1.1299e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0272327, Final residual = 0.00124681, No Iterations 46
+time step continuity errors : sum local = 2.94519e-06, global = 1.33707e-07, cumulative = -9.96197e-07
+DICPCG:  Solving for p_rgh, Initial residual = 0.00736283, Final residual = 6.95364e-08, No Iterations 78
+time step continuity errors : sum local = 1.57575e-10, global = 1.7732e-12, cumulative = -9.96195e-07
+ExecutionTime = 113.51 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 292 | t 0.291976 of 0.5 | dt 0.001 | max dt 2.39294e-05 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0237207 max: 0.967751
+Interface Courant Number mean: 0.00481351 max: 0.967751
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The solver's timestep cannot be larger than the coupling timestep. Adjusting from 0.000044 to 0.000024
+
+deltaT = 2.38823e-05
+Time = 0.281999
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 1.26932e-07, Final residual = 1.20721e-07, No Iterations 2
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 6.35677e-08, Final residual = 5.26323e-08, No Iterations 2
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.31207e-07, No Iterations 89
+time step continuity errors : sum local = 2.31208e-15, global = 5.61933e-17, cumulative = -9.96195e-07
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00102673, Final residual = 2.90453e-11, No Iterations 2
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.22031e-09  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219606  Min(alpha.water) = -1.22031e-09  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.122456, Final residual = 0.00518446, No Iterations 4
+time step continuity errors : sum local = 4.23576e-06, global = -6.96652e-10, cumulative = -9.96892e-07
+DICPCG:  Solving for p_rgh, Initial residual = 0.0193282, Final residual = 0.000938546, No Iterations 21
+time step continuity errors : sum local = 8.29126e-07, global = 8.2195e-08, cumulative = -9.14697e-07
+DICPCG:  Solving for p_rgh, Initial residual = 0.0039839, Final residual = 8.84624e-08, No Iterations 76
+time step continuity errors : sum local = 7.90057e-11, global = -1.66233e-12, cumulative = -9.14699e-07
+ExecutionTime = 113.55 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  Mapping Forces0 conservative from Fluid-Mesh-Faces (ID 0) to Solid (ID 2) for dimension 0) with polynomial set to separate
+---[precice]  Mapping Forces0 conservative from Fluid-Mesh-Faces (ID 0) to Solid (ID 2) for dimension 1) with polynomial set to separate
+---[precice]  Mapping Forces0 conservative from Fluid-Mesh-Faces (ID 0) to Solid (ID 2) for dimension 2) with polynomial set to separate
+---[precice]  Time window completed
+---[precice]  Mapping Displacements0 consistent from Solid (ID 2) to Fluid-Mesh-Nodes (ID 1) for dimension 0) with polynomial set to separate
+---[precice]  Mapping Displacements0 consistent from Solid (ID 2) to Fluid-Mesh-Nodes (ID 1) for dimension 1) with polynomial set to separate
+---[precice]  Mapping Displacements0 consistent from Solid (ID 2) to Fluid-Mesh-Nodes (ID 1) for dimension 2) with polynomial set to separate
+---[precice]  it 1 | dt# 293 | t 0.292 of 0.5 | dt 0.001 | max dt 0.001 | ongoing yes | dt complete yes | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0134973 max: 0.535341
+Interface Courant Number mean: 0.00265474 max: 0.535341
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.82706e-05
+Time = 0.282028
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 0.181831, Final residual = 9.87379e-07, No Iterations 135
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.435878, Final residual = 9.86951e-07, No Iterations 133
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 7.77947e-07, No Iterations 95
+time step continuity errors : sum local = 2.44611e-09, global = 1.50864e-11, cumulative = -9.14683e-07
+smoothSolver:  Solving for alpha.water, Initial residual = 0.0243473, Final residual = 7.42061e-10, No Iterations 5
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = -6.25839e-10  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = -6.34932e-06  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.839587, Final residual = 0.0388546, No Iterations 62
+time step continuity errors : sum local = 0.000162096, global = -9.40815e-06, cumulative = -1.03228e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.0176856, Final residual = 0.000721295, No Iterations 51
+time step continuity errors : sum local = 0.000519411, global = 1.04841e-05, cumulative = 1.61251e-07
+DICPCG:  Solving for p_rgh, Initial residual = 0.00983941, Final residual = 7.33455e-08, No Iterations 81
+time step continuity errors : sum local = 4.17903e-08, global = -7.38462e-10, cumulative = 1.60512e-07
+ExecutionTime = 113.64 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 293 | t 0.292028 of 0.5 | dt 0.001 | max dt 0.000971657 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.24044 max: 6.24526
+Interface Courant Number mean: 0.0242848 max: 6.24526
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 4.52457e-06
+Time = 0.282032
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 0.343695, Final residual = 9.96031e-07, No Iterations 47
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.437547, Final residual = 9.89102e-07, No Iterations 84
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 9.46987e-07, No Iterations 93
+time step continuity errors : sum local = 7.47773e-10, global = 6.75652e-12, cumulative = 1.60519e-07
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00351371, Final residual = 7.21577e-12, No Iterations 3
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = -6.04794e-06  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = -6.04794e-06  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.10666, Final residual = 0.00484851, No Iterations 59
+time step continuity errors : sum local = 9.31709e-05, global = 1.49406e-06, cumulative = 1.65458e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0185772, Final residual = 0.000744883, No Iterations 6
+time step continuity errors : sum local = 5.86346e-05, global = 2.42963e-06, cumulative = 4.08421e-06
+DICPCG:  Solving for p_rgh, Initial residual = 0.0107817, Final residual = 9.21061e-08, No Iterations 76
+time step continuity errors : sum local = 7.04739e-09, global = 8.66992e-11, cumulative = 4.0843e-06
+ExecutionTime = 113.7 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 293 | t 0.292033 of 0.5 | dt 0.001 | max dt 0.00096713 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.0149334 max: 2.54184
+Interface Courant Number mean: 0.00465007 max: 2.54184
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 1.77971e-06
+Time = 0.282034
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 0.390243, Final residual = 9.71705e-07, No Iterations 60
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.417915, Final residual = 9.90425e-07, No Iterations 46
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.26505e-07, No Iterations 85
+time step continuity errors : sum local = 9.26408e-11, global = -4.59819e-13, cumulative = 4.0843e-06
+smoothSolver:  Solving for alpha.water, Initial residual = 0.00599992, Final residual = 2.45316e-11, No Iterations 2
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = -1.98142e-07  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = -1.98118e-07  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.875477, Final residual = 0.0429013, No Iterations 3
+time step continuity errors : sum local = 0.00327268, global = 6.2863e-05, cumulative = 6.69473e-05
+DICPCG:  Solving for p_rgh, Initial residual = 0.967907, Final residual = 0.0436821, No Iterations 3
+time step continuity errors : sum local = 0.408324, global = 6.28666e-05, cumulative = 0.000129814
+DICPCG:  Solving for p_rgh, Initial residual = 0.978734, Final residual = 7.43794e-08, No Iterations 92
+time step continuity errors : sum local = 3.64451e-05, global = -8.16943e-07, cumulative = 0.000128997
+ExecutionTime = 113.75 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 293 | t 0.292035 of 0.5 | dt 0.001 | max dt 0.00096535 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 186.17 max: 65529.8
+Interface Courant Number mean: 149.858 max: 65529.8
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.71588e-11
+Time = 0.282034
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 0.604554, Final residual = 9.9695e-07, No Iterations 185
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.449114, Final residual = 9.81131e-07, No Iterations 90
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.52382e-07, No Iterations 87
+time step continuity errors : sum local = 1.8611e-09, global = 7.28584e-11, cumulative = 0.000128997
+smoothSolver:  Solving for alpha.water, Initial residual = 0.0439752, Final residual = 6.67063e-13, No Iterations 2
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = -1.634e-07  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = -1.61114e-07  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.998892, Final residual = 0.0478262, No Iterations 10
+time step continuity errors : sum local = 7.19584e-05, global = -1.04556e-11, cumulative = 0.000128997
+DICPCG:  Solving for p_rgh, Initial residual = 0.305434, Final residual = 0.00693899, No Iterations 3
+time step continuity errors : sum local = 0.000144105, global = -2.20256e-11, cumulative = 0.000128997
+DICPCG:  Solving for p_rgh, Initial residual = 0.685208, Final residual = 8.48943e-08, No Iterations 93
+time step continuity errors : sum local = 2.10314e-09, global = 3.50201e-11, cumulative = 0.000128997
+ExecutionTime = 113.82 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 293 | t 0.292035 of 0.5 | dt 0.001 | max dt 0.00096535 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 0.143725 max: 10.952
+Interface Courant Number mean: 0.049268 max: 10.952
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.4798e-12
+Time = 0.282034
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 0.484829, Final residual = 9.63819e-07, No Iterations 37
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.649996, Final residual = 9.43966e-07, No Iterations 24
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 9.72079e-07, No Iterations 80
+time step continuity errors : sum local = 3.1827e-09, global = -5.94442e-11, cumulative = 0.000128997
+smoothSolver:  Solving for alpha.water, Initial residual = 0.123199, Final residual = 3.10422e-09, No Iterations 6
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = -1.51909e-07  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = -1.5098e-07  Max(alpha.water) = 1
+DICPCG:  Solving for p_rgh, Initial residual = 0.489496, Final residual = 0.0229119, No Iterations 29
+time step continuity errors : sum local = 9.54523e-05, global = -2.04724e-05, cumulative = 0.000108525
+DICPCG:  Solving for p_rgh, Initial residual = 0.886462, Final residual = 0.0312961, No Iterations 70
+time step continuity errors : sum local = 0.00167646, global = 2.78417e-05, cumulative = 0.000136366
+DICPCG:  Solving for p_rgh, Initial residual = 0.914763, Final residual = 8.51444e-08, No Iterations 118
+time step continuity errors : sum local = 3.51279e-07, global = -1.65007e-08, cumulative = 0.00013635
+ExecutionTime = 113.87 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 293 | t 0.292035 of 0.5 | dt 0.001 | max dt 0.00096535 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 48.8259 max: 108710
+Interface Courant Number mean: 29.2093 max: 108710
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 2.28111e-17
+Time = 0.282034
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 0.360499, Final residual = 9.19826e-05, No Iterations 1000
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.184637, Final residual = 9.98075e-07, No Iterations 200
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 9.71779e-07, No Iterations 110
+time step continuity errors : sum local = 8.72429e-10, global = 7.59009e-12, cumulative = 0.00013635
+smoothSolver:  Solving for alpha.water, Initial residual = 0.242445, Final residual = 5.76642e-09, No Iterations 9
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = -7.46793e-10  Max(alpha.water) = 1
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = -7.39749  Max(alpha.water) = 14.8341
+DICPCG:  Solving for p_rgh, Initial residual = 0.999994, Final residual = 0.0439942, No Iterations 29
+time step continuity errors : sum local = 7.48042e-05, global = -1.70505e-07, cumulative = 0.000136179
+DICPCG:  Solving for p_rgh, Initial residual = 0.788841, Final residual = 0.01363, No Iterations 16
+time step continuity errors : sum local = 0.00469765, global = -1.43271e-08, cumulative = 0.000136165
+DICPCG:  Solving for p_rgh, Initial residual = 0.821599, Final residual = 7.55619e-08, No Iterations 142
+time step continuity errors : sum local = 4.85151e-06, global = 1.35165e-08, cumulative = 0.000136179
+ExecutionTime = 114.02 s  ClockTime = 149 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 293 | t 0.292035 of 0.5 | dt 0.001 | max dt 0.00096535 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 51.7017 max: 37417.3
+Interface Courant Number mean: 50.011 max: 37417.3
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 6.09641e-22
+Time = 0.282034
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 0.10305, Final residual = 9.95034e-07, No Iterations 998
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.281836, Final residual = 9.9521e-07, No Iterations 330
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 8.655e-07, No Iterations 97
+time step continuity errors : sum local = 3.28851e-09, global = 5.77171e-11, cumulative = 0.000136179
+smoothSolver:  Solving for alpha.water, Initial residual = 0.840819, Final residual = 9.60542e-09, No Iterations 149
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = 8.83945e-90  Max(alpha.water) = 0.560837
+MULES: Correcting alpha.water
+MULES: Correcting alpha.water
+Phase-1 volume fraction = 0.0219049  Min(alpha.water) = -1.21649  Max(alpha.water) = 2.80818
+DICPCG:  Solving for p_rgh, Initial residual = 0.999873, Final residual = 0.0495301, No Iterations 48
+time step continuity errors : sum local = 0.000264576, global = 2.24984e-05, cumulative = 0.000158677
+DICPCG:  Solving for p_rgh, Initial residual = 0.206303, Final residual = 0.00796269, No Iterations 71
+time step continuity errors : sum local = 0.0146872, global = -0.00555535, cumulative = -0.00539667
+DICPCG:  Solving for p_rgh, Initial residual = 0.187199, Final residual = 8.71828e-08, No Iterations 144time step continuity errors : sum local = 1.51444e-05, global = 1.5597e-08, cumulative = -0.00539665
+ExecutionTime = 114.2 s  ClockTime = 150 s
+
+---[preciceAdapter] [DEBUG] Writing coupling data...
+---[preciceAdapter] [DEBUG] Advancing preCICE...
+---[precice]  it 1 | dt# 293 | t 0.292035 of 0.5 | dt 0.001 | max dt 0.00096535 | ongoing yes | dt complete no | 
+---[preciceAdapter] [DEBUG] Reading coupling data...
+Courant Number mean: 572.732 max: 16474.2
+Interface Courant Number mean: 532.023 max: 7956.67
+---[preciceAdapter] [DEBUG] Adjusting the solver's timestep...
+---[preciceAdapter] The solver's timestep is smaller than the coupling timestep. Subcycling...
+--> FOAM Warning : 
+    From function void adapterInfo(std::__cxx11::string, std::__cxx11::string)
+    in file Utilities.C at line 17
+    Warning in the preCICE adapter: 
+The adapter does not fully support subcycling for FSI and instabilities may occur.
+
+deltaT = 7.40114e-26
+Time = 0.282034
+
+smoothSolver:  Solving for cellDisplacementx, Initial residual = 0.161171, Final residual = 0.000272829, No Iterations 1000
+smoothSolver:  Solving for cellDisplacementz, Initial residual = 0.180648, Final residual = 0.000170589, No Iterations 1000
+DICPCG:  Solving for pcorr, Initial residual = 1, Final residual = 9.85598e-07, No Iterations 185
+time step continuity errors : sum local = 1.55595e-07, global = 1.48861e-09, cumulative = -0.00539665
+smoothSolver:  Solving for alpha.water, Initial residual = 0.264665, Final residual = 1.39597e+70, No Iterations 1000
+Phase-1 volume fraction = -1.72301e+70  Min(alpha.water) = -1.26219e+74  Max(alpha.water) = 2.29712e+72
+[0]PETSC ERROR: ------------------------------------------------------------------------
+[0]PETSC ERROR: Caught signal number 8 FPE: Floating Point Exception,probably divide by zero
+[0]PETSC ERROR: Try option -start_in_debugger or -on_error_attach_debugger
+[0]PETSC ERROR: or see https://www.mcs.anl.gov/petsc/documentation/faq.html#valgrind
+[0]PETSC ERROR: or try http://valgrind.org on GNU/linux and Apple Mac OS X to find memory corruption errors
+[0]PETSC ERROR: configure using --with-debugging=yes, recompile, link, and run 
+[0]PETSC ERROR: to get more information on the crash.
+[0]PETSC ERROR: User provided function() line 0 in  unknown file  
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 0 in communicator MPI_COMM_WORLD
+with errorcode 59.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+Looking for any time directories without results (e.g. stray functionObjectProperties files, see issue #26 on GitHub)...
+
+### NOTE ### Make sure to use the correct solver for your OpenFOAM version! (pimpleFoam for OpenFOAM v1806, OpenFOAM 6, or newer, vs pimpleDyMFoam for older) You may change this in your Fluid/system/controlDict file, if needed.
+prasad@XDEM-laptop:~/01_PhD/3_Tutorials/3_trials/0_OpenFOAM-CalculiX_interFoam$ 
