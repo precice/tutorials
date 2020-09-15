@@ -5,53 +5,53 @@
     <log>
         <sink filter="%Severity% > debug and %Rank% = 0" format="---[precice] %ColorizedSeverity% %Message%" enabled="true"/>
         <sink type="file" output="debug_OpenFOAM.log" filter="%Participant% = OpenFOAM" />
-        <sink type="file" output="debug_Solid.log" filter="%Participant% = CalculiX" />
+        <sink type="file" output="debug_Calculix_Mesh.log" filter="%Participant% = Calculix" />
     </log>
 
     <solver-interface dimensions="3">
 
-    <data:scalar name="Sink-Temperature"/>
+    <data:scalar name="Temperature"/>
     <data:scalar name="Heat-Flux"/>
 
     <mesh name="OpenFOAM-Mesh">
-        <use-data name="Sink-Temperature"/>
+        <use-data name="Temperature"/>
         <use-data name="Heat-Flux"/>
     </mesh>
 
-    <mesh name="Solid">
-        <use-data name="Sink-Temperature"/>
+    <mesh name="Calculix_Mesh">
+        <use-data name="Temperature"/>
         <use-data name="Heat-Flux"/>
     </mesh>
 
     <participant name="OpenFOAM">
         <use-mesh name="OpenFOAM-Mesh" provide="yes"/>
-        <use-mesh name="Solid" from="CalculiX"/>
+        <use-mesh name="Calculix_Mesh" from="Calculix"/>
         <read-data name="Heat-Flux" mesh="OpenFOAM-Mesh"/>
-        <write-data name="Sink-Temperature" mesh="OpenFOAM-Mesh"/>
-        <mapping:nearest-neighbor direction="read" from="Solid" to="OpenFOAM-Mesh" constraint="consistent" timing="initial"/>
+        <write-data name="Temperature" mesh="OpenFOAM-Mesh"/>
+        <mapping:nearest-neighbor direction="read" from="Calculix_Mesh" to="OpenFOAM-Mesh" constraint="consistent" timing="initial"/>
     </participant>
 
-    <participant name="CalculiX">
+    <participant name="Calculix">
         <use-mesh name="OpenFOAM-Mesh" from="OpenFOAM"/>
-        <use-mesh name="Solid" provide="yes"/>
-        <read-data name="Sink-Temperature" mesh="Solid"/>
-        <write-data name="Heat-Flux" mesh="Solid"/>
-        <mapping:nearest-neighbor direction="read" from="OpenFOAM-Mesh" to="Solid" constraint="consistent" timing="initial"/>
+        <use-mesh name="Calculix_Mesh" provide="yes"/>
+        <read-data name="Temperature" mesh="Calculix_Mesh"/>
+        <write-data name="Heat-Flux" mesh="Calculix_Mesh"/>
+        <mapping:nearest-neighbor direction="read" from="OpenFOAM-Mesh" to="Calculix_Mesh" constraint="consistent" timing="initial"/>
     </participant>
 
-    <m2n:sockets from="CalculiX" to="OpenFOAM"/>
+    <m2n:sockets from="Calculix" to="OpenFOAM"/>
 
     <coupling-scheme:serial-implicit>
         <time-window-size value="0.01"/>
         <max-time value="1"/>
         <max-iterations value="200"/>
-        <participants first="OpenFOAM" second="CalculiX"/>
-        <exchange data="Sink-Temperature" mesh="OpenFOAM-Mesh" from="OpenFOAM" to="CalculiX"/>
-        <exchange data="Heat-Flux" mesh="Solid" from="CalculiX" to="OpenFOAM"/>
-        <relative-convergence-measure limit="1.0e-6" data="Sink-Temperature" mesh="OpenFOAM-Mesh"/>
+        <participants first="OpenFOAM" second="Calculix"/>
+        <exchange data="Temperature" mesh="OpenFOAM-Mesh" from="OpenFOAM" to="Calculix"/>
+        <exchange data="Heat-Flux" mesh="Calculix_Mesh" from="Calculix" to="OpenFOAM"/>
+        <relative-convergence-measure limit="1.0e-6" data="Temperature" mesh="OpenFOAM-Mesh"/>
         <extrapolation-order value="2"/>
         <acceleration:IQN-ILS>
-            <data mesh="Solid" name="Heat-Flux" />
+            <data mesh="Calculix_Mesh" name="Heat-Flux" />
             <initial-relaxation value="0.01" />
             <max-used-iterations value="80" />
             <time-windows-reused value="10" />

@@ -1,0 +1,10 @@
+participants:
+
+    CalculiX:
+        interfaces:
+        - faces-mesh: Solid
+          patch: interface
+          write-data: [Heat-Flux]
+          read-data: [Temperature]
+          
+precice-config-file: ./precice-config.xml
