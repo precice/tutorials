@@ -1,9 +1,9 @@
 participants:
     Calculix:
         interfaces:
-        - faces-mesh: Calculix_Mesh
+        - mesh: Calculix_Mesh
           patch: interface
-          read-data: [Temperature]
+          read-data: [Sink-Temperature-0]
           write-data: [Heat-Flux]
           
 precice-config-file: ./precice-config.xml

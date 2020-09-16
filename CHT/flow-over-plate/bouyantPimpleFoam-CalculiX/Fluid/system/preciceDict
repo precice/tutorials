@@ -27,7 +27,7 @@ interfaces
     
     writeData
     (
-      Temperature
+      Sink-Temperature-0
     );
   };
 };

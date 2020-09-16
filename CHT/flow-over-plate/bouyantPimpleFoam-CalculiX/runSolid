@@ -11,4 +11,4 @@
 echo "Running the Solid participant..."
 
 # Run
-ccx_preCICEedit -i Solid/Solid_plate -precice-participant Calculix #> Solid.log
+ccx_preCICEv216 -i Solid/Solid_plate -precice-participant Calculix #> Solid.log
