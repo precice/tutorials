@@ -24,8 +24,8 @@ Nall,400
 *BOUNDARY
 Nfix1, 11, 11, 400
 
-** *DFLUX
-** *INCLUDE, INPUT=Solid/interface.dfl
+*DFLUX
+*INCLUDE, INPUT=Solid/interface.dfl
 
 *FILM
 *INCLUDE, INPUT=Solid/interface.flm

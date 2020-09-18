@@ -24,6 +24,7 @@ echo "Cleaning..."
 # rm -fv ${Participant1}_decomposePar.log
 # rm -fv ${Participant1}.log
 # rm -fv ${Participant1}_reconstructPar.log
+rm -fv *.log
 
 # Participant 2: Solid
 Participant2="Solid"

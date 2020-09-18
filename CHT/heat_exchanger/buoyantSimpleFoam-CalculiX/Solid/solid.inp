@@ -1,0 +1,33 @@
+*INCLUDE, INPUT=Solid/all.msh
+*INCLUDE, INPUT=Solid/inner-interface.nam
+*INCLUDE, INPUT=Solid/inner-interface.sur
+*INCLUDE, INPUT=Solid/outer-interface.nam
+*INCLUDE, INPUT=Solid/outer-interface.sur
+
+*MATERIAL,NAME=ALUMINUM
+*DENSITY
+8960
+*CONDUCTIVITY
+401
+*SPECIFIC HEAT
+385
+*SOLID SECTION,ELSET=Eall,MATERIAL=ALUMINUM
+
+*INITIAL CONDITIONS,TYPE=TEMPERATURE
+Nall,293
+
+*STEP, INC=1000000
+*HEAT TRANSFER, DIRECT, STEADY STATE
+1,1
+
+*DFLUX
+*INCLUDE, INPUT=Solid/adiabatic.dfl
+
+*FILM
+*INCLUDE, INPUT=Solid/inner-interface.flm
+*INCLUDE, INPUT=Solid/outer-interface.flm
+
+*NODE FILE, FREQUENCY=50
+NT
+
+*END STEP
