@@ -32,8 +32,10 @@
         <use-mesh name="Solid" from="Calculix"/>
         <write-data name="Forces0" mesh="Fluid-Mesh-Faces"/>
         <read-data name="Displacements0" mesh="Fluid-Mesh-Nodes"/>
-        <mapping:rbf-thin-plate-splines direction="write" from="Fluid-Mesh-Faces" to="Solid" constraint="conservative" y-dead="true" />
-        <mapping:rbf-thin-plate-splines direction="read" from="Solid" to="Fluid-Mesh-Nodes" constraint="consistent"/>
+        <!--<mapping:rbf-thin-plate-splines direction="write" from="Fluid-Mesh-Faces" to="Solid" constraint="conservative" y-dead="true" />
+        <mapping:rbf-thin-plate-splines direction="read" from="Solid" to="Fluid-Mesh-Nodes" constraint="consistent"/>-->
+        <mapping:nearest-neighbor direction="write" from="Fluid-Mesh-Faces" to="Solid" constraint="conservative"/>
+        <mapping:nearest-neighbor direction="read" from="Solid" to="Fluid-Mesh-Nodes" constraint="consistent"/>
         <export:vtk directory="preCICE-OF-output" />
     </participant>
 
@@ -42,18 +44,18 @@
         <read-data name="Forces0" mesh="Solid"/>
         <write-data name="Displacements0" mesh="Solid"/>
         <watch-point mesh="Solid" name="point1" coordinate="-0.05;0;1" />
-        <export:vtk directory="preCICE-CCX-output" />
+<!--         <export:vtk directory="preCICE-CCX-output" /> -->
     </participant>
 
     <m2n:sockets from="Fluid" to="Calculix" />
 
-    <coupling-scheme:serial-explicit>
+    <!--<coupling-scheme:serial-explicit>
         <time-window-size value="1e-4"/>
         <max-time value="1.0"/>
         <participants first="Fluid" second="Calculix"/>
         <exchange data="Forces0" mesh="Solid" from="Fluid" to="Calculix"/>
         <exchange data="Displacements0" mesh="Solid" from="Calculix" to="Fluid"/>
-    </coupling-scheme:serial-explicit>
+    </coupling-scheme:serial-explicit>-->
 
  
     <!--<coupling-scheme:serial-implicit>
@@ -79,9 +81,9 @@
 
     </coupling-scheme:serial-implicit>-->
     
-    <!--<coupling-scheme:parallel-implicit>
-            <time-window-size value="1.e-3" />
-            <max-time value="0.5"/>
+    <coupling-scheme:parallel-implicit>
+            <time-window-size value="1.e-4" />
+            <max-time value="5"/>
             <participants first="Fluid" second="Calculix"/>
             <exchange data="Forces0" mesh="Solid" from="Fluid" to="Calculix"/>
             <exchange data="Displacements0" mesh="Solid" from="Calculix" to="Fluid" />
@@ -91,16 +93,43 @@
             <relative-convergence-measure limit="1e-2" data="Forces0" mesh="Solid"/>
             <extrapolation-order value="2"/>
  
-            <acceleration:IQN-ILS>
+            <!--<acceleration:IQN-ILS>
                 <data name="Displacements0" mesh="Solid"/>
                 <preconditioner type="residual-sum"/>
                 <filter type="QR1" limit="1e-6"/>
                 <initial-relaxation value="0.01"/> 
                 <max-used-iterations value="100"/>
                 <time-windows-reused value="0"/> 
-            </acceleration:IQN-ILS> 
+            </acceleration:IQN-ILS> -->
+            
+            <!--<acceleration:IQN-ILS>
+                <data name="Displacements0" mesh="Solid"/>
+                <data name="Forces0" mesh="Solid"/>
+                <preconditioner type="residual-sum"/>
+                <filter type="QR2" limit="1e-2"/>
+                <initial-relaxation value="0.1"/> 
+                <max-used-iterations value="100"/>
+                <time-windows-reused value="10"/> 
+            </acceleration:IQN-ILS>--> 
+            
+            <acceleration:IQN-IMVJ>
+                <imvj-restart-mode truncation-threshold="0.0001" chunk-size="8" reused-time-windows-at-restart="8" type="RS-SVD"/>
+                <data name="Displacements0" mesh="Solid"/>
+                <data name="Forces0" mesh="Solid"/>
+                <preconditioner type="residual-sum"/>
+                <filter type="QR2" limit="1e-2"/>
+                <initial-relaxation value="0.1"/> 
+                <max-used-iterations value="100"/>
+                <time-windows-reused value="10"/> 
+            </acceleration:IQN-IMVJ> 
+            
+           <!-- <acceleration:aitken>
+            <data name="Displacements0" mesh="Solid"/>
+            <data name="Forces0" mesh="Solid"/>
+            <initial-relaxation value="0.1"/>
+            </acceleration:aitken>-->
 
-    </coupling-scheme:parallel-implicit>-->
+    </coupling-scheme:parallel-implicit>
  
 
     </solver-interface>
