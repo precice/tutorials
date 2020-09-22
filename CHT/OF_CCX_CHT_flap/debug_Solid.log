@@ -1,830 +1,830 @@
-(0) 17:14:25 [logging::config::LogConfiguration]:75 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [logging::config::LogConfiguration]:75 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == dimensions
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "dimensions" value = 3
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [config::SolverInterfaceConfiguration]:53 in xmlTagCallback: [0mEntering operator()
-(0) 17:14:25 [mesh::DataConfiguration]:36 in setDimensions: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "dimensions" value = 3
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [config::SolverInterfaceConfiguration]:53 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [mesh::DataConfiguration]:36 in setDimensions: [0mEntering operator()
   Argument 0: dimensions == 3
-(0) 17:14:25 [mesh::DataConfiguration]:36 in setDimensions: [0mLeaving setDimensions
-(0) 17:14:25 [mesh::MeshConfiguration]:60 in setDimensions: [0mEntering operator()
+(0) 12:10:30 [mesh::DataConfiguration]:36 in setDimensions: [0mLeaving setDimensions
+(0) 12:10:30 [mesh::MeshConfiguration]:60 in setDimensions: [0mEntering operator()
   Argument 0: dimensions == 3
-(0) 17:14:25 [mesh::MeshConfiguration]:60 in setDimensions: [0mLeaving setDimensions
-(0) 17:14:25 [config::ParticipantConfiguration]:223 in setDimensions: [0mEntering operator()
+(0) 12:10:30 [mesh::MeshConfiguration]:60 in setDimensions: [0mLeaving setDimensions
+(0) 12:10:30 [config::ParticipantConfiguration]:223 in setDimensions: [0mEntering operator()
   Argument 0: dimensions == 3
-(0) 17:14:25 [config::ParticipantConfiguration]:223 in setDimensions: [0mLeaving setDimensions
-(0) 17:14:25 [config::SolverInterfaceConfiguration]:53 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [config::ParticipantConfiguration]:223 in setDimensions: [0mLeaving setDimensions
+(0) 12:10:30 [config::SolverInterfaceConfiguration]:53 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Temperature
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Temperature
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Heat-Flux
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Heat-Flux
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Fluid-Mesh
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Fluid-Mesh
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == flip-normals
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "flip-normals" value = 0
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "flip-normals" value = 0
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == mesh
-(0) 17:14:25 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Temperature
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Temperature
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == use-data
-(0) 17:14:25 [mesh::Mesh]:124 in createData: [0mEntering operator()
+(0) 12:10:30 [mesh::Mesh]:124 in createData: [0mEntering operator()
   Argument 0: name == Temperature
   Argument 1: dimension == 1
-(0) 17:14:25 [mesh::Mesh]:124 in createData: [0mLeaving createData
-(0) 17:14:25 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [mesh::Mesh]:124 in createData: [0mLeaving createData
+(0) 12:10:30 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Heat-Flux
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Heat-Flux
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == use-data
-(0) 17:14:25 [mesh::Mesh]:124 in createData: [0mEntering operator()
+(0) 12:10:30 [mesh::Mesh]:124 in createData: [0mEntering operator()
   Argument 0: name == Heat-Flux
   Argument 1: dimension == 1
-(0) 17:14:25 [mesh::Mesh]:124 in createData: [0mLeaving createData
-(0) 17:14:25 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [mesh::Mesh]:124 in createData: [0mLeaving createData
+(0) 12:10:30 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Solid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Solid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == flip-normals
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "flip-normals" value = 0
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "flip-normals" value = 0
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == mesh
-(0) 17:14:25 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Temperature
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Temperature
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == use-data
-(0) 17:14:25 [mesh::Mesh]:124 in createData: [0mEntering operator()
+(0) 12:10:30 [mesh::Mesh]:124 in createData: [0mEntering operator()
   Argument 0: name == Temperature
   Argument 1: dimension == 1
-(0) 17:14:25 [mesh::Mesh]:124 in createData: [0mLeaving createData
-(0) 17:14:25 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [mesh::Mesh]:124 in createData: [0mLeaving createData
+(0) 12:10:30 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Heat-Flux
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Heat-Flux
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == use-data
-(0) 17:14:25 [mesh::Mesh]:124 in createData: [0mEntering operator()
+(0) 12:10:30 [mesh::Mesh]:124 in createData: [0mEntering operator()
   Argument 0: name == Heat-Flux
   Argument 1: dimension == 1
-(0) 17:14:25 [mesh::Mesh]:124 in createData: [0mLeaving createData
-(0) 17:14:25 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [mesh::Mesh]:124 in createData: [0mLeaving createData
+(0) 12:10:30 [mesh::MeshConfiguration]:69 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Fluid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Fluid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == participant
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == safety-factor
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "safety-factor" value = 0.5
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "safety-factor" value = 0.5
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == from
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = 
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = 
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == geometric-filter
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "geometric-filter" value = on-slaves
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "geometric-filter" value = on-slaves
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Fluid-Mesh
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Fluid-Mesh
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == provide
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "provide" value = 1
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "provide" value = 1
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == use-mesh
-(0) 17:14:25 [impl::Participant]:68 in useMesh: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:68 in useMesh: [0mEntering operator()
   Argument 0: _name == Fluid
   Argument 1: mesh->getName() == Fluid-Mesh
   Argument 2: mesh->getID() == 0
-(0) 17:14:25 [impl::Participant]:68 in useMesh: [0mLeaving useMesh
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:68 in useMesh: [0mLeaving useMesh
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == safety-factor
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "safety-factor" value = 0.5
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "safety-factor" value = 0.5
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == from
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = CalculiX
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = CalculiX
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == geometric-filter
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "geometric-filter" value = on-slaves
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "geometric-filter" value = on-slaves
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Solid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Solid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == provide
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "provide" value = 0
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "provide" value = 0
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == use-mesh
-(0) 17:14:25 [impl::Participant]:68 in useMesh: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:68 in useMesh: [0mEntering operator()
   Argument 0: _name == Fluid
   Argument 1: mesh->getName() == Solid
   Argument 2: mesh->getID() == 1
-(0) 17:14:25 [impl::Participant]:68 in useMesh: [0mLeaving useMesh
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:68 in useMesh: [0mLeaving useMesh
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == mesh
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Fluid-Mesh
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Fluid-Mesh
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Heat-Flux
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Heat-Flux
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == read-data
-(0) 17:14:25 [impl::Participant]:298 in checkDuplicatedData: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:298 in checkDuplicatedData: [0mEntering operator()
   Argument 0: data->getID() == 1
   Argument 1: _dataContexts.size() == 4
-(0) 17:14:25 [impl::Participant]:298 in checkDuplicatedData: [0mLeaving checkDuplicatedData
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:298 in checkDuplicatedData: [0mLeaving checkDuplicatedData
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == mesh
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Fluid-Mesh
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Fluid-Mesh
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Temperature
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Temperature
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == write-data
-(0) 17:14:25 [impl::Participant]:298 in checkDuplicatedData: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:298 in checkDuplicatedData: [0mEntering operator()
   Argument 0: data->getID() == 0
   Argument 1: _dataContexts.size() == 4
-(0) 17:14:25 [impl::Participant]:298 in checkDuplicatedData: [0mLeaving checkDuplicatedData
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:298 in checkDuplicatedData: [0mLeaving checkDuplicatedData
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == constraint
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "constraint" value = consistent
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "constraint" value = consistent
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == direction
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "direction" value = read
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "direction" value = read
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == from
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = Solid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = Solid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == timing
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "timing" value = initial
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "timing" value = initial
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == to
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "to" value = Fluid-Mesh
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [config:MappingConfiguration]:143 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "to" value = Fluid-Mesh
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [config:MappingConfiguration]:143 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == nearest-neighbor
-(0) 17:14:25 [config:MappingConfiguration]:243 in createMapping: [0mEntering operator()
+(0) 12:10:30 [config:MappingConfiguration]:243 in createMapping: [0mEntering operator()
   Argument 0: direction == read
   Argument 1: type == nearest-neighbor
   Argument 2: timing == 0
   Argument 3: shapeParameter == 0
   Argument 4: supportRadius == 0
-(0) 17:14:25 [config:MappingConfiguration]:243 in createMapping: [0mLeaving createMapping
-(0) 17:14:25 [config:MappingConfiguration]:143 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [config::ParticipantConfiguration]:357 in finishParticipantConfiguration: [0mEntering operator()
+(0) 12:10:30 [config:MappingConfiguration]:243 in createMapping: [0mLeaving createMapping
+(0) 12:10:30 [config:MappingConfiguration]:143 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [config::ParticipantConfiguration]:357 in finishParticipantConfiguration: [0mEntering operator()
   Argument 0: participant->getName() == Fluid
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mEntering operator()
   Argument 0: meshID == 1
   Argument 1: _meshContexts.size() == 2
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mEntering operator()
   Argument 0: meshID == 0
   Argument 1: _meshContexts.size() == 2
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
-(0) 17:14:25 [config::ParticipantConfiguration]:426 in finishParticipantConfiguration: [0mConfigure mapping for input=Solid, output=Fluid-Mesh
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
+(0) 12:10:30 [config::ParticipantConfiguration]:426 in finishParticipantConfiguration: [0mConfigure mapping for input=Solid, output=Fluid-Mesh
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mEntering operator()
   Argument 0: meshID == 1
   Argument 1: _meshContexts.size() == 2
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
-(0) 17:14:25 [config::ParticipantConfiguration]:357 in finishParticipantConfiguration: [0mLeaving finishParticipantConfiguration
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
+(0) 12:10:30 [config::ParticipantConfiguration]:357 in finishParticipantConfiguration: [0mLeaving finishParticipantConfiguration
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = CalculiX
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = CalculiX
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == participant
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == safety-factor
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "safety-factor" value = 0.5
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "safety-factor" value = 0.5
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == from
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = Fluid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = Fluid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == geometric-filter
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "geometric-filter" value = on-slaves
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "geometric-filter" value = on-slaves
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Fluid-Mesh
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Fluid-Mesh
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == provide
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "provide" value = 0
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "provide" value = 0
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == use-mesh
-(0) 17:14:25 [impl::Participant]:68 in useMesh: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:68 in useMesh: [0mEntering operator()
   Argument 0: _name == CalculiX
   Argument 1: mesh->getName() == Fluid-Mesh
   Argument 2: mesh->getID() == 0
-(0) 17:14:25 [impl::Participant]:68 in useMesh: [0mLeaving useMesh
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:68 in useMesh: [0mLeaving useMesh
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == safety-factor
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "safety-factor" value = 0.5
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "safety-factor" value = 0.5
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == from
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = 
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = 
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == geometric-filter
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "geometric-filter" value = on-slaves
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "geometric-filter" value = on-slaves
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Solid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Solid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == provide
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "provide" value = 1
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "provide" value = 1
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == use-mesh
-(0) 17:14:25 [impl::Participant]:68 in useMesh: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:68 in useMesh: [0mEntering operator()
   Argument 0: _name == CalculiX
   Argument 1: mesh->getName() == Solid
   Argument 2: mesh->getID() == 1
-(0) 17:14:25 [impl::Participant]:68 in useMesh: [0mLeaving useMesh
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:68 in useMesh: [0mLeaving useMesh
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == mesh
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Solid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Solid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Temperature
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Temperature
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == read-data
-(0) 17:14:25 [impl::Participant]:298 in checkDuplicatedData: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:298 in checkDuplicatedData: [0mEntering operator()
   Argument 0: data->getID() == 2
   Argument 1: _dataContexts.size() == 4
-(0) 17:14:25 [impl::Participant]:298 in checkDuplicatedData: [0mLeaving checkDuplicatedData
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:298 in checkDuplicatedData: [0mLeaving checkDuplicatedData
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == mesh
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Solid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Solid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Heat-Flux
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Heat-Flux
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == write-data
-(0) 17:14:25 [impl::Participant]:298 in checkDuplicatedData: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:298 in checkDuplicatedData: [0mEntering operator()
   Argument 0: data->getID() == 3
   Argument 1: _dataContexts.size() == 4
-(0) 17:14:25 [impl::Participant]:298 in checkDuplicatedData: [0mLeaving checkDuplicatedData
-(0) 17:14:25 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:298 in checkDuplicatedData: [0mLeaving checkDuplicatedData
+(0) 12:10:30 [config::ParticipantConfiguration]:232 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == constraint
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "constraint" value = consistent
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "constraint" value = consistent
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == direction
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "direction" value = read
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "direction" value = read
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == from
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = Fluid-Mesh
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = Fluid-Mesh
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == timing
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "timing" value = initial
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "timing" value = initial
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == to
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "to" value = Solid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [config:MappingConfiguration]:143 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "to" value = Solid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [config:MappingConfiguration]:143 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == nearest-neighbor
-(0) 17:14:25 [config:MappingConfiguration]:243 in createMapping: [0mEntering operator()
+(0) 12:10:30 [config:MappingConfiguration]:243 in createMapping: [0mEntering operator()
   Argument 0: direction == read
   Argument 1: type == nearest-neighbor
   Argument 2: timing == 0
   Argument 3: shapeParameter == 0
   Argument 4: supportRadius == 0
-(0) 17:14:25 [config:MappingConfiguration]:243 in createMapping: [0mLeaving createMapping
-(0) 17:14:25 [config:MappingConfiguration]:143 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [config::ParticipantConfiguration]:357 in finishParticipantConfiguration: [0mEntering operator()
+(0) 12:10:30 [config:MappingConfiguration]:243 in createMapping: [0mLeaving createMapping
+(0) 12:10:30 [config:MappingConfiguration]:143 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [config::ParticipantConfiguration]:357 in finishParticipantConfiguration: [0mEntering operator()
   Argument 0: participant->getName() == CalculiX
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mEntering operator()
   Argument 0: meshID == 0
   Argument 1: _meshContexts.size() == 2
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mEntering operator()
   Argument 0: meshID == 1
   Argument 1: _meshContexts.size() == 2
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
-(0) 17:14:25 [config::ParticipantConfiguration]:426 in finishParticipantConfiguration: [0mConfigure mapping for input=Fluid-Mesh, output=Solid
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
+(0) 12:10:30 [config::ParticipantConfiguration]:426 in finishParticipantConfiguration: [0mConfigure mapping for input=Fluid-Mesh, output=Solid
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mEntering operator()
   Argument 0: meshID == 0
   Argument 1: _meshContexts.size() == 2
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
-(0) 17:14:25 [config::ParticipantConfiguration]:357 in finishParticipantConfiguration: [0mLeaving finishParticipantConfiguration
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
+(0) 12:10:30 [config::ParticipantConfiguration]:357 in finishParticipantConfiguration: [0mLeaving finishParticipantConfiguration
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == port
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "port" value = 0
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "port" value = 0
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == exchange-directory
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "exchange-directory" value = 
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "exchange-directory" value = 
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == from
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = CalculiX
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = CalculiX
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == network
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "network" value = lo
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "network" value = lo
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == to
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "to" value = Fluid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "to" value = Fluid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == enforce-gather-scatter
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "enforce-gather-scatter" value = 0
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "enforce-gather-scatter" value = 0
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == use-two-level-initialization
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "use-two-level-initialization" value = 0
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "use-two-level-initialization" value = 0
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == coupling-scheme:serial-implicit
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == value
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 0.01
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 0.01
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == valid-digits
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "valid-digits" value = 10
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "valid-digits" value = 10
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == method
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "method" value = fixed
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "method" value = fixed
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == time-window-size
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:946 in getTimesteppingMethod: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:946 in getTimesteppingMethod: [0mEntering operator()
   Argument 0: method == fixed
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:946 in getTimesteppingMethod: [0mLeaving getTimesteppingMethod
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:946 in getTimesteppingMethod: [0mLeaving getTimesteppingMethod
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == time-window-size
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == value
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 1
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 1
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == max-time
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == max-time
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == value
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 200
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 200
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == max-iterations
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == max-iterations
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == first
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "first" value = Fluid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "first" value = Fluid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == second
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "second" value = CalculiX
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "second" value = CalculiX
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == participants
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == participants
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == data
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "data" value = Temperature
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "data" value = Temperature
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == from
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = Fluid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = Fluid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == mesh
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Fluid-Mesh
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Fluid-Mesh
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == to
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "to" value = CalculiX
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "to" value = CalculiX
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == initialize
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "initialize" value = 0
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "initialize" value = 0
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == exchange
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
   Argument 0: participant == Fluid
   Argument 1: mesh == Fluid-Mesh
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
   Argument 0: participant == CalculiX
   Argument 1: mesh == Fluid-Mesh
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == exchange
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == data
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "data" value = Heat-Flux
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "data" value = Heat-Flux
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == from
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = CalculiX
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "from" value = CalculiX
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == mesh
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Solid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Solid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == to
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "to" value = Fluid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "to" value = Fluid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == initialize
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "initialize" value = 0
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "initialize" value = 0
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == exchange
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
   Argument 0: participant == CalculiX
   Argument 1: mesh == Solid
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
   Argument 0: participant == Fluid
   Argument 1: mesh == Solid
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == exchange
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == limit
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "limit" value = 1e-06
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "limit" value = 1e-06
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == data
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "data" value = Temperature
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "data" value = Temperature
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == mesh
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Fluid-Mesh
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Fluid-Mesh
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == strict
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "strict" value = 0
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "strict" value = 0
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == suffices
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "suffices" value = 0
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "suffices" value = 0
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == relative-convergence-measure
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:655 in addRelativeConvergenceMeasure: [0mEntering operator()
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:655 in addRelativeConvergenceMeasure: [0mLeaving addRelativeConvergenceMeasure
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:655 in addRelativeConvergenceMeasure: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:655 in addRelativeConvergenceMeasure: [0mLeaving addRelativeConvergenceMeasure
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == relative-convergence-measure
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == value
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 2
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 2
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == extrapolation-order
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:161 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == extrapolation-order
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mEntering operator()
   Argument 0: callingTag.getFullName() == acceleration:IQN-ILS
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == scaling
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "scaling" value = 1
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "scaling" value = 1
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == mesh
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Solid
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "mesh" value = Solid
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == name
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Heat-Flux
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "name" value = Heat-Flux
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mEntering operator()
   Argument 0: callingTag.getFullName() == data
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: callingTag.getName() == data
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == value
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 0.01
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 0.01
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == enforce
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "enforce" value = 0
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "enforce" value = 0
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mEntering operator()
   Argument 0: callingTag.getFullName() == initial-relaxation
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: callingTag.getName() == initial-relaxation
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == value
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 80
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 80
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mEntering operator()
   Argument 0: callingTag.getFullName() == max-used-iterations
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: callingTag.getName() == max-used-iterations
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == value
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 10
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "value" value = 10
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mEntering operator()
   Argument 0: callingTag.getFullName() == time-windows-reused
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: callingTag.getName() == time-windows-reused
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == limit
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "limit" value = 1e-08
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "limit" value = 1e-08
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mEntering operator()
   Argument 0: _name == type
-(0) 17:14:25 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "type" value = QR1
-(0) 17:14:25 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
-(0) 17:14:25 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mEntering operator()
+(0) 12:10:30 [xml::XMLAttribute]:190 in readValue: [0mRead valid attribute "type" value = QR1
+(0) 12:10:30 [xml::XMLAttribute]:157 in readValue: [0mLeaving readValue
+(0) 12:10:30 [xml::XMLTag]:160 in readAttributes: [0mLeaving readAttributes
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mEntering operator()
   Argument 0: callingTag.getFullName() == filter
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mLeaving xmlTagCallback
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:139 in xmlTagCallback: [0mLeaving xmlTagCallback
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: callingTag.getName() == filter
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: callingTag.getName() == IQN-ILS
-(0) 17:14:25 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [acceleration::AccelerationConfiguration]:241 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: tag.getFullName() == coupling-scheme:serial-implicit
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:784 in createSerialImplicitCouplingScheme: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:784 in createSerialImplicitCouplingScheme: [0mEntering operator()
   Argument 0: accessor == Fluid
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:960 in addDataToBeExchanged: [0mEntering operator()
-(0) 17:14:25 [cplscheme::BiCouplingScheme]:55 in addDataToSend: [0mEntering operator()
-(0) 17:14:25 [cplscheme::BiCouplingScheme]:55 in addDataToSend: [0mLeaving addDataToSend
-(0) 17:14:25 [cplscheme::BiCouplingScheme]:71 in addDataToReceive: [0mEntering operator()
-(0) 17:14:25 [cplscheme::BiCouplingScheme]:71 in addDataToReceive: [0mLeaving addDataToReceive
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:960 in addDataToBeExchanged: [0mLeaving addDataToBeExchanged
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:960 in addDataToBeExchanged: [0mEntering operator()
+(0) 12:10:30 [cplscheme::BiCouplingScheme]:55 in addDataToSend: [0mEntering operator()
+(0) 12:10:30 [cplscheme::BiCouplingScheme]:55 in addDataToSend: [0mLeaving addDataToSend
+(0) 12:10:30 [cplscheme::BiCouplingScheme]:71 in addDataToReceive: [0mEntering operator()
+(0) 12:10:30 [cplscheme::BiCouplingScheme]:71 in addDataToReceive: [0mLeaving addDataToReceive
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:960 in addDataToBeExchanged: [0mLeaving addDataToBeExchanged
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
   Argument 0: participant == CalculiX
   Argument 1: mesh == Fluid-Mesh
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
   Argument 0: participant == CalculiX
   Argument 1: mesh == Solid
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
-(0) 17:14:25 [cplscheme::BiCouplingScheme]:105 in getSendData: [0mEntering operator()
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
+(0) 12:10:30 [cplscheme::BiCouplingScheme]:105 in getSendData: [0mEntering operator()
   Argument 0: dataID == 3
-(0) 17:14:25 [cplscheme::BiCouplingScheme]:105 in getSendData: [0mLeaving getSendData
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:784 in createSerialImplicitCouplingScheme: [0mLeaving createSerialImplicitCouplingScheme
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:375 in addCouplingScheme: [0mEntering operator()
+(0) 12:10:30 [cplscheme::BiCouplingScheme]:105 in getSendData: [0mLeaving getSendData
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:784 in createSerialImplicitCouplingScheme: [0mLeaving createSerialImplicitCouplingScheme
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:375 in addCouplingScheme: [0mEntering operator()
   Argument 0: participantName == Fluid
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:395 in addCouplingScheme: [0mNo coupling scheme exists for the participant
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:375 in addCouplingScheme: [0mLeaving addCouplingScheme
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:784 in createSerialImplicitCouplingScheme: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:395 in addCouplingScheme: [0mNo coupling scheme exists for the participant
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:375 in addCouplingScheme: [0mLeaving addCouplingScheme
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:784 in createSerialImplicitCouplingScheme: [0mEntering operator()
   Argument 0: accessor == CalculiX
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:960 in addDataToBeExchanged: [0mEntering operator()
-(0) 17:14:25 [cplscheme::BiCouplingScheme]:71 in addDataToReceive: [0mEntering operator()
-(0) 17:14:25 [cplscheme::BiCouplingScheme]:71 in addDataToReceive: [0mLeaving addDataToReceive
-(0) 17:14:25 [cplscheme::BiCouplingScheme]:55 in addDataToSend: [0mEntering operator()
-(0) 17:14:25 [cplscheme::BiCouplingScheme]:55 in addDataToSend: [0mLeaving addDataToSend
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:960 in addDataToBeExchanged: [0mLeaving addDataToBeExchanged
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:960 in addDataToBeExchanged: [0mEntering operator()
+(0) 12:10:30 [cplscheme::BiCouplingScheme]:71 in addDataToReceive: [0mEntering operator()
+(0) 12:10:30 [cplscheme::BiCouplingScheme]:71 in addDataToReceive: [0mLeaving addDataToReceive
+(0) 12:10:30 [cplscheme::BiCouplingScheme]:55 in addDataToSend: [0mEntering operator()
+(0) 12:10:30 [cplscheme::BiCouplingScheme]:55 in addDataToSend: [0mLeaving addDataToSend
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:960 in addDataToBeExchanged: [0mLeaving addDataToBeExchanged
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
   Argument 0: participant == CalculiX
   Argument 1: mesh == Fluid-Mesh
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mEntering operator()
   Argument 0: participant == CalculiX
   Argument 1: mesh == Solid
-(0) 17:14:25 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:784 in createSerialImplicitCouplingScheme: [0mLeaving createSerialImplicitCouplingScheme
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:375 in addCouplingScheme: [0mEntering operator()
+(0) 12:10:30 [mesh::MeshConfiguration]:146 in addNeededMesh: [0mLeaving addNeededMesh
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:784 in createSerialImplicitCouplingScheme: [0mLeaving createSerialImplicitCouplingScheme
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:375 in addCouplingScheme: [0mEntering operator()
   Argument 0: participantName == CalculiX
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:395 in addCouplingScheme: [0mNo coupling scheme exists for the participant
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:375 in addCouplingScheme: [0mLeaving addCouplingScheme
-(0) 17:14:25 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [config::SolverInterfaceConfiguration]:68 in xmlEndTagCallback: [0mEntering operator()
-(0) 17:14:25 [config::SolverInterfaceConfiguration]:68 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [config::Configuration]:47 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:395 in addCouplingScheme: [0mNo coupling scheme exists for the participant
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:375 in addCouplingScheme: [0mLeaving addCouplingScheme
+(0) 12:10:30 [cplscheme::CouplingSchemeConfiguration]:313 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [config::SolverInterfaceConfiguration]:68 in xmlEndTagCallback: [0mEntering operator()
+(0) 12:10:30 [config::SolverInterfaceConfiguration]:68 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [config::Configuration]:47 in xmlEndTagCallback: [0mEntering operator()
   Argument 0: tag.getName() == precice-configuration
-(0) 17:14:25 [config::Configuration]:47 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
-(0) 17:14:25 [xml::XMLTag]:44 in addSubtag: [0mEntering operator()
+(0) 12:10:30 [config::Configuration]:47 in xmlEndTagCallback: [0mLeaving xmlEndTagCallback
+(0) 12:10:30 [xml::XMLTag]:44 in addSubtag: [0mEntering operator()
   Argument 0: tag._fullName == precice-configuration
-(0) 17:14:25 [xml::XMLTag]:44 in addSubtag: [0mLeaving addSubtag
-(0) 17:14:25 [xml]:355 in configure: [0mLeaving configure
-(0) 17:14:25 [impl::SolverInterfaceImpl]:162 in configure: [0mThis is preCICE version 2.1.0
-(0) 17:14:25 [impl::SolverInterfaceImpl]:163 in configure: [0mRevision info: v2.1.0-2-g42abc38c
-(0) 17:14:25 [impl::SolverInterfaceImpl]:164 in configure: [0mConfiguring preCICE with configuration "./precice-config.xml"
-(0) 17:14:25 [impl::SolverInterfaceImpl]:165 in configure: [0mI am participant "CalculiX"
-(0) 17:14:25 [impl::SolverInterfaceImpl]:173 in configure: [0mEntering operator()
-(0) 17:14:25 [utils::Events]:40 in start: [0mStarted event configure
-(0) 17:14:25 [utils::MasterSlave]:27 in configure: [0mEntering operator()
+(0) 12:10:30 [xml::XMLTag]:44 in addSubtag: [0mLeaving addSubtag
+(0) 12:10:30 [xml]:355 in configure: [0mLeaving configure
+(0) 12:10:30 [impl::SolverInterfaceImpl]:162 in configure: [0mThis is preCICE version 2.1.0
+(0) 12:10:30 [impl::SolverInterfaceImpl]:163 in configure: [0mRevision info: v2.1.0-2-g42abc38c
+(0) 12:10:30 [impl::SolverInterfaceImpl]:164 in configure: [0mConfiguring preCICE with configuration "./precice-config.xml"
+(0) 12:10:30 [impl::SolverInterfaceImpl]:165 in configure: [0mI am participant "CalculiX"
+(0) 12:10:30 [impl::SolverInterfaceImpl]:173 in configure: [0mEntering operator()
+(0) 12:10:30 [utils::Events]:40 in start: [0mStarted event configure
+(0) 12:10:30 [utils::MasterSlave]:27 in configure: [0mEntering operator()
   Argument 0: rank == 0
   Argument 1: size == 1
-(0) 17:14:25 [utils::MasterSlave]:33 in configure: [0misSlave: 0, isMaster: 0
-(0) 17:14:25 [utils::MasterSlave]:27 in configure: [0mLeaving configure
-(0) 17:14:25 [impl::SolverInterfaceImpl]:1300 in configureM2Ns: [0mEntering operator()
-(0) 17:14:25 [impl::SolverInterfaceImpl]:1300 in configureM2Ns: [0mLeaving configureM2Ns
-(0) 17:14:25 [impl::SolverInterfaceImpl]:1333 in configurePartitions: [0mEntering operator()
-(0) 17:14:25 [impl::SolverInterfaceImpl]:1368 in configurePartitions: [0mReceiving mesh from Fluid
-(0) 17:14:25 [m2n::M2N]:187 in createDistributedCommunication: [0mEntering operator()
-(0) 17:14:25 [m2n::M2N]:187 in createDistributedCommunication: [0mLeaving createDistributedCommunication
-(0) 17:14:25 [m2n::M2N]:187 in createDistributedCommunication: [0mEntering operator()
-(0) 17:14:25 [m2n::M2N]:187 in createDistributedCommunication: [0mLeaving createDistributedCommunication
-(0) 17:14:25 [impl::SolverInterfaceImpl]:1333 in configurePartitions: [0mLeaving configurePartitions
-(0) 17:14:25 [utils::Events]:40 in start: [0mStarted event _GLOBAL
-(0) 17:14:25 [impl::SolverInterfaceImpl]:229 in configure: [0mInitialize master-slave communication
-(0) 17:14:25 [utils::Events]:40 in start: [0mStarted event solver.initialize
-(0) 17:14:25 [utils::Events]:59 in stop: [0mStopped event configure
-(0) 17:14:25 [impl::SolverInterfaceImpl]:173 in configure: [0mLeaving configure
-(0) 17:14:25 [impl::SolverInterfaceImpl]:527 in getDimensions: [0mEntering operator()
+(0) 12:10:30 [utils::MasterSlave]:33 in configure: [0misSlave: 0, isMaster: 0
+(0) 12:10:30 [utils::MasterSlave]:27 in configure: [0mLeaving configure
+(0) 12:10:30 [impl::SolverInterfaceImpl]:1300 in configureM2Ns: [0mEntering operator()
+(0) 12:10:30 [impl::SolverInterfaceImpl]:1300 in configureM2Ns: [0mLeaving configureM2Ns
+(0) 12:10:30 [impl::SolverInterfaceImpl]:1333 in configurePartitions: [0mEntering operator()
+(0) 12:10:30 [impl::SolverInterfaceImpl]:1368 in configurePartitions: [0mReceiving mesh from Fluid
+(0) 12:10:30 [m2n::M2N]:187 in createDistributedCommunication: [0mEntering operator()
+(0) 12:10:30 [m2n::M2N]:187 in createDistributedCommunication: [0mLeaving createDistributedCommunication
+(0) 12:10:30 [m2n::M2N]:187 in createDistributedCommunication: [0mEntering operator()
+(0) 12:10:30 [m2n::M2N]:187 in createDistributedCommunication: [0mLeaving createDistributedCommunication
+(0) 12:10:30 [impl::SolverInterfaceImpl]:1333 in configurePartitions: [0mLeaving configurePartitions
+(0) 12:10:30 [utils::Events]:40 in start: [0mStarted event _GLOBAL
+(0) 12:10:30 [impl::SolverInterfaceImpl]:229 in configure: [0mInitialize master-slave communication
+(0) 12:10:30 [utils::Events]:40 in start: [0mStarted event solver.initialize
+(0) 12:10:30 [utils::Events]:59 in stop: [0mStopped event configure
+(0) 12:10:30 [impl::SolverInterfaceImpl]:173 in configure: [0mLeaving configure
+(0) 12:10:30 [impl::SolverInterfaceImpl]:527 in getDimensions: [0mEntering operator()
   Argument 0: _dimensions == 3
-(0) 17:14:25 [impl::SolverInterfaceImpl]:527 in getDimensions: [0mLeaving getDimensions
-(0) 17:14:25 [impl::SolverInterfaceImpl]:602 in getMeshID: [0mEntering operator()
+(0) 12:10:30 [impl::SolverInterfaceImpl]:527 in getDimensions: [0mLeaving getDimensions
+(0) 12:10:30 [impl::SolverInterfaceImpl]:602 in getMeshID: [0mEntering operator()
   Argument 0: meshName == Solid
-(0) 17:14:25 [impl::SolverInterfaceImpl]:602 in getMeshID: [0mLeaving getMeshID
-(0) 17:14:25 [impl::SolverInterfaceImpl]:695 in setMeshVertices: [0mEntering operator()
+(0) 12:10:30 [impl::SolverInterfaceImpl]:602 in getMeshID: [0mLeaving getMeshID
+(0) 12:10:30 [impl::SolverInterfaceImpl]:695 in setMeshVertices: [0mEntering operator()
   Argument 0: meshID == 1
   Argument 1: size == 86
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mEntering operator()
   Argument 0: meshID == 1
   Argument 1: _meshContexts.size() == 2
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mEntering operator()
   Argument 0: meshID == 1
   Argument 1: _meshContexts.size() == 2
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
-(0) 17:14:25 [impl::SolverInterfaceImpl]:699 in setMeshVertices: [0mSet positions
-(0) 17:14:25 [mesh::Mesh]:184 in allocateDataValues: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
+(0) 12:10:30 [impl::SolverInterfaceImpl]:699 in setMeshVertices: [0mSet positions
+(0) 12:10:30 [mesh::Mesh]:184 in allocateDataValues: [0mEntering operator()
   Argument 0: _vertices.size() == 86
-(0) 17:14:25 [mesh::Mesh]:199 in allocateDataValues: [0mData Temperature now has 86 values
-(0) 17:14:25 [mesh::Mesh]:199 in allocateDataValues: [0mData Heat-Flux now has 86 values
-(0) 17:14:25 [mesh::Mesh]:184 in allocateDataValues: [0mLeaving allocateDataValues
-(0) 17:14:25 [impl::SolverInterfaceImpl]:695 in setMeshVertices: [0mLeaving setMeshVertices
-(0) 17:14:25 [impl::SolverInterfaceImpl]:630 in getDataID: [0mEntering operator()
+(0) 12:10:30 [mesh::Mesh]:199 in allocateDataValues: [0mData Temperature now has 86 values
+(0) 12:10:30 [mesh::Mesh]:199 in allocateDataValues: [0mData Heat-Flux now has 86 values
+(0) 12:10:30 [mesh::Mesh]:184 in allocateDataValues: [0mLeaving allocateDataValues
+(0) 12:10:30 [impl::SolverInterfaceImpl]:695 in setMeshVertices: [0mLeaving setMeshVertices
+(0) 12:10:30 [impl::SolverInterfaceImpl]:630 in getDataID: [0mEntering operator()
   Argument 0: dataName == Temperature
   Argument 1: meshID == 1
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mEntering operator()
   Argument 0: meshID == 1
   Argument 1: _meshContexts.size() == 2
-(0) 17:14:25 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
-(0) 17:14:25 [impl::SolverInterfaceImpl]:621 in hasData: [0mEntering operator()
+(0) 12:10:30 [impl::Participant]:222 in meshContext: [0mLeaving meshContext
+(0) 12:10:30 [impl::SolverInterfaceImpl]:621 in hasData: [0mEntering operator()
   Argument 0: dataName == Temperature
   Argument 1: meshID == 1
-(0) 17:14:25 [impl::SolverInterfaceImpl]:621 in hasData: [0mLeaving hasData
-(0) 17:14:25 [impl::SolverInterfaceImpl]:630 in getDataID: [0mLeaving getDataID
-(0) 17:14:25 [impl::SolverInterfaceImpl]:630 in getDataID: [0mEntering operator()
+(0) 12:10:30 [impl::SolverInterfaceImpl]:621 in hasData: [0mLeaving hasData
+(0) 12:10:30 [impl::SolverInterfaceImpl]:630 in getDataID: [0mLeaving getDataID
+(0) 12:10:30 [impl::SolverInterfaceImpl]:630 in getDataID: [0mEntering operator()
   Argument 0: dataName == Heat-Flux
   Argument 1: meshID == -1
-(0) 17:14:25 [impl::SolverInterfaceImpl]:631 in getDataID: [31mERROR: [0mThe given Mesh ID "-1" is unknown to preCICE.
-(0) 17:14:25 [utils::Events]:59 in stop: [0mStopped event solver.initialize
-(0) 17:14:25 [utils::Events]:59 in stop: [0mStopped event _GLOBAL
+(0) 12:10:30 [impl::SolverInterfaceImpl]:631 in getDataID: [31mERROR: [0mThe given Mesh ID "-1" is unknown to preCICE.
+(0) 12:10:30 [utils::Events]:59 in stop: [0mStopped event solver.initialize
+(0) 12:10:30 [utils::Events]:59 in stop: [0mStopped event _GLOBAL

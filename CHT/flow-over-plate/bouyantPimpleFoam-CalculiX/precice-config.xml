@@ -29,6 +29,7 @@
         <read-data name="Heat-Flux" mesh="OpenFOAM-Mesh"/>
         <write-data name="Sink-Temperature-0" mesh="OpenFOAM-Mesh"/>
         <mapping:nearest-neighbor direction="read" from="Calculix_Mesh" to="OpenFOAM-Mesh" constraint="consistent" timing="initial"/>
+        <export:vtk directory="preCICE-OF-output" />
     </participant>
 
     <participant name="Calculix">
@@ -37,6 +38,7 @@
         <read-data name="Sink-Temperature-0" mesh="Calculix_Mesh"/>
         <write-data name="Heat-Flux" mesh="Calculix_Mesh"/>
         <mapping:nearest-neighbor direction="read" from="OpenFOAM-Mesh" to="Calculix_Mesh" constraint="consistent" timing="initial"/>
+        <export:vtk directory="preCICE-CCX-output" />
     </participant>
 
     <m2n:sockets from="Calculix" to="OpenFOAM"/>
