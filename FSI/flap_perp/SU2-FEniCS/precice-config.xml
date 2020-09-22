@@ -45,7 +45,7 @@
       <coupling-scheme:parallel-implicit>
       <!--coupling-scheme:serial-implicit-->
            <participants first="SU2_CFD" second="FEniCS"/>
-           <max-time-windows value="400"/>
+           <max-time-windows value="200"/>
            <time-window-size value="1e-2" />
            <exchange data="Forces0" mesh="FEniCS_Mesh" from="SU2_CFD" to="FEniCS"/>
            <exchange data="DisplacementDeltas0" mesh="FEniCS_Mesh" from="FEniCS" to="SU2_CFD" />

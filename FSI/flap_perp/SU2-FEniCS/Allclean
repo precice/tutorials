@@ -16,6 +16,7 @@ cd ..
 
 # Remove the log files
 rm -fv ${Participant1}.log
+rm -fv Output/*.log
 
 # Participant 2: Solid
 Participant2="Solid"
