@@ -49,7 +49,7 @@ adjustTimeStep  yes;
 
 maxCo           2;
 maxAlphaCo      1;
-nAlphaSubCycles=5;
+//nAlphaSubCycles=5;
 maxDeltaT       1;
 
 functions
