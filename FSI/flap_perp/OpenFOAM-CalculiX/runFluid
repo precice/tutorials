@@ -19,9 +19,15 @@ if [ "$1" = "-parallel" ]; then
 fi
 
 echo "Preparing and running the Fluid participant..."
-
+#Create Mesh 
+cd Fluid
+    echo "Creating mesh from UNV"
+    ideasUnvToFoam Fluid_xy_original.unv
+cd ..
 rm -rfv Fluid/0/
+rm Fluid/constant/polyMesh/boundary
 cp -r Fluid/0.orig/ Fluid/0/
+cp -rf Fluid/constant/polyMesh_backup/boundary Fluid/constant/polyMesh/
 # blockMesh -case Fluid
 checkMesh -case Fluid
 

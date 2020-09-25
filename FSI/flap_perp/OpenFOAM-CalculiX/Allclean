@@ -12,9 +12,9 @@ cd ${Participant1}
     # Clean the case
     cleanCase
     rm -rfv 0
-    cd constant
-        cp -rfv polyMesh_backup polyMesh
-    cd ..
+    #cd constant
+    #    cp -rfv polyMesh_backup polyMesh
+    #cd ..
     # Create an empty .foam file for ParaView
     # Note: ".foam" triggers the native OpenFOAM reader of ParaView.
     # Change to ".OpenFOAM" to use the OpenFOAM reader provided with OpenFOAM.
