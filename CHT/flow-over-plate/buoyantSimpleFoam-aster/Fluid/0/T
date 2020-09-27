@@ -1,0 +1,68 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 300;
+
+boundaryField
+{
+
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 300;
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+        value           uniform 300;
+    }
+
+    interface
+    {
+        type            mixed;
+        refGradient     uniform 0;
+        refValue        uniform 310;
+        valueFraction   uniform 0.5;
+    }
+
+    top
+    {
+        type            zeroGradient;
+        value           uniform 300;
+    }
+
+    bottom
+    {
+        type            zeroGradient;
+        value           uniform 300;
+    }
+
+    slip-bottom
+    {
+        type            zeroGradient;
+        value           uniform 300;
+    }
+
+    outerWall
+    {
+        type            zeroGradient;
+        value           uniform 300;
+    }
+
+    defaultFaces
+    {
+        type empty;
+    }
+
+}
+
+// ************************************************************************* //
