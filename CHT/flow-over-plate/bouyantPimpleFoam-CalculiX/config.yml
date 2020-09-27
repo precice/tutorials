@@ -1,9 +1,0 @@
-participants:
-    Calculix:
-        interfaces:
-        - mesh: Calculix_Mesh
-          patch: interface
-          read-data: [Sink-Temperature-0]
-          write-data: [Heat-Flux]
-          
-precice-config-file: ./precice-config.xml
