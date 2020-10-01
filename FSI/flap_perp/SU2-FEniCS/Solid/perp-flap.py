@@ -30,7 +30,7 @@ H = 1
 W = 0.1
 rho = 3000
 # E = 400000.0 Changing elasticity to make the beam rigid
-E = 200000000.0
+E = 100000000.0
 nu = 0.3
 
 mu = Constant(E / (2.0 * (1.0 + nu)))
