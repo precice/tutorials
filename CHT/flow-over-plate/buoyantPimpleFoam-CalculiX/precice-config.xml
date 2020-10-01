@@ -4,8 +4,8 @@
 
     <log>
         <sink filter="%Severity% > debug and %Rank% = 0" format="---[precice] %ColorizedSeverity% %Message%" enabled="true"/>
-        <sink type="file" output="debug_OpenFOAM.log" filter="%Participant% = OpenFOAM" />
-        <sink type="file" output="debug_Calculix_Mesh.log" filter="%Participant% = Calculix" />
+        <!--<sink type="file" output="debug_OpenFOAM.log" filter="%Participant% = OpenFOAM" />
+        <sink type="file" output="debug_Calculix_Mesh.log" filter="%Participant% = Calculix" />-->
     </log>
 
     <solver-interface dimensions="3">
@@ -29,7 +29,6 @@
         <read-data name="Heat-Flux" mesh="OpenFOAM-Mesh"/>
         <write-data name="Sink-Temperature-0" mesh="OpenFOAM-Mesh"/>
         <mapping:nearest-neighbor direction="read" from="Calculix_Mesh" to="OpenFOAM-Mesh" constraint="consistent" timing="initial"/>
-        <export:vtk directory="preCICE-OF-output" />
     </participant>
 
     <participant name="Calculix">
@@ -38,14 +37,13 @@
         <read-data name="Sink-Temperature-0" mesh="Calculix_Mesh"/>
         <write-data name="Heat-Flux" mesh="Calculix_Mesh"/>
         <mapping:nearest-neighbor direction="read" from="OpenFOAM-Mesh" to="Calculix_Mesh" constraint="consistent" timing="initial"/>
-        <export:vtk directory="preCICE-CCX-output" />
     </participant>
 
     <m2n:sockets from="Calculix" to="OpenFOAM"/>
 
     <coupling-scheme:serial-implicit>
         <time-window-size value="0.01"/>
-        <max-time value="10"/>
+        <max-time value="1"/>
         <max-iterations value="200"/>
         <participants first="OpenFOAM" second="Calculix"/>
         <exchange data="Sink-Temperature-0" mesh="OpenFOAM-Mesh" from="OpenFOAM" to="Calculix"/>

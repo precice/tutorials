@@ -6,7 +6,7 @@ echo "Cleaning..."
 # Source tutorial clean functions
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
-Participant 1: Fluid
+# Participant 1: Fluid
 Participant1="Fluid"
 cd ${Participant1}
     # Clean the case
@@ -24,7 +24,6 @@ rm -fv ${Participant1}_potentialFoam.log
 rm -fv ${Participant1}_decomposePar.log
 rm -fv ${Participant1}.log
 rm -fv ${Participant1}_reconstructPar.log
-rm -fv *.log
 
 # Participant 2: Solid
 Participant2="Solid"
@@ -36,6 +35,7 @@ cd ${Participant2}
     rm -fv *.frd
     rm -fv *.sta
     rm -fv *.12d
+    rm -fv spooles.out
 cd ..
 # Remove the log files
 rm -fv spooles.out

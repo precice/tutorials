@@ -2,7 +2,7 @@ participants:
     Calculix:
         interfaces:
         - mesh: Calculix_Mesh
-          patch: interface
+          patch: sinterface
           read-data: [Sink-Temperature-0]
           write-data: [Heat-Flux]
           

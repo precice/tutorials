@@ -1,7 +1,7 @@
 *INCLUDE, INPUT=Solid/all.msh
 *INCLUDE, INPUT=Solid/fix1.nam
 *INCLUDE, INPUT=Solid/interface.nam
-*INCLUDE, INPUT=Solid/interface.sur
+*INCLUDE, INPUT=Solid/sinterface.sur
 
 
 *MATERIAL, Name=EL
@@ -25,10 +25,10 @@ Nall,400
 Nfix1, 11, 11, 400
 
 *DFLUX
-*INCLUDE, INPUT=Solid/interface.dfl
+*INCLUDE, INPUT=Solid/sinterface.dfl
 
 *FILM
-*INCLUDE, INPUT=Solid/interface.flm
+*INCLUDE, INPUT=Solid/sinterface.flm
  
 *NODE FILE
 NT
