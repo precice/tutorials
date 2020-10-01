@@ -27,11 +27,10 @@ mkdir Output
 cp flow*.vtk Output
 cp euler_config_coupled.cfg Output
 cp flap.inp Output
-cp Calculix.log Output
+cp FEniCS.log Output
 cp Su2.log Output
 cp precice-config.xml Output
 cp point1.watchpoint.txt Output
-cp plotDisplacement.sh Output
 # clean everything 
 rm -f *log
 rm -f *vtk

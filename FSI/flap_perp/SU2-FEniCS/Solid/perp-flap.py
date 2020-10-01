@@ -29,7 +29,8 @@ dim = 2  # number of dimensions
 H = 1
 W = 0.1
 rho = 3000
-E = 400000.0
+# E = 400000.0 Changing elasticity to make the beam rigid
+E = 200000000.0
 nu = 0.3
 
 mu = Constant(E / (2.0 * (1.0 + nu)))
@@ -37,8 +38,8 @@ mu = Constant(E / (2.0 * (1.0 + nu)))
 lambda_ = Constant(E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)))
 
 # create Mesh
-n_x_Direction = 5
-n_y_Direction = 50
+n_x_Direction = 2
+n_y_Direction = 20
 mesh = RectangleMesh(Point(-W / 2, 0), Point(W / 2, H), n_x_Direction, n_y_Direction)
 
 h = Constant(H / n_y_Direction)

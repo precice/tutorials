@@ -25,6 +25,7 @@ cd ${Participant2}
     rm -fv *.log
     rm -fv *.vtk
     rm -fv *.pvd
+    rm -fv FSI-S/*
 cd ..
 # Remove the log files
 rm -fv spooles.out
