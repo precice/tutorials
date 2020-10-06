@@ -10,7 +10,7 @@ If you prefer to run the two simulations in two different terminals and watch th
 
 There is an [open issue](https://github.com/precice/openfoam-adapter/issues/26) that leads to additional "empty" result directories when running with some OpenFOAM versions, leading to inconveniences during post-processing. Please run the script `removeObsoleteSolvers.sh` to delete the additional files.
 
-You may adjust the end time in the precice-config_*.xml, or interupt the execution earlier if you want.
+You may adjust the end time in the `precice-config_*.xml`, or interupt the execution earlier if you want.
 
 This case was contributed by Derek Risseeuw (TU Delft).
 
