@@ -1,6 +1,6 @@
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
-    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, \
+    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, project, \
     Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system
 import dolfin
 
@@ -29,8 +29,7 @@ dim = 2  # number of dimensions
 H = 1
 W = 0.1
 rho = 3000
-# E = 400000.0 Changing elasticity to make the beam rigid
-E = 100000000.0
+E = 400000.0
 nu = 0.3
 
 mu = Constant(E / (2.0 * (1.0 + nu)))
@@ -39,7 +38,7 @@ lambda_ = Constant(E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)))
 
 # create Mesh
 n_x_Direction = 2
-n_y_Direction = 20
+n_y_Direction = 13
 mesh = RectangleMesh(Point(-W / 2, 0), Point(W / 2, H), n_x_Direction, n_y_Direction)
 
 h = Constant(H / n_y_Direction)
@@ -61,6 +60,9 @@ saved_u_old = Function(V)
 u_n = Function(V)
 v_n = Function(V)
 a_n = Function(V)
+
+# Function to calculate displacement Deltas
+u_delta = Function(V)
 
 f_N_function = interpolate(Expression(("1", "0"), degree=1), V)
 u_function = interpolate(Expression(("0", "0"), degree=1), V)
@@ -188,6 +190,7 @@ while precice.is_coupling_ongoing():
 
     if precice.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
+        u_ref = u_n.copy()
 
     # read data from preCICE and get a new coupling expression
     read_data = precice.read_data()
@@ -210,7 +213,8 @@ while precice.is_coupling_ongoing():
     dt = Constant(np.min([precice_dt, fenics_dt]))
 
     # Write new displacements to preCICE
-    precice.write_data(u_np1)
+    u_delta = project(u_np1 - u_ref, V)
+    precice.write_data(u_delta)
 
     # Call to advance coupling, also returns the optimum time step value
     precice_dt = precice.advance(dt(0))
