@@ -38,7 +38,7 @@ This will launch a cgx window with geometry on it. Stay on this window and execu
 prnt se
 ```
 
-* To generate the mesh and node files, the following commands are used:
+* To generate the mesh and node files:
 
 ```
 send all abq
