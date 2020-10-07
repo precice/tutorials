@@ -22,7 +22,7 @@ For running this tutorial, you further have to install
 * **OpenFOAM and OpenFOAM adapter:** To make sure that everything is working properly, you should run the [similar OpenFOAM-OpenFOAM tutorial case](https://github.com/precice/openfoam-adapter/wiki/Tutorial-for-CHT:-Flow-over-a-heated-plate).
 
 ### Generating CacluliX files
-After installing the CalculiX adapter, CalculiX on it's own should also be available in the system. If not, an easy to use precomplied [tool](http://www.calculixforwin.com/) may be used to produced the required files (the commands remain same, use the pre-processing option).
+After installing the CalculiX adapter, CalculiX on it's own should also be available in the system. If not, an easy to use precomplied [tool](http://www.calculixforwin.com/) may be used to produce the required files (the commands remain same, use the pre-processing option).
 The files for CalculiX are already generated from the `Mesh_Coarse_OUT.inp` by using the command in the Solid directory.
 
 Terminal  :
