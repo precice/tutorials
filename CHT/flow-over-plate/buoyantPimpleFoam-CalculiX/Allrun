@@ -106,7 +106,7 @@ else
 
     # Workaround for issue #26
     echo "Problems with time directories without results? Run the script removeObsoleteFolders.sh and see issue #26 on GitHub."
-    # ./removeObsoleteFolders.sh
+    ./removeObsoleteFolders.sh
     
     echo "You may now open '${Participant1}/${Participant1}.foam' in ParaView."
     # Note: ".foam" triggers the native OpenFOAM reader of ParaView.
