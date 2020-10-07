@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Solid participant
 
 # Run this script in one terminal and the "runFluid" script in another terminal.

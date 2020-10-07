@@ -14,7 +14,7 @@ For running this tutorial, you further have to install
 * **Python bindings**, see [`precice/python-bindings`](https://github.com/precice/python-bindings)
 * **OpenFOAM**, see [Notes on OpenFOAM](https://github.com/precice/openfoam-adapter/wiki/Notes-on-OpenFOAM).
 * **OpenFOAM adapter**, see [OpenFOAM adapter wiki](https://github.com/precice/openfoam-adapter/wiki/Building). If you have problems compiling, see the [troubleshooting section](https://github.com/precice/precice/wiki/CHT-with-OpenFOAM-and-FEniCS#troubleshooting) below.
-* **CalculiX adapter, see [CalculiX adapter wiki](https://github.com/precice/calculix-adapter/wiki)
+* **CalculiX adapter**, see [CalculiX adapter wiki](https://github.com/precice/calculix-adapter/wiki)
 
 
 ### Testing your installation

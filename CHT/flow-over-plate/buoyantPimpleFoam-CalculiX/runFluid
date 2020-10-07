@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Fluid participant
 
 # Run this script in one terminal and the "runSolid" script in another terminal.
@@ -7,12 +5,6 @@
 # Alternatively, you may execute the "Allrun" script in one terminal.
 
 # The script "Allclean" cleans-up the result and log files.
-Participant1="Fluid"
-cd $Participant1 
-    echo "  Restoring 0/ from 0.orig/..."
-        rm -rfv 0
-        cp -r 0.orig 0
-    cd ..
 # Prepare
 blockMesh -case Fluid
 

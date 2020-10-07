@@ -4,6 +4,6 @@ participants:
         - mesh: Calculix_Mesh
           patch: sinterface
           read-data: [Sink-Temperature-0]
-          write-data: [Heat-Flux]
+          write-data: [Heat-Flux-0]
           
 precice-config-file: ./precice-config.xml
