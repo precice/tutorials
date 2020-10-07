@@ -35,9 +35,6 @@ Participant1="Fluid"
     blockMesh -case ${Participant1} > ${Participant1}_blockMesh.log 2>&1
     checkMesh -case ${Participant1} > ${Participant1}_checkMesh.log 2>&1
 
-    # Initialize the internal field with a potential flow
-    #potentialFoam -case ${Participant1} > ${Participant1}_potentialFoam.log 2>&1
-
     # get application information
     cd ${Participant1}
         Solver1=$(getApplication)    # solver
