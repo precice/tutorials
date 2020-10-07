@@ -58,7 +58,7 @@ Participant1="Fluid"
 
 # =============== Participant 2: Solid ===========================
 Participant2="Solid"
-Solver2="ccx_preCICEv216"
+Solver2="ccx_preCICE"
 
     # You can use CalculiX CGX to setup the structural simulation from sratch.
     # This will re-generate the all.msh, fix1_beam.nam, interface_beam.nam files.
