@@ -1,3 +1,0 @@
-rm -fv *.csv
-rm -fv *.vtk
-rm -fv *.dat
