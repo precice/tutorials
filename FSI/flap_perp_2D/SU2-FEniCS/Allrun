@@ -33,7 +33,6 @@ PIDParticipant1=$!
 
 # =============== Participant 2: Solid ===========================
 Participant2="Solid"
-Solver2="FEniCS"
 
 # Run
 echo "  Starting the ${Participant2} participant..."
