@@ -56,23 +56,23 @@ Participant1="Fluid"
     fi
     PIDParticipant1=$!
 
-# =============== Participant 2: Solid ===========================
+# =============== Participant 2: Solid1 ===========================
 Participant2="Solid1"
 Solver2="linear_elasticity1"
 
     # Run
     echo "  Starting the ${Participant2} participant..."
-    ./runSolid -linear > ${Participant2}.log  2>&1 &
+    ./runSolid1 -linear > ${Participant2}.log  2>&1 &
     PIDParticipant2=$!
     
     
-# =============== Participant 3: Solid ===========================
+# =============== Participant 3: Solid2 ===========================
 Participant3="Solid2"
 Solver3="linear_elasticity2"
 
     # Run
     echo "  Starting the ${Participant3} participant..."
-    ./runSolid -linear > ${Participant3}.log  2>&1 &
+    ./runSolid2 -linear > ${Participant3}.log  2>&1 &
     PIDParticipant3=$!
 
 

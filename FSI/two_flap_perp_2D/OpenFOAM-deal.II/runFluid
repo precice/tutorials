@@ -4,8 +4,8 @@ cd ${0%/*} || exit 1    		    # Run from this directory
 
 # Fluid participant
 
-# Run this script in one terminal and the execute the runSolid in another terminal.
-# These scripts present how the two participants would be started manually.
+# Run this script in one terminal and the execute the runSolid1 and runSolid2 in separate terminals.
+# These scripts present how the three participants would be started manually.
 
 # Run this script with "-parallel" for parallel simulations
 
