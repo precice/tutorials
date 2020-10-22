@@ -1,4 +1,4 @@
-Fluid
+Fluid/*
 !Fluid/0
 !Fluid/0.orig
 !Fluid/constant
@@ -6,4 +6,7 @@ Fluid
 !Fluid/Fluid.foam
 *.vtk
 *.log
-~                            
+config.dot
+config.png
+linear_elasticity1
+linear_elasticity2
