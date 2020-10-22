@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+
+<precice-configuration>
+
+    <log>
+        <sink filter="%Severity% > debug and %Rank% = 0" format="---[precice] %ColorizedSeverity% %Message%" enabled="true"/>
+    </log>
+
+    <solver-interface dimensions="2">
+
+    <data:vector name="Stress1"/>
+    <data:vector name="Displacement1"/>
+    <data:vector name="Stress2"/>
+    <data:vector name="Displacement2"/>
+
+    <mesh name="Fluid-Mesh-Centers1">
+        <use-data name="Stress1"/>
+    </mesh>
+    
+    <mesh name="Fluid-Mesh-Nodes1">
+        <use-data name="Displacement1"/>
+    </mesh>
+    
+    <mesh name="Fluid-Mesh-Centers2">
+        <use-data name="Stress2"/>
+    </mesh>
+   
+    <mesh name="Fluid-Mesh-Nodes2">
+        <use-data name="Displacement2"/>
+    </mesh>
+
+    <mesh name="Solid_mesh1">
+        <use-data name="Displacement1"/>
+        <use-data name="Stress1"/>
+    </mesh>
+    
+    <mesh name="Solid_mesh2">
+        <use-data name="Displacement2"/>
+        <use-data name="Stress2"/>
+    </mesh>
+
+    <participant name="Fluid">
+        <use-mesh name="Fluid-Mesh-Nodes1" provide="yes"/>
+        <use-mesh name="Fluid-Mesh-Centers1" provide="yes"/>
+        <use-mesh name="Solid_mesh1" from="Solid1"/>
+        <use-mesh name="Fluid-Mesh-Nodes2" provide="yes"/>
+        <use-mesh name="Fluid-Mesh-Centers2" provide="yes"/>
+        <use-mesh name="Solid_mesh2" from="Solid2"/>
+	<read-data name="Displacement1" mesh="Fluid-Mesh-Nodes1"/>
+	<write-data name="Stress1" mesh="Fluid-Mesh-Centers1"/>
+	<read-data name="Displacement2" mesh="Fluid-Mesh-Nodes2"/>
+	<write-data name="Stress2" mesh="Fluid-Mesh-Centers2"/>
+
+        <mapping:nearest-neighbor direction="read" from="Solid_mesh1" to="Fluid-Mesh-Nodes1" constraint="consistent"/>
+        <mapping:nearest-neighbor direction="read" from="Solid_mesh2" to="Fluid-Mesh-Nodes2" constraint="consistent"/>
+        <export:vtk directory="precice-output"/>
+    </participant>
+
+    <participant name="Solid1">
+        <use-mesh name="Solid_mesh1" provide="yes"/>
+        <use-mesh name="Fluid-Mesh-Centers1" from="Fluid"/>
+
+	<read-data name="Stress1"  mesh="Solid_mesh1"/>
+  	<write-data name="Displacement1" mesh="Solid_mesh1"/>
+        <watch-point mesh="Solid_mesh1" name="flap_tip" coordinate="-1.05;1" />
+	<mapping:nearest-neighbor direction="read" from="Fluid-Mesh-Centers1" to="Solid_mesh1" constraint="consistent" />
+	<export:vtk directory="precice-output"/>
+    </participant>
+    
+    <participant name="Solid2">
+        <use-mesh name="Solid_mesh2" provide="yes"/>
+        <use-mesh name="Fluid-Mesh-Centers2" from="Fluid"/>
+	<read-data name="Stress2" mesh="Solid_mesh2"/>
+
+  	<write-data name="Displacement2" mesh="Solid_mesh2"/>
+        <watch-point mesh="Solid_mesh2" name="flap_tip" coordinate="0.95;1" />
+	<mapping:nearest-neighbor direction="read" from="Fluid-Mesh-Centers2" to="Solid_mesh2" constraint="consistent" />
+	<export:vtk directory="precice-output"/>
+    </participant>
+
+    <m2n:sockets from="Fluid" to="Solid1" />
+    <m2n:sockets from="Fluid" to="Solid2" />
+
+    <coupling-scheme:multi>
+        <time-window-size value="0.01"/>
+        <max-time value="5"/>
+        <participant name="Fluid" control="yes"/>
+  	<participant name="Solid1" />
+  	<participant name="Solid2" />
+        <exchange data="Stress1" mesh="Fluid-Mesh-Centers1" from="Fluid" to="Solid1"/>
+        <exchange data="Stress2" mesh="Fluid-Mesh-Centers2" from="Fluid" to="Solid2"/>
+        <exchange data="Displacement1" mesh="Solid_mesh1" from="Solid1" to="Fluid" initialize="0"/>
+        <exchange data="Displacement2" mesh="Solid_mesh2" from="Solid2" to="Fluid" initialize="0"/>
+
+        <max-iterations value="50"/>
+	<relative-convergence-measure limit="1e-4" data="Stress1" mesh="Fluid-Mesh-Centers1"/>
+        <relative-convergence-measure limit="1e-4" data="Displacement1" mesh="Solid_mesh1"/>
+        <relative-convergence-measure limit="1e-4" data="Stress2" mesh="Fluid-Mesh-Centers2"/>
+        <relative-convergence-measure limit="1e-4" data="Displacement2" mesh="Solid_mesh2"/>
+        <extrapolation-order value="2"/>
+
+        <acceleration:IQN-ILS>
+            <data name="Displacement1" mesh="Solid_mesh1"/>
+            <data name="Displacement2" mesh="Solid_mesh2"/>
+            <data name="Stress1" mesh="Fluid-Mesh-Centers1"/>
+            <data name="Stress2" mesh="Fluid-Mesh-Centers2"/>
+                                                
+            <preconditioner type="residual-sum"/>
+            <filter type="QR1" limit="1e-6"/>
+            <initial-relaxation value="0.1"/>
+            <max-used-iterations value="50"/>
+            <time-windows-reused value="10"/>
+        </acceleration:IQN-ILS>
+
+    </coupling-scheme:multi>
+
+
+
+    </solver-interface>
+
+</precice-configuration>
