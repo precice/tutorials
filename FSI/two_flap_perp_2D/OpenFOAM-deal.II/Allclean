@@ -24,11 +24,11 @@ rm -fv ${Participant1}_decomposePar.log
 rm -fv ${Participant1}.log
 rm -fv ${Participant1}_reconstructPar.log
 
-# Participant 2: Solid (deal.II)
-Participant2="Solid"
-cd  ./Solid/dealii_output
+# Participant 2: Solid1 (deal.II)
+Participant2="Solid1"
+cd  ./Solid1/dealii_output
     # Clean the case
-    echo "Cleaning Solid case"
+    echo "Cleaning Solid1 case"
     rm -fv solution-*.vtk
 cd ..
     rm -fv solution-*.vtk
@@ -36,21 +36,23 @@ cd ..
 
 rm -fv ${Participant2}.log
 
+# Participant 3: Solid2 (deal.II)
+Participant3="Solid2"
+cd  ./Solid2/dealii_output
+    # Clean the case
+    echo "Cleaning Solid2 case"
+    rm -fv solution-*.vtk
+cd ..
+    rm -fv solution-*.vtk
+cd ..
+
+rm -fv ${Participant3}.log
+
 # Remove the preCICE-related log files
 echo "Deleting the preCICE log files..."
 rm -fv \
     precice-*.log \
     precice-*-events.json
     
-# Output files for preCICE versions before 1.2:
-rm -fv \
-    iterations-${Participant1}.txt iterations-${Participant2}.txt \
-    convergence-${Participant1}.txt convergence-${Participant2}.txt \
-    Events-${Participant1}.log Events-${Participant2}.log \
-    EventTimings-${Participant1}.log EventTimings-${Participant2}.log
-
-rm -rfv precice-run
-rm -fv .${Participant1}-${Participant2}.address
-
 echo "Cleaning complete!"
 #------------------------------------------------------------------------------

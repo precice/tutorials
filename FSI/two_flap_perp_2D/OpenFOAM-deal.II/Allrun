@@ -5,7 +5,7 @@ cd ${0%/*} || exit 1                        # Run from this directory
 
 # This script prepares and runs all the participants in one terminal,
 # forwarding the solvers' output to log files.
-# Alternatively, you may execute the script "runFluid" and start the Solid participant manually
+# Alternatively, you may execute the script "runFluid" and start the Solid participants manually
 # in separate terminals.
 
 # Run this script with "-parallel" for parallel simulations
@@ -57,17 +57,27 @@ Participant1="Fluid"
     PIDParticipant1=$!
 
 # =============== Participant 2: Solid ===========================
-Participant2="Solid"
-Solver2="linear_elasticity"
+Participant2="Solid1"
+Solver2="linear_elasticity1"
 
     # Run
     echo "  Starting the ${Participant2} participant..."
     ./runSolid -linear > ${Participant2}.log  2>&1 &
     PIDParticipant2=$!
+    
+    
+# =============== Participant 3: Solid ===========================
+Participant3="Solid2"
+Solver3="linear_elasticity2"
+
+    # Run
+    echo "  Starting the ${Participant3} participant..."
+    ./runSolid -linear > ${Participant3}.log  2>&1 &
+    PIDParticipant3=$!
 
 
 # =============== Wait for all the participants to finish =======
-echo "Waiting for the participants to exit..., PIDs: ${PIDParticipant1}, ${PIDParticipant2}"
+echo "Waiting for the participants to exit..., PIDs: ${PIDParticipant1}, ${PIDParticipant2}, ${PIDParticipant3}"
 echo "(you may run 'tail -f ${Participant1}.log' in another terminal to check the progress)"
 
 echo "To interrupt the simulation, press 'c'. Ctrl+C will only send the processes to the background."
@@ -76,16 +86,19 @@ while [ -e /proc/${PIDParticipant1} ]; do
     if [ "$input" = "c" ]; then
         kill ${PIDParticipant1}
         kill ${PIDParticipant2}
+        kill ${PIDParticipant3}
         false
     fi
 done
 
-if [ $? -ne 0 ] || [ "$(grep -c -E "error:" ${Participant1}.log)" -ne 0 ] || [ "$(grep -c -E "error:" ${Participant2}.log)" -ne 0 ]; then
+if [ $? -ne 0 ] || [ "$(grep -c -E "error:" ${Participant1}.log)" -ne 0 ] || [ "$(grep -c -E "error:" ${Participant2}.log)" -ne 0 ] || [ "$(grep -c -E "error:" ${Participant3}.log)" -ne 0 ]; then
     echo ""
     echo "Something went wrong... See the log files for more."
     # Precaution
     kill ${PIDParticipant1}
     kill ${PIDParticipant2}
+    kill ${PIDParticipant3}
+    
 else
     echo ""
     echo "The simulation completed! (check for any errors)"
