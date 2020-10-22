@@ -1,14 +1,18 @@
-# Tutorial for an FSI simulation of an elastic flap perpendicular to a channel flow
+# Tutorial for an FSI simulation of two elastic flaps perpendicular to a channel flow
 
-This tutorial is described in the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM). Have also a look into our [Notes on OpenFOAM](https://github.com/precice/openfoam-adapter/wiki/Notes-on-OpenFOAM).
+This tutorial is NOT YET described in the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM). Have also a look into our [Notes on OpenFOAM](https://github.com/precice/openfoam-adapter/wiki/Notes-on-OpenFOAM).
 
 You may run the coupled simulation in serial using the script `Allrun` or (OpenFOAM) in parallel with `Allrun -parallel`. The output of each step will be redirected to log files. You can cleanup the simulation using `Allclean`.
 
-If you prefer to run the two simulations in two different terminals and watch their output on the screen, use the (simpler) scripts `runFluid` (or `runFluid -parallel`).
+If you prefer to run the three simulations in three different terminals and watch their output on the screen, use the (simpler) scripts `runFluid` , `runSolid1` and `runSolid2`.
 
 Before starting the deal.II program, it needs to be compiled and copied in this case directory. Information about building is collected in the [deal.II wiki](https://github.com/precice/dealii-adapter/wiki/Building). You can use the following command to run e.g. the linear deal.II solver afterwards:
 ```
-./runSolid -linear
+./runSolid1 -linear
+```
+
+```
+./runSolid2 -linear
 ```
 
 There is an [open issue](https://github.com/precice/openfoam-adapter/issues/26) that leads to additional "empty" result directories when running with some OpenFOAM versions, leading to inconveniences during post-processing. Please run the script `removeObsoleteSolvers.sh` to delete the additional files.
