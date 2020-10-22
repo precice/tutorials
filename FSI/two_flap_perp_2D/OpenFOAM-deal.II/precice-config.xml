@@ -13,19 +13,19 @@
     <data:vector name="Stress2"/>
     <data:vector name="Displacement2"/>
 
-    <mesh name="Fluid-Mesh-Centers1">
+    <mesh name="Fluid1-Mesh-Centers">
         <use-data name="Stress1"/>
     </mesh>
     
-    <mesh name="Fluid-Mesh-Nodes1">
+    <mesh name="Fluid1-Mesh-Nodes">
         <use-data name="Displacement1"/>
     </mesh>
     
-    <mesh name="Fluid-Mesh-Centers2">
+    <mesh name="Fluid2-Mesh-Centers">
         <use-data name="Stress2"/>
     </mesh>
    
-    <mesh name="Fluid-Mesh-Nodes2">
+    <mesh name="Fluid2-Mesh-Nodes">
         <use-data name="Displacement2"/>
     </mesh>
 
@@ -40,41 +40,41 @@
     </mesh>
 
     <participant name="Fluid">
-        <use-mesh name="Fluid-Mesh-Nodes1" provide="yes"/>
-        <use-mesh name="Fluid-Mesh-Centers1" provide="yes"/>
+        <use-mesh name="Fluid1-Mesh-Nodes" provide="yes"/>
+        <use-mesh name="Fluid1-Mesh-Centers" provide="yes"/>
         <use-mesh name="Solid1_mesh" from="Solid1"/>
-        <use-mesh name="Fluid-Mesh-Nodes2" provide="yes"/>
-        <use-mesh name="Fluid-Mesh-Centers2" provide="yes"/>
+        <use-mesh name="Fluid2-Mesh-Nodes" provide="yes"/>
+        <use-mesh name="Fluid2-Mesh-Centers" provide="yes"/>
         <use-mesh name="Solid2_mesh" from="Solid2"/>
-	<read-data name="Displacement1" mesh="Fluid-Mesh-Nodes1"/>
-	<write-data name="Stress1" mesh="Fluid-Mesh-Centers1"/>
-	<read-data name="Displacement2" mesh="Fluid-Mesh-Nodes2"/>
-	<write-data name="Stress2" mesh="Fluid-Mesh-Centers2"/>
+	<read-data name="Displacement1" mesh="Fluid1-Mesh-Nodes"/>
+	<write-data name="Stress1" mesh="Fluid1-Mesh-Centers"/>
+	<read-data name="Displacement2" mesh="Fluid2-Mesh-Nodes"/>
+	<write-data name="Stress2" mesh="Fluid2-Mesh-Centers"/>
 
-        <mapping:nearest-neighbor direction="read" from="Solid1_mesh" to="Fluid-Mesh-Nodes1" constraint="consistent"/>
-        <mapping:nearest-neighbor direction="read" from="Solid2_mesh" to="Fluid-Mesh-Nodes2" constraint="consistent"/>
+        <mapping:nearest-neighbor direction="read" from="Solid1_mesh" to="Fluid1-Mesh-Nodes" constraint="consistent"/>
+        <mapping:nearest-neighbor direction="read" from="Solid2_mesh" to="Fluid2-Mesh-Nodes" constraint="consistent"/>
         <export:vtk directory="precice-output"/>
     </participant>
 
     <participant name="Solid1">
         <use-mesh name="Solid1_mesh" provide="yes"/>
-        <use-mesh name="Fluid-Mesh-Centers1" from="Fluid"/>
+        <use-mesh name="Fluid1-Mesh-Centers" from="Fluid"/>
 
 	<read-data name="Stress1"  mesh="Solid1_mesh"/>
   	<write-data name="Displacement1" mesh="Solid1_mesh"/>
         <watch-point mesh="Solid1_mesh" name="flap_tip" coordinate="-1.05;1" />
-	<mapping:nearest-neighbor direction="read" from="Fluid-Mesh-Centers1" to="Solid1_mesh" constraint="consistent" />
+	<mapping:nearest-neighbor direction="read" from="Fluid1-Mesh-Centers" to="Solid1_mesh" constraint="consistent" />
 	<export:vtk directory="precice-output"/>
     </participant>
     
     <participant name="Solid2">
         <use-mesh name="Solid2_mesh" provide="yes"/>
-        <use-mesh name="Fluid-Mesh-Centers2" from="Fluid"/>
+        <use-mesh name="Fluid2-Mesh-Centers" from="Fluid"/>
 	<read-data name="Stress2" mesh="Solid2_mesh"/>
 
   	<write-data name="Displacement2" mesh="Solid2_mesh"/>
         <watch-point mesh="Solid2_mesh" name="flap_tip" coordinate="0.95;1" />
-	<mapping:nearest-neighbor direction="read" from="Fluid-Mesh-Centers2" to="Solid2_mesh" constraint="consistent" />
+	<mapping:nearest-neighbor direction="read" from="Fluid2-Mesh-Centers" to="Solid2_mesh" constraint="consistent" />
 	<export:vtk directory="precice-output"/>
     </participant>
 
@@ -87,23 +87,23 @@
         <participant name="Fluid" control="yes"/>
   	<participant name="Solid1" />
   	<participant name="Solid2" />
-        <exchange data="Stress1" mesh="Fluid-Mesh-Centers1" from="Fluid" to="Solid1"/>
-        <exchange data="Stress2" mesh="Fluid-Mesh-Centers2" from="Fluid" to="Solid2"/>
+        <exchange data="Stress1" mesh="Fluid1-Mesh-Centers" from="Fluid" to="Solid1"/>
+        <exchange data="Stress2" mesh="Fluid2-Mesh-Centers" from="Fluid" to="Solid2"/>
         <exchange data="Displacement1" mesh="Solid1_mesh" from="Solid1" to="Fluid" initialize="0"/>
         <exchange data="Displacement2" mesh="Solid2_mesh" from="Solid2" to="Fluid" initialize="0"/>
 
         <max-iterations value="50"/>
-	<relative-convergence-measure limit="1e-4" data="Stress1" mesh="Fluid-Mesh-Centers1"/>
+	<relative-convergence-measure limit="1e-4" data="Stress1" mesh="Fluid1-Mesh-Centers"/>
         <relative-convergence-measure limit="1e-4" data="Displacement1" mesh="Solid1_mesh"/>
-        <relative-convergence-measure limit="1e-4" data="Stress2" mesh="Fluid-Mesh-Centers2"/>
+        <relative-convergence-measure limit="1e-4" data="Stress2" mesh="Fluid2-Mesh-Centers"/>
         <relative-convergence-measure limit="1e-4" data="Displacement2" mesh="Solid2_mesh"/>
         <extrapolation-order value="2"/>
 
         <acceleration:IQN-ILS>
             <data name="Displacement1" mesh="Solid1_mesh"/>
             <data name="Displacement2" mesh="Solid2_mesh"/>
-            <data name="Stress1" mesh="Fluid-Mesh-Centers1"/>
-            <data name="Stress2" mesh="Fluid-Mesh-Centers2"/>
+            <data name="Stress1" mesh="Fluid1-Mesh-Centers"/>
+            <data name="Stress2" mesh="Fluid2-Mesh-Centers"/>
                                                 
             <preconditioner type="residual-sum"/>
             <filter type="QR1" limit="1e-6"/>
