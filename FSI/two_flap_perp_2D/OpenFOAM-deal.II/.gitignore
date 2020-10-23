@@ -1,7 +1,8 @@
 Fluid/*
-!Fluid/0
 !Fluid/0.orig
-!Fluid/constant
+!Fluid/constant/dynamicMeshDict
+!Fluid/constant/transportProperties
+!Fluid/constant/turbulenceProperties
 !Fluid/system
 !Fluid/Fluid.foam
 *.vtk
