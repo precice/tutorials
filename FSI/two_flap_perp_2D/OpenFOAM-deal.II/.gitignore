@@ -11,3 +11,5 @@ config.dot
 config.png
 linear_elasticity1
 linear_elasticity2
+precice-run/
+
