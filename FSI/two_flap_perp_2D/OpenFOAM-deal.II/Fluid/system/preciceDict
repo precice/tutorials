@@ -17,7 +17,7 @@ interfaces
 {
   Interface1
   {
-    mesh              Fluid-Mesh-Centers1;
+    mesh              Fluid1-Mesh-Centers;
     patches           (flap1);
     locations         faceCenters;
     
@@ -33,7 +33,7 @@ interfaces
   
   Interface2
   {
-    mesh              Fluid-Mesh-Nodes1;
+    mesh              Fluid1-Mesh-Nodes;
     patches           (flap1);
     locations         faceNodes;
     
@@ -49,7 +49,7 @@ interfaces
   
   Interface3
   {
-    mesh              Fluid-Mesh-Centers2;
+    mesh              Fluid2-Mesh-Centers;
     patches           (flap2);
     locations         faceCenters;
     
@@ -65,7 +65,7 @@ interfaces
   
   Interface4
   {
-    mesh              Fluid-Mesh-Nodes2;
+    mesh              Fluid2-Mesh-Nodes;
     patches           (flap2);
     locations         faceNodes;
     
