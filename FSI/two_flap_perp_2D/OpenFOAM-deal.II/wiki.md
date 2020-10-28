@@ -20,7 +20,7 @@ The top, bottom and flap are walls with the `noslip` condition.
 
 
 ## Running the Simulation
-SECTION TO BE UPDATED
+SECTION TO BE UPDATE
 1. Preparation:
    To run the coupled simulation, copy the deal.II executable `linear_elasticity` or `nonlinear_elasticity` into the `Solid` folder.           For OpenFOAM: The name of your solver might differ, depending on your OpenFOAM version. Have a look in the `Fluid/system/controlDict` file and set the appropriate solver name.
 2. Starting:
@@ -40,7 +40,7 @@ SECTION TO BE UPDATED
    or simply `./runSolid -linear`. Similarly for the non-linear case.
    It is important to start both solvers in the same directory.
 ## Postprocessing
-SECTION TO BE UPDATED
+SECTION TO BE UPDATE
 
 After the simulation has finished, you can visualize your results using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `Fluid.foam` file. Solid results are in VTK format and located in the `dealii_output` directory. If you want to plot both domains with ParaView, keep in mind that the deal.II solver we presented here writes results every few timesteps, while the OpenFOAM solver writes in reference to simulated time. For this reason, make sure that you use compatible write intervals. You may also need to convert the OpenFOAM results to VTK (with the command `foamToVTK`).
 
