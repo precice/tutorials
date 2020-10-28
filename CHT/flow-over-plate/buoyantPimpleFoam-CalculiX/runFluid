@@ -1,3 +1,4 @@
+#!/bin/bash
 # Fluid participant
 
 # Run this script in one terminal and the "runSolid" script in another terminal.
