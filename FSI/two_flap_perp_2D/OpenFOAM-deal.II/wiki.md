@@ -1,4 +1,4 @@
-# Two Perpendicular Flap
+# Multi-Coupling: Two Perpendicular Flaps
 
 In the following tutorial we model a fluid flowing through a channel. 
 Two solid, elastic flaps are fixed to the floor of this channel.
@@ -18,6 +18,7 @@ The inflow velocity is 10 m/s (uniform) on the left boundary.
 At the outlet, pressure is set to zero and velocity to `zeroGradient`.
 The top, bottom and flap are walls with the `noslip` condition. 
 
+## Why multi-coupling?
 
 ## Running the Simulation
 SECTION TO BE UPDATE
