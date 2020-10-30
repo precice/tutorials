@@ -67,17 +67,17 @@ vertices
 );
 
 // Grading
-h1 45;      
+h1 20;      
 h2 4;
-h3 60;       
-v1 45;      
-v2 90;
+h3 25;       
+v1 20;      
+v2 45;
 
 blocks
 (
     hex (   0   1   7  6   18   19   25   24  )
     ($h1 $v1 1 )
-    simpleGrading (0.2 1 1)
+    simpleGrading (0.5 1 1)
 
     hex (   2   3   9   8  20  21  27  26  )
     ($h3 $v1 1)
@@ -90,24 +90,24 @@ blocks
     
     hex (  6  7  13  12  24  25   31  30 )
     ($h1 $v2 1 )
-    simpleGrading (0.2 2 1)
+    simpleGrading (0.5 1.2 1)
 
     hex (  8  9  15  14  26  27  33  32  )
     ($h3 $v2 1)
-    simpleGrading (1 2 1)
+    simpleGrading (1 1.2 1)
 
     hex (  10  11  17  16  28  29  35  34  )
     ($h1 $v2 1)
-    simpleGrading (2 2 1)
+    simpleGrading (2 1.2 1)
     
     
     hex ( 7  8  14  13  25 26  32  31  )
     ($h2 $v2 1)
-    simpleGrading (1.5 2 1)    
+    simpleGrading (1 1.2 1)    
 
     hex ( 9  10  16  15  27  28   34  33 )
     ($h2 $v2 1)
-    simpleGrading (1.5 2 1)
+    simpleGrading (1 1.2 1)
 
 
 );
