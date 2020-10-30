@@ -7,7 +7,7 @@ import dolfin
 from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
-from fenicsadapter import Adapter
+from fenicsprecice import Adapter
 from enum import Enum
 
 # Beam geometry
