@@ -6,7 +6,7 @@ from __future__ import print_function, division
 from fenics import Function, SubDomain, RectangleMesh, BoxMesh, FunctionSpace, Point, Expression, Constant, DirichletBC, \
     TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, assemble, interpolate, project, \
     near
-from fenicsadapter import Adapter
+from fenicsprecice import Adapter
 import numpy as np
 
 
