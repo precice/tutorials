@@ -124,16 +124,12 @@ precice, precice_dt, initial_data = None, 0.0, None
 # Initialize the adapter according to the specific participant
 if problem is ProblemType.DIRICHLET:
     precice = Adapter(adapter_config_filename="precice-adapter-config-D.json")
-    precice_dt = precice.initialize(coupling_boundary, mesh, V)
-    initial_data = precice.initialize_data(f_N_function)
+    precice_dt = precice.initialize(coupling_boundary, mesh, V, write_function=f_N_function)
 elif problem is ProblemType.NEUMANN:
     precice = Adapter(adapter_config_filename="precice-adapter-config-N.json")
-    precice_dt = precice.initialize(coupling_boundary, mesh, V_g)
-    initial_data = precice.initialize_data(u_D_function)
+    precice_dt = precice.initialize(coupling_boundary, mesh, V_g, write_function=u_D_function)
 
 boundary_marker = False
-
-coupling_expression = precice.create_coupling_expression(initial_data)
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -148,6 +144,7 @@ F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
 
 # Set boundary conditions at coupling interface once wrt to the coupling expression
+coupling_expression = precice.create_coupling_expression()
 if problem is ProblemType.DIRICHLET:
     # modify Dirichlet boundary condition on coupling interface
     bcs.append(DirichletBC(V, coupling_expression, coupling_boundary))
