@@ -181,7 +181,7 @@ while precice.is_coupling_ongoing():
         n += 1
 
     if precice.is_time_window_complete():
-        # if abs(t % dt_out) < 10e-5:  # output if t is a multiple of dt_out
+        if abs(float(t) % dt_out) < 10e-5:  # output if t is a multiple of dt_out
             file_out << u_n
 
     # Update dirichlet BC
