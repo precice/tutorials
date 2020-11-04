@@ -72,7 +72,7 @@ def determine_gradient(V_g, u, flux):
     v = TestFunction(V_g)
 
     a = inner(w, v) * dx
-    L = inner(grad(u), v) * dx
+    L = inner(-k * grad(u), v) * dx
     solve(a == L, flux)
 
 
