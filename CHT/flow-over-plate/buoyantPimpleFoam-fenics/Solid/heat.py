@@ -82,7 +82,7 @@ ny = 25
 nz = 1
 
 fenics_dt = 0.01  # time step size
-dt_out = 0.2
+dt_out = 0.2  # interval for writing VTK files
 y_top = 0
 y_bottom = y_top - .25
 x_left = 0
@@ -141,6 +141,8 @@ t = 0
 u_D.t = t + dt
 
 file_out = File("Solid/VTK/%s.pvd" % precice.get_participant_name())
+file_out << u_n
+print("output vtk for time = {}".format(float(t)))
 n = 0
 
 fluxes = Function(V_g)
@@ -179,13 +181,13 @@ while precice.is_coupling_ongoing():
         n += 1
 
     if precice.is_time_window_complete():
-        if abs(float(t) % dt_out) < 10e-5:  # output if t is a multiple of dt_out
+        tol = 10e-5  # we need some tolerance, since otherwise output might be skipped.
+        if abs((float(t)+tol) % dt_out) < 2*tol:  # output if t is a multiple of dt_out
+            print("output vtk for time = {}".format(float(t)))
             file_out << u_n
 
     # Update dirichlet BC
     u_D.t = t + dt(0)
-
-file_out << u_n
 
 # Hold plot
 precice.finalize()
