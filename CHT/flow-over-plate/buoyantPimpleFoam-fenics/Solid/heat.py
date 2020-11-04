@@ -60,11 +60,12 @@ class BottomBoundary(SubDomain):
             return False
 
 
-def determine_gradient(V_g, u, flux):
+def determine_heat_flux(V_g, u, k, flux):
     """
     compute flux following http://hplgit.github.io/INF5620/doc/pub/fenics_tutorial1.1/tu2.html#tut-poisson-gradu
     :param V_g: Vector function space
     :param u: solution where gradient is to be determined
+    :param k: thermal conductivity
     :param flux: returns calculated flux into this value
     """
 
@@ -164,7 +165,7 @@ while precice.is_coupling_ongoing():
     solve(a == L, u_np1, bcs)
 
     # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
-    determine_gradient(V_g, u_np1, fluxes)
+    determine_heat_flux(V_g, u_np1, k, fluxes)
     fluxes_y = fluxes.sub(1)  # only exchange y component of flux.
     precice.write_data(fluxes_y)
 
