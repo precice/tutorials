@@ -29,7 +29,9 @@
         <use-mesh name="Solid_mesh" from="Solid"/>
 	<read-data name="Displacement" mesh="Fluid-Mesh-Nodes"/>
         <write-data name="Stress" mesh="Fluid-Mesh-Centers"/>
+        <!--export:vtk directory="coupling_data" /-->
         <mapping:rbf-thin-plate-splines direction="read" from="Solid_mesh" to="Fluid-Mesh-Nodes" constraint="consistent"/>
+        <!--mapping:rbf-compact-tps-c2 direction="read" from="Solid_mesh" to="Fluid-Mesh-Nodes" support-radius="0.011" constraint="consistent"/-->
     </participant>
 
     <participant name="Solid">
@@ -40,42 +42,44 @@
 	<write-data name="Displacement" mesh="Solid_mesh"/>
         <watch-point mesh="Solid_mesh" name="flap_tip" coordinate="0.6;0.2" />
 	<mapping:rbf-thin-plate-splines direction="read" from="Fluid-Mesh-Centers" to="Solid_mesh" constraint="consistent" />
+	<!--mapping:rbf-compact-tps-c2 direction="read" from="Fluid-Mesh-Centers" to="Solid_mesh" support-radius="0.011" constraint="consistent" /-->
     </participant>
 
     <m2n:sockets from="Fluid" to="Solid" />
 
     <coupling-scheme:parallel-implicit>
-        <time-window-size value="0.002"/>
+        <time-window-size value="1e-3"/>
         <max-time value="15"/>
         <participants first="Fluid" second="Solid"/>
         <exchange data="Stress" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid"/>
         <exchange data="Displacement" mesh="Solid_mesh" from="Solid" to="Fluid" initialize="0"/>
 
         <max-iterations value="100"/>
-	<relative-convergence-measure limit="5e-5" data="Stress" mesh="Fluid-Mesh-Centers"/>
-        <relative-convergence-measure limit="5e-5" data="Displacement" mesh="Solid_mesh"/>
+	<relative-convergence-measure limit="1e-4" data="Stress" mesh="Fluid-Mesh-Centers"/>
+        <relative-convergence-measure limit="1e-4" data="Displacement" mesh="Solid_mesh"/>
         <extrapolation-order value="2"/>
 
         <acceleration:IQN-ILS>
-            <data name="Displacement" mesh="Solid_mesh"/>
-            <preconditioner type="residual-sum"/>
-            <filter type="QR1" limit="1e-6"/>
-            <initial-relaxation value="0.1"/>
-            <max-used-iterations value="50"/>
-            <time-windows-reused value="10"/>
+	    <data name="Displacement" mesh="Solid_mesh"/>
+	    <data name="Stress" mesh="Fluid-Mesh-Centers"/>
+	    <preconditioner type="residual-sum"/>
+	    <filter type="QR2" limit="1.2e-3"/>
+	    <initial-relaxation value="0.1"/>
+	    <max-used-iterations value="60"/>
+	    <time-windows-reused value="15"/>
         </acceleration:IQN-ILS>
 
+	<!--acceleration:IQN-IMVJ>
+                <data name="Displacement" mesh="Solid_mesh" scaling="1.0"/>
+                <data name="Stress" mesh="Fluid-Mesh-Centers" scaling="100"/>
+                <initial-relaxation value="0.1"/>
+                <preconditioner type="residual-sum"/>
+                <filter type="QR2" limit="1.2e-3"/>
+                <max-used-iterations value="60"/>
+                <time-windows-reused value="0"/>
+	</acceleration:IQN-IMVJ-->
+
     </coupling-scheme:parallel-implicit>
-
-
-    <!--coupling-scheme:serial-explicit>
-        <time-window-size value="0.01"/>
-        <max-time value="5"/>
-        <participants first="Fluid" second="Solid"/>
-        <exchange data="Stress" mesh="Solid_mesh" from="Fluid" to="Solid"/>
-        <exchange data="Displacement" mesh="Solid_mesh" from="Solid" to="Fluid" initialize="0"/>
-
-   </coupling-scheme:serial-explicit-->
 
     </solver-interface>
 
