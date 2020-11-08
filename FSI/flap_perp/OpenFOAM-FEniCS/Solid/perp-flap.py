@@ -222,7 +222,7 @@ while precice.is_coupling_ongoing():
         n = n_cp
     else:
         u_n.assign(u_np1)
-        t += dt
+        t += float(dt)
         n += 1
 
     if precice.is_time_window_complete():
