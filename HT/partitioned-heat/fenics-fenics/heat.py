@@ -228,7 +228,7 @@ while precice.is_coupling_ongoing():
         n = n_cp
     else:  # update solution
         u_n.assign(u_np1)
-        t += dt
+        t += float(dt)
         n += 1
 
     if precice.is_time_window_complete():
@@ -243,8 +243,8 @@ while precice.is_coupling_ongoing():
         error_out << error_pointwise
 
     # Update Dirichlet BC
-    u_D.t = t + dt(0)
-    f.t = t + dt(0)
+    u_D.t = t + float(dt)
+    f.t = t + float(dt)
 
 # Hold plot
 precice.finalize()
