@@ -88,7 +88,7 @@ clamped_boundary_domain = AutoSubDomain(left_boundary)
 force_boundary = AutoSubDomain(remaining_boundary)
 
 # Initialize the coupling interface
-precice_dt = precice.initialize(coupling_boundary, mesh, V, dim, fixed_boundary=clamped_boundary_domain)
+precice_dt = precice.initialize(coupling_boundary, V, V, clamped_boundary_domain)
 
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
