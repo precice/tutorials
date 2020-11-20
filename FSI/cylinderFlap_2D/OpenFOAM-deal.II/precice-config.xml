@@ -29,9 +29,7 @@
         <use-mesh name="Solid_mesh" from="Solid"/>
 	<read-data name="Displacement" mesh="Fluid-Mesh-Nodes"/>
         <write-data name="Stress" mesh="Fluid-Mesh-Centers"/>
-        <!--export:vtk directory="coupling_data" /-->
         <mapping:rbf-thin-plate-splines direction="read" from="Solid_mesh" to="Fluid-Mesh-Nodes" constraint="consistent"/>
-        <!--mapping:rbf-compact-tps-c2 direction="read" from="Solid_mesh" to="Fluid-Mesh-Nodes" support-radius="0.011" constraint="consistent"/-->
     </participant>
 
     <participant name="Solid">
@@ -42,7 +40,6 @@
 	<write-data name="Displacement" mesh="Solid_mesh"/>
         <watch-point mesh="Solid_mesh" name="flap_tip" coordinate="0.6;0.2" />
 	<mapping:rbf-thin-plate-splines direction="read" from="Fluid-Mesh-Centers" to="Solid_mesh" constraint="consistent" />
-	<!--mapping:rbf-compact-tps-c2 direction="read" from="Fluid-Mesh-Centers" to="Solid_mesh" support-radius="0.011" constraint="consistent" /-->
     </participant>
 
     <m2n:sockets from="Fluid" to="Solid" />
@@ -68,17 +65,6 @@
 	    <max-used-iterations value="60"/>
 	    <time-windows-reused value="15"/>
         </acceleration:IQN-ILS>
-
-	<!--acceleration:IQN-IMVJ>
-                <data name="Displacement" mesh="Solid_mesh" scaling="1.0"/>
-                <data name="Stress" mesh="Fluid-Mesh-Centers" scaling="100"/>
-                <initial-relaxation value="0.1"/>
-                <preconditioner type="residual-sum"/>
-                <filter type="QR2" limit="1.2e-3"/>
-                <max-used-iterations value="60"/>
-                <time-windows-reused value="0"/>
-	</acceleration:IQN-IMVJ-->
-
     </coupling-scheme:parallel-implicit>
 
     </solver-interface>
