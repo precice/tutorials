@@ -118,7 +118,7 @@ def main(elemsize: 'mesh width in x and y direction' = 0.05,
       lhs0 = lhscheckpoint
     else: # go to next timestep and visualize
       bezier = domain.sample('bezier', 2)
-      x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs0)
+      x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs)
       with treelog.add(treelog.DataLog()):
         if timestep % 20 == 0:
           nutils.export.vtk('Solid_' + str(timestep), bezier.tri, x, T=u)
