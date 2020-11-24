@@ -15,13 +15,13 @@ FoamFile
 
     gradSchemes
     {
-        default Gauss linear;
+        default cellLimited Gauss linear 1;
     }
 
     divSchemes
     {
         default         none;
-    	div(phi,U)      bounded Gauss linearUpwind limited;
+    	div(phi,U)      Gauss linearUpwind grad(U);
         div((nuEff*dev2(T(grad(U))))) Gauss linear;
     }
 
@@ -38,16 +38,4 @@ FoamFile
     snGradSchemes
     {
         default corrected;
-    }
-
-    wallDist
-    {
-        method meshWave;
-    }
-
-    fluxRequired
-    {
-        default no;
-        p ;
-        Phi ;
     }

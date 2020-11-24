@@ -13,24 +13,33 @@ solvers
     p
     {
         solver           GAMG;
-        tolerance        1e-10;
-        relTol           1e-6;
+        tolerance        1e-6;
+        relTol           1e-5;
         smoother         DICGaussSeidel;
     }
 
     pFinal
     {
         $p;
+        tolerance       1e-07;
         relTol          0;
+    }
+
+    pcorr
+    {
+        solver           GAMG;
+        tolerance        1e-5;
+        relTol           1e-4;
+        smoother         GaussSeidel;
     }
 
     pcorrFinal
     {
-        $p;
+        $pcorr;
         relTol          0;
     }
 
-    Phi
+    phi
     {
         $p;
     }
@@ -39,7 +48,7 @@ solvers
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
-        tolerance       1e-10;
+        tolerance       1e-8;
         relTol          1e-6;
     }
 
@@ -52,45 +61,49 @@ solvers
 
 PIMPLE
 {
+    nOuterCorrectors 50;
     nCorrectors 2;
-    nNonOrthogonalCorrectors 0;
-    tolerance 1.0e-14;
-    relTol 5e-3;
+    nNonOrthogonalCorrectors 1;
+    tolerance 1.0e-12;
+
+    correctPhi          yes;
+    relTol 1e-4;
     pisoTol 1e-6;
     consistent  true;
 
-    nOuterCorrectors 50;
-
     // OpenFOAM (.com), OpenFOAM 5 or older (.org)
-    /*
     residualControl
     {
-        U
-        {
-            tolerance 5e-5;
-            relTol      0;
-        }
-        p
-        {
-            tolerance 5e-4;
-            relTol      0;
-        }
+	U
+	{
+		tolerance 1e-5;
+		relTol	  0;
+	}
+
+	p
+	{
+		tolerance 1e-5;
+		relTol	  0;
+	}
     }
-    */
 
     // OpenFOAM 6 (.org) or newer
     /*
     residualControl
     {
-        U 5e-5;
-        p 5e-4;
+        U 1e-5;
+        p 1e-5;
     }
     */
-}
 
+}
+PISO
+{
+    nNonOrthogonalCorrectors 1;
+}
 potentialFlow
 {
-    nNonOrthogonalCorrectors 5;
+    nNonOrthogonalCorrectors 1;
 }
 
 
