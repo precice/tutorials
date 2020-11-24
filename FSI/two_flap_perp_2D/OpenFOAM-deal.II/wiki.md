@@ -8,7 +8,7 @@ The flaps oscillate due to the fluid pressure building up on its surface. This c
 
 The case setup is shown here:
 
-[images/setup_twoflaps.png]
+![](images/setup_twoflaps.png)
 
 The simulated flow domain is 6 units long (x) and 4 units tall (z). The flaps are clamped at the bottom (z=0) and they are 1 unit tall (z), 0.1 units long (x), and 0.3 units wide (y). Being located at x=-1 and x=1, the flaps split the domain into three equal parts. 
 
@@ -76,7 +76,7 @@ For the linear case and in 'Solid1/nonlinear_elasticity.prm' for the nonlinear c
 
 After the simulation has finished, you can visualize your results using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `Fluid.foam` file. Solid results are in VTK format and located in the `dealii_output` directory. You can find more information about visualization in other tutorials cases. It might be useful to check https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM, where we have one perpendicular flap only.
 
-[images/results.png]
+![](images/results.png()
 
 
 
