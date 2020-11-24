@@ -76,7 +76,7 @@ For the linear case and in 'Solid1/nonlinear_elasticity.prm' for the nonlinear c
 
 After the simulation has finished, you can visualize your results using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `Fluid.foam` file. Solid results are in VTK format and located in the `dealii_output` directory. You can find more information about visualization in other tutorials cases. It might be useful to check https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM, where we have one perpendicular flap only.
 
-![](images/results.png()
+![](images/results.png)
 
 
 
