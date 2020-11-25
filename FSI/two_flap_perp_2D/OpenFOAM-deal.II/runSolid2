@@ -19,9 +19,9 @@ if [ "$1" = "-linear" ]; then
 fi
 
 if [ $linear -eq 1 ]; then
-        ./linear_elasticity2 Solid2/linear_elasticity.prm
+        ./linear_elasticity Solid2/linear_elasticity.prm
 elif [ $nonlinear -eq 1 ]; then
-        ./nonlinear_elasticity2 Solid2/nonlinear_elasticity.prm
+        ./nonlinear_elasticity Solid2/nonlinear_elasticity.prm
 else
         echo "No solver type specified. Please specify -linear or -nonlinear as solver type"
 fi

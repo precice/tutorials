@@ -49,7 +49,7 @@ end
 
 subsection precice configuration
   # Cases: FSI3 or PF for perpendicular flap
-  set Scenario            = PF
+  set Scenario            = PFleft
 
   # Name of the precice configuration file
   set precice config-file = precice-config.xml
