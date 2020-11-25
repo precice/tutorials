@@ -72,7 +72,8 @@ clamped_boundary_domain = AutoSubDomain(clamped_boundary)
 force_boundary = AutoSubDomain(neumann_boundary)
 
 # Initialize the coupling interface
-precice_dt = precice.initialize(coupling_boundary, V, V, fixed_boundary=clamped_boundary_domain)
+precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V,
+                                fixed_boundary=clamped_boundary_domain)
 
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
