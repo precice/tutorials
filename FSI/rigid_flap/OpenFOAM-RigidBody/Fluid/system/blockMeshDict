@@ -21,7 +21,7 @@ X4  1.5; // wake
 Y1 -0.12; // floor distance
 Y2 -0.01; // half body height
 Y3  0.01; // half body height
-Y4  0.1;  // ceil distance
+Y4  0.12;  // ceil distance
 
 // Blocks
 H1 12; 

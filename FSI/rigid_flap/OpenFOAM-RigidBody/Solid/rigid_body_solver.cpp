@@ -38,41 +38,39 @@ public:
 
   void
   solve(const Vector &forces,
+        const Vector &initial_vertices,
         Vector &      vertices,
-        double &      old_moment,
-        double &      theta,
-        double &      theta_dot,
-        const double  delta_t)
+        double &,
+        double &     theta,
+        double &     theta_dot,
+        const double delta_t)
   {
-    // Leapfrog update
+    // Compute total moment
     double moment = 0;
     for (uint i = 0; i < forces.size() / 2; ++i)
-      moment += vertices[2 * i] * forces[2 * i + 1] + vertices[2 * i + 1] * forces[2 * i];
-
-    // Compute angular acceleration
-    double theta_acc_old = old_moment / moment_of_inertia;
+      moment += vertices[2 * i] * forces[2 * i + 1] - vertices[2 * i + 1] * forces[2 * i];
+    // Store old angle
+    const double theta_old = theta;
     // Update angle
-    theta = theta + theta_dot * delta_t + 0.5 * (theta_acc_old + moment / moment_of_inertia) * std::pow(delta_t, 2);
-    theta = -theta;
+    theta = moment * std::pow(delta_t, 2) / moment_of_inertia + delta_t * theta_dot + theta;
+//    theta = -theta;
+    // Update velocity
+    theta_dot = (theta - theta_old) / delta_t;
     // Update vertices according to rigid body rotation
     for (uint i = 0; i < vertices.size() / 2; ++i) {
       //compute length
-      //      const double l       = std::sqrt(std::pow(vertices[2 * i], 2) + std::pow(vertices[2 * i + 1], 2));
-      const double x_coord = vertices[2 * i];
-      vertices[2 * i]      = x_coord * std::cos(theta) + vertices[2 * i + 1] * std::sin(theta);
-      vertices[2 * i + 1]  = -x_coord * std::sin(theta) + vertices[2 * i + 1] * std::cos(theta);
+      const double x_coord = initial_vertices[2 * i];
+      vertices[2 * i]      = x_coord * std::cos(theta) + initial_vertices[2 * i + 1] * std::sin(theta);
+      vertices[2 * i + 1]  = -x_coord * std::sin(theta) + initial_vertices[2 * i + 1] * std::cos(theta);
     }
     // Compute recent moment on updated coordinates
-    moment = 0;
-    for (uint i = 0; i < forces.size() / 2; ++i)
-      moment += vertices[2 * i] * forces[2 * i + 1] + vertices[2 * i + 1] * forces[2 * i];
 
     // Update recent angular velocity
-    theta_dot = theta_dot + 0.5 * (moment + old_moment) * delta_t;
+    //    theta_dot = theta_dot + 0.5 * (moment + old_moment) * delta_t;
     //    theta_dot = -theta_dot;
     std::cout << "Theta: " << theta << " Theta dot: " << theta_dot << " Moment: " << moment << std::endl;
     // Update moment
-    old_moment = moment;
+    //    old_moment = moment;
   }
 
 private:
@@ -97,7 +95,7 @@ int main()
   constexpr double height                = 0.02;
   // Rotation centre is at (0,0)
 
-  constexpr double density = 10;
+  constexpr double density = 100;
   //***********************************************************************************//
 
   // Derived quantities
@@ -205,7 +203,7 @@ int main()
           precice::constants::actionWriteIterationCheckpoint());
     }
     // Solve system
-    solver.solve(forces, vertices, old_moment, theta, theta_dot, dt);
+    solver.solve(forces, initial_vertices, vertices, old_moment, theta, theta_dot, dt);
     // Advance
     {
       for (uint i = 0; i < displacement.size(); ++i)
