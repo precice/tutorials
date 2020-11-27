@@ -1,4 +1,4 @@
-# Multi-Coupling: Two Perpendicular Flaps
+# Multi-coupling: Two perpendicular flaps
 
 In the following tutorial we model a fluid flowing through a channel. 
 Two solid, elastic flaps are fixed to the floor of this channel.
@@ -20,9 +20,9 @@ The top, bottom and flap are walls with a `noslip` condition.
 
 ## Why multi-coupling?
 
-This is a case with three participants: the fluid and each flap. In preCICE there are two options to couple more than two participants. A brief description of the options can be found in the wiki ( https://github.com/precice/precice/wiki/Multi-Coupling-Configuration ). The first option is known as the Composition of Bicoupling Schemes and we must specify the exchange of data in a participant to participant manner. However such explicit couplings schemes are not suited for fluid-structure interations [1]. Thus in this case we use the second option, which is known as Fully-Implicit Multi-Coupling. 
+This is a case with three participants: the fluid and each flap. In preCICE, there are [two options to couple more than two participants](https://github.com/precice/precice/wiki/Multi-Coupling-Configuration). The first option a composition of bicoupling schemes, in which we must specify the exchange of data in a participant to participant manner. However, such explicit couplings schemes are not suited for fluid-structure interations [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling. 
 
-This option is selected in the file 'precice-config.xml':
+We can set this in our 'precice-config.xml':
 
 ~~~
     <coupling-scheme:multi>
@@ -31,27 +31,30 @@ This option is selected in the file 'precice-config.xml':
   	   <participant name="Solid2" />
 ~~~
 
-The participant that has the control, is the one that it is connected to all other participants. This is why we have choosen the fluid participant for this task.
+The participant that has the control is the one that it is connected to all other participants. This is why we have chosen the fluid participant for this task.
 
 ## About the Solvers
 
-For the fluid participant we use OpenFOAM. In particular, we use the application 'pimpleFoam'. The geometry of the Fluid participant is defined in the file 'Fluid/system/blockMeshDict'. Besides, we must specify where are we exchanging data with the other participants. The interfaces are set in the file 'Fluid/system/preciceDict'. In this file we make that in the surface of each flap we exchange the values for stress and displacement. 
+For the fluid participant we use OpenFOAM. In particular, we use the application 'pimpleFoam'. The geometry of the Fluid participant is defined in the file 'Fluid/system/blockMeshDict'. Besides, we must specify where are we exchanging data with the other participants. The interfaces are set in the file 'Fluid/system/preciceDict'. In this file, we set to exchange stress and displacement on the surface of each flap. 
 
 Most of the coupling details are specified in the file 'precide-config.xml'.Here we estipulate the order in which we read/write data from one participant to another or how we map from the fluid to the solid's mesh. In particular, we have choosen the nearest-neighbor mapping scheme. 
 
 For the simulation of the solid participants we use the deal.ii adapter. Ind eal.ii, the geometry of the domain (where the flap located is located) is specified directly on the solver. So if we want Solid1 to be the left flap, we must specify it in the 'Solid1/linear_elasticity.prm' file as follows:
 
-'set Scenario            = PFleft'
+   ```
+   set Scenario            = PFleft
+   ```
 
-For the linear case and in 'Solid1/nonlinear_elasticity.prm' for the nonlinear case. 
+
+Similarly, in `Solid1/nonlinear_elasticity.prm` for the nonlinear case. 
 
 ## Running the Simulation
 1. Preparation:
    To run the coupled simulation, copy the deal.II executable `linear_elasticity` or `nonlinear_elasticity` into the `Solid` folder.           For OpenFOAM: The name of your solver might differ, depending on your OpenFOAM version. Have a look in the `Fluid/system/controlDict` file and set the appropriate solver name.
 2. Starting:
 
-   We are going to run each solvers in a different terminal. It is important that first we navigate to the simulation directory so that all solvers start in the same directory. 
-   To start the `Fluid` participant run
+   We are going to run each solver in a different terminal. It is important that first we navigate to the simulation directory so that all solvers start in the same directory. 
+   To start the `Fluid` participant, run:
    ```
    ./runFluid
    ```
@@ -69,8 +72,7 @@ For the linear case and in 'Solid1/nonlinear_elasticity.prm' for the nonlinear c
       ```
    ./runSolid2 -linear
    ```
-
-   In case we want to run the nonlinear case, simply replace the flag 'linear' by flag 'nonlinear'. 
+   In case we want to run the nonlinear case, simply replace the flag`-linear` by `-nonlinear`. 
    
 ## Postprocessing
 
