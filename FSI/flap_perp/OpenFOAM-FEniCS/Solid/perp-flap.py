@@ -72,6 +72,7 @@ clamped_boundary_domain = AutoSubDomain(clamped_boundary)
 force_boundary = AutoSubDomain(neumann_boundary)
 
 # Initialize the coupling interface
+# Function space V is passed twice as both read and write functions are defined using the same space
 precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V,
                                 fixed_boundary=clamped_boundary_domain)
 
