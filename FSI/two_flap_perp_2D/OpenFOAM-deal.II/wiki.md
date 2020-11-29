@@ -2,7 +2,7 @@
 
 In the following tutorial we model a fluid flowing through a channel. 
 Two solid, elastic flaps are fixed to the floor of this channel.
-The flaps oscillate due to the fluid pressure building up on its surface. This case is an example for multi-coupling: a fluid and two solids are coupled together using a fully-implicit multi-coupling scheme. For a case showing fluid-structure interaction only (no multi-coupling), take a look at the [single perpendicular flap tutorial] (https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM). 
+The flaps oscillate due to the fluid pressure building up on its surface. In this case, a fluid and two solids are coupled together using a fully-implicit multi-coupling scheme. For a case showing fluid-structure interaction only (no multi-coupling), take a look at the [single perpendicular flap tutorial](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-deal.II-and-OpenFOAM). 
 
 ## Case Setup
 
@@ -20,9 +20,9 @@ The top, bottom and flap are walls with a `noslip` condition.
 
 ## Why multi-coupling?
 
-This is a case with three participants: the fluid and each flap. In preCICE, there are [two options to couple more than two participants](https://github.com/precice/precice/wiki/Multi-Coupling-Configuration). The first option a composition of bicoupling schemes, in which we must specify the exchange of data in a participant to participant manner. However, such explicit couplings schemes are not suited for fluid-structure interations [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling. 
+This is a case with three participants: the fluid and each flap. In preCICE, there are two options to [couple more than two participants](https://github.com/precice/precice/wiki/Multi-Coupling-Configuration). The first option a composition of bicoupling schemes, in which we must specify the exchange of data in a participant to participant manner. However, such explicit couplings schemes are not suited for fluid-structure interations [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling. 
 
-We can set this in our 'precice-config.xml':
+We can set this in our `precice-config.xml`:
 
 ~~~
     <coupling-scheme:multi>
@@ -35,9 +35,9 @@ The participant that has the control is the one that it is connected to all othe
 
 ## About the Solvers
 
-For the fluid participant we use OpenFOAM. In particular, we use the application 'pimpleFoam'. The geometry of the Fluid participant is defined in the file 'Fluid/system/blockMeshDict'. Besides, we must specify where are we exchanging data with the other participants. The interfaces are set in the file 'Fluid/system/preciceDict'. In this file, we set to exchange stress and displacement on the surface of each flap. 
+For the fluid participant we use OpenFOAM. In particular, we use the application `pimpleFoam`. The geometry of the Fluid participant is defined in the file `Fluid/system/blockMeshDict`. Besides, we must specify where are we exchanging data with the other participants. The interfaces are set in the file `Fluid/system/preciceDict`. In this file, we set to exchange stress and displacement on the surface of each flap. 
 
-Most of the coupling details are specified in the file 'precide-config.xml'.Here we estipulate the order in which we read/write data from one participant to another or how we map from the fluid to the solid's mesh. In particular, we have choosen the nearest-neighbor mapping scheme. 
+Most of the coupling details are specified in the file `precide-config.xml`. Here we estipulate the order in which we read/write data from one participant to another or how we map from the fluid to the solid's mesh. In particular, we have choosen the nearest-neighbor mapping scheme. 
 
 For the simulation of the solid participants we use the deal.II adapter. In deal.II, the geometry of the domain is specified directly on the solver. The two flaps in our case are essentially the same but for the x-coordinate. The flap location is given to the solver when we select the scenario in the '.prm' file. So if we want Solid1 to be the left flap, we must specify it in the `Solid1/linear_elasticity.prm` file as follows:
 
@@ -69,11 +69,11 @@ Similarly, the scenario settings are different for each solid for the nonlinear 
    ```
    for a parallel run. 
 
-   The solid participants are only designed for serial runs. To run the 'Solid1' participant, execute the corresponding deal.II binary file e.g. by:
+   The solid participants are only designed for serial runs. To run the `Solid1` participant, execute the corresponding deal.II binary file e.g. by:
    ```
    ./runSolid1 -linear
    ```
-   Finally, in the third terminal we will run the solver for the 'Solid2' participant by:
+   Finally, in the third terminal we will run the solver for the `Solid2` participant by:
       ```
    ./runSolid2 -linear
    ```
@@ -81,7 +81,7 @@ Similarly, the scenario settings are different for each solid for the nonlinear 
    
 ## Postprocessing
 
-After the simulation has finished, you can visualize your results using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `Fluid.foam` file. Looking at the fluid results is enough to obtain information about the behaviour of the flaps. You can also visualize the solid participants in ParaView. Solid results are in VTK format and located in the `dealii_output` directory. For example to look at the surface meshes at the beginning of the simulation you can load the files 'Solid1_mesh-Fluid.init.vtk' and 'Solid2_mesh-Fluid.init.vtk' to ParaView. To visualize them apply e.g. a 'Glypth' filter and select 'Points' in the representation objects.
+After the simulation has finished, you can visualize your results using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `Fluid.foam` file. Looking at the fluid results is enough to obtain information about the behaviour of the flaps. You can also visualize the solid participants in ParaView. Solid results are in VTK format and located in the `dealii_output` directory. For example to look at the surface meshes at the beginning of the simulation you can load the files `Solid1_mesh-Fluid.init.vtk` and `Solid2_mesh-Fluid.init.vtk` to ParaView. To visualize them apply e.g. a `Glypth` filter and select `Points` in the representation objects.
 
 ![](images/results.png)
 
