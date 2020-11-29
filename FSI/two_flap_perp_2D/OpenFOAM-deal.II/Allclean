@@ -55,6 +55,8 @@ rm -fv \
     precice-*-events.json
 
 rm -rfv precice-run
+rm -rfv precice-output
+
 
 echo "Cleaning complete!"
 #------------------------------------------------------------------------------
