@@ -26,7 +26,7 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
-    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace
+    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, MPI
 from fenicsprecice import Adapter
 from errorcomputation import compute_errors
 from my_enums import ProblemType, Subcycling
@@ -68,6 +68,8 @@ parser.add_argument("-dom", "--domain", metavar='domain_type string', type=str,
                     help="Specifying part of the domain being solved. For simple interface the options are left, right, for complex interface the options are circular, rest")
 
 args = parser.parse_args()
+
+assert(MPI.initialized())
 
 subcycle = Subcycling.NONE
 
