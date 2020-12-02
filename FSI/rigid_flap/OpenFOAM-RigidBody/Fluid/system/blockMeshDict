@@ -15,13 +15,13 @@ f  0.1; // z-front
 // Vertices
 X1 -0.2; // pre rigid body 
 X2  0.0; // begin rigid body
-X3  0.25; // end rigid body
+X3  0.25;// end rigid body
 X4  1.5; // wake
 
 Y1 -0.12; // floor distance
 Y2 -0.01; // half body height
 Y3  0.01; // half body height
-Y4  0.12;  // ceil distance
+Y4  0.12; // ceil distance
 
 // Blocks
 H1 12; 
