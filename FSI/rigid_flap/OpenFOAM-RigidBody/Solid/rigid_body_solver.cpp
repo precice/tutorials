@@ -41,7 +41,7 @@ public:
         Vector &      vertices,
         double &      theta,
         double &      theta_dot,
-        const double  delta_t)
+        const double  delta_t) const
   {
     // Compute total moment m = x^{n} x f^{n+1}
     double moment = 0;
@@ -116,8 +116,8 @@ int main()
   Vector           vertices(dim * n_nodes);
   Vector           displacement(dim * n_nodes);
   std::vector<int> vertex_ids(n_nodes);
-  double           theta_dot  = 0.0;
-  double           theta      = 0.0;
+  double           theta_dot = 0.0;
+  double           theta     = 0.0;
 
   {
     // Define a boundary mesh
@@ -188,7 +188,7 @@ int main()
   // Set up a struct in order to store time dependent values
   DataContainer data_container;
   // Set up an object which handles the time integration
-  Solver solver(inertia_moment);
+  const Solver solver(inertia_moment);
 
   // Start time loop
   double time = 0;
