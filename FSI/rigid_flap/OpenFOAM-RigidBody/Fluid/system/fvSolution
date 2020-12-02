@@ -14,7 +14,7 @@ solvers
     {
         solver           GAMG;
         tolerance        1e-6;
-        relTol           1e-5;
+        relTol           1e-4;
         smoother         DICGaussSeidel;
     }
 
@@ -29,7 +29,7 @@ solvers
     {
         solver           GAMG;
         tolerance        1e-5;
-        relTol           1e-4;
+        relTol           1e-3;
         smoother         GaussSeidel;
     }
 
@@ -48,8 +48,8 @@ solvers
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
-        tolerance       1e-8;
-        relTol          1e-6;
+        tolerance       1e-7;
+        relTol          1e-5;
     }
 
     "(U|cellDisplacement)Final"
@@ -64,7 +64,7 @@ PIMPLE
     nOuterCorrectors 50;
     nCorrectors 2;
     nNonOrthogonalCorrectors 1;
-    tolerance 1.0e-12;
+    tolerance 1.0e-8;
 
     correctPhi          yes;
     relTol 1e-4;
