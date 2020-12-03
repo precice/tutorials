@@ -37,7 +37,7 @@
          <use-mesh name="Calculix_Mesh" provide="yes"/>
          <write-data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
          <read-data  name="Forces0"      mesh="Calculix_Mesh"/>
-        <watch-point mesh="Calculix_Mesh" name="point1" coordinate="-0.05;0.01;1" />
+        <watch-point mesh="Calculix_Mesh" name="point1" coordinate="-0.05;0.01;0.0" />
       </participant>
 
       <m2n:sockets from="SU2_CFD" to="Calculix" />
