@@ -1,6 +1,6 @@
 ---
-title: Flow over plat
-permalink: tutorial-cht-flowoverplate.html
+title: Flow over plate
+permalink: tutorial-flow-over-plate.html
 keywords: tutorial
 summary:
 ---
