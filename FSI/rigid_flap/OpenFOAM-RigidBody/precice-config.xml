@@ -8,45 +8,46 @@
   </log>
 
   <solver-interface dimensions="2">
-    <data:vector name="Force" />
-    <data:vector name="Displacement" />
+    <data:vector name="Forces" />
+    <data:vector name="Displacements" />
 
     <mesh name="Fluid-Mesh-Centers">
-      <use-data name="Force" />
+      <use-data name="Forces" />
     </mesh>
 
     <mesh name="Fluid-Mesh-Nodes">
-      <use-data name="Displacement" />
+      <use-data name="Displacements" />
     </mesh>
 
-    <mesh name="Solid-mesh">
-      <use-data name="Displacement" />
-      <use-data name="Force" />
+    <mesh name="Solid-Mesh">
+      <use-data name="Displacements" />
+      <use-data name="Forces" />
     </mesh>
 
     <participant name="Fluid">
       <use-mesh name="Fluid-Mesh-Nodes" provide="yes" />
       <use-mesh name="Fluid-Mesh-Centers" provide="yes" />
-      <use-mesh name="Solid-mesh" from="Solid" />
-      <read-data name="Displacement" mesh="Fluid-Mesh-Nodes" />
-      <write-data name="Force" mesh="Fluid-Mesh-Centers" />
+      <use-mesh name="Solid-Mesh" from="Solid" />
+      <read-data name="Displacements" mesh="Fluid-Mesh-Nodes" />
+      <write-data name="Forces" mesh="Fluid-Mesh-Centers" />
       <mapping:rbf-thin-plate-splines
         direction="read"
-        from="Solid-mesh"
+        from="Solid-Mesh"
         to="Fluid-Mesh-Nodes"
         constraint="consistent" />
       <mapping:rbf-thin-plate-splines
         direction="write"
         from="Fluid-Mesh-Centers"
-        to="Solid-mesh"
+        to="Solid-Mesh"
         constraint="conservative" />
     </participant>
 
     <participant name="Solid">
-      <use-mesh name="Solid-mesh" provide="yes" />
-      <read-data name="Force" mesh="Solid-mesh" />
-      <write-data name="Displacement" mesh="Solid-mesh" />
-      <watch-point mesh="Solid-mesh" name="flap-tip" coordinate="0.25;0.0" />
+      <use-mesh name="Solid-Mesh" provide="yes" />
+      <read-data name="Forces" mesh="Solid-Mesh" />
+      <write-data name="Displacements" mesh="Solid-Mesh" />
+      <watch-point mesh="Solid-Mesh" name="flap-tip" coordinate="0.25;0.0" />
+      <export:vtk directory="coupling-meshes" />
     </participant>
 
     <m2n:sockets from="Fluid" to="Solid" />
@@ -55,21 +56,19 @@
       <time-window-size value="5e-2" />
       <max-time value="2.5" />
       <participants first="Fluid" second="Solid" />
-      <exchange data="Force" mesh="Solid-mesh" from="Fluid" to="Solid" />
-      <exchange data="Displacement" mesh="Solid-mesh" from="Solid" to="Fluid" initialize="0" />
+      <exchange data="Forces" mesh="Solid-Mesh" from="Fluid" to="Solid" />
+      <exchange data="Displacements" mesh="Solid-Mesh" from="Solid" to="Fluid" />
       <max-iterations value="20" />
-      <relative-convergence-measure limit="1e-3" data="Force" mesh="Solid-mesh" />
-      <relative-convergence-measure limit="1e-3" data="Displacement" mesh="Solid-mesh" />
-      
-      <extrapolation-order value="0" />
+      <relative-convergence-measure limit="1e-3" data="Forces" mesh="Solid-Mesh" />
+      <relative-convergence-measure limit="1e-3" data="Displacements" mesh="Solid-Mesh" />
       <acceleration:IQN-ILS>
-        <data name="Displacement" mesh="Solid-mesh" />
+        <data name="Displacements" mesh="Solid-Mesh" />
         <preconditioner type="residual-sum" />
         <filter type="QR2" limit="5.0e-5" />
         <initial-relaxation value="0.3" />
         <max-used-iterations value="15" />
         <time-windows-reused value="2" />
-	</acceleration:IQN-ILS>
-      </coupling-scheme:serial-implicit>
+      </acceleration:IQN-ILS>
+    </coupling-scheme:serial-implicit>
   </solver-interface>
 </precice-configuration>
