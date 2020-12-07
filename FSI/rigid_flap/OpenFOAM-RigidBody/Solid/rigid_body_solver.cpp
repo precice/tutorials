@@ -43,21 +43,25 @@ public:
         double &      theta_dot,
         const double  delta_t) const
   {
-    // Compute total moment m = x^{n} x f^{n+1}
+    // Compute total moment M = x^{n} x f^{n+1}
     double moment = 0;
     for (uint i = 0; i < forces.size() / 2; ++i)
       moment += vertices[2 * i] * forces[2 * i + 1] - vertices[2 * i + 1] * forces[2 * i];
 
-    // Store rigid body angle theta^{n}
+    // Store rigid body angle at the previous time level theta^{n}
     const double theta_old = theta;
     // Update angle to theta^{n+1} according to forward Euler method (simplified moment
     // computation, which does not depend on the updated configuration)
-    theta = moment * std::pow(delta_t, 2) / moment_of_inertia + delta_t * theta_dot + theta;
+    // theta^{n+1} = dt^2 * M / I + dt * \dot{theta}^{n} + theta^{n}
+    theta = std::pow(delta_t, 2) * moment / moment_of_inertia + delta_t * theta_dot + theta;
 
     // Update angular velocity
+    // \dot{theta}^{n+1} = (theta^{n+1} - \dot{theta}^{n}) / dt
     theta_dot = (theta - theta_old) / delta_t;
 
     // Update vertices according to rigid body rotation using an out-of-plane (z-axis) rotation matrix
+    // x^{n+1} = x^{0} * cos(theta^{n+1}) + y^{0} * sin(theta^{n+1})
+    // y^{n+1} = -x^{0} * sin(theta^{n+1}) + y^{0} * cos(theta^{n+1})
     for (uint i = 0; i < vertices.size() / 2; ++i) {
       const double x_coord = initial_vertices[2 * i];
       vertices[2 * i]      = x_coord * std::cos(theta) + initial_vertices[2 * i + 1] * std::sin(theta);
@@ -102,8 +106,8 @@ int main()
   // a thin rectangular plate of height h, length l and mass m with axis of rotation
   // at the end of the plate: I = (1/12)*m*(4*l^2+h^2)
   constexpr double inertia_moment = (1. / 12) * mass * (4 * std::pow(length, 2) + std::pow(height, 2));
-  const double     delta_y        = height / (n_vertical_nodes - 1);
-  const double     delta_x        = length / (n_horizontal_nodes - 1);
+  constexpr double delta_y        = height / (n_vertical_nodes - 1);
+  constexpr double delta_x        = length / (n_horizontal_nodes - 1);
 
   // Create Solverinterface
   precice::SolverInterface precice(solver_name,
