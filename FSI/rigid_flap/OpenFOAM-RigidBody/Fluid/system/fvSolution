@@ -71,31 +71,6 @@ PIMPLE
     pisoTol 1e-6;
     consistent  true;
 
-    // OpenFOAM (.com), OpenFOAM 5 or older (.org)
-    /*residualControl
-    {
-	U
-	{
-		tolerance 1e-5;
-		relTol	  0;
-	}
-
-	p
-	{
-		tolerance 1e-5;
-		relTol	  0;
-	}
-    }*/
-
-    // OpenFOAM 6 (.org) or newer
-    
-    residualControl
-    {
-        U 1e-5;
-        p 1e-5;
-    }
-    
-
 }
 PISO
 {
