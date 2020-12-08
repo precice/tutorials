@@ -1,6 +1,6 @@
 ---
 title: Cylinder flap 3D
-permalink: tutorial-cylinder-flap-3d.html
+permalink: tutorials-cylinder-flap-3d.html
 keywords:
 summary:
 ---

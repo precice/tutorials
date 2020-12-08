@@ -1,6 +1,6 @@
 ---
 title: Perpendicular flap 2D
-permalink: tutorial-perpendicular-flap-2d.html
+permalink: tutorials-perpendicular-flap-2d.html
 keywords:
 summary:
 ---

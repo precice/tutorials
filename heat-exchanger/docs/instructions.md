@@ -1,6 +1,6 @@
 ---
 title: Heat exchanger
-permalink: tutorial-heat-exchanger.html
+permalink: tutorials-heat-exchanger.html
 keywords:
 summary:
 ---

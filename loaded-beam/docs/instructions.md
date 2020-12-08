@@ -1,6 +1,6 @@
 ---
 title: Loaded Beam
-permalink: tutorial-loaded-beam.html
+permalink: tutorials-loaded-beam.html
 keywords:
 summary:
 ---

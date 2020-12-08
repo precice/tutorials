@@ -1,6 +1,6 @@
 ---
 title: Partitioned heat
-permalink: tutorial-partitioned-heat.html
+permalink: tutorials-partitioned-heat.html
 keywords:
 summary:
 ---

@@ -1,6 +1,6 @@
 ---
 title: Tube 3D
-permalink: tutorial-tube-3d.html
+permalink: tutorials-tube-3d.html
 keywords:
 summary:
 ---
