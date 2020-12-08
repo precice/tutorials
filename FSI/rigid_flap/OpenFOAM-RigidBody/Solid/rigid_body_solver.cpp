@@ -1,5 +1,6 @@
 #include <iostream>
-#include <math.h>
+#include <string>
+#include <cmath>
 #include <precice/SolverInterface.hpp>
 
 using Vector = std::vector<double>;
@@ -45,7 +46,7 @@ public:
   {
     // Compute total moment M = x^{n} x f^{n+1}
     double moment = 0;
-    for (uint i = 0; i < forces.size() / 2; ++i)
+    for (auto i = 0; i < forces.size() / 2; ++i)
       moment += vertices[2 * i] * forces[2 * i + 1] - vertices[2 * i + 1] * forces[2 * i];
 
     // Store rigid body angle at the previous time level theta^{n}
