@@ -50,6 +50,7 @@ rm -fv \
 
 rm -rfv precice-run
 rm -fv .${Participant1}-${Participant2}.address
+rm -rf coupling-meshes
 
 echo "Cleaning complete!"
 #------------------------------------------------------------------------------
