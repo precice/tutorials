@@ -103,8 +103,8 @@ k = 100  # kg * m / s^3 / K, https://en.wikipedia.org/wiki/Thermal_conductivity
 u_D = Constant('310')
 u_D_function = interpolate(u_D, V)
 # Define flux in y direction on coupling interface (grad(u_D) in normal direction)
-f_N = Constant('0')
-f_N_function = interpolate(f_N, V)
+f_N = Constant(['0','0'])
+f_N_function = interpolate(f_N, V_g)
 
 coupling_boundary = TopBoundary()
 bottom_boundary = BottomBoundary()
