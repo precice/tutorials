@@ -102,9 +102,8 @@ k = 100  # kg * m / s^3 / K, https://en.wikipedia.org/wiki/Thermal_conductivity
 # Define boundary condition
 u_D = Constant('310')
 u_D_function = interpolate(u_D, V)
-# Define flux in y direction on coupling interface (grad(u_D) in normal direction)
-f_N = Constant('0')
-f_N_function = interpolate(f_N, V)
+# We will only exchange flux in y direction on coupling interface. No initialization necessary.
+V_flux_y = V_g.sub(1)
 
 coupling_boundary = TopBoundary()
 bottom_boundary = BottomBoundary()
@@ -116,7 +115,7 @@ u_n.rename("T", "")
 # Adapter definition and initialization
 precice = Adapter(adapter_config_filename="precice-adapter-config.json")
 
-precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=f_N_function)
+precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V_flux_y)
 
 # Create a FEniCS Expression to define and control the coupling boundary values
 coupling_expression = precice.create_coupling_expression()
