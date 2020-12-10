@@ -166,8 +166,7 @@ while precice.is_coupling_ongoing():
 
     # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
     determine_heat_flux(V_g, u_np1, k, fluxes)
-    fluxes_y = fluxes.sub(1)  # only exchange y component of flux.
-    precice.write_data(fluxes_y)
+    precice.write_data(fluxes)
 
     precice_dt = precice.advance(dt(0))
 
