@@ -1,7 +1,7 @@
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
-    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, \
-    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system
+    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, SubDomain, \
+    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system, MPI, MeshFunction
 import dolfin
 
 from ufl import nabla_div
@@ -11,17 +11,34 @@ from fenicsprecice import Adapter
 from enum import Enum
 
 
-# define the two kinds of boundary: clamped and coupling Neumann Boundary
-def clamped_boundary(x, on_boundary):
-    return on_boundary and abs(x[1]) < tol
+# # define the two kinds of boundary: clamped and coupling Neumann Boundary
+# def clamped_boundary(x, on_boundary):
+#     return on_boundary and abs(x[1]) < tol
+#
+#
+# def neumann_boundary(x, on_boundary):
+#     """
+#     determines whether a node is on the coupling boundary
+#
+#     """
+#     return on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol)
+
+class clampedBoundary(SubDomain):
+    def inside(self, x, on_boundary):
+        tol = 1E-14
+        if on_boundary and abs(x[1]) < tol:
+            return True
+        else:
+            return False
 
 
-def neumann_boundary(x, on_boundary):
-    """
-    determines whether a node is on the coupling boundary
-    
-    """
-    return on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol)
+class neumannBoundary(SubDomain):
+    def inside(self, x, on_boundary):
+        tol = 1E-14
+        if on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol):
+            return True
+        else:
+            return False
 
 
 # Geometry and material properties
@@ -46,9 +63,6 @@ h = Constant(H / n_y_Direction)
 # create Function Space
 V = VectorFunctionSpace(mesh, 'P', 2)
 
-# BCs
-tol = 1E-14
-
 # Trial and Test Functions
 du = TrialFunction(V)
 v = TestFunction(V)
@@ -64,24 +78,19 @@ a_n = Function(V)
 f_N_function = interpolate(Expression(("1", "0"), degree=1), V)
 u_function = interpolate(Expression(("0", "0"), degree=1), V)
 
-coupling_boundary = AutoSubDomain(neumann_boundary)
-
 precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
-
-clamped_boundary_domain = AutoSubDomain(clamped_boundary)
-force_boundary = AutoSubDomain(neumann_boundary)
 
 # Initialize the coupling interface
 # Function space V is passed twice as both read and write functions are defined using the same space
-precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V,
-                                fixed_boundary=clamped_boundary_domain)
+precice_dt = precice.initialize(neumannBoundary(), read_function_space=V, write_object=V,
+                                fixed_boundary=clampedBoundary())
 
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
 # clamp the beam at the bottom
-bc = DirichletBC(V, Constant((0, 0)), clamped_boundary)
+bc = DirichletBC(V, Constant((0, 0)), clampedBoundary())
 
 # alpha method parameters
 alpha_m = Constant(0.2)
@@ -179,11 +188,18 @@ time.append(0.0)
 u_tip.append(0.0)
 E_ext = 0
 
+# mark mesh w.r.t ranks
+mesh_rank = MeshFunction("size_t", mesh, mesh.topology().dim())
+mesh_rank.set_all(MPI.rank(MPI.comm_world) + 0)
+mesh_rank.rename("myRank", "")
+
 displacement_out = File("Solid/FSI-S/u_fsi.pvd")
+ranks = File("out/ranks%s.pvd" % precice.get_participant_name())
 
 u_n.rename("Displacement", "")
 u_np1.rename("Displacement", "")
 displacement_out << u_n
+ranks << mesh_rank
 
 while precice.is_coupling_ongoing():
 
@@ -195,6 +211,7 @@ while precice.is_coupling_ongoing():
 
     # Update the point sources on the coupling boundary with the new read data
     Forces_x, Forces_y = precice.get_point_sources(read_data)
+    print("Rank {}: After get_point_sources".format(MPI.rank(MPI.comm_world)))
 
     A, b = assemble_system(a_form, L_form, bc)
 
@@ -204,6 +221,7 @@ while precice.is_coupling_ongoing():
         ps.apply(b_forces)
     for ps in Forces_y:
         ps.apply(b_forces)
+    print("Rank {}: After applying forces".format(MPI.rank(MPI.comm_world)))
 
     assert (b is not b_forces)
     solve(A, u_np1.vector(), b_forces)
