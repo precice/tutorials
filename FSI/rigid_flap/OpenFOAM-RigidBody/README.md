@@ -2,7 +2,7 @@
 
 This tutorial deals with a fluid-structure-interaction problem. The fluid part of the simulation is computed using OpenFOAM and the rigid body motion is a rigid body model written in `c++` with only a single degree of freedom, namely the deflection angle of the flap in the channel. The rigid body is fixed in the origin at (0,0) and the force exerted by the fluid on the rigid body structure causes an oscillatory rotation of the body.
 
-placeholder for a geometry overview
+![overview](overview.png)
 
 ## Building the `rigid_body` participant
 
