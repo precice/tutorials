@@ -13,11 +13,6 @@ internalField   uniform 0;
 
 boundaryField
 {
-    cylinder
-    {
-        type            zeroGradient;
-    }
-
     flap
     {
         type            zeroGradient;

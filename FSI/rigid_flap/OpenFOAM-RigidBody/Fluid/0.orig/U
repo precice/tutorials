@@ -14,11 +14,6 @@ internalField   uniform (0 0 0);
 boundaryField
 {
 
-    cylinder
-    {
-        type            noSlip;
-    }    
-
     flap
     {
         type            movingWallVelocity;
