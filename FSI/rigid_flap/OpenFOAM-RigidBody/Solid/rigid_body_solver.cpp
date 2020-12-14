@@ -1,7 +1,7 @@
-#include <iostream>
-#include <string>
 #include <cmath>
+#include <iostream>
 #include <precice/SolverInterface.hpp>
+#include <string>
 
 using Vector = std::vector<double>;
 
@@ -42,19 +42,22 @@ public:
         Vector &      vertices,
         double &      theta,
         double &      theta_dot,
+        const double  spring_constant,
         const double  delta_t) const
   {
     // Compute total moment M = x^{n} x f^{n+1}
     double moment = 0;
-    for (auto i = 0; i < forces.size() / 2; ++i)
+    for (unsigned int i = 0; i < forces.size() / 2; ++i)
       moment += vertices[2 * i] * forces[2 * i + 1] - vertices[2 * i + 1] * forces[2 * i];
 
     // Store rigid body angle at the previous time level theta^{n}
     const double theta_old = theta;
+
     // Update angle to theta^{n+1} according to forward Euler method (simplified moment
     // computation, which does not depend on the updated configuration)
     // theta^{n+1} = dt^2 * M / I + dt * \dot{theta}^{n} + theta^{n}
-    theta = std::pow(delta_t, 2) * moment / moment_of_inertia + delta_t * theta_dot + theta;
+    theta = (1. / (1 - (spring_constant / moment_of_inertia) * std::pow(delta_t, 2))) *
+            (std::pow(delta_t, 2) * moment / moment_of_inertia + delta_t * theta_dot + theta);
 
     // Update angular velocity
     // \dot{theta}^{n+1} = (theta^{n+1} - \dot{theta}^{n}) / dt
@@ -68,7 +71,7 @@ public:
       vertices[2 * i]      = x_coord * std::cos(theta) + initial_vertices[2 * i + 1] * std::sin(theta);
       vertices[2 * i + 1]  = -x_coord * std::sin(theta) + initial_vertices[2 * i + 1] * std::cos(theta);
     }
-    std::cout << "Theta: " << theta << " Theta dot: " << theta_dot << " Moment: " << moment << std::endl;
+    std::cout << "Theta: " << theta << " Theta dot: " << theta_dot << " Moment: " << moment << " Spring force: " << spring_constant * theta << std::endl;
   }
 
 private:
@@ -90,11 +93,15 @@ int main()
   constexpr int vertical_refinement   = 3;
   constexpr int horizontal_refinement = 6;
   // Rotation centre is at (0,0)
-  constexpr double length = 0.25;
+  constexpr double length = 0.2;
   constexpr double height = 0.02;
 
-  constexpr double density = 100;
+  constexpr double density         = 10000;
+  constexpr double spring_constant = -25;
 
+  // Time, where spring is stiffened
+  constexpr double switch_time       = 1.5;
+  constexpr double stiffening_factor = 8;
   //*******************************************************************************************//
 
   // Derived quantities
@@ -209,8 +216,9 @@ int main()
           precice::constants::actionWriteIterationCheckpoint());
     }
 
+    const double current_spring = time > switch_time ? spring_constant * stiffening_factor : spring_constant;
     // Solve system
-    solver.solve(forces, initial_vertices, vertices, theta, theta_dot, dt);
+    solver.solve(forces, initial_vertices, vertices, theta, theta_dot, current_spring, dt);
 
     // Advance coupled system
     // Compute absolute displacement with respect to the initial configuration

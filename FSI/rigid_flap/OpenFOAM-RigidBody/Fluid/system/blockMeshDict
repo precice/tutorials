@@ -15,10 +15,10 @@ f  0.1; // z-front
 // Vertices
 X1 -0.2; // pre rigid body 
 X2  0.0; // begin rigid body
-X3  0.25;// end rigid body
-X4  1.5; // wake
+X3  0.2; // end rigid body
+X4  1.2; // wake
 
-Y1 -0.12; // distance to bottom
+Y1 -0.13; // distance to bottom
 Y2 -0.01; // half body height
 Y3  0.01; // half body height
 Y4  0.12; // distance to top
@@ -26,13 +26,13 @@ Y4  0.12; // distance to top
 // Blocks
 H1 12; 
 H2 14;
-H3 30;
+H3 40;
 
 V1 12;
-V2 4;
+V2 2;
 V3 11;
 
-G3 3;
+G3 4;
 
 vertices
 (
