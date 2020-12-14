@@ -61,7 +61,7 @@ solvers
 
 PIMPLE
 {
-    nOuterCorrectors 50;
+    nOuterCorrectors 10;
     nCorrectors 2;
     nNonOrthogonalCorrectors 1;
     tolerance 1.0e-8;

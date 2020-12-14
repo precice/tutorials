@@ -53,13 +53,12 @@
     <m2n:sockets from="Fluid" to="Solid" />
 
     <coupling-scheme:serial-implicit>
-      <time-window-size value="1e-2" />
+      <time-window-size value="2.5e-2" />
       <max-time value="2.5" />
       <participants first="Fluid" second="Solid" />
       <exchange data="Forces" mesh="Solid-Mesh" from="Fluid" to="Solid" />
       <exchange data="Displacements" mesh="Solid-Mesh" from="Solid" to="Fluid" />
-      <max-iterations value="20" />
-      <relative-convergence-measure limit="1e-3" data="Forces" mesh="Solid-Mesh" />
+      <max-iterations value="10" />
       <relative-convergence-measure limit="1e-3" data="Displacements" mesh="Solid-Mesh" />
       <acceleration:IQN-ILS>
         <data name="Displacements" mesh="Solid-Mesh" />
