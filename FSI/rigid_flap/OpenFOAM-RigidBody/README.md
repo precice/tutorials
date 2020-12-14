@@ -1,6 +1,6 @@
 # FSI tutorial of a rigid body flap in a channel flow
 
-This tutorial deals with a fluid-structure-interaction problem. The fluid part of the simulation is computed using OpenFOAM and the rigid body motion is a rigid body model written in `c++` with only a single degree of freedom, namely the deflection angle of the flap in the channel. The rigid body is fixed in the origin at (0,0) and the force exerted by the fluid on the rigid body structure causes an oscillatory rotation of the body.
+This tutorial deals with a fluid-structure-interaction problem. The fluid part of the simulation is computed using OpenFOAM and the rigid body motion is a rigid body model written in `c++` with only a single degree of freedom, namely the deflection angle of the flap in the channel. The rigid body is fixed in the origin at (0,0) and the force exerted by the fluid on the rigid body structure causes an oscillatory rotation of the body. The simulation runs for 2.5 seconds. After 1.5 seconds we increase the angular stiffness of the structure by a factor of 8 to stabilize the coupled problem. Feel free to modify these parameters and increase the simulation time. 
 
 ![overview](overview.png)
 
@@ -8,7 +8,7 @@ This tutorial deals with a fluid-structure-interaction problem. The fluid part o
 
 Before starting the coupled simulation, the `rigid_body` solver needs to be compiled using `cmake`. You can run the following commands from this directory to build the `rigid_body` solver
 ```
-cd Solid && cmake . && make all
+cd Solid && cmake . && make
 ```
 
 ## Running the coupled simulation
@@ -17,6 +17,7 @@ You may run the two simulations in two different terminals and watch their outpu
 
 There is an [open issue](https://github.com/precice/openfoam-adapter/issues/26) that leads to additional "empty" result directories when running with some OpenFOAM versions, leading to inconveniences during post-processing. Please run the script `removeObsoleteSolvers.sh` to delete the additional files.
 
+Ini serial, the simulation takes roughly 30 seconds to compute.
 
 ## Visualizing the results
 
