@@ -1,0 +1,220 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    location system;
+    object fvSolution;
+}
+
+PISO
+{
+    nCorrectors 3;
+    nNonOrthogonalCorrectors 2;
+    tolerance 1e-8;
+    relTol 0;
+    maxIter 30;
+    minIter 1;
+    pisoTol 1e-1;
+}
+
+PIMPLE
+{
+    nCorrectors 3;
+    nNonOrthogonalCorrectors 2;
+    tolerance 1e-5;
+    relTol 0;
+    maxIter 30;
+    minIter 1;
+    pisoTol 1e-1;
+}
+
+SIMPLE
+{
+    nCorrectors 3;
+    nNonOrthogonalCorrectors 2;
+    tolerance 1e-5;
+    relTol 0;
+    maxIter 30;
+    minIter 1;
+    pisoTol 1e-1;
+}
+
+blockSolver
+{
+    nCorrectors 3;
+    nNonOrthogonalCorrectors 2;
+    tolerance 1e-5;
+    relTol 0;
+    maxIter 50;
+    nOuterCorrectors 50;
+    minIter 1;
+    pisoTol 1e-1;
+    convergenceTolerance 1e-6;
+}
+
+solvers
+{
+    p
+    {
+        solver GAMG;
+        agglomerator faceAreaPair;
+        mergeLevels 1;
+        cacheAgglomeration true;
+        nCellsInCoarsestLevel 500;
+        tolerance 1e-7;
+        relTol 1e-1;
+        smoother GaussSeidel;
+        nPreSweeps 1;
+        nPostSweeps 2;
+        nFinestSweeps 2;
+        minIter 1;
+        maxIter 5;
+    }
+
+    cellMotionU
+    {
+        solver           GAMG;
+        tolerance        1e-6;
+        relTol           1e-3;
+        minIter          1;
+        maxIter          1000;
+
+        smoother         GaussSeidel;
+        nPreSweeps       0;
+        nPostSweeps      2;
+        nFinestSweeps    2;
+
+        scaleCorrection true;
+        directSolveCoarsest false;
+
+        cacheAgglomeration true;
+
+        nCellsInCoarsestLevel 20;
+        agglomerator     faceAreaPair;
+        mergeLevels      1;
+    }
+
+    Phi
+    {
+        $p;
+    }
+
+    "(U|cellDisplacement)"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-10;
+        relTol          1e-6;
+    }
+
+    "(U|cellDisplacement)Final"
+    {
+        $U;
+        relTol          0;
+    }
+
+    Up
+    {
+        solver BiCGStab;
+        preconditioner Cholesky;
+        tolerance 1e-8;
+        relTol 1e-2;
+        minIter 1;
+        maxIter 100;
+    }
+
+    "pcorr.*"
+    {
+        solver GAMG;
+        agglomerator faceAreaPair;
+        mergeLevels 1;
+        cacheAgglomeration true;
+        nCellsInCoarsestLevel 500;
+        tolerance 1e-10;
+        relTol 1e-1;
+        smoother GaussSeidel;
+        nPreSweeps 1;
+        nPostSweeps 2;
+        nFinestSweeps 2;
+        minIter 1;
+        maxIter 5;
+    }
+
+    pFinal
+    {
+        solver GAMG;
+        agglomerator faceAreaPair;
+        mergeLevels 1;
+        cacheAgglomeration true;
+        nCellsInCoarsestLevel 500;
+        tolerance 1e-10;
+        relTol 1e-1;
+        smoother GaussSeidel;
+        nPreSweeps 1;
+        nPostSweeps 2;
+        nFinestSweeps 2;
+        minIter 1;
+        maxIter 5;
+    }
+
+    U
+    {
+        solver smoothSolver;
+        smoother GaussSeidel;
+        tolerance 1e-8;
+        relTol 1e-2;
+        minIter 1;
+    }
+
+    UFinal
+    {
+        solver smoothSolver;
+        smoother GaussSeidel;
+        tolerance 1e-10;
+        relTol 0;
+        minIter 1;
+    }
+}
+
+// OpenFOAM (.com), OpenFOAM 5 or older (.org)
+/*
+residualControl
+{
+    U
+    {
+        relTol          0;
+        tolerance       0.0001;
+    }
+    p
+    {
+        relTol          0;
+        tolerance       0.0001;
+    }
+    "(k|epsilon|omega)"
+    {
+        relTol          0;
+        tolerance       0.0001;
+    }
+}
+*/
+
+// OpenFOAM 6 (.org) or newer
+/*
+residualControl
+{
+    U 0.0001;
+    p 0.0001;
+    "(k|epsilon|omega)" 0.0001;
+}
+*/
+
+relaxationFactors
+{
+    U       0.5;
+    UFinal  0.5;
+    p       0.2;
+    pFinal  0.2;
+    Up      0.2;
+}
+

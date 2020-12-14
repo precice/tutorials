@@ -1,5 +1,0 @@
-precice
-enum34
-numpy
-fenics
-mpi4py

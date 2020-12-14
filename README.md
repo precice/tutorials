@@ -11,8 +11,8 @@ Each folder in this directory represents a stand-alone tutorial containing:
 
 
 The website import relies on the following rules:
-* tutorials use dashes to separate words `flow-over-plate`.
-* a tutorial contains a `REAMDE.md` with a Jekyll front-matter and a `permalink: /tutorials-flow-over-plate.html`.
+* tutorials use dashes to separate words `flow-over-heated-plate`.
+* a tutorial contains a `REAMDE.md` with a Jekyll front-matter and a `permalink: /tutorials-flow-over-heated-plate.html`.
 * a tutorial may contain a folder `images/` with images to be displayed in the `README.md`.  
-  Images use the naming scheme `tutorials-flow-over-plate-example.png`. Subdirectories in `images/` are not allowed.
-* images includes in the `README.md` use relative links to `![example](images/tutorials-flow-over-plate-example.png)`.
+  Images use the naming scheme `tutorials-flow-over-heated-plate-example.png`. Subdirectories in `images/` are not allowed.
+* images includes in the `README.md` use relative links to `![example](images/tutorials-flow-over-heated-plate-example.png)`.
