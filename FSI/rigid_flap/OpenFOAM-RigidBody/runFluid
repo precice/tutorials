@@ -1,0 +1,42 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    		    		# Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions    # Tutorial run functions
+
+# Fluid participant
+
+# Run this script in one terminal and the execute the coupled_elasto_dynamics bindary 
+# in another terminal.
+# These scripts present how the two participants would be started manually.
+
+# Run this script with "-parallel" for parallel simulations
+
+# The script "Allclean" cleans-up the result and log files.
+
+# 1 for true, 0 for false
+parallel=0
+if [ "$1" = "-parallel" ]; then
+    parallel=1
+fi
+
+echo "Preparing and running the Fluid participant..."
+
+rm -rfv Fluid/0/
+cp -r Fluid/0.orig/ Fluid/0/
+blockMesh -case Fluid
+checkMesh -case Fluid
+
+# Run
+cd Fluid
+	solver=$(getApplication)
+	procs=$(getNumberOfProcessors)
+cd ..
+if [ $parallel -eq 1 ]; then
+    decomposePar -force -case Fluid
+    mpirun -np $procs $solver -parallel -case Fluid
+    reconstructPar -case Fluid
+else
+    $solver -case Fluid
+fi
+
+# Workaround for issue #26 (OF-adapter, relevant for OF .com versions) 
+./removeObsoleteFolders.sh
