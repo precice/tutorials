@@ -78,4 +78,7 @@ subsection precice configuration
 
     # Name of the write data in the precice-config.xml file
     set Write data name     = Displacement2
+    
+    # PF x-location 
+    set Flap location     = 1.0
 end

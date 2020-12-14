@@ -39,19 +39,22 @@ For the fluid participant we use OpenFOAM. In particular, we use the application
 
 Most of the coupling details are specified in the file `precide-config.xml`. Here we estipulate the order in which we read/write data from one participant to another or how we map from the fluid to the solid's mesh. In particular, we have choosen the nearest-neighbor mapping scheme. 
 
-For the simulation of the solid participants we use the deal.II adapter. In deal.II, the geometry of the domain is specified directly on the solver. The two flaps in our case are essentially the same but for the x-coordinate. The flap location is given to the solver when we select the scenario in the '.prm' file. So if we want Solid1 to be the left flap, we must specify it in the `Solid1/linear_elasticity.prm` file as follows:
+For the simulation of the solid participants we use the deal.II adapter. In deal.II, the geometry of the domain is specified directly on the solver. The two flaps in our case are essentially the same but for the x-coordinate. The flap geometry is given to the solver when we select the scenario in the '.prm' file. 
 
    ```
-   set Scenario            = PFleft
+   set Scenario            = PF
    ```
+But to specify the position of the flap along the x-axis, we must specify it in the `Solid1/linear_elasticity.prm` file as follows:
 
+   ```
+   set Flap location     = -1.0
+   ```
 While in case of `Solid2/linear_elasticity.prm` we write:
 
    ```
-   set Scenario            = PFright
+   set Flap location     = 1.0
    ```
-
-Similarly, the scenario settings are different for each solid for the nonlinear case. 
+The scenario settings are implemented similarly for the nonlinear case. 
 
 ## Running the Simulation
 1. Preparation:

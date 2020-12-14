@@ -49,7 +49,7 @@ end
 
 subsection precice configuration
   # Cases: FSI3 or PF for perpendicular flap
-  set Scenario            = PFleft
+  set Scenario            = PF
 
   # Name of the precice configuration file
   set precice config-file = precice-config.xml
@@ -65,4 +65,7 @@ subsection precice configuration
 
   # Name of the write data in the precice-config.xml file
   set Write data name     = Displacement1
+  
+  # PF x-location 
+  set Flap location     = -1.0
 end
