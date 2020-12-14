@@ -54,8 +54,9 @@ public:
     const double theta_old = theta;
 
     // Update angle to theta^{n+1} according to forward Euler method (simplified moment
-    // computation, which does not depend on the updated configuration)
-    // theta^{n+1} = dt^2 * M / I + dt * \dot{theta}^{n} + theta^{n}
+    // computation, which does not depend on the updated configuration). The contribution
+    // of the spring with strength k is discretized implicitly.
+    // theta^{n+1} = 1/ (1 - (k/I)*dt^2) * dt^2 * M / I + dt * \dot{theta}^{n} + theta^{n}
     theta = (1. / (1 - (spring_constant / moment_of_inertia) * std::pow(delta_t, 2))) *
             (std::pow(delta_t, 2) * moment / moment_of_inertia + delta_t * theta_dot + theta);
 
