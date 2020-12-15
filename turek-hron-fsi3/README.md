@@ -63,6 +63,22 @@ TODO: update picture according to actual used mesh.
 ![FSI3 watchpoint](https://user-images.githubusercontent.com/33414590/58789906-882f7400-85ef-11e9-968a-082b33493f34.png)
 
 
+## Mesh refinement
+
+In `fluid-openfoam/system/`, we provide three different fluid meshes:
+* `blockMeshDict`: the default mesh with approximately 21k cells,
+* `blockMeshDict_refined`: a refined mesh with approximately 38k cells,
+* `blockMeshDict_double_refined`: a refined mesh with approximately 46k cells.
+
+For the double-refined mesh, it is wisely to use local basis functions in the RBF data mapping method instead of global ones. You can use: 
+
+```xml
+<mapping:rbf-compact-tps-c2 direction="read" from="Fluid-Mesh-Centers" to="Solid-Mesh" 
+                            support-radius="0.011" constraint="consistent" />
+```
+
+You can find more information on RBF data mapping in the [documentation](configuration-mapping.html#radial-basis-function-mapping).
+
 ## References
 
 [1]  S. Turek, J. Hron, M. Madlik, M. Razzaq, H. Wobker, and J. Acker. Numerical simulation and benchmarking of a monolithic multigrid solver for fluid-structure interaction problems with application to hemodynamics. In H.-J. Bungartz, M. Mehl, and M. Schäfer, editors, Fluid Structure Interaction II: Modelling, Simulation, Optimization, page 432. Springer Berlin Heidelberg, 2010.
