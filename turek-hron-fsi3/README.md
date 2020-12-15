@@ -45,7 +45,7 @@ Moreover, the name of your solver might differ, depending on your OpenFOAM versi
 
 You may adjust the end time in the `precice-config.xml`, or interupt the execution earlier if you want.
 
-In the first few timesteps, many coupling iterations are required for convergence. Don't loose hope, things get better quickly. 
+In the first few timesteps, many coupling iterations are required for convergence. Don't lose hope, things get better quickly. 
 
 
 ## Postprocessing
@@ -66,4 +66,3 @@ TODO: update picture according to actual used mesh.
 [1]  S. Turek, J. Hron, M. Madlik, M. Razzaq, H. Wobker, and J. Acker. Numerical simulation and benchmarking of a monolithic multigrid solver for fluid-structure interaction problems with application to hemodynamics. In H.-J. Bungartz, M. Mehl, and M. Schäfer, editors, Fluid Structure Interaction II: Modelling, Simulation, Optimization, page 432. Springer Berlin Heidelberg, 2010.
 
 {% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
-
