@@ -194,7 +194,7 @@ mesh_rank.set_all(MPI.rank(MPI.comm_world) + 0)
 mesh_rank.rename("myRank", "")
 
 displacement_out = File("Solid/FSI-S/u_fsi.pvd")
-ranks = File("out/ranks%s.pvd" % precice.get_participant_name())
+ranks = File("Solid/FSI-S/ranks%s.pvd" % precice.get_participant_name())
 
 u_n.rename("Displacement", "")
 u_np1.rename("Displacement", "")
