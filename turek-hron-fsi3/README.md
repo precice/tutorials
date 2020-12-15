@@ -43,8 +43,6 @@ cd solid-dealii
 You can also run OpenFOAM in parallel by `./run.sh -parallel`. The default setting here uses 25 MPI ranks. You can change this setting in `fluid-openfoam/system/decomposeParDict`.
 Moreover, the name of your solver might differ, depending on your OpenFOAM version. Have a look in the `fluid-openfoam/system/controlDict` file and set the appropriate solver name.
 
-There is an [open issue](https://github.com/precice/openfoam-adapter/issues/26) that leads to additional "empty" result directories when running with some OpenFOAM versions, leading to inconveniences during post-processing. Please run the script `removeObsoleteSolvers.sh` to delete the additional files.
-
 You may adjust the end time in the precice-config_*.xml, or interupt the execution earlier if you want.
 
 In the first few timesteps, many coupling iterations are required for convergence. Don't loose hope, things get better quickly. 
@@ -53,6 +51,9 @@ In the first few timesteps, many coupling iterations are required for convergenc
 ## Postprocessing
    
 You can visualize the results of the coupled simulation using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `Fluid.foam` file. Solid results are in VTK format. If you want to visualize both domains with ParaView, keep in mind that the deal.II solver writes results every few timesteps, while the OpenFOAM solver writes in reference to simulated time. For this reason, make sure that you use compatible write intervals. You may also need to convert the OpenFOAM results to VTK (with the command `foamToVTK`). 
+
+There is an [known issue](https://github.com/precice/openfoam-adapter/issues/26) that leads to additional "empty" result directories when running with some OpenFOAM versions, leading to inconveniences during post-processing. Please run the script `removeObsoleteSolvers.sh` to delete the additional files before importing your results in ParaView.
+
 Moreover, we defined a watchpoint at the flap tip and can observe the perpendicular displacement with the script `plotDisplacement.sh`. 
 
 TODO: update picture according to actual used mesh.
