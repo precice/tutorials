@@ -62,6 +62,7 @@
       <max-iterations value="100" />
       <relative-convergence-measure limit="1e-4" data="Stress" mesh="Fluid-Mesh-Centers" />
       <relative-convergence-measure limit="1e-4" data="Displacement" mesh="Solid-Mesh" />
+      <extrapolation-order value="2" />
       <acceleration:IQN-ILS>
         <data name="Displacement" mesh="Solid-Mesh" />
         <data name="Stress" mesh="Fluid-Mesh-Centers" />
