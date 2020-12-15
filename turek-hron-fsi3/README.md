@@ -42,7 +42,7 @@ cd solid-dealii
 ./run.sh
 ```
 
-You can also run OpenFOAM in parallel by `./run.sh -parallel`.
+You can also run OpenFOAM in parallel by `./run.sh -parallel`. The default setting here uses 25 MPI ranks. You can change this setting in `fluid-openfoam/system/decomposeParDict`.
 Moreover, the name of your solver might differ, depending on your OpenFOAM version. Have a look in the `fluid-openfoam/system/controlDict` file and set the appropriate solver name.
 
 There is an [open issue](https://github.com/precice/openfoam-adapter/issues/26) that leads to additional "empty" result directories when running with some OpenFOAM versions, leading to inconveniences during post-processing. Please run the script `removeObsoleteSolvers.sh` to delete the additional files.
