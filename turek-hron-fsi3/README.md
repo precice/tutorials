@@ -15,8 +15,6 @@ For more information please refer to the original publication of the benchmark [
 
 ## Available solvers
 
-hier auch wo mann sie herbekommt
-
 Fluid participant:
 
 * OpenFOAM. For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html). 
