@@ -43,7 +43,7 @@
       <use-mesh name="Fluid-Mesh-Nodes" from="Fluid" />
       <read-data name="Stress" mesh="Solid-Mesh" />
       <write-data name="Displacement" mesh="Solid-Mesh" />
-      <watch-point mesh="Solid-Mesh" name="flap_tip" coordinate="0.6;0.2" />
+      <watch-point mesh="Solid-Mesh" name="Flap-Tip" coordinate="0.6;0.2" />
       <mapping:rbf-thin-plate-splines
         direction="read"
         from="Fluid-Mesh-Centers"
