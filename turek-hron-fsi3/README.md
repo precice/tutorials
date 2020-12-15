@@ -41,7 +41,7 @@ cd solid-dealii
 ```
 
 You can also run OpenFOAM in parallel by `./run.sh -parallel`. The default setting here uses 25 MPI ranks. You can change this setting in `fluid-openfoam/system/decomposeParDict`.
-Moreover, the name of your solver might differ, depending on your OpenFOAM version. Have a look in the `fluid-openfoam/system/controlDict` file and set the appropriate solver name.
+For older OpenFOAM versions, the solver name will differ. If you are using OpenFOAM v1712 / 5.x or older have a look in the `fluid-openfoam/system/controlDict` file and set the appropriate solver name.
 
 You may adjust the end time in the `precice-config.xml`, or interupt the execution earlier if you want.
 
