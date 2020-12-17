@@ -61,6 +61,7 @@ Moreover, as we defined a watchpoint at the flap tip (see `precice-config.xml`),
 
 ![FSI3 watchpoint](images/tutorials-turek-hron-tip-plot.png)
 
+Before running the simulation again, you may want to cleanup any result files using the script `Allclean`.
 
 ## Mesh refinement
 
