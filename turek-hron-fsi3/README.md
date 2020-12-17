@@ -70,6 +70,12 @@ In `fluid-openfoam/system/`, we provide three different fluid meshes:
 * `blockMeshDict_refined`: a refined mesh with approximately 38k cells,
 * `blockMeshDict_double_refined`: a refined mesh with approximately 46k cells.
 
+If you want to use one of the two refined meshes, simply swap the `blockMeshDict`:
+```bash
+mv blockMeshDict blockMeshDict_original
+mv blockMeshDict_refined blockMeshDict
+```
+
 For the double-refined mesh, it is wisely to use local basis functions in the RBF data mapping method instead of global ones. You can use: 
 
 ```xml
