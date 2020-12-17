@@ -19,7 +19,7 @@ Fluid participant:
 
 * OpenFOAM. For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html). 
 
-{% include important.html content="For the parabolic inflow profile, this tutorial requires groovyBC. groovyBC is part of swak4Foam. You can find more explanations in the [official OpenFOAM wiki](https://openfoamwiki.net/index.php/Contrib/swak4Foam) or get it from an [inofficial GitHub mirror](https://github.com/Unofficial-Extend-Project-Mirror/openfoam-extend-swak4Foam-dev.git). Please follow the building instructions there." %}
+{% include important.html content="For the parabolic inflow profile, this tutorial requires groovyBC. groovyBC is part of swak4Foam. You can find more explanations in [openfoamwiki.net](https://openfoamwiki.net/index.php/Contrib/swak4Foam) or get it from an [unofficial GitHub mirror](https://github.com/Unofficial-Extend-Project-Mirror/openfoam-extend-swak4Foam-dev.git). Please follow the building instructions there." %}
 
 Solid participant:
 
