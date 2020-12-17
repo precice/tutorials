@@ -48,7 +48,7 @@ You may adjust the end time in the `precice-config.xml`, or interupt the executi
 In the first few timesteps, many coupling iterations are required for convergence. Don't lose hope, things get better quickly. 
 
 
-## Postprocessing
+## Post-processing
 
 You can visualize the results of the coupled simulation using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `Fluid.foam` file. Solid results are in VTK format.
 
