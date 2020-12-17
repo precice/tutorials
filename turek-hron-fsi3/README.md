@@ -58,9 +58,8 @@ There is an [known issue](https://github.com/precice/openfoam-adapter/issues/26)
 
 Moreover, as we defined a watchpoint at the flap tip (see `precice-config.xml`), we can plot it with gnuplot using the script `plotDisplacement.sh`.  The resulting graph shows the vertical (y) displacement of the tip of the flap.
 
-TODO: update picture according to actual used mesh.
 
-![FSI3 watchpoint](https://user-images.githubusercontent.com/33414590/58789906-882f7400-85ef-11e9-968a-082b33493f34.png)
+![FSI3 watchpoint](images/tutorials-turek-hron-tip-plot.png)
 
 
 ## Mesh refinement
