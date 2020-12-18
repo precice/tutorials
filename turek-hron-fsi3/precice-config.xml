@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" ?>
 <precice-configuration>
   <log>
     <sink
@@ -40,7 +40,6 @@
     <participant name="Solid">
       <use-mesh name="Solid-Mesh" provide="yes" />
       <use-mesh name="Fluid-Mesh-Centers" from="Fluid" />
-      <use-mesh name="Fluid-Mesh-Nodes" from="Fluid" />
       <read-data name="Stress" mesh="Solid-Mesh" />
       <write-data name="Displacement" mesh="Solid-Mesh" />
       <watch-point mesh="Solid-Mesh" name="Flap-Tip" coordinate="0.6;0.2" />
