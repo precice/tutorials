@@ -6,7 +6,7 @@ from __future__ import print_function, division
 from fenics import Function, SubDomain, RectangleMesh, BoxMesh, FunctionSpace, VectorFunctionSpace, Point, \
     Expression, Constant, DirichletBC, \
     TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, interpolate, project, \
-    near
+    near, MeshFunction, MPI
 from fenicsprecice import Adapter
 import numpy as np
 
@@ -140,8 +140,17 @@ u_np1 = Function(V)
 t = 0
 u_D.t = t + dt
 
+# mark mesh w.r.t ranks
+ranks = File("Solid/VTK/ranks%s.pvd.pvd" % precice.get_participant_name())
+mesh_rank = MeshFunction("size_t", mesh, mesh.topology().dim())
+mesh_rank.set_all(MPI.rank(MPI.comm_world))
+mesh_rank.rename("myRank", "")
+ranks << mesh_rank
+
+# Create output file
 file_out = File("Solid/VTK/%s.pvd" % precice.get_participant_name())
 file_out << u_n
+
 print("output vtk for time = {}".format(float(t)))
 n = 0
 

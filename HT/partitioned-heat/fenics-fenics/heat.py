@@ -26,7 +26,7 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
-    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace
+    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, MeshFunction, MPI
 from fenicsprecice import Adapter
 from errorcomputation import compute_errors
 from my_enums import ProblemType, Subcycling
@@ -174,16 +174,26 @@ t = 0
 u_ref = interpolate(u_D, V)
 u_ref.rename("reference", " ")
 
+# mark mesh w.r.t ranks
+mesh_rank = MeshFunction("size_t", mesh, mesh.topology().dim())
+if problem is ProblemType.NEUMANN:
+    mesh_rank.set_all(MPI.rank(MPI.comm_world) + 4)
+else:
+    mesh_rank.set_all(MPI.rank(MPI.comm_world) + 0)
+mesh_rank.rename("myRank", "")
+
 # Generating output files
 temperature_out = File("out/%s.pvd" % precice.get_participant_name())
 ref_out = File("out/ref%s.pvd" % precice.get_participant_name())
 error_out = File("out/error%s.pvd" % precice.get_participant_name())
+ranks = File("out/ranks%s.pvd" % precice.get_participant_name())
 
 # output solution and reference solution at t=0, n=0
 n = 0
 print('output u^%d and u_ref^%d' % (n, n))
 temperature_out << u_n
 ref_out << u_ref
+ranks << mesh_rank
 
 error_total, error_pointwise = compute_errors(u_n, u_ref, V)
 error_out << error_pointwise
