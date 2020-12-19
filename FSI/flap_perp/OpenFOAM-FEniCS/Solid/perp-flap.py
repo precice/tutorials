@@ -11,18 +11,6 @@ from fenicsprecice import Adapter
 from enum import Enum
 
 
-# # define the two kinds of boundary: clamped and coupling Neumann Boundary
-# def clamped_boundary(x, on_boundary):
-#     return on_boundary and abs(x[1]) < tol
-#
-#
-# def neumann_boundary(x, on_boundary):
-#     """
-#     determines whether a node is on the coupling boundary
-#
-#     """
-#     return on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol)
-
 class clampedBoundary(SubDomain):
     def inside(self, x, on_boundary):
         tol = 1E-14
@@ -211,7 +199,6 @@ while precice.is_coupling_ongoing():
 
     # Update the point sources on the coupling boundary with the new read data
     Forces_x, Forces_y = precice.get_point_sources(read_data)
-    print("Rank {}: After get_point_sources".format(MPI.rank(MPI.comm_world)))
 
     A, b = assemble_system(a_form, L_form, bc)
 
@@ -221,7 +208,6 @@ while precice.is_coupling_ongoing():
         ps.apply(b_forces)
     for ps in Forces_y:
         ps.apply(b_forces)
-    print("Rank {}: After applying forces".format(MPI.rank(MPI.comm_world)))
 
     assert (b is not b_forces)
     solve(A, u_np1.vector(), b_forces)
