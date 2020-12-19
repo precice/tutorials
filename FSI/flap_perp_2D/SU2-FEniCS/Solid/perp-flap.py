@@ -1,27 +1,44 @@
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
-    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, project, \
-    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system
+    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, SubDomain, \
+    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system, MPI, MeshFunction
 import dolfin
 
 from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
-from fenicsadapter import Adapter
+from fenicsprecice import Adapter
 from enum import Enum
 
 
-# define the two kinds of boundary: clamped and coupling Neumann Boundary
-def clamped_boundary(x, on_boundary):
-    return on_boundary and abs(x[1]) < tol
+# # define the two kinds of boundary: clamped and coupling Neumann Boundary
+# def clamped_boundary(x, on_boundary):
+#     return on_boundary and abs(x[1]) < tol
+#
+#
+# def neumann_boundary(x, on_boundary):
+#     """
+#     determines whether a node is on the coupling boundary
+#
+#     """
+#     return on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol)
+
+class clampedBoundary(SubDomain):
+    def inside(self, x, on_boundary):
+        tol = 1E-14
+        if on_boundary and abs(x[1]) < tol:
+            return True
+        else:
+            return False
 
 
-def neumann_boundary(x, on_boundary):
-    """
-    determines whether a node is on the coupling boundary
-    
-    """
-    return on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol)
+class neumannBoundary(SubDomain):
+    def inside(self, x, on_boundary):
+        tol = 1E-14
+        if on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol):
+            return True
+        else:
+            return False
 
 
 # Geometry and material properties
@@ -29,7 +46,7 @@ dim = 2  # number of dimensions
 H = 1
 W = 0.1
 rho = 3000
-E = 1000000.0
+E = 400000.0
 nu = 0.3
 
 mu = Constant(E / (2.0 * (1.0 + nu)))
@@ -37,17 +54,14 @@ mu = Constant(E / (2.0 * (1.0 + nu)))
 lambda_ = Constant(E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)))
 
 # create Mesh
-n_x_Direction = 2
-n_y_Direction = 13
+n_x_Direction = 5
+n_y_Direction = 50
 mesh = RectangleMesh(Point(-W / 2, 0), Point(W / 2, H), n_x_Direction, n_y_Direction)
 
 h = Constant(H / n_y_Direction)
 
 # create Function Space
 V = VectorFunctionSpace(mesh, 'P', 2)
-
-# BCs
-tol = 1E-14
 
 # Trial and Test Functions
 du = TrialFunction(V)
@@ -61,28 +75,22 @@ u_n = Function(V)
 v_n = Function(V)
 a_n = Function(V)
 
-# Function to calculate displacement Deltas
-u_delta = Function(V)
-
 f_N_function = interpolate(Expression(("1", "0"), degree=1), V)
 u_function = interpolate(Expression(("0", "0"), degree=1), V)
 
-coupling_boundary = AutoSubDomain(neumann_boundary)
-
 precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
 
-clamped_boundary_domain = AutoSubDomain(clamped_boundary)
-force_boundary = AutoSubDomain(neumann_boundary)
-
 # Initialize the coupling interface
-precice_dt = precice.initialize(coupling_boundary, mesh, V, dim, fixed_boundary=clamped_boundary_domain)
+# Function space V is passed twice as both read and write functions are defined using the same space
+precice_dt = precice.initialize(neumannBoundary(), read_function_space=V, write_object=V,
+                                fixed_boundary=clampedBoundary())
 
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
 # clamp the beam at the bottom
-bc = DirichletBC(V, Constant((0, 0)), clamped_boundary)
+bc = DirichletBC(V, Constant((0, 0)), clampedBoundary())
 
 # alpha method parameters
 alpha_m = Constant(0.2)
@@ -180,23 +188,30 @@ time.append(0.0)
 u_tip.append(0.0)
 E_ext = 0
 
+# mark mesh w.r.t ranks
+mesh_rank = MeshFunction("size_t", mesh, mesh.topology().dim())
+mesh_rank.set_all(MPI.rank(MPI.comm_world) + 0)
+mesh_rank.rename("myRank", "")
+
 displacement_out = File("Solid/FSI-S/u_fsi.pvd")
+ranks = File("Solid/FSI-S/ranks%s.pvd" % precice.get_participant_name())
 
 u_n.rename("Displacement", "")
 u_np1.rename("Displacement", "")
 displacement_out << u_n
+ranks << mesh_rank
 
 while precice.is_coupling_ongoing():
 
     if precice.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
-        u_ref = u_n.copy()
 
     # read data from preCICE and get a new coupling expression
     read_data = precice.read_data()
 
     # Update the point sources on the coupling boundary with the new read data
     Forces_x, Forces_y = precice.get_point_sources(read_data)
+    print("Rank {}: After get_point_sources".format(MPI.rank(MPI.comm_world)))
 
     A, b = assemble_system(a_form, L_form, bc)
 
@@ -206,6 +221,7 @@ while precice.is_coupling_ongoing():
         ps.apply(b_forces)
     for ps in Forces_y:
         ps.apply(b_forces)
+    print("Rank {}: After applying forces".format(MPI.rank(MPI.comm_world)))
 
     assert (b is not b_forces)
     solve(A, u_np1.vector(), b_forces)
@@ -213,8 +229,7 @@ while precice.is_coupling_ongoing():
     dt = Constant(np.min([precice_dt, fenics_dt]))
 
     # Write new displacements to preCICE
-    u_delta = project(u_np1 - u_ref, V)
-    precice.write_data(u_delta)
+    precice.write_data(u_np1)
 
     # Call to advance coupling, also returns the optimum time step value
     precice_dt = precice.advance(dt(0))
