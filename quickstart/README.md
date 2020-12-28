@@ -2,7 +2,7 @@
 title: Quickstart Guide
 permalink: quickstart.html
 keywords: tutorial, quickstart
-summary:
+summary: "Install preCICE on Linux (e.g. via a Debian package), and then couple two OpenFOAM solvers with the OpenFOAM-preCICE adapter."
 layout: "page"
 comments: false
 search: true
