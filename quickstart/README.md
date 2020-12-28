@@ -36,7 +36,7 @@ To become a preCICE pro:
 * Run [tutorials with other coupled solvers](https://github.com/precice/precice/wiki#2-getting-started---tutorials).
 * Watch some [preCICE videos](https://www.youtube.com/channel/UCxZdSQdmDrheEqxq8g48t6A).
 * Register to our [virtual preCICE Workshop 2021](precice-workshop-2021.html).
-* Find out how to [couple your own solver](couple-your-code-prerequisites.html).
+* Find out how to [couple your own solver](couple-your-code-overview.html).
 * Tell us [your story](community-projects.html).
 
 
