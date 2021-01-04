@@ -35,7 +35,6 @@
     <participant name="Solid">
         <use-mesh name="Solid_mesh" provide="yes"/>
         <use-mesh name="Fluid-Mesh-Centers" from="Fluid"/>
-        <use-mesh name="Fluid-Mesh-Nodes" from="Fluid"/>
 	<read-data name="Stress"  mesh="Solid_mesh"/>
   	<write-data name="Displacement" mesh="Solid_mesh"/>
         <watch-point mesh="Solid_mesh" name="flap_tip" coordinate="-0.05;1" />
