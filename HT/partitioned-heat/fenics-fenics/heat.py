@@ -29,7 +29,7 @@ from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, T
     File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, MeshFunction, MPI
 from fenicsprecice import Adapter
 from errorcomputation import compute_errors
-from my_enums import ProblemType, Subcycling
+from my_enums import ProblemType, Subcycling, DomainPart
 import argparse
 import numpy as np
 from problem_setup import get_geometry, get_problem_setup
@@ -211,6 +211,10 @@ while precice.is_coupling_ongoing():
         precice.store_checkpoint(u_n, t, n)
 
     read_data = precice.read_data()
+    if problem is ProblemType.DIRICHLET and (domain_part is DomainPart.CIRCULAR or domain_part is DomainPart.RECTANGLE):
+        # We have to data for an arbitrary point that is not on the circle, to obtain exact solution.
+        # See https://github.com/precice/fenics-adapter/issues/113 for details.
+        read_data[(0, 0)] = u_D(0, 0)
 
     # Update the coupling expression with the new read data
     precice.update_coupling_expression(coupling_expression, read_data)
