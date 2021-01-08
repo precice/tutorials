@@ -2,8 +2,6 @@
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
     TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, project, \
     Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system
-import dolfin
-
 from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
@@ -63,26 +61,25 @@ a_n = Function(V)
 
 # Function to calculate displacement Deltas
 u_delta = Function(V)
+u_ref = Function(V)
 
 f_N_function = interpolate(Expression(("1", "0"), degree=1), V)
 u_function = interpolate(Expression(("0", "0"), degree=1), V)
 
 coupling_boundary = AutoSubDomain(neumann_boundary)
+fixed_boundary = AutoSubDomain(clamped_boundary)
 
 precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
 
-clamped_boundary_domain = AutoSubDomain(clamped_boundary)
-force_boundary = AutoSubDomain(neumann_boundary)
-
 # Initialize the coupling interface
-precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fixed_boundary=clamped_boundary_domain)
+precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fixed_boundary=fixed_boundary)
 
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
 # clamp the beam at the bottom
-bc = DirichletBC(V, Constant((0, 0)), clamped_boundary)
+bc = DirichletBC(V, Constant((0, 0)), fixed_boundary)
 
 # alpha method parameters
 alpha_m = Constant(0.2)
