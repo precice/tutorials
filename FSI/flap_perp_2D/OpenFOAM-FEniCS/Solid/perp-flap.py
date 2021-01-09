@@ -1,9 +1,7 @@
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
-    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, SubDomain, \
-    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system, MPI, MeshFunction
-import dolfin
-
+    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, Identity, inner, dx, ds, \
+    sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system, MPI, MeshFunction
 from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,22 +9,17 @@ from fenicsprecice import Adapter
 from enum import Enum
 
 
-class clampedBoundary(SubDomain):
-    def inside(self, x, on_boundary):
-        tol = 1E-14
-        if on_boundary and abs(x[1]) < tol:
-            return True
-        else:
-            return False
+# define the two kinds of boundary: clamped and coupling Neumann Boundary
+def clamped_boundary(x, on_boundary):
+    return on_boundary and abs(x[1]) < tol
 
 
-class neumannBoundary(SubDomain):
-    def inside(self, x, on_boundary):
-        tol = 1E-14
-        if on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol):
-            return True
-        else:
-            return False
+def neumann_boundary(x, on_boundary):
+    """
+    determines whether a node is on the coupling boundary
+
+    """
+    return on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol)
 
 
 # Geometry and material properties
@@ -51,6 +44,9 @@ h = Constant(H / n_y_Direction)
 # create Function Space
 V = VectorFunctionSpace(mesh, 'P', 2)
 
+# BCs
+tol = 1E-14
+
 # Trial and Test Functions
 du = TrialFunction(V)
 v = TestFunction(V)
@@ -66,19 +62,21 @@ a_n = Function(V)
 f_N_function = interpolate(Expression(("1", "0"), degree=1), V)
 u_function = interpolate(Expression(("0", "0"), degree=1), V)
 
+coupling_boundary = AutoSubDomain(neumann_boundary)
+fixed_boundary = AutoSubDomain(clamped_boundary)
+
 precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
 
 # Initialize the coupling interface
 # Function space V is passed twice as both read and write functions are defined using the same space
-precice_dt = precice.initialize(neumannBoundary(), read_function_space=V, write_object=V,
-                                fixed_boundary=clampedBoundary())
+precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fixed_boundary=fixed_boundary)
 
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
 # clamp the beam at the bottom
-bc = DirichletBC(V, Constant((0, 0)), clampedBoundary())
+bc = DirichletBC(V, Constant((0, 0)), fixed_boundary)
 
 # alpha method parameters
 alpha_m = Constant(0.2)
