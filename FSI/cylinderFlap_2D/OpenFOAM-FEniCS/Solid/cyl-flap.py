@@ -7,7 +7,7 @@ import dolfin
 from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
-from fenicsadapter import Adapter
+from fenicsprecice import Adapter
 from enum import Enum
 
 # Beam geometry
@@ -88,7 +88,9 @@ clamped_boundary_domain = AutoSubDomain(left_boundary)
 force_boundary = AutoSubDomain(remaining_boundary)
 
 # Initialize the coupling interface
-precice_dt = precice.initialize(coupling_boundary, mesh, V, dim)
+# Function space V is passed twice as both read and write functions are defined using the same space
+precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V,
+                                fixed_boundary=clamped_boundary_domain)
 
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
@@ -171,8 +173,6 @@ v_np1 = update_velocity(a_np1, u_n, v_n, a_n, ufl=True)
 
 res = m(avg(a_n, a_np1, alpha_m), v) + k(avg(u_n, du, alpha_f), v)
 
-Forces_x, Forces_y = precice.create_point_sources(clamped_boundary_domain)
-
 a_form = lhs(res)
 L_form = rhs(res)
 
@@ -201,7 +201,7 @@ while precice.is_coupling_ongoing():
     read_data = precice.read_data()
 
     # Update the point sources on the coupling boundary with the new read data
-    Forces_x, Forces_y = precice.update_point_sources(read_data)
+    Forces_x, Forces_y = precice.get_point_sources(read_data)
 
     A, b = assemble_system(a_form, L_form, bc)
 
@@ -231,7 +231,7 @@ while precice.is_coupling_ongoing():
         n = n_cp
     else:
         u_n.assign(u_np1)
-        t += dt
+        t += float(dt)
         n += 1
 
     if precice.is_time_window_complete():

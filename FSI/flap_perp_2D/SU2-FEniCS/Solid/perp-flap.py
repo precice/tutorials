@@ -1,9 +1,7 @@
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
-    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, \
+    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, project, \
     Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system
-import dolfin
-
 from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
@@ -29,7 +27,7 @@ dim = 2  # number of dimensions
 H = 1
 W = 0.1
 rho = 3000
-E = 400000.0
+E = 1000000.0
 nu = 0.3
 
 mu = Constant(E / (2.0 * (1.0 + nu)))
@@ -37,8 +35,8 @@ mu = Constant(E / (2.0 * (1.0 + nu)))
 lambda_ = Constant(E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)))
 
 # create Mesh
-n_x_Direction = 5
-n_y_Direction = 50
+n_x_Direction = 2
+n_y_Direction = 13
 mesh = RectangleMesh(Point(-W / 2, 0), Point(W / 2, H), n_x_Direction, n_y_Direction)
 
 h = Constant(H / n_y_Direction)
@@ -61,25 +59,27 @@ u_n = Function(V)
 v_n = Function(V)
 a_n = Function(V)
 
+# Function to calculate displacement Deltas
+u_delta = Function(V)
+u_ref = Function(V)
+
 f_N_function = interpolate(Expression(("1", "0"), degree=1), V)
 u_function = interpolate(Expression(("0", "0"), degree=1), V)
 
 coupling_boundary = AutoSubDomain(neumann_boundary)
+fixed_boundary = AutoSubDomain(clamped_boundary)
 
 precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
 
-clamped_boundary_domain = AutoSubDomain(clamped_boundary)
-force_boundary = AutoSubDomain(neumann_boundary)
-
 # Initialize the coupling interface
-precice_dt = precice.initialize(coupling_boundary, mesh, V, dim)
+precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fixed_boundary=fixed_boundary)
 
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
 # clamp the beam at the bottom
-bc = DirichletBC(V, Constant((0, 0)), clamped_boundary)
+bc = DirichletBC(V, Constant((0, 0)), fixed_boundary)
 
 # alpha method parameters
 alpha_m = Constant(0.2)
@@ -165,8 +165,6 @@ v_np1 = update_v(a_np1, u_n, v_n, a_n, ufl=True)
 
 res = m(avg(a_n, a_np1, alpha_m), v) + k(avg(u_n, du, alpha_f), v)
 
-Forces_x, Forces_y = precice.create_point_sources(clamped_boundary_domain)
-
 a_form = lhs(res)
 L_form = rhs(res)
 
@@ -189,12 +187,13 @@ while precice.is_coupling_ongoing():
 
     if precice.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
+        u_ref = u_n.copy()
 
     # read data from preCICE and get a new coupling expression
     read_data = precice.read_data()
 
     # Update the point sources on the coupling boundary with the new read data
-    Forces_x, Forces_y = precice.update_point_sources(read_data)
+    Forces_x, Forces_y = precice.get_point_sources(read_data)
 
     A, b = assemble_system(a_form, L_form, bc)
 
@@ -211,7 +210,8 @@ while precice.is_coupling_ongoing():
     dt = Constant(np.min([precice_dt, fenics_dt]))
 
     # Write new displacements to preCICE
-    precice.write_data(u_np1)
+    u_delta = project(u_np1 - u_ref, V)
+    precice.write_data(u_delta)
 
     # Call to advance coupling, also returns the optimum time step value
     precice_dt = precice.advance(dt(0))
@@ -224,7 +224,7 @@ while precice.is_coupling_ongoing():
         n = n_cp
     else:
         u_n.assign(u_np1)
-        t += dt
+        t += float(dt)
         n += 1
 
     if precice.is_time_window_complete():

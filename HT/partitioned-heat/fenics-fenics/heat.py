@@ -26,10 +26,10 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
-    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace
-from fenicsadapter import Adapter
+    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, MeshFunction, MPI
+from fenicsprecice import Adapter
 from errorcomputation import compute_errors
-from my_enums import ProblemType, Subcycling
+from my_enums import ProblemType, Subcycling, DomainPart
 import argparse
 import numpy as np
 from problem_setup import get_geometry, get_problem_setup
@@ -124,16 +124,12 @@ precice, precice_dt, initial_data = None, 0.0, None
 # Initialize the adapter according to the specific participant
 if problem is ProblemType.DIRICHLET:
     precice = Adapter(adapter_config_filename="precice-adapter-config-D.json")
-    precice_dt = precice.initialize(coupling_boundary, mesh, V)
-    initial_data = precice.initialize_data(f_N_function)
+    precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=f_N_function)
 elif problem is ProblemType.NEUMANN:
     precice = Adapter(adapter_config_filename="precice-adapter-config-N.json")
-    precice_dt = precice.initialize(coupling_boundary, mesh, V_g)
-    initial_data = precice.initialize_data(u_D_function)
+    precice_dt = precice.initialize(coupling_boundary, read_function_space=V_g, write_object=u_D_function)
 
 boundary_marker = False
-
-coupling_expression = precice.create_coupling_expression(initial_data)
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -148,6 +144,7 @@ F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
 
 # Set boundary conditions at coupling interface once wrt to the coupling expression
+coupling_expression = precice.create_coupling_expression()
 if problem is ProblemType.DIRICHLET:
     # modify Dirichlet boundary condition on coupling interface
     bcs.append(DirichletBC(V, coupling_expression, coupling_boundary))
@@ -177,16 +174,26 @@ t = 0
 u_ref = interpolate(u_D, V)
 u_ref.rename("reference", " ")
 
+# mark mesh w.r.t ranks
+mesh_rank = MeshFunction("size_t", mesh, mesh.topology().dim())
+if problem is ProblemType.NEUMANN:
+    mesh_rank.set_all(MPI.rank(MPI.comm_world) + 4)
+else:
+    mesh_rank.set_all(MPI.rank(MPI.comm_world) + 0)
+mesh_rank.rename("myRank", "")
+
 # Generating output files
 temperature_out = File("out/%s.pvd" % precice.get_participant_name())
 ref_out = File("out/ref%s.pvd" % precice.get_participant_name())
 error_out = File("out/error%s.pvd" % precice.get_participant_name())
+ranks = File("out/ranks%s.pvd" % precice.get_participant_name())
 
 # output solution and reference solution at t=0, n=0
 n = 0
 print('output u^%d and u_ref^%d' % (n, n))
 temperature_out << u_n
 ref_out << u_ref
+ranks << mesh_rank
 
 error_total, error_pointwise = compute_errors(u_n, u_ref, V)
 error_out << error_pointwise
@@ -204,6 +211,10 @@ while precice.is_coupling_ongoing():
         precice.store_checkpoint(u_n, t, n)
 
     read_data = precice.read_data()
+    if problem is ProblemType.DIRICHLET and (domain_part is DomainPart.CIRCULAR or domain_part is DomainPart.RECTANGLE):
+        # We have to data for an arbitrary point that is not on the circle, to obtain exact solution.
+        # See https://github.com/precice/fenics-adapter/issues/113 for details.
+        read_data[(0, 0)] = u_D(0, 0)
 
     # Update the coupling expression with the new read data
     precice.update_coupling_expression(coupling_expression, read_data)
@@ -231,7 +242,7 @@ while precice.is_coupling_ongoing():
         n = n_cp
     else:  # update solution
         u_n.assign(u_np1)
-        t += dt
+        t += float(dt)
         n += 1
 
     if precice.is_time_window_complete():
@@ -246,8 +257,8 @@ while precice.is_coupling_ongoing():
         error_out << error_pointwise
 
     # Update Dirichlet BC
-    u_D.t = t + dt(0)
-    f.t = t + dt(0)
+    u_D.t = t + float(dt)
+    f.t = t + float(dt)
 
 # Hold plot
 precice.finalize()
