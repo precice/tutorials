@@ -65,16 +65,16 @@ subsection precice configuration
     set Scenario            = PF
 
     # Name of the precice configuration file
-    set precice config-file = precice-config.xml
+    set precice config-file = ../precice-config.xml
 
     # Name of the participant in the precice-config.xml file
     set Participant name    = Solid
 
     # Name of the coupling mesh in the precice-config.xml file
-    set Mesh name           = Solid_mesh
+    set Mesh name           = Solid-Mesh
 
     # Name of the read data in the precice-config.xml file
-    set Read data name      = Stress
+    set Read data name      = Forces
 
     # Name of the write data in the precice-config.xml file
     set Write data name     = Displacement

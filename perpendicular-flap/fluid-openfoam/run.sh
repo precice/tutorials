@@ -20,8 +20,8 @@ fi
 
 echo "Preparing and running the Fluid participant..."
 
-rm -rfv Fluid/0/
-cp -r Fluid/0.orig/ Fluid/0/
+rm -rfv 0/
+cp -r 0.orig/ 0/
 blockMesh -case Fluid
 checkMesh -case Fluid
 
@@ -31,11 +31,11 @@ cd Fluid
 	procs=$(getNumberOfProcessors)
 cd ..
 if [ $parallel -eq 1 ]; then
-    decomposePar -force -case Fluid
-    mpirun -np $procs $solver -parallel -case Fluid
-    reconstructPar -case Fluid
+    decomposePar -force
+    mpirun -np $procs $solver -parallel
+    reconstructPar
 else
-    $solver -case Fluid
+    $solver
 fi
 
 # Workaround for issue #26

@@ -3,38 +3,29 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 echo "Cleaning..."
 
-# Source tutorial clean functions
-. $WM_PROJECT_DIR/bin/tools/CleanFunctions
-
 # Participant 1: Fluid
 Participant1="Fluid"
 cd ${Participant1}
-    # Clean the case
-    cleanCase
-    rm -rfv 0
-    # Create an empty .foam file for ParaView
-    # Note: ".foam" triggers the native OpenFOAM reader of ParaView.
-    # Change to ".OpenFOAM" to use the OpenFOAM reader provided with OpenFOAM.
-    touch ${Participant1}.foam
+    # Clean the result and auxiliary files
+    rm -fv flow_*.vtk
+    rm -fv history_*.vtk
+    rm -fv restart_flow_*.dat
+    rm -fv forces_breakdown.dat
+    rm -fv surface_flow_*.csv
 cd ..
+
 # Remove the log files
-rm -fv ${Participant1}_blockMesh.log
-rm -fv ${Participant1}_checkMesh.log
-rm -fv ${Participant1}_potentialFoam.log
-rm -fv ${Participant1}_decomposePar.log
 rm -fv ${Participant1}.log
-rm -fv ${Participant1}_reconstructPar.log
+rm -fv Output/*.log
 
 # Participant 2: Solid
 Participant2="Solid"
 cd ${Participant2}
     # Clean the case
     rm -fv *.log
-    rm -fv flap.cvg
-    rm -fv flap.dat
-    rm -fv flap.frd
-    rm -fv flap.sta
-    rm -fv flap.12d
+    rm -fv *.vtk
+    rm -fv *.pvd
+    rm -fv FSI-S/*
 cd ..
 # Remove the log files
 rm -fv spooles.out
