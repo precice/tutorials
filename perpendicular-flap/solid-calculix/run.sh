@@ -11,4 +11,4 @@
 echo "Running the Solid participant..."
 
 # Run
-ccx_preCICE -i Solid/flap -precice-participant Calculix 2>&1 | tee Solid.log
+ccx_preCICE -i flap -precice-participant Solid 2>&1 | tee Solid.log

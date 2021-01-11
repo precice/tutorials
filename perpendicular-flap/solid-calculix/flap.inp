@@ -1,6 +1,6 @@
-*INCLUDE, INPUT=Solid/all.msh
-*INCLUDE, INPUT=Solid/fix1_beam.nam
-*INCLUDE, INPUT=Solid/interface_beam.nam
+*INCLUDE, INPUT=all.msh
+*INCLUDE, INPUT=fix1_beam.nam
+*INCLUDE, INPUT=interface_beam.nam
 *MATERIAL, Name=EL
 *ELASTIC
  200000, 0.3

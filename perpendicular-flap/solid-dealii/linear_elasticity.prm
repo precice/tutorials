@@ -64,5 +64,5 @@ subsection precice configuration
   set Read data name      = Forces
 
   # Name of the write data in the precice-config.xml file
-  set Write data name     = Displacement
+  set Write data name     = Displacements
 end
