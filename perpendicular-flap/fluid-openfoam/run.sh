@@ -22,14 +22,13 @@ echo "Preparing and running the Fluid participant..."
 
 rm -rfv 0/
 cp -r 0.orig/ 0/
-blockMesh -case Fluid
-checkMesh -case Fluid
+blockMesh
+checkMesh
 
 # Run
-cd Fluid
-	solver=$(getApplication)
-	procs=$(getNumberOfProcessors)
-cd ..
+solver=$(getApplication)
+procs=$(getNumberOfProcessors)
+
 if [ $parallel -eq 1 ]; then
     decomposePar -force
     mpirun -np $procs $solver -parallel

@@ -100,15 +100,15 @@ def main(inflow: 'inflow velocity' = 10,
 
   # preCICE setup
   configFileName = "../precice-config.xml"
-  participantName = "Nutils"
+  participantName = "Fluid"
   solverProcessIndex = 0
   solverProcessSize = 1
   interface = precice.Interface(participantName, solverProcessIndex, solverProcessSize)
   interface.configure(configFileName)
   
   # define coupling meshes
-  meshNameGP = "Nutils-Mesh-GP" # Gauss points
-  meshNameCC = "Nutils-Mesh-CC" # cell centers 
+  meshNameGP = "Fluid-Mesh" # Gauss points
+  meshNameCC = "Fluid-Mesh" # cell centers
   meshIDGP = interface.get_mesh_id(meshNameGP)
   meshIDCC = interface.get_mesh_id(meshNameCC)
 
