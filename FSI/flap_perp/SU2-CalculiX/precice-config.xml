@@ -27,33 +27,30 @@
          <read-data  name="DisplacementDeltas0" mesh="SU2_Mesh0"/>
          <mapping:nearest-neighbor
             direction="write" from="SU2_Mesh0" to="Calculix_Mesh"
-            constraint="conservative" timing="initial"/>
+            constraint="conservative"/>
          <mapping:nearest-neighbor
 	        direction="read" from="Calculix_Mesh" to="SU2_Mesh0"
-            constraint="consistent" timing="initial"/>
+            constraint="consistent"/>
       </participant>
 
       <participant name="Calculix">
          <use-mesh name="Calculix_Mesh" provide="yes"/>
          <write-data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
          <read-data  name="Forces0"      mesh="Calculix_Mesh"/>
-        <watch-point mesh="Calculix_Mesh" name="point1" coordinate="-0.05;1.0" />
+        <watch-point mesh="Calculix_Mesh" name="point1" coordinate="-0.05;1" />
       </participant>
 
       <m2n:sockets from="SU2_CFD" to="Calculix" />
-      
+
       <coupling-scheme:parallel-implicit>
-      <!--coupling-scheme:serial-implicit-->
            <participants first="SU2_CFD" second="Calculix"/>
-           <max-time-windows value="400"/>
+           <max-time-windows value="300"/>
            <time-window-size value="1e-2" />
            <exchange data="Forces0" mesh="Calculix_Mesh" from="SU2_CFD" to="Calculix"/>
            <exchange data="DisplacementDeltas0" mesh="Calculix_Mesh" from="Calculix" to="SU2_CFD" />
            <max-iterations value="50"/>
            <relative-convergence-measure limit="1e-3" data="DisplacementDeltas0" mesh="Calculix_Mesh"/>
            <relative-convergence-measure limit="1e-3" data="Forces0" mesh="Calculix_Mesh"/>
-           <extrapolation-order value="2"/>
-
            <acceleration:IQN-ILS>
             <data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
             <data name="Forces0" mesh="Calculix_Mesh"/>
@@ -63,13 +60,7 @@
             <max-used-iterations value="40"/>
             <time-windows-reused value="10"/>
            </acceleration:IQN-ILS>
-
-           <!-- <acceleration:aitken>
-              <data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
-              <initial-relaxation value="0.9"/>
-           </acceleration:aitken> -->
-           
       </coupling-scheme:parallel-implicit>
-      <!--/coupling-scheme:serial-implicit-->
-   </solver-interface>
+
+  </solver-interface>
 </precice-configuration>
