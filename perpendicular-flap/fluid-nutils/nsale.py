@@ -2,10 +2,6 @@
 
 from nutils import mesh, function, solver, export, cli
 import numpy, treelog
-import os, sys
-precice_root = os.getenv('PRECICE_ROOT')
-precice_python_adapter_root = precice_root+"/src/precice/bindings/python"
-sys.path.insert(0, precice_python_adapter_root)
 import precice
 
 # some helper function to shift variables by one timestep
