@@ -13,7 +13,7 @@
 *BOUNDARY
 Nfix1, 1, 3
 *BOUNDARY
-Nall, 2, 2 
+Nall, 3
 *CLOAD
  Nsurface, 1, 0.0
  Nsurface, 2, 0.0

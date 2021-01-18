@@ -3,47 +3,74 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 echo "Cleaning..."
 
-# Participant 1: Fluid
-Participant1="Fluid"
-cd ${Participant1}
+clean_case(){
+    cd ${1}
     # Clean the result and auxiliary files
-    rm -fv flow_*.vtk
-    rm -fv history_*.vtk
+    rm -fv *.vtk
+    rm -fv ${1}.log
+    rm -fv precice-*.log \
+    rm -fv precice-postProcessingInfo.log \
+    rm -fv precice-*-events.json
+}
+
+finished_clean(){
+cd ..
+}
+
+
+# Nutils
+Name="fluid-nutils"
+clean_case ${Name}
+finished_clean
+
+# Openfoam
+Name="fluid-openfoam"
+clean_case ${Name}
+    # Clean specialized files
+    if [ -n "${WM_PROJECT}" ]; 
+    then
+        . $WM_PROJECT_DIR/bin/tools/CleanFunctions
+        cleanCase
+        rm -rfv ./0
+        touch ${Name}.foam
+    fi
+finished_clean
+
+# SU2
+Name="fluid-su2"
+clean_case ${Name}
+    # Clean specialized files
     rm -fv restart_flow_*.dat
     rm -fv forces_breakdown.dat
     rm -fv surface_flow_*.csv
-cd ..
+finished_clean
 
-# Remove the log files
-rm -fv ${Participant1}.log
-rm -fv Output/*.log
+# Calculix
+Name="solid-calculix"
+clean_case ${Name}
+    # Clean specialized files
+    rm -fv flap.cvg
+    rm -fv flap.dat
+    rm -fv flap.frd
+    rm -fv flap.sta
+    rm -fv flap.12d
+finished_clean
 
-# Participant 2: Solid
-Participant2="Solid"
-cd ${Participant2}
-    # Clean the case
-    rm -fv *.log
-    rm -fv *.vtk
+# deal.II
+Name="solid-dealii"
+clean_case ${Name}
+    # Clean specialized files
+    rm -rfv ./*/*vtk
+finished_clean
+
+# Fenics
+Name="solid-fenics"
+clean_case ${Name}
+    # Clean specialized files
     rm -fv *.pvd
     rm -fv FSI-S/*
-cd ..
-# Remove the log files
-rm -fv spooles.out
-rm -fv ${Participant2}.log
-
-# Remove the preCICE-related log files
-echo "Deleting the preCICE log files..."
-rm -fv \
-    precice-*.log \
-    precice-postProcessingInfo.log \
-    precice-*-events.json
-    
-# Output files for preCICE versions before 1.2:
-rm -fv \
-    iterations-${Participant1}.txt iterations-${Participant2}.txt \
-    convergence-${Participant1}.txt convergence-${Participant2}.txt \
-    Events-${Participant1}.log Events-${Participant2}.log \
-    EventTimings-${Participant1}.log EventTimings-${Participant2}.log
+    rm -fv spooles.out
+finished_clean
 
 # Remove the preCICE address files
 rm -rfv precice-run
