@@ -1,8 +1,57 @@
 ---
 title: Perpendicular flap
 permalink: tutorials-perpendicular-flap.html
-keywords:
-summary:
+keywords: fluid-structure interaction, FSI, OpenFOAM, FEniCS, Nutils, deal.II, Calculix, SU2,
+summary: This tutorial describes how to run a fluid-structure interaction using preCICE and any fluid-solid solver combination of our [officially provided adapter codes](adapters-overview.html).
 ---
 
-{% include important.html content="We have not yet ported the documentation of the preCICE tutorials from the preCICE wiki to here. Please go to the [preCICE wiki](https://github.com/precice/precice/wiki#2-getting-started---tutorials)" %}
+## Setup
+
+In the following tutorial we model a two-dimensional fluid flowing through a channel. A solid, elastic flap is fixed to the floor of this channel. The flap oscillates due to the fluid pressure building up on its surface. The setup is shown schematically here:
+
+![Flap setup](images/setupDrawing.png)
+
+The simulated flow domain is 6 units long (x) and 4 units tall (y). The flap is located at the center of the bottom (x=0) and is 1 unit tall (y) and 0.1 units long (x). We set the fluid density $\{rho}_F= 1.0kg/m^{3}$, the kinematic viscosity $\{nu}_f= 1.0m^{2}/s$, the solid density $\{rho}_s= 3.0·10^{3}kg/m^{3}$, the Young’s modulus to $E= 4.0·10^{6} kg/ms^{2}$and the Poisson ratio $\{nu}_s = 0.3$. On the left boundary a constant inflow profile in x-direction of 10m/s is prescribed. The right boundary is an outflow and the top and bottom of the channel as well asthe surface of the flap are no-slip walls.
+
+## Available solvers
+
+Fluid participant:
+
+* OpenFOAM. For older OpenFOAM versions, the solver name will differ. If you are using OpenFOAM v1712 / 5.x or older have a look in the `fluid-openfoam/system/controlDict` file and set the appropriate solver name. For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
+
+* Nutils. For more information, have a look at the [Nutils adapter documentation](adapter-nutils-overview.html).
+
+* SU2. For more information, have a look at the [SU2 adapter documentation](adapter-su2-overview.html).
+
+Solid participant:
+
+* FEniCS. For more information, have a look at the [FeniCS adapter documentation](adapter-fenics.html).
+
+* CalculiX. For more information, have a look at the [CalculiX adapter documentation](adapter-calculix-overview.html)
+
+* deal.II. For more information, have a look at the [deal.II adapter documentation](adapter-dealii-overview.html). This tutorial is intended to be used with the linear solid solver, but works also with the nonlinear solver. Please copy thesolver executables to the `solid-dealii` folder or make it discoverable at runtime and update the `solid-dealii/run.sh` script.
+
+## Running the Simulation
+
+All listed solvers can be used in order to run the simulation. Open two separate terminals and start the desired fluid and solid participant by calling the respective run script `run.sh` located in the participant directory, e.g.
+
+```
+cd fluid-openfoam
+./run.sh
+```
+and
+```
+cd solid-fenics
+./run.sh
+```
+in order to use OpenFOAM and FeniCS for this test case.
+
+
+## Post-processing
+
+How to visualize the simulation results depends on the selected solvers, as usual. Most of the solver generate `vtk` files which can visualized using, e.g., ParaView.
+
+As we defined a watchpoint at the flap tip (see `precice-config.xml`), we can plot it with gnuplot.  The resulting graph shows either the displacement or the force at the flap tip.
+
+
+![Flap watchpoint](images/displacement_watchpoint.png)
