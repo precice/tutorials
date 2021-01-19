@@ -54,16 +54,17 @@
       <exchange data="Forces" mesh="Solid-Mesh" from="Fluid" to="Solid" />
       <exchange data="Displacements" mesh="Solid-Mesh" from="Solid" to="Fluid" />
       <max-iterations value="50" />
-      <relative-convergence-measure limit="5e-4" data="Displacements" mesh="Solid-Mesh" />
-      <relative-convergence-measure limit="5e-4" data="Forces" mesh="Solid-Mesh" />
+      <extrapolation-order value="2"/>
+      <relative-convergence-measure limit="1e-3" data="Displacements" mesh="Solid-Mesh" />
+      <relative-convergence-measure limit="1e-3" data="Forces" mesh="Solid-Mesh" />
       <acceleration:IQN-ILS>
         <data name="Displacements" mesh="Solid-Mesh" />
         <data name="Forces" mesh="Solid-Mesh" />
         <preconditioner type="residual-sum" />
-        <filter type="QR1" limit="1e-6" />
-        <initial-relaxation value="0.2" />
-        <max-used-iterations value="40" />
-        <time-windows-reused value="20" />
+        <filter type="QR2" limit="1e-3" />
+        <initial-relaxation value="0.1" />
+        <max-used-iterations value="50" />
+        <time-windows-reused value="5" />
       </acceleration:IQN-ILS>
     </coupling-scheme:parallel-implicit>
   </solver-interface>
