@@ -11,7 +11,7 @@ In the following tutorial we model a two-dimensional fluid flowing through a cha
 
 ![Flap setup](images/setupDrawing.png)
 
-The simulated flow domain is 6 units long (x) and 4 units tall (y). The flap is located at the center of the bottom (x=0) and is 1 unit tall (y) and 0.1 units long (x). We set the fluid density $\{rho}_F= 1.0kg/m^{3}$, the kinematic viscosity $\{nu}_f= 1.0m^{2}/s$, the solid density $\{rho}_s= 3.0·10^{3}kg/m^{3}$, the Young’s modulus to $E= 4.0·10^{6} kg/ms^{2}$and the Poisson ratio $\{nu}_s = 0.3$. On the left boundary a constant inflow profile in x-direction of 10m/s is prescribed. The right boundary is an outflow and the top and bottom of the channel as well asthe surface of the flap are no-slip walls.
+The simulated flow domain is 6 units long (x) and 4 units tall (y). The flap is located at the center of the bottom (x=0) and is 1 unit long (y) and 0.1 units thick (x). We set the fluid density $\{rho}_F= 1.0kg/m^{3}$, the kinematic viscosity $\{nu}_f= 1.0m^{2}/s$, the solid density $\{rho}_s= 3.0·10^{3}kg/m^{3}$, the Young’s modulus to $E= 4.0·10^{6} kg/ms^{2}$and the Poisson ratio $\{nu}_s = 0.3$. On the left boundary a constant inflow profile in x-direction of 10m/s is prescribed. The right boundary is an outflow and the top and bottom of the channel as well as the surface of the flap are no-slip walls.
 
 ## Available solvers
 

@@ -59,9 +59,6 @@ u_n = Function(V)
 v_n = Function(V)
 a_n = Function(V)
 
-# Function to calculate displacement Deltas
-u_delta = Function(V)
-u_ref = Function(V)
 
 f_N_function = interpolate(Expression(("1", "0"), degree=1), V)
 u_function = interpolate(Expression(("0", "0"), degree=1), V)
@@ -187,7 +184,6 @@ while precice.is_coupling_ongoing():
 
     if precice.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
-        u_ref = u_n.copy()
 
     # read data from preCICE and get a new coupling expression
     read_data = precice.read_data()
@@ -210,8 +206,7 @@ while precice.is_coupling_ongoing():
     dt = Constant(np.min([precice_dt, fenics_dt]))
 
     # Write new displacements to preCICE
-    u_delta = project(u_np1 - u_ref, V)
-    precice.write_data(u_delta)
+    precice.write_data(u_np1)
 
     # Call to advance coupling, also returns the optimum time step value
     precice_dt = precice.advance(dt(0))
