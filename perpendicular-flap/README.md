@@ -51,7 +51,7 @@ in order to use OpenFOAM and FeniCS for this test case.
 
 How to visualize the simulation results depends on the selected solvers, as usual. Most of the solver generate `vtk` files which can visualized using, e.g., ParaView.
 
-As we defined a watchpoint at the flap tip (see `precice-config.xml`), we can plot it with gnuplot.  The resulting graph shows either the displacement or the force at the flap tip.
+As we defined a watchpoint on the 'Solid' participant at the flap tip (see `precice-config.xml`), we can plot it with gnuplot using the script `plotDisplacement.sh.` You need to specify the directory of the selected solid participant as a command line argument, so that the script can pick-up the desired watchpoint file, e.g. `plotDisplacement solid-fenics`. The resulting graph shows either the displacement at the flap tip. You can modify the script to also plot the force instead.
 
 
 ![Flap watchpoint](images/displacement_watchpoint.png)
