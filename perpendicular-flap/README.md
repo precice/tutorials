@@ -19,7 +19,7 @@ Fluid participant:
 
 * OpenFOAM. For older OpenFOAM versions, the solver name will differ. If you are using OpenFOAM v1712 / 5.x or older have a look in the `fluid-openfoam/system/controlDict` file and set the appropriate solver name. The solver can run in parallel using the command line argument `run.sh -parallel`. For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
 
-* Nutils. For more information, have a look at the [Nutils adapter documentation](adapter-nutils-overview.html).
+* Nutils. For more information, have a look at the [Nutils adapter documentation](adapter-nutils-overview.html). This Nutils solver requires at least Nutils v6.0.
 
 * SU2. As opposed to the other fluid codes, SU2 is in particular specialized for compressible flows. Therefore the default simulation parameters haven been adjusted in order to pull the setup into the compressible flow regime. For more information, have a look at the [SU2 adapter documentation](adapter-su2-overview.html).
 
