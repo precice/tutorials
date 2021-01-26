@@ -74,8 +74,8 @@ subsection precice configuration
     set Mesh name           = Solid-Mesh
 
     # Name of the read data in the precice-config.xml file
-    set Read data name      = Forces
+    set Read data name      = Force
 
     # Name of the write data in the precice-config.xml file
-    set Write data name     = Displacements
+    set Write data name     = Displacement
 end

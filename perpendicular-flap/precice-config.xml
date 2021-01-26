@@ -8,24 +8,24 @@
   </log>
 
   <solver-interface dimensions="2">
-    <data:vector name="Forces" />
-    <data:vector name="Displacements" />
+    <data:vector name="Force" />
+    <data:vector name="Displacement" />
 
     <mesh name="Fluid-Mesh">
-      <use-data name="Forces" />
-      <use-data name="Displacements" />
+      <use-data name="Force" />
+      <use-data name="Displacement" />
     </mesh>
 
     <mesh name="Solid-Mesh">
-      <use-data name="Displacements" />
-      <use-data name="Forces" />
+      <use-data name="Displacement" />
+      <use-data name="Force" />
     </mesh>
 
     <participant name="Fluid">
       <use-mesh name="Fluid-Mesh" provide="yes" />
       <use-mesh name="Solid-Mesh" from="Solid" />
-      <write-data name="Forces" mesh="Fluid-Mesh" />
-      <read-data name="Displacements" mesh="Fluid-Mesh" />
+      <write-data name="Force" mesh="Fluid-Mesh" />
+      <read-data name="Displacement" mesh="Fluid-Mesh" />
       <mapping:rbf-thin-plate-splines
         direction="write"
         from="Fluid-Mesh"
@@ -40,8 +40,8 @@
 
     <participant name="Solid">
       <use-mesh name="Solid-Mesh" provide="yes" />
-      <write-data name="Displacements" mesh="Solid-Mesh" />
-      <read-data name="Forces" mesh="Solid-Mesh" />
+      <write-data name="Displacement" mesh="Solid-Mesh" />
+      <read-data name="Force" mesh="Solid-Mesh" />
       <watch-point mesh="Solid-Mesh" name="Flap-Tip" coordinate="0.0;1" />
     </participant>
 
@@ -51,15 +51,15 @@
       <time-window-size value="0.01" />
       <max-time value="5" />
       <participants first="Fluid" second="Solid" />
-      <exchange data="Forces" mesh="Solid-Mesh" from="Fluid" to="Solid" />
-      <exchange data="Displacements" mesh="Solid-Mesh" from="Solid" to="Fluid" />
+      <exchange data="Force" mesh="Solid-Mesh" from="Fluid" to="Solid" />
+      <exchange data="Displacement" mesh="Solid-Mesh" from="Solid" to="Fluid" />
       <max-iterations value="50" />
-      <extrapolation-order value="2"/>
-      <relative-convergence-measure limit="1e-3" data="Displacements" mesh="Solid-Mesh" />
-      <relative-convergence-measure limit="1e-3" data="Forces" mesh="Solid-Mesh" />
+      <extrapolation-order value="2" />
+      <relative-convergence-measure limit="1e-3" data="Displacement" mesh="Solid-Mesh" />
+      <relative-convergence-measure limit="1e-3" data="Force" mesh="Solid-Mesh" />
       <acceleration:IQN-ILS>
-        <data name="Displacements" mesh="Solid-Mesh" />
-        <data name="Forces" mesh="Solid-Mesh" />
+        <data name="Displacement" mesh="Solid-Mesh" />
+        <data name="Force" mesh="Solid-Mesh" />
         <preconditioner type="residual-sum" />
         <filter type="QR2" limit="1e-3" />
         <initial-relaxation value="0.1" />

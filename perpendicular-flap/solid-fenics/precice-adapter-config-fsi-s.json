@@ -3,7 +3,7 @@
   "config_file_name": "../precice-config.xml",
   "interface": {
       "coupling_mesh_name": "Solid-Mesh",
-      "write_data_name": "Displacements",
-      "read_data_name": "Forces"
+      "write_data_name": "Displacement",
+      "read_data_name": "Force"
     }
 }

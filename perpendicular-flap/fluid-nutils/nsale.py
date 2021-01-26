@@ -114,8 +114,8 @@ def main(inflow: 'inflow velocity' = 10,
   interface.set_mesh_vertices(meshIDGP, couplingsampleGP.npoints, verticesGP, dataIndicesGP)
 
   # coupling data
-  writeData = "Forces"
-  readData =  "Displacements"
+  writeData = "Force"
+  readData =  "Displacement"
   writedataID = interface.get_data_id(writeData, meshIDGP)
   readdataID = interface.get_data_id(readData, meshIDGP)
 

@@ -23,12 +23,12 @@ interfaces
     
     readData
     (
-      Displacements
+      Displacement
     );
     
     writeData
     (
-      Forces
+      Force
     );
   };
 };
