@@ -26,10 +26,10 @@ end
 
 subsection System properties
   # Poisson's ratio
-  set Poisson's ratio = 0.375
+  set Poisson's ratio = 0.3
 
   # Shear modulus
-  set Shear modulus   = 153846
+  set Shear modulus   = 1538462
 
   # Density
   set rho	      = 3000

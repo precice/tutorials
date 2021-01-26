@@ -24,10 +24,10 @@ end
 
 subsection System properties
   # mu (shear modulus)
-  set mu              = 1538461.539
+  set mu              = 1538462
 
   # lambda
-  set lambda          = 2307692.308
+  set lambda          = 2307692
 
   # density
   set rho             = 3000
