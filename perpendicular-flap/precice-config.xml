@@ -54,7 +54,6 @@
       <exchange data="Force" mesh="Solid-Mesh" from="Fluid" to="Solid" />
       <exchange data="Displacement" mesh="Solid-Mesh" from="Solid" to="Fluid" />
       <max-iterations value="50" />
-      <extrapolation-order value="2" />
       <relative-convergence-measure limit="1e-3" data="Displacement" mesh="Solid-Mesh" />
       <relative-convergence-measure limit="1e-3" data="Force" mesh="Solid-Mesh" />
       <acceleration:IQN-ILS>
