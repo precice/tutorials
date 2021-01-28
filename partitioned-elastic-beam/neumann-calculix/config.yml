@@ -3,7 +3,7 @@ participants:
         interfaces:
         - nodes-mesh: Calculix_Mesh2
           patch: surface
-          read-data: [Forces0]
-          write-data: [Displacements0]
+          read-data: [Force0]
+          write-data: [Displacement0]
           
 precice-config-file: ../precice-config.xml
