@@ -11,4 +11,4 @@ participants:
       patch: outer-interface
       read-data: [Sink-Temperature-Outer-Fluid, Heat-Transfer-Coefficient-Outer-Fluid]
       write-data: [Sink-Temperature-Solid, Heat-Transfer-Coefficient-Solid]
-precice-config-file: precice-config.xml
+precice-config-file: ../precice-config.xml

@@ -7,9 +7,9 @@ FoamFile
     object      preciceDict;
 }
 
-preciceConfig "precice-config.xml";
+preciceConfig "../precice-config.xml";
 
-participant Inner-Fluid;
+participant Outer-Fluid;
 
 modules (CHT);
 
@@ -17,7 +17,7 @@ interfaces
 {
   Interface1
   {
-    mesh              Inner-Fluid-to-Solid;
+    mesh              Outer-Fluid-to-Solid;
     patches           (interface);
     
     readData
@@ -28,8 +28,8 @@ interfaces
     
     writeData
     (
-      Sink-Temperature-Inner-Fluid
-      Heat-Transfer-Coefficient-Inner-Fluid
+      Sink-Temperature-Outer-Fluid
+      Heat-Transfer-Coefficient-Outer-Fluid
     );
   };
 };
