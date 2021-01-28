@@ -65,7 +65,7 @@ subsection precice configuration
     set Scenario            = PF
 
     # Name of the precice configuration file
-    set precice config-file = precice-config.xml
+    set precice config-file = ../precice-config.xml
 
     # Name of the participant in the precice-config.xml file
     set Participant name    = Solid2
