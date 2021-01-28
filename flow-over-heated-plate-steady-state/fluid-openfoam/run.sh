@@ -22,6 +22,7 @@ echo "Preparing and running the Fluid participant..."
 
 rm -rfv 0/
 cp -r 0.orig/ 0/
+blockMesh
 checkMesh
 
 # Run

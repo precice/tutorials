@@ -11,15 +11,14 @@ cd ${Participant1}
     rm -fv ${Participant1}/solid.resu
     rm -fv ${Participant1}/solid.rmed
     rm -fv ${Participant1}.log
-    rm -fvr ${Participant1}/REPE_OUT
-    mkdir ${Participant1}/REPE_OUT
+    rm -fvr ${Participant1}/REPE_OUT/*
     rm -fv \
       precice-*.log \
       precice-*-events.json
 cd ..
 
 # Participant 2: Fluid
-Participant2="Fluid"
+Participant2="fluid-openfoam"
 rm -fv ${Participant2}.log
 cd ${Participant2}
   cleanCase
