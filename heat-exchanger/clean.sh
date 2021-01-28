@@ -7,7 +7,7 @@ echo "Cleaning..."
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
 # Participant 1: Inner-Fluid
-Participant1="inner-fluid-openfoam"
+Participant1="fluid-inner-openfoam"
 cd ${Participant1}
     # Clean the case
     cleanCase
@@ -28,7 +28,7 @@ cd ${Participant1}
 cd ..
 
 # Participant 2: Outer-Fluid
-Participant2="outer-fluid-openfoam"
+Participant2="fluid-outer-openfoam"
 cd ${Participant2}
     # Clean the case
     cleanCase
