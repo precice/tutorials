@@ -1,7 +1,7 @@
 settings = \
 {'base-path': tutorial_root,
  'couplings': [['Solid-Interface', 'Fluid-Interface']],
- 'participants': {'Solid': {'directory': 'Solid',
+ 'participants': {'Solid': {'directory': '.',
                             'domain-decomposed': False,
                             'interfaces': [{'material-id': 0,
                                             'name': 'Solid-Interface',
@@ -14,7 +14,7 @@ settings = \
                                             'write-mesh': 'Solid-Interface-Nodes'}],
                             'non-linear': False,
                             'solver': 'Code_Aster'}},
- 'precice-config-file': 'precice-config.xml',
+ 'precice-config-file': '../precice-config.xml',
  'simulation': {'force-explicit': False,
                 'force-parallel': False,
                 'max-coupling-iterations': 100,
