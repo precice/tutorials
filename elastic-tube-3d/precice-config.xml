@@ -8,28 +8,28 @@
 
    <solver-interface dimensions="3">
 
-      <data:vector name="Forces0"/>
-      <data:vector name="DisplacementDeltas0"/>
+      <data:vector name="Force"/>
+      <data:vector name="DisplacementDelta"/>
 
       <mesh name="Fluid-Mesh-Nodes">
-        <use-data name="DisplacementDeltas0"/>
+        <use-data name="DisplacementDelta"/>
     </mesh>
 
       <mesh name="Fluid-Mesh-Faces">
-        <use-data name="Forces0"/>
+        <use-data name="Force"/>
     </mesh>
 
       <mesh name="Calculix_Mesh">
-         <use-data name="DisplacementDeltas0"/>
-         <use-data name="Forces0"/>
+         <use-data name="DisplacementDelta"/>
+         <use-data name="Force"/>
       </mesh>
 
       <participant name="Fluid">
          <use-mesh name="Calculix_Mesh" from="Calculix" safety-factor="1.5"/>
          <use-mesh name="Fluid-Mesh-Nodes" provide="yes"/>
          <use-mesh name="Fluid-Mesh-Faces" provide="yes"/>
-         <write-data name="Forces0" mesh="Fluid-Mesh-Faces"/>
-         <read-data  name="DisplacementDeltas0" mesh="Fluid-Mesh-Nodes"/>
+         <write-data name="Force" mesh="Fluid-Mesh-Faces"/>
+         <read-data  name="DisplacementDelta" mesh="Fluid-Mesh-Nodes"/>
          <mapping:nearest-neighbor direction="write" from="Fluid-Mesh-Faces" to="Calculix_Mesh" constraint="conservative" timing="initial" />
          <mapping:nearest-projection direction="read" from="Calculix_Mesh" to="Fluid-Mesh-Nodes" constraint="consistent" timing="initial"  />
       </participant>
@@ -37,30 +37,30 @@
       <participant name="Calculix">
          <use-mesh name="Calculix_Mesh" provide="yes"/>
          <use-mesh name="Fluid-Mesh-Faces" from="Fluid"/>
-         <write-data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
-         <read-data  name="Forces0" mesh="Calculix_Mesh"/>
+         <write-data name="DisplacementDelta" mesh="Calculix_Mesh"/>
+         <read-data  name="Force" mesh="Calculix_Mesh"/>
       </participant>
 
       <m2n:sockets from="Fluid" to="Calculix" exchange-directory=".." />
-      
+
       <coupling-scheme:serial-implicit>
            <participants first="Fluid" second="Calculix"/>
            <max-time-windows value="100"/>
            <time-window-size value="1e-4" />
-           <exchange data="Forces0" mesh="Calculix_Mesh" from="Fluid" to="Calculix"/>
-           <exchange data="DisplacementDeltas0" mesh="Calculix_Mesh" from="Calculix" to="Fluid" />
+           <exchange data="Force" mesh="Calculix_Mesh" from="Fluid" to="Calculix"/>
+           <exchange data="DisplacementDelta" mesh="Calculix_Mesh" from="Calculix" to="Fluid" />
            <max-iterations value="30"/>
-           <relative-convergence-measure limit="1e-3" data="DisplacementDeltas0" mesh="Calculix_Mesh"/>
-           <relative-convergence-measure limit="1e-3" data="Forces0" mesh="Calculix_Mesh"/>
+           <relative-convergence-measure limit="1e-3" data="DisplacementDelta" mesh="Calculix_Mesh"/>
+           <relative-convergence-measure limit="1e-3" data="Force" mesh="Calculix_Mesh"/>
 
            <acceleration:IQN-IMVJ>
-            <data name="DisplacementDeltas0" mesh="Calculix_Mesh"/>
+            <data name="DisplacementDelta" mesh="Calculix_Mesh"/>
             <preconditioner type="residual-sum"/>
             <initial-relaxation value="0.1"/>
             <max-used-iterations value="10"/>
             <time-windows-reused value="1"/>
-           </acceleration:IQN-IMVJ>		
-	 
+           </acceleration:IQN-IMVJ>
+
       </coupling-scheme:serial-implicit>
 
    </solver-interface>

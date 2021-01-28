@@ -3,8 +3,8 @@ participants:
         interfaces:
         - nodes-mesh-with-connectivity: Calculix_Mesh
           patch: interface
-          read-data: [Forces0]
-          write-data: [DisplacementDeltas0]
+          read-data: [Force]
+          write-data: [DisplacementDelta]
           
 precice-config-file: ../precice-config.xml
 
