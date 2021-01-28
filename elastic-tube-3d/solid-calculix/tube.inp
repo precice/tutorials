@@ -1,9 +1,9 @@
-*INCLUDE, INPUT=Solid/all.msh
-*INCLUDE, INPUT=Solid/inlet.nam
-*INCLUDE, INPUT=Solid/outlet.nam
-*INCLUDE, INPUT=Solid/wall.nam
-*INCLUDE, INPUT=Solid/interface.nam
-*INCLUDE, INPUT=Solid/interface.sur
+*INCLUDE, INPUT=all.msh
+*INCLUDE, INPUT=inlet.nam
+*INCLUDE, INPUT=outlet.nam
+*INCLUDE, INPUT=wall.nam
+*INCLUDE, INPUT=interface.nam
+*INCLUDE, INPUT=interface.sur
 *MATERIAL, Name=EL
 *ELASTIC
 300000.0, 0.3

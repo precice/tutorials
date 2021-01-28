@@ -7,23 +7,28 @@ echo "Cleaning..."
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
 # Participant 1: Fluid
-Participant1="Fluid"
+Participant1="fluid-openfoam"
 cd ${Participant1}
     # Clean the case
-    #cleanCase
+    # prevent cleaning the mesh
+    mv ./constant/polyMesh ./constant/mesh
+    cleanCase
     rm -rfv 0
+    # restore mesh files
+    mv ./constant/mesh ./constant/polyMesh
     # Create an empty .foam file for ParaView
     # Note: ".foam" triggers the native OpenFOAM reader of ParaView.
     # Change to ".OpenFOAM" to use the OpenFOAM reader provided with OpenFOAM.
     touch ${Participant1}.foam
+    rm -fv ${Participant1}_decomposePar.log
+    rm -fv ${Participant1}.log
+    rm -fv ${Participant1}_reconstructPar.log
+    rm -fv precice-*.log
+    rm -fv precice-*-events.json
 cd ..
-# Remove the log files
-rm -fv ${Participant1}_decomposePar.log
-rm -fv ${Participant1}.log
-rm -fv ${Participant1}_reconstructPar.log
 
 # Participant 2: Solid
-Participant2="Solid"
+Participant2="solid-calculix"
 cd ${Participant2}
     # Clean the case
     rm -fv *.log
@@ -31,28 +36,14 @@ cd ${Participant2}
     rm -fv tube.dat
     rm -fv tube.frd
     rm -fv tube.sta
+    rm -fv tube.12d
+    rm -fv spooles.out
+    rm -fv precice-*.log
+    rm -fv precice-*-events.json
 cd ..
-# Remove the log files
-rm -fv spooles.out
-rm -fv ${Participant2}.log
-
-# Remove the preCICE-related log files
-echo "Deleting the preCICE log files..."
-rm -fv \
-    precice-*.log \
-    precice-postProcessingInfo.log \
-    precice-*-events.json
-    
-# Output files for preCICE versions before 1.2:
-rm -fv \
-    iterations-${Participant1}.txt iterations-${Participant2}.txt \
-    convergence-${Participant1}.txt convergence-${Participant2}.txt \
-    Events-${Participant1}.log Events-${Participant2}.log \
-    EventTimings-${Participant1}.log EventTimings-${Participant2}.log
 
 # Remove the preCICE address files
 rm -rfv precice-run
-rm -fv .*.address
 
 echo "Cleaning complete!"
 #------------------------------------------------------------------------------
