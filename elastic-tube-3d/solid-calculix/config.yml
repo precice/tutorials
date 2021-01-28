@@ -6,5 +6,5 @@ participants:
           read-data: [Forces0]
           write-data: [DisplacementDeltas0]
           
-precice-config-file: ./precice-config.xml
+precice-config-file: ../precice-config.xml
 

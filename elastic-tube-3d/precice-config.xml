@@ -41,7 +41,7 @@
          <read-data  name="Forces0" mesh="Calculix_Mesh"/>
       </participant>
 
-      <m2n:sockets from="Fluid" to="Calculix" />
+      <m2n:sockets from="Fluid" to="Calculix" exchange-directory=".." />
       
       <coupling-scheme:serial-implicit>
            <participants first="Fluid" second="Calculix"/>
