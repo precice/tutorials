@@ -1,5 +1,9 @@
 *.log
-Fluid
 Solid/VTK
+Fluid/*
+!Fluid/0
+!Fluid/constant
+!Fluid/system
+!Fluid/Fluid.foam
 out
 *.txt

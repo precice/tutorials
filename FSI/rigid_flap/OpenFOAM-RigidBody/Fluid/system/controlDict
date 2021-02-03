@@ -1,0 +1,61 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    system;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Note: With OpenFOAM v1806 and OpenFOAM 6, the DyM solvers
+// were marked deprecated and merged into their respective standard solvers.
+application         pimpleFoam;    // OpenFOAM v1806, OpenFOAM 6, or newer
+//  application         pimpleDyMFoam; // OpenFOAM v1712, OpenFOAM 5.x, or older
+
+
+startFrom           startTime;
+
+startTime           0;
+
+stopAt              endTime;
+
+endTime             2.5;
+
+deltaT              2.5e-2;
+
+writeControl        adjustableRunTime;
+
+writeInterval       2.5e-2;
+
+purgeWrite          0;
+
+writeFormat         ascii;
+
+writePrecision      10;
+
+writeCompression    off;
+
+timeFormat          general;
+
+timePrecision       8;
+
+functions
+{
+    forces
+    {
+        type                forces;
+        libs                ( "libforces.so" );
+        patches             (flap);
+        rho                 rhoInf;
+        log                 true;
+        rhoInf              10;
+        CofR                (0 0 0);
+    }
+
+    preCICE_Adapter
+    {
+        type preciceAdapterFunctionObject;
+        libs ("libpreciceAdapterFunctionObject.so");
+    }
+}

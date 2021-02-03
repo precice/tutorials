@@ -30,8 +30,8 @@
     </participant>
     
     <participant name="HeatNeumann">
-	    <use-mesh name="NeumannNodes" provide="yes"/>
-	    <use-mesh name="DirichletNodes" from="HeatDirichlet"/>
+      <use-mesh name="NeumannNodes" provide="yes"/>
+      <use-mesh name="DirichletNodes" from="HeatDirichlet"/>
       <write-data name="Temperature" mesh="NeumannNodes"/>
       <read-data  name="Flux"        mesh="NeumannNodes"/>
       <mapping:nearest-projection direction="read" from="DirichletNodes" to="NeumannNodes"   constraint="consistent" timing="initial"/>
