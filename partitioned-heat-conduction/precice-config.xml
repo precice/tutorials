@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<precice-configuration>
+
+    <log>
+        <sink filter="%Severity% > debug and %Rank% = 0" format="---[precice] %ColorizedSeverity% %Message%" enabled="true"/>
+    </log>
+  
+  <solver-interface dimensions="2">
+    
+    <data:scalar name="Temperature"/>
+    <data:vector name="Flux"/>
+
+    <mesh name="DirichletNodes">
+        <use-data name="Temperature"/>
+        <use-data name="Flux"/>
+    </mesh>
+
+    <mesh name="NeumannNodes">
+       <use-data name="Temperature"/>   
+       <use-data name="Flux"/>
+    </mesh>
+
+    <participant name="HeatDirichlet">
+      <use-mesh name="DirichletNodes" provide="yes"/>
+      <use-mesh name="NeumannNodes" from="HeatNeumann"/>
+      <write-data name="Flux" mesh="DirichletNodes"/>
+      <read-data  name="Temperature" mesh="DirichletNodes"/>
+      <mapping:nearest-projection direction="read"  from="NeumannNodes"   to="DirichletNodes" constraint="consistent" timing="initial"/>
+    </participant>
+    
+    <participant name="HeatNeumann">
+      <use-mesh name="NeumannNodes" provide="yes"/>
+      <use-mesh name="DirichletNodes" from="HeatDirichlet"/>
+      <write-data name="Temperature" mesh="NeumannNodes"/>
+      <read-data  name="Flux"        mesh="NeumannNodes"/>
+      <mapping:nearest-projection direction="read" from="DirichletNodes" to="NeumannNodes"   constraint="consistent" timing="initial"/>
+    </participant>
+
+    <m2n:sockets from="HeatDirichlet" to="HeatNeumann" exchange-directory=".."/>
+
+      <coupling-scheme:serial-implicit>
+         <participants first="HeatDirichlet" second="HeatNeumann"/>
+         <max-time value="1"/>
+         <time-window-size value=".1" valid-digits="8"/>
+         <max-iterations value="100"/>
+         <exchange data="Flux"        mesh="DirichletNodes" from="HeatDirichlet" to="HeatNeumann" />
+         <exchange data="Temperature" mesh="NeumannNodes" from="HeatNeumann"   to="HeatDirichlet" initialize="true"/>
+         <relative-convergence-measure data="Flux"        mesh="DirichletNodes" limit="1e-5"/>
+         <relative-convergence-measure data="Temperature" mesh="NeumannNodes" limit="1e-5"/>
+         <acceleration:IQN-ILS> 
+            <data name="Temperature" mesh="NeumannNodes"/>
+            <initial-relaxation value="0.01"/>
+            <max-used-iterations value="3"/>
+            <time-windows-reused value="1"/>
+            <filter type="QR2" limit="1e-3"/>
+         </acceleration:IQN-ILS>
+      </coupling-scheme:serial-implicit>
+    
+  </solver-interface>
+</precice-configuration>
