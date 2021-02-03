@@ -86,8 +86,20 @@ def main(nelems: 'number of elements along edge' = 10,
 
     interface.initialize_data()
 
-    lhs0 = numpy.zeros(res0.shape)
-    t = precice_dt
+    t = 0
+
+    projection = domain.integral(
+        '(u - (1 + x_0 x_0 + alpha x_1 x_1 + beta ?t))^2' @ ns, degree=degree*2)
+    lhs0 = nutils.solver.optimize(
+        'lhs', projection, droptol=1e-15, arguments=dict(t=t))
+    bezier = domain.sample('bezier', degree * 2)
+    x, u, uexact = bezier.eval(['x_i', 'u', 'uexact'] @ ns, lhs=lhs0, t=t)
+
+    with treelog.add(treelog.DataLog()):
+        nutils.export.vtk('solution-' + side,
+                          bezier.tri, x, Temperature=u, exact=uexact)
+
+    t += precice_dt
 
     cons0 = nutils.solver.optimize(
         'lhs', sqr0, droptol=1e-15, arguments=dict(t=t))
@@ -96,7 +108,9 @@ def main(nelems: 'number of elements along edge' = 10,
         nutils.function.outer(ns.basis), degree=degree * 2)
     projectioncons = numpy.zeros(res0.shape)
     projectioncons[projectionmatrix.rowsupp(1e-15)] = numpy.nan
-    def fluxdofs(v): return projectionmatrix.solve(v, constrain=projectioncons)
+
+    def fluxdofs(v): return projectionmatrix.solve(
+        v, constrain=projectioncons)
 
     while interface.is_coupling_ongoing():
         if interface.is_action_required(action_write_iteration_checkpoint()):
@@ -154,7 +168,7 @@ def main(nelems: 'number of elements along edge' = 10,
 
                 with treelog.add(treelog.DataLog()):
                     nutils.export.vtk('solution-' + side,
-                                      bezier.tri, x, fem=u, exact=uexact)
+                                      bezier.tri, x, Temperature=u, exact=uexact)
 
             t += dt
 
