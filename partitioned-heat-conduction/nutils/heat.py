@@ -99,6 +99,11 @@ def main(nelems: 'number of elements along edge' = 10,
     def fluxdofs(v): return projectionmatrix.solve(v, constrain=projectioncons)
 
     while interface.is_coupling_ongoing():
+        if interface.is_action_required(action_write_iteration_checkpoint()):
+            lhscheckpoint = lhs0
+            conscheckpoint = cons0
+            interface.mark_action_fulfilled(
+                action_write_iteration_checkpoint())
 
         if interface.is_read_data_available():
             readdata = interface.read_block_scalar_data(
@@ -114,12 +119,6 @@ def main(nelems: 'number of elements along edge' = 10,
                 cons = cons0
                 res = res0 + couplingsample.integral(ns.basis * coupledata)
 
-        if interface.is_action_required(action_write_iteration_checkpoint()):
-            lhscheckpoint = lhs0
-            conscheckpoint = cons0
-            interface.mark_action_fulfilled(
-                action_write_iteration_checkpoint())
-
         dt = min(timestepsize, precice_dt)
 
         lhs = nutils.solver.solve_linear(
@@ -127,7 +126,7 @@ def main(nelems: 'number of elements along edge' = 10,
 
         if interface.is_write_data_required(dt):
             if side == 'Dirichlet':
-                fluxvalues = res.eval(lhs0=lhs0, lhs=lhs, dt=dt)
+                fluxvalues = res.eval(lhs0=lhs0, lhs=lhs, dt=dt, t=t)
                 writedata = couplingsample.eval(
                     'flux' @ ns, fluxdofs=fluxdofs(fluxvalues))
             else:
