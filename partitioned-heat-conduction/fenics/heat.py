@@ -53,14 +53,18 @@ def determine_gradient(V_g, u, flux):
     solve(a == L, flux)
 
 
-parser = argparse.ArgumentParser(description='Solving heat equation for simple or complex interface case')
-parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
-parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
+parser = argparse.ArgumentParser(
+    description='Solving heat equation for simple or complex interface case')
+parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem",
+                    dest='dirichlet', action='store_true')
+parser.add_argument("-n", "--neumann", help="create a neumann problem",
+                    dest='neumann', action='store_true')
 
 args = parser.parse_args()
 
 fenics_dt = .1  # time step size
-error_tol = 10 ** -6  # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
+# Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
+error_tol = 10 ** -6
 
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
@@ -77,15 +81,17 @@ mesh, coupling_boundary, remaining_boundary = get_geometry(domain_part)
 # Define function space using mesh
 V = FunctionSpace(mesh, 'P', 2)
 V_g = VectorFunctionSpace(mesh, 'P', 1)
+W = V_g.sub(0).collapse()
 
 # Define boundary conditions
-u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, t=0)
+u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t',
+                 degree=2, alpha=alpha, beta=beta, t=0)
 u_D_function = interpolate(u_D, V)
 
 if problem is ProblemType.DIRICHLET:
-    # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
-    f_N = Expression(("2 * x[0]", "2 * alpha * x[1]"), degree=1, alpha=alpha, t=0)
-    f_N_function = interpolate(f_N, V_g)
+    # Define flux in x direction
+    f_N = Expression("2 * x[0]", degree=1, alpha=alpha, t=0)
+    f_N_function = interpolate(f_N, W)
 
 # Define initial value
 u_n = interpolate(u_D, V)
@@ -96,10 +102,12 @@ precice, precice_dt, initial_data = None, 0.0, None
 # Initialize the adapter according to the specific participant
 if problem is ProblemType.DIRICHLET:
     precice = Adapter(adapter_config_filename="precice-adapter-config-D.json")
-    precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=f_N_function)
+    precice_dt = precice.initialize(
+        coupling_boundary, read_function_space=V, write_object=f_N_function)
 elif problem is ProblemType.NEUMANN:
     precice = Adapter(adapter_config_filename="precice-adapter-config-N.json")
-    precice_dt = precice.initialize(coupling_boundary, read_function_space=V_g, write_object=u_D_function)
+    precice_dt = precice.initialize(
+        coupling_boundary, read_function_space=W, write_object=u_D_function)
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -112,15 +120,16 @@ F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
 
-# Set boundary conditions at coupling interface once wrt to the coupling expression
+# Set boundary conditions at coupling interface once wrt to the coupling
+# expression
 coupling_expression = precice.create_coupling_expression()
 if problem is ProblemType.DIRICHLET:
     # modify Dirichlet boundary condition on coupling interface
     bcs.append(DirichletBC(V, coupling_expression, coupling_boundary))
 if problem is ProblemType.NEUMANN:
-    # modify Neumann boundary condition on coupling interface, modify weak form correspondingly
-    normal = FacetNormal(mesh)
-    F += -v * dot(normal, coupling_expression) * dolfin.ds
+    # modify Neumann boundary condition on coupling interface, modify weak
+    # form correspondingly
+    F += v * coupling_expression * dolfin.ds
 
 a, L = lhs(F), rhs(F)
 
@@ -158,7 +167,8 @@ error_total, error_pointwise = compute_errors(u_n, u_ref, V)
 error_out << error_pointwise
 
 # set t_1 = t_0 + dt, this gives u_D^1
-u_D.t = t + dt(0)  # call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
+# call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
+u_D.t = t + dt(0)
 f.t = t + dt(0)
 
 if problem is ProblemType.DIRICHLET:
@@ -167,7 +177,8 @@ if problem is ProblemType.DIRICHLET:
 
 while precice.is_coupling_ongoing():
 
-    if precice.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
+    # write checkpoint
+    if precice.is_action_required(precice.action_write_iteration_checkpoint()):
         precice.store_checkpoint(u_n, t, n)
 
     read_data = precice.read_data()
@@ -184,14 +195,16 @@ while precice.is_coupling_ongoing():
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem reads temperature and writes flux on boundary to Neumann problem
         determine_gradient(V_g, u_np1, flux)
-        precice.write_data(flux)
+        flux_x = interpolate(flux.sub(0), W)
+        precice.write_data(flux_x)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
         precice.write_data(u_np1)
 
     precice_dt = precice.advance(dt(0))
 
-    if precice.is_action_required(precice.action_read_iteration_checkpoint()):  # roll back to checkpoint
+    # roll back to checkpoint
+    if precice.is_action_required(precice.action_read_iteration_checkpoint()):
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
         u_n.assign(u_cp)
         t = t_cp
@@ -204,7 +217,8 @@ while precice.is_coupling_ongoing():
     if precice.is_time_window_complete():
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
-        error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
+        error, error_pointwise = compute_errors(
+            u_n, u_ref, V, total_error_tol=error_tol)
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
         print('output u^%d and u_ref^%d' % (n, n))
