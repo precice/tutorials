@@ -21,6 +21,8 @@ You can either couple a solver with itself or different solvers with each other.
 
 ## Running the simulation
 
+### FEniCS
+
 For choosing whether you want to run the Dirichlet-kind and a Neumann-kind participant, please provide the following commandline input:
 
 * `-d` flag will enforce Dirichlet boundary conditions on the coupling interface.
@@ -45,6 +47,31 @@ If you want to use Nutils for one or both sides of the setup, just `cd nutils`. 
 ```
 mpirun -n <N_PROC> python3 heat.py -d
 ```
+
+### Nutils
+
+For choosing whether you want to run the Dirichlet-kind and a Neumann-kind participant, please provide the following commandline input:
+
+* `side=Dirichlet` will enforce Dirichlet boundary conditions on the coupling interface.
+* `side=Neumann` will enforce Neumann boundary conditions on the coupling interface.
+
+For running the case, open two terminals and:
+
+```
+cd nutils
+python3 heat.py side=Dirichlet
+```
+
+and
+
+```
+cd nutils
+python3 heat.py side=Neumann
+```
+
+### Any combination of the solvers above
+
+Feel free to mix any combination of Dirichlet- and Neumann-solvers by mixing the respective commands described above.
 
 ## Visualization
 
