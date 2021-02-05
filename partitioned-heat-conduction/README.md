@@ -17,7 +17,7 @@ You can either couple a solver with itself or different solvers with each other.
 
 * `fenics`, requires you to install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). 
 
-* `nutils`, requires you to install [Nutils]
+* :construction: This case is still under construction. See https://github.com/precice/tutorials/issues/152. :construction: `nutils`, requires you to install [Nutils] 
 
 ## Running the simulation
 
