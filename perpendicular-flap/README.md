@@ -44,7 +44,7 @@ and
 cd solid-fenics
 ./run.sh
 ```
-in order to use OpenFOAM and FeniCS for this test case.
+in order to use OpenFOAM and FEniCS for this test case.
 
 
 ## Post-processing
