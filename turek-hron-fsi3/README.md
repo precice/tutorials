@@ -26,7 +26,7 @@ Fluid participant:
 Solid participant:
 
 * deal.II. For more information, have a look at the [deal.II adapter documentation](adapter-dealii-overview.html). This tutorial requires the nonlinear solid solver. Please copy the nonlinear solver executable to the `solid-dealii` folder or make it discoverable at runtime and update the `solid-dealii/run.sh` script.
-
+* FEniCS.
 
 ## Running the Simulation
 
@@ -39,6 +39,11 @@ cd fluid-openfoam
 and
 ```
 cd solid-dealii
+./run.sh
+```
+or
+```
+cd solid-fenics
 ./run.sh
 ```
 
