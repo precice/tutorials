@@ -24,6 +24,6 @@ The prepared case already contains configuration and mesh files, so that the sim
 
 To see an animated visualization of the results, you can run the script `./visualize.py`. It joins the `*.frd` output files of both participants to form a new file with the entire beam. Then, it calls `cgx`, since CalculiX results can only be visualized with this graphic tool. If you want to use e.g. Paraview, you may use converting tools.
 
-[beam results](images/beam_results.png)
+![beam results](images/beam_results.png)
 
 You can open result files directly with `cgx` with the command `cgx beam1.frd`, for instance.

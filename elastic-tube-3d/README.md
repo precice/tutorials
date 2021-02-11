@@ -1,19 +1,34 @@
-# Tutorial for an FSI simulation of a three-dimensional expanding tube scenario 
+---
+title: Elastic tube 3D
+permalink: tutorials-elastic-tube-3d.html
+keywords: FSI, OpenFOAM, CalculiX, nearest-projection
+summary: Tutorial for an FSI simulation of a three-dimensional expanding tube scenario
+---
 
-This tutorial is described in the [preCICE wiki](https://github.com/precice/precice/wiki/Tutorial-for-FSI-with-OpenFOAM-and-CalculiX).
+## Setup
 
-It is known to work with OpenFOAM 4.1, 5.0, and CalculiX 2.15, but it should also work with newer versions. Have a look into our [Notes on OpenFOAM](https://github.com/precice/openfoam-adapter/wiki/Notes-on-OpenFOAM).
+The expanding tube test case involves a cylinder fluid domain surrounded by a solid domain. A pressure inlet boundary condition is applied at the inlet for 3 milliseconds, and then 0 set to zero for a further 7 millisecond. The pressure of the fluid expands the tube which then relaxes once the pressure decreases.
 
-The case files are prepared for the latest versions of OpenFOAM and use the solver `pimpleFoam`. **In case you are using a previous OpenFOAM version** you need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file.
+The expanding tube test case comes with the interface surface mesh connectivity of the solid domain. This allows the use of nearest-projection mapping of the displacements of the solid domain. In order to run the example with nearest projection mapping, the "node-mesh-with-connectivity" has been specified in the `solid-calculix/config.yml` file. More details can be found in the [CalculiX configuration description](adapter-calculix-config.html#nearest-projection-mapping).
 
-You may run the coupled simulation in serial using the script `Allrun` or in parallel with `Allrun -parallel` (`Allrun_parallel` is a shortcut to this). The output of each step will be redirected to log files. You can cleanup the simulation using `Allclean`.
+## Available solvers
 
-There is an [open issue](https://github.com/precice/openfoam-adapter/issues/26) that leads to additional "empty" result directories when running with some OpenFOAM versions, leading to inconveniences during post-processing. Please run the script `removeObsoleteSolvers.sh` to delete the additional files.
+Fluid participant:
 
-You may adjust the end time in the precice-config_*.xml, or interupt the execution earlier if you want.
+* OpenFOAM. This tutorial is known to work with OpenFOAM 4.1, 5.0, but it should also work with newer versions. The case files are prepared for the latest versions of OpenFOAM and use the solver `pimpleFoam`. In case you are using a previous OpenFOAM version you need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
 
-This case was contributed by Kyle Davis (Universität Stuttgart).
+Solid participant:
 
-## Disclaimer
+* CalculiX. This tutorial is known to work with CalculiX 2.15, but it should also work with newer versions. For more information, have a look at the [CalculiX adapter documentation](adapter-calculix-overview.html).
 
-This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM® and OpenCFD® trade marks.
+## Running the simulation
+
+You can start the simulation by running the script `./run.sh` located in each participant directory. OpenFOAM can be executed in parallel by using an additional `run.sh -parallel` flag. The default setting uses 4 MPI ranks.
+
+## Post-processing
+
+You can visualize the results using paraView or `cgx`(for native CalculiX resul files), as usual. The total deformation is rather small. Multiplying the deformation by factor of 10 (warp by vector filter in paraView) and visualizing the fluid domain at `t=0.005s` looks as follows:
+
+![result tube](images/tube_result.png)
+
+{% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
