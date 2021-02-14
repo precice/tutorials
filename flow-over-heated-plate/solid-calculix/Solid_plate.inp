@@ -1,7 +1,7 @@
-*INCLUDE, INPUT=Solid/all.msh
-*INCLUDE, INPUT=Solid/fix1.nam
-*INCLUDE, INPUT=Solid/interface.nam
-*INCLUDE, INPUT=Solid/sinterface.sur
+*INCLUDE, INPUT=all.msh
+*INCLUDE, INPUT=fix1.nam
+*INCLUDE, INPUT=interface.nam
+*INCLUDE, INPUT=sinterface.sur
 
 
 *MATERIAL, Name=EL
@@ -11,6 +11,7 @@
 446
 *CONDUCTIVITY
 50
+
 
 *SOLID SECTION, Elset=Eall, Material=EL
 
@@ -25,10 +26,10 @@ Nall,400
 Nfix1, 11, 11, 400
 
 *DFLUX
-*INCLUDE, INPUT=Solid/sinterface.dfl
+*INCLUDE, INPUT=sinterface.dfl
 
 *FILM
-*INCLUDE, INPUT=Solid/sinterface.flm
+*INCLUDE, INPUT=sinterface.flm
  
 *NODE FILE
 NT

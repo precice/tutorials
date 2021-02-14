@@ -1,9 +1,9 @@
 participants:
-    Calculix:
+    Solid:
         interfaces:
-        - mesh: Calculix_Mesh
+        - mesh: Solid-Mesh
           patch: sinterface
-          read-data: [Sink-Temperature-0]
-          write-data: [Heat-Flux-0]
+          read-data: [Temperature]
+          write-data: [Heat-Flux]
           
 precice-config-file: ../precice-config.xml

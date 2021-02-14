@@ -35,7 +35,7 @@ def main(elemsize: 'mesh width in x and y direction' = 0.05,
   
   # preCICE setup
   configFileName = "../precice-config.xml"
-  participantName = "Nutils"
+  participantName = "Solid"
   solverProcessIndex = 0
   solverProcessSize = 1
   interface = precice.Interface(participantName, configFileName, solverProcessIndex, solverProcessSize)

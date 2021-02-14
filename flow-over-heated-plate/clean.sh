@@ -52,11 +52,11 @@ finished_clean
 Name="solid-calculix"
 clean_case ${Name}
     # Clean specialized files
-    rm -fv flap.cvg
-    rm -fv flap.dat
-    rm -fv flap.frd
-    rm -fv flap.sta
-    rm -fv flap.12d
+    rm -fv *.cvg
+    rm -fv *.dat
+    rm -fv *.frd
+    rm -fv *.sta
+    rm -fv *.12d
 finished_clean
 
 # Fenics
