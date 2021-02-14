@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0"?>
 <precice-configuration>
   <log>
     <sink
@@ -11,55 +11,51 @@
     <data:scalar name="Temperature" />
     <data:scalar name="Heat-Flux" />
 
-    <mesh name="OpenFOAM-Mesh">
+    <mesh name="Fluid-Mesh">
       <use-data name="Temperature" />
       <use-data name="Heat-Flux" />
     </mesh>
 
-    <mesh name="Nutils-Mesh-GP">
+    <mesh name="Solid-Mesh">
       <use-data name="Temperature" />
-    </mesh>
-
-    <mesh name="Nutils-Mesh-CC">
       <use-data name="Heat-Flux" />
     </mesh>
 
-    <participant name="OpenFOAM">
-      <use-mesh name="OpenFOAM-Mesh" provide="yes" />
-      <read-data name="Heat-Flux" mesh="OpenFOAM-Mesh" />
-      <write-data name="Temperature" mesh="OpenFOAM-Mesh" />
+    <participant name="Fluid">
+      <use-mesh name="Fluid-Mesh" provide="yes" />
+      <read-data name="Heat-Flux" mesh="Fluid-Mesh" />
+      <write-data name="Temperature" mesh="Fluid-Mesh" />
     </participant>
 
-    <participant name="Nutils">
-      <use-mesh name="OpenFOAM-Mesh" from="OpenFOAM" />
-      <use-mesh name="Nutils-Mesh-GP" provide="yes" />
-      <use-mesh name="Nutils-Mesh-CC" provide="yes" />
+    <participant name="Solid">
+      <use-mesh name="Fluid-Mesh" from="Fluid" />
+      <use-mesh name="Solid-Mesh-GP" provide="yes" />
       <mapping:nearest-neighbor
         direction="write"
-        from="Nutils-Mesh-CC"
-        to="OpenFOAM-Mesh"
+        from="Solid-Mesh"
+        to="Fluid-Mesh"
         constraint="consistent" />
       <mapping:nearest-neighbor
         direction="read"
-        from="OpenFOAM-Mesh"
-        to="Nutils-Mesh-GP"
+        from="Fluid-Mesh"
+        to="Solid-Mesh"
         constraint="consistent" />
-      <read-data name="Temperature" mesh="Nutils-Mesh-GP" />
-      <write-data name="Heat-Flux" mesh="Nutils-Mesh-CC" />
+      <read-data name="Temperature" mesh="Solid-Mesh" />
+      <write-data name="Heat-Flux" mesh="Solid-Mesh" />
     </participant>
 
-    <m2n:sockets from="OpenFOAM" to="Nutils" exchange-directory=".." />
+    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
 
     <coupling-scheme:serial-implicit>
       <time-window-size value="0.01" />
       <max-time value="1" />
       <max-iterations value="30" />
-      <participants first="OpenFOAM" second="Nutils" />
-      <exchange data="Temperature" mesh="OpenFOAM-Mesh" from="OpenFOAM" to="Nutils" />
-      <exchange data="Heat-Flux" mesh="OpenFOAM-Mesh" from="Nutils" to="OpenFOAM" />
-      <relative-convergence-measure limit="1.0e-5" data="Temperature" mesh="OpenFOAM-Mesh" />
+      <participants first="Fluid" second="Solid" />
+      <exchange data="Temperature" mesh="Fluid-Mesh" from="Fluid" to="Solid" />
+      <exchange data="Heat-Flux" mesh="Fluid-Mesh" from="Solid" to="Fluid" />
+      <relative-convergence-measure limit="1.0e-5" data="Temperature" mesh="Fluid-Mesh" />
       <acceleration:aitken>
-        <data mesh="OpenFOAM-Mesh" name="Heat-Flux" />
+        <data mesh="Fluid-Mesh" name="Heat-Flux" />
         <initial-relaxation value="0.01" />
       </acceleration:aitken>
     </coupling-scheme:serial-implicit>
