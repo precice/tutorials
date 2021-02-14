@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  5                                     |
+|  \\    /   O peration     | Version:  2.4.0                                 |
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -18,35 +18,22 @@ convertToMeters 1;
 
 vertices
 (
-    (0 0 0)
+
+    (0 -.25 0)
+    (1 -.25 0)
     (1 0 0)
-    (1 .5 0)
-    (0 .5 0)
+    (0 0 0)
 
-    (0 0 .05)
-    (1 0 .05)
-    (1 .5 .05)
-    (0 .5 .05)
-
-    (3 0 0)
-    (3 .5 0)
-
-    (3 0 .05)
-    (3 .5 .05)
-
-    (-.5 0 0)
-    (-.5 .5 0)
-
-    (-.5 .5 .05)
-    (-.5 0 .05)
+    (0 -.25 .4)
+    (1 -.25 .4)
+    (1 0 .4)
+    (0 0 .4)
 
 );
 
 blocks
 (
-    hex (12 0 3 13 15 4 7 14) (81 41 1) simpleGrading (.2 15 1)
-    hex (0 1 2 3 4 5 6 7) (161 41 1) simpleGrading (5 15 1)
-    hex (1 8 9 2 5 10 11 6) (51 41 1) simpleGrading (1 15 1)
+    hex (0 1 2 3 4 5 6 7) (32 16 1) simpleGrading (1 1 1)
 );
 
 edges
@@ -56,54 +43,34 @@ edges
 boundary
 (
 
-    inlet
+    left
     {
         type wall;
         faces
         (
-            (13 12 15 14)
+            (4 7 3 0)
         );
     }
 
-    outlet
+    right
     {
         type wall;
         faces
         (
-            (8 9 11 10)
+            (1 2 6 5)
         );
     }
 
-    top
+    interface
     {
         type wall;
         faces
         (
             (7 6 2 3)
-            (9 2 6 11)
-            (13 3 7 14)
-        );
-    }
-
-    slip-bottom
-    {
-        type wall;
-        faces
-        (
-            (15 12 0 4)
         );
     }
 
     bottom
-    {
-        type wall;
-        faces
-        (
-            (1 8 10 5)
-        );
-    }
-
-    interface
     {
         type wall;
         faces

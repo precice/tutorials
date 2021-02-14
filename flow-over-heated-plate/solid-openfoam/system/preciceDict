@@ -7,9 +7,9 @@ FoamFile
     object      preciceDict;
 }
 
-preciceConfig "../precice-config.xml";
+preciceConfig "precice-config.xml";
 
-participant OpenFOAM;
+participant Solid;
 
 modules (CHT);
 
@@ -17,17 +17,23 @@ interfaces
 {
   Interface1
   {
-    mesh              OpenFOAM-Mesh;
+    mesh              Solid-Mesh;
     patches           (interface);
     
     readData
     (
-      Heat-Flux
+      Temperature
     );
     
     writeData
     (
-      Temperature
+      Heat-Flux
     );
   };
+};
+
+CHT
+{
+   k   [ 1  1 -3 -1 0 0 0 ] 100;
+   solverType "basic";
 };
