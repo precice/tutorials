@@ -29,7 +29,7 @@
 
     <participant name="Solid">
       <use-mesh name="Fluid-Mesh" from="Fluid" />
-      <use-mesh name="Solid-Mesh-GP" provide="yes" />
+      <use-mesh name="Solid-Mesh" provide="yes" />
       <mapping:nearest-neighbor
         direction="write"
         from="Solid-Mesh"
