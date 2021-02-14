@@ -1,0 +1,37 @@
+*INCLUDE, INPUT=Solid/all.msh
+*INCLUDE, INPUT=Solid/fix1.nam
+*INCLUDE, INPUT=Solid/interface.nam
+*INCLUDE, INPUT=Solid/sinterface.sur
+
+
+*MATERIAL, Name=EL
+*DENSITY
+3000
+*SPECIFIC HEAT
+446
+*CONDUCTIVITY
+50
+
+*SOLID SECTION, Elset=Eall, Material=EL
+
+*INITIAL CONDITIONs, TYPE=TEMPERATURE
+Nall,400
+
+*STEP, INC=1000000
+*HEAT TRANSFER, DIRECT, STEADY STATE
+1e-2, 10
+
+*BOUNDARY
+Nfix1, 11, 11, 400
+
+*DFLUX
+*INCLUDE, INPUT=Solid/sinterface.dfl
+
+*FILM
+*INCLUDE, INPUT=Solid/sinterface.flm
+ 
+*NODE FILE
+NT
+
+
+*END STEP
