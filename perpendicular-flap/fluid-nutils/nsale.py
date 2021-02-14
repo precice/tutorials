@@ -145,7 +145,7 @@ def main(inflow: 'inflow velocity' = 10,
 
   # boundary conditions mesh displacements
   sqr = domain.boundary['inflow,outflow,wall'].integral('d_i d_i' @ ns, degree=2)
-  meshcons0 = solver.optimize('meshdofs', sqr, droptol=1e-10)
+  meshcons0 = solver.optimize('meshdofs', sqr, droptol=1e-15)
 
   # weak form mesh displacements
   meshsqr = domain.integral('d_i,x0_j d_i,x0_j d:x0' @ ns, degree=2)
@@ -165,7 +165,7 @@ def main(inflow: 'inflow velocity' = 10,
       readdata = interface.read_block_vector_data(readdataID, dataIndices)
       coupledata = couplingsample.asfunction(readdata)
       sqr = couplingsample.integral(((ns.d - coupledata)**2).sum(0))
-      meshcons = solver.optimize('meshdofs', sqr, droptol=1e-10, constrain=meshcons0)
+      meshcons = solver.optimize('meshdofs', sqr, droptol=1e-15, constrain=meshcons0)
       meshdofs = solver.optimize('meshdofs', meshsqr, constrain=meshcons)
       
     # save checkpoint
@@ -180,7 +180,7 @@ def main(inflow: 'inflow velocity' = 10,
       interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
     # solve fluid equations
-    lhs1 = solver.newton('lhs', res, lhs0=lhs0, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt, meshdofs=meshdofs, oldmeshdofs=oldmeshdofs, oldoldmeshdofs=oldoldmeshdofs, oldoldoldmeshdofs=oldoldoldmeshdofs)).solve(tol=1e-9)
+    lhs1 = solver.newton('lhs', res, lhs0=lhs0, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt, meshdofs=meshdofs, oldmeshdofs=oldmeshdofs, oldoldmeshdofs=oldoldmeshdofs, oldoldoldmeshdofs=oldoldoldmeshdofs)).solve(tol=1e-6)
 
     # write forces to interface
     if interface.is_write_data_required(dt):
