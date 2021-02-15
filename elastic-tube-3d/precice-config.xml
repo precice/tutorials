@@ -30,7 +30,7 @@
       <use-mesh name="Fluid-Mesh-Faces" provide="yes" />
       <write-data name="Force" mesh="Fluid-Mesh-Faces" />
       <read-data name="DisplacementDelta" mesh="Fluid-Mesh-Nodes" />
-      <mapping:nearest-neighbor
+      <mapping:nearest-projection
         direction="write"
         from="Fluid-Mesh-Faces"
         to="Calculix_Mesh"

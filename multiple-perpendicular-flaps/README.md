@@ -5,9 +5,11 @@ keywords: multi-coupling, OpenFOAM, deal.II, FSI
 summary: In this case, a fluid and two solids are coupled together using a fully-implicit multi-coupling scheme.
 ---
 
+{% include important.html content="We have not yet ported the documentation of the preCICE tutorials from the preCICE wiki to here. Please go to the [preCICE wiki](https://github.com/precice/precice/wiki#2-getting-started---tutorials)" %}
+
 ## Case Setup
 
-In the following tutorial we model a fluid flowing through a channel. Two solid, elastic flaps are fixed to the floor of this channel. The flaps oscillate due to the fluid pressure building up on its surface. In this case, a fluid and two solids are coupled together using a fully-implicit multi-coupling scheme. For a case showing fluid-structure interaction only (no multi-coupling), take a look at the [single perpendicular flap tutorial](tutorials-perpendicular-flap.html). The case setup is shown here:
+In the following tutorial we model a fluid flowing through a channel. Two solid, elastic flaps are fixed to the floor of this channel. The flaps oscillate due to the fluid pressure building up on its surface. In this case, a fluid and two solids are coupled together using a fully-implicit multi-coupling scheme. The case setup is shown here:
 
 ![](images/setup_twoflaps.png)
 
@@ -19,18 +21,20 @@ The inflow velocity is 5 m/s (uniform) on the left boundary.
 At the outlet, pressure is set to zero and velocity to `zeroGradient`.
 The top, bottom and flap are walls with a `noslip` condition. 
 
+For a case showing fluid-structure interaction only (no multi-coupling), take a look at the [single perpendicular flap tutorial](tutorials-perpendicular-flap.html).
+
 ## Why multi-coupling?
 
-This is a case with three participants: the fluid and each flap. In preCICE, there are two options to [couple more than two participants](configuration-coupling-multi.html). The first option a composition of bicoupling schemes, in which we must specify the exchange of data in a participant to participant manner. However, such explicit couplings schemes are not suited for fluid-structure interations [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling. 
+This is a case with three participants: the fluid and each flap. In preCICE, there are two options to [couple more than two participants](configuration-coupling-multi.html). The first option a composition of bi-coupling schemes, in which we must specify the exchange of data in a participant to participant manner. However, such a composition is not suited for combining multiple strong fluid-structure interations [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling. 
 
 We can set this in our `precice-config.xml`:
 
-~~~
-    <coupling-scheme:multi>
-      <participant name="Fluid" control="yes"/>
-  	   <participant name="Solid1" />
-  	   <participant name="Solid2" />
-~~~
+```xml
+<coupling-scheme:multi>
+  <participant name="Fluid" control="yes"/>
+   <participant name="Solid1" />
+   <participant name="Solid2" />
+```
 
 The participant that has the control is the one that it is connected to all other participants. This is why we have chosen the fluid participant for this task.
 
@@ -65,27 +69,31 @@ The scenario settings are implemented similarly for the nonlinear case.
    We are going to run each solver in a different terminal. It is important that first we navigate to the simulation directory so that all solvers start in the same directory. 
    To start the `Fluid` participant, run:
    ```
-   ./runFluid
+   cd fluid-openfoam
+   ./run.sh
    ```
    to start OpenFOAM in serial or
    ```
-   ./runFluid -parallel
+   cd fluid-openfoam
+   ./run.sh -parallel
    ```
    for a parallel run. 
 
    The solid participants are only designed for serial runs. To run the `Solid1` participant, execute the corresponding deal.II binary file e.g. by:
    ```
-   ./runSolid1 -linear
+   cd solid-left-dealii
+   ./run.sh -linear
    ```
    Finally, in the third terminal we will run the solver for the `Solid2` participant by:
-      ```
-   ./runSolid2 -linear
+   ```
+   cd solid-right-dealii
+   ./run.sh -linear
    ```
    In case we want to run the nonlinear case, simply replace the flag`-linear` by `-nonlinear`. 
    
 ## Postprocessing
 
-After the simulation has finished, you can visualize your results using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `Fluid.foam` file. Looking at the fluid results is enough to obtain information about the behaviour of the flaps. You can also visualize the solid participants in ParaView. Solid results are in VTK format and located in the `dealii_output` directory. For example to look at the surface meshes at the beginning of the simulation you can load the files `Solid1_mesh-Fluid.init.vtk` and `Solid2_mesh-Fluid.init.vtk` to ParaView. To visualize them apply e.g. a `Glypth` filter and select `Points` in the representation objects.
+After the simulation has finished, you can visualize your results using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `Fluid.foam` file. Looking at the fluid results is enough to obtain information about the behaviour of the flaps. You can also visualize the solid participants' vtks though.
 
 ![](images/results.png)
 

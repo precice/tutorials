@@ -1,13 +1,15 @@
 ---
 title: Elastic tube 3D
 permalink: tutorials-elastic-tube-3d.html
-keywords: FSI, OpenFOAM, CalculiX, nearest-projection
+keywords: FSI, OpenFOAM, CalculiX, nearest-projection, IMVJ
 summary: Tutorial for an FSI simulation of a three-dimensional expanding tube scenario
 ---
 
+{% include important.html content="We have not yet ported the documentation of the preCICE tutorials from the preCICE wiki to here. Please go to the [preCICE wiki](https://github.com/precice/precice/wiki#2-getting-started---tutorials)" %}
+
 ## Setup
 
-The expanding tube test case involves a cylinder fluid domain surrounded by a solid domain. A pressure inlet boundary condition is applied at the inlet for 3 milliseconds, and then 0 set to zero for a further 7 millisecond. The pressure of the fluid expands the tube which then relaxes once the pressure decreases.
+The expanding tube test case involves a cylindrical fluid domain surrounded by a solid domain. A pressure inlet boundary condition is applied at the inlet for 3 milliseconds, and then 0 set to zero for a further 7 millisecond. The pressure of the fluid expands the tube which then relaxes once the pressure decreases.
 
 The expanding tube test case comes with the interface surface mesh connectivity of the solid domain. This allows the use of nearest-projection mapping of the displacements of the solid domain. In order to run the example with nearest projection mapping, the "node-mesh-with-connectivity" has been specified in the `solid-calculix/config.yml` file. More details can be found in the [CalculiX configuration description](adapter-calculix-config.html#nearest-projection-mapping).
 

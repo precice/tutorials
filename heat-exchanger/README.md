@@ -5,7 +5,9 @@ keywords: CHT, OpenFOAM, CalculiX
 summary: Tutorial for a shell-and-tube heat exchanger, using OpenFOAM and CalculiX
 ---
 
-This tutorial describes how to run a conjugate heat transfer simulation with OpenFOAM and CalculiX. The files for this tutorial are located in this repository (directory CHT/heat_exchanger).
+{% include important.html content="We have not yet ported the documentation of the preCICE tutorials from the preCICE wiki to here. Please go to the [preCICE wiki](https://github.com/precice/precice/wiki#2-getting-started---tutorials)" %}
+
+This tutorial describes how to run a conjugate heat transfer simulation with two separate OpenFOAM solvers and CalculiX. The files for this tutorial are located in this repository (directory CHT/heat_exchanger).
 
 This tutorial is based on [a case](https://www.simscale.com/projects/cheunglucia/heat_exchanger_-_cht_simulation/) prepared with [SimScale](https://www.simscale.com/) by [Lucia Cheung Yau](https://github.com/ludcila) for her [Master's Thesis](https://www5.in.tum.de/pub/Cheung2016_Thesis.pdf). It works with OpenFOAM 5.0 and CalculiX 2.12, but newer minor versions should work as well.
 
@@ -14,17 +16,17 @@ This tutorial is based on [a case](https://www.simscale.com/projects/cheunglucia
 
 ## Setup
 
-This scenario consists of two fluid and one solid participant and represents a [shell-and-tube heat exchanger](https://en.wikipedia.org/wiki/Shell_and_tube_heat_exchanger). The geometry includes an (adiabatic) shell, in which an "inner fluid" flows. It enters from the top-right inlet and exits from the bottom-left, after getting redirected several times by baffles. The geometry also includes a set of tubes, in which an "outer fluid" flows from left to right. The two fluids enter in different temperatures and exchange heat through the (thick) solid walls of the tubes. This is a steady-state simulation and the flow is considered laminar.
+This scenario consists of two fluid and one solid participant and represents a [shell-and-tube heat exchanger](https://en.wikipedia.org/wiki/Shell_and_tube_heat_exchanger). The geometry includes an (adiabatic) shell, in which an _inner fluid_ flows. It enters from the top-right inlet and exits from the bottom-left, after getting redirected several times by baffles. The geometry also includes a set of tubes, in which an _outer fluid_ flows from left to right. The two fluids enter in different temperatures and exchange heat through the (thick) solid walls of the tubes. This is a steady-state simulation and the flow is considered laminar.
 
 ![Shell-and-tube heat exchanger geometry](images/heat_exchanger_geometry.png)
 
-We define the participants `Inner-Fluid`, `Solid`, and `Outer-Fluid` and two interfaces: one between the `Inner-Fluid` and `Solid` and one between the `Solid` and `Outer-Fluid`. Parallel-explicit coupling is used on both interfaces, with nearest-neighbor mapping. The participants can either be executed in serial, or in parallel.
+We define the participants `Inner-Fluid`, `Solid`, and `Outer-Fluid` and two interfaces: one between the `Inner-Fluid` and `Solid` and one between the `Solid` and `Outer-Fluid`. Parallel-explicit coupling is used on both interfaces as pseudo timestepping to reach steady-state. We use nearest-neighbor mapping between all meshes. The OpenFOAM participants can either be executed in serial, or in parallel.
 
 ![Heat exchanger: three participants](images/heat-exchanger_participants.png)
 
 ## Available solvers
 
-* OpenFOAM. buoyantSimpleFoam is used for Fluid flow (both participants). This is a free solver for steady-state, buoyant, turbulent flow of compressible fluids for ventilation and heat transfer. For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
+* OpenFOAM. `buoyantSimpleFoam` is used for fluid flow (both participants). This is a solver for steady-state, buoyant, turbulent flow of compressible fluids for ventilation and heat transfer. For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
 
 * CalculiX. For more information, have a look at the [CalculiX adapter documentation](adapter-calculix-overview.html).
 
