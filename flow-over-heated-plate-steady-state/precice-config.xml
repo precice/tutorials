@@ -7,7 +7,7 @@
       enabled="true" />
   </log>
 
-  <solver-interface dimensions="3">
+  <solver-interface dimensions="2">
     <data:scalar name="Heat-Transfer-Coefficient-Solid" />
     <data:scalar name="Sink-Temperature-Solid" />
     <data:scalar name="Heat-Transfer-Coefficient-Fluid" />
