@@ -86,7 +86,6 @@
         from="Fluid2-Mesh-Centers"
         to="Solid2-Mesh"
         constraint="consistent" />
-      <export:vtk directory="precice-output" />
     </participant>
 
     <m2n:sockets from="Fluid" to="Solid1" exchange-directory=".." />
