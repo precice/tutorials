@@ -16,43 +16,43 @@
       <use-data name="Flux"/>
     </mesh>
 
-    <mesh name="NeumannNodes">
+    <mesh name="Neumann-Mesh">
       <use-data name="Temperature"/>
       <use-data name="Flux"/>
     </mesh>
 
-    <participant name="HeatDirichlet">
-      <use-mesh name="DirichletNodes" provide="yes"/>
-      <use-mesh name="NeumannNodes" from="HeatNeumann"/>
-      <write-data name="Flux" mesh="DirichletNodes"/>
-      <read-data name="Temperature" mesh="DirichletNodes"/>
-      <mapping:nearest-projection direction="read" from="NeumannNodes" to="DirichletNodes" constraint="consistent" />
+    <participant name="Dirichlet">
+      <use-mesh name="Dirichlet-Mesh" provide="yes"/>
+      <use-mesh name="Neumann-Mesh" from="Neumann"/>
+      <write-data name="Flux" mesh="Dirichlet-Mesh"/>
+      <read-data name="Temperature" mesh="Dirichlet-Mesh"/>
+      <mapping:nearest-projection direction="read" from="Neumann-Mesh" to="Dirichlet-Mesh" constraint="consistent" />
     </participant>
 
-    <participant name="HeatNeumann">
-      <use-mesh name="NeumannNodes" provide="yes"/>
-      <use-mesh name="DirichletNodes" from="HeatDirichlet"/>
-      <write-data name="Temperature" mesh="NeumannNodes"/>
-      <read-data name="Flux" mesh="NeumannNodes"/>
-      <mapping:nearest-projection direction="read" from="DirichletNodes" to="NeumannNodes" constraint="consistent" />
+    <participant name="Neumann">
+      <use-mesh name="Neumann-Mesh" provide="yes"/>
+      <use-mesh name="Dirichlet-Mesh" from="Dirichlet"/>
+      <write-data name="Temperature" mesh="Neumann-Mesh"/>
+      <read-data name="Flux" mesh="Neumann-Mesh"/>
+      <mapping:nearest-projection direction="read" from="Dirichlet-Mesh" to="Neumann-Mesh" constraint="consistent" />
     </participant>
 
-    <m2n:sockets from="HeatDirichlet" to="HeatNeumann" exchange-directory=".."/>
+    <m2n:sockets from="Dirichlet" to="Neumann" exchange-directory=".."/>
 
     <coupling-scheme:serial-implicit>
-      <participants first="HeatDirichlet" second="HeatNeumann"/>
-      <max-time value="1"/>
-      <time-window-size value=".1" />
+      <participants first="Dirichlet" second="Neumann"/>
+      <max-time value="1.0"/>
+      <time-window-size value="0.1"/>
       <max-iterations value="100"/>
-      <exchange data="Flux" mesh="DirichletNodes" from="HeatDirichlet" to="HeatNeumann" />
-      <exchange data="Temperature" mesh="NeumannNodes" from="HeatNeumann" to="HeatDirichlet" initialize="true"/>
-      <relative-convergence-measure data="Flux" mesh="DirichletNodes" limit="1e-5"/>
-      <relative-convergence-measure data="Temperature" mesh="NeumannNodes" limit="1e-5"/>
+      <exchange data="Flux" mesh="Dirichlet-Mesh" from="Dirichlet" to="Neumann" />
+      <exchange data="Temperature" mesh="Neumann-Mesh" from="Neumann" to="Dirichlet" initialize="true"/>
+      <relative-convergence-measure data="Flux" mesh="Dirichlet-Mesh" limit="1e-5"/>
+      <relative-convergence-measure data="Temperature" mesh="Neumann-Mesh" limit="1e-5"/>
       <acceleration:IQN-ILS>
-        <data name="Temperature" mesh="NeumannNodes"/>
-        <initial-relaxation value="0.01"/>
-        <max-used-iterations value="3"/>
-        <time-windows-reused value="1"/>
+        <data name="Temperature" mesh="Neumann-Mesh"/>
+        <initial-relaxation value="0.1"/>
+        <max-used-iterations value="10"/>
+        <time-windows-reused value="5"/>
         <filter type="QR2" limit="1e-3"/>
       </acceleration:IQN-ILS>
     </coupling-scheme:serial-implicit>
