@@ -9,9 +9,7 @@ summary: In this tutorial we solve a simple heat equation. The domain is partiti
 
 ## Setup
 
-In this tutorial we solve a partitioned heat equation. For information on the non-partitioned case, please refer to [1, p.37ff]. The corresponding FEniCS code can be found on [github:fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py).
-
-In this tutorial the computational domain is partitioned and coupled via preCICE. The coupling roughly follows the approach described in [2].
+In this tutorial we solve a partitioned heat equation. For information on the non-partitioned case, please refer to [1, p.37ff]. In this tutorial the computational domain is partitioned and coupled via preCICE. The coupling roughly follows the approach described in [2].
 
 ![Case setup of partitioned-heat-conduction case](images/setup.png)
 
@@ -25,7 +23,8 @@ This simple case allows us to compare the solution for the partitioned case to a
 
 You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE and the python bindings installed on your system.
 
-* `fenics`, requires you to install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). 
+* `fenics`, requires you to install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
+
 
 * :construction: This case is still under construction. See https://github.com/precice/tutorials/issues/152. :construction: `nutils`, requires you to install [Nutils](http://www.nutils.org/en/latest/).
 
