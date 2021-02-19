@@ -11,7 +11,7 @@
     <data:scalar name="Temperature"/>
     <data:vector name="Flux"/>
 
-    <mesh name="DirichletNodes">
+    <mesh name="Dirichlet-Mesh">
       <use-data name="Temperature"/>
       <use-data name="Flux"/>
     </mesh>
