@@ -34,7 +34,7 @@
       <use-mesh name="DirichletNodes" from="HeatDirichlet"/>
       <write-data name="Temperature" mesh="NeumannNodes"/>
       <read-data name="Flux" mesh="NeumannNodes"/>
-      <mapping:nearest-projection direction="read" from="DirichletNodes" to="NeumannNodes" constraint="consistent" timing="initial"/>
+      <mapping:nearest-projection direction="read" from="DirichletNodes" to="NeumannNodes" constraint="consistent" />
     </participant>
 
     <m2n:sockets from="HeatDirichlet" to="HeatNeumann" exchange-directory=".."/>
