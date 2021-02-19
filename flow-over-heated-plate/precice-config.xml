@@ -56,7 +56,7 @@
       <relative-convergence-measure limit="1.0e-5" data="Temperature" mesh="Fluid-Mesh" />
       <acceleration:aitken>
         <data mesh="Fluid-Mesh" name="Heat-Flux" />
-        <initial-relaxation value="0.01" />
+        <initial-relaxation value="0.5" />
       </acceleration:aitken>
     </coupling-scheme:serial-implicit>
   </solver-interface>
