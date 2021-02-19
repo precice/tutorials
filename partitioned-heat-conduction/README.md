@@ -5,6 +5,8 @@ keywords: FEniCS, Nutils, Heat conduction
 summary:
 ---
 
+{% include important.html content="We have not yet ported the documentation of the preCICE tutorials from the preCICE wiki to here. Please go to the [preCICE wiki](https://github.com/precice/precice/wiki#2-getting-started---tutorials)" %}
+
 ## Setup
 
 In this tutorial we solve a partitioned heat equation. For information on the non-partitioned case, please refer to [1, p.37ff]. The corresponding FEniCS code can be found on [github:fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py).
