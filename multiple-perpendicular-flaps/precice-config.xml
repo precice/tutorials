@@ -60,7 +60,6 @@
         from="Solid2-Mesh"
         to="Fluid2-Mesh-Nodes"
         constraint="consistent" />
-      <export:vtk directory="precice-output" />
     </participant>
 
     <participant name="Solid1">
@@ -74,7 +73,6 @@
         from="Fluid1-Mesh-Centers"
         to="Solid1-Mesh"
         constraint="consistent" />
-      <export:vtk directory="precice-output" />
     </participant>
 
     <participant name="Solid2">
