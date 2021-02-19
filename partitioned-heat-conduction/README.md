@@ -2,7 +2,7 @@
 title: Partitioned heat conduction
 permalink: tutorials-partitioned-heat-conduction.html
 keywords: FEniCS, Nutils, Heat conduction
-summary:
+summary: In this tutorial we solve a simple heat equation. The domain is partitioned and the coupling is established in a Dirichlet-Neumann fashion.
 ---
 
 {% include important.html content="We have not yet ported the documentation of the preCICE tutorials from the preCICE wiki to here. Please go to the [preCICE wiki](https://github.com/precice/precice/wiki#2-getting-started---tutorials)" %}
