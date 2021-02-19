@@ -42,7 +42,7 @@
     <coupling-scheme:serial-implicit>
       <participants first="HeatDirichlet" second="HeatNeumann"/>
       <max-time value="1"/>
-      <time-window-size value=".1" valid-digits="8"/>
+      <time-window-size value=".1" />
       <max-iterations value="100"/>
       <exchange data="Flux" mesh="DirichletNodes" from="HeatDirichlet" to="HeatNeumann" />
       <exchange data="Temperature" mesh="NeumannNodes" from="HeatNeumann" to="HeatDirichlet" initialize="true"/>
