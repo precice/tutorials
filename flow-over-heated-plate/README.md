@@ -1,69 +1,67 @@
 ---
 title: Flow over heated plate
 permalink: tutorials-flow-over-heated-plate.html
-keywords: tutorial
-summary:
+keywords: tutorial, CHT, conjugate-heat transfer, OpenFOAM, FEniCS, Nutils, Calculix
+summary: This tutorial describes how to run a conjugate heat transfer coupled simulation using preCICE and any fluid-solid solver combination of our [officially provided adapter codes](adapters-overview.html).
 ---
 
 {% include important.html content="We have not yet ported the documentation of the preCICE tutorials from the preCICE wiki to here. Please go to the [preCICE wiki](https://github.com/precice/precice/wiki#2-getting-started---tutorials)" %}
 
-![img](images/tutorials-flow-over-heated-plate-example.png)### Nutils 
 
-[Nutils](http://www.nutils.org/en/latest/) is an open-source Python programming finite element library, developed by [Evalf Computing](http://evalf.com/). 
+## Setup
 
-Clone and install via pip:
+This scenario consists of one fluid and one solid participant and it is described by Vynnycky et al. [1]. A fluid enters in a channel with temperature 300K, where it comes in contact with a solid plate, which is heated from below at a constant temperature of 310K.
+
+![img](images/tutorials-flow-over-heated-plate-example.png)
+
+The test case is two-dimensional and a serial-implicit coupling with Aitken underrelaxation is used for the coupling.
+
+## Available solvers
+
+By default, the fluid participant reads heat-flux values and the solid participant reads temperature values for the coupled simulation. The following participants are available:
+
+Fluid participant:
+
+* OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
+
+Solid participant:
+
+* OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
+
+* FEniCS. For more information, have a look at the [FeniCS adapter documentation](adapter-fenics.html).
+
+* CalculiX. For more information, have a look at the [CalculiX adapter documentation](adapter-calculix-overview.html).
+
+## Running the Simulation
+
+All listed solvers can be used in order to run the simulation. Open two separate terminals and start the desired fluid and solid participant by calling the respective run script `run.sh` located in the participant directory. For example:
 
 ```
-$ git clone https://github.com/nutils/nutils.git
-$ python3 -m pip install --user --editable nutils
+cd fluid-openfoam
+./run.sh
 ```
-
-For faster computations, you can optionally install `mkl`:
-
+and
 ```
-$ pip3 install mkl
+cd solid-fenics
+./run.sh
 ```
+in order to use OpenFOAM and FEniCS for this test case.
 
-### Other dependencies
+## Post-processing
 
-For running this tutorial, you further have to install
+How to visualize the simulation results depends on the selected solvers. Most of the solvers generate `vtk` files which can visualized using, e.g., ParaView.
+An example of the visualized expected results looks as follows:
 
-* **preCICE**, see [preCICE wiki](https://github.com/precice/precice/wiki/Building).
-* **Python bindings**, see [`precice/python-bindings`](https://github.com/precice/python-bindings)
-* **OpenFOAM**, see [Notes on OpenFOAM](https://github.com/precice/openfoam-adapter/wiki/Notes-on-OpenFOAM).
-* **OpenFOAM adapter**, see [OpenFOAM adapter wiki](https://github.com/precice/openfoam-adapter/wiki/Building). If you have problems compiling, see the [troubleshooting section](https://github.com/precice/precice/wiki/CHT-with-OpenFOAM-and-FEniCS#troubleshooting) below.
+![result](images/result-openfoam.png)
 
-### Testing your installation
+Observe that the temperature at the bottom of the plate is 310K and at the inlet 300K. On the interface, the temperature is between these values. An area of higher temperature is formed above the plate, which is shifted towards the front, driven by the flow.
 
-* **OpenFOAM and OpenFOAM adapter:** To make sure that everything is working properly, you should run the [similar OpenFOAM-OpenFOAM tutorial case](https://github.com/precice/openfoam-adapter/wiki/Tutorial-for-CHT:-Flow-over-a-heated-plate).
-* **Nutils:** To make sure that Nutils is working properly, you should run at least one of the [Nutils examples](http://www.nutils.org/en/latest/examples/).
+You may use additional filters, such as the Calculator and the Plot Over Line, to obtain the distribution of the non-dimensional temperature (T-T_inlet)/(T_solid-T_inlet):
 
-## Run the tutorial
+![graph](images/graph-result.png)
 
-Open two terminals at the root of this tutorial.
+## References
 
-Terminal 1:
-```
-$ cd OpenFOAM
-$ ./runFluid
-```
+[1]  M. Vynnycky, S. Kimura, K. Kanev, and I. Pop. Forced convection heat transfer from a flat plate: the conjugate problem. International Journal of Heat and Mass Transfer, 41(1):45 – 59, 1998.
 
-Terminal 2:
-```
-$ cd Nutils
-$ python3 cht.py
-```
-
-Alternatively, you can also directly use the `Allrun` script in one terminal. 
-
-### Visualization
-
-Both solvers, OpenFOAM and Nutils, create vtk output that you can, for example, load in Paraview. 
-
-After 100 timesteps with `dt=0.01`: 
-
-![Visualization of the temperature](https://raw.githubusercontent.com/wiki/precice/precice/images/CHT_OpenFOAM_Nutils.png)
-
-## Disclaimer
-
-This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM® and OpenCFD® trade marks.
+{% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
