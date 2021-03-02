@@ -48,17 +48,6 @@ clean_case ${Name}
     fi
 finished_clean
 
-# Calculix
-Name="solid-calculix"
-clean_case ${Name}
-    # Clean specialized files
-    rm -fv *.cvg
-    rm -fv *.dat
-    rm -fv *.frd
-    rm -fv *.sta
-    rm -fv *.12d
-finished_clean
-
 # Fenics
 Name="solid-fenics"
 clean_case ${Name}

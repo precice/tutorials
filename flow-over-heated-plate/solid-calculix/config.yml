@@ -1,9 +1,0 @@
-participants:
-    Solid:
-        interfaces:
-        - mesh: Solid-Mesh
-          patch: sinterface
-          read-data: [Temperature]
-          write-data: [Heat-Flux]
-          
-precice-config-file: ../precice-config.xml
