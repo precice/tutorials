@@ -1,7 +1,7 @@
 ---
 title: Flow over heated plate
 permalink: tutorials-flow-over-heated-plate.html
-keywords: tutorial, CHT, conjugate-heat transfer, OpenFOAM, FEniCS, Nutils, Calculix
+keywords: tutorial, CHT, conjugate-heat transfer, OpenFOAM, FEniCS, Nutils
 summary: This tutorial describes how to run a conjugate heat transfer coupled simulation using preCICE and any fluid-solid solver combination of our [officially provided adapter codes](adapters-overview.html).
 ---
 
@@ -29,8 +29,6 @@ Solid participant:
 * OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
 
 * FEniCS. For more information, have a look at the [FeniCS adapter documentation](adapter-fenics.html).
-
-* CalculiX. For more information, have a look at the [CalculiX adapter documentation](adapter-calculix-overview.html).
 
 ## Running the Simulation
 
