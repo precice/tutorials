@@ -8,4 +8,4 @@
 
 # The script "Allclean" cleans-up the result and log files.
 
-python3 heat.py
+python3 solid.py
