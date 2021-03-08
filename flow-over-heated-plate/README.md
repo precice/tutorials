@@ -10,7 +10,7 @@ summary: This tutorial describes how to run a conjugate heat transfer coupled si
 
 ## Setup
 
-This scenario consists of one fluid and one solid participant and it is described by Vynnycky et al. [1]. A fluid enters in a channel with temperature 300K, where it comes in contact with a solid plate, which is heated from below at a constant temperature of 310K.
+This scenario consists of one fluid and one solid participant and it is inspired by Vynnycky et al. [1]. A fluid enters in a channel with temperature 300K, where it comes in contact with a solid plate, which is heated from below at a constant temperature of 310K.
 
 ![img](images/tutorials-flow-over-heated-plate-example.png)
 
