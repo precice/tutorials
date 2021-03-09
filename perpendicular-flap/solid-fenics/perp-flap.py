@@ -79,8 +79,8 @@ dt = Constant(np.min([precice_dt, fenics_dt]))
 bc = DirichletBC(V, Constant((0, 0)), fixed_boundary)
 
 # alpha method parameters
-alpha_m = Constant(0.2)
-alpha_f = Constant(0.4)
+alpha_m = Constant(0)
+alpha_f = Constant(0)
 gamma = Constant(0.5 + alpha_f - alpha_m)
 beta = Constant((gamma + 0.5)**2 / 4.)
 
