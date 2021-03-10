@@ -23,10 +23,9 @@ toc: false
     sudo apt install ./libprecice2_2.2.0_focal.deb
     ```
    - If you prefer to try everything in an isolated environment, you may prefer using our [demo virtual machine](installation-vm.html).
-3. Build and couple two [C++ solverdummies](https://github.com/precice/precice/tree/master/examples/solverdummies/cpp).
-4. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](adapter-openfoam-support.html) (most compatible version: latest ESI/OpenFOAM.com).
-5. Download and install the [OpenFOAM-preCICE adapter](adapter-openfoam-get.html).
-6. Couple OpenFOAM with a C++ rigid body solver. [Find the case in our tutorials](https://github.com/precice/tutorials/quickstart) and keep reading. You can either `git clone` the [tutorials repository](https://github.com/precice/tutorials), or [directly download the current state](https://github.com/precice/tutorials/archive/master.zip).
+3. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](adapter-openfoam-support.html) (most compatible version: latest ESI/OpenFOAM.com).
+4. Download and install the [OpenFOAM-preCICE adapter](adapter-openfoam-get.html).
+5. Couple OpenFOAM with a C++ rigid body solver. [Find the case in our tutorials](https://github.com/precice/tutorials/quickstart) and keep reading. You can either `git clone` the [tutorials repository](https://github.com/precice/tutorials), or [directly download the current state](https://github.com/precice/tutorials/archive/master.zip).
 
 ## What's next?
 
