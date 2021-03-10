@@ -37,6 +37,9 @@ Participant2="Solid"
 cd  solid-cpp
     # Clean the case
     echo "Cleaning the solid-cpp case"
+
+    echo "Deleting the exported coupling meshes"
+    rm -rfv coupling-meshes
     
     # Remove the preCICE-related log files
     echo "Deleting the preCICE log files..."
