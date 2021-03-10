@@ -28,12 +28,12 @@ checkMesh
 # Run
 solver=$(getApplication)
 procs=$(getNumberOfProcessors)
-if [ $parallel -eq 1 ]; then
+if [ ${parallel} -eq 1 ]; then
     decomposePar -force
-    mpirun -np $procs $solver -parallel
+    mpirun -np ${procs} ${solver} -parallel
     reconstructPar
 else
-    $solver
+    ${solver}
 fi
 
 # Workaround for issue #26 (OF-adapter, relevant for OF .com versions) 

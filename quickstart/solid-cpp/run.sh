@@ -7,9 +7,9 @@ cd ${0%/*} || exit 1    		    # Run from this directory
 # in another terminal.
 # These scripts present how the two participants would be started manually.
 
-EXE=./rigid_body_solver
-if [ -f "$EXE" ]; then
-    $EXE
+solver=./rigid_body_solver
+if [ -f "${solver}" ]; then
+    ${solver}
 else 
-    echo "Unable to locate the executable $EXE. Have a look at the README for building instructions."
+    echo "Unable to locate the executable ${solver}. Have a look at the README for building instructions."
 fi
