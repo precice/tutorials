@@ -10,11 +10,13 @@ summary: This tutorial describes how to run a conjugate heat transfer coupled si
 
 ## Setup
 
-This scenario consists of one fluid and one solid participant and it is inspired by Vynnycky et al. [1]. A fluid enters in a channel with temperature 300K, where it comes in contact with a solid plate, which is heated from below at a constant temperature of 310K.
+This scenario consists of one fluid and one solid participant and it is inspired by Vynnycky et al. [1]. A fluid enters a channel with temperature `T_\infty`, where it comes in contact with a solid plate. The plate is heated at its bottom and has a constant temperature of `T_hot`.
 
 ![img](images/tutorials-flow-over-heated-plate-example.png)
 
 The test case is two-dimensional and a serial-implicit coupling with Aitken underrelaxation is used for the coupling.
+
+The inlet velocity is `u_\infty = 0.01 m/s`, the inlet temperature is `T_\infty = 300K`. The fluid and solid have the same thermal conductivities `k_S = k_F = 100 W/m/K`. Further material properties of the fluid are its Prandtl number `Pr = 0.01`, viscosity `mu = 0.0002 kg/m/s` and specific heat capacity `c_p = 5000 J/kg/K`. The solid has the thermal diffusivity `\alpha = 1 m^2/s`. The gravitational acceleration is `g = 9.81 m/s^2`.
 
 ## Available solvers
 
