@@ -10,6 +10,7 @@ echo "Cleaning..."
 Participant1="Fluid"
 cd fluid-openfoam
     # Clean the case
+    echo "Cleaning the fluid-openfoam case"
     cleanCase
     rm -rfv 0
     # Create an empty .foam file for ParaView
@@ -35,7 +36,7 @@ cd ..
 Participant2="Solid"
 cd  solid-cpp
     # Clean the case
-    echo "Cleaning Solid case"
+    echo "Cleaning the solid-cpp case"
     
     # Remove the preCICE-related log files
     echo "Deleting the preCICE log files..."
