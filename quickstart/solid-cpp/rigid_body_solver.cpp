@@ -87,8 +87,8 @@ int main()
   const std::string config_file_name("../precice-config.xml");
   const std::string solver_name("Solid");
   const std::string mesh_name("Solid-Mesh");
-  const std::string data_write_name("Displacements");
-  const std::string data_read_name("Forces");
+  const std::string data_write_name("Displacement");
+  const std::string data_read_name("Force");
 
   // Mesh configuration
   constexpr int vertical_refinement   = 3;
