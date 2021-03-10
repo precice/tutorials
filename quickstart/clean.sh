@@ -44,13 +44,6 @@ cd  solid-cpp
     precice-*.log \
     precice-*-events.json
 
-    # Output files for preCICE versions before 1.2:
-    rm -fv \
-    iterations-${Participant1}.txt iterations-${Participant2}.txt \
-    convergence-${Participant1}.txt convergence-${Participant2}.txt \
-    Events-${Participant1}.log Events-${Participant2}.log \
-    EventTimings-${Participant1}.log EventTimings-${Participant2}.log
-
 cd ..
 
 rm -rfv precice-run
