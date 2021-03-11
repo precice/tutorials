@@ -33,9 +33,9 @@ To become a preCICE pro:
 
 * Get an overview of the [preCICE docs](docs.html).
 * See what users talk about in the [preCICE forum](https://precice.discourse.group/).
-* Run [tutorials with other coupled solvers](https://github.com/precice/precice/wiki#2-getting-started---tutorials).
-* Watch some [preCICE videos](https://www.youtube.com/channel/UCxZdSQdmDrheEqxq8g48t6A).
-* Register to our [virtual preCICE Workshop 2021](precice-workshop-2021.html).
+* Run [tutorials with other coupled solvers](tutorials.html).
+* Watch some [preCICE videos](https://www.youtube.com/c/preCICECoupling/).
+* Meet our [community](community.html).
 * Find out how to [couple your own solver](couple-your-code-overview.html).
 * Tell us [your story](community-projects.html).
 
