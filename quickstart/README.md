@@ -46,8 +46,8 @@ This tutorial deals with a fluid-structure interaction problem. The fluid part o
 
 ![overview](images/overview.png)
 
-### Building the `rigid_body` participant
-Before starting the coupled simulation, the `rigid_body` solver needs to be built using CMake. You can run the following commands from this directory to build the `rigid_body_solver.cpp`
+### Building the rigid body solver
+Before starting the coupled simulation, the rigid body solver needs to be built using CMake. You can run the following commands from this directory to build the `rigid_body_solver.cpp`
 ```
 cd solid-cpp && cmake . && make
 ```
@@ -56,10 +56,9 @@ cd solid-cpp && cmake . && make
 
 You may run the two simulations in two different terminals and watch their output on the screen using the `run.sh` scripts (or `run.sh -parallel`, option only available for OpenFOAM) located in each participant directory. You can cleanup the simulation using `clean.sh`.
 
-There is an [open issue](https://github.com/precice/openfoam-adapter/issues/26) that leads to additional "empty" result directories when running with some OpenFOAM versions, leading to inconveniences during post-processing. Please run the script `removeObsoleteSolvers.sh` to delete the additional files.
 
-Ini serial, the simulation takes roughly 30 seconds to compute.
+In serial, the simulation takes roughly 30 seconds to compute.
 
 ### Visualizing the results
 
-You can visualize the simulation results of the `Fluid` participant using ParaView (use `paraFoam` to trigger the OpenFOAM native reader or load the (empty) file `Fluid.foam` into ParaView). The rigid body doesn't generate any readable output files, but the motion can be observed in the OpenFOAM data. In addition, one could visualize the coupling meshes including the exchanged coupling data. preCICE generates the relevant files during the simulation and stores them in the directory `coupling-meshes`. In order to visualize the results, load the VTK files in ParaView and apply a `Glyph` filter. Depending on the specific ParaView version, you might additionally need to disable the `ScaleArray` option by selecting `No scale array`, since the exchanged data might be inappropriate for a scaling operation. You can further add a `Warp By Vector` filter with `Displacements` to deform the coupling data.
+You can visualize the simulation results of the `Fluid` participant using ParaView (use `paraFoam` to trigger the OpenFOAM native reader or load the (empty) file `Fluid.foam` into ParaView). The rigid body doesn't generate any readable output files, but the motion can be observed in the OpenFOAM data. In addition, one could visualize the coupling meshes including the exchanged coupling data. preCICE generates the relevant files during the simulation and stores them in the directory `coupling-meshes`. In order to visualize the results, load the VTK files in ParaView and apply a `Glyph` filter. Depending on the specific ParaView version, you might additionally need to disable the `ScaleArray` option by selecting `No scale array`, since the exchanged data might be inappropriate for a scaling operation. You can further add a `Warp By Vector` filter with `Displacement` to deform the coupling data.
