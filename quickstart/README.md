@@ -19,8 +19,8 @@ toc: false
 2. Get and install preCICE. For Linux systems, this is pretty easy. Just pick what suits you best on [this overview page](installation-overview.html). Facing any problems? [Ask for help](community-channels.html).
     - For example, [download](https://github.com/precice/precice/releases/latest) and install our binary package for Ubuntu 20.04 (Focal Fossa) by clicking on it or using the following commands:
     ```shell
-    wget https://github.com/precice/precice/releases/download/v2.1.1/libprecice2_2.1.1_focal.deb
-    sudo apt install ./libprecice2_2.1.1_focal.deb
+    wget https://github.com/precice/precice/releases/download/v2.2.0/libprecice2_2.2.0_focal.deb
+    sudo apt install ./libprecice2_2.2.0_focal.deb
     ```
 3. Build and couple two [C++ solverdummies](https://github.com/precice/precice/tree/master/examples/solverdummies/cpp).
 4. You probably want to couple a solver you are already using, such as OpenFOAM. Since many of our tutorials use it, [install OpenFOAM](adapter-openfoam-support.html).
