@@ -4,13 +4,8 @@ cd ${0%/*} || exit 1    		    		# Run from this directory
 
 # Fluid participant
 
-# Run this script in one terminal and the "runSolid" script in another terminal.
-# These scripts present how the two participants would be started manually.
-# Alternatively, you may execute the "Allrun" script in one terminal.
-
+# Run this script in one terminal in order to start this participant.
 # Run this script with "-parallel" for parallel simulations
-
-# The script "Allclean" cleans-up the result and log files.
 
 # 1 for true, 0 for false
 parallel=0
