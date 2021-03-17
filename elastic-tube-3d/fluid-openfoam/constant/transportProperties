@@ -1,0 +1,14 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      flowProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+nu              nu [0 2 -1 0 0 0 0] 3e-6;
+
+transportModel Newtonian;
+
+// ************************************************************************* //

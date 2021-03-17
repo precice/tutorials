@@ -1,0 +1,52 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      p_rgh;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 -1 -2 0 0 0 0];
+
+internalField   uniform 103500;
+
+boundaryField
+{
+	inlet
+	{
+        type            zeroGradient;
+        value           uniform 0;
+	}
+	outlet
+	{
+        type            fixedValue;
+        value           uniform 103500;
+	}
+    top
+    {
+        type            zeroGradient;
+        value           uniform 103500;
+    }
+    slip-bottom
+    {
+        type            zeroGradient;
+        value           uniform 103500;
+    }
+    bottom
+    {
+        type            zeroGradient;
+        value           uniform 103500;
+    }
+    interface
+    {
+        type            zeroGradient;
+        value           uniform 0;
+    }
+    defaultFaces
+    {
+    	type			empty;
+    }
+}
+
+// ************************************************************************* //

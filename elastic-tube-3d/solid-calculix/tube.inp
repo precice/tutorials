@@ -1,0 +1,29 @@
+*INCLUDE, INPUT=all.msh
+*INCLUDE, INPUT=inlet.nam
+*INCLUDE, INPUT=outlet.nam
+*INCLUDE, INPUT=wall.nam
+*INCLUDE, INPUT=interface.nam
+*INCLUDE, INPUT=interface.sur
+*MATERIAL, Name=EL
+*ELASTIC
+300000.0, 0.3
+*DENSITY
+1200.0
+*SOLID SECTION, Elset=Eall, Material=EL
+*STEP, INC=1000000
+*DYNAMIC,DIRECT,NLGEOM
+ 0.0001,0.01
+*RESTART,WRITE,FREQUENCY=1
+*BOUNDARY
+ Ninlet,1,3,0
+ Noutlet,1,3,0
+*CLOAD
+ Ninterface,1,0.0
+ Ninterface,2,0.0
+ Ninterface,3,0.0
+*NODE FILE
+ U
+*EL FILE
+ S, E
+*END STEP
+urface.nam
