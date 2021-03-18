@@ -34,7 +34,7 @@ For visualizing the results of the fluid solver, go to `File -> Open ParaView Fi
 
 For visualizing the result of the solid solver, press again `Open ParaView File` and select the `output-..rmed` group. Again, click `Apply` to visualize the result. After setting the temperature scale for both domains to 300-310 K, the following result is given for timestep 200:
 
-![post-processing](images/Post-processing.png)
+![post-processing](images/tutorials-flow-over-heated-plate-steady-state-post-processing.png)
 
 {% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
 

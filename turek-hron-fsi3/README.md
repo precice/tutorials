@@ -19,7 +19,7 @@ For more information please refer to the original publication of the benchmark [
 
 Fluid participant:
 
-* OpenFOAM. For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html). 
+* OpenFOAM. For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
 
 {% include important.html content="For the parabolic inflow profile, this tutorial requires groovyBC. groovyBC is part of swak4Foam. You can find more explanations in [openfoamwiki.net](https://openfoamwiki.net/index.php/Contrib/swak4Foam) or get it from an [unofficial GitHub mirror](https://github.com/Unofficial-Extend-Project-Mirror/openfoam-extend-swak4Foam-dev.git). Please follow the building instructions there." %}
 
@@ -52,7 +52,7 @@ For older OpenFOAM versions, the solver name will differ. If you are using OpenF
 
 You may adjust the end time in the `precice-config.xml`, or interupt the execution earlier if you want.
 
-In the first few timesteps, many coupling iterations are required for convergence. Don't lose hope, things get better quickly. 
+In the first few timesteps, many coupling iterations are required for convergence. Don't lose hope, things get better quickly.
 
 
 ## Post-processing
@@ -66,7 +66,7 @@ There is an [known issue](https://github.com/precice/openfoam-adapter/issues/26)
 Moreover, as we defined a watchpoint at the flap tip (see `precice-config.xml`), we can plot it with gnuplot using the script `plotDisplacement.sh`.  The resulting graph shows the vertical (y) displacement of the tip of the flap.
 
 
-![FSI3 watchpoint](images/tutorials-turek-hron-tip-plot.png)
+![FSI3 watchpoint](images/tutorials-turek-hron-fsi3-tip-plot.png)
 
 Before running the simulation again, you may want to cleanup any result files using the script `Allclean`.
 
@@ -83,10 +83,10 @@ mv blockMeshDict blockMeshDict_original
 mv blockMeshDict_refined blockMeshDict
 ```
 
-For the double-refined mesh, it is wisely to use local basis functions in the RBF data mapping method instead of global ones. You can use: 
+For the double-refined mesh, it is wisely to use local basis functions in the RBF data mapping method instead of global ones. You can use:
 
 ```xml
-<mapping:rbf-compact-tps-c2 direction="read" from="Fluid-Mesh-Centers" to="Solid-Mesh" 
+<mapping:rbf-compact-tps-c2 direction="read" from="Fluid-Mesh-Centers" to="Solid-Mesh"
                             support-radius="0.011" constraint="consistent" />
 ```
 
