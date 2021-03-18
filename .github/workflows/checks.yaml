@@ -1,0 +1,12 @@
+name: Checks
+on: [push, pull_request]
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Check image names
+        run:  bash tools/checkimages.sh
+      - name: Check permalinks
+        run:  bash tools/checkpermalinks.sh
