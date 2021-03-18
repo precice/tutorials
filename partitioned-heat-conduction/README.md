@@ -11,7 +11,7 @@ summary: In this tutorial we solve a simple heat equation. The domain is partiti
 
 In this tutorial we solve a partitioned heat equation. For information on the non-partitioned case, please refer to [1, p.37ff]. In this tutorial the computational domain is partitioned and coupled via preCICE. The coupling roughly follows the approach described in [2].
 
-![Case setup of partitioned-heat-conduction case](images/setup.png)
+![Case setup of partitioned-heat-conduction case](images/tutorials-partitioned-heat-conduction-setup.png)
 
 Case setup from [3]. `D` denotes the Dirichlet participant and `N` denotes the Neumann participant.
 
@@ -59,7 +59,7 @@ mpirun -n <N_PROC> python3 heat.py -d
 
 Output is written into the folder `fenics/out`. You can visualize the content with paraview by opening the `*.pvd` files. The files `Dirichlet.pvd` and `Neumann.pvd` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution, the files with `error` show the error and the files with `ranks` the ranks of the solvers (if executed in parallel).
 
-![Animation of the partitioned heat equation](images/HT_FEniCS_movie.gif)
+![Animation of the partitioned heat equation](images/tutorials-partitioned-heat-conduction-FEniCS-movie.gif)
 
 Visualization in paraview for `x_c = 1.5`.
 

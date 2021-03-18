@@ -52,13 +52,13 @@ in order to use OpenFOAM and FEniCS for this test case.
 How to visualize the simulation results depends on the selected solvers. Most of the solvers generate `vtk` files which can visualized using, e.g., ParaView.
 An example of the visualized expected results looks as follows:
 
-![result](images/result-openfoam.png)
+![result](images/tutorials-flow-over-heated-plate-result-openfoam.png)
 
 Observe that the temperature at the bottom of the plate is 310K and at the inlet 300K. On the interface, the temperature is between these values. An area of higher temperature is formed above the plate, which is shifted towards the front, driven by the flow.
 
 You may use additional filters, such as the Calculator and the Plot Over Line, to obtain the distribution of the non-dimensional temperature (T-T_inlet)/(T_solid-T_inlet):
 
-![graph](images/graph-result.png)
+![graph](images/tutorials-flow-over-heated-plate-graph-result.png)
 
 ## References
 

@@ -18,11 +18,11 @@ This tutorial is based on [a case](https://www.simscale.com/projects/cheunglucia
 
 This scenario consists of two fluid and one solid participant and represents a [shell-and-tube heat exchanger](https://en.wikipedia.org/wiki/Shell_and_tube_heat_exchanger). The geometry includes an (adiabatic) shell, in which an _inner fluid_ flows. It enters from the top-right inlet and exits from the bottom-left, after getting redirected several times by baffles. The geometry also includes a set of tubes, in which an _outer fluid_ flows from left to right. The two fluids enter in different temperatures and exchange heat through the (thick) solid walls of the tubes. This is a steady-state simulation and the flow is considered laminar.
 
-![Shell-and-tube heat exchanger geometry](images/heat_exchanger_geometry.png)
+![Shell-and-tube heat exchanger geometry](images/tutorials-heat-exchanger-geometry.png)
 
 We define the participants `Inner-Fluid`, `Solid`, and `Outer-Fluid` and two interfaces: one between the `Inner-Fluid` and `Solid` and one between the `Solid` and `Outer-Fluid`. Parallel-explicit coupling is used on both interfaces as pseudo timestepping to reach steady-state. We use nearest-neighbor mapping between all meshes. The OpenFOAM participants can either be executed in serial, or in parallel.
 
-![Heat exchanger: three participants](images/heat-exchanger_participants.png)
+![Heat exchanger: three participants](images/tutorials-heat-exchanger-participants.png)
 
 ## Available solvers
 
@@ -44,6 +44,6 @@ For the OpenFOAM results, you can use ParaView and open the allready-provided `f
 
 Unfortunately, ParaView does not support CalculiX result files. You may see the results in CGX or convert them using 3rd-party tools.
 
-![The heat exchanger with streamlines](images/heat-exchanger_visualization.png)
+![The heat exchanger with streamlines](images/tutorials-heat-exchanger-visualization.png)
 
 {% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
