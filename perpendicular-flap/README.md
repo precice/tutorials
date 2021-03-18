@@ -5,8 +5,6 @@ keywords: fluid-structure interaction, FSI, OpenFOAM, FEniCS, Nutils, deal.II, C
 summary: This tutorial describes how to run a fluid-structure interaction using preCICE and any fluid-solid solver combination of our [officially provided adapter codes](adapters-overview.html).
 ---
 
-{% include important.html content="We have not yet ported the documentation of the preCICE tutorials from the preCICE wiki to here. Please go to the [preCICE wiki](https://github.com/precice/precice/wiki#2-getting-started---tutorials)" %}
-
 ## Setup
 
 We model a two-dimensional fluid flowing through a channel. A solid, elastic flap is fixed to the floor of this channel. The flap oscillates due to the fluid pressure building up on its surface. The setup is shown schematically here:
