@@ -1,7 +1,7 @@
 #!/bin/bash
 # Run this script at the root of the repository to check images for correct prefixes
 
-tutorials=$(find . -mindepth 2 -maxdepth 2 -type d -name images | cut -d/ -f2)
+tutorials=$(find . -mindepth 2 -maxdepth 2 -type d -name images -not -path "./quickstart/*" | cut -d/ -f2)
 
 CODE=0
 for tutorial in $tutorials; do
