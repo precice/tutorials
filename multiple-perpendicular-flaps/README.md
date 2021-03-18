@@ -99,5 +99,3 @@ After the simulation has finished, you can visualize your results using e.g. Par
 
 [1] H. Bungartz, F. Linder, M. Mehl, B. Uekerman. A plug-and-play coupling approach for parallel multi-field simulations. 2014. 
 
-
-{% include important.html content="We have not yet ported the documentation of the preCICE tutorials from the preCICE wiki to here. Please go to the [preCICE wiki](https://github.com/precice/precice/wiki#2-getting-started---tutorials)" %}
