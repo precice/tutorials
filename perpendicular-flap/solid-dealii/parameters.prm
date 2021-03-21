@@ -34,24 +34,25 @@ end
 
 subsection Solver
   # Structural model to be used: linear or neo-Hookean
-  set Model                     = linear
-
-  # Linear solver iterations (multiples of the system matrix size)
-  set Max iteration multiplier  = 1
-
-  # Linear solver residual (scaled by residual norm)
-  set Residual                  = 1e-6
+  set Model                     = neo-Hookean
 
   # Linear solver: CG or Direct
   set Solver type               = Direct
 
-  # Number of Newton-Raphson iterations allowed
+  # Max CG solver iterations (multiples of the system matrix size)
+  # In 2-d, this value is best set at 2. In 3-d, a value of 1 work fine.
+  set Max iteration multiplier  = 1
+
+  # Absolute CG solver residual (multiplied by residual norm, ignored if Model == linear)
+  set Residual                  = 1e-6
+
+  # Number of Newton-Raphson iterations allowed (ignored if Model == linear)
   set Max iterations Newton-Raphson = 10
 
-  # Displacement error tolerance
+  # Relative displacement error tolerance for non-linear iteration (ignored if Model == linear)
   set Tolerance displacement        = 1.0e-6
 
-  # Force residual tolerance
+  # Relative force residual tolerance for non-linear iteration (ignored if Model == linear)
   set Tolerance force               = 1.0e-9
 end
 
