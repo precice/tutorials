@@ -9,54 +9,50 @@ subsection Time
   # Time step size
   set Time step size  = 0.01
 
-  # Output interval
-  set Output interval = 10
+  # Write results every x timesteps
+  set Output interval       = 10
 end
 
 subsection Discretization
-  # Newmark beta
-  set beta  = 0.25
-
-  # Newmark gamma
-  set gamma   = 0.5
-
   # Polynomial degree of the FE system
   set Polynomial degree   = 4
 end
 
 subsection System properties
   # Poisson's ratio
-  set Poisson's ratio = 0.375
+  set Poisson's ratio = 0.3
 
   # Shear modulus
-  set Shear modulus   = 153846
+  set Shear modulus   = 1538462
 
   # Density
-  set rho	      = 3000
+  set rho             = 3000
 
   # Body forces x,y,z
   set body forces     = 0.0,0.0,0.0
 end
 
-subsection Linear solver
-  # Linear solver iterations (multiples of the system matrix size)
-  set Max iteration multiplier  = 1
-
-  # Linear solver residual (scaled by residual norm)
-  set Residual                  = 1e-6
+subsection Solver
+  # Structural model to be used: linear or neo-Hookean
+  set Model                     = linear
 
   # Linear solver: CG or Direct
   set Solver type               = Direct
-end
 
-subsection Nonlinear solver
-  # Number of Newton-Raphson iterations allowed
+  # Max CG solver iterations (multiples of the system matrix size)
+  # In 2-d, this value is best set at 2. In 3-d, a value of 1 work fine.
+  set Max iteration multiplier  = 1
+
+  # Absolute CG solver residual (multiplied by residual norm, ignored if Model == linear)
+  set Residual                  = 1e-6
+
+  # Number of Newton-Raphson iterations allowed (ignored if Model == linear)
   set Max iterations Newton-Raphson = 10
 
-  # Displacement error tolerance
+  # Relative displacement error tolerance for non-linear iteration (ignored if Model == linear)
   set Tolerance displacement        = 1.0e-6
 
-  # Force residual tolerance
+  # Relative force residual tolerance for non-linear iteration (ignored if Model == linear)
   set Tolerance force               = 1.0e-9
 end
 
@@ -68,17 +64,17 @@ subsection precice configuration
     set precice config-file = ../precice-config.xml
 
     # Name of the participant in the precice-config.xml file
-    set Participant name    = Solid2
+    set Participant name    = Solid1
 
     # Name of the coupling mesh in the precice-config.xml file
-    set Mesh name           = Solid2-Mesh
+    set Mesh name           = Solid1-Mesh
 
     # Name of the read data in the precice-config.xml file
-    set Read data name      = Stress2
+    set Read data name      = Stress1
 
     # Name of the write data in the precice-config.xml file
-    set Write data name     = Displacement2
+    set Write data name     = Displacement1
     
     # PF x-location 
-    set Flap location     = 1.0
+    set Flap location     = -1.0
 end

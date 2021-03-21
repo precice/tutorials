@@ -4,13 +4,13 @@
 
 subsection Time
   # End time
-  set End time        = 5 
+  set End time        = 15
 
   # Time step size
-  set Time step size  = 0.01
+  set Time step size  = 0.001
 
   # Write results every x timesteps
-  set Output interval       = 10
+  set Output interval       = 100
 end
 
 subsection Discretization
@@ -20,13 +20,13 @@ end
 
 subsection System properties
   # Poisson's ratio
-  set Poisson's ratio = 0.3
+  set Poisson's ratio = 0.4
 
   # Shear modulus
-  set Shear modulus   = 1538462
+  set Shear modulus   = 2.0e6
 
   # Density
-  set rho             = 3000
+  set rho             = 1000
 
   # Body forces x,y,z
   set body forces     = 0.0,0.0,0.0
@@ -34,7 +34,7 @@ end
 
 subsection Solver
   # Structural model to be used: linear or neo-Hookean
-  set Model                     = linear
+  set Model                     = neo-Hookean
 
   # Linear solver: CG or Direct
   set Solver type               = Direct
@@ -58,7 +58,7 @@ end
 
 subsection precice configuration
   # Cases: FSI3 or PF for perpendicular flap
-  set Scenario            = PF
+  set Scenario            = FSI3
 
   # Name of the precice configuration file
   set precice config-file = ../precice-config.xml
@@ -70,7 +70,7 @@ subsection precice configuration
   set Mesh name           = Solid-Mesh
 
   # Name of the read data in the precice-config.xml file
-  set Read data name      = Force
+  set Read data name      = Stress
 
   # Name of the write data in the precice-config.xml file
   set Write data name     = Displacement
