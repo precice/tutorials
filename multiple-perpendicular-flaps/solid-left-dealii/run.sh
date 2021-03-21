@@ -1,27 +1,30 @@
 #!/bin/bash
 cd ${0%/*} || exit 1    		    # Run from this directory
 
-# Solid1 participant 
+# Solid participant
 
 # Run this script in one terminal and the execute the Fluid participant 
-# and the Solid2 participant in another terminal.
-# These scripts present how the three participants would be started manually.
+# in another terminal.
+# These scripts present how the two participants would be started manually.
 
-# 1 for true, 0 for false
-nonlinear=0
-if [ "$1" = "-nonlinear" ]; then
-            nonlinear=1
+for i in "$@"
+do
+case $i in
+    -p=*|--prefix=*)
+    SEARCHPATH="${i#*=}"
+    shift # past argument=value
+    ;;
+    *)
+      # unknown option
+    ;;
+esac
+done
+
+if test -f "elasticity"; then
+    ./elasticity parameters.prm
+    elif [ ! -z ${SEARCHPATH} ]; then
+    ${SEARCHPATH}/elasticity parameters.prm
+    else
+    echo "Unable to find the executable 'elasticity'. Either specify a prefix (-p=/path/to/elasticity) or make it discoverable at runtime (e.g. export PATH)"
 fi
 
-linear=0
-if [ "$1" = "-linear" ]; then
-            linear=1
-fi
-
-if [ $linear -eq 1 ]; then
-        ./linear_elasticity linear_elasticity.prm
-elif [ $nonlinear -eq 1 ]; then
-        ./nonlinear_elasticity nonlinear_elasticity.prm
-else
-        echo "No solver type specified. Please specify -linear or -nonlinear as solver type"
-fi
