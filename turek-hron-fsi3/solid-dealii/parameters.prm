@@ -40,7 +40,7 @@ subsection Solver
   set Solver type               = Direct
 
   # Max CG solver iterations (multiples of the system matrix size)
-  # In 2-d, this value is best set at 2. In 3-d, a value of 1 work fine.
+  # In 2D, this value is best set at 2. In 3D, a value of 1 works fine.
   set Max iteration multiplier  = 1
 
   # Absolute CG solver residual (multiplied by residual norm, ignored if Model == linear)
