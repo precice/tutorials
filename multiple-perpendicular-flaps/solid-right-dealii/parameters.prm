@@ -44,7 +44,7 @@ subsection Solver
   set Max iteration multiplier  = 1
 
   # Relative drop criterion for CG solver residual (multiplied by residual norm, ignored if Model == linear or solver == direct)
-  # Hard-coded to absolute criterion of 1e-10 for the linear model. 
+  # Hard-coded to absolute criterion of 1e-10 for the linear model.
   set Residual                  = 1e-6
 
   # Number of Newton-Raphson iterations allowed (ignored if Model == linear)
