@@ -4,65 +4,62 @@
 
 subsection Time
   # End time
-  set End time        = 15
+  set End time        = 5 
 
   # Time step size
-  set Time step size  = 0.001
+  set Time step size  = 0.01
 
-  # Output interval
-  set Output interval = 100
+  # Write results every x timesteps
+  set Output interval       = 10
 end
 
 subsection Discretization
-  # Newmark beta
-  set beta    = 0.25
-
-  # Newmark gamma
-  set gamma   = 0.5
-
   # Polynomial degree of the FE system
   set Polynomial degree   = 4
 end
 
 subsection System properties
   # Poisson's ratio
-  set Poisson's ratio = 0.4
+  set Poisson's ratio = 0.3
 
   # Shear modulus
-  set Shear modulus   = 2.0e6
+  set Shear modulus   = 1538462
 
   # Density
-  set rho	      = 1000
+  set rho             = 3000
 
   # Body forces x,y,z
   set body forces     = 0.0,0.0,0.0
 end
 
-subsection Linear solver
-  # Linear solver iterations (multiples of the system matrix size)
-  set Max iteration multiplier  = 1
-
-  # Linear solver residual (scaled by residual norm)
-  set Residual                  = 1e-6
+subsection Solver
+  # Structural model to be used: linear or neo-Hookean
+  set Model                     = linear
 
   # Linear solver: CG or Direct
   set Solver type               = Direct
-end
 
-subsection Nonlinear solver
-  # Number of Newton-Raphson iterations allowed
+  # Max CG solver iterations (multiples of the system matrix size)
+  # In 2D, this value is best set at 2. In 3D, a value of 1 works fine.
+  set Max iteration multiplier  = 1
+
+  # Relative drop criterion for CG solver residual (multiplied by residual norm, ignored if Model == linear or solver == direct)
+  # Hard-coded to absolute criterion of 1e-10 for the linear model.
+  set Residual                  = 1e-6
+
+  # Number of Newton-Raphson iterations allowed (ignored if Model == linear)
   set Max iterations Newton-Raphson = 10
 
-  # Displacement error tolerance
+  # Relative displacement error tolerance for non-linear iteration (ignored if Model == linear)
   set Tolerance displacement        = 1.0e-6
 
-  # Force residual tolerance
+  # Relative force residual tolerance for non-linear iteration (ignored if Model == linear)
   set Tolerance force               = 1.0e-9
 end
 
 subsection precice configuration
   # Cases: FSI3 or PF for perpendicular flap
-  set Scenario            = FSI3
+  set Scenario            = PF
 
   # Name of the precice configuration file
   set precice config-file = ../precice-config.xml
@@ -74,7 +71,7 @@ subsection precice configuration
   set Mesh name           = Solid-Mesh
 
   # Name of the read data in the precice-config.xml file
-  set Read data name      = Stress
+  set Read data name      = Force
 
   # Name of the write data in the precice-config.xml file
   set Write data name     = Displacement
