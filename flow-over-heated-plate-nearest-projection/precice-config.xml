@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0"?>
 <precice-configuration>
   <log>
     <sink
@@ -54,7 +54,7 @@
         constraint="consistent" />
     </participant>
 
-    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".."/>
+    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
 
     <coupling-scheme:serial-implicit>
       <time-window-size value="0.01" />
