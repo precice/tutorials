@@ -56,7 +56,7 @@ All further changes follow from this interface splitting. Have a look in the giv
 
 ### Notes on 2D Cases
 
-from a preCICE point of view, the simulation here is in 3D as opposed to the original case. This leads to the fact that the out-of-plane thickness of the domain is reduced clearly and it is recommended. Otherwise your face centers have a quite large distance to the face nodes, which might trigger a preCICE warning. In that case, preCICE may filter out one of the meshes, especially in parallel simulations.
+From the preCICE point of view, the simulation here is in 3D, as opposed to the original 2D case, as is often the case with 3D solvers (such as OpenFOAM). In such cases, we recommend keeping the out-of-plane thickness of the domain small and comparable to the in-plane cell size. Otherwise, the face centers will have a large distance to the face nodes, which might trigger a preCICE warning and preCICE may even filter out one of the meshes, especially in parallel simulations.
 
 
 ## Post-processing
