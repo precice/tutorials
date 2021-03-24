@@ -1,0 +1,87 @@
+Run finished at Fri Feb  5 16:05:07 2021
+Global runtime       = 33704ms / 33.704s
+Number of processors = 1
+# Rank: 0
+
+                                                                     Event |      Count |  Total[ms] |    Max[ms] |    Min[ms] |    Avg[ms] | Time Ratio |
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                   _GLOBAL |          1 |      33704 |      33704 |      33704 |      33704 |          1 |
+                                                                   advance |         52 |      20252 |        771 |          1 |        389 |      0.601 |
+                                      advance/cpl.computeQuasiNewtonUpdate |         42 |        210 |         40 |          0 |          5 |    0.00623 |
+                                                   advance/m2n.receiveData |         51 |      19908 |        769 |        238 |        390 |      0.591 |
+                                                      advance/m2n.sendData |         52 |          9 |          0 |          0 |          0 |   0.000267 |
+                  advance/map.pet.mapData.FromDirichlet-MeshToNeumann-Mesh |         51 |         23 |          2 |          0 |          0 |   0.000682 |
+          advance/map.pet.solveConsistent.FromDirichlet-MeshToNeumann-Mesh |         51 |          5 |          0 |          0 |          0 |   0.000148 |
+                                                                 configure |          1 |          0 |          0 |          0 |          0 |          0 |
+                                                                  finalize |          1 |         12 |         12 |         12 |         12 |   0.000356 |
+                                                                initialize |          1 |         22 |         22 |         22 |         22 |   0.000653 |
+                                     initialize/m2n.acceptMasterConnection |          1 |          3 |          3 |          3 |          3 |    8.9e-05 |
+                                     initialize/m2n.acceptSlavesConnection |          1 |         14 |         14 |         14 |         14 |   0.000415 |
+                               initialize/m2n.broadcastVertexDistributions |          2 |          0 |          0 |          0 |          0 |          0 |
+                                      initialize/m2n.buildCommunicationMap |          2 |          0 |          0 |          0 |          0 |          0 |
+                                       initialize/m2n.createCommunications |          2 |          6 |          3 |          2 |          3 |   0.000178 |
+                                 initialize/m2n.exchangeVertexDistribution |          2 |          6 |          3 |          3 |          3 |   0.000178 |
+                              initialize/partition.gatherMesh.Neumann-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+                             initialize/partition.prepareMesh.Neumann-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+                     initialize/partition.receiveGlobalMesh.Dirichlet-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+                          initialize/partition.sendGlobalMesh.Neumann-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+                                                            initializeData |          1 |        874 |        874 |        874 |        874 |     0.0259 |
+                                            initializeData/m2n.receiveData |          1 |        865 |        865 |        865 |        865 |     0.0257 |
+                                               initializeData/m2n.sendData |          1 |          0 |          0 |          0 |          0 |          0 |
+                initializeData/map.pet.AO.FromDirichlet-MeshToNeumann-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+    initializeData/map.pet.computeMapping.FromDirichlet-MeshToNeumann-Mesh |          1 |          6 |          6 |          6 |          6 |   0.000178 |
+  initializeData/map.pet.computeRescaling.FromDirichlet-MeshToNeumann-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+    initializeData/map.pet.createMatrices.FromDirichlet-MeshToNeumann-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+             initializeData/map.pet.fillA.FromDirichlet-MeshToNeumann-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+             initializeData/map.pet.fillC.FromDirichlet-MeshToNeumann-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+           initializeData/map.pet.mapData.FromDirichlet-MeshToNeumann-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+          initializeData/map.pet.postFill.FromDirichlet-MeshToNeumann-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+ initializeData/map.pet.preComputeMapping.FromDirichlet-MeshToNeumann-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+         initializeData/map.pet.preallocA.FromDirichlet-MeshToNeumann-Mesh |          1 |          1 |          1 |          1 |          1 |   2.97e-05 |
+         initializeData/map.pet.preallocC.FromDirichlet-MeshToNeumann-Mesh |          1 |          1 |          1 |          1 |          1 |   2.97e-05 |
+   initializeData/map.pet.solveConsistent.FromDirichlet-MeshToNeumann-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+        initializeData/map.pet.solverInit.FromDirichlet-MeshToNeumann-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+                                                            solver.advance |         52 |      11886 |        492 |        128 |        228 |      0.353 |
+                                                         solver.initialize |          1 |        652 |        652 |        652 |        652 |     0.0193 |
+
+
+                                                                      Name |        Max |  MaxOnRank |        Min |  MinOnRank |    Min/Max |
+---------------------------------------------------------------------------------------------------------------------------------------------
+                                                                   _GLOBAL |      33704 |          0 |      33704 |          0 |          1 |
+                                                                   advance |        771 |          0 |          1 |          0 | 0.00129702 |
+                                      advance/cpl.computeQuasiNewtonUpdate |         40 |          0 |          0 |          0 |          0 |
+                                                   advance/m2n.receiveData |        769 |          0 |        238 |          0 |   0.309493 |
+                                                      advance/m2n.sendData |          0 |          0 |          0 |          0 |          0 |
+                  advance/map.pet.mapData.FromDirichlet-MeshToNeumann-Mesh |          2 |          0 |          0 |          0 |          0 |
+          advance/map.pet.solveConsistent.FromDirichlet-MeshToNeumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+                                                                 configure |          0 |          0 |          0 |          0 |          0 |
+                                                                  finalize |         12 |          0 |         12 |          0 |          1 |
+                                                                initialize |         22 |          0 |         22 |          0 |          1 |
+                                     initialize/m2n.acceptMasterConnection |          3 |          0 |          3 |          0 |          1 |
+                                     initialize/m2n.acceptSlavesConnection |         14 |          0 |         14 |          0 |          1 |
+                               initialize/m2n.broadcastVertexDistributions |          0 |          0 |          0 |          0 |          0 |
+                                      initialize/m2n.buildCommunicationMap |          0 |          0 |          0 |          0 |          0 |
+                                       initialize/m2n.createCommunications |          3 |          0 |          2 |          0 |   0.666667 |
+                                 initialize/m2n.exchangeVertexDistribution |          3 |          0 |          3 |          0 |          1 |
+                              initialize/partition.gatherMesh.Neumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+                             initialize/partition.prepareMesh.Neumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+                     initialize/partition.receiveGlobalMesh.Dirichlet-Mesh |          0 |          0 |          0 |          0 |          0 |
+                          initialize/partition.sendGlobalMesh.Neumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+                                                            initializeData |        874 |          0 |        874 |          0 |          1 |
+                                            initializeData/m2n.receiveData |        865 |          0 |        865 |          0 |          1 |
+                                               initializeData/m2n.sendData |          0 |          0 |          0 |          0 |          0 |
+                initializeData/map.pet.AO.FromDirichlet-MeshToNeumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+    initializeData/map.pet.computeMapping.FromDirichlet-MeshToNeumann-Mesh |          6 |          0 |          6 |          0 |          1 |
+  initializeData/map.pet.computeRescaling.FromDirichlet-MeshToNeumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+    initializeData/map.pet.createMatrices.FromDirichlet-MeshToNeumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+             initializeData/map.pet.fillA.FromDirichlet-MeshToNeumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+             initializeData/map.pet.fillC.FromDirichlet-MeshToNeumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+           initializeData/map.pet.mapData.FromDirichlet-MeshToNeumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+          initializeData/map.pet.postFill.FromDirichlet-MeshToNeumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+ initializeData/map.pet.preComputeMapping.FromDirichlet-MeshToNeumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+         initializeData/map.pet.preallocA.FromDirichlet-MeshToNeumann-Mesh |          1 |          0 |          1 |          0 |          1 |
+         initializeData/map.pet.preallocC.FromDirichlet-MeshToNeumann-Mesh |          1 |          0 |          1 |          0 |          1 |
+   initializeData/map.pet.solveConsistent.FromDirichlet-MeshToNeumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+        initializeData/map.pet.solverInit.FromDirichlet-MeshToNeumann-Mesh |          0 |          0 |          0 |          0 |          0 |
+                                                            solver.advance |        492 |          0 |        128 |          0 |   0.260163 |
+                                                         solver.initialize |        652 |          0 |        652 |          0 |          1 |

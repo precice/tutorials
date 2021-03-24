@@ -8,7 +8,7 @@ from my_enums import DomainPart
 
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
-x_coupling = 1.5  # x coordinate of coupling interface
+x_coupling = 1.0  # x coordinate of coupling interface
 radius = 0.2
 midpoint = Point(0.5, 0.5)
 
