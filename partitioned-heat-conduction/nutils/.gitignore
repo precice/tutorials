@@ -1,0 +1,4 @@
+solution-Neumann-*.vtk
+solution-Dirichlet-*.vtk
+*.log
+precice-*-events.json

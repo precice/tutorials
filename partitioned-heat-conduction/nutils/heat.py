@@ -96,7 +96,7 @@ def main(nelems: 'number of elements along edge' = 10,
     x, u, uexact = bezier.eval(['x_i', 'u', 'uexact'] @ ns, lhs=lhs0, t=t)
 
     with treelog.add(treelog.DataLog()):
-        nutils.export.vtk('solution-' + side,
+        nutils.export.vtk('solution-' + side + '-0',
                           bezier.tri, x, Temperature=u, exact=uexact)
 
     t += precice_dt
