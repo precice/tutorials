@@ -57,7 +57,7 @@ clean_dealii() {
     (
         cd "$1"
         echo "--- Cleaning up deal.II case in $(pwd)"
-        rm -fv ./dealii_output/solution-*.vtk
+        rm -fv ./dealii_output/solution-*.vtk ./solution-*.vtk
         clean_precice_logs .
     )
 }
