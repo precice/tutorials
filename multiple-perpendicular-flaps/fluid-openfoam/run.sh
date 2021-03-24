@@ -25,10 +25,8 @@ blockMesh
 checkMesh
 
 # Run
-cd Fluid
-	solver=$(getApplication)
-	procs=$(getNumberOfProcessors)
-cd ..
+solver=$(getApplication)
+procs=$(getNumberOfProcessors)
 if [ $parallel -eq 1 ]; then
     decomposePar -force
     mpirun -np $procs $solver -parallel
