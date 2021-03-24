@@ -1,4 +1,4 @@
-solution-Neumann-*.vtk
-solution-Dirichlet-*.vtk
+Neumann-*.vtk
+Dirichlet-*.vtk
 *.log
 precice-*-events.json
