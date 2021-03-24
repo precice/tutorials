@@ -42,16 +42,18 @@ def main(nelems: 'number of elements along edge' = 10,
     ns.uexact = '1 + x_0 x_0 + alpha x_1 x_1 + beta ?t'
 
     res0 = domain.integral(
-        '(basis_n dudt + basis_n f + basis_n,i u_,i) d:x' @ ns, degree=degree * 2)
+        '(basis_n dudt - basis_n f + basis_n,i u_,i) d:x' @ ns, degree=degree * 2)
 
+    # set boundary conditions at non-coupling boundaries
+    # top and bottom boundary are non-coupling for both sides
     sqr0 = domain.boundary['top'].integral(
         '(u - 1 - x_0 x_0 - alpha - beta ?t)^2 d:x' @ ns, degree=degree * 2)
     sqr0 += domain.boundary['bottom'].integral(
         '(u - 1 - x_0 x_0 - beta ?t)^2 d:x' @ ns, degree=degree * 2)
-    if side == 'Dirichlet':
+    if side == 'Dirichlet':  # left boundary is non-coupling
         sqr0 += domain.boundary['left'].integral(
             '(u - 1 - alpha x_1 x_1 - beta ?t)^2 d:x' @ ns, degree=degree * 2)
-    elif side == 'Neumann':
+    elif side == 'Neumann':  # right boundary is non-coupling
         sqr0 += domain.boundary['right'].integral(
             '(u - 1 - x_0 x_0 - alpha x_1 x_1 - beta ?t)^2 d:x' @ ns, degree=degree * 2)
 
