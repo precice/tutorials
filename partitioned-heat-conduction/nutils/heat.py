@@ -17,7 +17,7 @@ def main(nelems: 'number of elements along edge' = 10,
 
     y_bottom, y_top = 0, 1
     x_left, x_right = 0, 2
-    x_coupling = 1.5  # x coordinate of coupling interface
+    x_coupling = 1  # x coordinate of coupling interface
 
     if side == 'Dirichlet':
         x_grid = numpy.linspace(x_left, x_coupling, nelems)
