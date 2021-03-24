@@ -7,7 +7,7 @@ error() {
 
 clean_tutorial() {
     (
-        cd "$1" || exit
+        cd "$1"
         echo "-- Cleaning up all cases in $(pwd)..."
         rm -rfv ./precice-run/
 
@@ -22,7 +22,7 @@ clean_tutorial() {
 
 clean_precice_logs() {
     (
-        cd "$1" || exit
+        cd "$1"
         echo "---- Cleaning up preCICE logs in $(pwd)"
         rm -fv ./precice-*-iterations.log \
                ./precice-*-convergence.log \
@@ -36,7 +36,7 @@ clean_precice_logs() {
 
 clean_calculix() {
     (
-        cd "$1" || exit
+        cd "$1"
         echo "--- Cleaning up CalculiX case in $(pwd)"
         rm -fv ./*.cvg ./*.dat ./*.frd ./*.sta ./*.12d spooles.out
         clean_precice_logs .
@@ -45,7 +45,7 @@ clean_calculix() {
 
 clean_codeaster() {
     (
-        cd "$1" || exit
+        cd "$1"
         echo "--- Cleaning up code_aster case in $(pwd)"
         rm -fv ./*.mess ./*.resu ./*.rmed  # TODO: Check this list
         rm -rfv ./REPE_OUT/*
@@ -55,7 +55,7 @@ clean_codeaster() {
 
 clean_dealii() {
     (
-        cd "$1" || exit
+        cd "$1"
         echo "--- Cleaning up deal.II case in $(pwd)"
         rm -fv ./dealii_output/solution-*.vtk
         clean_precice_logs .
@@ -64,7 +64,7 @@ clean_dealii() {
 
 clean_fenics() {
     (
-        cd "$1" || exit
+        cd "$1"
         echo "--- Cleaning up FEniCS case in $(pwd)"
         rm -fv ./*.pvd spooles.out FSI-S/* # TODO: Check this list
         clean_precice_logs .
@@ -73,7 +73,7 @@ clean_fenics() {
 
 clean_nutils() {
     (
-        cd "$1" || exit
+        cd "$1"
         echo "--- Cleaning up Nutils case in $(pwd)"
         clean_precice_logs .
     )
@@ -81,7 +81,7 @@ clean_nutils() {
 
 clean_openfoam() {
     (
-        cd "$1" || exit
+        cd "$1"
         echo "--- Cleaning up OpenFOAM case in $(pwd)"
         if [ -n "${WM_PROJECT:-}" ] || error "No OpenFOAM environment is active."; then
             # shellcheck disable=SC1090 # This is an OpenFOAM file which we don't need to check
@@ -94,7 +94,7 @@ clean_openfoam() {
 
 clean_su2() {
     (
-        cd "$1" || exit
+        cd "$1"
         echo "--- Cleaning up SU2 case in $(pwd)"
         rm -fv ./restart_flow_*.dat forces_breakdown.dat ./surface_flow_*.csv ./flow_*.vtk ./history_*.vtk
         clean_precice_logs .
