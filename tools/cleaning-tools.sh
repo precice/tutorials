@@ -38,7 +38,7 @@ clean_calculix() {
     (
         cd "$1" || exit
         echo "--- Cleaning up CalculiX case in $(pwd)"
-        rm -fv ./*.cvg ./*.dat ./*.frd ./*.sta ./*.12d spooles.out  # TODO: Check this list
+        rm -fv ./*.cvg ./*.dat ./*.frd ./*.sta ./*.12d spooles.out
         clean_precice_logs .
     )
 }
@@ -96,7 +96,7 @@ clean_su2() {
     (
         cd "$1" || exit
         echo "--- Cleaning up SU2 case in $(pwd)"
-        rm -fv ./restart_flow_*.dat forces_breakdown.dat surface_flow_*.csv # TODO: Check this list
+        rm -fv ./restart_flow_*.dat forces_breakdown.dat ./surface_flow_*.csv ./flow_*.vtk ./history_*.vtk
         clean_precice_logs .
     )
 }
