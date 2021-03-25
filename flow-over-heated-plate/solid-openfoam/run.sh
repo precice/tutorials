@@ -31,3 +31,4 @@ else
     $solver
 fi
 
+. ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs

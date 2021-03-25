@@ -38,4 +38,4 @@ else
 fi
 
 # Workaround for issue #26 (OF-adapter, relevant for OF .com versions) 
-./removeObsoleteFolders.sh
+. ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
