@@ -19,6 +19,7 @@ rm -rfv 0/
 cp -r 0.orig/ 0/
 blockMesh
 checkMesh
+touch solid-openfoam.foam
 
 # Run
 solver=$(getApplication)
