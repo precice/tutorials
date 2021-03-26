@@ -2,14 +2,14 @@
 title: Partitioned heat conduction
 permalink: tutorials-partitioned-heat-conduction.html
 keywords: FEniCS, Nutils, Heat conduction
-summary: In this tutorial we solve a simple heat equation. The domain is partitioned and the coupling is established in a Dirichlet-Neumann fashion.
+summary: We solve a simple heat equation. The domain is partitioned and the coupling is established in a Dirichlet-Neumann fashion.
 ---
 
 {% include important.html content="We have not yet ported the documentation of the preCICE tutorials from the preCICE wiki to here. Please go to the [preCICE wiki](https://github.com/precice/precice/wiki#2-getting-started---tutorials)" %}
 
 ## Setup
 
-In this tutorial we solve a partitioned heat equation. For information on the non-partitioned case, please refer to [1, p.37ff]. In this tutorial the computational domain is partitioned and coupled via preCICE. The coupling roughly follows the approach described in [2].
+We solve a partitioned heat equation. For information on the non-partitioned case, please refer to [1, p.37ff]. In this tutorial the computational domain is partitioned and coupled via preCICE. The coupling roughly follows the approach described in [2].
 
 ![Case setup of partitioned-heat-conduction case](images/tutorials-partitioned-heat-conduction-setup.png)
 
@@ -26,7 +26,7 @@ You can either couple a solver with itself or different solvers with each other.
 * `fenics`, requires you to install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
 
 
-* :construction: This case is still under construction. See https://github.com/precice/tutorials/issues/152. :construction: `nutils`, requires you to install [Nutils](http://www.nutils.org/en/latest/).
+* `nutils`, requires you to install [Nutils](http://www.nutils.org/en/latest/).
 
 ## Running the simulation
 
@@ -78,10 +78,6 @@ cd nutils
 You can mix the Nutils and FEniCS solver, if you like. Please provide the option `--error-tol=10e-3` to the FEniCS solver in this case. The accuracy of a mixed setup is lower than for a pure FEniCS setup and therefore the tolerance has to be increased.
 
 We don't exactly know where this higher error comes from, but assume that it originates from mixing Gauss points (Nutils) with mesh points (FEniCS). This leads to a mapping error, even if identical meshes are used.
-
-### Any combination of the solvers above
-
-Feel free to mix any combination of Dirichlet- and Neumann-solvers by mixing the respective commands described above.
 
 ## Visualization
 
