@@ -11,11 +11,14 @@ subsection Time
 
   # Write results every x timesteps
   set Output interval       = 100
+
+  # Output folder
+  set Output folder   = dealii-output
 end
 
 subsection Discretization
   # Polynomial degree of the FE system
-  set Polynomial degree   = 4
+  set Polynomial degree   = 1
 end
 
 subsection System properties
