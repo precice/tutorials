@@ -63,7 +63,7 @@ If you want to visualize both domains with ParaView, keep in mind that the deal.
 
 There is an [known issue](https://github.com/precice/openfoam-adapter/issues/26) that leads to additional "empty" result directories when running with some OpenFOAM versions, leading to inconveniences during post-processing. At the end of `run.sh`, we call `openfoam_remove_empty_dirs` (provided by `tools/openfoam-remove-empty-dirs`) to delete the additional files before importing the results in ParaView.
 
-Moreover, as we defined a watchpoint at the flap tip (see `precice-config.xml`), we can plot it with gnuplot using the script `plotDisplacement.sh`.  The resulting graph shows the vertical (y) displacement of the tip of the flap.
+Moreover, as we defined a watchpoint at the flap tip (see `precice-config.xml`), we can plot it with gnuplot using the script `plot-displacement.sh`.  The resulting graph shows the vertical (y) displacement of the tip of the flap.
 
 
 ![FSI3 watchpoint](images/tutorials-turek-hron-fsi3-tip-plot.png)
