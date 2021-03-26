@@ -59,24 +59,23 @@ mpirun -n <N_PROC> python3 heat.py -d
 
 ### Nutils
 
-For choosing whether you want to run the Dirichlet-kind and a Neumann-kind participant, please provide the following commandline input:
-
-* `side=Dirichlet` will enforce Dirichlet boundary conditions on the coupling interface.
-* `side=Neumann` will enforce Neumann boundary conditions on the coupling interface.
-
 For running the case, open two terminals and:
 
 ```
 cd nutils
-python3 heat.py side=Dirichlet
+./run_Dirichlet.sh
 ```
 
 and
 
 ```
 cd nutils
-python3 heat.py side=Neumann
+./run_Neumann.sh
 ```
+
+### Nutils & FEniCS
+
+You can mix the Nutils and FEniCS solver, if you like. Please provide the option `--error-tol=10e-3` to the FEniCS solver in this case. The accuracy of a mixed setup is lower than for a pure FEniCS setup and therefore the tolerance has to be increased.
 
 ### Any combination of the solvers above
 
@@ -84,7 +83,11 @@ Feel free to mix any combination of Dirichlet- and Neumann-solvers by mixing the
 
 ## Visualization
 
-Output is written into the folder `fenics/out`. You can visualize the content with paraview by opening the `*.pvd` files. The files `Dirichlet.pvd` and `Neumann.pvd` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution, the files with `error` show the error and the files with `ranks` the ranks of the solvers (if executed in parallel).
+Output is written into the folders `fenics/out` and `nutils`. 
+
+For FEniCS you can visualize the content with paraview by opening the `*.pvd` files. The files `Dirichlet.pvd` and `Neumann.pvd` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution, the files with `error` show the error and the files with `ranks` the ranks of the solvers (if executed in parallel).
+
+For Nutils, please use the files `Dirichlet-*.vtk` or `Neumann-*.vtk`. Please note that these files contain the temperature as well as the reference solution.
 
 ![Animation of the partitioned heat equation](images/tutorials-partitioned-heat-conduction-FEniCS-movie.gif)
 
