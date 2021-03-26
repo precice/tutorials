@@ -19,6 +19,7 @@ rm -rfv 0/
 cp -r 0.orig/ 0/
 blockMesh
 checkMesh
+touch solid-openfoam.foam
 
 solver=$(getApplication)
 procs=$(getNumberOfProcessors)
@@ -30,3 +31,4 @@ else
     $solver
 fi
 
+. ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs

@@ -22,7 +22,9 @@ echo "Preparing and running the Fluid participant..."
 
 rm -rfv 0/
 cp -r 0.orig/ 0/
+cp -r constant/polyMesh.orig constant/polyMesh
 checkMesh
+touch fluid-openfoam.foam
 
 # Run
 solver=$(getApplication)
@@ -36,4 +38,4 @@ else
 fi
 
 # Workaround for issue #26 (OF-adapter, relevant for OF .com versions) 
-./removeObsoleteFolders.sh
+. ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
