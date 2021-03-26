@@ -11,6 +11,9 @@ subsection Time
 
   # Write results every x timesteps
   set Output interval       = 10
+
+  # Output folder
+  set Output folder   = dealii-output
 end
 
 subsection Discretization
