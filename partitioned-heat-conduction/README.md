@@ -77,6 +77,8 @@ cd nutils
 
 You can mix the Nutils and FEniCS solver, if you like. Please provide the option `--error-tol=10e-3` to the FEniCS solver in this case. The accuracy of a mixed setup is lower than for a pure FEniCS setup and therefore the tolerance has to be increased.
 
+We don't exactly know where this higher error comes from, but assume that it originates from mixing Gauss points (Nutils) with mesh points (FEniCS). This leads to a mapping error, even if identical meshes are used.
+
 ### Any combination of the solvers above
 
 Feel free to mix any combination of Dirichlet- and Neumann-solvers by mixing the respective commands described above.
