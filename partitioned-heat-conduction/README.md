@@ -30,54 +30,36 @@ You can either couple a solver with itself or different solvers with each other.
 
 ## Running the simulation
 
-### FEniCS
+This tutorial is for FEniCS and Nutils. You can find the corresponding `run.sh` script in the folders `fenics` and `nutils`.
 
 For choosing whether you want to run the Dirichlet-kind and a Neumann-kind participant, please provide the following commandline input:
 
 * `-d` flag will enforce Dirichlet boundary conditions on the coupling interface.
 * `-n` flag will enforce Neumann boundary conditions on the coupling interface.
 
-For running the case, open two terminals and:
+For running the case, open two terminals run:
 
 ```
 cd fenics
-python3 heat.py -d
+python3 ./run.sh -d
 ```
 
 and
 
 ```
 cd fenics
-python3 heat.py -n
+python3 ./run.sh -n
 ```
 
-If you want to use Nutils for one or both sides of the setup, just `cd nutils`. The FEniCS case also supports parallel runs. Here, simply execute
+If you want to use Nutils for one or both sides of the setup, just `cd nutils`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
 
 ```
 mpirun -n <N_PROC> python3 heat.py -d
 ```
 
-### Nutils
+### Note on the combination of Nutils & FEniCS
 
-For running the case, open two terminals and:
-
-```
-cd nutils
-./run_Dirichlet.sh
-```
-
-and
-
-```
-cd nutils
-./run_Neumann.sh
-```
-
-### Nutils & FEniCS
-
-You can mix the Nutils and FEniCS solver, if you like. Please provide the option `--error-tol=10e-3` to the FEniCS solver in this case. The accuracy of a mixed setup is lower than for a pure FEniCS setup and therefore the tolerance has to be increased.
-
-We don't exactly know where this higher error comes from, but assume that it originates from mixing Gauss points (Nutils) with mesh points (FEniCS). This leads to a mapping error, even if identical meshes are used.
+You can mix the Nutils and FEniCS solver, if you like. Note that the error for a pure FEniCS simulation is lower than for a mixed one. We don't exactly know where this higher error comes from, but assume that it originates from mixing Gauss points (Nutils) with mesh points (FEniCS). This leads to a mapping error, even if identical meshes are used.
 
 ## Visualization
 
