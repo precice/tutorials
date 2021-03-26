@@ -133,7 +133,7 @@ def main(nelems: 'number of elements along edge' = 10,
                 res = res0
             else:
                 cons = cons0
-                res = res0 + couplingsample.integral(ns.basis * coupledata)
+                res = res0 + couplingsample.integral(ns.basis * coupledata / (nelems-1))
 
         dt = min(timestepsize, precice_dt)
 
@@ -144,7 +144,7 @@ def main(nelems: 'number of elements along edge' = 10,
             if side == 'Dirichlet':
                 fluxvalues = res.eval(lhs0=lhs0, lhs=lhs, dt=dt, t=t)
                 writedata = couplingsample.eval(
-                    'flux' @ ns, fluxdofs=fluxdofs(fluxvalues))
+                    'flux' @ ns, fluxdofs=fluxdofs(fluxvalues)) * (nelems-1)
             else:
                 writedata = couplingsample.eval('u' @ ns, lhs=lhs)
 
