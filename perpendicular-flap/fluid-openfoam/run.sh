@@ -34,7 +34,7 @@ else
 fi
 
 # Workaround for issue #26
-./removeObsoleteFolders.sh
+. ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
 
 echo ""
 echo "### NOTE ### Make sure to use the correct solver for your OpenFOAM version! (pimpleFoam for OpenFOAM v1806, OpenFOAM 6, or newer, vs pimpleDyMFoam for older) You may change this in your Fluid/system/controlDict file, if needed."
