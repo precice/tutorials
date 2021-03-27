@@ -18,7 +18,7 @@ end
 
 subsection Discretization
   # Polynomial degree of the FE system
-  set Polynomial degree   = 1
+  set Polynomial degree   = 4
 end
 
 subsection System properties
