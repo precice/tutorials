@@ -59,7 +59,7 @@ mpirun -n <N_PROC> python3 heat.py -d
 
 ### Note on the combination of Nutils & FEniCS
 
-You can mix the Nutils and FEniCS solver, if you like. Note that the error for a pure FEniCS simulation is lower than for a mixed one. We don't exactly know where this higher error comes from, but assume that it originates from mixing Gauss points (Nutils) with mesh points (FEniCS). This leads to a mapping error, even if identical meshes are used.
+You can mix the Nutils and FEniCS solver, if you like. Note that the error for a pure FEniCS simulation is lower than for a mixed one. We did not yet study the origin of this error, but assume that this is due to the fact that Nutils uses Gauss points as coupling mesh and therefore entails extrapolation in the data mapping at the top and bottom corners.
 
 ## Visualization
 
