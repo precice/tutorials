@@ -100,8 +100,9 @@ def main(nelems: 'number of elements along edge' = 10,
     with treelog.add(treelog.DataLog()):
         nutils.export.vtk(side + '-0',
                           bezier.tri, x, Temperature=u, reference=uexact)
-
+                          
     t += precice_dt
+    timestep = 1
 
     cons0 = nutils.solver.optimize(
         'lhs', sqr0, droptol=1e-15, arguments=dict(t=t))
@@ -169,10 +170,11 @@ def main(nelems: 'number of elements along edge' = 10,
                     ['x_i', 'u', 'uexact'] @ ns, lhs=lhs0, t=t)
 
                 with treelog.add(treelog.DataLog()):
-                    nutils.export.vtk(side,
+                    nutils.export.vtk(side + "-" + str(timestep),
                                       bezier.tri, x, Temperature=u, reference=uexact)
-
+                                      
             t += dt
+            timestep += 1
 
     interface.finalize()
 
