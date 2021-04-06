@@ -2,14 +2,14 @@
 title: Partitioned heat conduction
 permalink: tutorials-partitioned-heat-conduction.html
 keywords: FEniCS, Nutils, Heat conduction
-summary: In this tutorial we solve a simple heat equation. The domain is partitioned and the coupling is established in a Dirichlet-Neumann fashion.
+summary: We solve a simple heat equation. The domain is partitioned and the coupling is established in a Dirichlet-Neumann fashion.
 ---
 
 {% include important.html content="We have not yet ported the documentation of the preCICE tutorials from the preCICE wiki to here. Please go to the [preCICE wiki](https://github.com/precice/precice/wiki#2-getting-started---tutorials)" %}
 
 ## Setup
 
-In this tutorial we solve a partitioned heat equation. For information on the non-partitioned case, please refer to [1, p.37ff]. In this tutorial the computational domain is partitioned and coupled via preCICE. The coupling roughly follows the approach described in [2].
+We solve a partitioned heat equation. For information on the non-partitioned case, please refer to [1, p.37ff]. In this tutorial the computational domain is partitioned and coupled via preCICE. The coupling roughly follows the approach described in [2].
 
 ![Case setup of partitioned-heat-conduction case](images/tutorials-partitioned-heat-conduction-setup.png)
 
@@ -26,38 +26,48 @@ You can either couple a solver with itself or different solvers with each other.
 * `fenics`, requires you to install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
 
 
-* :construction: This case is still under construction. See https://github.com/precice/tutorials/issues/152. :construction: `nutils`, requires you to install [Nutils](http://www.nutils.org/en/latest/).
+* `nutils`, requires you to install [Nutils](http://www.nutils.org/en/latest/).
 
 ## Running the simulation
+
+This tutorial is for FEniCS and Nutils. You can find the corresponding `run.sh` script in the folders `fenics` and `nutils`.
 
 For choosing whether you want to run the Dirichlet-kind and a Neumann-kind participant, please provide the following commandline input:
 
 * `-d` flag will enforce Dirichlet boundary conditions on the coupling interface.
 * `-n` flag will enforce Neumann boundary conditions on the coupling interface.
 
-For running the case, open two terminals and:
+For running the case, open two terminals run:
 
 ```
 cd fenics
-python3 heat.py -d
+python3 ./run.sh -d
 ```
 
 and
 
 ```
 cd fenics
-python3 heat.py -n
+python3 ./run.sh -n
 ```
 
-If you want to use Nutils for one or both sides of the setup, just `cd nutils`. The FEniCS case also supports parallel runs. Here, simply execute
+If you want to use Nutils for one or both sides of the setup, just `cd nutils`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
 
 ```
 mpirun -n <N_PROC> python3 heat.py -d
 ```
 
+### Note on the combination of Nutils & FEniCS
+
+You can mix the Nutils and FEniCS solver, if you like. Note that the error for a pure FEniCS simulation is lower than for a mixed one. We did not yet study the origin of this error, but assume that this is due to the fact that Nutils uses Gauss points as coupling mesh and therefore entails extrapolation in the data mapping at the top and bottom corners.
+
 ## Visualization
 
-Output is written into the folder `fenics/out`. You can visualize the content with paraview by opening the `*.pvd` files. The files `Dirichlet.pvd` and `Neumann.pvd` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution, the files with `error` show the error and the files with `ranks` the ranks of the solvers (if executed in parallel).
+Output is written into the folders `fenics/out` and `nutils`. 
+
+For FEniCS you can visualize the content with paraview by opening the `*.pvd` files. The files `Dirichlet.pvd` and `Neumann.pvd` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution, the files with `error` show the error and the files with `ranks` the ranks of the solvers (if executed in parallel).
+
+For Nutils, please use the files `Dirichlet-*.vtk` or `Neumann-*.vtk`. Please note that these files contain the temperature as well as the reference solution.
 
 ![Animation of the partitioned heat equation](images/tutorials-partitioned-heat-conduction-FEniCS-movie.gif)
 
