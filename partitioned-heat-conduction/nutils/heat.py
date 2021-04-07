@@ -78,9 +78,8 @@ def main(side='Dirichlet'):
   projection_cons[projection_matrix.rowsupp(1e-15)] = np.nan
   fluxdofs = lambda v: projection_matrix.solve(v, constrain=projection_cons)
 
-  # helper data structures to integrate heat flux correctly  
-  dx = coupling_sample.eval('d:x' @ ns)
-  dx_function = coupling_sample.asfunction(dx)
+  # helper data structure to apply heat flux correctly
+  dx_function = 'd:x' @ ns
   
   precice_dt = interface.initialize()
 
