@@ -1,7 +1,7 @@
 #! /bin/sh
-set -e -u
 
 openfoam_remove_empty_dirs() {
+	set -e -u
 	echo "Looking for any time directories without results (e.g. stray functionObjectProperties files, see openfoam-adapter issue #26 on GitHub)..."
 
 	for f in [0-9]* [0-9]*.[0-9]*; do
