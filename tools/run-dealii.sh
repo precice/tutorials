@@ -32,6 +32,6 @@ fi
 # If it has been copied to the local directory
 if test -f "elasticity"; then
     ./"${EXE}" parameters.prm
-    else
+else
     echo "Unable to find the executable ${EXE}. Either specify the executable explicitly (-e=/path/to/elasticity) or make it discoverable at runtime (e.g. export PATH)"
 fi

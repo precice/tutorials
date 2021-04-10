@@ -9,7 +9,7 @@ summary: Tutorial for a shell-and-tube heat exchanger, using OpenFOAM and Calcul
 
 This tutorial describes how to run a conjugate heat transfer simulation with two separate OpenFOAM solvers and CalculiX. The files for this tutorial are located in this repository (directory CHT/heat_exchanger).
 
-This tutorial is based on [a case](https://www.simscale.com/projects/cheunglucia/heat_exchanger_-_cht_simulation/) prepared with [SimScale](https://www.simscale.com/) by [Lucia Cheung Yau](https://github.com/ludcila) for her [Master's Thesis](https://www5.in.tum.de/pub/Cheung2016_Thesis.pdf). It works with OpenFOAM 5.0 and CalculiX 2.12, but newer minor versions should work as well.
+This tutorial is based on [a case](https://www.simscale.com/projects/cheunglucia/heat_exchanger_-_cht_simulation/) prepared with [SimScale](https://www.simscale.com/) by [Lucia Cheung Yau](https://github.com/ludcila) for her [Master's Thesis](https://www5.in.tum.de/pub/Cheung2016_Thesis.pdf).
 
 {% include note.html content="Since the already prepared case contains mesh files of approx. 50MB in size, we host these files outside of the repository and you can download and extract them automatically in the appropriate locations by running the Download_meshes script. We plan to integrate the preparation part in this tutorial in the future." %}
 
@@ -32,7 +32,7 @@ We define the participants `Inner-Fluid`, `Solid`, and `Outer-Fluid` and two int
 
 ## Running the Simulation
 
-Before starting the simulation for the first time you need to download the mesh files and copy them into the appropriate location. The shell script `./Download_meshes` will handle these things automatically. Afterwards, the simulation setup is ready to run.
+Before starting the simulation for the first time you need to download the mesh files and copy them into the appropriate location. The shell script `./download-meshes.sh` will handle these things automatically. Afterwards, the simulation setup is ready to run.
 
 In order to run the coupled simulation, you can simply step into the participant directories and execute`./run.sh` for run (or `./run.sh -parallel`) for a parallel run. The simulation will need approximately one hour on a modern laptop to end (t=500). Before repeating the simulation, you can use the `clean.sh` script to clean-up any previous results and log files.
 
