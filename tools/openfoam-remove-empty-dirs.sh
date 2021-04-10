@@ -1,6 +1,7 @@
 #! /bin/sh
 
 openfoam_remove_empty_dirs() {
+	(
 	set -e -u
 	echo "Looking for any time directories without results (e.g. stray functionObjectProperties files, see openfoam-adapter issue #26 on GitHub)..."
 
@@ -20,4 +21,5 @@ openfoam_remove_empty_dirs() {
 			cd ..
 		done
 	fi
+	)
 }
