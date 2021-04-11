@@ -13,5 +13,3 @@ if [ "${1:-}" = "-parallel" ]; then
 else
     ${solver}
 fi
-
-. openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
