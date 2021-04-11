@@ -2,6 +2,6 @@
 set -e -u
 
 blockMesh
-touch fluid.foam
+touch fluid-openfoam.foam
 
 ../../tools/run-openfoam.sh "$@"
