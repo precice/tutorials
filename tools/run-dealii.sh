@@ -3,30 +3,29 @@ set -e -u
 
 EXE=""
 
-for i in "$@"
-do
-case $i in
-    -e=*|--exec=*)
-    EXE="${i#*=}"
-    shift # past argument=value
-    ;;
+for i in "$@"; do
+    case $i in
+    -e=* | --exec=*)
+        EXE="${i#*=}"
+        shift # past argument=value
+        ;;
     *)
-      # unknown option
-    ;;
-esac
+        # unknown option
+        ;;
+    esac
 done
 
 # If the executable has been defined
-if [ -n "${EXE}"  ]; then
+if [ -n "${EXE}" ]; then
     "${EXE}" parameters.prm
-    exit 0;
+    exit 0
 fi
 
 EXE="elasticity"
 # If it is in the global path
 if [ -n "$(command -v "${EXE}")" ]; then
-   "${EXE}" parameters.prm
-   exit 0;
+    "${EXE}" parameters.prm
+    exit 0
 fi
 
 # If it has been copied to the local directory
