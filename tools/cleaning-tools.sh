@@ -1,7 +1,8 @@
 #!/bin/sh
 
 error() {
-    echo "Error: $1" >&2; exit 1;
+    echo "Error: $1" >&2
+    exit 1
 }
 
 clean_tutorial() {
@@ -14,7 +15,7 @@ clean_tutorial() {
         for case in */; do
             if [ "${case}" = images/ ]; then
                 continue
-            fi;
+            fi
             (cd "${case}" && ./clean.sh)
         done
     )
@@ -26,12 +27,12 @@ clean_precice_logs() {
         cd "$1"
         echo "---- Cleaning up preCICE logs in $(pwd)"
         rm -fv ./precice-*-iterations.log \
-               ./precice-*-convergence.log \
-               ./precice-*-events.json \
-               ./precice-*-events-summary.log \
-               ./precice-postProcessingInfo.log \
-               ./precice-*-watchpoint-*.log \
-               ./precice-*-watchintegral-*.log
+            ./precice-*-convergence.log \
+            ./precice-*-events.json \
+            ./precice-*-events-summary.log \
+            ./precice-postProcessingInfo.log \
+            ./precice-*-watchpoint-*.log \
+            ./precice-*-watchintegral-*.log
     )
 }
 
