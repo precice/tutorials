@@ -72,7 +72,8 @@ clean_fenics() {
         set -e -u
         cd "$1"
         echo "--- Cleaning up FEniCS case in $(pwd)"
-        rm -fv ./*.pvd spooles.out out FSI-S/*
+        rm -fv ./*.pvd spooles.out FSI-S/*
+        rm -rfv ./out/
         clean_precice_logs .
     )
 }
