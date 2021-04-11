@@ -1,7 +1,6 @@
-# Auxiliary files, or files downloaded via download-meshes.sh
+# Files distributed separately, downloaded via download-meshes.sh
 adiabatic.dfl
 all.msh
-dummy
 inner-interface.flm
 inner-interface.nam
 inner-interface.sur
