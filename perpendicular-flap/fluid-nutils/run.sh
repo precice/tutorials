@@ -1,7 +1,4 @@
-#!/bin/bash
+#!/bin/sh
+set -e -u
 
-# Solid participant
-
-# Run
 python3 nsale.py
-

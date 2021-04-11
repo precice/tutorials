@@ -82,6 +82,7 @@ clean_nutils() {
         set -e -u
         cd "$1"
         echo "--- Cleaning up Nutils case in $(pwd)"
+        rm -fv ./*.vtk
         clean_precice_logs .
     )
 }

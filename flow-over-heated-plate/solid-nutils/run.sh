@@ -1,7 +1,5 @@
 #!/bin/bash
+set -e -u
 
-# Solid participant
-
-# Run
 python3 solid.py
 
