@@ -15,7 +15,7 @@ We solve a partitioned heat equation. For information on the non-partitioned cas
 
 Case setup from [3]. `D` denotes the Dirichlet participant and `N` denotes the Neumann participant.
 
-The heat equation is solved on a rectangular domain `Omega = [0,2] x [0,1]` with given Dirichlet boundary conditions. We split the domain at `x_c = 1` using a straight vertical line, the coupling interface. The left part of the domain will be referred to as the Dirichlet partition and the right part as the Neumann partition. To couple the two participant we use Dirichlet-Neumann coupling. Here, the Dirichlet participant receives Dirichlet boundary conditions (`Temperature`) at the coupling interface and solves the heat equation using these boundary conditions on the left part of the domain. Then the Dirichlet participant computes the resulting heat flux (`Flux`) from the solution and sends it to the Neumann participant. The Neumann participant uses the flux as a Neumann boundary condition to solve the heat equation on the right part of the domain. We then extract the temperature from the solution and send it back to the Dirichlet participant. This establishes the coupling between the two participants.
+The heat equation is solved on a rectangular domain `Omega = [0,2] x [0,1]` with given Dirichlet boundary conditions. We split the domain at `x_c = 1` using a straight vertical line, the coupling interface. The left part of the domain will be referred to as the Dirichlet partition and the right part as the Neumann partition. To couple the two participants we use Dirichlet-Neumann coupling. Here, the Dirichlet participant receives Dirichlet boundary conditions (`Temperature`) at the coupling interface and solves the heat equation using these boundary conditions on the left part of the domain. Then the Dirichlet participant computes the resulting heat flux (`Flux`) from the solution and sends it to the Neumann participant. The Neumann participant uses the flux as a Neumann boundary condition to solve the heat equation on the right part of the domain. We then extract the temperature from the solution and send it back to the Dirichlet participant. This establishes the coupling between the two participants.
 
 This simple case allows us to compare the solution for the partitioned case to a known analytical solution (method of manufactures solutions, see [1, p.37ff]). For more usage examples and details, please refer to [3, sect. 4.1].
 
@@ -23,10 +23,9 @@ This simple case allows us to compare the solution for the partitioned case to a
 
 You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE and the python bindings installed on your system.
 
-* `fenics`, requires you to install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
+* FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
 
-
-* `nutils`, requires you to install [Nutils](http://www.nutils.org/en/latest/).
+* Nutils. Install [Nutils](http://www.nutils.org/en/latest/).
 
 ## Running the simulation
 
@@ -41,20 +40,20 @@ For running the case, open two terminals run:
 
 ```
 cd fenics
-python3 ./run.sh -d
+./run.sh -d
 ```
 
 and
 
 ```
 cd fenics
-python3 ./run.sh -n
+./run.sh -n
 ```
 
 If you want to use Nutils for one or both sides of the setup, just `cd nutils`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
 
 ```
-mpirun -n <N_PROC> python3 heat.py -d
+mpirun -n <N_PROC> heat.py -d
 ```
 
 ### Note on the combination of Nutils & FEniCS

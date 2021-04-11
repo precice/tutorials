@@ -11,8 +11,6 @@ This tutorial describes how to run a conjugate heat transfer simulation with two
 
 This tutorial is based on [a case](https://www.simscale.com/projects/cheunglucia/heat_exchanger_-_cht_simulation/) prepared with [SimScale](https://www.simscale.com/) by [Lucia Cheung Yau](https://github.com/ludcila) for her [Master's Thesis](https://www5.in.tum.de/pub/Cheung2016_Thesis.pdf).
 
-{% include note.html content="Since the already prepared case contains mesh files of approx. 50MB in size, we host these files outside of the repository and you can download and extract them automatically in the appropriate locations by running the Download_meshes script. We plan to integrate the preparation part in this tutorial in the future." %}
-
 
 ## Setup
 
@@ -32,15 +30,17 @@ We define the participants `Inner-Fluid`, `Solid`, and `Outer-Fluid` and two int
 
 ## Running the Simulation
 
+{% include note.html content="Since the already prepared case contains mesh files of approx. 50MB in size, we currently host these files outside of the tutorials repository and you can download and extract them automatically in the appropriate locations by running the download-meshes.sh script." %}
+
 Before starting the simulation for the first time you need to download the mesh files and copy them into the appropriate location. The shell script `./download-meshes.sh` will handle these things automatically. Afterwards, the simulation setup is ready to run.
 
-In order to run the coupled simulation, you can simply step into the participant directories and execute`./run.sh` for run (or `./run.sh -parallel`) for a parallel run. The simulation will need approximately one hour on a modern laptop to end (t=500). Before repeating the simulation, you can use the `clean.sh` script to clean-up any previous results and log files.
+In order to run the coupled simulation, you can simply step into the participant directories and execute`./run.sh` (or `./run.sh -parallel` for running a fluid participant in parallel). The simulation will need several minutes or up to an hour on a laptop to end (t=500). Before repeating the simulation, you can use the `clean-tutorial.sh` script to clean-up any previous results and log files.
 
 ## Post-processing
 
 After the first results are written (a new time directory will be created), you may visualize the results.
 
-For the OpenFOAM results, you can use ParaView and open the allready-provided `fluid-inner-openfoam.foam` and `fluid-outer-openfoam.foam` files. If it is installed you may better use `paraFoam -case fluid-inner-openfoam` and load the fluid-outer-openfoam.foam through the ParaView menu. You can then group the two cases and visualize them together.
+For the OpenFOAM results, you can use ParaView and open the allready-provided `fluid-inner-openfoam.foam` and `fluid-outer-openfoam.foam` files. You can then group the two cases and visualize them together.
 
 Unfortunately, ParaView does not support CalculiX result files. You may see the results in CGX or convert them using 3rd-party tools.
 
