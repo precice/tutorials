@@ -1,0 +1,13 @@
+fluid-cpp/build/
+solid-cpp/build/
+fluid-python/__pycache__/
+solid-python/__pycache__/
+
+
+
+*.o
+*.log
+*.json
+*.pyc
+postproc/*.vtk
+
