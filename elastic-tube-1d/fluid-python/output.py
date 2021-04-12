@@ -12,7 +12,7 @@ def writeOutputToVTK(time, name, dx,  data, datanames):
     n_datasets = data.__len__()
     assert n_datasets == datanames.__len__()
 
-    outpath = os.path.join(os.getcwd(), '../postproc')
+    outpath = os.path.join(os.getcwd(), './output')
 
     if not os.path.exists(outpath):
         os.mkdir(outpath)

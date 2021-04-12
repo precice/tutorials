@@ -96,25 +96,25 @@ Parameters such as `N` can be modified directly at the `FluidSolver.py` and at t
 
 ## Post-processing
 
-The `postproc/` folder contains the .vtk files resulting from the execution, which you can visualize using eg. paraview. Alternatively you can visualize the results with the provided `postproc/plot-fluid.py` script:
-
+The results from each simulation are stored in each `fluid-<participant>/output/` folder. You can visualize these VTK files using the provided `plot-diameter.sh` script
 ```bash
-$ python3 postproc/plot-fluid.py <quantity> postproc/<prefix>
+./plot-diameter.sh
+```
+which will try to visualize the results from both fluid cases, if available.
+
+This script calls the more flexible `plot-vtk.py` Python script, which you can use as
+```bash
+python3 plot-vtk.py <quantity> <case>/output/<prefix>
 ```
 Note the required arguments specifying which quantity to plot (`pressure`, `velocity` or `diameter`) and the name prefix of the target vtk files.
 
-For example, to plot the diameter using the default prefix for vtk files, we execute:
+For example, to plot the diameter of the fluid-python case using the default prefix for VTK files, `plot-diamter.sh` executes:
 ```bash
-$ python3 postproc/plot-fluid.py diameter postproc/out_fluid_
+python3 plot-vtk.py diameter fluid-python/output/out_fluid_
 ```
 ![FSI3 setup](images/tutorials-elastic-tube-1d-diameter.png)
 
-If you run the case in parallel, you can visualize the results calculated by one rank (eg. rank 0) as follows:
-
-```bash
-$ python3 postproc/plot-fluid.py diameter postproc/out_fluid0_
-```
-
+Note that the prefix also contains the rank in the parallel C++ case.
 
 ## References
 
