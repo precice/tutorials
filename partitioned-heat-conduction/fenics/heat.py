@@ -53,16 +53,12 @@ def determine_gradient(V_g, u, flux):
     solve(a == L, flux)
 
 
-parser = argparse.ArgumentParser(
-    description="Solving heat equation for simple or complex interface case")
+parser = argparse.ArgumentParser(description="Solving heat equation for simple or complex interface case")
 command_group = parser.add_mutually_exclusive_group(required=True)
-command_group.add_argument("-d", "--dirichlet",
-                           help="create a dirichlet problem", dest="dirichlet",
+command_group.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest="dirichlet",
                            action="store_true")
-command_group.add_argument("-n", "--neumann", help="create a neumann problem",
-                           dest="neumann", action="store_true")
-parser.add_argument("-e", "--error-tol", help="set error tolerance",
-                    type=float, default=10**-6,)
+command_group.add_argument("-n", "--neumann", help="create a neumann problem", dest="neumann", action="store_true")
+parser.add_argument("-e", "--error-tol", help="set error tolerance", type=float, default=10**-6,)
 
 args = parser.parse_args()
 
@@ -88,8 +84,7 @@ V_g = VectorFunctionSpace(mesh, 'P', 1)
 W = V_g.sub(0).collapse()
 
 # Define boundary conditions
-u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t',
-                 degree=2, alpha=alpha, beta=beta, t=0)
+u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, t=0)
 u_D_function = interpolate(u_D, V)
 
 if problem is ProblemType.DIRICHLET:
@@ -106,12 +101,10 @@ precice, precice_dt, initial_data = None, 0.0, None
 # Initialize the adapter according to the specific participant
 if problem is ProblemType.DIRICHLET:
     precice = Adapter(adapter_config_filename="precice-adapter-config-D.json")
-    precice_dt = precice.initialize(
-        coupling_boundary, read_function_space=V, write_object=f_N_function)
+    precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=f_N_function)
 elif problem is ProblemType.NEUMANN:
     precice = Adapter(adapter_config_filename="precice-adapter-config-N.json")
-    precice_dt = precice.initialize(
-        coupling_boundary, read_function_space=W, write_object=u_D_function)
+    precice_dt = precice.initialize(coupling_boundary, read_function_space=W, write_object=u_D_function)
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -221,8 +214,7 @@ while precice.is_coupling_ongoing():
     if precice.is_time_window_complete():
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
-        error, error_pointwise = compute_errors(
-            u_n, u_ref, V, total_error_tol=error_tol)
+        error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
         print('output u^%d and u_ref^%d' % (n, n))

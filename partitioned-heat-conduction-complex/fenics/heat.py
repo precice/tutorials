@@ -55,33 +55,20 @@ def determine_gradient(V_g, u, flux):
 
 parser = argparse.ArgumentParser(
     description='Solving heat equation for simple or complex interface case')
-parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem",
-                    dest='dirichlet', action='store_true')
-parser.add_argument("-n", "--neumann", help="create a neumann problem",
-                    dest='neumann', action='store_true')
+parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest='dirichlet', action='store_true')
+parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0,
                     type=float)
-parser.add_argument(
-    "-a",
-    "--arbitrary-coupling-interface",
-    help="uses more general, but less exact method for " +
-    "interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1",
-    action='store_true')
+parser.add_argument("-a", "--arbitrary-coupling-interface",
+                    help="uses more general, but less exact method for interpolation on coupling interface,"
+                    "see https://github.com/precice/fenics-adapter/milestone/1", action='store_true')
 parser.add_argument("-i", "--interface", metavar="interface_type string", type=str, choices=['simple', 'complex'],
                     help="Type of coupling interface case to be solved. Options: simple, complex", default="simple")
-parser.add_argument(
-    "-dom",
-    "--domain",
-    metavar='domain_type string',
-    type=str,
-    choices=[
-        'left',
-        'right',
-        'circular',
-        'rectangle'],
-    help="Specifying part of the domain being " +
-    "solved. For simple interface the options are left, right, for complex interface the options are circular, rest")
-
+parser.add_argument("-dom", "--domain", metavar='domain_type string', type=str,
+                    choices=['left', 'right', 'circular', 'rectangle'],
+                    help="Specifying part of the domain being solved. "
+                    "For simple interface the options are left, right, "
+                    "for complex interface the options are circular, rest")
 args = parser.parse_args()
 
 fenics_dt = .1
@@ -104,8 +91,7 @@ u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] 
                  beta=beta, gamma=gamma, t=0)
 u_D_function = interpolate(u_D, V)
 # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
-f_N = Expression(("2 * gamma*t*x[0] + 2 * (1-gamma)*x[0]",
-                  "2 * alpha*x[1]"), degree=1, gamma=gamma, alpha=alpha, t=0)
+f_N = Expression(("2 * gamma*t*x[0] + 2 * (1-gamma)*x[0]", "2 * alpha*x[1]"), degree=1, gamma=gamma, alpha=alpha, t=0)
 f_N_function = interpolate(f_N, V_g)
 
 # Define initial value
@@ -117,12 +103,10 @@ precice, precice_dt, initial_data = None, 0.0, None
 # Initialize the adapter according to the specific participant
 if problem is ProblemType.DIRICHLET:
     precice = Adapter(adapter_config_filename="precice-adapter-config-D.json")
-    precice_dt = precice.initialize(
-        coupling_boundary, read_function_space=V, write_object=f_N_function)
+    precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=f_N_function)
 elif problem is ProblemType.NEUMANN:
     precice = Adapter(adapter_config_filename="precice-adapter-config-N.json")
-    precice_dt = precice.initialize(
-        coupling_boundary, read_function_space=V_g, write_object=u_D_function)
+    precice_dt = precice.initialize(coupling_boundary, read_function_space=V_g, write_object=u_D_function)
 
 boundary_marker = False
 
@@ -132,8 +116,8 @@ dt.assign(np.min([fenics_dt, precice_dt]))
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-f = Expression('beta + gamma*x[0]*x[0] - 2*gamma*t - 2*(1-gamma) - 2*alpha', degree=2, alpha=alpha,
-               beta=beta, gamma=gamma, t=0)
+f = Expression('beta + gamma*x[0]*x[0] - 2*gamma*t - 2*(1-gamma) - 2*alpha',
+               degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
@@ -249,8 +233,7 @@ while precice.is_coupling_ongoing():
     if precice.is_time_window_complete():
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
-        error, error_pointwise = compute_errors(
-            u_n, u_ref, V, total_error_tol=error_tol)
+        error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
         print('output u^%d and u_ref^%d' % (n, n))
