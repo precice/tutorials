@@ -84,10 +84,7 @@ def main(inflow: 'inflow velocity' = 10,
     ns.d_i = 'dbasis_ni ?meshdofs_n'
     ns.umesh_i = 'dbasis_ni (1.5 ?meshdofs_n - 2 ?oldmeshdofs_n + 0.5 ?oldoldmeshdofs_n ) / ?dt'
     ns.x_i = 'x0_i + d_i'  # moving geometry
-    ns.ubasis, ns.pbasis = function.chain([
-        domain.basis('std', degree=2).vector(2),
-        domain.basis('std', degree=1),
-    ])
+    ns.ubasis, ns.pbasis = function.chain([domain.basis('std', degree=2).vector(2), domain.basis('std', degree=1), ])
     ns.F_i = 'ubasis_ni ?F_n'  # stress field
     ns.urel_i = 'ubasis_ni ?lhs_n'  # relative velocity
     ns.u_i = 'umesh_i + urel_i'  # total velocity
@@ -147,14 +144,8 @@ def main(inflow: 'inflow velocity' = 10,
     resF += domain.integral('rho ubasis_ni tt(u_i d:x)' @ ns, degree=4)
     resF += domain.integral('rho ubasis_ni (u_i,j urel_j d:x)' @ ns, degree=4)
     resF += couplinginterface.sample('gauss', 4).integral('ubasis_ni F_i d:x' @ ns)
-    consF = numpy.isnan(
-        solver.optimize(
-            'F',
-            couplinginterface.sample(
-                'gauss',
-                4).integral(
-                'F_i F_i' @ ns),
-            droptol=1e-10))
+    consF = numpy.isnan(solver.optimize('F', couplinginterface.sample('gauss', 4).integral('F_i F_i' @ ns),
+                                        droptol=1e-10))
 
     # boundary conditions mesh displacements
     sqr = domain.boundary['inflow,outflow,wall'].integral('d_i d_i' @ ns, degree=2)
@@ -193,35 +184,17 @@ def main(inflow: 'inflow velocity' = 10,
             interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
         # solve fluid equations
-        lhs1 = solver.newton(
-            'lhs',
-            res,
-            lhs0=lhs0,
-            constrain=cons,
-            arguments=dict(
-                lhs0=lhs0,
-                dt=dt,
-                meshdofs=meshdofs,
-                oldmeshdofs=oldmeshdofs,
-                oldoldmeshdofs=oldoldmeshdofs,
-                oldoldoldmeshdofs=oldoldoldmeshdofs)).solve(
-            tol=1e-6)
+        lhs1 = solver.newton('lhs', res, lhs0=lhs0, constrain=cons,
+                             arguments=dict(lhs0=lhs0, dt=dt, meshdofs=meshdofs, oldmeshdofs=oldmeshdofs,
+                                            oldoldmeshdofs=oldoldmeshdofs, oldoldoldmeshdofs=oldoldoldmeshdofs)
+                             ).solve(tol=1e-6)
 
         # write forces to interface
         if interface.is_write_data_required(dt):
-            F = solver.solve_linear(
-                'F',
-                resF,
-                constrain=consF,
-                arguments=dict(
-                    lhs00=lhs00,
-                    lhs0=lhs0,
-                    lhs=lhs1,
-                    dt=dt,
-                    meshdofs=meshdofs,
-                    oldmeshdofs=oldmeshdofs,
-                    oldoldmeshdofs=oldoldmeshdofs,
-                    oldoldoldmeshdofs=oldoldoldmeshdofs))
+            F = solver.solve_linear('F', resF, constrain=consF,
+                                    arguments=dict(lhs00=lhs00, lhs0=lhs0, lhs=lhs1, dt=dt, meshdofs=meshdofs,
+                                                   oldmeshdofs=oldmeshdofs, oldoldmeshdofs=oldoldmeshdofs,
+                                                   oldoldoldmeshdofs=oldoldoldmeshdofs))
             # writedata = couplingsample.eval(ns.F, F=F) # for stresses
             writedata = couplingsample.eval('F_i d:x' @ ns, F=F, meshdofs=meshdofs) * \
                 numpy.concatenate([p.weights for p in couplingsample.points])[:, numpy.newaxis]

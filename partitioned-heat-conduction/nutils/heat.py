@@ -53,8 +53,8 @@ def main(side='Dirichlet'):
     if side == 'Dirichlet':  # left boundary is non-coupling
         sqr0 += domain.boundary['left'].integral('(u - 1 - alpha x_1 x_1 - beta ?t)^2 d:x' @ ns, degree=degree * 2)
     elif side == 'Neumann':  # right boundary is non-coupling
-        sqr0 += domain.boundary['right'].integral(
-            '(u - 1 - x_0 x_0 - alpha x_1 x_1 - beta ?t)^2 d:x' @ ns, degree=degree * 2)
+        sqr0 += domain.boundary['right'].integral('(u - 1 - x_0 x_0 - alpha x_1 x_1 - beta ?t)^2 d:x' @ ns,
+                                                  degree=degree * 2)
 
     # preCICE setup
     interface = precice.Interface(side, "../precice-config.xml", 0, 1)

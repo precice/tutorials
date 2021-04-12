@@ -76,9 +76,8 @@ def get_problem_setup(args):
         elif args.domain == 'right':
             return DomainPart.RIGHT, problem
         elif args.dirichlet and args.neumann:
-            raise Exception(
-                "You can only choose to either compute the left part of the domain (option -dl) "
-                "or the right part (option -dr)")
+            raise Exception("You can only choose to either compute the left part of the domain (option -dl) "
+                            "or the right part (option -dr)")
         elif not (args.domain == 'left' or args.domain == 'right'):
             print("Default domain partitioning for simple interface is used: Left part of domain is a "
                   "Dirichlet-type problem; right part is a Neumann-type problem")
