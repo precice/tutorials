@@ -29,6 +29,6 @@ You can start the simulation by running the script `./run.sh` located in each pa
 
 You can visualize the results using paraView or `cgx`(for native CalculiX resul files), as usual. The total deformation is rather small. Multiplying the deformation by factor of 10 (warp by vector filter in paraView) and visualizing the fluid domain at `t=0.005s` looks as follows:
 
-![result tube](images/tube_result.png)
+![result tube](images/tutorials-elastic-tube-3d-tube-result.png)
 
 {% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}

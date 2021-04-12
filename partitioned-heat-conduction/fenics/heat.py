@@ -54,17 +54,21 @@ def determine_gradient(V_g, u, flux):
 
 
 parser = argparse.ArgumentParser(
-    description='Solving heat equation for simple or complex interface case')
-parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem",
-                    dest='dirichlet', action='store_true')
-parser.add_argument("-n", "--neumann", help="create a neumann problem",
-                    dest='neumann', action='store_true')
+    description="Solving heat equation for simple or complex interface case")
+command_group = parser.add_mutually_exclusive_group(required=True)
+command_group.add_argument("-d", "--dirichlet",
+        help="create a dirichlet problem", dest="dirichlet",
+        action="store_true")
+command_group.add_argument("-n", "--neumann", help="create a neumann problem",
+        dest="neumann", action="store_true")
+parser.add_argument("-e", "--error-tol", help="set error tolerance",
+                    type=float, default=10**-6,)
 
 args = parser.parse_args()
 
 fenics_dt = .1  # time step size
 # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
-error_tol = 10 ** -6
+error_tol = args.error_tol
 
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta

@@ -7,13 +7,13 @@ summary: This tutorial describes how to run a conjugate heat transfer coupled si
 
 ## Setup
 
-This scenario consists of one fluid and one solid participant and it is inspired by Vynnycky et al. [1]. A fluid enters a channel with temperature `T_\infty`, where it comes in contact with a solid plate. The plate is heated at its bottom and has a constant temperature of `T_hot`.
+This scenario consists of one fluid and one solid participant and it is inspired by Vynnycky et al. [1]. A fluid enters a channel with temperature $$ T_\infty $$, where it comes in contact with a solid plate. The plate is heated at its bottom and has a constant temperature of $$ T_{hot} $$.
 
 ![img](images/tutorials-flow-over-heated-plate-example.png)
 
 The test case is two-dimensional and a serial-implicit coupling with Aitken underrelaxation is used for the coupling.
 
-The inlet velocity is `u_\infty = 0.1 m/s`, the inlet temperature is `T_\infty = 300K`. The fluid and solid have the same thermal conductivities `k_S = k_F = 100 W/m/K`. Further material properties of the fluid are its viscosity `mu = 0.0002 kg/m/s` and specific heat capacity `c_p = 5000 J/kg/K`. The Prandtl number `Pr = 0.01` follows from thermal conductivity, viscosity and specific heat capacity. The solid has the thermal diffusivity `\alpha = 1 m^2/s`. The gravitational acceleration is `g = 9.81 m/s^2`.
+The inlet velocity is $$ u_{\infty} = 0.1 m/s $$, the inlet temperature is $$ T_{\infty} = 300K $$. The fluid and solid have the same thermal conductivities $$ k_S = k_F = 100 W/m/K $$. Further material properties of the fluid are its viscosity $$ mu = 0.0002 kg/m/s $$ and specific heat capacity $$ c_p = 5000 J/kg/K $$. The Prandtl number $$ Pr = 0.01 $$ follows from thermal conductivity, viscosity and specific heat capacity. The solid has the thermal diffusivity $$ \alpha = 1 m^2/s $$. The gravitational acceleration is $$ g = 9.81 m/s^2 $$.
 
 ## Available solvers
 
@@ -42,20 +42,20 @@ and
 cd solid-fenics
 ./run.sh
 ```
-in order to use OpenFOAM and FEniCS for this test case.
+in order to use OpenFOAM and FEniCS for this test case. Feel free to try different combinations, they should all run and give approximately similar results.
 
 ## Post-processing
 
-How to visualize the simulation results depends on the selected solvers. Most of the solvers generate `vtk` files which can visualized using, e.g., ParaView.
+How to visualize the simulation results depends on the selected solvers. Most of the solvers generate VTK files which can visualized using ParaView or similar tools.
 An example of the visualized expected results looks as follows:
 
-![result](images/result-openfoam.png)
+![result](images/tutorials-flow-over-heated-plate-result-openfoam.png)
 
 Observe that the temperature at the bottom of the plate is 310K and at the inlet 300K. On the interface, the temperature is between these values. An area of higher temperature is formed above the plate, which is shifted towards the front, driven by the flow.
 
-You may use additional filters, such as the Calculator and the Plot Over Line, to obtain the distribution of the non-dimensional temperature (T-T_inlet)/(T_solid-T_inlet):
+You may use additional filters, such as the Calculator and the Plot Over Line, to obtain the distribution of the non-dimensional temperature $$ (T-T_{inlet})/(T_{solid}-T_{inlet}) $$:
 
-![graph](images/graph-result.png)
+![graph](images/tutorials-flow-over-heated-plate-graph-result.png)
 
 ## References
 

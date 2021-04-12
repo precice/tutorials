@@ -9,7 +9,7 @@ summary: This tutorial describes how to run a structure-structure interaction si
 
 We have a rectangular linear elastic beam of dimensions 1 x 1 x 8 m, divided in two subdomains by a splitting plane at z = 6 m. This plane corresponds to the coupling surface. Both ends of the beam (z = 0 and z = 8 m) are fixed. A mechanical load F = -0.001 N is applied constantly along the y-axis onto a small set of nodes near the end of the beam. These boundary conditions can be seen in the input files `beam<x>.inp`. Initial conditions are zero both for position and velocity. Other parameters can be found and customized in the `.inp` files.
 
-![beam setup](images/beam_setup.png)
+![beam setup](images/tutorials-partitioned-elastic-beam-setup.png)
 
 ## Available solvers
 
@@ -22,8 +22,8 @@ The prepared case already contains configuration and mesh files, so that the sim
 
 ## Post-processing
 
-To see an animated visualization of the results, you can run the script `./visualize.py`. It joins the `*.frd` output files of both participants to form a new file with the entire beam. Then, it calls `cgx`, since CalculiX results can only be visualized with this graphic tool. If you want to use e.g. Paraview, you may use converting tools.
+To see an animated visualization of the results, you can run the script `./visualize.py`. It joins the `*.frd` output files of both participants to form a new file with the entire beam. Then, it calls `cgx`, since CalculiX results can only be visualized with this graphic tool. If you want to use e.g. ParaView, you may use converting tools.
 
-![beam results](images/beam_results.png)
+![beam results](images/tutorials-partitioned-elastic-beam-results.png)
 
 You can open result files directly with `cgx` with the command `cgx beam1.frd`, for instance.
