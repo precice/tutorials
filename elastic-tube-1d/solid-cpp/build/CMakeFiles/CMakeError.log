@@ -1,0 +1,96 @@
+Performing C++ SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_2701d/fast && /usr/bin/make -f CMakeFiles/cmTC_2701d.dir/build.make CMakeFiles/cmTC_2701d.dir/build
+make[1]: Entering directory '/home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_2701d.dir/src.cxx.o
+/usr/bin/c++    -Wall -Wextra -Wno-unused-parameter -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_2701d.dir/src.cxx.o -c /home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_2701d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2701d.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Wextra -Wno-unused-parameter -DCMAKE_HAVE_LIBC_PTHREAD    CMakeFiles/cmTC_2701d.dir/src.cxx.o  -o cmTC_2701d 
+/usr/bin/ld: CMakeFiles/cmTC_2701d.dir/src.cxx.o: in function `main':
+src.cxx:(.text+0x46): undefined reference to `pthread_create'
+/usr/bin/ld: src.cxx:(.text+0x52): undefined reference to `pthread_detach'
+/usr/bin/ld: src.cxx:(.text+0x63): undefined reference to `pthread_join'
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_2701d.dir/build.make:87: cmTC_2701d] Error 1
+make[1]: Leaving directory '/home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:121: cmTC_2701d/fast] Error 2
+
+
+Source file was:
+#include <pthread.h>
+
+void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_ae5a3/fast && /usr/bin/make -f CMakeFiles/cmTC_ae5a3.dir/build.make CMakeFiles/cmTC_ae5a3.dir/build
+make[1]: Entering directory '/home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_ae5a3.dir/CheckFunctionExists.cxx.o
+/usr/bin/c++    -Wall -Wextra -Wno-unused-parameter -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_ae5a3.dir/CheckFunctionExists.cxx.o -c /home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CheckLibraryExists/CheckFunctionExists.cxx
+Linking CXX executable cmTC_ae5a3
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ae5a3.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Wextra -Wno-unused-parameter -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_ae5a3.dir/CheckFunctionExists.cxx.o  -o cmTC_ae5a3  -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_ae5a3.dir/build.make:87: cmTC_ae5a3] Error 1
+make[1]: Leaving directory '/home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:121: cmTC_ae5a3/fast] Error 2
+
+
+
+Determining if the function sgemm_ exists failed with the following output:
+Change Dir: /home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_238a0/fast && /usr/bin/make -f CMakeFiles/cmTC_238a0.dir/build.make CMakeFiles/cmTC_238a0.dir/build
+make[1]: Entering directory '/home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_238a0.dir/CheckFunctionExists.cxx.o
+/usr/bin/c++    -Wall -Wextra -Wno-unused-parameter -DCHECK_FUNCTION_EXISTS=sgemm_   -o CMakeFiles/cmTC_238a0.dir/CheckFunctionExists.cxx.o -c /home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CheckFunctionExists/CheckFunctionExists.cxx
+Linking CXX executable cmTC_238a0
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_238a0.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Wextra -Wno-unused-parameter -DCHECK_FUNCTION_EXISTS=sgemm_    CMakeFiles/cmTC_238a0.dir/CheckFunctionExists.cxx.o  -o cmTC_238a0 
+/usr/bin/ld: CMakeFiles/cmTC_238a0.dir/CheckFunctionExists.cxx.o: in function `main':
+CheckFunctionExists.cxx:(.text+0x14): undefined reference to `sgemm_'
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_238a0.dir/build.make:87: cmTC_238a0] Error 1
+make[1]: Leaving directory '/home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:121: cmTC_238a0/fast] Error 2
+
+
+
+Determining if the function cheev_ exists failed with the following output:
+Change Dir: /home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_a039e/fast && /usr/bin/make -f CMakeFiles/cmTC_a039e.dir/build.make CMakeFiles/cmTC_a039e.dir/build
+make[1]: Entering directory '/home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_a039e.dir/CheckFunctionExists.cxx.o
+/usr/bin/c++    -Wall -Wextra -Wno-unused-parameter -DCHECK_FUNCTION_EXISTS=cheev_   -o CMakeFiles/cmTC_a039e.dir/CheckFunctionExists.cxx.o -c /home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CheckFunctionExists/CheckFunctionExists.cxx
+Linking CXX executable cmTC_a039e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a039e.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Wextra -Wno-unused-parameter -DCHECK_FUNCTION_EXISTS=cheev_    CMakeFiles/cmTC_a039e.dir/CheckFunctionExists.cxx.o  -o cmTC_a039e  /usr/lib/x86_64-linux-gnu/libblas.so 
+/usr/bin/ld: CMakeFiles/cmTC_a039e.dir/CheckFunctionExists.cxx.o: in function `main':
+CheckFunctionExists.cxx:(.text+0x14): undefined reference to `cheev_'
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_a039e.dir/build.make:88: cmTC_a039e] Error 1
+make[1]: Leaving directory '/home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:121: cmTC_a039e/fast] Error 2
+
+
+

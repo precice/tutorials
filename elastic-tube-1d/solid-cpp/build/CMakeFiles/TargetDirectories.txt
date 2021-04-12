@@ -1,0 +1,3 @@
+/home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/rebuild_cache.dir
+/home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/edit_cache.dir
+/home/homspons/Documents/hiwi/elastictube1d/solid-cpp/build/CMakeFiles/SolidSolver.dir
