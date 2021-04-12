@@ -71,7 +71,7 @@ cd solid-cpp
 
 The run scripts set the input parameters `N = 100`, `tau = 0.01`, `kappa = 100`. 
 
-{% include warning.html content= "Running serial or parallel leads to different results. Please refer to this [open issue](https://github.com/precice/elastictube1d/issues/40) for more insight" %}
+{% include warning.html content= "Running serial or parallel leads to different results. Please refer to this [open issue](https://github.com/precice/tutorials/issues/194) for more insight. Contributions are particularly welcome here." %}
 
 ### Python
 
@@ -92,7 +92,7 @@ Parameters such as `N` can be modified directly at the `FluidSolver.py` and at t
 
 ![Elastic tube animation](images/tutorials-elastic-tube-1d-animation.gif)
 
-{% include warning.html content= "The cpp and python solvers lead to different results. Please consider the Python results as the correct ones and refer to this [open issue](https://github.com/precice/elastictube1d/issues/41) for more insight" %}
+{% include warning.html content= "The C++ and Python solvers lead to different results. Please consider the Python results as the correct ones and refer to this [open issue](https://github.com/precice/tutorials/issues/195) for more insight. Contributions are particularly welcome here." %}
 
 ## Post-processing
 
