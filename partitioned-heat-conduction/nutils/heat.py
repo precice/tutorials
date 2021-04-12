@@ -102,7 +102,7 @@ def main(side='Dirichlet'):
     nutils.export.vtk(side + '-0', bezier.tri, x, Temperature=u, reference=uexact)
                         
   t += precice_dt
-  timestep = 1
+  timestep = 0
   dt = 0.1
 
   while interface.is_coupling_ongoing():
@@ -126,6 +126,8 @@ def main(side='Dirichlet'):
     # save checkpoint
     if interface.is_action_required(precice.action_write_iteration_checkpoint()):
       lhs_checkpoint = lhs0
+      t_checkpoint = t
+      timestep_checkpoint = timestep
       interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
     # potentially adjust non-matching timestep sizes 
@@ -146,10 +148,17 @@ def main(side='Dirichlet'):
 
     # do the coupling
     precice_dt = interface.advance(dt)
+    
+    # advance variables
+    t += dt
+    timestep += 1
+    lhs0 = lhs
 
     # read checkpoint if required
     if interface.is_action_required(precice.action_read_iteration_checkpoint()):
       lhs0 = lhs_checkpoint
+      t = t_checkpoint
+      timestep = timestep_checkpoint
       interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
     else: # go to next timestep
       bezier = domain.sample('bezier', degree * 2)
@@ -157,10 +166,6 @@ def main(side='Dirichlet'):
 
       with treelog.add(treelog.DataLog()):
         nutils.export.vtk(side + "-" + str(timestep), bezier.tri, x, Temperature=u, reference=uexact)
-                                
-      t += dt
-      timestep += 1
-      lhs0 = lhs
 
   interface.finalize()
 
