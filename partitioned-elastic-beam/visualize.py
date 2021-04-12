@@ -49,7 +49,7 @@ def join_frd(frd1, frd2):
             elif line_f2 < line_f1:
                 fp.write(line_f2)
             else:
-                while(line_f2 > line_f1):
+                while line_f2 > line_f1:
                     fp.write(line_f1)
                     line_f1 = f1.readline()
 
@@ -105,7 +105,7 @@ def join_frd(frd1, frd2):
                 elif line_f2 < line_f1:
                     fp.write(line_f2)
                 else:
-                    while(line_f2[:13] > line_f1[:13]):
+                    while line_f2[:13] > line_f1[:13]:
                         fp.write(line_f1)
                         line_f1 = f1.readline()
 
