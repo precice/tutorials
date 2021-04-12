@@ -12,7 +12,9 @@ T = 100  # number of timesteps performed
 arrayname = sys.argv[1]  # Which dataset should be plotted?
 data_path = sys.argv[2]  # Where is the data?
 
-file_name_generator = lambda id: data_path+str(id)+".vtk"
+
+def file_name_generator(id): return data_path + str(id) + ".vtk"
+
 
 print("reading data from array with name = %s" % arrayname)
 print("parsing datasets named %s*.vtk" % data_path)

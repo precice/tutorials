@@ -8,19 +8,21 @@ import precice
 from precice import *
 
 
-r0 = 1/np.sqrt(np.pi)  # radius of the tube
+r0 = 1 / np.sqrt(np.pi)  # radius of the tube
 a0 = r0**2 * np.pi  # cross sectional area
 tau = 10**10  # timestep size, set it to a large value to enforce tau from precice_config.xml
 N = 100  # number of elements in x direction
 p0 = 0  # pressure at outlet
 L = 10  # length of tube/simulation domain
 E = 10000  # elasticity module
-c_mk = np.sqrt(E/2/r0)  # wave speed
+c_mk = np.sqrt(E / 2 / r0)  # wave speed
+
 
 def crossSection0(N):
     return a0 * np.ones(N + 1)
 
 ###############
+
 
 print("Starting Solid Solver...")
 
@@ -88,7 +90,7 @@ while interface.is_coupling_ongoing():
         interface.mark_action_fulfilled(action_write_iteration_checkpoint())
 
     crossSectionLength = crossSection0 * (
-                (pressure0 - 2.0 * c_mk ** 2) ** 2 / (pressure - 2.0 * c_mk ** 2) ** 2)
+        (pressure0 - 2.0 * c_mk ** 2) ** 2 / (pressure - 2.0 * c_mk ** 2) ** 2)
 
     interface.write_block_scalar_data(crossSectionLengthID, vertexIDs, crossSectionLength)
     precice_dt = interface.advance(precice_dt)

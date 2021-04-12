@@ -1,12 +1,11 @@
 import os
 
 
+def writeOutputToVTK(time, name, dx, data, datanames):
 
-def writeOutputToVTK(time, name, dx,  data, datanames):
-
-    if type(data) is not list:
+    if not isinstance(data, list):
         data = list(data)
-    if type(datanames) is not list:
+    if not isinstance(datanames, list):
         datanames = list(datanames)
 
     n_datasets = data.__len__()
@@ -17,12 +16,12 @@ def writeOutputToVTK(time, name, dx,  data, datanames):
     if not os.path.exists(outpath):
         os.mkdir(outpath)
 
-    filename = name+str(time)+".vtk"
-    filepath = os.path.join(outpath , filename)
+    filename = name + str(time) + ".vtk"
+    filepath = os.path.join(outpath, filename)
 
     i = 0
 
-    f=open(filepath,'w')
+    f = open(filepath, 'w')
 
     f.write("# vtk DataFile Version 2.0")
     f.write("\n")
@@ -38,12 +37,12 @@ def writeOutputToVTK(time, name, dx,  data, datanames):
 
     f.write("POINTS ")
     f.write(str(len(data[i])))
-    f.write (" float")
+    f.write(" float")
     f.write("\n")
     f.write("\n")
 
     for k in range(len(data[i])):
-        f.write(str("{:.16e}".format(0.0+ k*dx)))
+        f.write(str("{:.16e}".format(0.0 + k * dx)))
         f.write(" 0.0000000000000000e+00 0.0000000000000000e+00")
         f.write("\n")
     f.write("\n")
@@ -55,23 +54,23 @@ def writeOutputToVTK(time, name, dx,  data, datanames):
 
     for dataname in datanames:
 
-        if (i==0):
+        if (i == 0):
             f.write("VECTORS ")
         else:
             f.write("SCALARS ")
-           
+
         f.write(dataname)
         f.write(" float")
         f.write("\n")
-        if (i!=0):
+        if (i != 0):
             f.write("LOOKUP_TABLE default")
             f.write("\n")
         for element in data[i]:
             f.write(str("{:.16e}".format(element)))
-            if (i==0):
+            if (i == 0):
                 f.write(" 0.0000000000000000e+00 0.0000000000000000e+00")
             f.write("\n")
         f.write("\n")
         f.write("\n")
-        i = i+1
+        i = i + 1
     f.close()
