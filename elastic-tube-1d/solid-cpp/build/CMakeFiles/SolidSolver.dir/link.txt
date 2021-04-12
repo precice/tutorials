@@ -1,1 +1,0 @@
-/usr/bin/c++   -Wall -Wextra -Wno-unused-parameter -g   CMakeFiles/SolidSolver.dir/SolidComputeSolution.cpp.o CMakeFiles/SolidSolver.dir/SolidSolver.cpp.o  -o SolidSolver  -Wl,-rpath,/usr/lib/x86_64-linux-gnu/openmpi/lib /usr/lib/x86_64-linux-gnu/libprecice.so.2.1.0 /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi_cxx.so /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi.so 
