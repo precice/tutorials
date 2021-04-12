@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class ProblemType(Enum):
     """
     Enum defines problem type. Details see above.

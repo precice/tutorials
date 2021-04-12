@@ -69,30 +69,36 @@ def get_problem_setup(args):
 
     if args.interface == 'simple':
         if args.domain == 'circular' or args.domain == 'rectangle':
-            raise Exception("Only --domain left or --domain right is supported for --interface {}. Invalid --domain {} provided.".format(args.interface, args.domain))
+            raise Exception("Only --domain left or --domain right is supported for --interface {}. "
+                            "Invalid --domain {} provided.".format(args.interface, args.domain))
         elif args.domain == 'left':
             return DomainPart.LEFT, problem
         elif args.domain == 'right':
             return DomainPart.RIGHT, problem
         elif args.dirichlet and args.neumann:
-            raise Exception("you can only choose to either compute the left part of the domain (option -dl) or the right part (option -dr)")
+            raise Exception("You can only choose to either compute the left part of the domain (option -dl) "
+                            "or the right part (option -dr)")
         elif not (args.domain == 'left' or args.domain == 'right'):
-            print("Default domain partitioning for simple interface is used: Left part of domain is a Dirichlet-type problem; right part is a Neumann-type problem")
+            print("Default domain partitioning for simple interface is used: Left part of domain is a "
+                  "Dirichlet-type problem; right part is a Neumann-type problem")
             if problem is ProblemType.DIRICHLET:
                 return DomainPart.LEFT, problem
             elif problem is ProblemType.NEUMANN:
                 return DomainPart.RIGHT, problem
     elif args.interface == 'complex':
         if args.domain == 'left' or args.domain == 'right':
-            raise Exception("Only --domain circular or --domain rectangle is supported for --interface {}. Invalid --domain {} provided.".format(args.interface, args.domain))
+            raise Exception("Only --domain circular or --domain rectangle is supported for --interface {}. "
+                            "Invalid --domain {} provided.".format(args.interface, args.domain))
         elif args.domain == 'circular':
             return DomainPart.CIRCULAR, problem
         elif args.domain == 'rectangle':
             return DomainPart.RECTANGLE, problem
         elif args.dirichlet and args.neumann:
-            raise Exception("you can only choose to either compute the circular part of the domain (option -dc) or the residual part (option -dnc)")
+            raise Exception("You can only choose to either compute the circular part of the domain (option -dc) "
+                            "or the residual part (option -dnc)")
         elif not (args.domain == 'circular' or args.domain == 'rectangle'):
-            print("Default domain partitioning for complex interface is used: Circular part of domain is a Neumann-type problem; Rest of the domain is a Dirichlet-type problem")
+            print("Default domain partitioning for complex interface is used: Circular part of domain "
+                  "is a Neumann-type problem; Rest of the domain is a Dirichlet-type problem")
             if problem is ProblemType.NEUMANN:
                 return DomainPart.CIRCULAR, problem
             elif problem is ProblemType.DIRICHLET:
@@ -109,9 +115,9 @@ def get_geometry(domain_part):
     n_vertices = 20
 
     if domain_part is DomainPart.LEFT:
-        nx = nx*3
+        nx = nx * 3
     elif domain_part is DomainPart.RIGHT:
-        ny = ny*2
+        ny = ny * 2
     elif domain_part is DomainPart.CIRCULAR:
         n_vertices = n_vertices
     elif domain_part is DomainPart.RECTANGLE:
