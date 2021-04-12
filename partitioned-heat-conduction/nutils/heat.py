@@ -112,15 +112,11 @@ def main(side='Dirichlet'):
     bezier = domain.sample('bezier', degree * 2)
     x, u, uexact = bezier.eval(['x_i', 'u', 'uexact'] @ ns, lhs=lhs0, t=t)
     with treelog.add(treelog.DataLog()):
-        nutils.export.vtk(
-            side + '-0',
-            bezier.tri,
-            x,
-            Temperature=u,
+        nutils.export.vtk(side + '-0', bezier.tri, x, Temperature=u,
             reference=uexact)
 
     t += precice_dt
-    timestep = 1
+    timestep = 0
     dt = 0.1
 
     while interface.is_coupling_ongoing():
@@ -137,24 +133,20 @@ def main(side='Dirichlet'):
 
             if side == 'Dirichlet':
                 sqr = coupling_sample.integral((ns.u - read_function)**2)
-                cons = nutils.solver.optimize(
-                    'lhs',
-                    sqr,
-                    droptol=1e-15,
-                    constrain=cons0,
-                    arguments=dict(
-                        t=t))
+                cons = nutils.solver.optimize('lhs', sqr, droptol=1e-15,
+                    constrain=cons0, arguments=dict(t=t))
                 res = res0
             else:
                 cons = cons0
                 res = res0 + \
-                    coupling_sample.integral(
-                        ns.basis * read_function * dx_function)
+                    coupling_sample.integral(ns.basis * read_function * dx_function)
 
         # save checkpoint
         if interface.is_action_required(
                 precice.action_write_iteration_checkpoint()):
             lhs_checkpoint = lhs0
+            t_checkpoint = t
+            timestep_checkpoint = timestep
             interface.mark_action_fulfilled(
                 precice.action_write_iteration_checkpoint())
 
@@ -181,10 +173,17 @@ def main(side='Dirichlet'):
         # do the coupling
         precice_dt = interface.advance(dt)
 
+        # advance variables
+        t += dt
+        timestep += 1
+        lhs0 = lhs
+
         # read checkpoint if required
         if interface.is_action_required(
                 precice.action_read_iteration_checkpoint()):
             lhs0 = lhs_checkpoint
+            t = t_checkpoint
+            timestep = timestep_checkpoint
             interface.mark_action_fulfilled(
                 precice.action_read_iteration_checkpoint())
         else:  # go to next timestep
@@ -193,18 +192,8 @@ def main(side='Dirichlet'):
                 ['x_i', 'u', 'uexact'] @ ns, lhs=lhs, t=t)
 
             with treelog.add(treelog.DataLog()):
-                nutils.export.vtk(
-                    side +
-                    "-" +
-                    str(timestep),
-                    bezier.tri,
-                    x,
-                    Temperature=u,
-                    reference=uexact)
-
-            t += dt
-            timestep += 1
-            lhs0 = lhs
+                nutils.export.vtk(side + "-" + str(timestep),
+                    bezier.tri, x, Temperature=u, reference=uexact)
 
     interface.finalize()
 

@@ -66,7 +66,7 @@ def main():
 
     cons0 = cons  # to not lose the Dirichlet BC at the bottom
     lhs0 = np.zeros(res.shape)  # solution from previous timestep
-    timestep = 1
+    timestep = 0
     dt = 0.01
 
     # set u = uwall as initial condition and visualize
@@ -94,6 +94,7 @@ def main():
         if interface.is_action_required(
                 precice.action_write_iteration_checkpoint()):
             lhs_checkpoint = lhs0
+            timestep_checkpoint = timestep
             interface.mark_action_fulfilled(
                 precice.action_write_iteration_checkpoint())
 
@@ -115,10 +116,15 @@ def main():
         # do the coupling
         precice_dt = interface.advance(dt)
 
+        # advance variables
+        timestep += 1
+        lhs0 = lhs
+
         # read checkpoint if required
         if interface.is_action_required(
                 precice.action_read_iteration_checkpoint()):
             lhs0 = lhs_checkpoint
+            timestep = timestep_checkpoint
             interface.mark_action_fulfilled(
                 precice.action_read_iteration_checkpoint())
         else:  # go to next timestep
@@ -128,8 +134,6 @@ def main():
                 with treelog.add(treelog.DataLog()):
                     nutils.export.vtk(
                         'Solid_' + str(timestep), bezier.tri, x, T=u)
-            timestep += 1
-            lhs0 = lhs
 
     interface.finalize()
 
