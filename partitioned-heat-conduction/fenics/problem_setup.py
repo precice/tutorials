@@ -19,7 +19,9 @@ class ExcludeStraightBoundary(SubDomain):
 
     def inside(self, x, on_boundary):
         tol = 1E-14
-        if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
+        if on_boundary and not near(x[0], x_coupling, tol)
+                       or near(x[1], y_top, tol)
+                       or near(x[1], y_bottom, tol):
             return True
         else:
             return False
@@ -42,10 +44,10 @@ def get_geometry(domain_part):
 
     if domain_part is DomainPart.LEFT:
         p0 = Point(x_left, y_bottom)
-        p1 = Point(x_coupling, y_top)        
+        p1 = Point(x_coupling, y_top)
     elif domain_part is DomainPart.RIGHT:
         p0 = Point(x_coupling, y_bottom)
-        p1 = Point(x_right, y_top)        
+        p1 = Point(x_right, y_top)
     else:
         raise Exception("invalid domain_part: {}".format(domain_part))
 

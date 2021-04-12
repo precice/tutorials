@@ -102,7 +102,8 @@ k = 100  # kg * m / s^3 / K, https://en.wikipedia.org/wiki/Thermal_conductivity
 # Define boundary condition
 u_D = Constant('310')
 u_D_function = interpolate(u_D, V)
-# We will only exchange flux in y direction on coupling interface. No initialization necessary.
+# We will only exchange flux in y direction on coupling interface. No
+# initialization necessary.
 V_flux_y = V_g.sub(1)
 
 coupling_boundary = TopBoundary()
@@ -115,7 +116,8 @@ u_n.rename("T", "")
 # Adapter definition and initialization
 precice = Adapter(adapter_config_filename="precice-adapter-config.json")
 
-precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V_flux_y)
+precice_dt = precice.initialize(coupling_boundary, read_function_space=V,
+                                write_object=V_flux_y)
 
 # Create a FEniCS Expression to define and control the coupling boundary values
 coupling_expression = precice.create_coupling_expression()
@@ -131,7 +133,8 @@ F = u * v / dt * dx + alpha * dot(grad(u), grad(v)) * dx - u_n * v / dt * dx
 
 # apply constant Dirichlet boundary condition at bottom edge
 # apply Dirichlet boundary condition on coupling interface
-bcs = [DirichletBC(V, coupling_expression, coupling_boundary), DirichletBC(V, u_D, bottom_boundary)]
+bcs = [DirichletBC(V, coupling_expression, coupling_boundary),
+       DirichletBC(V, u_D, bottom_boundary)]
 
 a, L = lhs(F), rhs(F)
 
@@ -159,7 +162,8 @@ fluxes.rename("Fluxes", "")
 
 while precice.is_coupling_ongoing():
 
-    if precice.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
+    if precice.is_action_required(
+            precice.action_write_iteration_checkpoint()):  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
 
     read_data = precice.read_data()
@@ -172,14 +176,16 @@ while precice.is_coupling_ongoing():
     # Compute solution
     solve(a == L, u_np1, bcs)
 
-    # Dirichlet problem obtains flux from solution and sends flux on boundary to Neumann problem
+    # Dirichlet problem obtains flux from solution and sends flux on boundary
+    # to Neumann problem
     determine_heat_flux(V_g, u_np1, k, fluxes)
     fluxes_y = fluxes.sub(1)  # only exchange y component of flux.
     precice.write_data(fluxes_y)
 
     precice_dt = precice.advance(dt(0))
 
-    if precice.is_action_required(precice.action_read_iteration_checkpoint()):  # roll back to checkpoint
+    if precice.is_action_required(
+            precice.action_read_iteration_checkpoint()):  # roll back to checkpoint
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
         u_n.assign(u_cp)
         t = t_cp
@@ -190,8 +196,10 @@ while precice.is_coupling_ongoing():
         n += 1
 
     if precice.is_time_window_complete():
-        tol = 10e-5  # we need some tolerance, since otherwise output might be skipped.
-        if abs((t + tol) % dt_out) < 2*tol:  # output if t is a multiple of dt_out
+        # we need some tolerance, since otherwise output might be skipped.
+        tol = 10e-5
+        if abs((t + tol) % dt_out) < 2 * \
+                tol:  # output if t is a multiple of dt_out
             print("output vtk for time = {}".format(float(t)))
             file_out << u_n
 

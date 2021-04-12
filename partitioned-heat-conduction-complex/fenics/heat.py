@@ -59,27 +59,32 @@ parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem",
                     dest='dirichlet', action='store_true')
 parser.add_argument("-n", "--neumann", help="create a neumann problem",
                     dest='neumann', action='store_true')
-parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0,
-                    type=float)
+parser.add_argument("-g", "--gamma",
+    help="parameter gamma to set temporal dependence of heat flux",
+    default=0.0, type=float)
 parser.add_argument("-a", "--arbitrary-coupling-interface",
-                    help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1",
-                    action='store_true')
-parser.add_argument("-i", "--interface", metavar="interface_type string", type=str, choices=['simple', 'complex'],
-                    help="Type of coupling interface case to be solved. Options: simple, complex", default="simple")
-parser.add_argument("-dom", "--domain", metavar='domain_type string', type=str,
-                    choices=['left', 'right', 'circular', 'rectangle'],
-                    help="Specifying part of the domain being solved. For simple interface the options are left, right, for complex interface the options are circular, rest")
+    help="uses more general, but less exact method for interpolation on coupling interface, see https://github.com/precice/fenics-adapter/milestone/1",
+    action='store_true')
+parser.add_argument("-i", "--interface", metavar="interface_type string",
+    type=str, choices=['simple', 'complex'],
+    help="Type of coupling interface case to be solved. Options: simple, complex",
+    default="simple")
+parser.add_argument("-dom", "--domain", metavar='domain_type string',
+    type=str, choices=['left', 'right', 'circular', 'rectangle'],
+    help="Specifying part of the domain being solved. For simple interface the options are left, right, for complex interface the options are circular, rest")
 
 args = parser.parse_args()
 
 fenics_dt = .1
-# Error is bounded by coupling accuracy. In theory we can obtain the analytical solution.
+# Error is bounded by coupling accuracy. In theory we can obtain the
+# analytical solution.
 error_tol = 10 ** -6
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 
-# Create mesh and separate mesh components for grid, boundary and coupling interface
+# Create mesh and separate mesh components for grid, boundary and coupling
+# interface
 domain_part, problem = get_problem_setup(args)
 mesh, coupling_boundary, remaining_boundary = get_geometry(domain_part)
 
@@ -88,10 +93,12 @@ V = FunctionSpace(mesh, 'P', 2)
 V_g = VectorFunctionSpace(mesh, 'P', 1)
 
 # Define boundary conditions
-u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha,
-                 beta=beta, gamma=gamma, t=0)
+u_D = Expression(
+    '1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t',
+    degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 u_D_function = interpolate(u_D, V)
-# Define flux in x direction on coupling interface (grad(u_D) in normal direction)
+# Define flux in x direction on coupling interface (grad(u_D) in normal
+# direction)
 f_N = Expression(("2 * gamma*t*x[0] + 2 * (1-gamma)*x[0]",
                   "2 * alpha*x[1]"), degree=1, gamma=gamma, alpha=alpha, t=0)
 f_N_function = interpolate(f_N, V_g)
@@ -120,22 +127,26 @@ dt.assign(np.min([fenics_dt, precice_dt]))
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-f = Expression('beta + gamma*x[0]*x[0] - 2*gamma*t - 2*(1-gamma) - 2*alpha', degree=2, alpha=alpha,
-               beta=beta, gamma=gamma, t=0)
+f = Expression('beta + gamma*x[0]*x[0] - 2*gamma*t - 2*(1-gamma) - 2*alpha',
+    degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
 
-# Set boundary conditions at coupling interface once wrt to the coupling expression
+# Set boundary conditions at coupling interface once wrt to the coupling
+# expression
 coupling_expression = precice.create_coupling_expression()
 if problem is ProblemType.DIRICHLET:
     # modify Dirichlet boundary condition on coupling interface
     bcs.append(DirichletBC(V, coupling_expression, coupling_boundary))
 if problem is ProblemType.NEUMANN:
-    # modify Neumann boundary condition on coupling interface, modify weak form correspondingly
+    # modify Neumann boundary condition on coupling interface, modify weak
+    # form correspondingly
     if not boundary_marker:  # there is only 1 Neumann-BC which is at the coupling boundary -> integration over whole boundary
         if coupling_expression.is_scalar_valued():
-            # this term has to be added to weak form to add a Neumann BC (see e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python The FEniCS Tutorial Volume I." (2016).)
+            # this term has to be added to weak form to add a Neumann BC (see
+            # e.g. p. 83ff Langtangen, Hans Petter, and Anders Logg. "Solving
+            # PDEs in Python The FEniCS Tutorial Volume I." (2016).)
             F += v * coupling_expression * dolfin.ds
         elif coupling_expression.is_vector_valued():
             normal = FacetNormal(mesh)
@@ -197,7 +208,9 @@ while precice.is_coupling_ongoing():
         precice.store_checkpoint(u_n, t, n)
 
     read_data = precice.read_data()
-    if problem is ProblemType.DIRICHLET and (domain_part is DomainPart.CIRCULAR or domain_part is DomainPart.RECTANGLE):
+    if problem is ProblemType.DIRICHLET
+            and (domain_part is DomainPart.CIRCULAR
+                 or domain_part is DomainPart.RECTANGLE):
         # We have to data for an arbitrary point that is not on the circle, to obtain exact solution.
         # See https://github.com/precice/fenics-adapter/issues/113 for details.
         read_data[(0, 0)] = u_D(0, 0)
@@ -212,11 +225,13 @@ while precice.is_coupling_ongoing():
 
     # Write data to preCICE according to which problem is being solved
     if problem is ProblemType.DIRICHLET:
-        # Dirichlet problem reads temperature and writes flux on boundary to Neumann problem
+        # Dirichlet problem reads temperature and writes flux on boundary to
+        # Neumann problem
         determine_gradient(V_g, u_np1, flux)
         precice.write_data(flux)
     elif problem is ProblemType.NEUMANN:
-        # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
+        # Neumann problem reads flux and writes temperature on boundary to
+        # Dirichlet problem
         precice.write_data(u_np1)
 
     precice_dt = precice.advance(dt(0))
