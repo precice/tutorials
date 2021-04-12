@@ -44,7 +44,7 @@ To become a preCICE pro:
 
 This tutorial deals with a fluid-structure interaction problem. The fluid part of the simulation is computed using OpenFOAM and the rigid body motion is a rigid body model (implemented in C++) with only a single degree of freedom, namely the deflection angle of the flap in the channel. The rigid body is fixed in the origin at (0,0) and the force exerted by the fluid on the rigid body structure causes an oscillatory rotation of the body. The simulation runs for 2.5 seconds. In order to gain more control over the rigid body oscillation, a rotational spring is applied at the rigid body origin. After 1.5 seconds we increase the spring constant by a factor of 8 to stabilize the coupled problem. Feel free to modify these parameters (directly in `rigid_body_solver.cpp`) and increase the simulation time (in `precice-config.xml`).
 
-![overview](images/tutorials-quickstart-setup.png)
+![overview](images/quickstart-setup.png)
 
 ### Building the rigid body solver
 Before starting the coupled simulation, the rigid body solver needs to be built using CMake. You can run the following commands from this directory to build the `rigid_body_solver.cpp`
@@ -63,4 +63,4 @@ In serial, the simulation takes roughly 30 seconds to compute.
 
 You can visualize the simulation results of the `Fluid` participant using ParaView (use `paraFoam` to trigger the OpenFOAM native reader or load the (empty) file `Fluid.foam` into ParaView). The rigid body doesn't generate any readable output files, but the motion can be observed in the OpenFOAM data. In addition, one could visualize the coupling meshes including the exchanged coupling data. preCICE generates the relevant files during the simulation and stores them in the directory `coupling-meshes`. In order to visualize the results, load the VTK files in ParaView and apply a `Glyph` filter. Depending on the specific ParaView version, you might additionally need to disable the `ScaleArray` option by selecting `No scale array`, since the exchanged data might be inappropriate for a scaling operation. You can further add a `Warp By Vector` filter with `Displacement` to deform the coupling data. The result would look the following way:
 
-![result](images/tutorials-quickstart-result.png)
+![result](images/quickstart-result.png)

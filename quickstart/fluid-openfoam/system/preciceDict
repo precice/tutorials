@@ -11,54 +11,30 @@ preciceConfig "../precice-config.xml";
 
 participant Fluid;
 
-modules (CHT);
+modules (FSI);
 
 interfaces
 {
   Interface1
   {
-<<<<<<< HEAD:quickstart/fluid-openfoam/system/preciceDict
     mesh              Fluid-Mesh;
     patches           (flap);
-=======
-    mesh              Fluid-Mesh-Centers;
->>>>>>> develop:flow-over-heated-plate-nearest-projection/fluid-openfoam/system/preciceDict
     locations         faceCenters;
-    connectivity      false;
-    patches           (interface);
     
     readData
     (
-<<<<<<< HEAD:quickstart/fluid-openfoam/system/preciceDict
       Displacement
-=======
-      Heat-Flux
->>>>>>> develop:flow-over-heated-plate-nearest-projection/fluid-openfoam/system/preciceDict
     );
     
     writeData
     (
-<<<<<<< HEAD:quickstart/fluid-openfoam/system/preciceDict
       Force
-=======
-    );
-  };
-  
-  Interface2
-  {
-    mesh              Fluid-Mesh-Nodes;
-    locations         faceNodes;
-    connectivity      true;
-    patches           (interface);
-    
-    readData
-    (
-    );
-    
-    writeData
-    (
-      Temperature
->>>>>>> develop:flow-over-heated-plate-nearest-projection/fluid-openfoam/system/preciceDict
     );
   };
 };
+
+FSI
+{
+  rho rho [1 -3 0 0 0 0 0] 1000;
+}
+
