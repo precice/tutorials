@@ -191,7 +191,7 @@ while precice.is_coupling_ongoing():
 
     if precice.is_time_window_complete():
         tol = 10e-5  # we need some tolerance, since otherwise output might be skipped.
-        if abs((t + tol) % dt_out) < 2*tol:  # output if t is a multiple of dt_out
+        if abs((t + tol) % dt_out) < 2 * tol:  # output if t is a multiple of dt_out
             print("output vtk for time = {}".format(float(t)))
             file_out << u_n
 

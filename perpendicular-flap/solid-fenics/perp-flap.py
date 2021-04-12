@@ -17,7 +17,7 @@ def clamped_boundary(x, on_boundary):
 def neumann_boundary(x, on_boundary):
     """
     determines whether a node is on the coupling boundary
-    
+
     """
     return on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol)
 
