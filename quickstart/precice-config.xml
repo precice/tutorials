@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<precice-configuration>
+  <log>
+    <sink
+      filter="%Severity% > debug and %Rank% = 0"
+      format="---[precice] %ColorizedSeverity% %Message%"
+      enabled="true" />
+  </log>
+
+  <solver-interface dimensions="2">
+    <data:vector name="Force" />
+    <data:vector name="Displacement" />
+
+    <mesh name="Fluid-Mesh">
+      <use-data name="Force" />
+      <use-data name="Displacement" />
+    </mesh>
+
+    <mesh name="Solid-Mesh">
+      <use-data name="Displacement" />
+      <use-data name="Force" />
+    </mesh>
+
+    <participant name="Fluid">
+      <use-mesh name="Fluid-Mesh" provide="yes" />
+      <use-mesh name="Solid-Mesh" from="Solid" />
+      <read-data name="Displacement" mesh="Fluid-Mesh" />
+      <write-data name="Force" mesh="Fluid-Mesh" />
+      <mapping:rbf-thin-plate-splines
+        direction="read"
+        from="Solid-Mesh"
+        to="Fluid-Mesh"
+        constraint="consistent" />
+      <mapping:rbf-thin-plate-splines
+        direction="write"
+        from="Fluid-Mesh"
+        to="Solid-Mesh"
+        constraint="conservative" />
+    </participant>
+
+    <participant name="Solid">
+      <use-mesh name="Solid-Mesh" provide="yes" />
+      <read-data name="Force" mesh="Solid-Mesh" />
+      <write-data name="Displacement" mesh="Solid-Mesh" />
+      <watch-point mesh="Solid-Mesh" name="Flap-Tip" coordinate="0.25;0.0" />
+      <export:vtk directory="coupling-meshes" />
+    </participant>
+
+    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
+
+    <coupling-scheme:serial-implicit>
+      <time-window-size value="2.5e-2" />
+      <max-time value="2.5" />
+      <participants first="Fluid" second="Solid" />
+      <exchange data="Force" mesh="Solid-Mesh" from="Fluid" to="Solid" />
+      <exchange data="Displacement" mesh="Solid-Mesh" from="Solid" to="Fluid" />
+      <max-iterations value="10" />
+      <relative-convergence-measure limit="1e-3" data="Displacement" mesh="Solid-Mesh" />
+      <acceleration:IQN-ILS>
+        <data name="Displacement" mesh="Solid-Mesh" />
+        <preconditioner type="residual-sum" />
+        <filter type="QR2" limit="5.0e-5" />
+        <initial-relaxation value="0.3" />
+        <max-used-iterations value="15" />
+        <time-windows-reused value="2" />
+      </acceleration:IQN-ILS>
+    </coupling-scheme:serial-implicit>
+  </solver-interface>
+</precice-configuration>
