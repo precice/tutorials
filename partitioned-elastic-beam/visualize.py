@@ -35,13 +35,10 @@ def join_frd(frd1, frd2):
         fp.write(line_f1)
         f2.readline()
 
-        # merging node lines. each iteration in the for uses a new line from
-        # frd2. lines in frd1 are advanced manually
+        # merging node lines. each iteration in the for uses a new line from frd2. lines in frd1 are advanced manually
         line_f1 = f1.readline()
-        for line_f2 in iter(
-                f2.readline, " -3\n"):  # -3 indicates end of line block
-            # same node in both files (interface): write any (assuming their
-            # values are correct!!)
+        for line_f2 in iter(f2.readline, " -3\n"):  # -3 indicates end of line block
+            # same node in both files (interface): write any (assuming their values are correct!!)
             if line_f1[:13] == line_f2[:13]:
                 if line_f1[2] == "3":
                     continue
@@ -67,8 +64,7 @@ def join_frd(frd1, frd2):
         fp.write(line_f1)
         f2.readline()
 
-        # merge element lines. assuming they are sorted and non-overlapping in
-        # frd1 and frd2
+        # merge element lines. assuming they are sorted and non-overlapping in frd1 and frd2
         for line_f1 in iter(f1.readline, " -3\n"):
             fp.write(line_f1)
         for line_f2 in iter(f2.readline, " -3\n"):
@@ -90,23 +86,15 @@ def join_frd(frd1, frd2):
                 f2.readline()
 
             line_f1 = f1.readline()
-            for line_f2 in iter(
-                    f2.readline, " -3\n"):  # -3 indicates end of line block
-                # same node in both files (interface): write any (assuming
-                # their values are correct!!)
+            for line_f2 in iter(f2.readline, " -3\n"):  # -3 indicates end of line block
+                # same node in both files (interface): write any (assuming their values are correct!!)
                 if line_f1[:13] == line_f2[:13]:
                     if line_f1[2] == "3":
                         continue
                     else:
-                        # this is an interface node for both beams. write the
-                        # mean of the values in beam1 and beam2
-                        mean_vals = [(float(x) + float(y)) / 2. for x,
-                                     y in zip([line_f1[13:25],
-                                               line_f1[25:37],
-                                               line_f1[37:49]],
-                                              [line_f2[13:25],
-                                               line_f2[25:37],
-                                               line_f2[37:49]])]
+                        # this is an interface node for both beams. write the mean of the values in beam1 and beam2
+                        mean_vals = [(float(x) + float(y)) / 2. for x, y in zip([line_f1[13:25],
+                                                                                 line_f1[25:37], line_f1[37:49]], [line_f2[13:25], line_f2[25:37], line_f2[37:49]])]
                         fp.writelines(line_f1[:13] +
                                       '{:12.5E}'.format(mean_vals[0]) +
                                       '{:12.5E}'.format(mean_vals[1]) +
@@ -124,13 +112,8 @@ def join_frd(frd1, frd2):
                     if line_f1[:13] != line_f2[:13]:
                         fp.write(line_f2)
                     else:
-                        mean_vals = [(float(x) + float(y)) / 2. for x,
-                                     y in zip([line_f1[13:25],
-                                               line_f1[25:37],
-                                               line_f1[37:49]],
-                                              [line_f2[13:25],
-                                               line_f2[25:37],
-                                               line_f2[37:49]])]
+                        mean_vals = [(float(x) + float(y)) / 2. for x, y in zip([line_f1[13:25],
+                                                                                 line_f1[25:37], line_f1[37:49]], [line_f2[13:25], line_f2[25:37], line_f2[37:49]])]
                         fp.writelines(line_f1[:13] +
                                       '{:12.5E}'.format(mean_vals[0]) +
                                       '{:12.5E}'.format(mean_vals[1]) +

@@ -12,8 +12,7 @@ def main():
     print("Running utils")
 
     # define the Nutils mesh
-    grid = [np.linspace(a, b, round((b - a) / size) + 1)
-            for (a, b, size) in [(0, 1, 0.05), (-.25, 0, 0.05)]]
+    grid = [np.linspace(a, b, round((b - a) / size) + 1) for (a, b, size) in [(0, 1, 0.05), (-.25, 0, 0.05)]]
     domain, geom = nutils.mesh.rectilinear(grid)
 
     # Nutils namespace
@@ -28,13 +27,10 @@ def main():
     ns.uwall = 310  # wall temperature
 
     # define the weak form
-    res = domain.integral(
-        '(basis_n dudt + k basis_n,i u_,i) d:x' @ ns,
-        degree=2)
+    res = domain.integral('(basis_n dudt + k basis_n,i u_,i) d:x' @ ns, degree=2)
 
     # define Dirichlet boundary condition
-    sqr = domain.boundary['bottom'].integral(
-        '(u - uwall)^2 d:x' @ ns, degree=2)
+    sqr = domain.boundary['bottom'].integral('(u - uwall)^2 d:x' @ ns, degree=2)
     cons = nutils.solver.optimize('lhs', sqr, droptol=1e-15)
 
     # preCICE setup
@@ -44,8 +40,7 @@ def main():
     mesh_name = "Solid-Mesh"
     mesh_id = interface.get_mesh_id(mesh_name)
     coupling_boundary = domain.boundary['top']
-    coupling_sample = coupling_boundary.sample(
-        'gauss', degree=2)  # mesh vertices at Gauss points
+    coupling_sample = coupling_boundary.sample('gauss', degree=2)  # mesh vertices at Gauss points
     vertices = coupling_sample.eval(ns.x)
     vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)
 
@@ -54,13 +49,10 @@ def main():
     temperature_id = interface.get_data_id("Temperature", mesh_id)
 
     # helper functions to project heat flux to coupling boundary
-    projection_matrix = coupling_boundary.integrate(
-        ns.eval_nm('basis_n basis_m d:x'), degree=2)
+    projection_matrix = coupling_boundary.integrate(ns.eval_nm('basis_n basis_m d:x'), degree=2)
     projection_cons = np.zeros(res.shape)
     projection_cons[projection_matrix.rowsupp(1e-15)] = np.nan
-
-    def fluxdofs(v): return projection_matrix.solve(
-        v, constrain=projection_cons)
+    def fluxdofs(v): return projection_matrix.solve(v, constrain=projection_cons)
 
     precice_dt = interface.initialize()
 
@@ -81,36 +73,28 @@ def main():
 
         # read temperature from interface
         if interface.is_read_data_available():
-            temperature_values = interface.read_block_scalar_data(
-                temperature_id, vertex_ids)
-            temperature_function = coupling_sample.asfunction(
-                temperature_values)
+            temperature_values = interface.read_block_scalar_data(temperature_id, vertex_ids)
+            temperature_function = coupling_sample.asfunction(temperature_values)
 
             sqr = coupling_sample.integral((ns.u - temperature_function)**2)
-            cons = nutils.solver.optimize(
-                'lhs', sqr, droptol=1e-15, constrain=cons0)
+            cons = nutils.solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons0)
 
         # save checkpoint
-        if interface.is_action_required(
-                precice.action_write_iteration_checkpoint()):
+        if interface.is_action_required(precice.action_write_iteration_checkpoint()):
             lhs_checkpoint = lhs0
             timestep_checkpoint = timestep
-            interface.mark_action_fulfilled(
-                precice.action_write_iteration_checkpoint())
+            interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
         # potentially adjust non-matching timestep sizes
         dt = min(dt, precice_dt)
 
         # solve nutils timestep
-        lhs = nutils.solver.solve_linear(
-            'lhs', res, constrain=cons, arguments=dict(
-                lhs0=lhs0, dt=dt))
+        lhs = nutils.solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt))
 
         # write heat fluxes to interface
         if interface.is_write_data_required(dt):
             flux_function = res.eval(lhs0=lhs0, lhs=lhs, dt=dt)
-            flux_values = coupling_sample.eval(
-                '-flux' @ ns, fluxdofs=fluxdofs(flux_function))
+            flux_values = coupling_sample.eval('-flux' @ ns, fluxdofs=fluxdofs(flux_function))
             interface.write_block_scalar_data(flux_id, vertex_ids, flux_values)
 
         # do the coupling
@@ -121,19 +105,16 @@ def main():
         lhs0 = lhs
 
         # read checkpoint if required
-        if interface.is_action_required(
-                precice.action_read_iteration_checkpoint()):
+        if interface.is_action_required(precice.action_read_iteration_checkpoint()):
             lhs0 = lhs_checkpoint
             timestep = timestep_checkpoint
-            interface.mark_action_fulfilled(
-                precice.action_read_iteration_checkpoint())
+            interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
         else:  # go to next timestep
             if timestep % 20 == 0:  # visualize
                 bezier = domain.sample('bezier', 2)
                 x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs)
                 with treelog.add(treelog.DataLog()):
-                    nutils.export.vtk(
-                        'Solid_' + str(timestep), bezier.tri, x, T=u)
+                    nutils.export.vtk('Solid_' + str(timestep), bezier.tri, x, T=u)
 
     interface.finalize()
 

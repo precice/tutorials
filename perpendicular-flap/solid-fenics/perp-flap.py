@@ -19,8 +19,7 @@ def neumann_boundary(x, on_boundary):
     determines whether a node is on the coupling boundary
 
     """
-    return on_boundary and ((abs(x[1] - 1) < tol)
-                            or abs(abs(x[0]) - W / 2) < tol)
+    return on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol)
 
 
 # Geometry and material properties
@@ -38,8 +37,7 @@ lambda_ = Constant(E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)))
 # create Mesh
 n_x_Direction = 4
 n_y_Direction = 26
-mesh = RectangleMesh(Point(-W / 2, 0), Point(W / 2, H),
-                     n_x_Direction, n_y_Direction)
+mesh = RectangleMesh(Point(-W / 2, 0), Point(W / 2, H), n_x_Direction, n_y_Direction)
 
 h = Constant(H / n_y_Direction)
 
@@ -71,8 +69,7 @@ fixed_boundary = AutoSubDomain(clamped_boundary)
 precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
 
 # Initialize the coupling interface
-precice_dt = precice.initialize(coupling_boundary, read_function_space=V,
-                                write_object=V, fixed_boundary=fixed_boundary)
+precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fixed_boundary=fixed_boundary)
 
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
@@ -185,8 +182,7 @@ displacement_out << u_n
 
 while precice.is_coupling_ongoing():
 
-    if precice.is_action_required(
-            precice.action_write_iteration_checkpoint()):  # write checkpoint
+    if precice.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
 
     # read data from preCICE and get a new coupling expression
@@ -215,10 +211,8 @@ while precice.is_coupling_ongoing():
     # Call to advance coupling, also returns the optimum time step value
     precice_dt = precice.advance(dt(0))
 
-    # Either revert to old step if timestep has not converged or move to next
-    # timestep
-    if precice.is_action_required(
-            precice.action_read_iteration_checkpoint()):  # roll back to checkpoint
+    # Either revert to old step if timestep has not converged or move to next timestep
+    if precice.is_action_required(precice.action_read_iteration_checkpoint()):  # roll back to checkpoint
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
         u_n.assign(u_cp)
         t = t_cp

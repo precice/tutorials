@@ -19,9 +19,7 @@ class ExcludeStraightBoundary(SubDomain):
 
     def inside(self, x, on_boundary):
         tol = 1E-14
-        if on_boundary and not near(x[0], x_coupling, tol)
-                       or near(x[1], y_top, tol)
-                       or near(x[1], y_bottom, tol):
+        if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
             return True
         else:
             return False

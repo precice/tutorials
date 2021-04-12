@@ -15,20 +15,11 @@ def subs0(f):
     if isinstance(f, function.Argument) and f._name == 'lhs':
         return function.Argument(name='lhs0', shape=f.shape, nderiv=f._nderiv)
     if isinstance(f, function.Argument) and f._name == 'meshdofs':
-        return function.Argument(
-            name='oldmeshdofs',
-            shape=f.shape,
-            nderiv=f._nderiv)
+        return function.Argument(name='oldmeshdofs', shape=f.shape, nderiv=f._nderiv)
     if isinstance(f, function.Argument) and f._name == 'oldmeshdofs':
-        return function.Argument(
-            name='oldoldmeshdofs',
-            shape=f.shape,
-            nderiv=f._nderiv)
+        return function.Argument(name='oldoldmeshdofs', shape=f.shape, nderiv=f._nderiv)
     if isinstance(f, function.Argument) and f._name == 'oldoldmeshdofs':
-        return function.Argument(
-            name='oldoldoldmeshdofs',
-            shape=f.shape,
-            nderiv=f._nderiv)
+        return function.Argument(name='oldoldoldmeshdofs', shape=f.shape, nderiv=f._nderiv)
 
 # some helper function to shift variables by two timesteps
 
@@ -55,8 +46,7 @@ def main(inflow: 'inflow velocity' = 10,
     grid_x_4 = numpy.linspace(0.3, 1, 8)
     grid_x_4 = grid_x_4[:-1]
     grid_x_5 = numpy.linspace(1, 3, 7)
-    grid_x = numpy.concatenate(
-        (grid_x_1, grid_x_2, grid_x_3, grid_x_4, grid_x_5), axis=None)
+    grid_x = numpy.concatenate((grid_x_1, grid_x_2, grid_x_3, grid_x_4, grid_x_5), axis=None)
     grid_y_1 = numpy.linspace(0, 1.5, 16)
     grid_y_1 = grid_y_1[:-1]
     grid_y_2 = numpy.linspace(1.5, 2, 4)
@@ -66,10 +56,8 @@ def main(inflow: 'inflow velocity' = 10,
     grid = [grid_x, grid_y]
 
     topo, geom = mesh.rectilinear(grid)
-    domain = topo.withboundary(inflow='left',
-                               wall='top,bottom',
-                               outflow='right') - topo[18:20,
-                                                       :10].withboundary(flap='left,right,top')
+    domain = topo.withboundary(inflow='left', wall='top,bottom', outflow='right') - \
+        topo[18:20, :10].withboundary(flap='left,right,top')
 
     # Nutils namespace
     ns = function.Namespace()
@@ -82,8 +70,7 @@ def main(inflow: 'inflow velocity' = 10,
     ns._functions['δt'] = lambda f: (f - subs0(f)) / dt
     ns._functions_nargs['δt'] = 1
     # 2nd order FD
-    ns._functions['tt'] = lambda f: (
-        1.5 * f - 2 * subs0(f) + 0.5 * subs00(f)) / dt
+    ns._functions['tt'] = lambda f: (1.5 * f - 2 * subs0(f) + 0.5 * subs00(f)) / dt
     ns._functions_nargs['tt'] = 1
     # extrapolation for pressure
     ns._functions['tp'] = lambda f: (1.5 * f - 0.5 * subs0(f))
@@ -121,21 +108,15 @@ def main(inflow: 'inflow velocity' = 10,
     participantName = "Fluid"
     solverProcessIndex = 0
     solverProcessSize = 1
-    interface = precice.Interface(
-        participantName,
-        configFileName,
-        solverProcessIndex,
-        solverProcessSize)
+    interface = precice.Interface(participantName, configFileName, solverProcessIndex, solverProcessSize)
 
     # define coupling meshes
     meshName = "Fluid-Mesh"
     meshID = interface.get_mesh_id(meshName)
 
     couplinginterface = domain.boundary['flap']
-    couplingsample = couplinginterface.sample(
-        'gauss', degree=2)  # mesh located at Gauss points
-    dataIndices = interface.set_mesh_vertices(
-        meshID, couplingsample.eval(ns.x0))
+    couplingsample = couplinginterface.sample('gauss', degree=2)  # mesh located at Gauss points
+    dataIndices = interface.set_mesh_vertices(meshID, couplingsample.eval(ns.x0))
 
     # coupling data
     writeData = "Force"
@@ -148,32 +129,24 @@ def main(inflow: 'inflow velocity' = 10,
     dt = min(precice_dt, timestepsize)
 
     # boundary conditions for fluid equations
-    sqr = domain.boundary['wall,flap'].integral(
-        'urel_k urel_k d:x0' @ ns, degree=4)
+    sqr = domain.boundary['wall,flap'].integral('urel_k urel_k d:x0' @ ns, degree=4)
     cons = solver.optimize('lhs', sqr, droptol=1e-15)
-    sqr = domain.boundary['inflow'].integral(
-        '((urel_0 - uin)^2 + urel_1^2) d:x0' @ ns, degree=4)
+    sqr = domain.boundary['inflow'].integral('((urel_0 - uin)^2 + urel_1^2) d:x0' @ ns, degree=4)
     cons = solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons)
 
     # weak form fluid equations
-    res = domain.integral(
-        't(ubasis_ni,j (u_i,j + u_j,i) rho nu d:x)' @ ns,
-        degree=4)
-    res += domain.integral('(-ubasis_ni,j p δ_ij + pbasis_n u_k,k) d:x' @
-                           ns, degree=4)
+    res = domain.integral('t(ubasis_ni,j (u_i,j + u_j,i) rho nu d:x)' @ ns, degree=4)
+    res += domain.integral('(-ubasis_ni,j p δ_ij + pbasis_n u_k,k) d:x' @ ns, degree=4)
     res += domain.integral('rho ubasis_ni δt(u_i d:x)' @ ns, degree=4)
     res += domain.integral('rho ubasis_ni t(u_i,j urel_j d:x)' @ ns, degree=4)
 
     # weak form for force computation
-    resF = domain.integral(
-        '(ubasis_ni,j (u_i,j + u_j,i) rho nu d:x)' @ ns,
-        degree=4)
+    resF = domain.integral('(ubasis_ni,j (u_i,j + u_j,i) rho nu d:x)' @ ns, degree=4)
     resF += domain.integral('tp(-ubasis_ni,j p δ_ij d:x)' @ ns, degree=4)
     resF += domain.integral('pbasis_n u_k,k d:x' @ ns, degree=4)
     resF += domain.integral('rho ubasis_ni tt(u_i d:x)' @ ns, degree=4)
     resF += domain.integral('rho ubasis_ni (u_i,j urel_j d:x)' @ ns, degree=4)
-    resF += couplinginterface.sample('gauss',
-                                     4).integral('ubasis_ni F_i d:x' @ ns)
+    resF += couplinginterface.sample('gauss', 4).integral('ubasis_ni F_i d:x' @ ns)
     consF = numpy.isnan(
         solver.optimize(
             'F',
@@ -184,8 +157,7 @@ def main(inflow: 'inflow velocity' = 10,
             droptol=1e-10))
 
     # boundary conditions mesh displacements
-    sqr = domain.boundary['inflow,outflow,wall'].integral(
-        'd_i d_i' @ ns, degree=2)
+    sqr = domain.boundary['inflow,outflow,wall'].integral('d_i d_i' @ ns, degree=2)
     meshcons0 = solver.optimize('meshdofs', sqr, droptol=1e-15)
 
     # weak form mesh displacements
@@ -203,17 +175,14 @@ def main(inflow: 'inflow velocity' = 10,
 
         # read displacements from interface
         if interface.is_read_data_available():
-            readdata = interface.read_block_vector_data(
-                readdataID, dataIndices)
+            readdata = interface.read_block_vector_data(readdataID, dataIndices)
             coupledata = couplingsample.asfunction(readdata)
             sqr = couplingsample.integral(((ns.d - coupledata)**2).sum(0))
-            meshcons = solver.optimize(
-                'meshdofs', sqr, droptol=1e-15, constrain=meshcons0)
+            meshcons = solver.optimize('meshdofs', sqr, droptol=1e-15, constrain=meshcons0)
             meshdofs = solver.optimize('meshdofs', meshsqr, constrain=meshcons)
 
         # save checkpoint
-        if interface.is_action_required(
-                precice.action_write_iteration_checkpoint()):
+        if interface.is_action_required(precice.action_write_iteration_checkpoint()):
             lhs_checkpoint = lhs0
             lhs00_checkpoint = lhs00
             t_checkpoint = t
@@ -221,8 +190,7 @@ def main(inflow: 'inflow velocity' = 10,
             oldmeshdofs_checkpoint = oldmeshdofs
             oldoldmeshdofs_checkpoint = oldoldmeshdofs
             oldoldoldmeshdofs_checkpoint = oldoldoldmeshdofs
-            interface.mark_action_fulfilled(
-                precice.action_write_iteration_checkpoint())
+            interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
         # solve fluid equations
         lhs1 = solver.newton(
@@ -255,10 +223,9 @@ def main(inflow: 'inflow velocity' = 10,
                     oldoldmeshdofs=oldoldmeshdofs,
                     oldoldoldmeshdofs=oldoldoldmeshdofs))
             # writedata = couplingsample.eval(ns.F, F=F) # for stresses
-            writedata = couplingsample.eval('F_i d:x' @ ns, F=F, meshdofs=meshdofs) * numpy.concatenate([
-                p.weights for p in couplingsample.points])[:, numpy.newaxis]
-            interface.write_block_vector_data(
-                writedataID, dataIndices, writedata)
+            writedata = couplingsample.eval('F_i d:x' @ ns, F=F, meshdofs=meshdofs) * \
+                numpy.concatenate([p.weights for p in couplingsample.points])[:, numpy.newaxis]
+            interface.write_block_vector_data(writedataID, dataIndices, writedata)
 
         # do the coupling
         precice_dt = interface.advance(dt)
@@ -274,8 +241,7 @@ def main(inflow: 'inflow velocity' = 10,
         oldmeshdofs = meshdofs
 
         # read checkpoint if required
-        if interface.is_action_required(
-                precice.action_read_iteration_checkpoint()):
+        if interface.is_action_required(precice.action_read_iteration_checkpoint()):
             lhs0 = lhs_checkpoint
             lhs00 = lhs00_checkpoint
             t = t_checkpoint
@@ -283,8 +249,7 @@ def main(inflow: 'inflow velocity' = 10,
             oldmeshdofs = oldmeshdofs_checkpoint
             oldoldmeshdofs = oldoldmeshdofs_checkpoint
             oldoldoldmeshdofs = oldoldoldmeshdofs_checkpoint
-            interface.mark_action_fulfilled(
-                precice.action_read_iteration_checkpoint())
+            interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
 
         if interface.is_time_window_complete():
             x, u, p = bezier.eval(['x_i', 'u_i', 'p'] @ ns, lhs=lhs1, meshdofs=meshdofs, oldmeshdofs=oldmeshdofs,

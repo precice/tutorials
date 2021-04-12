@@ -67,8 +67,7 @@ parser.add_argument("-e", "--error-tol", help="set error tolerance",
 args = parser.parse_args()
 
 fenics_dt = .1  # time step size
-# Error is bounded by coupling accuracy. In theory we would obtain the
-# analytical solution.
+# Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
 error_tol = args.error_tol
 
 alpha = 3  # parameter alpha
@@ -198,14 +197,12 @@ while precice.is_coupling_ongoing():
 
     # Write data to preCICE according to which problem is being solved
     if problem is ProblemType.DIRICHLET:
-        # Dirichlet problem reads temperature and writes flux on boundary to
-        # Neumann problem
+        # Dirichlet problem reads temperature and writes flux on boundary to Neumann problem
         determine_gradient(V_g, u_np1, flux)
         flux_x = interpolate(flux.sub(0), W)
         precice.write_data(flux_x)
     elif problem is ProblemType.NEUMANN:
-        # Neumann problem reads flux and writes temperature on boundary to
-        # Dirichlet problem
+        # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
         precice.write_data(u_np1)
 
     precice_dt = precice.advance(dt(0))

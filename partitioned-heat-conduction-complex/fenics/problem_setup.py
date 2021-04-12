@@ -20,9 +20,7 @@ class ExcludeStraightBoundary(SubDomain):
 
     def inside(self, x, on_boundary):
         tol = 1E-14
-        if on_boundary and not near(x[0], x_coupling, tol)
-               or near(x[1], y_top, tol)
-               or near(x[1], y_bottom, tol):
+        if on_boundary and not near(x[0], x_coupling, tol) or near(x[1], y_top, tol) or near(x[1], y_bottom, tol):
             return True
         else:
             return False
@@ -63,52 +61,51 @@ def get_problem_setup(args):
     elif args.neumann and not args.dirichlet:
         problem = ProblemType.NEUMANN
     elif args.dirichlet and args.neumann:
-        msg = "you can only choose either a dirichlet problem (option -d) or a neumann problem (option -n)"
-        raise Exception(msg)
+        raise Exception("you can only choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
     elif not (args.dirichlet or args.neumann):
-        msg = "you have to choose either a dirichlet problem (option -d) or a neumann problem (option -n)"
-        raise Exception(msg)
+        raise Exception("you have to choose either a dirichlet problem (option -d) or a neumann problem (option -n)")
     else:
         raise Exception("invalid control flow.")
 
     if args.interface == 'simple':
         if args.domain == 'circular' or args.domain == 'rectangle':
-            msg = "Only --domain left or --domain right is supported for --interface {}. Invalid --domain {} provided."
-            raise Exception(msg.format(args.interface, args.domain))
+            raise Exception("Only --domain left or --domain right is supported for --interface {}. "
+                            "Invalid --domain {} provided.".format(args.interface, args.domain))
         elif args.domain == 'left':
             return DomainPart.LEFT, problem
         elif args.domain == 'right':
             return DomainPart.RIGHT, problem
         elif args.dirichlet and args.neumann:
-            msg = "you can only choose to either compute the left part of the domain (option -dl) or the right part (option -dr)"
-            raise Exception(msg)
-                
+            raise Exception(
+                "You can only choose to either compute the left part of the domain (option -dl) "
+                "or the right part (option -dr)")
         elif not (args.domain == 'left' or args.domain == 'right'):
-            print("Default domain partitioning for simple interface is used: Left part of domain is a Dirichlet-type problem; right part is a Neumann-type problem")
+            print("Default domain partitioning for simple interface is used: Left part of domain is a "
+                  "Dirichlet-type problem; right part is a Neumann-type problem")
             if problem is ProblemType.DIRICHLET:
                 return DomainPart.LEFT, problem
             elif problem is ProblemType.NEUMANN:
                 return DomainPart.RIGHT, problem
     elif args.interface == 'complex':
         if args.domain == 'left' or args.domain == 'right':
-            msg = "Only --domain circular or --domain rectangle is supported for --interface {}. Invalid --domain {} provided."
-            raise Exception(msg.format(args.interface, args.domain))
+            raise Exception("Only --domain circular or --domain rectangle is supported for --interface {}. "
+                            "Invalid --domain {} provided.".format(args.interface, args.domain))
         elif args.domain == 'circular':
             return DomainPart.CIRCULAR, problem
         elif args.domain == 'rectangle':
             return DomainPart.RECTANGLE, problem
         elif args.dirichlet and args.neumann:
-            msg = "you can only choose to either compute the circular part of the domain (option -dc) or the residual part (option -dnc)"
-            raise Exception(msg)
+            raise Exception("You can only choose to either compute the circular part of the domain (option -dc) "
+                            "or the residual part (option -dnc)")
         elif not (args.domain == 'circular' or args.domain == 'rectangle'):
-            print("Default domain partitioning for complex interface is used: Circular part of domain is a Neumann-type problem; Rest of the domain is a Dirichlet-type problem")
+            print("Default domain partitioning for complex interface is used: Circular part of domain "
+                  "is a Neumann-type problem; Rest of the domain is a Dirichlet-type problem")
             if problem is ProblemType.NEUMANN:
                 return DomainPart.CIRCULAR, problem
             elif problem is ProblemType.DIRICHLET:
                 return DomainPart.RECTANGLE, problem
     else:
-        msg = "invalid interface provided: args.interface = {}"
-        raise Exception(msg.format(args.interface))
+        raise Exception("invalid interface provided: args.interface = {}".format(args.interface))
 
 
 def get_geometry(domain_part):
@@ -151,8 +148,7 @@ def get_geometry(domain_part):
             mesh = mshr.generate_mesh(circular_domain, high_resolution, "cgal")
         elif domain_part is DomainPart.RECTANGLE:
             circular_domain = mshr.Circle(midpoint, radius, n_vertices)
-            mesh = mshr.generate_mesh(whole_domain - circular_domain,
-                low_resolution, "cgal")
+            mesh = mshr.generate_mesh(whole_domain - circular_domain, low_resolution, "cgal")
         else:
             raise Exception("invalid control flow!")
         coupling_boundary = CircleBoundary()
