@@ -1,0 +1,10 @@
+# Files distributed separately, downloaded via download-meshes.sh
+adiabatic.dfl
+all.msh
+inner-interface.flm
+inner-interface.nam
+inner-interface.sur
+outer-interface.flm
+outer-interface.nam
+outer-interface.sur
+solid.inp
