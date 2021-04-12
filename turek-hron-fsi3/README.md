@@ -26,7 +26,9 @@ Fluid participant:
 Solid participant:
 
 * deal.II. For more information, have a look at the [deal.II adapter documentation](adapter-dealii-overview.html). This tutorial requires the nonlinear solid solver. Please copy the nonlinear solver executable to the `solid-dealii` folder or make it discoverable at runtime and update the `solid-dealii/run.sh` script.
-* FEniCS.
+* FEniCS. For more information, have a look at the [FEniCS adapter documentation](adapter-fenics.html).
+
+As this is a benchmark case, note that we currently only consider the OpenFOAM-deal.II results as valid.
 
 ## Running the Simulation
 
@@ -41,11 +43,6 @@ and
 cd solid-dealii
 ./run.sh
 ```
-or
-```
-cd solid-fenics
-./run.sh
-```
 
 You can also run OpenFOAM in parallel by `./run.sh -parallel`. The default setting here uses 25 MPI ranks. You can change this setting in `fluid-openfoam/system/decomposeParDict`.
 For older OpenFOAM versions, the solver name will differ. If you are using OpenFOAM v1712 / 5.x or older have a look in the `fluid-openfoam/system/controlDict` file and set the appropriate solver name.
@@ -57,7 +54,7 @@ In the first few timesteps, many coupling iterations are required for convergenc
 
 ## Post-processing
 
-You can visualize the results of the coupled simulation using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `Fluid.foam` file. Solid results are in VTK format.
+You can visualize the results of the coupled simulation using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `fluid-openfoam.foam` file. Solid results are in VTK format.
 
 If you want to visualize both domains with ParaView, keep in mind that the deal.II solver writes results every few timesteps, while the OpenFOAM solver writes in reference to simulated time. For this reason, make sure that you use compatible write intervals. You may also need to convert the OpenFOAM results to VTK (with the command `foamToVTK`).
 
@@ -68,7 +65,7 @@ Moreover, as we defined a watchpoint at the flap tip (see `precice-config.xml`),
 
 ![FSI3 watchpoint](images/tutorials-turek-hron-fsi3-tip-plot.png)
 
-Before running the simulation again, you may want to cleanup any result files using the script `Allclean`.
+Before running the simulation again, you may want to cleanup any result files using the script `clean-tutorial.sh`.
 
 ## Mesh refinement
 

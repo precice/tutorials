@@ -4,7 +4,7 @@ FoamFile {
     object controlDict;
     format ascii;
 }
-application chtMultiRegionSimpleFoam;
+application buoyantSimpleFoam;
 startFrom startTime;
 stopAt endTime;
 writeFormat ascii;
@@ -12,7 +12,7 @@ writePrecision 12;
 writeCompression on;
 timeFormat general;
 timePrecision 12;
-runTimeModifiable yes;
+runTimeModifiable false;
 deltaT 1;
 startTime 0.0;
 writeInterval 50;

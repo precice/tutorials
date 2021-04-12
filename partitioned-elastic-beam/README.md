@@ -24,7 +24,7 @@ The prepared case already contains configuration and mesh files, so that the sim
 
 ## Post-processing
 
-To see an animated visualization of the results, you can run the script `./visualize.py`. It joins the `*.frd` output files of both participants to form a new file with the entire beam. Then, it calls `cgx`, since CalculiX results can only be visualized with this graphic tool. If you want to use e.g. Paraview, you may use converting tools.
+To see an animated visualization of the results, you can run the script `./visualize.py`. It joins the `*.frd` output files of both participants to form a new file with the entire beam. Then, it calls `cgx`, since CalculiX results can only be visualized with this graphic tool. If you want to use e.g. ParaView, you may use converting tools.
 
 ![beam results](images/tutorials-partitioned-elastic-beam-results.png)
 
