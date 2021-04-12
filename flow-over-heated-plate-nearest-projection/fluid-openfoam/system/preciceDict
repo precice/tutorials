@@ -17,30 +17,18 @@ interfaces
 {
   Interface1
   {
-<<<<<<< HEAD:quickstart/fluid-openfoam/system/preciceDict
-    mesh              Fluid-Mesh;
-    patches           (flap);
-=======
     mesh              Fluid-Mesh-Centers;
->>>>>>> develop:flow-over-heated-plate-nearest-projection/fluid-openfoam/system/preciceDict
     locations         faceCenters;
     connectivity      false;
     patches           (interface);
     
     readData
     (
-<<<<<<< HEAD:quickstart/fluid-openfoam/system/preciceDict
-      Displacement
-=======
       Heat-Flux
->>>>>>> develop:flow-over-heated-plate-nearest-projection/fluid-openfoam/system/preciceDict
     );
     
     writeData
     (
-<<<<<<< HEAD:quickstart/fluid-openfoam/system/preciceDict
-      Force
-=======
     );
   };
   
@@ -58,7 +46,6 @@ interfaces
     writeData
     (
       Temperature
->>>>>>> develop:flow-over-heated-plate-nearest-projection/fluid-openfoam/system/preciceDict
     );
   };
 };
