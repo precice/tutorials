@@ -412,24 +412,24 @@ int fluidComputeSolutionSerial(
 
     for (int i = 1; i < N; i++) {
       // Momentum, Velocity
-      LHS(i, i - 1) = LHS(i, i - 1) - 0.25 * crossSectionLength[i - 1] * velocity[i - 1] * 2 - 0.25 * crossSectionLength[i] * velocity[i - 1] * 2 - 0.25 * crossSectionLength[i] * velocity[i] - 0.25 * crossSectionLength[i - 1] * velocity[i];
-      LHS(i, i)     = LHS(i, i) + 0.25 * crossSectionLength[i + 1] * velocity[i + 1] + 0.25 * crossSectionLength[i] * velocity[i + 1] + crossSectionLength[i] * dx / tau + 0.25 * crossSectionLength[i + 1] * velocity[i] * 2 + 0.25 * crossSectionLength[i] * velocity[i] * 2 - 0.25 * crossSectionLength[i] * velocity[i - 1] - 0.25 * crossSectionLength[i - 1] * velocity[i - 1];
-      LHS(i, i + 1) = LHS(i, i + 1) + 0.25 * crossSectionLength[i + 1] * velocity[i] + 0.25 * crossSectionLength[i] * velocity[i];
+      LHS(i, i - 1) += -0.25 * crossSectionLength[i - 1] * velocity[i - 1] * 2 - 0.25 * crossSectionLength[i] * velocity[i - 1] * 2 - 0.25 * crossSectionLength[i] * velocity[i] - 0.25 * crossSectionLength[i - 1] * velocity[i];
+      LHS(i, i)     +=  0.25 * crossSectionLength[i + 1] * velocity[i + 1] + 0.25 * crossSectionLength[i] * velocity[i + 1] + crossSectionLength[i] * dx / tau + 0.25 * crossSectionLength[i + 1] * velocity[i] * 2 + 0.25 * crossSectionLength[i] * velocity[i] * 2 - 0.25 * crossSectionLength[i] * velocity[i - 1] - 0.25 * crossSectionLength[i - 1] * velocity[i - 1];
+      LHS(i, i + 1) +=  0.25 * crossSectionLength[i + 1] * velocity[i] + 0.25 * crossSectionLength[i] * velocity[i];
 
       // Momentum, Pressure
-      LHS(i, N + 1 + i - 1) = LHS(i, N + 1 + i - 1) - 0.25 * crossSectionLength[i - 1] - 0.25 * crossSectionLength[i];
-      LHS(i, N + 1 + i)     = LHS(i, N + 1 + i) + 0.25 * crossSectionLength[i - 1] - 0.25 * crossSectionLength[i + 1];
-      LHS(i, N + 1 + i + 1) = LHS(i, N + 1 + i + 1) + 0.25 * crossSectionLength[i] + 0.25 * crossSectionLength[i + 1];
+      LHS(i, N + 1 + i - 1) += -0.25 * crossSectionLength[i - 1] - 0.25 * crossSectionLength[i];
+      LHS(i, N + 1 + i)     +=  0.25 * crossSectionLength[i - 1] - 0.25 * crossSectionLength[i + 1];
+      LHS(i, N + 1 + i + 1) +=  0.25 * crossSectionLength[i]     + 0.25 * crossSectionLength[i + 1];
 
       // Continuity, Velocity
-      LHS(i + N + 1, i - 1) = LHS(i + N + 1, i - 1) - 0.25 * crossSectionLength[i - 1] - 0.25 * crossSectionLength[i];
-      LHS(i + N + 1, i)     = LHS(i + N + 1, i) - 0.25 * crossSectionLength[i - 1] + 0.25 * crossSectionLength[i + 1];
-      LHS(i + N + 1, i + 1) = LHS(i + N + 1, i + 1) + 0.25 * crossSectionLength[i] + 0.25 * crossSectionLength[i + 1];
+      LHS(i + N + 1, i - 1) += -0.25 * crossSectionLength[i - 1] - 0.25 * crossSectionLength[i];
+      LHS(i + N + 1, i)     += -0.25 * crossSectionLength[i - 1] + 0.25 * crossSectionLength[i + 1];
+      LHS(i + N + 1, i + 1) +=  0.25 * crossSectionLength[i]     + 0.25 * crossSectionLength[i + 1];
 
       // Continuity, Pressure
-      LHS(i + N + 1, N + 1 + i - 1) = LHS(i + N + 1, N + 1 + i - 1) - alpha;
-      LHS(i + N + 1, N + 1 + i)     = LHS(i + N + 1, N + 1 + i) + 2 * alpha;
-      LHS(i + N + 1, N + 1 + i + 1) = LHS(i + N + 1, N + 1 + i + 1) - alpha;
+      LHS(i + N + 1, N + 1 + i - 1) -= alpha;
+      LHS(i + N + 1, N + 1 + i)     += 2 * alpha;
+      LHS(i + N + 1, N + 1 + i + 1) -= alpha;
     }
 
     /* Boundary */
