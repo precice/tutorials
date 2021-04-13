@@ -32,7 +32,8 @@ clean_precice_logs() {
             ./precice-*-events-summary.log \
             ./precice-postProcessingInfo.log \
             ./precice-*-watchpoint-*.log \
-            ./precice-*-watchintegral-*.log
+            ./precice-*-watchintegral-*.log \
+            ./core
     )
 }
 

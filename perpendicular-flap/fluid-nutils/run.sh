@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e -u
 
-python3 nsale.py
+python3 fluid.py
