@@ -59,10 +59,10 @@ int main(int argc, char **argv)
   SolverInterface interface(solverName, configFileName, rank, size);
   std::cout << "preCICE configured..." << std::endl;
 
-  int dimensions           = interface.getDimensions();
-  int meshID               = interface.getMeshID("Fluid-Nodes-Mesh");
-  int pressureID           = interface.getDataID("Pressure", meshID);
-  int crossSectionLengthID = interface.getDataID("CrossSectionLength", meshID);
+  const int dimensions           = interface.getDimensions();
+  const int meshID               = interface.getMeshID("Fluid-Nodes-Mesh");
+  const int pressureID           = interface.getDataID("Pressure", meshID);
+  const int crossSectionLengthID = interface.getDataID("CrossSectionLength", meshID);
 
   std::vector<double> pressure, crossSectionLength, velocity, crossSectionLength_old;
   std::vector<int>    vertexIDs;
