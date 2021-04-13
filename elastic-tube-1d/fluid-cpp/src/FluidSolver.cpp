@@ -101,16 +101,16 @@ int main(int argc, char **argv)
 
   interface.initializeData();
 
-  if (interface.isReadDataAvailable()) {
-    interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
-  }
-
   int out_counter = 0;
 
   while (interface.isCouplingOngoing()) {
     int convergenceCounter = 0;
     if (interface.isActionRequired(actionWriteIterationCheckpoint())) {
       interface.markActionFulfilled(actionWriteIterationCheckpoint());
+    }
+
+    if (interface.isReadDataAvailable()) {
+      interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
     }
 
     if (parallel) {
@@ -126,11 +126,11 @@ int main(int argc, char **argv)
                                  t, domainSize, kappa, tau);
     }
 
-    interface.writeBlockScalarData(pressureID, chunkLength, vertexIDs.data(), pressure.data());
+    if (interface.isWriteDataRequired(dt)) {
+      interface.writeBlockScalarData(pressureID, chunkLength, vertexIDs.data(), pressure.data());
+    }
 
     interface.advance(dt);
-
-    interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
 
     if (interface.isActionRequired(actionReadIterationCheckpoint())) { // i.e. not yet converged
       interface.markActionFulfilled(actionReadIterationCheckpoint());
