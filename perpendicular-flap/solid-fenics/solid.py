@@ -1,70 +1,56 @@
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
-    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, \
+    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, project, \
     Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system
-import dolfin
-
 from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
 from fenicsprecice import Adapter
 from enum import Enum
 
-# Beam geometry
+
+# define the two kinds of boundary: clamped and coupling Neumann Boundary
+def clamped_boundary(x, on_boundary):
+    return on_boundary and abs(x[1]) < tol
+
+
+def neumann_boundary(x, on_boundary):
+    """
+    determines whether a node is on the coupling boundary
+
+    """
+    return on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol)
+
+
+# Geometry and material properties
 dim = 2  # number of dimensions
-L = 0.35  # length
-H = 0.02  # height
+H = 1
+W = 0.1
+rho = 3000
+E = 4000000
+nu = 0.3
 
-y_bottom = 0.2 - 0.5 * H  # y coordinate of bottom surface of beam
-y_top = y_bottom + H  # y coordinate of top surface of beam
-x_left = 0.25  # x coordinate of left surface of beam
-x_right = x_left + L  # x coordinate of right surface of beam
+mu = Constant(E / (2.0 * (1.0 + nu)))
 
-
-# define the two inside functions to determine the boundaries: clamped Dirichlet and coupling Neumann Boundary
-def left_boundary(x, on_boundary):
-    """
-    inside-function for the clamped Dirichlet Boundary.
-
-    Apply Dirichlet boundary on left part of the beam.
-    """
-    return on_boundary and abs(x[0] - x_left) < tol  # left boundary of beam
-
-
-def remaining_boundary(x, on_boundary):
-    """
-    inside-function for the coupling Neumann Boundary.
-
-    Apply Neumann boundary on top, bottom and right (=remaining) part of the beam.
-    """
-    return on_boundary and (abs(x[1] - y_top) < tol or  # top boundary of beam
-                            abs(x[1] - y_bottom) < tol or  # bottom boundary of beam
-                            abs(x[0] - x_right) < tol)  # right boundary of beam
-
-
-# Numerical properties
-tol = 1E-14
-
-# Beam material properties
-rho = 1000  # density
-E = 5600000.0  # Young's modulus
-nu = 0.4  # Poisson's ratio
-lambda_ = Constant(E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)))  # first Lame constant
-mu = Constant(E / (2.0 * (1.0 + nu)))  # second Lame constant
+lambda_ = Constant(E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)))
 
 # create Mesh
-n_x_Direction = 20  # DoFs in x direction
-n_y_Direction = 4  # DoFs in y direction
-mesh = RectangleMesh(Point(x_left, y_bottom), Point(x_right, y_top), n_x_Direction, n_y_Direction)
+n_x_Direction = 4
+n_y_Direction = 26
+mesh = RectangleMesh(Point(-W / 2, 0), Point(W / 2, H), n_x_Direction, n_y_Direction)
+
+h = Constant(H / n_y_Direction)
 
 # create Function Space
 V = VectorFunctionSpace(mesh, 'P', 2)
+
+# BCs
+tol = 1E-14
 
 # Trial and Test Functions
 du = TrialFunction(V)
 v = TestFunction(V)
 
-# displacement fields
 u_np1 = Function(V)
 saved_u_old = Function(V)
 
@@ -73,37 +59,30 @@ u_n = Function(V)
 v_n = Function(V)
 a_n = Function(V)
 
-# initial value for force and displacement field
+
 f_N_function = interpolate(Expression(("1", "0"), degree=1), V)
 u_function = interpolate(Expression(("0", "0"), degree=1), V)
 
-# define coupling boundary
-coupling_boundary = AutoSubDomain(remaining_boundary)
+coupling_boundary = AutoSubDomain(neumann_boundary)
+fixed_boundary = AutoSubDomain(clamped_boundary)
 
-# create Adapter
 precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
 
-# create subdomains used by the adapter
-clamped_boundary_domain = AutoSubDomain(left_boundary)
-force_boundary = AutoSubDomain(remaining_boundary)
-
 # Initialize the coupling interface
-# Function space V is passed twice as both read and write functions are defined using the same space
-precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V,
-                                fixed_boundary=clamped_boundary_domain)
+precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fixed_boundary=fixed_boundary)
 
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
-# generalized alpha method (time stepping) parameters
-alpha_m = Constant(0.2)
-alpha_f = Constant(0.4)
-gamma = Constant(0.5 + alpha_f - alpha_m)
-beta = Constant((gamma + 0.5) ** 2 * 0.25)
+# clamp the beam at the bottom
+bc = DirichletBC(V, Constant((0, 0)), fixed_boundary)
 
-# clamp (u == 0) the beam at the left
-bc = DirichletBC(V, Constant((0, 0)), left_boundary)
+# alpha method parameters
+alpha_m = Constant(0)
+alpha_f = Constant(0)
+gamma = Constant(0.5 + alpha_f - alpha_m)
+beta = Constant((gamma + 0.5)**2 / 4.)
 
 
 # Define strain
@@ -126,7 +105,15 @@ def k(u, v):
     return inner(sigma(u), sym(grad(v))) * dx
 
 
-def update_acceleration(u, u_old, v_old, a_old, ufl=True):
+# External Work
+def Wext(u_):
+    return dot(u_, p) * ds
+
+
+# Update functions
+
+# Update acceleration
+def update_a(u, u_old, v_old, a_old, ufl=True):
     if ufl:
         dt_ = dt
         beta_ = beta
@@ -134,10 +121,12 @@ def update_acceleration(u, u_old, v_old, a_old, ufl=True):
         dt_ = float(dt)
         beta_ = float(beta)
 
-    return (u - u_old - dt_ * v_old) / beta / dt_ ** 2 - .5 * (1 - 2 * beta_) / beta_ * a_old
+    return ((u - u_old - dt_ * v_old) / beta / dt_ ** 2
+            - (1 - 2 * beta_) / 2 / beta_ * a_old)
 
 
-def update_velocity(a, u_old, v_old, a_old, ufl=True):
+# Update velocity
+def update_v(a, u_old, v_old, a_old, ufl=True):
     if ufl:
         dt_ = dt
         gamma_ = gamma
@@ -155,8 +144,8 @@ def update_fields(u, u_old, v_old, a_old):
     v0_vec, a0_vec = v_old.vector(), a_old.vector()
 
     # call update functions
-    a_vec = update_acceleration(u_vec, u0_vec, v0_vec, a0_vec, ufl=False)
-    v_vec = update_velocity(a_vec, u0_vec, v0_vec, a0_vec, ufl=False)
+    a_vec = update_a(u_vec, u0_vec, v0_vec, a0_vec, ufl=False)
+    v_vec = update_v(a_vec, u0_vec, v0_vec, a0_vec, ufl=False)
 
     # assign u->u_old
     v_old.vector()[:], a_old.vector()[:] = v_vec, a_vec
@@ -168,21 +157,17 @@ def avg(x_old, x_new, alpha):
 
 
 # residual
-a_np1 = update_acceleration(du, u_n, v_n, a_n, ufl=True)
-v_np1 = update_velocity(a_np1, u_n, v_n, a_n, ufl=True)
+a_np1 = update_a(du, u_n, v_n, a_n, ufl=True)
+v_np1 = update_v(a_np1, u_n, v_n, a_n, ufl=True)
 
 res = m(avg(a_n, a_np1, alpha_m), v) + k(avg(u_n, du, alpha_f), v)
 
 a_form = lhs(res)
 L_form = rhs(res)
 
-# Prepare for time-stepping
+# parameters for Time-Stepping
 t = 0.0
 n = 0
-time = []
-u_tip = []
-time.append(0.0)
-u_tip.append(0.0)
 E_ext = 0
 
 displacement_out = File("Solid/FSI-S/u_fsi.pvd")
@@ -191,7 +176,6 @@ u_n.rename("Displacement", "")
 u_np1.rename("Displacement", "")
 displacement_out << u_n
 
-# time loop for coupling
 while precice.is_coupling_ongoing():
 
     if precice.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
@@ -236,18 +220,10 @@ while precice.is_coupling_ongoing():
 
     if precice.is_time_window_complete():
         update_fields(u_np1, saved_u_old, v_n, a_n)
-        if n % 20 == 0:
+        if n % 10 == 0:
             displacement_out << (u_n, t)
-
-        u_tip.append(u_n(0.6, 0.2)[1])
-        time.append(t)
 
 # Plot tip displacement evolution
 displacement_out << u_n
-plt.figure()
-plt.plot(time, u_tip)
-plt.xlabel("Time")
-plt.ylabel("Tip displacement")
-plt.show()
 
 precice.finalize()

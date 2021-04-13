@@ -24,9 +24,6 @@ Fluid participant:
 Solid participant:
 
 * deal.II. For more information, have a look at the [deal.II adapter documentation](adapter-dealii-overview.html). This tutorial requires the nonlinear solid solver. Please copy the nonlinear solver executable to the `solid-dealii` folder or make it discoverable at runtime and update the `solid-dealii/run.sh` script.
-* FEniCS. For more information, have a look at the [FEniCS adapter documentation](adapter-fenics.html).
-
-As this is a benchmark case, note that we currently only consider the OpenFOAM-deal.II results as valid.
 
 ## Running the Simulation
 
