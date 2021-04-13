@@ -465,8 +465,8 @@ int fluidComputeSolutionSerial(
     }
 
     for (int i = 0; i <= N; i++) {
-      velocity[i] = velocity[i] + Res[i];
-      pressure[i] = pressure[i] + Res[i + N + 1];
+      velocity[i] += Res[i];
+      pressure[i] += Res[i + N + 1];
     }
   }
   return 0;
