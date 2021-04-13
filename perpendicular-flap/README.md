@@ -65,4 +65,4 @@ You should get results similar to this one:
 Reasons for the differences:
 
 * The CalculiX adapter only supports linear finite elements (deal.II uses 4th order, FEniCS 2nd order).
-* SU2 models a compressible fluid, OpenFOAM and SU2 an incompressible one.  
+* SU2 models a compressible fluid, OpenFOAM and Nutils an incompressible one.  
