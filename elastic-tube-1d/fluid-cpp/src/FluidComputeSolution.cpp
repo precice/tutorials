@@ -306,16 +306,11 @@ int fluidComputeSolutionSerial(
     double * pressure)
 {
   /* fluid_nl Variables */
-  double   alpha, dx;
-  double   tmp1, tmp2;
   double * Res;
   double **LHS;
-  double   temp_sum;
-  double   norm_1, norm_2;
-  double   norm = 1.0;
-  double   c_mk2; //c_mk**2
-
-  c_mk2 = 10000 / 2 * sqrt(PI);
+  const double E = 10000;
+  // c_mk^2
+  const double c_mk2 = E / 2 * sqrt(PI);
 
   const int chunkLength = N + 1;
   std::copy(velocity_old, velocity_old + chunkLength, velocity);
@@ -339,8 +334,8 @@ int fluidComputeSolutionSerial(
   int info;
 
   /* Stabilization Intensity */
-  alpha = (N * kappa * tau) / (N * tau + 1);
-  dx    = 1.0 / (N * kappa);
+  const double alpha = (N * kappa * tau) / (N * tau + 1);
+  const double dx    = 1.0 / (N * kappa);
   //dx = 0.1;
   //alpha = 0;
 
@@ -371,8 +366,8 @@ int fluidComputeSolutionSerial(
     /* Boundary */
 
     /* Velocity Inlet is prescribed */
-    tmp1   = 10 + 3 * sin(10 * PI * (t)); //inlet velocity
-    Res[0] = tmp1 - velocity[0];
+    const double vel_in = 10 + 3 * sin(10 * PI * (t));
+    Res[0] = vel_in - velocity[0];
 
     /* Pressure Inlet is lineary interpolated */
     Res[N + 1] = -pressure[0] + 2 * pressure[1] - pressure[2];
@@ -381,21 +376,23 @@ int fluidComputeSolutionSerial(
     Res[N] = -velocity[N] + 2 * velocity[N - 1] - velocity[N - 2];
 
     /* Pressure Outlet is "non-reflecting" */
-    tmp2           = sqrt(c_mk2 - pressure_old[N] / 2) - (velocity[N] - velocity_old[N]) / 4;
-    Res[2 * N + 1] = -pressure[N] + 2 * (c_mk2 - tmp2 * tmp2);
+    const double tmp2 = sqrt(c_mk2 - pressure_old[N] / 2) - (velocity[N] - velocity_old[N]) / 4;
+    Res[2 * N + 1] = -pressure[N] + 2 * (c_mk2 - std::pow(tmp2, 2));
 
     // compute norm of residual
-    temp_sum = 0;
+    double temp_sum_1 = 0;
     for (int i = 0; i < (2 * N + 2); i++) {
-      temp_sum += Res[i] * Res[i];
+      temp_sum_1 += Res[i] * Res[i];
     }
-    norm_1   = sqrt(temp_sum);
-    temp_sum = 0;
+    const double norm_1   = sqrt(temp_sum_1);
+
+    double temp_sum_2 = 0;
     for (int i = 0; i < (N + 1); i++) {
-      temp_sum += (pressure[i] * pressure[i]) + (velocity[i] * velocity[i]);
+      temp_sum_2 += (pressure[i] * pressure[i]) + (velocity[i] * velocity[i]);
     }
-    norm_2 = sqrt(temp_sum);
-    norm   = norm_1 / norm_2;
+    const double norm_2 = sqrt(temp_sum_2);
+
+    const double norm   = norm_1 / norm_2;
 
     if ((norm < 1e-15 && k > 1) || k > 50) {
       printf("Nonlinear Solver break, iterations: %i, residual norm: %e\n", k, norm);
