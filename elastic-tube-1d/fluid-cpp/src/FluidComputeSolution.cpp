@@ -347,8 +347,7 @@ int fluidComputeSolutionSerial(
 
   // k is the iteration counter
   for(int k = 1; ; ++k) {
-    for (int i = 0; i < (2 * N + 2); i++)
-      Res[i] = 0.0;
+    std::fill(Res.begin(), Res.end(), 0.0);
 
     for (int i = 1; i < N; i++) {
       /* Momentum */ //theta = 1
