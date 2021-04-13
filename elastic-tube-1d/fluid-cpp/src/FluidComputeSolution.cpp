@@ -334,10 +334,9 @@ int fluidComputeSolutionSerial(
 
   /* LAPACK Variables */
   std::vector<double> A(LHS_buffer); // linearized transposed version of LHS
-  int *ipiv = (int *) calloc((2 * N + 2), sizeof(int));
   int nlhs = (2 * N + 2);
   int nrhs = 1;
-  int info;
+  std::vector<int> ipiv(nlhs);
 
   /* Stabilization Intensity */
   const double alpha = (N * kappa * tau) / (N * tau + 1);
@@ -458,7 +457,8 @@ int fluidComputeSolutionSerial(
     }
 
     /* LAPACK Function call to solve the linear system */
-    dgesv_(&nlhs, &nrhs, A.data(), &nlhs, ipiv, Res.data(), &nlhs, &info);
+    int info{0};
+    dgesv_(&nlhs, &nrhs, A.data(), &nlhs, ipiv.data(), Res.data(), &nlhs, &info);
 
     if (info != 0) {
       std::cerr << "Linear Solver not converged!, Info: " << info << '\n';
