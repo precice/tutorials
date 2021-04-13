@@ -9,6 +9,17 @@
 using std::sin;
 using std::sqrt;
 
+// Simplifies strided access on a 1d buffer
+template<class T>
+class StridedAccess {
+  public:
+    StridedAccess(T*first, int stride) : first(first), stride(stride) {};
+    T& operator()(int i, int j) { return first[i*stride+j]; }
+  private:
+    T*first;
+    int stride;
+};
+
 extern "C" {
 void dgesv_(
     int *   n,
@@ -306,8 +317,6 @@ int fluidComputeSolutionSerial(
     double * pressure)
 {
   /* fluid_nl Variables */
-  double * Res;
-  double **LHS;
   const double E = 10000;
   // c_mk^2
   const double c_mk2 = E / 2 * sqrt(PI);
@@ -319,11 +328,10 @@ int fluidComputeSolutionSerial(
 
   // Used as Ax = b
   // i.e. LHS*x = Res
-  Res = (double *) calloc((2 * N + 2), sizeof(double));
-  LHS = (double **) calloc((2 * N + 2), sizeof(double *));
-  for (int i = 0; i < (2 * N + 2); ++i) {
-    LHS[i] = (double *) calloc((2 * N + 2), sizeof(double));
-  }
+  std::vector<double> Res(2 * N + 2);
+  std::vector<double> LHS_buffer(std::pow(2*N + 2, 2));
+  StridedAccess<double> LHS(LHS_buffer.data(), 2* N + 2);
+
   /* LAPACK Variables */
   double *A = (double *) calloc((2 * N + 2) * (2 * N + 2), sizeof(double));
   ;
@@ -400,47 +408,45 @@ int fluidComputeSolutionSerial(
     }
 
     /* Initilizing the the LHS i.e. Left Hand Side */
-    for (int i = 0; i <= (2 * N + 1); i++)
-      for (int j = 0; j <= (2 * N + 1); j++)
-        LHS[i][j] = 0.0;
+    std::fill(LHS_buffer.begin(), LHS_buffer.end(), 0.0);
 
     for (int i = 1; i < N; i++) {
       // Momentum, Velocity
-      LHS[i][i - 1] = LHS[i][i - 1] - 0.25 * crossSectionLength[i - 1] * velocity[i - 1] * 2 - 0.25 * crossSectionLength[i] * velocity[i - 1] * 2 - 0.25 * crossSectionLength[i] * velocity[i] - 0.25 * crossSectionLength[i - 1] * velocity[i];
-      LHS[i][i]     = LHS[i][i] + 0.25 * crossSectionLength[i + 1] * velocity[i + 1] + 0.25 * crossSectionLength[i] * velocity[i + 1] + crossSectionLength[i] * dx / tau + 0.25 * crossSectionLength[i + 1] * velocity[i] * 2 + 0.25 * crossSectionLength[i] * velocity[i] * 2 - 0.25 * crossSectionLength[i] * velocity[i - 1] - 0.25 * crossSectionLength[i - 1] * velocity[i - 1];
-      LHS[i][i + 1] = LHS[i][i + 1] + 0.25 * crossSectionLength[i + 1] * velocity[i] + 0.25 * crossSectionLength[i] * velocity[i];
+      LHS(i, i - 1) = LHS(i, i - 1) - 0.25 * crossSectionLength[i - 1] * velocity[i - 1] * 2 - 0.25 * crossSectionLength[i] * velocity[i - 1] * 2 - 0.25 * crossSectionLength[i] * velocity[i] - 0.25 * crossSectionLength[i - 1] * velocity[i];
+      LHS(i, i)     = LHS(i, i) + 0.25 * crossSectionLength[i + 1] * velocity[i + 1] + 0.25 * crossSectionLength[i] * velocity[i + 1] + crossSectionLength[i] * dx / tau + 0.25 * crossSectionLength[i + 1] * velocity[i] * 2 + 0.25 * crossSectionLength[i] * velocity[i] * 2 - 0.25 * crossSectionLength[i] * velocity[i - 1] - 0.25 * crossSectionLength[i - 1] * velocity[i - 1];
+      LHS(i, i + 1) = LHS(i, i + 1) + 0.25 * crossSectionLength[i + 1] * velocity[i] + 0.25 * crossSectionLength[i] * velocity[i];
 
       // Momentum, Pressure
-      LHS[i][N + 1 + i - 1] = LHS[i][N + 1 + i - 1] - 0.25 * crossSectionLength[i - 1] - 0.25 * crossSectionLength[i];
-      LHS[i][N + 1 + i]     = LHS[i][N + 1 + i] + 0.25 * crossSectionLength[i - 1] - 0.25 * crossSectionLength[i + 1];
-      LHS[i][N + 1 + i + 1] = LHS[i][N + 1 + i + 1] + 0.25 * crossSectionLength[i] + 0.25 * crossSectionLength[i + 1];
+      LHS(i, N + 1 + i - 1) = LHS(i, N + 1 + i - 1) - 0.25 * crossSectionLength[i - 1] - 0.25 * crossSectionLength[i];
+      LHS(i, N + 1 + i)     = LHS(i, N + 1 + i) + 0.25 * crossSectionLength[i - 1] - 0.25 * crossSectionLength[i + 1];
+      LHS(i, N + 1 + i + 1) = LHS(i, N + 1 + i + 1) + 0.25 * crossSectionLength[i] + 0.25 * crossSectionLength[i + 1];
 
       // Continuity, Velocity
-      LHS[i + N + 1][i - 1] = LHS[i + N + 1][i - 1] - 0.25 * crossSectionLength[i - 1] - 0.25 * crossSectionLength[i];
-      LHS[i + N + 1][i]     = LHS[i + N + 1][i] - 0.25 * crossSectionLength[i - 1] + 0.25 * crossSectionLength[i + 1];
-      LHS[i + N + 1][i + 1] = LHS[i + N + 1][i + 1] + 0.25 * crossSectionLength[i] + 0.25 * crossSectionLength[i + 1];
+      LHS(i + N + 1, i - 1) = LHS(i + N + 1, i - 1) - 0.25 * crossSectionLength[i - 1] - 0.25 * crossSectionLength[i];
+      LHS(i + N + 1, i)     = LHS(i + N + 1, i) - 0.25 * crossSectionLength[i - 1] + 0.25 * crossSectionLength[i + 1];
+      LHS(i + N + 1, i + 1) = LHS(i + N + 1, i + 1) + 0.25 * crossSectionLength[i] + 0.25 * crossSectionLength[i + 1];
 
       // Continuity, Pressure
-      LHS[i + N + 1][N + 1 + i - 1] = LHS[i + N + 1][N + 1 + i - 1] - alpha;
-      LHS[i + N + 1][N + 1 + i]     = LHS[i + N + 1][N + 1 + i] + 2 * alpha;
-      LHS[i + N + 1][N + 1 + i + 1] = LHS[i + N + 1][N + 1 + i + 1] - alpha;
+      LHS(i + N + 1, N + 1 + i - 1) = LHS(i + N + 1, N + 1 + i - 1) - alpha;
+      LHS(i + N + 1, N + 1 + i)     = LHS(i + N + 1, N + 1 + i) + 2 * alpha;
+      LHS(i + N + 1, N + 1 + i + 1) = LHS(i + N + 1, N + 1 + i + 1) - alpha;
     }
 
     /* Boundary */
 
     // Velocity Inlet is prescribed
-    LHS[0][0] = 1;
+    LHS(0, 0) = 1;
     // Pressure Inlet is lineary interpolated
-    LHS[N + 1][N + 1] = 1;
-    LHS[N + 1][N + 2] = -2;
-    LHS[N + 1][N + 3] = 1;
+    LHS(N + 1, N + 1) = 1;
+    LHS(N + 1, N + 2) = -2;
+    LHS(N + 1, N + 3) = 1;
     // Velocity Outlet is lineary interpolated
-    LHS[N][N]     = 1;
-    LHS[N][N - 1] = -2;
-    LHS[N][N - 2] = 1;
+    LHS(N, N)     = 1;
+    LHS(N, N - 1) = -2;
+    LHS(N, N - 2) = 1;
     // Pressure Outlet is Non-Reflecting
-    LHS[2 * N + 1][2 * N + 1] = 1;
-    LHS[2 * N + 1][N]         = -(sqrt(c_mk2 - pressure_old[N] / 2.0) - (velocity[N] - velocity_old[N]) / 4.0);
+    LHS(2 * N + 1, 2 * N + 1) = 1;
+    LHS(2 * N + 1, N)         = -(sqrt(c_mk2 - pressure_old[N] / 2.0) - (velocity[N] - velocity_old[N]) / 4.0);
 
     /* LAPACK requires a 1D array 
        i.e. Linearizing 2D 
@@ -448,13 +454,13 @@ int fluidComputeSolutionSerial(
     int counter = 0;
     for (int i = 0; i <= (2 * N + 1); i++) {
       for (int j = 0; j <= (2 * N + 1); j++) {
-        A[counter] = LHS[j][i];
+        A[counter] = LHS(j, i);
         counter++;
       }
     }
 
     /* LAPACK Function call to solve the linear system */
-    dgesv_(&nlhs, &nrhs, A, &nlhs, ipiv, Res, &nlhs, &info);
+    dgesv_(&nlhs, &nrhs, A, &nlhs, ipiv, Res.data(), &nlhs, &info);
 
     if (info != 0) {
       printf("Linear Solver not converged!, Info: %i\n", info);
