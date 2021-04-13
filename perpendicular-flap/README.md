@@ -51,7 +51,18 @@ in order to use OpenFOAM and FEniCS for this test case.
 
 How to visualize the simulation results depends on the selected solvers. Most of the solvers generate `vtk` files which can visualized using, e.g., ParaView.
 
-As we defined a watchpoint on the 'Solid' participant at the flap tip (see `precice-config.xml`), we can plot it with gnuplot using the script `plot-displacement.sh.` You need to specify the directory of the selected solid participant as a command line argument, so that the script can pick-up the desired watchpoint file, e.g. `plot-displacement solid-fenics`. The resulting graph shows the x displacement of the flap tip. You can modify the script to plot the force instead.
+As we defined a watchpoint on the 'Solid' participant at the flap tip (see `precice-config.xml`), we can plot it with gnuplot using the script `plot-displacement.sh.` You need to specify the directory of the selected solid participant as a command line argument, so that the script can pick-up the desired watchpoint file, e.g. `plot-displacement.sh solid-fenics`. The resulting graph shows the x displacement of the flap tip. You can modify the script to plot the force instead.
 
 
 ![Flap watchpoint](images/tutorials-perpendicular-flap-displacement-watchpoint.png)
+
+There is moreover a script `plot-all-displacements.sh` to plot and compare all possible variants. This script expects all watchpoint logs to be available in a subfolder `watchpoints` in the format `openfoam-dealii.log` or similar. If you want to use this script, you need to copy the files over accordingly.
+
+You should get results similar to this one:
+
+![All flap watchpoints](images/tutorials-perpendicular-flap-displacement-all-watchpoints.png)
+
+Reasons for the differences:
+
+* The CalculiX adapter only supports linear finite elements (deal.II uses 4th order, FEniCS 2nd order).
+* SU2 models a compressible fluid, OpenFOAM and Nutils an incompressible one.  
