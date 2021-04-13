@@ -9,6 +9,7 @@ summary: Using a steady-state OpenFOAM solver for a CHT coupling with Code_Aster
 
 The setup for this tutorial is similar to the [flow over a heated plate](tutorials-flow-over-heated-plate.html) using OpenFOAM. In this tutorial OpenFOAM is used as the solver for the fluid domain, and code_aster is the solver for the solid domain. A difference here is that we are using a steady-state OpenFOAM solver for demonstration purposes, therefore the results between the two tutorials are not comparable.
 
+{% include note.html content="This is a pseudo-2D case, but we still set a 3D `solver-interface` in `precice-config.xml`, because the code_aster case is set up like this at the moment. Contributions here are particularly welcome!" %}
 
 ## Available solvers
 
@@ -18,7 +19,7 @@ Fluid participant:
 
 Solid participant:
 
-* Code_Aster. The [code_aster adapter documentation](adapter-code_aster.html) is oriented on this tutorial case. In particular the described configuration settings.
+* code_aster. The [code_aster adapter documentation](adapter-code_aster.html) is oriented on this tutorial case. In particular the described configuration settings.
 
 ## Running the Simulation
 
@@ -33,5 +34,9 @@ For visualizing the results of the fluid solver, go to `File -> Open ParaView Fi
 For visualizing the result of the solid solver, press again `Open ParaView File` and select the `output-..rmed` group. Again, click `Apply` to visualize the result. After setting the temperature scale for both domains to 300-310 K, the following result is given for timestep 200:
 
 ![post-processing](images/tutorials-flow-over-heated-plate-steady-state-post-processing.png)
+
+The `.rmed` file output from Code_Aster can be viewed using [GMSH](https://gmsh.info/). The result is as follows:
+
+![code-aster-result](images/tutorials-flow-over-heated-plate-steady-state-result.png)
 
 {% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
