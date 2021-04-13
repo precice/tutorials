@@ -333,10 +333,8 @@ int fluidComputeSolutionSerial(
   StridedAccess<double> LHS(LHS_buffer.data(), 2* N + 2);
 
   /* LAPACK Variables */
-  double *A = (double *) calloc((2 * N + 2) * (2 * N + 2), sizeof(double));
-  ;
+  std::vector<double> A(LHS_buffer); // linearized transposed version of LHS
   int *ipiv = (int *) calloc((2 * N + 2), sizeof(int));
-  ;
   int nlhs = (2 * N + 2);
   int nrhs = 1;
   int info;
@@ -460,7 +458,7 @@ int fluidComputeSolutionSerial(
     }
 
     /* LAPACK Function call to solve the linear system */
-    dgesv_(&nlhs, &nrhs, A, &nlhs, ipiv, Res.data(), &nlhs, &info);
+    dgesv_(&nlhs, &nrhs, A.data(), &nlhs, ipiv, Res.data(), &nlhs, &info);
 
     if (info != 0) {
       printf("Linear Solver not converged!, Info: %i\n", info);
