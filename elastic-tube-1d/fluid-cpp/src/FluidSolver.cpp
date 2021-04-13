@@ -104,6 +104,17 @@ int main(int argc, char **argv)
 
   interface.initializeData();
 
+  if (interface.isReadDataAvailable()) {
+    interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
+  }
+
+  std::copy(crossSectionLength.begin(), crossSectionLength.end(), crossSectionLength_old.begin());
+
+  // initialize such that mass conservation is fulfilled
+  for(int i = 0; i < chunkLength; ++i) {
+    velocity_old[i] = 10 * crossSectionLength[0] / crossSectionLength[i];
+  }
+
   int out_counter = 0;
 
   while (interface.isCouplingOngoing()) {
