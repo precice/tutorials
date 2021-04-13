@@ -104,7 +104,6 @@ int main(int argc, char **argv)
   int out_counter = 0;
 
   while (interface.isCouplingOngoing()) {
-    int convergenceCounter = 0;
     if (interface.isActionRequired(actionWriteIterationCheckpoint())) {
       interface.markActionFulfilled(actionWriteIterationCheckpoint());
     }
@@ -134,7 +133,6 @@ int main(int argc, char **argv)
 
     if (interface.isActionRequired(actionReadIterationCheckpoint())) { // i.e. not yet converged
       interface.markActionFulfilled(actionReadIterationCheckpoint());
-      convergenceCounter++;
     } else {
       t += dt;
       write_vtk(t, out_counter, outputFilePrefix.c_str(), chunkLength, grid.data(), velocity.data(), pressure.data(), crossSectionLength.data());
