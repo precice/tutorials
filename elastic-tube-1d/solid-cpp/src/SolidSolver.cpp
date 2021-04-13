@@ -57,33 +57,25 @@ int main(int argc, char **argv)
   int crossSectionLengthID = interface.getDataID("CrossSectionLength", meshID);
   int pressureID           = interface.getDataID("Pressure", meshID);
 
-  std::vector<double> pressure, crossSectionLength;
-  std::vector<int>    vertexIDs;
-  std::vector<double> grid;
+  std::vector<double> pressure(chunkLength, 0.0);
+  std::vector<double> crossSectionLength(chunkLength, 1.0);
+  std::vector<double> grid(dimensions * chunkLength);
 
-  grid.resize(dimensions * chunkLength);
-  pressure.resize(chunkLength);
-  vertexIDs.resize(chunkLength);
-  crossSectionLength.resize(chunkLength);
-
-  if (argc == 4) {
+  if (parallel) {
     for (int i = 0; i < chunkLength; i++) {
-      crossSectionLength[i] = 1.0;
-      pressure[i]           = 0.0;
       for (int j = 0; j < dimensions; j++) {
         grid[i * dimensions + j] = j == 0 ? gridOffset + (double) i : 0.0;
       }
     }
   } else {
     for (int i = 0; i < chunkLength; i++) {
-      crossSectionLength[i] = 1.0;
-      pressure[i]           = 0.0;
       for (int j = 0; j < dimensions; j++) {
         grid[i * dimensions + j] = i * (1 - j);
       }
     }
   }
 
+  std::vector<int> vertexIDs(chunkLength);
   interface.setMeshVertices(meshID, chunkLength, grid.data(), vertexIDs.data());
   std::cout << "Initialize preCICE..." << std::endl;
   interface.initialize();
