@@ -65,23 +65,12 @@ int main(int argc, char **argv)
   const int pressureID           = interface.getDataID("Pressure", meshID);
   const int crossSectionLengthID = interface.getDataID("CrossSectionLength", meshID);
 
-  std::vector<double> pressure, crossSectionLength, velocity, crossSectionLength_old;
-  std::vector<int>    vertexIDs;
-  std::vector<double> grid;
-
-  grid.resize(dimensions * chunkLength);
-  pressure.resize(chunkLength);
-  vertexIDs.resize(chunkLength);
-  crossSectionLength.resize(chunkLength);
-  crossSectionLength_old.resize(chunkLength);
-  velocity.resize(chunkLength);
-
-  for (int i = 0; i < chunkLength; i++) {
-    pressure[i]               = 0.0;
-    crossSectionLength[i]     = 1.0;
-    crossSectionLength_old[i] = 1.0;
-    velocity[i]               = 10.0;
-  }
+  std::vector<int>    vertexIDs(chunkLength);
+  std::vector<double> pressure(chunkLength, 0.0);
+  std::vector<double> crossSectionLength(chunkLength, 1.0);
+  std::vector<double> crossSectionLength_old(crossSectionLength);
+  std::vector<double> velocity(chunkLength, 10.0);
+  std::vector<double> grid(dimensions * chunkLength);
 
   if (parallel) {
     for (int i = 0; i < chunkLength; i++) {
