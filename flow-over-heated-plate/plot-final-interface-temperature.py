@@ -1,5 +1,6 @@
 import vtk
 from matplotlib import pyplot as plt
+import numpy as np
 
 
 def vtk_to_dict(case):
@@ -49,11 +50,12 @@ i = 0
 
 for case in cases:
     case_data = vtk_to_dict(case)
-    x, t = [p[0] for p in case_data.keys()], list(case_data.values())
-    plt.plot(x, t, colors[i%4]+styles[i%3], label=case_labels[case])
+    x, t = [p[0] for p in case_data.keys()], np.array(list(case_data.values()))
+    theta = (t - 300) / (310 - 300)
+    plt.plot(x, theta, colors[i%4]+styles[i%3], label=case_labels[case])
     i += 1
 
-plt.ylabel("Temperature")
+plt.ylabel("Theta")
 plt.xlabel("x-coordinate along coupling interface")
 plt.legend()
 plt.show()

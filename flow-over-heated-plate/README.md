@@ -76,7 +76,7 @@ index 9c13374..c18a49e 100644
        <mapping:nearest-neighbor
 ```
 
-After that running a case from this tutorial will export data into `solid-*/preCICE-output`. To visualize and compare these results run `python3 plot-final-interface-temperature.py`. This will plot the temperature across the coupling interface, i.e. where the solid and the fluid meet and exchange heat. The x-axis shows the x coordinate and the y-axis the temperature at the interface. If you want to exclude certain cases, simply comment out the corresponding lines in the script. For reference see below:
+After that running a case from this tutorial will export data into `solid-*/preCICE-output`. To visualize and compare these results run `python3 plot-final-interface-temperature.py`. This will plot `theta = (T-300)/(310-300)` (with `T` being the temperature) across the coupling interface, i.e. where the solid and the fluid meet and exchange heat. The x-axis shows the x coordinate and the y-axis `theta` at the interface. If you want to exclude certain cases, simply comment out the corresponding lines in the script. For reference see below:
 
 ![](images/tutorials-flow-over-heated-plate-results-comparison.png)
 
