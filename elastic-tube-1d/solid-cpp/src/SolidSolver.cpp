@@ -29,7 +29,7 @@ int main(int argc, char **argv)
   std::cout << "N: " << domainSize << std::endl;
   std::cout << "inputs: " << argc << std::endl;
 
-  std::string solverName = "Solid";
+  const std::string solverName = "Solid";
 
   int gridOffset, rank = 0, size = 1;
   if (parallel) {
