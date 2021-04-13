@@ -56,7 +56,7 @@ As we defined a watchpoint on the 'Solid' participant at the flap tip (see `prec
 
 ![Flap watchpoint](images/tutorials-perpendicular-flap-displacement-watchpoint.png)
 
-There is moreover a script `plot-all-displacements.sh` to plot and compare all possible variants. This scripts expects all watchpoint logs to be available in a subfolder `watchpoints` in the format `openfoam-dealii.log` or similar. If you want to use this script, you need to copy the files over accordingly.
+There is moreover a script `plot-all-displacements.sh` to plot and compare all possible variants. This script expects all watchpoint logs to be available in a subfolder `watchpoints` in the format `openfoam-dealii.log` or similar. If you want to use this script, you need to copy the files over accordingly.
 
 You should get results similar to this one:
 
