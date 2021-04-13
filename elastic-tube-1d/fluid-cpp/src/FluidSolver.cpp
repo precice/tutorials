@@ -26,6 +26,7 @@ int main(int argc, char **argv)
     return -1;
   }
 
+  const bool parallel = (argc == 6);
   std::string configFileName(argv[1]);
   int         domainSize  = atoi(argv[2]);  //N
   int         chunkLength = domainSize + 1; //serial run
@@ -38,7 +39,7 @@ int main(int argc, char **argv)
 
   int gridOffset, rank = 0, size = 1;
 
-  if (argc == 6) {
+  if (parallel) {
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -82,7 +83,7 @@ int main(int argc, char **argv)
     velocity[i]               = 10.0;
   }
 
-  if (argc == 6) {
+  if (parallel) {
     for (int i = 0; i < chunkLength; i++) {
       for (int j = 0; j < dimensions; j++) {
         grid[i * dimensions + j] = j == 0 ? gridOffset + (double) i : 0.0;
@@ -123,7 +124,7 @@ int main(int argc, char **argv)
       interface.markActionFulfilled(actionWriteIterationCheckpoint());
     }
 
-    if (argc == 6) {
+    if (parallel) {
       fluidComputeSolutionParallel(rank, size, domainSize, chunkLength, kappa, tau, 0.0, t + dt,
                                    pressure.data(),
                                    crossSectionLength.data(),
@@ -157,7 +158,7 @@ int main(int argc, char **argv)
 
   std::cout << "Exiting FluidSolver" << std::endl;
   interface.finalize();
-  if (argc == 6) {
+  if (parallel) {
     MPI_Finalize();
   }
 
