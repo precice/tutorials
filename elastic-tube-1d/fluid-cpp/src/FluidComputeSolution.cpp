@@ -461,7 +461,7 @@ int fluidComputeSolutionSerial(
     dgesv_(&nlhs, &nrhs, A.data(), &nlhs, ipiv, Res.data(), &nlhs, &info);
 
     if (info != 0) {
-      printf("Linear Solver not converged!, Info: %i\n", info);
+      std::cerr << "Linear Solver not converged!, Info: " << info << '\n';
     }
 
     for (int i = 0; i <= N; i++) {
