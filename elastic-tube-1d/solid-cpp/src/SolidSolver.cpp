@@ -20,6 +20,8 @@ int main(int argc, char **argv)
     return -1;
   }
 
+  const bool parallel = (argc == 4);
+
   std::string configFileName(argv[1]);
   int         domainSize  = atoi(argv[2]); // N
   int         chunkLength = domainSize + 1;
@@ -30,7 +32,7 @@ int main(int argc, char **argv)
   std::string solverName = "Solid";
 
   int gridOffset, rank = 0, size = 1;
-  if (argc == 4) {
+  if (parallel) {
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -122,7 +124,7 @@ int main(int argc, char **argv)
 
   std::cout << "Exiting SolidSolver" << std::endl;
   interface.finalize();
-  if (argc == 4) {
+  if (parallel) {
     MPI_Finalize();
   }
   return 0;
