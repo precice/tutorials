@@ -18,7 +18,7 @@ etude,fich,4,serv Local
 serv_fich_export -1
 surcharge,nbfic 0
 etude,fich,6,FR F
-path_etude /path/to/tutorials/CHT/flow-over-plate/buoyantSimpleFoam-aster/Solid
+path_etude /path/to/tutorials/flow-over-heated-plate-steady-state/solid-codeaster
 option,rep_outils 0
 etude,fich,3,resultat 0
 etude,fich,6,UL 8
@@ -43,7 +43,7 @@ rex non
 etude,fich,1,nom ./solid.mmed
 etude,fich,1,type mmed
 suivi_interactif 0
-path_sources /path/to/tutorials/CHT/flow-over-plate/buoyantSimpleFoam-aster/Solid
+path_sources /path/to/tutorials/flow-over-heated-plate-steady-state/solid-codeaster
 pre_eda non
 etude,fich,4,FR F
 option,multiple 1
@@ -58,9 +58,9 @@ make_etude run
 option,depart 1
 option,only_nook 1
 opt_val,ORBInitRef _VIDE
-nom_profil /path/to/tutorials/CHT/flow-over-plate/buoyantSimpleFoam-aster/Solid/solid.astk
+nom_profil /path/to/tutorials/flow-over-heated-plate-steady-state/solid-codeaster/solid.astk
 args _VIDE
-etude,fich,7,nom /path/to/tutorials/CHT/flow-over-plate/buoyantSimpleFoam-aster/Solid/REPE_OUT
+etude,fich,7,nom /path/to/tutorials/flow-over-heated-plate-steady-state/solid-codeaster/REPE_OUT
 etude,fich,0,donnee 1
 etude,fich,5,resultat 1
 etude,fich,7,compress 0
@@ -86,7 +86,7 @@ etude,fich,6,resultat 1
 opt_val,rep_outils _VIDE
 M_3 non
 etude,fich,2,UL 90
-path_surcharge /path/to/tutorials/CHT/flow-over-plate/buoyantSimpleFoam-aster/Solid
+path_surcharge /path/to/tutorials/flow-over-heated-plate-steady-state/solid-codeaster
 consult non
 M_4 non
 asno non
@@ -126,7 +126,7 @@ etude,fich,0,nom /path/to/code_aster-adapter/cht/adapter.comm
 etude,fich,2,serv Local
 option,exectool 1
 asverif non
-etude,fich,2,nom ./../config.comm
+etude,fich,2,nom ./config.comm
 option,after_job 1
 opt_val,depart _VIDE
 opt_val,mpi_nbnoeud 1
@@ -145,4 +145,4 @@ etude,nbfic 8
 agla non
 opt_val,nbmaxnook 5
 version stable
-path_tests /path/to/tutorials/CHT/flow-over-plate/buoyantSimpleFoam-aster/Solid
+path_tests /path/to/tutorials/flow-over-heated-plate-steady-state/solid-codeaster
