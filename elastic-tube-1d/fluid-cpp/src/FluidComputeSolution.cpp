@@ -5,6 +5,7 @@
 #include <iostream>
 #include <mpi.h>
 #include <vector>
+#include <numeric>
 
 using std::sin;
 using std::sqrt;
@@ -385,19 +386,15 @@ int fluidComputeSolutionSerial(
     Res[2 * N + 1] = -pressure[N] + 2 * (c_mk2 - std::pow(tmp2, 2));
 
     // compute norm of residual
-    double temp_sum_1 = 0;
-    for (int i = 0; i < (2 * N + 2); i++) {
-      temp_sum_1 += Res[i] * Res[i];
-    }
-    const double norm_1   = sqrt(temp_sum_1);
+    const double norm_1 = std::sqrt(
+        std::inner_product(Res.begin(), Res.end(), Res.begin(), 0.0)
+        );
 
-    double temp_sum_2 = 0;
-    for (int i = 0; i < (N + 1); i++) {
-      temp_sum_2 += (pressure[i] * pressure[i]) + (velocity[i] * velocity[i]);
-    }
-    const double norm_2 = sqrt(temp_sum_2);
-
-    const double norm   = norm_1 / norm_2;
+    const double norm_2 = std::sqrt(
+        std::inner_product(pressure, pressure + chunkLength, pressure, 0.0) +
+        std::inner_product(velocity, velocity + chunkLength, velocity, 0.0)
+        );
+    const double norm = norm_1 / norm_2;
 
     if ((norm < 1e-15 && k > 1) || k > 50) {
       printf("Nonlinear Solver break, iterations: %i, residual norm: %e\n", k, norm);
