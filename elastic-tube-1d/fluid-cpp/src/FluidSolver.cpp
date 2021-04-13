@@ -40,6 +40,9 @@ int main(int argc, char **argv)
   int gridOffset, rank = 0, size = 1;
 
   if (parallel) {
+    std::cerr << "Parallel runs are currently not supported\n";
+    return -1;
+
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -127,10 +130,12 @@ int main(int argc, char **argv)
     }
 
     if (parallel) {
+      /*
       fluidComputeSolutionParallel(rank, size, domainSize, chunkLength, kappa, tau, 0.0, t + dt,
                                    pressure.data(),
                                    crossSectionLength.data(),
                                    velocity.data());
+                                   */
     } else {
       fluidComputeSolutionSerial(
           // old values in
