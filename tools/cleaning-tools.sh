@@ -16,7 +16,7 @@ clean_tutorial() {
             if [ "${case}" = images/ ]; then
                 continue
             fi
-            (cd "${case}" && ./clean.sh)
+            (cd "${case}" && ./clean.sh || echo "No cleaning script in ${case} - skipping")
         done
     )
 }
