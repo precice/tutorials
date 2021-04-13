@@ -29,10 +29,10 @@ int main(int argc, char **argv)
   std::string configFileName(argv[1]);
   int         domainSize  = atoi(argv[2]);  //N
   int         chunkLength = domainSize + 1; //serial run
-  double      tau         = atof(argv[3]);
-  double      kappa       = atof(argv[4]);
+  const double tau        = atof(argv[3]);
+  const double kappa      = atof(argv[4]);
 
-  std::string solverName = "Fluid";
+  const std::string solverName = "Fluid";
 
   std::string outputFilePrefix = "./output/out_fluid"; //extra
 
