@@ -35,4 +35,8 @@ For visualizing the result of the solid solver, press again `Open ParaView File`
 
 ![post-processing](images/tutorials-flow-over-heated-plate-steady-state-post-processing.png)
 
+The `.rmed` file output from Code_Aster can be viewed using [GMSH](https://gmsh.info/). The result is as follows:
+
+![code-aster-result](images/tutorials-flow-over-heated-plate-steady-state-result.png)
+
 {% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
