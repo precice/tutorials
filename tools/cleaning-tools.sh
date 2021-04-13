@@ -75,6 +75,7 @@ clean_fenics() {
         echo "--- Cleaning up FEniCS case in $(pwd)"
         rm -fv ./*.pvd spooles.out FSI-S/*
         rm -rfv ./out/
+        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }
@@ -85,6 +86,7 @@ clean_nutils() {
         cd "$1"
         echo "--- Cleaning up Nutils case in $(pwd)"
         rm -fv ./*.vtk
+        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }
@@ -100,6 +102,7 @@ clean_openfoam() {
             cleanCase
             rm -rfv 0/uniform/functionObjects/functionObjectProperties
         fi
+        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }
