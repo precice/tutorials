@@ -59,24 +59,18 @@ You may use additional filters, such as the Calculator and the Plot Over Line, t
 
 ### Compare results
 
-First generate the output for each run by adding export to `precice-config.xml`. You can just apply the following patch:
+First generate the output for each run by adding export to the participant `Solid` in `precice-config.xml`:
 
 ```
-diff --git a/flow-over-heated-plate/precice-config.xml b/flow-over-heated-plate/precice-config.xml
-index 9c13374..c18a49e 100644
---- a/flow-over-heated-plate/precice-config.xml
-+++ b/flow-over-heated-plate/precice-config.xml
-@@ -34,6 +34,7 @@
-     </participant>
- 
-     <participant name="Solid">
-+      <export:vtk directory="preCICE-output" />
-       <use-mesh name="Fluid-Mesh" from="Fluid" />
-       <use-mesh name="Solid-Mesh" provide="yes" />
-       <mapping:nearest-neighbor
+<participant name="Solid">
+  <export:vtk directory="preCICE-output" />
+  <use-mesh name="Fluid-Mesh" from="Fluid" />
+  <use-mesh name="Solid-Mesh" provide="yes" />
+  ...
+</participant>
 ```
 
-After that running a case from this tutorial will export data into `solid-*/preCICE-output`. To visualize and compare these results run `python3 plot-final-interface-temperature.py`. This will plot `theta = (T-300)/(310-300)` (with `T` being the temperature) across the coupling interface, i.e. where the solid and the fluid meet and exchange heat. The x-axis shows the x coordinate and the y-axis `theta` at the interface. If you want to exclude certain cases, simply comment out the corresponding lines in the script. For reference see below:
+After that running a case from this tutorial will export data into `solid-*/preCICE-output`. To visualize and compare these results run `python3 plot-final-interface-temperature.py` (You can install the required python packages by running `pip3 install -r plot-final-interface-temperature-requirements.txt`). This will plot the dimensionless temperature `theta = (T-300)/(310-300)` (with `T` being the temperature) across the coupling interface, i.e. where the solid and the fluid meet and exchange heat. The x-axis shows the x coordinate and the y-axis the dimensionless temperature `theta` at the interface. If you want to exclude certain cases, simply comment out the corresponding lines in the script. For reference see below:
 
 ![](images/tutorials-flow-over-heated-plate-results-comparison.png)
 
