@@ -18,7 +18,7 @@ Fluid participant:
 
 Solid participant:
 
-* Code_Aster. The [code_aster adapter documentation](adapter-code_aster.html) is oriented on this tutorial case. In particular the described configuration settings.
+* code_aster. The [code_aster adapter documentation](adapter-code_aster.html) is oriented on this tutorial case. In particular the described configuration settings.
 
 ## Running the Simulation
 
