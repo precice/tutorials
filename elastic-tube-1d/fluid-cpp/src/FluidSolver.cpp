@@ -66,10 +66,13 @@ int main(int argc, char **argv)
   const int crossSectionLengthID = interface.getDataID("CrossSectionLength", meshID);
 
   std::vector<int>    vertexIDs(chunkLength);
+
   std::vector<double> pressure(chunkLength, 0.0);
+  std::vector<double> pressure_old(pressure);
   std::vector<double> crossSectionLength(chunkLength, 1.0);
   std::vector<double> crossSectionLength_old(crossSectionLength);
   std::vector<double> velocity(chunkLength, 10.0);
+  std::vector<double> velocity_old(velocity);
   std::vector<double> grid(dimensions * chunkLength);
 
   if (parallel) {
@@ -118,11 +121,15 @@ int main(int argc, char **argv)
                                    crossSectionLength.data(),
                                    velocity.data());
     } else {
-      fluidComputeSolutionSerial(crossSectionLength.data(),
-                                 crossSectionLength_old.data(),
-                                 velocity.data(),
-                                 pressure.data(),
-                                 t, domainSize, kappa, tau);
+      fluidComputeSolutionSerial(
+          // old values in
+          velocity_old.data(), pressure_old.data(), crossSectionLength_old.data(),
+          // last received in
+          crossSectionLength.data(),
+          t, domainSize, kappa, tau,
+          // new values out
+          velocity.data(),
+          pressure.data());
     }
 
     if (interface.isWriteDataRequired(dt)) {
@@ -138,6 +145,8 @@ int main(int argc, char **argv)
       write_vtk(t, out_counter, outputFilePrefix.c_str(), chunkLength, grid.data(), velocity.data(), pressure.data(), crossSectionLength.data());
       for (int i = 0; i < chunkLength; i++) {
         crossSectionLength_old[i] = crossSectionLength[i];
+        pressure_old[i] = pressure[i];
+        velocity_old[i] = velocity[i];
       }
       out_counter++;
     }

@@ -15,11 +15,14 @@ void fluidComputeSolutionParallel(
     double *crossSectionLength,
     double *velocity);
 
-int fluidComputeSolutionSerial(double *crossSectionLength,
-                               double *crossSectionLength_old,
-                               double *velocity,
-                               double *pressure,
-                               double  t,
-                               int     N,
-                               double  kappa,
-                               double  tau);
+int fluidComputeSolutionSerial(
+    double const * const velocity_old,
+    double const * const pressure_old,
+    double const * const crossSectionLength_old,
+    double const * const crossSectionLength,
+    double  t,
+    int     N,
+    double  kappa,
+    double  tau,
+    double * velocity,
+    double * pressure);
