@@ -12,4 +12,4 @@ jobs:
           args: --recursive --diff --aggressive --aggressive --exit-code --ignore E402 --max-line-length 120 .
       - name: Fail if autopep8 made changes
         if: ${{ steps.autopep8.outputs.exit-code == 2 }}
-        run: echo ${{ steps.autopep8.outputs.exit-code }}
+        run: exit 1
