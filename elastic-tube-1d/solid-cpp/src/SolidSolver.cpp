@@ -90,22 +90,22 @@ int main(int argc, char **argv)
 
   interface.initializeData();
 
-  if (interface.isReadDataAvailable()) {
-    interface.readBlockScalarData(pressureID, chunkLength, vertexIDs.data(), pressure.data());
-  }
-
   while (interface.isCouplingOngoing()) {
     if (interface.isActionRequired(actionWriteIterationCheckpoint())) {
       interface.markActionFulfilled(actionWriteIterationCheckpoint());
     }
 
+    if (interface.isReadDataAvailable()) {
+      interface.readBlockScalarData(pressureID, chunkLength, vertexIDs.data(), pressure.data());
+    }
+
     SolidComputeSolution(rank, size, chunkLength, pressure.data(), crossSectionLength.data()); // Call Solver
 
-    interface.writeBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
+    if (interface.isWriteDataRequired(dt)) {
+      interface.writeBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
+    }
 
     interface.advance(dt);
-
-    interface.readBlockScalarData(pressureID, chunkLength, vertexIDs.data(), pressure.data());
 
     if (interface.isActionRequired(actionReadIterationCheckpoint())) { // i.e. fluid not yet converged
       interface.markActionFulfilled(actionReadIterationCheckpoint());
