@@ -45,7 +45,7 @@ cases.append('fenics')
 cases.append('openfoam')
 cases.append('nutils')
 
-case_labels = {'fenics': 'fenics-openfoam', 'openfoam': 'openfoam-openfoam', 'nutils': 'nutils-openfoam', }
+case_labels = {'fenics': 'OpenFOAM-FEniCS', 'openfoam': 'OpenFOAM-OpenFOAM', 'nutils': 'OpenFOAM-Nutils', }
 styles = [':', '-', '--']
 colors = ['r', 'b', 'g', 'k']
 i = 0
