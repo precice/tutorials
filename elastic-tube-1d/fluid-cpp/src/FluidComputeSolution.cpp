@@ -306,7 +306,7 @@ int fluidComputeSolutionSerial(
     double * pressure)
 {
   /* fluid_nl Variables */
-  int      i, j = 0, k;
+  int      i, j = 0;
   double   alpha, dx;
   double   tmp1, tmp2;
   double * Res;
@@ -345,8 +345,8 @@ int fluidComputeSolutionSerial(
   //dx = 0.1;
   //alpha = 0;
 
-  k = 0;
-  while (1) {
+  // k is the iteration counter
+  for(int k = 1; ; ++k) {
     for (i = 0; i < (2 * N + 2); i++)
       Res[i] = 0.0;
 
@@ -384,8 +384,6 @@ int fluidComputeSolutionSerial(
     /* Pressure Outlet is "non-reflecting" */
     tmp2           = sqrt(c_mk2 - pressure_old[N] / 2) - (velocity[N] - velocity_old[N]) / 4;
     Res[2 * N + 1] = -pressure[N] + 2 * (c_mk2 - tmp2 * tmp2);
-
-    k += 1; // Iteration Count
 
     // compute norm of residual
     temp_sum = 0;
