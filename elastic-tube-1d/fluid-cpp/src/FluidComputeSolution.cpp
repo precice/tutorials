@@ -306,7 +306,6 @@ int fluidComputeSolutionSerial(
     double * pressure)
 {
   /* fluid_nl Variables */
-  int      i, j = 0;
   double   alpha, dx;
   double   tmp1, tmp2;
   double * Res;
@@ -327,7 +326,7 @@ int fluidComputeSolutionSerial(
   // i.e. LHS*x = Res
   Res = (double *) calloc((2 * N + 2), sizeof(double));
   LHS = (double **) calloc((2 * N + 2), sizeof(double *));
-  for (i = 0; i < (2 * N + 2); ++i) {
+  for (int i = 0; i < (2 * N + 2); ++i) {
     LHS[i] = (double *) calloc((2 * N + 2), sizeof(double));
   }
   /* LAPACK Variables */
@@ -347,10 +346,10 @@ int fluidComputeSolutionSerial(
 
   // k is the iteration counter
   for(int k = 1; ; ++k) {
-    for (i = 0; i < (2 * N + 2); i++)
+    for (int i = 0; i < (2 * N + 2); i++)
       Res[i] = 0.0;
 
-    for (i = 1; i < N; i++) {
+    for (int i = 1; i < N; i++) {
       /* Momentum */ //theta = 1
       Res[i] = (velocity_old[i] * crossSectionLength_old[i] - velocity[i] * crossSectionLength[i]) * dx / tau;
       //Res[i] = velocity_old[i] *crossSectionLength[i]* dx/tau;
@@ -387,12 +386,12 @@ int fluidComputeSolutionSerial(
 
     // compute norm of residual
     temp_sum = 0;
-    for (i = 0; i < (2 * N + 2); i++) {
+    for (int i = 0; i < (2 * N + 2); i++) {
       temp_sum += Res[i] * Res[i];
     }
     norm_1   = sqrt(temp_sum);
     temp_sum = 0;
-    for (i = 0; i < (N + 1); i++) {
+    for (int i = 0; i < (N + 1); i++) {
       temp_sum += (pressure[i] * pressure[i]) + (velocity[i] * velocity[i]);
     }
     norm_2 = sqrt(temp_sum);
@@ -404,11 +403,11 @@ int fluidComputeSolutionSerial(
     }
 
     /* Initilizing the the LHS i.e. Left Hand Side */
-    for (i = 0; i <= (2 * N + 1); i++)
-      for (j = 0; j <= (2 * N + 1); j++)
+    for (int i = 0; i <= (2 * N + 1); i++)
+      for (int j = 0; j <= (2 * N + 1); j++)
         LHS[i][j] = 0.0;
 
-    for (i = 1; i < N; i++) {
+    for (int i = 1; i < N; i++) {
       // Momentum, Velocity
       LHS[i][i - 1] = LHS[i][i - 1] - 0.25 * crossSectionLength[i - 1] * velocity[i - 1] * 2 - 0.25 * crossSectionLength[i] * velocity[i - 1] * 2 - 0.25 * crossSectionLength[i] * velocity[i] - 0.25 * crossSectionLength[i - 1] * velocity[i];
       LHS[i][i]     = LHS[i][i] + 0.25 * crossSectionLength[i + 1] * velocity[i + 1] + 0.25 * crossSectionLength[i] * velocity[i + 1] + crossSectionLength[i] * dx / tau + 0.25 * crossSectionLength[i + 1] * velocity[i] * 2 + 0.25 * crossSectionLength[i] * velocity[i] * 2 - 0.25 * crossSectionLength[i] * velocity[i - 1] - 0.25 * crossSectionLength[i - 1] * velocity[i - 1];
@@ -450,8 +449,8 @@ int fluidComputeSolutionSerial(
        i.e. Linearizing 2D 
     */
     int counter = 0;
-    for (i = 0; i <= (2 * N + 1); i++) {
-      for (j = 0; j <= (2 * N + 1); j++) {
+    for (int i = 0; i <= (2 * N + 1); i++) {
+      for (int j = 0; j <= (2 * N + 1); j++) {
         A[counter] = LHS[j][i];
         counter++;
       }
@@ -464,7 +463,7 @@ int fluidComputeSolutionSerial(
       printf("Linear Solver not converged!, Info: %i\n", info);
     }
 
-    for (i = 0; i <= N; i++) {
+    for (int i = 0; i <= N; i++) {
       velocity[i] = velocity[i] + Res[i];
       pressure[i] = pressure[i] + Res[i + N + 1];
     }
