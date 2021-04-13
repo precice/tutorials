@@ -57,6 +57,29 @@ You may use additional filters, such as the Calculator and the Plot Over Line, t
 
 ![graph](images/tutorials-flow-over-heated-plate-graph-result.png)
 
+### Compare results
+
+First generate the output for each run by adding export to `precice-config.xml`. You can just apply the following patch:
+
+```
+diff --git a/flow-over-heated-plate/precice-config.xml b/flow-over-heated-plate/precice-config.xml
+index 9c13374..c18a49e 100644
+--- a/flow-over-heated-plate/precice-config.xml
++++ b/flow-over-heated-plate/precice-config.xml
+@@ -34,6 +34,7 @@
+     </participant>
+ 
+     <participant name="Solid">
++      <export:vtk directory="preCICE-output" />
+       <use-mesh name="Fluid-Mesh" from="Fluid" />
+       <use-mesh name="Solid-Mesh" provide="yes" />
+       <mapping:nearest-neighbor
+```
+
+After that running a case from this tutorial will export data into `solid-*/preCICE-output`. To visualize and compare these results run `python3 plot-final-interface-temperature.py`. This will plot the temperature across the coupling interface, i.e. where the solid and the fluid meet and exchange heat. The x-axis shows the x coordinate and the y-axis the temperature at the interface. If you want to exclude certain cases, simply comment out the corresponding lines in the script. For reference see below:
+
+![](images/tutorials-flow-over-heated-plate-results-comparison.png)
+
 ## References
 
 [1]  M. Vynnycky, S. Kimura, K. Kanev, and I. Pop. Forced convection heat transfer from a flat plate: the conjugate problem. International Journal of Heat and Mass Transfer, 41(1):45 – 59, 1998.
