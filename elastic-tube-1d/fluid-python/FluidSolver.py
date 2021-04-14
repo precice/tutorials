@@ -55,6 +55,7 @@ ampl = 3  # amplitude of varying velocity
 frequency = 10  # frequency of variation
 t_shift = 0  # temporal shift of variation
 p0 = 0  # pressure at outlet
+kappa = 100
 
 
 def velocity_in(t): return u0 + ampl * np.sin(frequency *
@@ -63,7 +64,7 @@ def velocity_in(t): return u0 + ampl * np.sin(frequency *
 
 L = 10  # length of tube/simulation domain
 N = 100
-dx = L / 100
+dx = L / kappa
 # helper function to create constant cross section
 
 
