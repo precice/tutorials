@@ -28,7 +28,7 @@ We define the participants `Inner-Fluid`, `Solid`, and `Outer-Fluid` and two int
 
 ## Running the Simulation
 
-{% include note.html content="Since the already prepared case contains mesh files of approx. 50MB in size, we currently host these files outside of the tutorials repository and you can download and extract them automatically in the appropriate locations by running the download-meshes.sh script." %}
+{% include note.html content="Since the already prepared case contains mesh files of approx. 50MB in size, we currently host these files outside of the tutorials repository and you can download and extract them automatically in the appropriate locations by running the download-meshes.sh script. You can [help us improve this](https://github.com/precice/tutorials/issues/6)!" %}
 
 Before starting the simulation for the first time you need to download the mesh files and copy them into the appropriate location. The shell script `./download-meshes.sh` will handle these things automatically. Afterwards, the simulation setup is ready to run.
 
