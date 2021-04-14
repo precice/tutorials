@@ -2,7 +2,6 @@
 #include "utilities.h"
 
 #include <iostream>
-#include <mpi.h>
 #include <vector>
 #include <cmath>
 #include "precice/SolverInterface.hpp"
@@ -27,7 +26,6 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  const bool parallel = (argc == 6);
   std::string configFileName(argv[1]);
   int         domainSize  = atoi(argv[2]);  //N
   int         chunkLength = domainSize + 1; //serial run
@@ -41,28 +39,7 @@ int main(int argc, char **argv)
 
   int gridOffset, rank = 0, size = 1;
 
-  if (parallel) {
-    std::cerr << "Parallel runs are currently not supported\n";
-    return -1;
-
-    MPI_Init(&argc, &argv);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    outputFilePrefix += std::to_string(rank); //extra
-
-    if ((domainSize + 1) % size == 0) {
-      chunkLength = (domainSize + 1) / size;
-      gridOffset  = rank * chunkLength;
-    } else if (rank < (domainSize + 1) % size) {
-      chunkLength = (domainSize + 1) / size + 1;
-      gridOffset  = rank * chunkLength;
-    } else {
-      chunkLength = (domainSize + 1) / size;
-      gridOffset  = ((domainSize + 1) % size) * ((domainSize + 1) / size + 1) + (rank - ((domainSize + 1) % size)) * (domainSize + 1) / size;
-    }
-  }
-
-  SolverInterface interface(solverName, configFileName, rank, size);
+  SolverInterface interface(solverName, configFileName, 0, 1);
   std::cout << "preCICE configured..." << std::endl;
 
   const int dimensions           = interface.getDimensions();
@@ -93,20 +70,12 @@ int main(int argc, char **argv)
   std::vector<double> grid(dimensions * chunkLength);
 
   const double cellwidth =(L / domainSize) ;
-  if (parallel) {
-    for (int i = 0; i < chunkLength; i++) {
-      for (int j = 0; j < dimensions; j++) {
-        grid[i * dimensions + j] = j == 0 ? gridOffset + (double) i : 0.0;
-      }
-    }
-  } else {
-    for (int i = 0; i < chunkLength; i++) {
-      for (int d = 0; d < dimensions; d++) {
-        if (d == 0) {
-          grid[i * dimensions] = i * cellwidth;
-        } else {
-          grid[i * dimensions + d] = 0.0;
-        }
+  for (int i = 0; i < chunkLength; i++) {
+    for (int d = 0; d < dimensions; d++) {
+      if (d == 0) {
+        grid[i * dimensions] = i * cellwidth;
+      } else {
+        grid[i * dimensions + d] = 0.0;
       }
     }
   }
@@ -149,27 +118,18 @@ int main(int argc, char **argv)
       interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
     }
 
-    if (parallel) {
-      /*
-      fluidComputeSolutionParallel(rank, size, domainSize, chunkLength, kappa, tau, 0.0, t + dt,
-                                   pressure.data(),
-                                   crossSectionLength.data(),
-                                   velocity.data());
-                                   */
-    } else {
-      fluidComputeSolutionSerial(
-          // values from last time window
-          velocity_old.data(), pressure_old.data(), crossSectionLength_old.data(),
-          // last received crossSectionLength
-          crossSectionLength.data(),
-          t+dt, // used for inlet velocity
-          domainSize, 
-          kappa, 
-          dt, // tau
-          // resulting velocity pressure
-          velocity.data(),
-          pressure.data());
-    }
+    fluidComputeSolutionSerial(
+        // values from last time window
+        velocity_old.data(), pressure_old.data(), crossSectionLength_old.data(),
+        // last received crossSectionLength
+        crossSectionLength.data(),
+        t+dt, // used for inlet velocity
+        domainSize, 
+        kappa, 
+        dt, // tau
+        // resulting velocity pressure
+        velocity.data(),
+        pressure.data());
     
     if (interface.isWriteDataRequired(dt)) {
       interface.writeBlockScalarData(pressureID, chunkLength, vertexIDs.data(), pressure.data());
@@ -198,9 +158,5 @@ int main(int argc, char **argv)
 
   std::cout << "Exiting FluidSolver" << std::endl;
   interface.finalize();
-  if (parallel) {
-    MPI_Finalize();
-  }
-
   return 0;
 }
