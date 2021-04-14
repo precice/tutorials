@@ -7,3 +7,4 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v2
       - run:  bash tools/check.sh
+      - run:  bash tools/check-size.sh
