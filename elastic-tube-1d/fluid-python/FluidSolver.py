@@ -49,12 +49,12 @@ configFileName = args.configurationFileName
 # physical properties of the tube
 r0 = 1 / np.sqrt(np.pi)  # radius of the tube
 a0 = r0**2 * np.pi  # cross sectional area
-E = 10000  # elasticity module
 u0 = 10  # mean velocity
 ampl = 3  # amplitude of varying velocity
 frequency = 10  # frequency of variation
 t_shift = 0  # temporal shift of variation
 p0 = 0  # pressure at outlet
+kappa = 100
 
 
 def velocity_in(t): return u0 + ampl * np.sin(frequency *
@@ -63,7 +63,7 @@ def velocity_in(t): return u0 + ampl * np.sin(frequency *
 
 L = 10  # length of tube/simulation domain
 N = 100
-dx = L / 100
+dx = L / kappa
 # helper function to create constant cross section
 
 
@@ -110,10 +110,11 @@ grid[:, 1] = 0  # y component, leave blank
 vertexIDs = interface.set_mesh_vertices(meshID, grid)
 
 t = 0
+precice_dt = 0.01
 
 print("Fluid: init precice...")
 # preCICE defines timestep size of solver via precice-config.xml
-precice_dt = interface.initialize()
+interface.initialize()
 
 if interface.is_action_required(action_write_initial_data()):
     interface.write_block_scalar_data(pressureID, vertexIDs, pressure)
@@ -142,7 +143,7 @@ while interface.is_coupling_ongoing():
         velocity_old, pressure_old, crossSectionLength_old, crossSectionLength, dx, precice_dt, velocity_in(
             t + precice_dt), custom_coupling=True)
     interface.write_block_scalar_data(pressureID, vertexIDs, pressure)
-    precice_dt = interface.advance(precice_dt)
+    interface.advance(precice_dt)
     crossSectionLength = interface.read_block_scalar_data(
         crossSectionLengthID, vertexIDs)
 
