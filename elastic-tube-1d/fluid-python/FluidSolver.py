@@ -111,10 +111,11 @@ grid[:, 1] = 0  # y component, leave blank
 vertexIDs = interface.set_mesh_vertices(meshID, grid)
 
 t = 0
+precice_dt = 0.01
 
 print("Fluid: init precice...")
 # preCICE defines timestep size of solver via precice-config.xml
-precice_dt = interface.initialize()
+interface.initialize()
 
 if interface.is_action_required(action_write_initial_data()):
     interface.write_block_scalar_data(pressureID, vertexIDs, pressure)
@@ -143,7 +144,7 @@ while interface.is_coupling_ongoing():
         velocity_old, pressure_old, crossSectionLength_old, crossSectionLength, dx, precice_dt, velocity_in(
             t + precice_dt), custom_coupling=True)
     interface.write_block_scalar_data(pressureID, vertexIDs, pressure)
-    precice_dt = interface.advance(precice_dt)
+    interface.advance(precice_dt)
     crossSectionLength = interface.read_block_scalar_data(
         crossSectionLengthID, vertexIDs)
 
