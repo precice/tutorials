@@ -66,7 +66,7 @@ ax = fig.add_subplot(111, projection='3d')
 X, Y = np.meshgrid(spatial_mesh, range(T))
 
 # uncomment depending on what quantity you want to plot
-ax.plot_surface(X, Y, values_for_all_t)
+ax.plot_surface(X, Y, values_for_all_t, cmap='viridis', edgecolor='black')
 plt.xlabel("space")
 plt.ylabel("time")
 plt.title(arrayname + " from " + data_path + "*.vtk")
