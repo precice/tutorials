@@ -4,6 +4,7 @@
 #include <iostream>
 #include <mpi.h>
 #include <vector>
+#include <cmath>
 #include "precice/SolverInterface.hpp"
 
 using namespace precice;
@@ -32,6 +33,7 @@ int main(int argc, char **argv)
   int         chunkLength = domainSize + 1; //serial run
   const double tau        = atof(argv[3]);
   const double kappa      = atof(argv[4]);
+  const double L = 10.0; // tube length
 
   const std::string solverName = "Fluid";
 
@@ -70,14 +72,27 @@ int main(int argc, char **argv)
 
   std::vector<int>    vertexIDs(chunkLength);
 
-  std::vector<double> pressure(chunkLength, 0.0);
+  const double PI = 3.141592653589793;
+
+  const double r0 = 1 / sqrt(PI); // radius of the tube
+  const double a0 = std::pow(r0, 2) * PI; // cross sectional area
+  const double E = 10000; // elasticity module
+  const double u0 = 10; // mean velocity
+  const double ampl = 3; // amplitude of varying velocity
+  const double frequency = 10; // frequency of variation
+  const double t_shift = 0; // temporal shift of variation
+  const double p0 = 0; // pressure at outlet
+  const double vel_in_0 = u0 + ampl * sin(frequency * (t_shift) * PI);
+
+  std::vector<double> pressure(chunkLength, p0);
   std::vector<double> pressure_old(pressure);
-  std::vector<double> crossSectionLength(chunkLength, 1.0);
+  std::vector<double> crossSectionLength(chunkLength, a0);
   std::vector<double> crossSectionLength_old(crossSectionLength);
-  std::vector<double> velocity(chunkLength, 10.0);
+  std::vector<double> velocity(chunkLength, vel_in_0);
   std::vector<double> velocity_old(velocity);
   std::vector<double> grid(dimensions * chunkLength);
 
+  const double cellwidth =(L / domainSize) ;
   if (parallel) {
     for (int i = 0; i < chunkLength; i++) {
       for (int j = 0; j < dimensions; j++) {
@@ -86,8 +101,12 @@ int main(int argc, char **argv)
     }
   } else {
     for (int i = 0; i < chunkLength; i++) {
-      for (int j = 0; j < dimensions; j++) {
-        grid[i * dimensions + j] = i * (1 - j) * 0.1;
+      for (int d = 0; d < dimensions; d++) {
+        if (d == 0) {
+          grid[i * dimensions] = i * cellwidth;
+        } else {
+          grid[i * dimensions + d] = 0.0;
+        }
       }
     }
   }
@@ -115,7 +134,7 @@ int main(int argc, char **argv)
 
   // initialize such that mass conservation is fulfilled
   for(int i = 0; i < chunkLength; ++i) {
-    velocity_old[i] = 10 * crossSectionLength[0] / crossSectionLength[i];
+    velocity_old[i] = vel_in_0 * crossSectionLength_old[0] / crossSectionLength_old[i];
   }
 
   int out_counter = 0;
@@ -125,6 +144,7 @@ int main(int argc, char **argv)
       interface.markActionFulfilled(actionWriteIterationCheckpoint());
     }
 
+    
     if (interface.isReadDataAvailable()) {
       interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
     }
@@ -138,21 +158,29 @@ int main(int argc, char **argv)
                                    */
     } else {
       fluidComputeSolutionSerial(
-          // old values in
+          // values from last time window
           velocity_old.data(), pressure_old.data(), crossSectionLength_old.data(),
-          // last received in
+          // last received crossSectionLength
           crossSectionLength.data(),
-          t, domainSize, kappa, tau,
-          // new values out
+          t+dt, // used for inlet velocity
+          domainSize, 
+          kappa, 
+          dt, // tau
+          // resulting velocity pressure
           velocity.data(),
           pressure.data());
     }
-
+    
     if (interface.isWriteDataRequired(dt)) {
       interface.writeBlockScalarData(pressureID, chunkLength, vertexIDs.data(), pressure.data());
     }
-
+    
     interface.advance(dt);
+
+    //interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
+    if (interface.isReadDataAvailable()) {
+      interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
+    }
 
     if (interface.isActionRequired(actionReadIterationCheckpoint())) { // i.e. not yet converged
       interface.markActionFulfilled(actionReadIterationCheckpoint());

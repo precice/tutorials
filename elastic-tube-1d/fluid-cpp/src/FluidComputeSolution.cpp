@@ -317,6 +317,8 @@ int fluidComputeSolutionSerial(
     double * velocity,
     double * pressure)
 {
+  const double PI = 3.141592653589793;
+
   /* fluid_nl Variables */
   const double E = 10000;
   // c_mk^2
@@ -325,7 +327,6 @@ int fluidComputeSolutionSerial(
   const int chunkLength = N + 1;
   std::copy(velocity_old, velocity_old + chunkLength, velocity);
   std::copy(pressure_old, pressure_old + chunkLength, pressure);
-
 
   // Used as Ax = b
   // i.e. LHS*x = Res
@@ -340,39 +341,57 @@ int fluidComputeSolutionSerial(
   std::vector<int> ipiv(nlhs);
 
   /* Stabilization Intensity */
-  const double alpha = (N * kappa * tau) / (N * tau + 1);
-  const double dx    = 1.0 / (N * kappa);
-  //dx = 0.1;
-  //alpha = 0;
+  const double alpha = 0.0; //(N * kappa * tau) / (N * tau + 1);
+  const double L = 10.0;
+  const double dx = L / kappa; // 1.0 / (N * kappa);
 
   // k is the iteration counter
   for(int k = 1; ; ++k) {
     std::fill(Res.begin(), Res.end(), 0.0);
 
     for (int i = 1; i < N; i++) {
-      /* Momentum */ //theta = 1
+      /* Momentum */ 
       Res[i] = (velocity_old[i] * crossSectionLength_old[i] - velocity[i] * crossSectionLength[i]) * dx / tau;
-      //Res[i] = velocity_old[i] *crossSectionLength[i]* dx/tau;
 
-      Res[i] = Res[i] - 0.25 * crossSectionLength[i + 1] * velocity[i] * velocity[i + 1] - 0.25 * crossSectionLength[i] * velocity[i] * velocity[i + 1];
+      Res[i] += 0.25 * (- crossSectionLength[i + 1] * velocity[i] * velocity[i + 1]
+                        - crossSectionLength[i] * velocity[i] * velocity[i + 1]);
 
-      Res[i] = Res[i] - 0.25 * crossSectionLength[i + 1] * velocity[i] * velocity[i] - 0.25 * crossSectionLength[i] * velocity[i] * velocity[i] + 0.25 * crossSectionLength[i] * velocity[i - 1] * velocity[i] + 0.25 * crossSectionLength[i - 1] * velocity[i - 1] * velocity[i];
+      Res[i] += 0.25 * (- crossSectionLength[i + 1] * velocity[i] * velocity[i]
+                        - crossSectionLength[i] * velocity[i] * velocity[i]
+                        + crossSectionLength[i] * velocity[i - 1] * velocity[i] 
+                        + crossSectionLength[i - 1] * velocity[i - 1] * velocity[i]);
 
-      Res[i] = Res[i] + 0.25 * crossSectionLength[i - 1] * velocity[i - 1] * velocity[i - 1] + 0.25 * crossSectionLength[i] * velocity[i - 1] * velocity[i - 1];
-      Res[i] = Res[i] + 0.25 * crossSectionLength[i - 1] * pressure[i - 1] + 0.25 * crossSectionLength[i] * pressure[i - 1] - 0.25 * crossSectionLength[i - 1] * pressure[i] + 0.25 * crossSectionLength[i + 1] * pressure[i] - 0.25 * crossSectionLength[i] * pressure[i + 1] - 0.25 * crossSectionLength[i + 1] * pressure[i + 1];
+      Res[i] += 0.25 * (+ crossSectionLength[i - 1] * velocity[i - 1] * velocity[i - 1]
+                        + crossSectionLength[i] * velocity[i - 1] * velocity[i - 1]);
+
+      Res[i] += 0.25*(+ crossSectionLength[i - 1] * pressure[i - 1]
+                      + crossSectionLength[i]     * pressure[i - 1]
+                      - crossSectionLength[i - 1] * pressure[i]
+                      + crossSectionLength[i + 1] * pressure[i]
+                      - crossSectionLength[i]     * pressure[i + 1]
+                      - crossSectionLength[i + 1] * pressure[i + 1]);
 
       /* Continuity */
       Res[i + N + 1] = (crossSectionLength_old[i] - crossSectionLength[i]) * dx / tau;
-      Res[i + N + 1] = Res[i + N + 1] + 0.25 * crossSectionLength[i - 1] * velocity[i - 1] + 0.25 * crossSectionLength[i] * velocity[i - 1] + 0.25 * crossSectionLength[i - 1] * velocity[i] - 0.25 * crossSectionLength[i + 1] * velocity[i] - 0.25 * crossSectionLength[i] * velocity[i + 1] - 0.25 * crossSectionLength[i + 1] * velocity[i + 1];
-      //Res[i + N + 1] = Res[i + N + 1] + alpha * pressure[i - 1] - 2 * alpha * pressure[i] + alpha * pressure[i + 1];
-      Res[i + N + 1] = Res[i + N + 1] + alpha * (pressure[i - 1] - 2 * pressure[i] + pressure[i + 1]);
+      Res[i + N + 1] += 0.25*(+ crossSectionLength[i - 1] * velocity[i - 1]
+                              + crossSectionLength[i]     * velocity[i - 1]
+                              + crossSectionLength[i - 1] * velocity[i]
+                              - crossSectionLength[i + 1] * velocity[i]
+                              - crossSectionLength[i]     * velocity[i + 1]
+                              - crossSectionLength[i + 1] * velocity[i + 1]);
+
+      Res[i + N + 1] += alpha * (pressure[i - 1] - 2 * pressure[i] + pressure[i + 1]);
     }
 
     /* Boundary */
 
     /* Velocity Inlet is prescribed */
-    const double vel_in = 10 + 3 * sin(10 * PI * (t));
-    Res[0] = vel_in - velocity[0];
+    const double u0 = 10.0;
+    const double ampl = 3.0;
+    const double frequency = 10.0;
+    const double t_shift = 0.0;
+    const double velocity_in = u0 + ampl * sin(frequency * (t + t_shift) * PI);
+    Res[0] = velocity_in - velocity[0];
 
     /* Pressure Inlet is lineary interpolated */
     Res[N + 1] = -pressure[0] + 2 * pressure[1] - pressure[2];
@@ -395,8 +414,9 @@ int fluidComputeSolutionSerial(
         );
     const double norm = norm_1 / norm_2;
 
+    // NOTE tolerance is 1e-10 and max iterations is 1000 in python
     if ((norm < 1e-15 && k > 1) || k > 50) {
-      printf("Nonlinear Solver break, iterations: %i, residual norm: %e\n", k, norm);
+      std::cout << "Nonlinear Solver break, iterations: " << k << ", residual norm: " << norm << '\n';
       break;
     }
 
@@ -405,9 +425,20 @@ int fluidComputeSolutionSerial(
 
     for (int i = 1; i < N; i++) {
       // Momentum, Velocity
-      LHS(i, i - 1) += -0.25 * crossSectionLength[i - 1] * velocity[i - 1] * 2 - 0.25 * crossSectionLength[i] * velocity[i - 1] * 2 - 0.25 * crossSectionLength[i] * velocity[i] - 0.25 * crossSectionLength[i - 1] * velocity[i];
-      LHS(i, i)     +=  0.25 * crossSectionLength[i + 1] * velocity[i + 1] + 0.25 * crossSectionLength[i] * velocity[i + 1] + crossSectionLength[i] * dx / tau + 0.25 * crossSectionLength[i + 1] * velocity[i] * 2 + 0.25 * crossSectionLength[i] * velocity[i] * 2 - 0.25 * crossSectionLength[i] * velocity[i - 1] - 0.25 * crossSectionLength[i - 1] * velocity[i - 1];
-      LHS(i, i + 1) +=  0.25 * crossSectionLength[i + 1] * velocity[i] + 0.25 * crossSectionLength[i] * velocity[i];
+      LHS(i, i - 1) +=0.25*(-2 * crossSectionLength[i - 1] * velocity[i - 1]
+                            -2 * crossSectionLength[i]     * velocity[i - 1]
+                            -    crossSectionLength[i]     * velocity[i]
+                            -    crossSectionLength[i - 1] * velocity[i]);
+
+      LHS(i, i)     += crossSectionLength[i] * dx / tau;
+      LHS(i, i)     +=  0.25 * (+    crossSectionLength[i + 1] * velocity[i + 1]
+                                +    crossSectionLength[i]     * velocity[i + 1]
+                                +2 * crossSectionLength[i + 1] * velocity[i] 
+                                +2 * crossSectionLength[i]     * velocity[i]
+                                -    crossSectionLength[i]     * velocity[i - 1]
+                                -    crossSectionLength[i - 1] * velocity[i - 1]);
+      LHS(i, i + 1) +=  0.25 * (+ crossSectionLength[i + 1] * velocity[i]    
+                                + crossSectionLength[i]     * velocity[i]);
 
       // Momentum, Pressure
       LHS(i, N + 1 + i - 1) += -0.25 * crossSectionLength[i - 1] - 0.25 * crossSectionLength[i];
