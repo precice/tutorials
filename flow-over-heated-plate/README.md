@@ -47,6 +47,8 @@ in order to use OpenFOAM and FEniCS for this test case. Feel free to try differe
 ## Post-processing
 
 How to visualize the simulation results depends on the selected solvers. Most of the solvers generate VTK files which can visualized using ParaView or similar tools.
+In case of OpenFOAM, you can open the `.foam` file with ParaView, or create VTK files with `foamToVTK`.
+
 An example of the visualized expected results looks as follows:
 
 ![result](images/tutorials-flow-over-heated-plate-result-openfoam.png)
