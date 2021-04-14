@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e -u
 
-./build/SolidSolver ../precice-config.xml 100
+./build/SolidSolver ../precice-config.xml

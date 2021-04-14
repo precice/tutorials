@@ -49,7 +49,6 @@ configFileName = args.configurationFileName
 # physical properties of the tube
 r0 = 1 / np.sqrt(np.pi)  # radius of the tube
 a0 = r0**2 * np.pi  # cross sectional area
-E = 10000  # elasticity module
 u0 = 10  # mean velocity
 ampl = 3  # amplitude of varying velocity
 frequency = 10  # frequency of variation

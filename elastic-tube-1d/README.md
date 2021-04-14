@@ -68,7 +68,7 @@ cd solid-cpp
 ./run.sh
 ```
 
-The run scripts set the input parameters `N = 100`, `tau = 0.01`, `kappa = 100`. 
+The solvers use the parameters `N = 100`, `tau = 0.01`, `kappa = 100` by default and can be modified in the solver. 
 
 ### Python
 

@@ -9,18 +9,15 @@ int main(int argc, char **argv)
   using namespace precice;
   using namespace precice::constants;
 
-  if (argc != 3 && argc != 4) {
-    std::cout << "Fluid: Usage: mpiexec -np <#procs> " << argv[0] << " <configurationFileName> <N> -parallel" << std::endl;
-    std::cout << "or" << std::endl;
-    std::cout << "Usage: " << argv[0] << " configurationFileName> <N>" << std::endl;
+  if (argc != 2) {
+    std::cout << "Fluid: Usage: " << argv[0] << " configurationFileName>" << std::endl;
     std::cout << std::endl;
-    std::cout << "N:     Number of mesh elements, needs to be equal for fluid and Solid solver." << std::endl;
 
     return -1;
   }
 
   std::string configFileName(argv[1]);
-  int         domainSize  = atoi(argv[2]); // N
+  int         domainSize  = 100; // N
   int         chunkLength = domainSize + 1;
 
   std::cout << "N: " << domainSize << std::endl;

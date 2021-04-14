@@ -13,24 +13,17 @@ int main(int argc, char **argv)
 {
 
   std::cout << "Starting Fluid Solver..." << std::endl;
-  if (argc != 5 && argc != 6) {
+  if (argc != 2) {
     std::cout << std::endl;
-    std::cout << "Fluid: Usage: mpiexec -np <#procs> " << argv[0] << " <configurationFileName> <N> <tau> <kappa> -parallel" << std::endl;
-    std::cout << "or" << std::endl;
-    std::cout << "Usage: " << argv[0] << " <configurationFileName> <N> <tau> <kappa>" << std::endl;
-    std::cout << std::endl;
-    std::cout << "N:     Number of mesh elements, needs to be equal for fluid and Solid solver." << std::endl;
-    std::cout << "tau:   Dimensionless time step size." << std::endl;
-    std::cout << "kappa: Dimensionless structural stiffness." << std::endl;
+    std::cout << "Fluid: Usage: " << argv[0] << " <configurationFileName>" << std::endl;
 
     return -1;
   }
 
   std::string configFileName(argv[1]);
-  int         domainSize  = atoi(argv[2]);  //N
-  int         chunkLength = domainSize + 1; //serial run
-  const double tau        = atof(argv[3]);
-  const double kappa      = atof(argv[4]);
+  int         domainSize  = 100;  //N
+  int         chunkLength = domainSize + 1;
+  const double kappa      = 100;
   const double L = 10.0; // tube length
 
   const std::string solverName = "Fluid";
@@ -51,7 +44,6 @@ int main(int argc, char **argv)
 
   const double r0 = 1 / sqrt(PI); // radius of the tube
   const double a0 = std::pow(r0, 2) * PI; // cross sectional area
-  const double E = 10000; // elasticity module
   const double u0 = 10; // mean velocity
   const double ampl = 3; // amplitude of varying velocity
   const double frequency = 10; // frequency of variation
