@@ -61,7 +61,6 @@ Open two separate terminals and start each participant by calling the respective
 ```
 cd fluid-cpp
 ./run.sh
-# or, in parallel: ./run.sh -parallel
 ```
 and
 ```
@@ -70,8 +69,6 @@ cd solid-cpp
 ```
 
 The run scripts set the input parameters `N = 100`, `tau = 0.01`, `kappa = 100`. 
-
-{% include warning.html content= "Running serial or parallel leads to different results. Please refer to this [open issue](https://github.com/precice/tutorials/issues/194) for more insight. Contributions are particularly welcome here." %}
 
 ### Python
 
@@ -113,8 +110,6 @@ For example, to plot the diameter of the fluid-python case using the default pre
 python3 plot-vtk.py diameter fluid-python/output/out_fluid_
 ```
 ![FSI3 setup](images/tutorials-elastic-tube-1d-diameter.png)
-
-Note that the prefix also contains the rank in the parallel C++ case.
 
 ## References
 
