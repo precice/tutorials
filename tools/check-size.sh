@@ -4,6 +4,9 @@
 CODE=0
 MAXIMUMSIZE=250
 
+RED='\033[0;31m'
+NOCOLOR='\033[0m'
+
 # Check tutorials
 IGNORE="tools"
 tutorials=$(find . -maxdepth 1 -type d -not -name ".*" | grep -vE $IGNORE | sed "s/^.\///")
@@ -13,10 +16,10 @@ for tutorial in $tutorials; do
   for img in $images; do
     actualsize=$(du -k "$img" | cut -f 1)
     if [ "${actualsize}" -ge "${MAXIMUMSIZE}" ]; then
-        echo "Size of ""${img}"" is with ""${actualsize}"" kilobytes larger than the  of ""${MAXIMUMSIZE}"" kilobytes"
+        echo "$img:$RED $actualsize kb exceeds the limit of $MAXIMUMSIZE kb. $NOCOLOR"
         CODE=1
     else
-      echo "$img: info: correct file size"
+      echo "$img: image size of $actualsize kb is fine."
     fi
   done
 done
