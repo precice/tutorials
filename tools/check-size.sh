@@ -19,7 +19,7 @@ for tutorial in $tutorials; do
         echo "$img:$RED $actualsize kb exceeds the limit of $MAXIMUMSIZE kb. $NOCOLOR"
         CODE=1
     else
-      echo "$img: image size of $actualsize kb is fine."
+      echo "$img: $actualsize kb (Ok)."
     fi
   done
 done
