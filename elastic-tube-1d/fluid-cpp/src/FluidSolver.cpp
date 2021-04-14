@@ -37,8 +37,6 @@ int main(int argc, char **argv)
 
   std::string outputFilePrefix = "./output/out_fluid"; //extra
 
-  int gridOffset, rank = 0, size = 1;
-
   SolverInterface interface(solverName, configFileName, 0, 1);
   std::cout << "preCICE configured..." << std::endl;
 
