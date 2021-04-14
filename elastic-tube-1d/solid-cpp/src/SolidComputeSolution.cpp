@@ -1,7 +1,7 @@
 #include <cmath>
 #include "SolidSolver.h"
 
-void SolidComputeSolution(int rank, int size, int chunkLength, double const * const pressure, double *crossSectionLength)
+void SolidComputeSolution(int chunkLength, double const * const pressure, double *crossSectionLength)
 {
   /*
    * Update displacement of membrane based on pressure data from the fluid solver

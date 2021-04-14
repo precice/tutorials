@@ -1,7 +1,6 @@
 #include "SolidSolver.h"
 #include <iostream>
 #include <stdlib.h>
-#include "mpi.h"
 #include "precice/SolverInterface.hpp"
 
 int main(int argc, char **argv)
@@ -20,8 +19,6 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  const bool parallel = (argc == 4);
-
   std::string configFileName(argv[1]);
   int         domainSize  = atoi(argv[2]); // N
   int         chunkLength = domainSize + 1;
@@ -31,25 +28,7 @@ int main(int argc, char **argv)
 
   const std::string solverName = "Solid";
 
-  int gridOffset, rank = 0, size = 1;
-  if (parallel) {
-    MPI_Init(&argc, &argv);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-
-    if ((domainSize + 1) % size == 0) {
-      chunkLength = (domainSize + 1) / size;
-      gridOffset  = rank * chunkLength;
-    } else if (rank < (domainSize + 1) % size) {
-      chunkLength = (domainSize + 1) / size + 1;
-      gridOffset  = rank * chunkLength;
-    } else {
-      chunkLength = (domainSize + 1) / size;
-      gridOffset  = ((domainSize + 1) % size) * ((domainSize + 1) / size + 1) + (rank - ((domainSize + 1) % size)) * (domainSize + 1) / size;
-    }
-  }
-
-  SolverInterface interface(solverName, configFileName, rank, size);
+  SolverInterface interface(solverName, configFileName, 0, 1);
   std::cout << "preCICE configured..." << std::endl;
 
   int dimensions           = interface.getDimensions();
@@ -61,17 +40,9 @@ int main(int argc, char **argv)
   std::vector<double> crossSectionLength(chunkLength, 1.0);
   std::vector<double> grid(dimensions * chunkLength);
 
-  if (parallel) {
-    for (int i = 0; i < chunkLength; i++) {
-      for (int j = 0; j < dimensions; j++) {
-        grid[i * dimensions + j] = j == 0 ? gridOffset + (double) i : 0.0;
-      }
-    }
-  } else {
-    for (int i = 0; i < chunkLength; i++) {
-      for (int j = 0; j < dimensions; j++) {
-        grid[i * dimensions + j] = i * (1 - j);
-      }
+  for (int i = 0; i < chunkLength; i++) {
+    for (int j = 0; j < dimensions; j++) {
+      grid[i * dimensions + j] = i * (1 - j);
     }
   }
 
@@ -99,7 +70,7 @@ int main(int argc, char **argv)
       interface.readBlockScalarData(pressureID, chunkLength, vertexIDs.data(), pressure.data());
     }
 
-    SolidComputeSolution(rank, size, chunkLength, pressure.data(), crossSectionLength.data()); // Call Solver
+    SolidComputeSolution(chunkLength, pressure.data(), crossSectionLength.data()); // Call Solver
 
     if (interface.isWriteDataRequired(dt)) {
       interface.writeBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
@@ -116,8 +87,5 @@ int main(int argc, char **argv)
 
   std::cout << "Exiting SolidSolver" << std::endl;
   interface.finalize();
-  if (parallel) {
-    MPI_Finalize();
-  }
   return 0;
 }
