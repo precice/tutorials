@@ -14,7 +14,8 @@ template<class T>
 class StridedAccess {
   public:
     StridedAccess(T*first, int stride) : first(first), stride(stride) {};
-    T& operator()(int i, int j) { return first[i*stride+j]; }
+    // This accessor allows for row-major access
+    T& operator()(int i, int j) { return first[j*stride+i]; }
   private:
     T*first;
     int stride;
@@ -63,7 +64,6 @@ int fluidComputeSolutionSerial(
   StridedAccess<double> LHS(LHS_buffer.data(), 2* N + 2);
 
   /* LAPACK Variables */
-  std::vector<double> A(LHS_buffer); // linearized transposed version of LHS
   int nlhs = (2 * N + 2);
   int nrhs = 1;
   std::vector<int> ipiv(nlhs);
@@ -200,20 +200,9 @@ int fluidComputeSolutionSerial(
     LHS(2 * N + 1, 2 * N + 1) = 1;
     LHS(2 * N + 1, N)         = -(sqrt(c_mk2 - pressure_old[N] / 2.0) - (velocity[N] - velocity_old[N]) / 4.0);
 
-    /* LAPACK requires a 1D array 
-       i.e. Linearizing 2D 
-    */
-    int counter = 0;
-    for (int i = 0; i <= (2 * N + 1); i++) {
-      for (int j = 0; j <= (2 * N + 1); j++) {
-        A[counter] = LHS(j, i);
-        counter++;
-      }
-    }
-
     /* LAPACK Function call to solve the linear system */
     int info{0};
-    dgesv_(&nlhs, &nrhs, A.data(), &nlhs, ipiv.data(), Res.data(), &nlhs, &info);
+    dgesv_(&nlhs, &nrhs, LHS_buffer.data(), &nlhs, ipiv.data(), Res.data(), &nlhs, &info);
 
     if (info != 0) {
       std::cerr << "Linear Solver not converged!, Info: " << info << '\n';
