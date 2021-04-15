@@ -10,3 +10,5 @@ jobs:
       - run:  bash tools/check-size.sh
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
+        with:
+          check_together: 'yes'
