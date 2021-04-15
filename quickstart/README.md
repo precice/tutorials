@@ -34,13 +34,14 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     ```
 3. Download and install the [OpenFOAM-preCICE adapter](adapter-openfoam-get.html):
     ```bash
-     git clone --branch=master https://github.com/precice/openfoam-adapter
+     git clone --branch=master --depth 1 https://github.com/precice/openfoam-adapter
      cd openfoam-adapter
      ./Allwmake
+     cd ..
     ```
 4. Get the quickstart tutorial case:
     ```bash
-    git clone --branch=master https://github.com/precice/tutorials.git
+    git clone --branch=master --depth 1 https://github.com/precice/tutorials.git
     cd tutorials/quickstart
     ```
 
