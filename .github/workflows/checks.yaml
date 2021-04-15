@@ -8,3 +8,5 @@ jobs:
         uses: actions/checkout@v2
       - run:  bash tools/check.sh
       - run:  bash tools/check-size.sh
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
