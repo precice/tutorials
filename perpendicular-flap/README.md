@@ -29,7 +29,7 @@ Solid participant:
 
 * CalculiX. In order to allow a reasonable comparison to all solid codes, the geometrically non-linear solver has been disabled and only a linear model is used by default. For more information, have a look at the [CalculiX adapter documentation](adapter-calculix-overview.html)
 
-* deal.II. This tutorial is intended to be used with the linear solid solver, but works with the nonlinear solver as well. Please copy the solver executables to the `solid-dealii` folder or make it discoverable at runtime and update the `solid-dealii/run.sh` script. For more information, have a look at the [deal.II adapter documentation](adapter-dealii-overview.html).
+* deal.II. This tutorial works only with `Model = linear` since the deal.II codes were developed with read data `Stress` instead of `Force` as applied here (example given in Turek-Hron-FSI) in the first place. The `./run.sh` script takes the compiled executable `elasticity` as input argument (`run.sh -e=/path/to/elasticity`) and is required in case the executable is not discoverable at runtime (e.g. has been added to the system `PATH`). For more information, have a look at the [deal.II adapter documentation](adapter-dealii-overview.html).
 
 ## Running the Simulation
 
