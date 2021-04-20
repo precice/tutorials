@@ -2,7 +2,7 @@
 title: Flow over heated plate nearest projection
 permalink: tutorials-flow-over-heated-plate-nearest-projection.html
 keywords: OpenFOAM, nearest-projection, CHT
-summary: This tutorial introduces an example simulation setup for a nearest-projection mapping. At the moment, it only contains an example with the OpenFOAM adapter. The demonstrated "flow over a heated plate" scenario is exactly the same as in the `buoyantPimpleFoam-laplacianFoam` tutorial.
+summary: This tutorial introduces an example simulation setup for a nearest-projection mapping, based on the "flow over a heated plate" scenario.
 ---
 
 ## Setup

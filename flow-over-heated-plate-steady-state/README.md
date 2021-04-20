@@ -2,7 +2,7 @@
 title: Flow over heated plate steady state
 permalink: tutorials-flow-over-heated-plate-steady-state.html
 keywords: CHT, steady-state, Code_Aster, OpenFOAM
-summary: Using a steady-state OpenFOAM solver for a CHT coupling with Code_Aster.
+summary: Using a steady-state OpenFOAM solver for a CHT coupling with code_aster. This tutorial is based on the "flow over a heated plate" scenario.
 ---
 
 ## Setup
