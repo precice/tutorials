@@ -25,9 +25,9 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     sudo apt install ./libprecice2_2.2.0_focal.deb
     ```
 
-    - Are you using something else? Just pick what suits you best on [this overview page](installation-overview.html).
-    - Facing any problems? [Ask for help](community-channels.html).
-2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](adapter-openfoam-support.html):
+    - Are you using something else? Just pick what suits you best on [this overview page](https://www.precice.org/installation-overview.html).
+    - Facing any problems? [Ask for help](https://www.precice.org/community-channels.html).
+2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](https://www.precice.org/adapter-openfoam-support.html):
 
     ```bash
     # Add the signing key, add the repository, update (check this):
@@ -45,7 +45,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     sudo apt install build-essential pkg-config cmake git
     ```
 
-4. Download and install the [OpenFOAM-preCICE adapter](adapter-openfoam-get.html):
+4. Download and install the [OpenFOAM-preCICE adapter](https://www.precice.org/adapter-openfoam-get.html):
 
     ```bash
      git clone --branch=master --depth 1 https://github.com/precice/openfoam-adapter
@@ -61,7 +61,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     cd tutorials/quickstart
     ```
 
-If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](installation-vm.html).
+If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](https://www.precice.org/installation-vm.html).
 
 ## Case setup
 
