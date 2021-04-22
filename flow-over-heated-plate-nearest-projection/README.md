@@ -23,7 +23,6 @@ Solid participant:
 
 The solvers are currently only OpenFOAM related. For information regarding the nearest-projection mapping, have a look in the [OpenFOAM configuration section](adapter-openfoam-config.html).
 
-
 ## Running the Simulation
 
 Open two separate terminals and start each participant by calling the respective run script.

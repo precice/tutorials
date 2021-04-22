@@ -74,6 +74,7 @@ In order to gain more control over the rigid body oscillation, a rotational spri
 ## Building the rigid body solver
 
 Before starting the coupled simulation, we need to build the rigid body solver. You can run the following commands from the `solid-cpp` directory to build the `rigid_body_solver.cpp`:
+
 ```bash
 cd tutorials/quickstart/solid-cpp
 cmake . && make

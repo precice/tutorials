@@ -107,7 +107,7 @@ The scenario settings are implemented similarly for the nonlinear case.
 
 After the simulation has finished, you can visualize your results using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `fluid-openfoam.foam` file. Looking at the fluid results is enough to obtain information about the behaviour of the flaps. You can also visualize the solid participants' vtks though.
 
-![](images/tutorials-multiple-perpendicular-flaps-results.png)
+![Example visualization](images/tutorials-multiple-perpendicular-flaps-results.png)
 
 ## References
 
