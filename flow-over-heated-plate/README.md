@@ -23,13 +23,13 @@ By default, the fluid participant reads heat-flux values and the solid participa
 
 Fluid participant:
 
-* OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
+* OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
 Solid participant:
 
-* OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
+* OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
-* FEniCS. For more information, have a look at the [FeniCS adapter documentation](adapter-fenics.html).
+* FEniCS. For more information, have a look at the [FeniCS adapter documentation](https://www.precice.org/adapter-fenics.html).
 
 ## Running the Simulation
 

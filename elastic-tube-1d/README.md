@@ -29,8 +29,8 @@ The following parameters have been chosen:
 
 Both fluid and solid participant are supported in:
 
-- *C++*: An example solver using the intrinsic [C++ API of preCICE](couple-your-code-api.html). This solver also depends on LAPACK (e.g. on Ubuntu `sudo apt-get install liblapack-dev`)
-- *Python*: An example solver using the preCICE [Python bindings](installation-bindings-python.html). This solver also depends on the Python libraries `numpy scipy matplotlib vtk mpi4py`, which you can get from your system package manager or with `pip3 install --user <package>`.
+- *C++*: An example solver using the intrinsic [C++ API of preCICE](https://www.precice.org/couple-your-code-api.html). This solver also depends on LAPACK (e.g. on Ubuntu `sudo apt-get install liblapack-dev`)
+- *Python*: An example solver using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy scipy matplotlib vtk mpi4py`, which you can get from your system package manager or with `pip3 install --user <package>`.
 
 ### Building the C++ Solver
 

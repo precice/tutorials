@@ -9,7 +9,7 @@ summary: Using a steady-state OpenFOAM solver for a CHT coupling with code_aster
 
 ## Setup
 
-The setup for this tutorial is similar to the [flow over a heated plate](tutorials-flow-over-heated-plate.html) using OpenFOAM. In this tutorial OpenFOAM is used as the solver for the fluid domain, and code_aster is the solver for the solid domain. A difference here is that we are using a steady-state OpenFOAM solver for demonstration purposes, therefore the results between the two tutorials are not comparable.
+The setup for this tutorial is similar to the [flow over a heated plate](https://www.precice.org/tutorials-flow-over-heated-plate.html) using OpenFOAM. In this tutorial OpenFOAM is used as the solver for the fluid domain, and code_aster is the solver for the solid domain. A difference here is that we are using a steady-state OpenFOAM solver for demonstration purposes, therefore the results between the two tutorials are not comparable.
 
 {% include note.html content="This is a pseudo-2D case, but we still set a 3D `solver-interface` in `precice-config.xml`, because the code_aster case is set up like this at the moment. Contributions here are particularly welcome!" %}
 
@@ -17,11 +17,11 @@ The setup for this tutorial is similar to the [flow over a heated plate](tutoria
 
 Fluid participant:
 
-* OpenFOAM. We use buoyantSimpleFoam instead of the transient buoyantPimpleFoam. For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
+* OpenFOAM. We use buoyantSimpleFoam instead of the transient buoyantPimpleFoam. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
 Solid participant:
 
-* code_aster. The [code_aster adapter documentation](adapter-code_aster.html) is oriented on this tutorial case. In particular the described configuration settings.
+* code_aster. The [code_aster adapter documentation](https://www.precice.org/adapter-code_aster.html) is oriented on this tutorial case. In particular the described configuration settings.
 
 ## Running the Simulation
 

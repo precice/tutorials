@@ -23,9 +23,9 @@ We define the participants `Inner-Fluid`, `Solid`, and `Outer-Fluid` and two int
 
 ## Available solvers
 
-* OpenFOAM. `buoyantSimpleFoam` is used for fluid flow (both participants). This is a solver for steady-state, buoyant, turbulent flow of compressible fluids for ventilation and heat transfer. For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
+* OpenFOAM. `buoyantSimpleFoam` is used for fluid flow (both participants). This is a solver for steady-state, buoyant, turbulent flow of compressible fluids for ventilation and heat transfer. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
-* CalculiX. For more information, have a look at the [CalculiX adapter documentation](adapter-calculix-overview.html).
+* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html).
 
 ## Running the Simulation
 

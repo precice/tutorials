@@ -9,19 +9,19 @@ summary: This tutorial introduces an example simulation setup for a nearest-proj
 
 ## Setup
 
-The setup is exactly the same as described in our [flow-over-heated-plate tutorial](tutorials-flow-over-heated-plate.html).
+The setup is exactly the same as described in our [flow-over-heated-plate tutorial](https://www.precice.org/tutorials-flow-over-heated-plate.html).
 
 ## Available solvers
 
 Fluid participant:
 
-* OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
+* OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
 Solid participant:
 
-* OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
+* OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
-The solvers are currently only OpenFOAM related. For information regarding the nearest-projection mapping, have a look in the [OpenFOAM configuration section](adapter-openfoam-config.html).
+The solvers are currently only OpenFOAM related. For information regarding the nearest-projection mapping, have a look in the [OpenFOAM configuration section](https://www.precice.org/adapter-openfoam-config.html).
 
 ## Running the Simulation
 
@@ -66,7 +66,7 @@ From the preCICE point of view, the simulation here is in 3D, as opposed to the 
 
 ## Post-processing
 
-Have a look at the [flow-over heated-plate](tutorials-flow-over-heated-plate.html) tutorial for the general aspects of post-processing.
+Have a look at the [flow-over heated-plate](https://www.precice.org/tutorials-flow-over-heated-plate.html) tutorial for the general aspects of post-processing.
 Since we now defined mesh connectivity on our interface, we can export the coupling interface with the tag `<export:vtk directory="preCICE-output" />` in our `precice-config.xml`.
 Visualizing these files (e.g. using ParaView) will show a triangular mesh, even though you use hexahedral meshes. This has nothing to do with your mesh and is just caused by the way the connectivity is defined in preCICE. As described above, the function `setMeshTriangles` is used to define the connectivity. Hence, every interface cell/face is represented by two triangles. The following image should give you an impression of a possible triangulated coupling mesh, which consists purely of hexahedral cells:
 

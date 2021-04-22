@@ -114,10 +114,10 @@ You may be curious what displacements OpenFOAM received from the rigid body solv
 
 To become a preCICE pro:
 
-- Get an overview of the [preCICE docs](docs.html).
+- Get an overview of the [preCICE docs](https://www.precice.org/docs.html).
 - See what users talk about in the [preCICE forum](https://precice.discourse.group/).
-- Run [tutorials with other coupled solvers](tutorials.html).
+- Run [tutorials with other coupled solvers](https://www.precice.org/tutorials.html).
 - Watch some [preCICE videos](https://www.youtube.com/c/preCICECoupling/).
-- Meet our [community](community.html).
-- Find out how to [couple your own solver](couple-your-code-overview.html).
-- Tell us [your story](community-projects.html).
+- Meet our [community](https://www.precice.org/community.html).
+- Find out how to [couple your own solver](https://www.precice.org/couple-your-code-overview.html).
+- Tell us [your story](https://www.precice.org/community-projects.html).
