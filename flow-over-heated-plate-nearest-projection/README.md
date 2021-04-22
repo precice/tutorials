@@ -5,6 +5,8 @@ keywords: OpenFOAM, nearest-projection, CHT
 summary: This tutorial introduces an example simulation setup for a nearest-projection mapping, based on the "flow over a heated plate" scenario.
 ---
 
+{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate-nearest-projection). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+
 ## Setup
 
 The setup is exactly the same as described in our [flow-over-heated-plate tutorial](tutorials-flow-over-heated-plate.html).

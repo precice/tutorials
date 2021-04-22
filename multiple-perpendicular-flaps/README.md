@@ -5,6 +5,8 @@ keywords: multi-coupling, OpenFOAM, deal.II, FSI
 summary: In this case, a fluid and two solids are coupled together using a fully-implicit multi-coupling scheme.
 ---
 
+{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/multiple-perpendicular-flaps). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+
 ## Case Setup
 
 In the following tutorial we model a fluid flowing through a channel. Two solid, elastic flaps are fixed to the floor of this channel. The flaps oscillate due to the fluid pressure building up on its surface. In this case, a fluid and two solids are coupled together using a fully-implicit multi-coupling scheme. The case setup is shown here:

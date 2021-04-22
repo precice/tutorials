@@ -5,6 +5,8 @@ keywords: CHT, steady-state, Code_Aster, OpenFOAM
 summary: Using a steady-state OpenFOAM solver for a CHT coupling with code_aster. This tutorial is based on the "flow over a heated plate" scenario.
 ---
 
+{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate-steady-state). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+
 ## Setup
 
 The setup for this tutorial is similar to the [flow over a heated plate](tutorials-flow-over-heated-plate.html) using OpenFOAM. In this tutorial OpenFOAM is used as the solver for the fluid domain, and code_aster is the solver for the solid domain. A difference here is that we are using a steady-state OpenFOAM solver for demonstration purposes, therefore the results between the two tutorials are not comparable.
