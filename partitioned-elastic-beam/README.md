@@ -17,7 +17,6 @@ We have a rectangular linear elastic beam of dimensions 1 x 1 x 8 m, divided in 
 
 * CalculiX. CalculiX is used for both structural parts. For more information, have a look at the [CalculiX adapter documentation](adapter-calculix-overview.html) for more.
 
-
 ## Running the Simulation
 
 The prepared case already contains configuration and mesh files, so that the simulation is ready to run. You can start the simulation by running the script `./run.sh` located in each participant directory. You will see both participants of the simulation running simultaneously.

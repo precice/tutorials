@@ -37,17 +37,19 @@ Solid participant:
 
 All listed solvers can be used in order to run the simulation. Open two separate terminals and start the desired fluid and solid participant by calling the respective run script `run.sh` located in the participant directory. For example:
 
-```
+```bash
 cd fluid-openfoam
 ./run.sh
 ```
+
 and
-```
+
+```bash
 cd solid-fenics
 ./run.sh
 ```
-in order to use OpenFOAM and FEniCS for this test case.
 
+in order to use OpenFOAM and FEniCS for this test case.
 
 ## Post-processing
 
@@ -56,7 +58,6 @@ How to visualize the simulation results depends on the selected solvers. Most of
 CalculiX exports results in `.frd` format, which you can visualize in CGX (`cgx flap.frd`). In the CGX window, you can click-and-hold to select different times and fields, or to animate the geometry. If you prefer to work with VTK files, you can also use tools such as [ccx2paraview](https://github.com/calculix/ccx2paraview) or a converter included in the [calculix-adapter/tools](https://github.com/precice/calculix-adapter/tree/master/tools) directory.
 
 As we defined a watchpoint on the 'Solid' participant at the flap tip (see `precice-config.xml`), we can plot it with gnuplot using the script `plot-displacement.sh.` You need to specify the directory of the selected solid participant as a command line argument, so that the script can pick-up the desired watchpoint file, e.g. `plot-displacement.sh solid-fenics`. The resulting graph shows the x displacement of the flap tip. You can modify the script to plot the force instead.
-
 
 ![Flap watchpoint](images/tutorials-perpendicular-flap-displacement-watchpoint.png)
 

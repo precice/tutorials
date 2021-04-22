@@ -31,12 +31,14 @@ Solid participant:
 
 Open two separate terminals and start each participant by calling the respective run script.
 
-```
+```bash
 cd fluid-openfoam
 ./run.sh
 ```
+
 and
-```
+
+```bash
 cd solid-dealii
 ./run.sh
 ```
@@ -48,7 +50,6 @@ You may adjust the end time in the `precice-config.xml`, or interupt the executi
 
 In the first few timesteps, many coupling iterations are required for convergence. Don't lose hope, things get better quickly.
 
-
 ## Post-processing
 
 You can visualize the results of the coupled simulation using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `fluid-openfoam.foam` file. Solid results are in VTK format.
@@ -59,7 +60,6 @@ There is an [known issue](https://github.com/precice/openfoam-adapter/issues/26)
 
 Moreover, as we defined a watchpoint at the flap tip (see `precice-config.xml`), we can plot it with gnuplot using the script `plot-displacement.sh`.  The resulting graph shows the vertical (y) displacement of the tip of the flap.
 
-
 ![FSI3 watchpoint](images/tutorials-turek-hron-fsi3-tip-plot.png)
 
 Before running the simulation again, you may want to cleanup any result files using the script `clean-tutorial.sh`.
@@ -67,11 +67,13 @@ Before running the simulation again, you may want to cleanup any result files us
 ## Mesh refinement
 
 In `fluid-openfoam/system/`, we provide three different fluid meshes:
+
 * `blockMeshDict`: the default mesh with approximately 21k cells,
 * `blockMeshDict_refined`: a refined mesh with approximately 38k cells,
 * `blockMeshDict_double_refined`: a refined mesh with approximately 46k cells.
 
 If you want to use one of the two refined meshes, simply swap the `blockMeshDict`:
+
 ```bash
 mv blockMeshDict blockMeshDict_original
 mv blockMeshDict_refined blockMeshDict

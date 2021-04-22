@@ -25,12 +25,14 @@ Both for Fluid1 and Fluid2, the following participants are available:
 
 All listed solvers can be used in order to run the simulation. Open two separate terminals and start the desired fluid1 and fluid2 participants by calling the respective run script. For example:
 
-```
+```bash
 cd fluid1-openfoam-pimplefoam
 ./run.sh
 ```
+
 and
-```
+
+```bash
 cd fluid2-openfoam-sonicliquidfoam
 ./run.sh
 ```

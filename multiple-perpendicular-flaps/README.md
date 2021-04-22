@@ -11,7 +11,7 @@ summary: In this case, a fluid and two solids are coupled together using a fully
 
 In the following tutorial we model a fluid flowing through a channel. Two solid, elastic flaps are fixed to the floor of this channel. The flaps oscillate due to the fluid pressure building up on its surface. In this case, a fluid and two solids are coupled together using a fully-implicit multi-coupling scheme. The case setup is shown here:
 
-![](images/tutorials-multiple-perpendicular-flaps-setup-two-flaps.png)
+![Setup](images/tutorials-multiple-perpendicular-flaps-setup-two-flaps.png)
 
 The simulated flow domain is 6 units long (x) and 4 units tall (z). The flaps are clamped at the bottom (z=0) and they are 1 unit tall (z), 0.1 units long (x), and 0.3 units wide (y). Being located at x=-1 and x=1, the flaps split the domain into three equal parts.
 
@@ -46,49 +46,61 @@ Most of the coupling details are specified in the file `precide-config.xml`. Her
 
 For the simulation of the solid participants we use the deal.II adapter. In deal.II, the geometry of the domain is specified directly on the solver. The two flaps in our case are essentially the same but for the x-coordinate. The flap geometry is given to the solver when we select the scenario in the '.prm' file.
 
-   ```
-   set Scenario            = PF
-   ```
+```text
+set Scenario            = PF
+```
+
 But to specify the position of the flap along the x-axis, we must specify it in the `Solid1/linear_elasticity.prm` file as follows:
 
-   ```
-   set Flap location     = -1.0
-   ```
+```text
+set Flap location     = -1.0
+```
+
 While in case of `Solid2/linear_elasticity.prm` we write:
 
-   ```
-   set Flap location     = 1.0
-   ```
+```text
+set Flap location     = 1.0
+```
+
 The scenario settings are implemented similarly for the nonlinear case.
 
 ## Running the Simulation
+
 1. Preparation:
    To run the coupled simulation, copy the deal.II executable `linear_elasticity` or `nonlinear_elasticity` into the main folder. To learn how to obtain the deal.II executable take a look at the description on the  [deal.II-adapter page](adapter-dealii-overview.html).
 2. Starting:
 
    We are going to run each solver in a different terminal. It is important that first we navigate to the simulation directory so that all solvers start in the same directory.
    To start the `Fluid` participant, run:
-   ```
+
+   ```bash
    cd fluid-openfoam
    ./run.sh
    ```
+
    to start OpenFOAM in serial or
-   ```
+
+   ```bash
    cd fluid-openfoam
    ./run.sh -parallel
    ```
+
    for a parallel run.
 
    The solid participants are only designed for serial runs. To run the `Solid1` participant, execute the corresponding deal.II binary file e.g. by:
-   ```
+
+   ```bash
    cd solid-left-dealii
    ./run.sh -linear
    ```
+
    Finally, in the third terminal we will run the solver for the `Solid2` participant by:
-   ```
+
+   ```bash
    cd solid-right-dealii
    ./run.sh -linear
    ```
+
    In case we want to run the nonlinear case, simply replace the flag`-linear` by `-nonlinear`.
 
 ## Postprocessing
@@ -100,4 +112,3 @@ After the simulation has finished, you can visualize your results using e.g. Par
 ## References
 
 [1] H. Bungartz, F. Linder, M. Mehl, B. Uekerman. A plug-and-play coupling approach for parallel multi-field simulations. 2014.
-
