@@ -1,4 +1,4 @@
-name: Lint docs and check links
+name: Lint docs
 on: [push, pull_request]
 jobs:
   check_md:
