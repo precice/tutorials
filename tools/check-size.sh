@@ -12,8 +12,8 @@ NOCOLOR='\033[0m'
 IGNORE="tools"
 tutorials=$(find . -maxdepth 1 -type d -not -name ".*" | grep -vE $IGNORE | sed "s/^.\///")
 
-echo "Limit for regular images: "${MAXIMUMSIZE}" kb"
-echo "Limit for gifs: "${MAXIMUMGIFSIZE}" kb"
+echo "Limit for regular images: ${MAXIMUMSIZE} kb"
+echo "Limit for gifs: ${MAXIMUMGIFSIZE} kb"
 # For all tutorials do
 for tutorial in $tutorials; do
   images=$(find ./"${tutorial}"/images -type f 2> /dev/null | sed "s/^.\///")

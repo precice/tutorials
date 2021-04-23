@@ -5,6 +5,8 @@ keywords: FEniCS, Nutils, Heat conduction
 summary: We solve a simple heat equation. The domain is partitioned and the coupling is established in a Dirichlet-Neumann fashion.
 ---
 
+{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+
 ## Setup
 
 We solve a partitioned heat equation. For information on the non-partitioned case, please refer to [1, p.37ff]. In this tutorial the computational domain is partitioned and coupled via preCICE. The coupling roughly follows the approach described in [2].
@@ -36,21 +38,21 @@ For choosing whether you want to run the Dirichlet-kind and a Neumann-kind parti
 
 For running the case, open two terminals run:
 
-```
+```bash
 cd fenics
 ./run.sh -d
 ```
 
 and
 
-```
+```bash
 cd fenics
 ./run.sh -n
 ```
 
 If you want to use Nutils for one or both sides of the setup, just `cd nutils`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
 
-```
+```bash
 mpirun -n <N_PROC> heat.py -d
 ```
 
@@ -60,7 +62,7 @@ You can mix the Nutils and FEniCS solver, if you like. Note that the error for a
 
 ## Visualization
 
-Output is written into the folders `fenics/out` and `nutils`. 
+Output is written into the folders `fenics/out` and `nutils`.
 
 For FEniCS you can visualize the content with paraview by opening the `*.pvd` files. The files `Dirichlet.pvd` and `Neumann.pvd` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution, the files with `error` show the error and the files with `ranks` the ranks of the solvers (if executed in parallel).
 

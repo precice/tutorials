@@ -5,10 +5,11 @@ keywords: CHT, OpenFOAM, CalculiX
 summary: Tutorial for a shell-and-tube heat exchanger, using OpenFOAM and CalculiX
 ---
 
+{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/heat-exchanger). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+
 This tutorial describes how to run a conjugate heat transfer simulation with two separate OpenFOAM solvers and CalculiX. The files for this tutorial are located in this repository (directory CHT/heat_exchanger).
 
 This tutorial is based on [a case](https://www.simscale.com/projects/cheunglucia/heat_exchanger_-_cht_simulation/) prepared with [SimScale](https://www.simscale.com/) by [Lucia Cheung Yau](https://github.com/ludcila) for her [Master's Thesis](https://www5.in.tum.de/pub/Cheung2016_Thesis.pdf).
-
 
 ## Setup
 
@@ -22,9 +23,9 @@ We define the participants `Inner-Fluid`, `Solid`, and `Outer-Fluid` and two int
 
 ## Available solvers
 
-* OpenFOAM. `buoyantSimpleFoam` is used for fluid flow (both participants). This is a solver for steady-state, buoyant, turbulent flow of compressible fluids for ventilation and heat transfer. For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
+* OpenFOAM. `buoyantSimpleFoam` is used for fluid flow (both participants). This is a solver for steady-state, buoyant, turbulent flow of compressible fluids for ventilation and heat transfer. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
-* CalculiX. For more information, have a look at the [CalculiX adapter documentation](adapter-calculix-overview.html).
+* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html).
 
 ## Running the Simulation
 

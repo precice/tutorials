@@ -19,33 +19,49 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 ## Installation
 
 1. Get and install preCICE. For Ubuntu 20.04 (Focal Fossa), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
+
     ```bash
     wget https://github.com/precice/precice/releases/download/v2.2.0/libprecice2_2.2.0_focal.deb
     sudo apt install ./libprecice2_2.2.0_focal.deb
     ```
-    - Are you using something else? Just pick what suits you best on [this overview page](installation-overview.html).
-    - Facing any problems? [Ask for help](community-channels.html).
-2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](adapter-openfoam-support.html):
+
+    - Are you using something else? Just pick what suits you best on [this overview page](https://www.precice.org/installation-overview.html).
+    - Facing any problems? [Ask for help](https://www.precice.org/community-channels.html).
+2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](https://www.precice.org/adapter-openfoam-support.html):
+
     ```bash
     # Add the signing key, add the repository, update (check this):
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash
     # Install OpenFOAM v2012:
-    sudo apt-get install openfoam2012-dev
+    sudo apt install openfoam2012-dev
+    # Enable OpenFOAM by default in your system and apply now:
+    echo "source /usr/lib/openfoam/openfoam2012/etc/bashrc" >> ~/.bashrc
+    source ~/.bashrc
     ```
-3. Download and install the [OpenFOAM-preCICE adapter](adapter-openfoam-get.html):
+
+3. Install a few common dependencies that we will need later:
+
+    ```bash
+    sudo apt install build-essential pkg-config cmake git
+    ```
+
+4. Download and install the [OpenFOAM-preCICE adapter](https://www.precice.org/adapter-openfoam-get.html):
+
     ```bash
      git clone --branch=master --depth 1 https://github.com/precice/openfoam-adapter
      cd openfoam-adapter
      ./Allwmake
      cd ..
     ```
-4. Get the quickstart tutorial case:
+
+5. Get the quickstart tutorial case:
+
     ```bash
     git clone --branch=master --depth 1 https://github.com/precice/tutorials.git
     cd tutorials/quickstart
     ```
 
-If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](installation-vm.html).
+If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](https://www.precice.org/installation-vm.html).
 
 ## Case setup
 
@@ -57,23 +73,40 @@ In order to gain more control over the rigid body oscillation, a rotational spri
 
 ## Building the rigid body solver
 
-Before starting the coupled simulation, the rigid body solver needs to be built using CMake. You can run the following commands from the `quickstart/` directory to build the `rigid_body_solver.cpp`
-```
-cd solid-cpp
+Before starting the coupled simulation, we need to build the rigid body solver. You can run the following commands from the `solid-cpp` directory to build the `rigid_body_solver.cpp`:
+
+```bash
+cd tutorials/quickstart/solid-cpp
 cmake . && make
 ```
 
 ## Running the coupled simulation
 
-You may run the two simulations in two different terminals and watch their output on the screen using `./run.sh` (or `./run.sh -parallel`, option only available for OpenFOAM) from inside the directory of each participant. You can cleanup the simulation using `./clean-tutorial.sh`.
+You may run the two simulations in two different terminals and watch their output on the screen using `./run.sh` from inside the directory of each participant:
 
-In serial, the simulation should take roughly 30 seconds to compute.
+```bash
+# Terminal window 1
+cd tutorials/quickstart/solid-cpp
+./run.sh
+```
+
+```bash
+# Terminal window 2
+cd tutorials/quickstart/fluid-openfoam
+./run.sh
+# Alternative, in parallel: ./run.sh -parallel
+```
+
+You can also run OpenFOAM in parallel: `./run.sh -parallel`.
+Before the simulation again, cleanup the results and temporary files using `./clean-tutorial.sh`.
+
+In serial, the simulation should take less than a minute to compute (simulated time: 2.5s).
 
 ## Visualizing the results
 
-You can visualize the simulation results of the `Fluid` participant using ParaView and loading the (empty) file `Fluid.foam`. The rigid body does not generate any readable output files, but the motion can be observed in the OpenFOAM data. 
+You can visualize the simulation results of the `Fluid` participant using ParaView and loading the (empty) file `fluid-openfoam/fluid-openfoam.foam`. The rigid body does not generate any readable output files, but the OpenFOAM data should be enough for now: click "play" in ParaView, the flap should already be moving! 🎉
 
-In addition, one could visualize the coupling meshes, including the exchanged coupling data. preCICE generates the relevant files during the simulation and stores them in the directory `coupling-meshes`. In order to visualize the results, load the VTK files in ParaView and apply a `Glyph` filter. Depending on the specific ParaView version, you might additionally need to disable the `ScaleArray` option by selecting `No scale array`, since the exchanged data might be inappropriate for a scaling operation. You can further add a `Warp By Vector` filter with `Displacement` to deform the coupling data. The result should look as follows:
+You may be curious what displacements OpenFOAM received from the rigid body solver. We can actually easily visualize the coupling meshes, including the exchanged coupling data: preCICE generates the relevant files during the simulation and stores them in the directory `solid-cpp/coupling-meshes`. Load these VTK files in ParaView and apply a `Glyph` filter with `Glyph Type: Arrow`,`Orientation Array: Displacement`, and `Scale Array: No scale array`. You can further add a `Warp By Vector` filter with `Displacement` to deform the coupling data. The result should look as follows:
 
 ![result](images/quickstart-result.png)
 
@@ -81,10 +114,10 @@ In addition, one could visualize the coupling meshes, including the exchanged co
 
 To become a preCICE pro:
 
-* Get an overview of the [preCICE docs](docs.html).
-* See what users talk about in the [preCICE forum](https://precice.discourse.group/).
-* Run [tutorials with other coupled solvers](tutorials.html).
-* Watch some [preCICE videos](https://www.youtube.com/c/preCICECoupling/).
-* Meet our [community](community.html).
-* Find out how to [couple your own solver](couple-your-code-overview.html).
-* Tell us [your story](community-projects.html).
+- Get an overview of the [preCICE docs](https://www.precice.org/docs.html).
+- See what users talk about in the [preCICE forum](https://precice.discourse.group/).
+- Run [tutorials with other coupled solvers](https://www.precice.org/tutorials.html).
+- Watch some [preCICE videos](https://www.youtube.com/c/preCICECoupling/).
+- Meet our [community](https://www.precice.org/community.html).
+- Find out how to [couple your own solver](https://www.precice.org/couple-your-code-overview.html).
+- Tell us [your story](https://www.precice.org/community-projects.html).

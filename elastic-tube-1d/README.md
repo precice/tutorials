@@ -5,6 +5,7 @@ keywords: OpenFOAM, python
 summary: The 1D Elastic Tube is a FSI case, that consists of an internal flow in a flexible tube. The flow is unsteady and incompressible. This tutorial contains C++ and Python variants of the fluid and solid solvers. Running the simulation takes just 1-2 minutes.  
 ---
 
+{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/elastic-tube-1d). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
 
 ## Setup
 
@@ -12,9 +13,10 @@ We want to simulate the internal flow in a flexible tube as shown in the figure 
 
 ![FSI3 setup](images/tutorials-elastic-tube-1d-setup.png)
 
-The flow is assumed to be incompressible flow and gravity is neglected. Due to the axisymmetry, the flow can be described using a quasi-two-dimensional continuity and momentum equations. The motivation and exact formulation of the equations that we consider can be found in [2]. 
+The flow is assumed to be incompressible flow and gravity is neglected. Due to the axisymmetry, the flow can be described using a quasi-two-dimensional continuity and momentum equations. The motivation and exact formulation of the equations that we consider can be found in [2].
 
 The following parameters have been chosen:
+
 - Length of the tube: L = 10
 - Inlet velocity: $$ v_{inlet} = 10 + 3 sin (10 \pi t) $$
 - Initial cross sectional area = 1
@@ -23,27 +25,25 @@ The following parameters have been chosen:
 - Fluid density: $$ \rho = 1 $$
 - Young modulus: E = 10000
 
-
 ## Available solvers
 
 Both fluid and solid participant are supported in:
 
-* *C++*: An example solver using the intrinsic [C++ API of preCICE](couple-your-code-api.html). This solver also depends on LAPACK (e.g. on Ubuntu `sudo apt-get install liblapack-dev`)
-* *Python*: An example solver using the preCICE [Python bindings](installation-bindings-python.html). This solver also depends on the Python libraries `numpy scipy matplotlib vtk mpi4py`, which you can get from your system package manager or with `pip3 install --user <package>`.
-
+- *C++*: An example solver using the intrinsic [C++ API of preCICE](https://www.precice.org/couple-your-code-api.html). This solver also depends on LAPACK (e.g. on Ubuntu `sudo apt-get install liblapack-dev`)
+- *Python*: An example solver using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy scipy matplotlib vtk mpi4py`, which you can get from your system package manager or with `pip3 install --user <package>`.
 
 ### Building the C++ Solver
 
 In order to use the C++ solver, you first need to build the scripts `FluidSolver` and `SolidSolver`. Each script needs to be built separately.
 
-```
+```bash
 cd fluid-cpp
 mkdir build && cd build
 cmake ..
 make all
 ```
 
-```
+```bash
 cd solid-cpp
 mkdir build && cd build
 cmake .. 
@@ -52,38 +52,43 @@ make all
 
 Building can be skipped if you do not plan to use the C++ version.  
 
-## Running the Simulation 
+## Running the Simulation
 
 ### C++
 
-Open two separate terminals and start each participant by calling the respective run script. 
+Open two separate terminals and start each participant by calling the respective run script.
 
-```
+```bash
 cd fluid-cpp
 ./run.sh
 ```
+
 and
-```
+
+```bash
 cd solid-cpp
 ./run.sh
 ```
 
-The solvers use the parameters `N = 100`, `tau = 0.01`, `kappa = 100` by default and can be modified in the solver. 
+The solvers use the parameters `N = 100`, `tau = 0.01`, `kappa = 100` by default and can be modified in the solver.
 
 ### Python
 
 Open two separate terminals and start each participant by calling the respective run script. Only serial run is possible:
 
-```
+```bash
 cd fluid-python
 ./run.sh
 ```
+
 and
-```
+
+```bash
 cd solid-python
 ./run.sh
 ```
-Parameters such as `N` can be modified directly at the `FluidSolver.py` and at the `SolidSolver.py`. The parameters must be consistent between the different solvers and participants. 
+
+Parameters such as `N` can be modified directly at the `FluidSolver.py` and at the `SolidSolver.py`. The parameters must be consistent between the different solvers and participants.
 
 **Optional:** Visualization and video output of the fluid participant can be triggered via the options `--enable-plot` and `--write-video` of `FluidSolver.py`. To generate .vtk files during execution, you need to add the flag `--write-vtk`.
 
@@ -94,21 +99,27 @@ Parameters such as `N` can be modified directly at the `FluidSolver.py` and at t
 ## Post-processing
 
 The results from each simulation are stored in each `fluid-<participant>/output/` folder. You can visualize these VTK files using the provided `plot-diameter.sh` script
+
 ```bash
 ./plot-diameter.sh
 ```
+
 which will try to visualize the results from both fluid cases, if available.
 
 This script calls the more flexible `plot-vtk.py` Python script, which you can use as
+
 ```bash
 python3 plot-vtk.py <quantity> <case>/output/<prefix>
 ```
+
 Note the required arguments specifying which quantity to plot (`pressure`, `velocity` or `diameter`) and the name prefix of the target vtk files.
 
-For example, to plot the diameter of the fluid-python case using the default prefix for VTK files, `plot-diamter.sh` executes:
+For example, to plot the diameter of the fluid-python case using the default prefix for VTK files, `plot-diameter.sh` executes:
+
 ```bash
 python3 plot-vtk.py diameter fluid-python/output/out_fluid_
 ```
+
 ![FSI3 setup](images/tutorials-elastic-tube-1d-diameter.png)
 
 ## References
@@ -119,8 +130,3 @@ python3 plot-vtk.py diameter fluid-python/output/out_fluid_
 
 [3] M. Mehl, B. Uekermann, H. Bijl, D. Blom, B. Gatzhammer, and A. van Zuijlen.
 Parallel coupling numerics for partitioned fluid-structure interaction simulations. CAMWA, 2016.  
-
-
-
-
-
