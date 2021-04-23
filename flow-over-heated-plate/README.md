@@ -23,27 +23,30 @@ By default, the fluid participant reads heat-flux values and the solid participa
 
 Fluid participant:
 
-* OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
+* OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
 Solid participant:
 
-* OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](adapter-openfoam-overview.html).
+* OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
-* FEniCS. For more information, have a look at the [FeniCS adapter documentation](adapter-fenics.html).
+* FEniCS. For more information, have a look at the [FeniCS adapter documentation](https://www.precice.org/adapter-fenics.html).
 
 ## Running the Simulation
 
 All listed solvers can be used in order to run the simulation. Open two separate terminals and start the desired fluid and solid participant by calling the respective run script `run.sh` located in the participant directory. For example:
 
-```
+```bash
 cd fluid-openfoam
 ./run.sh
 ```
+
 and
-```
+
+```bash
 cd solid-fenics
 ./run.sh
 ```
+
 in order to use OpenFOAM and FEniCS for this test case. Feel free to try different combinations, they should all run and give approximately similar results.
 
 ## Post-processing
@@ -65,7 +68,7 @@ You may use additional filters, such as the Calculator and the Plot Over Line, t
 
 First generate the output for each run by adding export to the participant `Solid` in `precice-config.xml`:
 
-```
+```xml
 <participant name="Solid">
   <export:vtk directory="preCICE-output" />
   <use-mesh name="Fluid-Mesh" from="Fluid" />
@@ -76,7 +79,7 @@ First generate the output for each run by adding export to the participant `Soli
 
 After that running a case from this tutorial will export data into `solid-*/preCICE-output`. To visualize and compare these results run `python3 plot-final-interface-temperature.py` (You can install the required python packages by running `pip3 install -r plot-final-interface-temperature-requirements.txt`). This will plot the dimensionless temperature `theta = (T-300)/(310-300)` (with `T` being the temperature) across the coupling interface, i.e. where the solid and the fluid meet and exchange heat. The x-axis shows the x coordinate and the y-axis the dimensionless temperature `theta` at the interface. If you want to exclude certain cases, simply comment out the corresponding lines in the script. For reference see below:
 
-![](images/tutorials-flow-over-heated-plate-results-comparison.png)
+![Comparison of the results with different solvers](images/tutorials-flow-over-heated-plate-results-comparison.png)
 
 ## References
 
