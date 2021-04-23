@@ -10,5 +10,5 @@ jobs:
         uses: articulate/actions-markdownlint@v1
         with:
           config: .markdownlint.json
-          files: '. !.github'
-          ignore: changelog-entries
+          files: '.'
+          ignore: changelog-entries .github
