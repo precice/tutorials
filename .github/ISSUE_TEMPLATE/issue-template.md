@@ -3,6 +3,7 @@ name: Issue template
 about: Check this out before opening an issue
 
 ---
+<!-- markdownlint-disable-file MD041 -->
 <!-- 
        Hey! Thank you for reporting an issue!
        Just to make sure: is this really an issue or do you need some help
