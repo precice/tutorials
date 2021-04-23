@@ -15,7 +15,7 @@ We have a rectangular linear elastic beam of dimensions 1 x 1 x 8 m, divided in 
 
 ## Available solvers
 
-* CalculiX. CalculiX is used for both structural parts. For more information, have a look at the [CalculiX adapter documentation](adapter-calculix-overview.html) for more.
+* CalculiX. CalculiX is used for both structural parts. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html) for more.
 
 ## Running the Simulation
 
