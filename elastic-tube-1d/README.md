@@ -114,7 +114,7 @@ python3 plot-vtk.py <quantity> <case>/output/<prefix>
 
 Note the required arguments specifying which quantity to plot (`pressure`, `velocity` or `diameter`) and the name prefix of the target vtk files.
 
-For example, to plot the diameter of the fluid-python case using the default prefix for VTK files, `plot-diamter.sh` executes:
+For example, to plot the diameter of the fluid-python case using the default prefix for VTK files, `plot-diameter.sh` executes:
 
 ```bash
 python3 plot-vtk.py diameter fluid-python/output/out_fluid_
