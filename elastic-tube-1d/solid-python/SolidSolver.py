@@ -17,11 +17,8 @@ L = 10  # length of tube/simulation domain
 E = 10000  # elasticity module
 c_mk = np.sqrt(E / 2 / r0)  # wave speed
 
-
 def crossSection0(N):
     return a0 * np.ones(N + 1)
-
-###############
 
 
 print("Starting Solid Solver...")
@@ -38,14 +35,10 @@ except SystemExit:
     print("Try '$ python SolidSolver.py precice-config.xml'")
     quit()
 
-configFileName = args.configurationFileName
-
 print("N: " + str(N))
 
-solverName = "Solid"
-
 print("Configure preCICE...")
-interface = precice.Interface(solverName, configFileName, 0, 1)
+interface = precice.Interface("Solid", args.configurationFileName, 0, 1)
 print("preCICE configured...")
 
 dimensions = interface.get_dimensions()

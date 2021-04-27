@@ -6,14 +6,34 @@ import outputConfiguration as config
 from thetaScheme import perform_partitioned_implicit_trapezoidal_rule_step, perform_partitioned_implicit_euler_step
 import numpy as np
 import tubePlotting
-
 import matplotlib.pyplot as plt
 import matplotlib.animation as manimation
-
 from output import writeOutputToVTK
-
 import precice
 from precice import action_write_initial_data, action_write_iteration_checkpoint, action_read_iteration_checkpoint
+
+# physical properties of the tube
+r0 = 1 / np.sqrt(np.pi)  # radius of the tube
+a0 = r0**2 * np.pi  # cross sectional area
+u0 = 10  # mean velocity
+ampl = 3  # amplitude of varying velocity
+frequency = 10  # frequency of variation
+t_shift = 0  # temporal shift of variation
+p0 = 0  # pressure at outlet
+kappa = 100
+
+L = 10  # length of tube/simulation domain
+N = 100
+dx = L / kappa
+# helper function to create constant cross section
+
+def velocity_in(t): return u0 + ampl * np.sin(frequency *
+                                              (t + t_shift) * np.pi)  # inflow velocity
+
+
+def crossSection0(N):
+    return a0 * np.ones(N + 1)
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("configurationFileName", help="Name of the xml precice configuration file.",
@@ -44,39 +64,10 @@ writeVideoToFile = True if args.write_video else False
 
 print("Starting Fluid Solver...")
 
-configFileName = args.configurationFileName
-
-# physical properties of the tube
-r0 = 1 / np.sqrt(np.pi)  # radius of the tube
-a0 = r0**2 * np.pi  # cross sectional area
-u0 = 10  # mean velocity
-ampl = 3  # amplitude of varying velocity
-frequency = 10  # frequency of variation
-t_shift = 0  # temporal shift of variation
-p0 = 0  # pressure at outlet
-kappa = 100
-
-
-def velocity_in(t): return u0 + ampl * np.sin(frequency *
-                                              (t + t_shift) * np.pi)  # inflow velocity
-
-
-L = 10  # length of tube/simulation domain
-N = 100
-dx = L / kappa
-# helper function to create constant cross section
-
-
-def crossSection0(N):
-    return a0 * np.ones(N + 1)
-
-
 print("N: " + str(N))
 
-solverName = "Fluid"
-
 print("Configure preCICE...")
-interface = precice.Interface(solverName, configFileName, 0, 1)
+interface = precice.Interface("Fluid", args.configurationFileName, 0, 1)
 print("preCICE configured...")
 
 dimensions = interface.get_dimensions()
@@ -110,11 +101,10 @@ grid[:, 1] = 0  # y component, leave blank
 vertexIDs = interface.set_mesh_vertices(meshID, grid)
 
 t = 0
-precice_dt = 0.01
 
 print("Fluid: init precice...")
 # preCICE defines timestep size of solver via precice-config.xml
-interface.initialize()
+precice_dt = interface.initialize()
 
 if interface.is_action_required(action_write_initial_data()):
     interface.write_block_scalar_data(pressureID, vertexIDs, pressure)
