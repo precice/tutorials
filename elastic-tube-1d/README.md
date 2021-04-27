@@ -25,7 +25,7 @@ The following parameters have been chosen:
 - Fluid density: $$ \rho = 1 $$
 - Young modulus: E = 10000
 
-Additionally the solvers use the parameters `N = 100`, `tau = 0.01`, `kappa = 100` by default and can be modified in the solver.
+Additionally the solvers use the parameters `N = 100`, `tau = 0.01`, `kappa = 100` by default. These values can be modified directly in each solver.
 
 ## Available solvers
 
