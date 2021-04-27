@@ -112,3 +112,5 @@ After the simulation has finished, you can visualize your results using e.g. Par
 ## References
 
 [1] H. Bungartz, F. Linder, M. Mehl, B. Uekerman. A plug-and-play coupling approach for parallel multi-field simulations. 2014.
+
+{% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
