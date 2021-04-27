@@ -10,7 +10,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as manimation
 from output import writeOutputToVTK
 import precice
-from precice import action_write_initial_data, action_write_iteration_checkpoint, action_read_iteration_checkpoint
+from precice import action_write_initial_data, action_write_iteration_checkpoint, \
+    action_read_iteration_checkpoint
 
 # physical properties of the tube
 r0 = 1 / np.sqrt(np.pi)  # radius of the tube
@@ -26,6 +27,7 @@ L = 10  # length of tube/simulation domain
 N = 100
 dx = L / kappa
 # helper function to create constant cross section
+
 
 def velocity_in(t): return u0 + ampl * np.sin(frequency *
                                               (t + t_shift) * np.pi)  # inflow velocity
