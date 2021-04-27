@@ -5,7 +5,7 @@ import sys
 import argparse
 import numpy as np
 import precice
-from precice import *
+from precice import action_write_initial_data, action_read_iteration_checkpoint, action_write_iteration_checkpoint
 
 
 r0 = 1 / np.sqrt(np.pi)  # radius of the tube

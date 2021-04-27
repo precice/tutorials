@@ -13,7 +13,7 @@ import matplotlib.animation as manimation
 from output import writeOutputToVTK
 
 import precice
-from precice import *
+from precice import action_write_initial_data, action_write_iteration_checkpoint, action_read_iteration_checkpoint
 
 parser = argparse.ArgumentParser()
 parser.add_argument("configurationFileName", help="Name of the xml precice configuration file.",
