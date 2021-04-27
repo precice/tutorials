@@ -25,6 +25,8 @@ The following parameters have been chosen:
 - Fluid density: $$ \rho = 1 $$
 - Young modulus: E = 10000
 
+Additionally the solvers use the parameters `N = 100`, `tau = 0.01`, `kappa = 100` by default and can be modified in the solver.
+
 ## Available solvers
 
 Both fluid and solid participant are supported in:
@@ -70,8 +72,6 @@ cd solid-cpp
 ./run.sh
 ```
 
-The solvers use the parameters `N = 100`, `tau = 0.01`, `kappa = 100` by default and can be modified in the solver.
-
 ### Python
 
 Open two separate terminals and start each participant by calling the respective run script. Only serial run is possible:
@@ -88,15 +88,11 @@ cd solid-python
 ./run.sh
 ```
 
-Parameters such as `N` can be modified directly at the `FluidSolver.py` and at the `SolidSolver.py`. The parameters must be consistent between the different solvers and participants.
-
-**Optional:** Visualization and video output of the fluid participant can be triggered via the options `--enable-plot` and `--write-video` of `FluidSolver.py`. To generate .vtk files during execution, you need to add the flag `--write-vtk`.
-
-![Elastic tube animation](images/tutorials-elastic-tube-1d-animation.gif)
-
 {% include warning.html content= "The C++ and Python solvers lead to different results. Please consider the Python results as the correct ones and refer to this [open issue](https://github.com/precice/tutorials/issues/195) for more insight. Contributions are particularly welcome here." %}
 
 ## Post-processing
+
+![Elastic tube animation](images/tutorials-elastic-tube-1d-animation.gif)
 
 The results from each simulation are stored in each `fluid-<participant>/output/` folder. You can visualize these VTK files using the provided `plot-diameter.sh` script
 
@@ -104,9 +100,7 @@ The results from each simulation are stored in each `fluid-<participant>/output/
 ./plot-diameter.sh
 ```
 
-which will try to visualize the results from both fluid cases, if available.
-
-This script calls the more flexible `plot-vtk.py` Python script, which you can use as
+which will try to visualize the results from both fluid cases, if available. This script calls the more flexible `plot-vtk.py` Python script, which you can use as
 
 ```bash
 python3 plot-vtk.py <quantity> <case>/output/<prefix>
