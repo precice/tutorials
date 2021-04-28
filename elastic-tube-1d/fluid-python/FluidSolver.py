@@ -41,8 +41,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument("configurationFileName", help="Name of the xml precice configuration file.",
                     nargs='?', type=str, default="../precice-config.xml")
 parser.add_argument(
-    "--write-vtk", help="Save vtk files of each timestep in the 'VTK' folder.", action='store_true')
-parser.add_argument(
     "--enable-plot", help="Show a continuously updated plot of the tube while simulating.", action='store_true')
 parser.add_argument("--write-video", help="Save a video of the simulation as 'writer_test.mp4'. \
                     NOTE: This requires 'enable_plot' to be active!", action='store_true')
@@ -55,7 +53,6 @@ except SystemExit:
     print("Try '$ python FluidSolver.py precice-config.xml'")
     quit()
 
-output_mode = config.OutputModes.VTK if args.write_vtk else config.OutputModes.OFF
 plotting_mode = config.PlottingModes.VIDEO if args.enable_plot else config.PlottingModes.OFF
 if args.write_video and not args.enable_plot:
     print("")
@@ -63,6 +60,8 @@ if args.write_video and not args.enable_plot:
     print("Please supply both the '--enable-plot' and '--write-video' flags.")
     quit()
 writeVideoToFile = True if args.write_video else False
+
+print("Plotting Mode: {}".format(plotting_mode))
 
 print("Starting Fluid Solver...")
 
@@ -80,7 +79,6 @@ pressure = p0 * np.ones(N + 1)
 pressure_old = p0 * np.ones(N + 1)
 crossSectionLength = a0 * np.ones(N + 1)
 crossSectionLength_old = a0 * np.ones(N + 1)
-
 
 if plotting_mode == config.PlottingModes.VIDEO:
     fig, ax = plt.subplots(1)
@@ -153,9 +151,9 @@ while interface.is_coupling_ongoing():
         velocity_old = np.copy(velocity)
         pressure_old = np.copy(pressure)
         crossSectionLength_old = np.copy(crossSectionLength)
-        if output_mode is config.OutputModes.VTK:
-            writeOutputToVTK(time_it, "out_fluid_", dx, datanames=["velocity", "pressure", "diameter"], data=[
-                             velocity_old, pressure_old, crossSectionLength_old])
+
+        writeOutputToVTK(time_it, "out_fluid_", dx, datanames=["velocity", "pressure", "diameter"], data=[
+                        velocity_old, pressure_old, crossSectionLength_old])
         time_it += 1
 
 print("Exiting FluidSolver")
