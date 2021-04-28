@@ -88,6 +88,8 @@ cd solid-python
 ./run.sh
 ```
 
+**Optional:** A run-time plot visualization can be trigged by passing the `--enable-plot` execution command in `run.sh` of `FluidSolver.py`.
+
 {% include warning.html content= "The C++ and Python solvers lead to different results. Please consider the Python results as the correct ones and refer to this [open issue](https://github.com/precice/tutorials/issues/195) for more insight. Contributions are particularly welcome here." %}
 
 ## Post-processing
