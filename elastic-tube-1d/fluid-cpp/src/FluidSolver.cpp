@@ -72,11 +72,9 @@ int main(int argc, char **argv)
 
   interface.setMeshVertices(meshID, chunkLength, grid.data(), vertexIDs.data());
 
-  std::cout << "Initialize preCICE..." << std::endl;
-  interface.initialize();
-
   double t  = 0.0;
-  double dt = 0.01;
+  std::cout << "Initialize preCICE..." << std::endl;
+  double dt = interface.initialize();
 
   if (interface.isActionRequired(actionWriteInitialData())) {
     interface.writeBlockScalarData(pressureID, chunkLength, vertexIDs.data(), pressure.data());
@@ -102,7 +100,6 @@ int main(int argc, char **argv)
     if (interface.isActionRequired(actionWriteIterationCheckpoint())) {
       interface.markActionFulfilled(actionWriteIterationCheckpoint());
     }
-
     
     if (interface.isReadDataAvailable()) {
       interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
