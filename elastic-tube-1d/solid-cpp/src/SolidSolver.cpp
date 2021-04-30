@@ -45,11 +45,10 @@ int main(int argc, char **argv)
 
   std::vector<int> vertexIDs(chunkLength);
   interface.setMeshVertices(meshID, chunkLength, grid.data(), vertexIDs.data());
-  std::cout << "Initialize preCICE..." << std::endl;
-  interface.initialize();
 
   double t  = 0;
-  double dt = 0.01;
+  std::cout << "Initialize preCICE..." << std::endl;
+  double dt = interface.initialize();
 
   if (interface.isActionRequired(actionWriteInitialData())) {
     interface.writeBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
