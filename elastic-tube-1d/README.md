@@ -25,7 +25,7 @@ The following parameters have been chosen:
 - Fluid density: $$ \rho = 1 $$
 - Young modulus: E = 10000
 
-Additionally the solvers use the parameters `N = 100`, `tau = 0.01`, `kappa = 100` by default. These values can be modified directly in each solver.
+Additionally the solvers use the parameters `N = 100` (number of cells), `tau = 0.01` (dimensionless timestep size), `kappa = 100` (dimensionless structural stiffness) by default. These values can be modified directly in each solver.
 
 ## Available solvers
 
