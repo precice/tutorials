@@ -1,0 +1,24 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createPatchDict;
+}
+
+pointSync true;
+
+patches
+(
+    {
+        name heatSource;
+
+        patchInfo
+        {
+            type patch;
+        }
+
+        constructFrom set;
+        set heatSourceSet;
+    }
+);

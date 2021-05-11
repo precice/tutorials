@@ -1,0 +1,46 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      T;
+}
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 8;
+
+boundaryField
+{
+    interface
+    {
+        type            fixedGradient;
+        gradient        uniform 0;
+    }
+
+    heatSink
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+    
+    right
+    {
+        type            zeroGradient;
+    }
+    
+    top
+    {
+        type            zeroGradient;   
+    }
+    
+    bottom
+    {
+        type            zeroGradient;   
+    }
+    
+    defaultFaces
+    {
+        type            empty;
+    }
+}

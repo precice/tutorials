@@ -1,0 +1,19 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+actions
+(
+    {
+        name        heatSink;
+        type        cellSet;
+        action      new;
+        source      sphereToCell;
+        origin      (2 1 0);
+        radius      0.1;
+    }
+);
