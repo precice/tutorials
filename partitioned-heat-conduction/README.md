@@ -53,7 +53,7 @@ cd fenics
 If you want to use Nutils for one or both sides of the setup, just `cd nutils`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
 
 ```bash
-mpirun -n <N_PROC> heat.py -d
+mpirun -n <N_PROC> python3 heat.py -d
 ```
 
 ### Note on the combination of Nutils & FEniCS
