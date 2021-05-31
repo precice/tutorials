@@ -170,7 +170,7 @@ f.t = t + dt(0)
 
 if problem is ProblemType.DIRICHLET:
     flux = Function(V_g)
-    flux.rename("Flux", "")
+    flux.rename("Heat-Flux", "")
 
 while precice.is_coupling_ongoing():
 
