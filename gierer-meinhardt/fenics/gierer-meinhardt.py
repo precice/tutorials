@@ -50,24 +50,23 @@ u = TrialFunction(V)
 
 v = TestFunction(V)
 u_n = Function(V)
-#u_ini = Expression("x[0]*x[1]", degree=1)
-#u_n = interpolate(u_ini, V)
+u_ini = Expression("x[0]*x[1]", degree=1)
+u_n = interpolate(u_ini, V)
 
 dt = precice.initialize(AllDomain(), read_function_space=V, write_object=u_n)
-volume_term = Expression("x[0]*x[1]", degree=1) 
-#volume_term = precice.create_coupling_expression()
+volume_term = precice.create_coupling_expression()
+f = Function(V)
 
 print(precice._fenics_vertices)
 
 dt_inv = Constant(1/dt)
 
+# from https://github.com/sebapersson/Master_thesis/blob/1643193a8f786674ce0573518162c0497306935d/Code/Python/RD_models/Simulate_RD_models.py#L342-L355
 if args.activator:
-    F = dt_inv*(u - u_n)*v*dx - gamma*(a - u + u*volume_term)*v*dx + inner(grad(u), grad(v))*dx
-    #F = dt_inv*(u - u_n)*v*dx - gamma*(a - u + u**2*volume_term)*v*dx + inner(grad(u), grad(v))*dx
+    F = dt_inv*(u - u_n)*v*dx - gamma*(a - b * u + u / f) * v *dx + inner(grad(u), grad(v))*dx
+    #F = dt_inv*(u - u_n)*v*dx - gamma*(a - b * u + u**2 / f) * v *dx + inner(grad(u), grad(v))*dx
 elif args.inhibitor:
-    F = dt_inv*(u - u_n)*v*dx - gamma*(b - (volume_term**2)*u)*v*dx + d*inner(grad(u), grad(v))*dx
-
-a, L = lhs(F), rhs(F)
+    F = dt_inv*(u - u_n)*v*dx - gamma*(f**2 - u)*v*dx + d*inner(grad(u), grad(v))*dx
 
 # Time-stepping
 u_np1 = Function(V)
@@ -106,25 +105,15 @@ while precice.is_coupling_ongoing():
     read_data = precice.read_data()    
 
     # Update the coupling expression with the new read data
-    #precice.update_coupling_expression(volume_term, read_data)
+    precice.update_coupling_expression(volume_term, read_data)
+    f.assign(interpolate(volume_term, V))
 
     dt_inv.assign(1/dt)
 
     # Compute solution u^n+1, use bcs u^n and coupling bcs
+    a, L = lhs(F), rhs(F)
     solve(a == L, u_np1)
     #solve(F == 0, u_np1)
-
-    """
-    # From https://github.com/sebapersson/Master_thesis/blob/1643193a8f786674ce0573518162c0497306935d/Code/Python/RD_models/Simulate_RD_models.py#L388-L395
-    # Iterate 10-times when trying to solve the problem
-    # In the future look into explicit stepping 
-    for m in range(0, 10):
-        A = assemble(derivative(F, u), keep_diagonal = True) # Define the derivative
-        R = assemble(F) # Define the right hand side
-        A.ident_zeros() # Fix "zero"-rows to get consistent system
-        solve(A, dU.vector(), R) # Solver matrix system
-        u.assign(u - dU) # Update solution one step  
-    """
 
     # Write data to preCICE according to which problem is being solved
     precice.write_data(u_np1)
