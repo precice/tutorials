@@ -72,8 +72,10 @@ a, L = lhs(F), rhs(F)
 # Time-stepping
 u_np1 = Function(V)
 if args.activator:
+    u_n.rename("Substance", "")
     u_np1.rename("Substance", "")
 elif args.inhibitor:
+    u_n.rename("Antagonist", "")
     u_np1.rename("Antagonist", "")
 
 t = 0
