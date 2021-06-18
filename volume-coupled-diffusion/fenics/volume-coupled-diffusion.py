@@ -54,14 +54,14 @@ f = Function(V)
 
 print(precice._fenics_vertices)
 
-dt_inv = Constant(1/dt)
+dt_inv = Constant(1 / dt)
 
 diffusion_source = 1
 diffusion_drain = 1
 if args.source:
-    F = dt_inv*(u - u_n)*v*dx - (f-u_ini) * v * dx + diffusion_source * inner(grad(u), grad(v))*dx
+    F = dt_inv * (u - u_n) * v * dx - (f - u_ini) * v * dx + diffusion_source * inner(grad(u), grad(v)) * dx
 elif args.drain:
-    F = dt_inv*(u - u_n)*v*dx - (f-u) * v * dx + diffusion_drain * inner(grad(u), grad(v))*dx
+    F = dt_inv * (u - u_n) * v * dx - (f - u) * v * dx + diffusion_drain * inner(grad(u), grad(v)) * dx
 
 # Time-stepping
 u_np1 = Function(V)
@@ -103,7 +103,7 @@ while precice.is_coupling_ongoing():
     precice.update_coupling_expression(volume_term, read_data)
     f.assign(interpolate(volume_term, V))
 
-    dt_inv.assign(1/dt)
+    dt_inv.assign(1 / dt)
 
     # Compute solution u^n+1, use bcs u^n and coupling bcs
     a, L = lhs(F), rhs(F)
