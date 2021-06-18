@@ -41,7 +41,7 @@
 
     <coupling-scheme:serial-implicit>
       <participants first="Activator" second="Inhibitor"/>
-      <max-time value="10.0"/>
+      <max-time value="1.0"/>
       <time-window-size value="0.1"/>
       <max-iterations value="100"/>
       <exchange data="Substance" mesh="Activator-Mesh" from="Activator" to="Inhibitor" />

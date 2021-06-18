@@ -30,10 +30,9 @@ elif args.inhibitor:
 
 # from https://github.com/sebapersson/Master_thesis/blob/1643193a8f786674ce0573518162c0497306935d/Code/Python/RD_models/Run_RD_simulations.py#L21
 a = Constant(0.5)
-b = Constant(1.0)
-gamma = Constant(0.4)
-d = Constant(0.001)
-e = Constant(0.001)
+b = Constant(2.0)
+gamma = Constant(20)
+d = Constant(50)
 
 mesh = UnitSquareMesh(10, 10)
 
@@ -51,11 +50,7 @@ u = TrialFunction(V)
 
 v = TestFunction(V)
 u_n = Function(V)
-if args.activator:
-    u_ini = Expression("x[0] * x[1]", degree=1)
-    g = Expression("x[0] * x[0] * x[0]", degree=1)
-elif args.inhibitor:
-    u_ini = Expression("10*(1-x[0])*(1-x[0]) * (1-x[1])*(1-x[1])", degree=1)
+u_ini = Expression("x[0]*x[1]", degree=1)
 u_n = interpolate(u_ini, V)
 
 dt = precice.initialize(AllDomain(), read_function_space=V, write_object=u_n)
@@ -68,9 +63,10 @@ dt_inv = Constant(1/dt)
 
 # from https://github.com/sebapersson/Master_thesis/blob/1643193a8f786674ce0573518162c0497306935d/Code/Python/RD_models/Simulate_RD_models.py#L342-L355
 if args.activator:
-    F = - dt_inv * (u - u_n)*v*dx - f*v*dx - 10e-7 * inner(grad(u), grad(v))*dx + g * v * dx
+    F = dt_inv*(u - u_n)*v*dx - gamma*(a - b * u + u / f) * v *dx + inner(grad(u), grad(v))*dx
+    #F = dt_inv*(u - u_n)*v*dx - gamma*(a - b * u + u**2 / f) * v *dx + inner(grad(u), grad(v))*dx
 elif args.inhibitor:
-    F = - dt_inv * (u - u_n)*v*dx + 10 * f*v*dx - 10e-5 * inner(grad(u), grad(v))*dx
+    F = dt_inv*(u - u_n)*v*dx - gamma*(f**2 - u)*v*dx + d*inner(grad(u), grad(v))*dx
 
 # Time-stepping
 u_np1 = Function(V)
