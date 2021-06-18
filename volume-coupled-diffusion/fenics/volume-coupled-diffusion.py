@@ -1,5 +1,5 @@
-from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
-    File, solve, lhs, rhs, dx, UnitSquareMesh, SubDomain, inner, grad, MeshFunction, MPI, interpolate, assemble, derivative, FiniteElement, dot
+from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, File, \
+    solve, lhs, rhs, dx, UnitSquareMesh, SubDomain, inner, grad, MeshFunction, MPI, interpolate
 from fenicsprecice import Adapter
 import numpy as np
 import argparse
@@ -9,9 +9,11 @@ class AllDomain(SubDomain):
     def inside(self, x, on_boundary):
         return True
 
+
 class AllBoundary(SubDomain):
     def inside(self, x, on_boundary):
         return on_boundary
+
 
 class RightBoundary(SubDomain):
     def inside(self, x, on_boundary):
@@ -20,8 +22,7 @@ class RightBoundary(SubDomain):
 
 parser = argparse.ArgumentParser(description="Solving a volume coupled problem")
 command_group = parser.add_mutually_exclusive_group(required=True)
-command_group.add_argument("-s", "--source", help="create a source", dest="source",
-                           action="store_true")
+command_group.add_argument("-s", "--source", help="create a source", dest="source", action="store_true")
 command_group.add_argument("-d", "--drain", help="create a drain", dest="drain", action="store_true")
 args = parser.parse_args()
 
@@ -37,16 +38,14 @@ u = TrialFunction(V)
 v = TestFunction(V)
 u_n = Function(V)
 if args.source:
-    #u_ini = Expression("x[0]*x[1]*(x[0]-1)*(x[1]-1)", degree=4)
-    u_ini = Expression("1", degree=1)    
+    u_ini = Expression("1", degree=1)
     bc = DirichletBC(V, u_ini, AllBoundary())
-elif args.drain:    
+elif args.drain:
     u_ini = Expression("0", degree=1)
     bc = DirichletBC(V, u_ini, RightBoundary())
 
 
 u_n = interpolate(u_ini, V)
-
 
 
 dt = precice.initialize(AllDomain(), read_function_space=V, write_object=u_n)
@@ -98,7 +97,7 @@ while precice.is_coupling_ongoing():
     if precice.is_action_required(precice.action_write_iteration_checkpoint()):
         precice.store_checkpoint(u_n, t, n)
 
-    read_data = precice.read_data()    
+    read_data = precice.read_data()
 
     # Update the coupling expression with the new read data
     precice.update_coupling_expression(volume_term, read_data)
