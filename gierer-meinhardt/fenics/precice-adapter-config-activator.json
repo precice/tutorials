@@ -1,9 +1,0 @@
-{
-  "participant_name": "Activator",
-  "config_file_name": "../precice-config.xml",
-  "interface": {
-      "coupling_mesh_name": "Activator-Mesh",
-      "write_data_name": "Substance",
-      "read_data_name": "Antagonist"
-    }
-}
