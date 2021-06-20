@@ -22,7 +22,7 @@ jobs:
     - name: Install solvers and dependencies (considering cache)
       uses: airvzxf/cache-anything-new-action@v1.0.1
       with:
-        script: 'install-solvers-dependencies.sh'
+        script: 'install-dependencies.sh'
         is_cached: ${{ steps.cache-id.outputs.cache-hit }}
         cache: ${{ runner.temp }}/cache-directory
         snapshot: '/'
