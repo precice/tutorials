@@ -6,23 +6,20 @@ on:
   schedule:
     - cron: '0 4 * * *' # Every night at 4:00
 jobs:
-  checkout:
+  install-dependencies:
     runs-on: ubuntu-20.04
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
       with:
         ref: develop
-  install-dependencies:
-    runs-on: ubuntu-20.04
-    steps:
     - name: Setup caches
       uses: actions/cache@v2
       id: cache-id
       with:
         path: ${{ runner.temp }}/cache-directory
         key: ${{ runner.os }}-cache-dependencies-v1.0
-    - name: Install solvers (considering cache)
+    - name: Install solvers and dependencies (considering cache)
       uses: airvzxf/cache-anything-new-action@v1.0.1
       with:
         script: 'install-solvers-dependencies.sh'
