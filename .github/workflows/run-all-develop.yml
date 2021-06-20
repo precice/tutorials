@@ -1,5 +1,8 @@
 name: Run with all components from develop
 on:
+  push:
+    branches:
+      - add-nightly-tests
   schedule:
     - cron: '0 4 * * *' # Every night at 4:00
 jobs:
