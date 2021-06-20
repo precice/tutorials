@@ -1,0 +1,58 @@
+name: Run with all components from develop
+on:
+  schedule:
+    - cron: '0 4 * * *' # Every night at 4:00
+jobs:
+  install-dependencies:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Setup caches
+      uses: actions/cache@v2
+      id: cache-id
+      with:
+        path: ${{ runner.temp }}/cache-directory
+        key: ${{ runner.os }}-cache-dependencies-v1.0
+    - name: Install solvers (considering cache)
+      uses: airvzxf/cache-anything-new-action@v1.0.1
+      with:
+        script: 'install-solvers.sh'
+        is_cached: ${{ steps.cache-id.outputs.cache-hit }}
+        cache: ${{ runner.temp }}/cache-directory
+        snapshot: '/'
+        exclude: '/boot /data /dev /mnt /proc /run /sys'
+  build-all-develop:
+    needs: dependencies
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Build preCICE from develop
+      run: |
+        git clone --depth=1 --branch develop https://github.com/precice/precice.git
+        cd precice
+        git pull
+        mkdir -p build && cd build/
+        cmake -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug -Wno-dev ..
+        make -j 2
+        make package
+        sudo apt-get install -y ./libprecice2_*.deb
+    - name: Build the preCICE Python bindings from develop
+      run: |
+        git clone --depth=1 --branch develop https://github.com/precice/python-bindings.git
+        cd python-bindings
+        python3 setup.py install --user
+    - name: Build the OpenFOAM adapter from develop for OpenFOAM v2012
+      run: |
+        git clone --depth=1 --branch develop https://github.com/precice/openfoam-adapter.git
+        cd openfoam-adapter
+        /usr/bin/openfoam2012 ./Allwmake
+    - name: Check out repository
+      uses: actions/checkout@v2
+      with:
+        ref: develop
+  run-flow-over-heated-plate:
+    needs: build-all-develop
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Run flow-over-heated-plate with fluid-openfoam and solid-openfoam
+      run: |
+        (cd tutorials/flow-over-heated-plate/fluid-openfoam && ./run.sh &)
+        (cd tutorials/flow-over-heated-plate/solid-openfoam && ./run.sh &)
