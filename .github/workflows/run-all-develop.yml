@@ -24,7 +24,7 @@ jobs:
         snapshot: '/'
         exclude: '/boot /data /dev /mnt /proc /run /sys'
   build-all-develop:
-    needs: dependencies
+    needs: install-dependencies
     runs-on: ubuntu-20.04
     steps:
     - name: Build preCICE from develop
