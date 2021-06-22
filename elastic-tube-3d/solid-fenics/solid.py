@@ -2,7 +2,7 @@
 from fenics import Constant, Function, AutoSubDomain, VectorFunctionSpace, interpolate, \
     TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, project, \
     Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system
-from mshr import Cylinder
+from mshr import Cylinder, generate_mesh
 from ufl import nabla_div
 import numpy as np
 from fenicsprecice import Adapter
@@ -18,8 +18,7 @@ def neumann_boundary(x, on_boundary):
     """
     determines whether a node is on the coupling boundary
     """
-    tol = 1E-14
-    return on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol)
+    return on_boundary and (x[2] < L) and (x[2] > 0.0)
 
 
 # Geometry and material properties
@@ -37,12 +36,10 @@ lambda_ = Constant(E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)))
 # create Mesh
 outer_tube = Cylinder(Point(0, 0, L), Point(0, 0, 0), R+0.001, R+0.001)
 inner_tube = Cylinder(Point(0, 0, L), Point(0, 0, 0), R, R)
-tube_mesh = outer_tube - inner_tube
+mesh = generate_mesh(outer_tube - inner_tube, 50)
 
 # create Function Space
-V = VectorFunctionSpace(tube_mesh, 'P', 2)
-
-# BCs
+V = VectorFunctionSpace(mesh, 'P', 2)
 
 # Trial and Test Functions
 du = TrialFunction(V)
@@ -56,8 +53,8 @@ u_n = Function(V)
 v_n = Function(V)
 a_n = Function(V)
 
-f_N_function = interpolate(Expression(("1", "0"), degree=1), V)
-u_function = interpolate(Expression(("0", "0"), degree=1), V)
+f_N_function = interpolate(Expression(("1", "0", "0"), degree=1), V)
+u_function = interpolate(Expression(("0", "0", "0"), degree=1), V)
 
 coupling_boundary = AutoSubDomain(neumann_boundary)
 fixed_boundary = AutoSubDomain(clamped_boundary)
@@ -72,7 +69,7 @@ fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
 # clamp the beam at the bottom
-bc = DirichletBC(V, Constant((0, 0)), fixed_boundary)
+bc = DirichletBC(V, Constant((0, 0, 0)), fixed_boundary)
 
 # alpha method parameters
 alpha_m = Constant(0)
