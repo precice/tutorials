@@ -1,0 +1,13 @@
+name: Run tutorials with all components from containers
+on:
+  push:
+    branches:
+      - add-nightly-tests
+jobs:
+  run-flow-over-heated-plate:
+    runs-on: ubuntu-latest
+    container: ghcr.io/precice/openfoam-adapter:latest
+    steps:
+      - run: |
+        cd /home/precice/tutorials && ls
+        
