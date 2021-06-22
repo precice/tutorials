@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/precice/openfoam-adapter:latest
     steps:
-      - run: |
-        cd /home/precice/tutorials && ls
+      - name: test
+        run: |
+          cd /home/precice/tutorials && ls
         
