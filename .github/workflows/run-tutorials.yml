@@ -10,5 +10,5 @@ jobs:
     steps:
       - name: test
         run: |
-          cd /home/precice/tutorials && ls
+          ls
         
