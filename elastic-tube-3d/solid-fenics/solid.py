@@ -1,11 +1,12 @@
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, VectorFunctionSpace, interpolate, \
-    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, project, \
-    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system
+    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, \
+    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, assemble_system
 from mshr import Cylinder, generate_mesh
 from ufl import nabla_div
 import numpy as np
 from fenicsprecice import Adapter
+import math
 
 
 # define the two kinds of boundary: clamped and coupling Neumann Boundary
@@ -18,7 +19,7 @@ def neumann_boundary(x, on_boundary):
     """
     determines whether a node is on the coupling boundary
     """
-    return on_boundary and (x[2] < L) and (x[2] > 0.0)
+    return on_boundary and (x[2] < L) and (x[2] > 0.0) and (math.sqrt(x[0]**2 + x[1]**2) <= R + 0.001)
 
 
 # Geometry and material properties
@@ -34,9 +35,12 @@ mu = Constant(E / (2.0 * (1.0 + nu)))
 lambda_ = Constant(E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)))
 
 # create Mesh
-outer_tube = Cylinder(Point(0, 0, L), Point(0, 0, 0), R+0.001, R+0.001)
+outer_tube = Cylinder(Point(0, 0, L), Point(0, 0, 0), R + 0.001, R + 0.001)
 inner_tube = Cylinder(Point(0, 0, L), Point(0, 0, 0), R, R)
-mesh = generate_mesh(outer_tube - inner_tube, 50)
+mesh = generate_mesh(outer_tube - inner_tube, 15)
+
+# Save the mesh
+File("cylinder.pvd") << mesh
 
 # create Function Space
 V = VectorFunctionSpace(mesh, 'P', 2)
