@@ -21,8 +21,8 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 1. Get and install preCICE. For Ubuntu 20.04 (Focal Fossa), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v2.2.0/libprecice2_2.2.0_focal.deb
-    sudo apt install ./libprecice2_2.2.0_focal.deb
+    wget https://github.com/precice/precice/releases/download/v2.2.1/libprecice2_2.2.1_focal.deb
+    sudo apt install ./libprecice2_2.2.1_focal.deb
     ```
 
     - Are you using something else? Just pick what suits you best on [this overview page](https://www.precice.org/installation-overview.html).
@@ -32,10 +32,10 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     ```bash
     # Add the signing key, add the repository, update (check this):
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash
-    # Install OpenFOAM v2012:
-    sudo apt install openfoam2012-dev
+    # Install OpenFOAM v2106:
+    sudo apt install openfoam2106-dev
     # Enable OpenFOAM by default in your system and apply now:
-    echo "source /usr/lib/openfoam/openfoam2012/etc/bashrc" >> ~/.bashrc
+    echo "source /usr/lib/openfoam/openfoam2106/etc/bashrc" >> ~/.bashrc
     source ~/.bashrc
     ```
 
