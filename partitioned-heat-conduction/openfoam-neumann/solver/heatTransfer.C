@@ -1,5 +1,6 @@
 // This solver is based on previous work of OpenCFD Ltd. In particular, major code
-// parts are part of the laplacianFoam solver of OpenFOAM 2012.
+// parts are part of the laplacianFoam solver of OpenFOAM 2012, which served as a
+// basis for this solver.
 // -------------------------------------------------------------------------------
 // Application
 //    heatTransfer
