@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <precice-configuration>
 
@@ -8,43 +8,41 @@
     <sink type="file" output="debug.log" filter="" enabled="true"/>
   </log>
   
-  <solver-interface dimensions="3">
+  <solver-interface dimensions="2">
     
     <!-- Data fields that are exchanged between the solvers -->
-    <data:vector name="Data" />
+    <data:vector name="Force" />
 
     <!-- A common mesh that uses these data fields -->
-    <mesh name="MeshA" flip-normals="no">
-      <use-data name="Data" />
+    <mesh name="Fluid-Mesh" flip-normals="no">
+      <use-data name="Force" />
     </mesh>
 
-    <mesh name="Solid" flip-normals="no">
-      <use-data name="Data" />
+    <mesh name="Solid-Mesh" flip-normals="no">
+      <use-data name="Force" />
     </mesh>
     
-    <m2n:sockets from="A" to="fenics"/> 
-
-    <participant name="A">
-      <use-mesh name="MeshA" provide="yes" />
-      <use-mesh name="Solid" provide="no" from="fenics" />
-      <write-data name="Data" mesh="MeshA"/>
-      <mapping:nearest-neighbor constraint="conservative" direction="write" from="MeshA" to="Solid" />
-      <export:vtk every-n-time-windows="1" directory="vtkA/" normals="0"/>
+    <participant name="Fluid">
+      <use-mesh name="Fluid-Mesh" provide="yes" />
+      <use-mesh name="Solid-Mesh" provide="no" from="Solid" />
+      <write-data name="Force" mesh="Fluid-Mesh"/>
+      <mapping:nearest-neighbor constraint="conservative" direction="write" from="Fluid-Mesh" to="Solid-Mesh" />
+      <export:vtk every-n-time-windows="1" directory="vtkFluid/" normals="0"/>
     </participant>
     
-    <participant name="fenics">
-      <use-mesh name="Solid" provide="yes" />
-      <read-data name="Data" mesh="Solid" />
-
-      <export:vtk every-n-time-windows="1" directory="vtkB/" normals="0"/>
+    <participant name="Solid">
+      <use-mesh name="Solid-Mesh" provide="yes" />
+      <read-data name="Force" mesh="Solid-Mesh" />
+      <export:vtk every-n-time-windows="1" directory="vtkSolid/" normals="0"/>
     </participant>
-
+    
+    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
     
     <coupling-scheme:serial-explicit>
-      <participants first="A" second="fenics" />
+      <participants first="Fluid" second="Solid" />
       <max-time value="5.0" />
       <time-window-size value="1.e-2" />
-      <exchange data="Data" mesh="Solid" from="A" to="fenics" />
+      <exchange data="Force" mesh="Solid-Mesh" from="Fluid" to="Solid" />
     </coupling-scheme:serial-explicit>
     
   </solver-interface>

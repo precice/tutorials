@@ -71,22 +71,12 @@ fixed_boundary = AutoSubDomain(clamped_boundary)
 
 # read fenics-adapter json-config-file)
 
-adapter_config_filename = "precice-adapter-config-fsi-s.json"
-           
-precice = Adapter(adapter_config_filename)
+precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s-aste.json")
 
 clamped_boundary_domain=AutoSubDomain(clamped_boundary)
-precice_dt = precice.initialize(coupling_subdomain=coupling_boundary, 
-                            mesh=mesh,
-                            read_field=f_N_function,
-                            write_field=u_function,
-                            u_n=u_n,
-                            dimension=dim,
-                            dirichlet_boundary=clamped_boundary_domain)
+precice_dt = precice.initialize(coupling_boundary, read_function_space=V, fixed_boundary=clamped_boundary_domain)
 
 dt = Constant(precice_dt)
-
-force_boundary = AutoSubDomain(Neumann_Boundary)
 
 # clamp the beam at the bottom
 bc = DirichletBC(V, Constant((0, 0)), fixed_boundary)
@@ -175,20 +165,18 @@ v_np1 = update_v(a_np1, u_n, v_n, a_n, ufl=True)
 
 res = m(avg(a_n,a_np1,alpha_m), v) + k(avg(u_n,du, alpha_f), v)  #TODO: Wext(v) needs to be replaced by coupling
 
-Forces_x, Forces_y = precice.create_force_boundary_condition(V)
-
 a_form= lhs(res)
 L_form= rhs(res)
 
-# Prepare for time-stepping
-
 # parameters for Time-Stepping
-t=0.0
-n=0
+t = 0.0
+n = 0
+	
 time = []
 u_tip = []
 time.append(0.0)
 u_tip.append(0.0)
+
 E_ext = 0
 
 displacement_out = File("Solid/FSI-S/u_fsi.pvd")
@@ -226,6 +214,13 @@ xdmf_file.parameters["rewrite_function_mesh"] = False
 
   
 while precice.is_coupling_ongoing():
+
+    # read data from preCICE and get a new coupling expression
+    read_data = precice.read_data()
+
+    # Update the point sources on the coupling boundary with the new read data
+    Forces_x, Forces_y = precice.get_point_sources(read_data)
+        
     A, b = assemble_system(a_form, L_form, bc)
 
     b_forces = b.copy()  # b is the same for every iteration, only forces change
@@ -238,11 +233,22 @@ while precice.is_coupling_ongoing():
     assert (b is not b_forces)
     solve(A, u_np1.vector(), b_forces)
     
-    t, n, precice_timestep_complete, precice_dt, Forces_x, Forces_y = precice.advance(u_np1, u_np1, u_n, t, float(dt), n)
+    dt = Constant(np.min([precice_dt, fenics_dt]))
     
+    precice_dt = precice.advance(dt(0))
     
-    if precice_timestep_complete:
+    u_n.assign(u_np1)
+    t += float(dt)
+    n += 1
+    
+    if precice.is_time_window_complete():
+        local_project(sigma(u_n), Vsig, sig)
         
+        # Plot tip displacement evolution
+        displacement_out << u_n
+        
+        xdmf_file.write(u_n,t)
+        xdmf_file.write(sig,t)           
         update_fields(u_np1, saved_u_old, v_n, a_n)
         
         if n % 10==0:
@@ -251,6 +257,7 @@ while precice.is_coupling_ongoing():
             displacement_out << (u_n,t)
             xdmf_file.write(u_n,t)
             xdmf_file.write(sig,t)
+        
         u_tip.append(u_n(0.,1.)[0])
         time.append(t)
     

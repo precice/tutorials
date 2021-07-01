@@ -1,8 +1,8 @@
 {
-  "solver_name": "solid",
-  "config_file_name": "../precice-config.xml",
+  "participant_name": "Solid",
+  "config_file_name": "../precice-config-aste.xml",
   "interface": {
-      "coupling_mesh_name": "Solid",
-      "read_data_name": "Data"
+      "coupling_mesh_name": "Solid-Mesh",
+      "read_data_name": "Force"
     }
 }
