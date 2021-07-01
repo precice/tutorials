@@ -23,7 +23,7 @@ Make sure to add `aste/build` to the `PATH` such that the python scripts and `pr
 
 ### Generating vtk output during a simulation
 
-The base case for this tutorial is the OpenFOAM-FEniCS perpendicular flap tutorial. So let's start in the the root-directory of that simulation [`tutorials/FSI/flap_perp/OpenFOAM-FEniCS`](https://github.com/precice/tutorials/tree/master/FSI/flap_perp/OpenFOAM-FEniCS).
+The base case for this tutorial is the OpenFOAM-FEniCS perpendicular flap tutorial. So let's start in the the root-directory of the perpendicular flap case: [`tutorials/perpendicular-flap`](https://github.com/precice/tutorials/tree/master/perpendicular-flap).
 
 To generate vtk output in preCICE, add the statement `<export:vtk directory="preCICE-output" />` to the `precice-config.xml` in `tutorials/perpendicular-flap` in the Solid participant. The result should look the following way:
 
