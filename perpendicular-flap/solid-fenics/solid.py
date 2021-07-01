@@ -1,53 +1,51 @@
-#Import required libs
+# Import required libs
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
-    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, Identity, inner,dx, ds, sym, grad, lhs, \
-    rhs, dot, File, solve, PointSource, XDMFFile, TensorFunctionSpace, LocalSolver, assemble_system
-import dolfin
+    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, project, \
+    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system
 from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
-from fenicsadapter import Adapter
+from fenicsprecice import Adapter
 from enum import Enum
 
 
 # define the two kinds of boundary: clamped and coupling Neumann Boundary
 def clamped_boundary(x, on_boundary):
-    return on_boundary and abs(x[1])<tol
+    return on_boundary and abs(x[1]) < tol
 
-def Neumann_Boundary(x, on_boundary):
+
+def neumann_boundary(x, on_boundary):
     """
     determines whether a node is on the coupling boundary
-    
-    """
-    return on_boundary and ((abs(x[1]-1)<tol) or abs(abs(x[0])-W/2)<tol)
 
+    """
+    return on_boundary and ((abs(x[1] - 1) < tol) or abs(abs(x[0]) - W / 2) < tol)
 
 
 # Geometry and material properties
-dim=2 #number of dimensions
+dim = 2  # number of dimensions
 H = 1
 W = 0.1
 rho = 3000
-E=400000.0
-nu= 0.3
+E = 4000000
+nu = 0.3
 
-mu    = Constant(E / (2.0*(1.0 + nu)))
+mu = Constant(E / (2.0 * (1.0 + nu)))
 
-lambda_ = Constant(E*nu / ((1.0 + nu)*(1.0 - 2.0*nu)))
+lambda_ = Constant(E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)))
 
 # create Mesh
-n_x_Direction=5
-n_y_Direction=50
-mesh = RectangleMesh(Point(-W/2,0), Point(W/2,H), n_x_Direction,n_y_Direction)
+n_x_Direction = 4
+n_y_Direction = 26
+mesh = RectangleMesh(Point(-W / 2, 0), Point(W / 2, H), n_x_Direction, n_y_Direction)
 
-h=Constant(H/n_y_Direction)
+h = Constant(H / n_y_Direction)
 
-
-#create Function Space
+# create Function Space
 V = VectorFunctionSpace(mesh, 'P', 2)
 
-#BCs
-tol=1E-14
+# BCs
+tol = 1E-14
 
 # Trial and Test Functions
 du = TrialFunction(V)
