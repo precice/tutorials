@@ -1,5 +1,5 @@
 {
-  "solver_name": "fenics",
+  "solver_name": "solid",
   "config_file_name": "../precice-config.xml",
   "interface": {
       "coupling_mesh_name": "Solid",
