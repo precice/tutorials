@@ -1,7 +1,7 @@
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
     TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, project, \
-    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system
+    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system, TensorFunctionSpace, XDMFFile
 from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
@@ -73,7 +73,7 @@ precice_dt = precice.initialize(coupling_boundary, read_function_space=V, fixed_
 
 fenics_dt = precice_dt # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
-dt = Constant(precice_dt)
+dt = Constant(np.min([precice_dt, fenics_dt]))
 
 # clamp the beam at the bottom
 bc = DirichletBC(V, Constant((0, 0)), fixed_boundary)
@@ -168,7 +168,7 @@ L_form = rhs(res)
 # parameters for Time-Stepping
 t = 0.0
 n = 0
-	
+
 time = []
 u_tip = []
 time.append(0.0)
@@ -231,38 +231,38 @@ while precice.is_coupling_ongoing():
     solve(A, u_np1.vector(), b_forces)
 
     dt = Constant(np.min([precice_dt, fenics_dt]))
-    
+
     precice_dt = precice.advance(dt(0))
-    
+
     u_n.assign(u_np1)
     t += float(dt)
     n += 1
-    
+
     if precice.is_time_window_complete():
         local_project(sigma(u_n), Vsig, sig)
-        
+
         # Plot tip displacement evolution
         displacement_out << u_n
-        
+
         xdmf_file.write(u_n,t)
         xdmf_file.write(sig,t)           
         update_fields(u_np1, saved_u_old, v_n, a_n)
-        
+
         if n % 10==0:
             local_project(sigma(u_n), Vsig, sig)
 
             displacement_out << (u_n,t)
             xdmf_file.write(u_n,t)
             xdmf_file.write(sig,t)
-        
+
         u_tip.append(u_n(0.,1.)[0])
         time.append(t)
-    
-    
+
+
 precice.finalize()
 
-# Plot tip displacement evolution    
-displacement_out << u_n 
+# Plot tip displacement evolution
+displacement_out << u_n
 plt.figure()
 plt.plot(time, u_tip)
 plt.xlabel("Time")
