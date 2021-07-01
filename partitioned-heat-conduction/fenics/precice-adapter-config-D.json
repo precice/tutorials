@@ -1,0 +1,9 @@
+{
+  "participant_name": "Dirichlet",
+  "config_file_name": "../precice-config.xml",
+  "interface": {
+      "coupling_mesh_name": "Dirichlet-Mesh",
+      "write_data_name": "Flux",
+      "read_data_name": "Temperature"
+    }
+}

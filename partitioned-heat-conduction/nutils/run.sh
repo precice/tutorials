@@ -1,0 +1,25 @@
+#!/bin/sh
+set -e -u
+
+usage() { echo "Usage: cmd [-d] [-n]" 1>&2; exit 1; }
+
+# Check if no input argument was provided
+if [ -z "$*" ] ; then
+        usage
+fi
+
+while getopts ":dn" opt; do
+  case ${opt} in
+  d)
+    rm -rf Dirichlet-*.vtk
+    python3 heat.py --side=Dirichlet
+    ;;
+  n)
+    rm -rf Neumann-*.vtk
+    python3 heat.py --side=Neumann
+    ;;
+  *)
+    usage
+    ;;
+  esac
+done

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<precice-configuration>
+  <log enabled="1">
+    <sink filter="%Severity% > debug" />
+  </log>
+
+  <solver-interface dimensions="2">
+    <data:scalar name="Pressure" />
+    <data:scalar name="CrossSectionLength" />
+
+    <mesh name="Fluid-Nodes-Mesh">
+      <use-data name="CrossSectionLength" />
+      <use-data name="Pressure" />
+    </mesh>
+
+    <mesh name="Solid-Nodes-Mesh">
+      <use-data name="CrossSectionLength" />
+      <use-data name="Pressure" />
+    </mesh>
+
+    <participant name="Fluid">
+      <use-mesh name="Fluid-Nodes-Mesh" provide="yes" />
+      <use-mesh name="Solid-Nodes-Mesh" from="Solid" />
+      <write-data name="Pressure" mesh="Fluid-Nodes-Mesh" />
+      <read-data name="CrossSectionLength" mesh="Fluid-Nodes-Mesh" />
+      <mapping:nearest-neighbor
+        direction="read"
+        from="Solid-Nodes-Mesh"
+        to="Fluid-Nodes-Mesh"
+        constraint="consistent" />
+    </participant>
+
+    <participant name="Solid">
+      <use-mesh name="Solid-Nodes-Mesh" provide="yes" />
+      <use-mesh name="Fluid-Nodes-Mesh" from="Fluid" />
+      <write-data name="CrossSectionLength" mesh="Solid-Nodes-Mesh" />
+      <read-data name="Pressure" mesh="Solid-Nodes-Mesh" />
+      <mapping:nearest-neighbor
+        direction="read"
+        from="Fluid-Nodes-Mesh"
+        to="Solid-Nodes-Mesh"
+        constraint="consistent" />
+    </participant>
+
+    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".."/>
+
+    <coupling-scheme:serial-implicit>
+      <participants first="Fluid" second="Solid" />
+      <max-time value="1.0" />
+      <time-window-size value="0.01" valid-digits="8" />
+      <max-iterations value="40" />
+      <exchange data="Pressure" mesh="Fluid-Nodes-Mesh" from="Fluid" to="Solid" />
+      <exchange
+        data="CrossSectionLength"
+        mesh="Solid-Nodes-Mesh"
+        from="Solid"
+        to="Fluid"
+        initialize="true" />
+      <relative-convergence-measure data="Pressure" mesh="Fluid-Nodes-Mesh" limit="1e-5" />
+      <relative-convergence-measure
+        data="CrossSectionLength"
+        mesh="Solid-Nodes-Mesh"
+        limit="1e-5" />
+      <acceleration:IQN-ILS>
+        <data name="CrossSectionLength" mesh="Solid-Nodes-Mesh" />
+        <initial-relaxation value="0.01" />
+        <max-used-iterations value="50" />
+        <time-windows-reused value="8" />
+        <filter type="QR2" limit="1e-3" />
+      </acceleration:IQN-ILS>
+    </coupling-scheme:serial-implicit>
+  </solver-interface>
+</precice-configuration>

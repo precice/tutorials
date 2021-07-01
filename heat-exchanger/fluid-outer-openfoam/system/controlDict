@@ -1,0 +1,30 @@
+FoamFile {
+    version 2.0;
+    class dictionary;
+    object controlDict;
+    format ascii;
+}
+application buoyantSimpleFoam;
+startFrom startTime;
+stopAt endTime;
+writeFormat ascii;
+writePrecision 12;
+writeCompression on;
+timeFormat general;
+timePrecision 12;
+runTimeModifiable false;
+deltaT 1;
+startTime 0.0;
+writeInterval 50;
+adjustTimeStep no;
+endTime 2000.0;
+writeControl timeStep;
+
+functions
+{
+    preCICE_Adapter
+    {
+        type preciceAdapterFunctionObject;
+        libs ("libpreciceAdapterFunctionObject.so");
+    }
+}
