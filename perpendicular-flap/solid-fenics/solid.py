@@ -68,9 +68,11 @@ fixed_boundary = AutoSubDomain(clamped_boundary)
 
 precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s-aste.json")
 
-clamped_boundary_domain=AutoSubDomain(clamped_boundary)
+# Initialize the coupling interface
 precice_dt = precice.initialize(coupling_boundary, read_function_space=V, fixed_boundary=fixed_boundary)
 
+fenics_dt = precice_dt # if fenics_dt == precice_dt, no subcycling is applied
+# fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(precice_dt)
 
 # clamp the beam at the bottom
@@ -158,10 +160,10 @@ def avg(x_old, x_new, alpha):
 a_np1 = update_a(du, u_n, v_n, a_n, ufl=True)
 v_np1 = update_v(a_np1, u_n, v_n, a_n, ufl=True)
 
-res = m(avg(a_n,a_np1,alpha_m), v) + k(avg(u_n,du, alpha_f), v)  #TODO: Wext(v) needs to be replaced by coupling
+res = m(avg(a_n, a_np1, alpha_m), v) + k(avg(u_n, du, alpha_f), v)
 
-a_form= lhs(res)
-L_form= rhs(res)
+a_form = lhs(res)
+L_form = rhs(res)
 
 # parameters for Time-Stepping
 t = 0.0
@@ -215,7 +217,7 @@ while precice.is_coupling_ongoing():
 
     # Update the point sources on the coupling boundary with the new read data
     Forces_x, Forces_y = precice.get_point_sources(read_data)
-        
+
     A, b = assemble_system(a_form, L_form, bc)
 
     b_forces = b.copy()  # b is the same for every iteration, only forces change
@@ -227,7 +229,7 @@ while precice.is_coupling_ongoing():
 
     assert (b is not b_forces)
     solve(A, u_np1.vector(), b_forces)
-    
+
     dt = Constant(np.min([precice_dt, fenics_dt]))
     
     precice_dt = precice.advance(dt(0))
