@@ -16,7 +16,7 @@ cd ${Participant1}
     # Note: ".foam" triggers the native OpenFOAM reader of ParaView.
     # Change to ".OpenFOAM" to use the OpenFOAM reader provided with OpenFOAM.
     touch ${Participant1}.foam
-cd ..
+cd .. || exit
 # Remove the log files
 rm -fv ${Participant1}_blockMesh.log
 rm -fv ${Participant1}_checkMesh.log
@@ -33,8 +33,8 @@ cd FSI-S
 	rm -fv *.vtu
 	rm -fv *.pvd
     rm -fv *.log
-cd ..
-cd ..
+cd .. || exit
+cd .. || exit 
 # Remove the log files
 rm -fv spooles.out
 rm -fv ${Participant2}.log
