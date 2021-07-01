@@ -66,15 +66,10 @@ u_function = interpolate(Expression(("0", "0"), degree=1), V)
 coupling_boundary = AutoSubDomain(neumann_boundary)
 fixed_boundary = AutoSubDomain(clamped_boundary)
 
-
-# get the adapter ready
-
-# read fenics-adapter json-config-file)
-
 precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s-aste.json")
 
 clamped_boundary_domain=AutoSubDomain(clamped_boundary)
-precice_dt = precice.initialize(coupling_boundary, read_function_space=V, fixed_boundary=clamped_boundary_domain)
+precice_dt = precice.initialize(coupling_boundary, read_function_space=V, fixed_boundary=fixed_boundary)
 
 dt = Constant(precice_dt)
 
