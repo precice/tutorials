@@ -11,15 +11,19 @@ import math
 
 # define the two kinds of boundary: clamped and coupling Neumann Boundary
 def clamped_boundary(x, on_boundary):
+    """
+    Filter nodes at both ends of tube as they are fixed
+    """
     tol = 1E-14
-    return on_boundary and ((abs(x[2]) - 0.0) < tol) and ((abs(x[2]) - 0.05) < tol)
+    return on_boundary and ((abs(x[2]) - 0.0) < tol) and ((abs(x[2]) - L) < tol)
 
 
 def neumann_boundary(x, on_boundary):
     """
-    determines whether a node is on the coupling boundary
+    Filter nodes which lie on the inner surface of the tube and excluding end nodes
     """
-    return on_boundary and (x[2] < L) and (x[2] > 0.0) and (math.sqrt(x[0]**2 + x[1]**2) <= R + 0.001)
+    tol = 1E-14
+    return on_boundary and ((L - x[2]) > tol) and ((x[2] - 0.0) > tol) and ((math.sqrt(x[0]**2 + x[1]**2) - R) < tol)
 
 
 # Geometry and material properties
@@ -37,7 +41,7 @@ lambda_ = Constant(E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)))
 # create Mesh
 outer_tube = Cylinder(Point(0, 0, L), Point(0, 0, 0), R + 0.001, R + 0.001)
 inner_tube = Cylinder(Point(0, 0, L), Point(0, 0, 0), R, R)
-mesh = generate_mesh(outer_tube - inner_tube, 15)
+mesh = generate_mesh(outer_tube - inner_tube, 20)
 
 # Save the mesh
 File("cylinder.pvd") << mesh
@@ -167,7 +171,7 @@ t = 0.0
 n = 0
 E_ext = 0
 
-displacement_out = File("Solid/FSI-S/u_fsi.pvd")
+displacement_out = File("Solid/u_fsi.pvd")
 
 u_n.rename("Displacement", "")
 u_np1.rename("Displacement", "")
