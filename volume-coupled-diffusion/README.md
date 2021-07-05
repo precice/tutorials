@@ -9,7 +9,7 @@ summary: This tutorial illustrates volume coupling with a simple example.
 
 ## Setup
 
-This case illustrates how to implement volume coupling in a simple toy problem. Two diffusion problems are coupled via volume coupling. One domain (the source) has constant non-zero Dirichlet boundary conditions. The Other domain (the drain) has Neumann boundary conditions and a zero Dirichlet boundary condition at the right edge of the domain. The quantity u flows from the source to the drain. This is realized via volume coupling:
+This case illustrates how to implement volume coupling in a simple toy problem. Two diffusion problems are coupled via volume terms. One domain (the source) has constant non-zero Dirichlet boundary conditions. The other domain (the drain) has Neumann boundary conditions and a zero Dirichlet boundary condition at the right edge of the domain. The quantity u flows from the source to the drain.
 
 ![Case setup of volume-coupled-diffusion case](images/tutorials-volume-coupled-diffusion-setup.png)
 
