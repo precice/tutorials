@@ -15,7 +15,6 @@ This case illustrates how to implement volume coupling in a simple toy problem. 
 
 ## Available solvers and dependencies
 
-You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE and the python bindings installed on your system.
 
 * FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter).
 
