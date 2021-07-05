@@ -52,7 +52,6 @@ dt = precice.initialize(AllDomain(), read_function_space=V, write_object=u_n)
 volume_term = precice.create_coupling_expression()
 f = Function(V)
 
-print(precice._fenics_vertices)
 
 dt_inv = Constant(1 / dt)
 
