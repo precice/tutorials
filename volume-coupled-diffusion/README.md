@@ -22,7 +22,7 @@ This case illustrates how to implement volume coupling in a simple toy problem. 
 
 This tutorial is for FEniCS. You can find the corresponding `run.sh` script in the folder `fenics`.
 
-For choosing whether you want to create a source or drain, please provide the following commandline input:
+To choose whether you want to run the source or the drain solver, please provide the following command line input:
 
 * `-s` flag will create a source.
 * `-d` flag will create a drain.
