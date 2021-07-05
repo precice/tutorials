@@ -5,7 +5,7 @@ keywords: FEniCS, Diffusion, Volume Coupling
 summary: This tutorial illustrates volume coupling with a simple example.
 ---
 
-{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/volume-coupled-diffusion). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/volume-coupled-diffusion). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
 
 ## Setup
 
