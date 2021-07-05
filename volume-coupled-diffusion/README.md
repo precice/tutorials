@@ -15,8 +15,7 @@ This case illustrates how to implement volume coupling in a simple toy problem. 
 
 ## Available solvers and dependencies
 
-
-* FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter).
+* FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). Additionally, you will need to have preCICE and the python bindings installed on your system.
 
 ## Running the simulation
 
