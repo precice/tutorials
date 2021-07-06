@@ -15,7 +15,7 @@ def clamped_boundary(x, on_boundary):
     Filter nodes at both ends of tube as they are fixed
     """
     tol = 1E-14
-    return on_boundary and (((x[2] - 0.0) < tol) or ((x[2] - L) < tol))
+    return on_boundary and (((abs(x[2]) - 0.0) < tol) or ((L - abs(x[2])) < tol))
 
 
 def neumann_boundary(x, on_boundary):
@@ -23,7 +23,7 @@ def neumann_boundary(x, on_boundary):
     Filter nodes which lie on the inner surface of the tube and excluding end nodes
     """
     tol = 1E-14
-    return on_boundary and ((L - x[2]) > tol) and ((x[2] - 0.0) > tol) and ((math.sqrt(x[0]**2 + x[1]**2) - R) < tol)
+    return on_boundary and ((math.sqrt(x[0]**2 + x[1]**2) - R) < tol) and ((L - x[2]) > tol) and ((x[2] - 0.0) > tol)
 
 
 # Geometry and material properties
