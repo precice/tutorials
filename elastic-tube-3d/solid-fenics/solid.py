@@ -15,7 +15,7 @@ def clamped_boundary(x, on_boundary):
     Filter nodes at both ends of tube as they are fixed
     """
     tol = 1E-14
-    return on_boundary and ((x[2] - 0.0) < tol) and ((x[2] - L) < tol)
+    return on_boundary and (((x[2] - 0.0) < tol) or ((x[2] - L) < tol))
 
 
 def neumann_boundary(x, on_boundary):
