@@ -15,7 +15,7 @@ def clamped_boundary(x, on_boundary):
     Filter nodes at both ends of tube as they are fixed
     """
     tol = 1E-14
-    return on_boundary and ((abs(x[2]) - 0.0) < tol) and ((abs(x[2]) - L) < tol)
+    return on_boundary and ((x[2] - 0.0) < tol) and ((x[2] - L) < tol)
 
 
 def neumann_boundary(x, on_boundary):
@@ -43,9 +43,6 @@ outer_tube = Cylinder(Point(0, 0, L), Point(0, 0, 0), R + 0.001, R + 0.001)
 inner_tube = Cylinder(Point(0, 0, L), Point(0, 0, 0), R, R)
 mesh = generate_mesh(outer_tube - inner_tube, 20)
 
-# Save the mesh
-File("cylinder.pvd") << mesh
-
 # create Function Space
 V = VectorFunctionSpace(mesh, 'P', 2)
 
@@ -61,7 +58,7 @@ u_n = Function(V)
 v_n = Function(V)
 a_n = Function(V)
 
-f_N_function = interpolate(Expression(("1", "0", "0"), degree=1), V)
+f_N_function = interpolate(Expression(("1", "1", "0"), degree=1), V)
 u_function = interpolate(Expression(("0", "0", "0"), degree=1), V)
 
 coupling_boundary = AutoSubDomain(neumann_boundary)
@@ -76,7 +73,7 @@ fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
-# clamp the beam at the bottom
+# clamp the tube on both sides
 bc = DirichletBC(V, Constant((0, 0, 0)), fixed_boundary)
 
 # alpha method parameters
