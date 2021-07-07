@@ -1,0 +1,5 @@
+preCICE-output/
+Solid-fenics*
+*.log
+vtk*
+Solid/FSI-S

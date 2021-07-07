@@ -1,0 +1,8 @@
+{
+  "participant_name": "Solid",
+  "config_file_name": "../precice-config-aste.xml",
+  "interface": {
+      "coupling_mesh_name": "Solid-Mesh",
+      "read_data_name": "Force"
+    }
+}
