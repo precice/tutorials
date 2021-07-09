@@ -6,7 +6,6 @@ FoamFile
     location    "0";
     object      T;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 0 0 1 0 0 0];
 
@@ -10024,7 +10023,7 @@ boundaryField
         type            fixedGradient;
         gradient        uniform 2;
     }
-    Dirichlet_Boundary
+    DirichletBoundary
     {
      type            groovyBC;
      variables       "val=1+pow(pos().x,2)+(3*pow(pos().y,2))+1.3*time();";
@@ -10037,5 +10036,3 @@ boundaryField
     }
 }
 
-
-// ************************************************************************* //

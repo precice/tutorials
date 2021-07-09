@@ -6,21 +6,18 @@ FoamFile
     object      blockMeshDict;
 }
 
-convertToMeters 1;
-
 vertices
 (
 
+    (0 0 0)
     (1 0 0)
-    (2 0 0)
-    (2 1 0)
     (1 1 0)
+    (0 1 0)
 
+    (0 0 .1)
     (1 0 .1)
-    (2 0 .1)
-    (2 1 .1)
     (1 1 .1)
-
+    (0 1 .1)
 );
 
 blocks
@@ -37,10 +34,10 @@ boundary
 
     interface
     {
-        type wall;
+        type patch;
         faces
         (
-            (4 7 3 0)
+            (1 2 6 5)
         );
     }
 
@@ -49,9 +46,9 @@ boundary
         type patch;
         faces
         (
-            (1 2 6 5)
-            (4 0 1 5)
+            (4 7 3 0)
             (7 6 2 3)
+            (4 0 1 5)
         );
     }
 );
