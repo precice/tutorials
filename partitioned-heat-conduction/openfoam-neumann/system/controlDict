@@ -7,10 +7,10 @@ FoamFile
     object      controlDict;
 }
 
-application     laplacianFoam;
+// In order to prevent misuse
+application     custom;
 
 libs ( "libgroovyBC.so" ) ;
-
 
 startFrom       startTime;
 

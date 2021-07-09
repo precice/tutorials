@@ -37,7 +37,7 @@ boundary
 
     interface
     {
-        type wall;
+        type patch;
         faces
         (
             (4 7 3 0)
