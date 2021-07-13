@@ -10019,17 +10019,21 @@ internalField   nonuniform List<scalar>
 
 boundaryField
 {
+    interface
+    {
+        type            fixedValue;
+        value           uniform 2;
+    }
+
     DirichletBoundary
     {
         type            groovyBC;
         variables       "val=1+pow(pos().x,2)+(3*pow(pos().y,2))+1.3*time();";
-        valueExpression  "val";
-    }
-    interface
-    {
-        type            fixedValue;
+        valueExpression "val";
         value           uniform 0;
+        evaluateDuringConstruction 1;
     }
+
     defaultFaces
     {
         type            empty;
