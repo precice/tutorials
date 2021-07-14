@@ -18,4 +18,3 @@ All notable changes to this repository will be documented in this file.
 - **An easy-to-run first tutorial:** We created a [quickstart](https://precice.org/quickstart.html) tutorial.
 - **Better 2D cases:** Two-dimensional cases such as the (now rotated) perpendicular flap are using the 2D interface of preCICE and every involved adapter supports a 2D mode.
 - **A validated Turek-Hron FSI3:** Validated with OpenFOAM and non-linear deal.II.
-
