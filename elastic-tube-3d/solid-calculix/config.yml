@@ -1,7 +1,7 @@
 participants:
-    Calculix:
+    Solid:
         interfaces:
-        - nodes-mesh-with-connectivity: Calculix_Mesh
+        - nodes-mesh-with-connectivity: Solid-Mesh
           patch: interface
           read-data: [Force]
           write-data: [DisplacementDelta]
