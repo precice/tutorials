@@ -68,8 +68,8 @@ def main(side='Dirichlet'):
     vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)
 
     # coupling data
-    write_data = "Temperature" if side == "Neumann" else "Flux"
-    read_data = "Flux" if side == "Neumann" else "Temperature"
+    write_data = "Temperature" if side == "Neumann" else "Heat-Flux"
+    read_data = "Heat-Flux" if side == "Neumann" else "Temperature"
     write_data_id = interface.get_data_id(write_data, mesh_id)
     read_data_id = interface.get_data_id(read_data, mesh_id)
 
