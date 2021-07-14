@@ -1,7 +1,7 @@
 ---
 title: Elastic tube 3D
 permalink: tutorials-elastic-tube-3d.html
-keywords: FSI, OpenFOAM, CalculiX, nearest-projection, IMVJ
+keywords: FSI, OpenFOAM, CalculiX, FEniCS, nearest-projection, IMVJ
 summary: Tutorial for an FSI simulation of a three-dimensional expanding tube scenario
 ---
 
@@ -22,6 +22,8 @@ Fluid participant:
 Solid participant:
 
 * CalculiX. This tutorial is known to work with CalculiX 2.15, but it should also work with newer versions. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html).
+
+* FEniCS. The structural model is currently limited to linear elasticity. Currently 3D functionality is experimental in the FEniCS adapter and more details can be found [here](https://github.com/precice/fenics-adapter/pull/133) For more information, have a look at the [FeniCS adapter documentation](https://www.precice.org/adapter-fenics.html).
 
 ## Running the simulation
 
