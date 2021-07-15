@@ -2,19 +2,36 @@
 
 All notable changes to this repository will be documented in this file.
 
-## 202104.1.1
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Read more details in the issue [#52: Releases and versioning](https://github.com/precice/openfoam-adapter/issues/52).
 
-- The modified helper tool `openfoam_remove_empty_dirs` now respects also results in the compressed OpenFOAM format (76f4482).
+## [Unreleased]
+
+## [v202104.1.1] 2021-04-23
+
+### Added
+
+
+### Changed
+
+- Modifying the helper tool `openfoam_remove_empty_dirs` such that it now respects also results in the compressed OpenFOAM format (76f4482).
 - Syncing the post-processing functionality of the elastic-tube-1d and the respective documentation. (#209)
 
-## 202104.1.0
+### Removed
 
-- **All documentation on the website:** Find everything directly in our [redesigned preCICE website](https://precice.org/tutorials.html) (rendered from the `README.md` files here, so you can also check the basic information without internet connection).
-- **New directory structure:** Read more in the [contributing guidelines](https://precice.org/community-contribute-to-precice.html).
-- **Self-contained cases:** The files for each case are inside its own directory, e.g. `fluid-openfoam`. The exchange directory is set to `..`, next to `precice-config.xml`.
-- **Arbitrary combinations of solvers:** Run OpenFOAM-CalculiX, OpenFOAM-deal.II, SU2-deal.II
-- **A standard way to run each case:** Go to the case folder and execute `./run.sh`.
-- **A standard way to clean:** A `clean<what>.sh` script in each directory cleans up everything from this level and deeper.
-- **An easy-to-run first tutorial:** We created a [quickstart](https://precice.org/quickstart.html) tutorial.
-- **Better 2D cases:** Two-dimensional cases such as the (now rotated) perpendicular flap are using the 2D interface of preCICE and every involved adapter supports a 2D mode.
-- **A validated Turek-Hron FSI3:** Validated with OpenFOAM and non-linear deal.II.
+## [v202104.1.0] 2021-05-02
+
+### Added
+
+- Adding a standard run script in each case folder which can be executed as `./run.sh`.
+- Adding a standard clean script in each case folder which can be executed as `./clean<what>.sh`.
+- Adding an easy-to-run tutorial called [quickstart](https://precice.org/quickstart.html).
+- Adding a validated Turek-Hron FSI3 case with OpenFOAM and non-linear deal.II.
+
+### Changed
+
+- Moving all documentation to the [redesigned preCICE website](https://precice.org/tutorials.html).
+- Creating a new directory structure for easy access and also for [contributions](https://precice.org/community-contribute-to-precice.html).
+- Modifying the 2D cases to use 2D mode in preCICE and also corresponding 2D functionality in the adapters.
+
+### Removed
