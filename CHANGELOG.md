@@ -23,6 +23,7 @@ Read more details in the issue [#52: Releases and versioning](https://github.com
 
 ### Added
 
+- Adding a change log for this project as a file named `CHANGELOG.md`.
 - Adding a standard run script in each case folder which can be executed as `./run.sh`.
 - Adding a standard clean script in each case folder which can be executed as `./clean<what>.sh`.
 - Adding an easy-to-run tutorial called [quickstart](https://precice.org/quickstart.html).
