@@ -11,11 +11,10 @@ Read more details in the issue [#52: Releases and versioning](https://github.com
 
 ### Added
 
-
 ### Changed
 
-- Modifying the helper tool `openfoam_remove_empty_dirs` such that it now respects also results in the compressed OpenFOAM format (76f4482).
-- Syncing the post-processing functionality of the elastic-tube-1d and the respective documentation. (#209)
+- Modified the helper tool `openfoam_remove_empty_dirs` such that it also respects results in the compressed OpenFOAM format (76f4482).
+- Synced the post-processing functionality of the elastic-tube-1d and the respective documentation. (#209)
 
 ### Removed
 
@@ -23,16 +22,16 @@ Read more details in the issue [#52: Releases and versioning](https://github.com
 
 ### Added
 
-- Adding a change log for this project as a file named `CHANGELOG.md`.
-- Adding a standard run script in each case folder which can be executed as `./run.sh`.
-- Adding a standard clean script in each case folder which can be executed as `./clean<what>.sh`.
-- Adding an easy-to-run tutorial called [quickstart](https://precice.org/quickstart.html).
-- Adding a validated Turek-Hron FSI3 case with OpenFOAM and non-linear deal.II.
+- Added a change log for this project as a file named `CHANGELOG.md`.
+- Added a standard run script in each case folder which can be executed as `./run.sh`.
+- Added a standard clean script in each case folder which can be executed as `./clean<what>.sh`.
+- Added an easy-to-run tutorial called [quickstart](https://precice.org/quickstart.html).
+- Added a validated Turek-Hron FSI3 case with OpenFOAM and non-linear deal.II.
 
 ### Changed
 
-- Moving all documentation to the [redesigned preCICE website](https://precice.org/tutorials.html).
-- Creating a new directory structure for easy access and also for [contributions](https://precice.org/community-contribute-to-precice.html).
-- Modifying the 2D cases to use 2D mode in preCICE and also corresponding 2D functionality in the adapters.
+- Moved all documentation to the [redesigned preCICE website](https://precice.org/tutorials.html).
+- Created a new directory structure for easy access and also for [contributions](https://precice.org/community-contribute-to-precice.html).
+- Modified the 2D cases to use 2D mode in preCICE and also corresponding 2D functionality in the adapters.
 
 ### Removed
