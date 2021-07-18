@@ -19,7 +19,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-- Added a change log for this project as a file named `CHANGELOG.md`.
 - Added a standard run script in each case folder which can be executed as `./run.sh`.
 - Added a standard clean script in each case folder which can be executed as `./clean<what>.sh`.
 - Added an easy-to-run tutorial called [quickstart](https://precice.org/quickstart.html).
