@@ -1,4 +1,4 @@
-# preCICE tutorials change log
+# preCICE tutorials changelog
 
 All notable changes to this repository will be documented in this file.
 
@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Created a first tagged version of this repository along with a [release](https://github.com/precice/tutorials/releases/tag/v202104.1.0).
 - Added a standard run script in each case folder which can be executed as `./run.sh`.
 - Added a standard clean script in each case folder which can be executed as `./clean<what>.sh`.
 - Added an easy-to-run tutorial called [quickstart](https://precice.org/quickstart.html).
