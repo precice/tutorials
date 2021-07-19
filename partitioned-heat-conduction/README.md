@@ -27,40 +27,30 @@ You can either couple a solver with itself or different solvers with each other.
 
 * Nutils. Install [Nutils](http://www.nutils.org/en/latest/).
 
-* OpenFOAM. Running this tutorial with OpenFOAM is a bit of a challenge and requires some special considerations. First of all, OpenFOAM does not provide a Laplace solver with a non-zero right-hand side. Therefore, we provide a modified Laplace solver together with the tutorial, which needs to be compiled before running the tutorial. The solver can be compiled by executing `wmake` in the solver directory `./openfoam-neumann/solver`. Afterwards, the custom solver `heatTransfer` can be started from the respective OpenFOAM case directory, as usual. The second challenge is given by the time- and space-dependent Dirichlet boundary conditions required for domain boundaries belonging not to the interface. For this purpose, a valid installation of `groovyBC` (part of `swak4Foam`) is required. Having the solver and an evaluator for the boundaries, the tutorial is ready to run. However, if you want to modify the tutorial the space-dependent initial condition of this tutorial state the third challenge. We let `funkySetFields`, which is installed along with OpenFOAM by default, evaluate the initial condition. You can simply execute the script `setInitialField.sh` in order to evaluate and store the required initial condition in the `0` directory. Note that `funkySetFields` overrides unintentionally the boundary conditions as well, so that you might need to restore them after you executed it.
+* OpenFOAM. Running this tutorial with OpenFOAM is a bit of a challenge and requires some special considerations. First of all, OpenFOAM does not provide a Laplace solver with a non-zero right-hand side. Therefore, we provide a modified Laplace solver together with the tutorial, which needs to be compiled before running the tutorial. The solver can be compiled by executing `wmake` in the solver directory `./openfoam-solver/`. Afterwards, the custom solver `heatTransfer` can be started from the respective OpenFOAM case directory by copying it into the OpenFOAM solver directory or copying it directly into the case directory. The second challenge is given by the time- and space-dependent Dirichlet boundary conditions required for domain boundaries belonging not to the interface. For this purpose, a valid installation of `groovyBC` (part of `swak4Foam`) is required. Having the solver and an evaluator for the boundaries, the tutorial is ready to run. However, if you want to modify the tutorial the space-dependent initial condition of this tutorial state the third challenge. We let `funkySetFields`, which is installed along with OpenFOAM by default, evaluate the initial condition. You can simply execute the script `setInitialField.sh` in order to evaluate and store the required initial condition in the `0` directory. Note that `funkySetFields` overrides unintentionally the boundary conditions as well, so that you might need to restore them after you executed it.
 
 ## Running the simulation
 
-This tutorial is for FEniCS and Nutils. You can find the corresponding `run.sh` script in the folders `fenics` and `nutils`.
+You can find the corresponding `run.sh` script in each participant solver.
 
-For choosing whether you want to run the Dirichlet-kind and a Neumann-kind participant, please provide the following commandline input:
+In case of `fenics` and `nutils` the Dirichlet-kind and a Neumann-kind participant are currently merged into a single participant directory. Therefore, please provide the following command line input argument:
 
 * `-d` flag will enforce Dirichlet boundary conditions on the coupling interface.
 * `-n` flag will enforce Neumann boundary conditions on the coupling interface.
 
-For running the case, open two terminals run:
+For running the case, a Dirichlet and a Neumann participant need to be executed, e.g., `./run.sh -d` and `./run.sh. -n`
 
-```bash
-cd fenics
-./run.sh -d
-```
-
-and
-
-```bash
-cd fenics
-./run.sh -n
-```
-
-If you want to use Nutils for one or both sides of the setup, just `cd nutils`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
+The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
 
 ```bash
 mpirun -n <N_PROC> python3 heat.py -d
 ```
 
+OpenFOAM supports parallel runs as usual. However, you need to execute the command manually by running: `mpirun -np <N_PROC> ./heatTransfer`.
+
 ### Note on the combination of Nutils & FEniCS
 
-You can mix the Nutils and FEniCS solver, if you like. Note that the error for a pure FEniCS simulation is lower than for a mixed one. We did not yet study the origin of this error, but assume that this is due to the fact that Nutils uses Gauss points as coupling mesh and therefore entails extrapolation in the data mapping at the top and bottom corners.
+You can mix the Nutils and FEniCS solver, if you like. Note that the error for a pure FEniCS simulation is lower than for a mixed one, because the FEniCS participants use the same coupling mesh, i.e., the mapping error becomes significantly smaller.
 
 ## Visualization
 
