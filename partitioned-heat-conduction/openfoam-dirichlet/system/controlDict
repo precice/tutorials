@@ -9,7 +9,7 @@ FoamFile
 
 // Make sure you build the solver located
 // in ./openfoam-solver before running
-// the case in the
+// the case
 application     heatTransfer;
 
 libs ( "libgroovyBC.so" ) ;
