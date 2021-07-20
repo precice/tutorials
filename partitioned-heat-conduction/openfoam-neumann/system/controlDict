@@ -7,8 +7,10 @@ FoamFile
     object      controlDict;
 }
 
-// In order to prevent misuse
-application     custom;
+// Make sure you build the solver located
+// in ./openfoam-solver before running
+// the case in the
+application     heatTransfer;
 
 libs ( "libgroovyBC.so" ) ;
 

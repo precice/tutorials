@@ -2,12 +2,7 @@
 set -e -u
 
 blockMesh
-touch openfoam-dirichlet.foam
+touch openfoam-neumann.foam
 
-if test -f "heatTransfer"; then
-    ./"heatTransfer"
-else
-	echo "Unable to find the executable 'heatTransfer'. Please compile the solver for this tutorial using the command 'wmake' in the solver (../openfoam-solver/) directory and copy the executable into this directory to run this tutorial."
-fi
-
+../../tools/run-openfoam.sh "$@"
 . ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
