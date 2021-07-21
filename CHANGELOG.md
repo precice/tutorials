@@ -8,14 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-## [v202104.1.1] 2021-04-23
+## [v202104.1.1] 2021-05-02
 
 ### Changed
 
 - Modified the helper tool `openfoam_remove_empty_dirs` such that it also respects results in the compressed OpenFOAM format (76f4482).
 - Synced the post-processing functionality of the elastic-tube-1d and the respective documentation. (#209)
 
-## [v202104.1.0] 2021-05-02
+## [v202104.1.0] 2021-04-23
 
 ### Added
 
