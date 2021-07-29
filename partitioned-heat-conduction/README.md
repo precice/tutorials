@@ -35,7 +35,7 @@ Running this tutorial with OpenFOAM is a bit of a challenge and requires some sp
 
 * First of all, OpenFOAM does not provide a Laplace solver with a non-zero right-hand side. Therefore, we provide a modified Laplace solver together with the tutorial, which needs to be compiled before running the tutorial. The solver can be compiled by executing `wmake` in the solver directory `./openfoam-solver/`. The generated executable will be stored in the `FOAM_USER_APPBIN` by default. Afterwards, the custom solver `heatTransfer` can be started from the respective OpenFOAM case directory, as usual.
 
-* The second challenge is given by the time- and space-dependent Dirichlet boundary conditions required for domain boundaries not belonging to the interface. For this purpose, a valid installation of `groovyBC` (part of `swak4Foam`) is required.
+* The second challenge is given by the time- and space-dependent Dirichlet boundary conditions required for domain boundaries not belonging to the interface. For this purpose, a valid installation of `groovyBC` (part of [`swak4Foam`](https://openfoamwiki.net/index.php/Contrib/swak4Foam)) is required.
 
 * The third challenge is given by the space-dependent initial conditions. We use `funkySetFields` (installed with OpenFOAM) to evaluate the initial condition. You can directly execute the `./run.sh` script, which calls the `setInitialField.sh` in order to evaluate the required initial condition and store it in the `0` directory. Note that `run.sh`  deletes the `0` time directory and copies it again from `0.orig`. If you start modifying the initial or boundary conditions, make sure you modify the files located in the `0.orig` directory in combination with the default `run.sh` scripts.
 
