@@ -15,50 +15,52 @@ We solve a partitioned heat equation. For information on the non-partitioned cas
 
 Case setup from [3]. `D` denotes the Dirichlet participant and `N` denotes the Neumann participant.
 
-The heat equation is solved on a rectangular domain `Omega = [0,2] x [0,1]` with given Dirichlet boundary conditions. We split the domain at `x_c = 1` using a straight vertical line, the coupling interface. The left part of the domain will be referred to as the Dirichlet partition and the right part as the Neumann partition. To couple the two participants we use Dirichlet-Neumann coupling. Here, the Dirichlet participant receives Dirichlet boundary conditions (`Temperature`) at the coupling interface and solves the heat equation using these boundary conditions on the left part of the domain. Then the Dirichlet participant computes the resulting heat flux (`Flux`) from the solution and sends it to the Neumann participant. The Neumann participant uses the flux as a Neumann boundary condition to solve the heat equation on the right part of the domain. We then extract the temperature from the solution and send it back to the Dirichlet participant. This establishes the coupling between the two participants.
+The heat equation is solved on a rectangular domain `Omega = [0,2] x [0,1]` with given Dirichlet boundary conditions. We split the domain at `x_c = 1` using a straight vertical line, the coupling interface. The left part of the domain will be referred to as the Dirichlet partition and the right part as the Neumann partition. To couple the two participants we use Dirichlet-Neumann coupling. Here, the Dirichlet participant receives Dirichlet boundary conditions (`Temperature`) at the coupling interface and solves the heat equation using these boundary conditions on the left part of the domain. Then the Dirichlet participant computes the resulting heat flux (`Heat-Flux`) from the solution and sends it to the Neumann participant. The Neumann participant uses the flux as a Neumann boundary condition to solve the heat equation on the right part of the domain. We then extract the temperature from the solution and send it back to the Dirichlet participant. This establishes the coupling between the two participants.
 
 This simple case allows us to compare the solution for the partitioned case to a known analytical solution (method of manufactures solutions, see [1, p.37ff]). For more usage examples and details, please refer to [3, sect. 4.1].
 
 ## Available solvers and dependencies
 
-You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE and the python bindings installed on your system.
+You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE
 
 * FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
 
 * Nutils. Install [Nutils](http://www.nutils.org/en/latest/).
 
+* OpenFOAM. Install OpenFOAM and the [OpenFOAM adapter](https://www.precice.org/adapter-openfoam-overview.html). This tutorial uses a custom solver, which you can find in `tutorials/partitioned-heat-conduction/openfoam-solver` and build using `cd tutorials/partitioned-heat-conduction/openfoam-solver && wmake`. Have a look at the section below (Notes on the OpenFOAM case) for further information.
+
+### Notes on the OpenFOAM case
+
+Running this tutorial with OpenFOAM is a bit of a challenge and requires some special considerations:
+
+* First of all, OpenFOAM does not provide a Laplace solver with a non-zero right-hand side. Therefore, we provide a modified Laplace solver together with the tutorial, which needs to be compiled before running the tutorial. The solver can be compiled by executing `wmake` in the solver directory `./openfoam-solver/`. The generated executable will be stored in the `FOAM_USER_APPBIN` by default. Afterwards, the custom solver `heatTransfer` can be started from the respective OpenFOAM case directory, as usual.
+
+* The second challenge is given by the time- and space-dependent Dirichlet boundary conditions required for domain boundaries not belonging to the interface. For this purpose, a valid installation of `groovyBC` (part of [`swak4Foam`](https://openfoamwiki.net/index.php/Contrib/swak4Foam)) is required.
+
+* The third challenge is given by the space-dependent initial conditions. We use `funkySetFields` (installed with OpenFOAM) to evaluate the initial condition. You can directly execute the `./run.sh` script, which calls the `setInitialField.sh` in order to evaluate the required initial condition and store it in the `0` directory. Note that `run.sh`  deletes the `0` time directory and copies it again from `0.orig`. If you start modifying the initial or boundary conditions, make sure you modify the files located in the `0.orig` directory in combination with the default `run.sh` scripts.
+
 ## Running the simulation
 
-This tutorial is for FEniCS and Nutils. You can find the corresponding `run.sh` script in the folders `fenics` and `nutils`.
+You can find the corresponding `run.sh` script in each participant solver.
 
-For choosing whether you want to run the Dirichlet-kind and a Neumann-kind participant, please provide the following commandline input:
+In case of `fenics` and `nutils` the Dirichlet-kind and a Neumann-kind participant are currently merged into a single participant directory. Therefore, please provide the following command line input argument:
 
 * `-d` flag will enforce Dirichlet boundary conditions on the coupling interface.
 * `-n` flag will enforce Neumann boundary conditions on the coupling interface.
 
-For running the case, open two terminals run:
+For running the case, a Dirichlet and a Neumann participant need to be executed, e.g., `./run.sh -d` and `./run.sh. -n`
 
-```bash
-cd fenics
-./run.sh -d
-```
-
-and
-
-```bash
-cd fenics
-./run.sh -n
-```
-
-If you want to use Nutils for one or both sides of the setup, just `cd nutils`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
+The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
 
 ```bash
 mpirun -n <N_PROC> python3 heat.py -d
 ```
 
+OpenFOAM supports parallel runs as usual. However, you need to execute the command manually by running: `mpirun -np <N_PROC> ./heatTransfer`.
+
 ### Note on the combination of Nutils & FEniCS
 
-You can mix the Nutils and FEniCS solver, if you like. Note that the error for a pure FEniCS simulation is lower than for a mixed one. We did not yet study the origin of this error, but assume that this is due to the fact that Nutils uses Gauss points as coupling mesh and therefore entails extrapolation in the data mapping at the top and bottom corners.
+You can mix the Nutils and FEniCS solver, if you like. Note that the error for a pure FEniCS simulation is lower than for a mixed one, because the FEniCS participants use the same coupling mesh, i.e., the mapping error becomes significantly smaller.
 
 ## Visualization
 
