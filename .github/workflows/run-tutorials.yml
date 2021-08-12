@@ -17,7 +17,7 @@ jobs:
           su - precice
       - name: Run an OpenFOAM-OpenFOAM case
         run: |
-          cd /home/precice/tutorials/flow-over-heated-plate/
+          cd tutorials/flow-over-heated-plate/
           (cd fluid-openfoam && ./run.sh &)
           (cd solid-openfoam && ./run.sh &)  
         
