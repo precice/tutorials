@@ -19,7 +19,7 @@ jobs:
           ls -la /home
       - name: Write a dummy file
         run: |
-          date | tee dummy.log
+          cd /home/precice && date | tee dummy.log
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: test
