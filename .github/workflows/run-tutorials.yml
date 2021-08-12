@@ -6,7 +6,10 @@ on:
 jobs:
   run-flow-over-heated-plate:
     runs-on: ubuntu-latest
-    container: ghcr.io/precice/openfoam-adapter:latest
+    container:
+      image: ghcr.io/precice/openfoam-adapter:latest
+      credentials:
+        username: precice
     steps:
       - name: Print environment
         run: |
