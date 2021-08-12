@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Print environment
         run: |
-          env
+          env && whoami
       - name: List files
         run: |
           ls -la /home
