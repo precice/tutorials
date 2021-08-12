@@ -13,7 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Switch user
-        run: su - precice
+        run: |
+          su - precice
+          echo $FOAM_USER_LIBBIN
+          ls $FOAM_USER_LIBBIN
       - name: Run an OpenFOAM-OpenFOAM case
         run: |
           cd flow-over-heated-plate/
