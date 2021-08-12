@@ -13,7 +13,7 @@ jobs:
           env
       - name: List files
         run: |
-          ls -la
+          ls -la /home
       - name: Write a dummy file
         run: |
           date | tee dummy.log
