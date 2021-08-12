@@ -11,9 +11,9 @@ jobs:
       - name: Print environment
         run: |
           env
-      - name: Manually clone repo
+      - name: Write a dummy file
         run: |
-          git clone https://github.com/precice/tutorials.git
+          date | tee dummy.log
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: test
