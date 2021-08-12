@@ -14,8 +14,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Run an OpenFOAM-OpenFOAM case
         run: |
-          ls
-          cd tutorials/flow-over-heated-plate/
+          cd flow-over-heated-plate/
           (cd fluid-openfoam && ./run.sh &)
           (cd solid-openfoam && ./run.sh &)  
         
