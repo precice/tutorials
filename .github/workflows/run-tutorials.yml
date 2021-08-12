@@ -12,9 +12,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Switch user to precice
-        run: |
-          su - precice
       - name: Run an OpenFOAM-OpenFOAM case
         run: |
           cd tutorials/flow-over-heated-plate/
