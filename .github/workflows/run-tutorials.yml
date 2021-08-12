@@ -10,15 +10,6 @@ jobs:
       image: ghcr.io/precice/openfoam-adapter:latest
       options: --user root
     steps:
-      - name: Print environment
-        run: |
-          env && whoami
-      - name: List files
-        run: |
-          ls -la
-      - name: Write a dummy file
-        run: |
-          cd /home/precice && date | tee dummy.log
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: test
