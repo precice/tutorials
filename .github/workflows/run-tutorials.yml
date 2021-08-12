@@ -11,6 +11,9 @@ jobs:
       - name: Print environment
         run: |
           env
+      - name: List files
+        run: |
+          ls -la
       - name: Write a dummy file
         run: |
           date | tee dummy.log
