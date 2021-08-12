@@ -12,7 +12,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: test
+      - name: Switch user to precice
         run: |
-          ls
+          su - precice
+      - name: Run an OpenFOAM-OpenFOAM case
+        run: |
+          cd /home/precice/tutorials/flow-over-heated-plate/
+          (cd fluid-openfoam && ./run.sh &)
+          (cd solid-openfoam && ./run.sh &)  
         
