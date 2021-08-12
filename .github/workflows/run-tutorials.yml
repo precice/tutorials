@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/precice/openfoam-adapter:latest
-      options: --user precice
+      options: --user root
     steps:
       - name: Print environment
         run: |
