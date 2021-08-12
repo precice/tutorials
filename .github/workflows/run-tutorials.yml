@@ -8,8 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/precice/openfoam-adapter:latest
     steps:
+      - name: Print environment
+        run: |
+          env
       - name: Checkout repository
-        uses: actions/checkout@v2 
+        uses: actions/checkout@v2
       - name: test
         run: |
           ls
