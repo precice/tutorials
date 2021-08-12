@@ -15,8 +15,8 @@ jobs:
       - name: Switch user
         run: |
           su - precice
-          echo $FOAM_USER_LIBBIN
-          ls $FOAM_USER_LIBBIN
+          /usr/bin/openfoam2012 echo $FOAM_USER_LIBBIN
+          /usr/bin/openfoam2012 ls $FOAM_USER_LIBBIN
       - name: Run an OpenFOAM-OpenFOAM case
         run: |
           cd flow-over-heated-plate/
