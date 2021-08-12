@@ -15,7 +15,7 @@ jobs:
           env && whoami
       - name: List files
         run: |
-          ls -la /home
+          ls -la
       - name: Write a dummy file
         run: |
           cd /home/precice && date | tee dummy.log
