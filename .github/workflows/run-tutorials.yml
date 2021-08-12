@@ -15,6 +15,6 @@ jobs:
       - name: Run an OpenFOAM-OpenFOAM case
         run: |
           cd flow-over-heated-plate/
-          (cd fluid-openfoam && ./run.sh &)
-          (cd solid-openfoam && ./run.sh &)  
+          (cd fluid-openfoam && /usr/bin/openfoam2012 ./run.sh &)
+          (cd solid-openfoam && /usr/bin/openfoam2012 ./run.sh &)  
         
