@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/precice/openfoam-adapter:latest
-      options: --user root
+      options: --user 1001
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
