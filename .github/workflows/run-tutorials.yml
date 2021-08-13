@@ -8,15 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/precice/openfoam-adapter:latest
-      options: --user root
+      options: --workdir /home/precice
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Switch user
-        run: |
-          su - precice
-          /usr/bin/openfoam2012 echo $FOAM_USER_LIBBIN
-          /usr/bin/openfoam2012 ls $FOAM_USER_LIBBIN
       - name: Run an OpenFOAM-OpenFOAM case
         run: |
           cd flow-over-heated-plate/
