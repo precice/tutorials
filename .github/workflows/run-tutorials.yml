@@ -17,6 +17,7 @@ jobs:
       - name: Run an OpenFOAM-OpenFOAM case
         run: |
           export USER=precice
+          export HOME=/home/precice
           openfoam2012 env
           cd flow-over-heated-plate/
           (cd fluid-openfoam && /usr/bin/openfoam2012 ./run.sh &)
