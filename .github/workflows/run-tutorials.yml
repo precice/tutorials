@@ -29,4 +29,11 @@ jobs:
           path: |
             flow-over-heated-plate/fluid-openfoam/fluid-openfoam.log
             flow-over-heated-plate/solid-openfoam/solid-openfoam.log
+      - name: Archive case files
+        uses: actions/upload-artifact@v2
+        with:
+          name: case-files
+          path: |
+            flow-over-heated-plate/fluid-openfoam/*
+            flow-over-heated-plate/solid-openfoam/*
         
