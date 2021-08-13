@@ -20,6 +20,13 @@ jobs:
           export HOME=/home/precice
           openfoam2012 env
           cd flow-over-heated-plate/
-          (cd fluid-openfoam && /usr/bin/openfoam2012 ./run.sh &)
-          (cd solid-openfoam && /usr/bin/openfoam2012 ./run.sh &)  
+          (cd fluid-openfoam && /usr/bin/openfoam2012 ./run.sh | tee fluid-openfoam.log 2>&1 &)
+          (cd solid-openfoam && /usr/bin/openfoam2012 ./run.sh | tee solid-openfoam.log 2>&1 &)
+      - name: Archive logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs
+          path: |
+            flow-over-heated-plate/fluid-openfoam/fluid-openfoam.log
+            flow-over-heated-plate/solid-openfoam/solid-openfoam.log
         
