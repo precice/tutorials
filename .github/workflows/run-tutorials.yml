@@ -8,14 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/precice/openfoam-adapter:latest
-      options: --user precice --workdir /home/precice
+      options: --user root
     steps:
-      - name: Tell me about /__w/tutorials/tutorials
-        run: ls -la /__w/tutorials/tutorials
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Run an OpenFOAM-OpenFOAM case
         run: |
+          export USER=precice
           cd flow-over-heated-plate/
           (cd fluid-openfoam && /usr/bin/openfoam2012 ./run.sh &)
           (cd solid-openfoam && /usr/bin/openfoam2012 ./run.sh &)  
