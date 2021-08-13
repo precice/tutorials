@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          path: /home/precice
       - name: Run an OpenFOAM-OpenFOAM case
         run: |
           cd flow-over-heated-plate/
