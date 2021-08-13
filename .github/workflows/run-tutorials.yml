@@ -10,8 +10,8 @@ jobs:
       image: ghcr.io/precice/openfoam-adapter:latest
       options: --user precice --workdir /home/precice
     steps:
-      - name: Tell me about /__w/tutorials
-        run: ls -la /__w/tutorials
+      - name: Tell me about /__w/tutorials/tutorials
+        run: ls -la /__w/tutorials/tutorials
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Run an OpenFOAM-OpenFOAM case
