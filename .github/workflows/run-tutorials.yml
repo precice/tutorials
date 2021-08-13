@@ -11,7 +11,7 @@ jobs:
       options: --user precice
     steps:
       - name: Get ownership of workspace
-        run: sudo chown -R $USER:$USER /home/github/actions-runner/_work/{REPOSITORY_NAME_HERE}
+        run: echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/github/actions-runner/_work/tutorials
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Run an OpenFOAM-OpenFOAM case
