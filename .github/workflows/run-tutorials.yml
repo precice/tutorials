@@ -18,8 +18,9 @@ jobs:
         run: |
           sudo apt-get install -y cmake
           cd elastic-tube-1d
-          (cd fluid-cpp && mkdir build && cd build && cmake .. && make all && cd .. && ./run.sh | tee fluid-cpp.log 2>&1 & && PIDfluid=$!)
-          (cd solid-cpp && mkdir build && cd build && cmake .. && make all && cd .. && ./run.sh | tee solid-cpp.log 2>&1 & && PIDsolid=$!)
+          cd fluid-cpp && mkdir build && cd build && cmake .. && make all && cd .. && ./run.sh | tee fluid-cpp.log 2>&1 &
+          cd ../solid-cpp && mkdir build && cd build && cmake .. && make all && cd .. && ./run.sh | tee solid-cpp.log 2>&1 &
+          PIDsolid=$!
           wait $PIDsolid
       - name: Run an OpenFOAM-OpenFOAM case
         run: |
