@@ -23,6 +23,7 @@ jobs:
       - name: Run elastic-tube-1d
         run: |
           cd elastic-tube-1d/fluid-cpp && ./run.sh | tee fluid-cpp.log 2>&1 &
+          ls
           cd ../solid-cpp && ./run.sh | tee solid-cpp.log 2>&1 &
           PIDsolid=$!
           wait $PIDsolid
