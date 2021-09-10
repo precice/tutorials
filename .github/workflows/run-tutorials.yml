@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Run an elastic-tube-1d case
         run: |
+          sudo apt-get install -y cmake
           cd elastic-tube-1d
           (cd fluid-cpp && mkdir build && cd build && cmake .. && make all && cd .. && ./run.sh | tee fluid-cpp.log 2>&1 &)
           (cd solid-cpp && mkdir build && cd build && cmake .. && make all && cd .. && ./run.sh | tee solid-cpp.log 2>&1 &)
