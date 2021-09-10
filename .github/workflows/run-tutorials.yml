@@ -14,6 +14,11 @@ jobs:
         run: sudo chown -R $USER:$USER /__w/tutorials/
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Run an elastic-tube-1d case
+        run: |
+          cd elastic-tube-1d
+          (cd fluid-cpp && mkdir build && cd build && cmake .. && make all && cd .. && ./run.sh | tee fluid-cpp.log 2>&1 &)
+          (cd solid-cpp && mkdir build && cd build && cmake .. && make all && cd .. && ./run.sh | tee solid-cpp.log 2>&1 &)
       - name: Run an OpenFOAM-OpenFOAM case
         run: |
           export USER=precice
@@ -27,6 +32,8 @@ jobs:
         with:
           name: logs
           path: |
+            elastic-tube-1d/fluid-cpp/fluid-cpp.log
+            elastic-tube-1d/solid-cpp/solid-cpp.log
             flow-over-heated-plate/fluid-openfoam/fluid-openfoam.log
             flow-over-heated-plate/solid-openfoam/solid-openfoam.log
       - name: Archive case files
