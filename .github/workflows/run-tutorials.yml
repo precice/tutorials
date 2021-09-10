@@ -24,7 +24,8 @@ jobs:
         run: |
           cd elastic-tube-1d
           cd fluid-cpp && ./run.sh | tee fluid-cpp.log 2>&1 &
-          cd ../solid-cpp && ./run.sh | tee solid-cpp.log 2>&1 &
+          ls
+          cd solid-cpp && ./run.sh | tee solid-cpp.log 2>&1 &
           PIDsolid=$!
           wait $PIDsolid
       - name: Run an OpenFOAM-OpenFOAM case
