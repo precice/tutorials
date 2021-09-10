@@ -14,35 +14,21 @@ jobs:
         run: sudo chown -R $USER:$USER /__w/tutorials/
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Build elastic-tube-1d C++ solvers
-        run: |
-          sudo apt-get install -y cmake
-          cd elastic-tube-1d
-          cd fluid-cpp && mkdir build && cd build && cmake .. && make all && cd ..
-          cd ../solid-cpp && mkdir build && cd build && cmake .. && make all && cd ..
-      - name: Run elastic-tube-1d
-        run: |
-          cd elastic-tube-1d
-          cd fluid-cpp && ./run.sh | tee fluid-cpp.log 2>&1 &
-          ls
-          cd solid-cpp && ./run.sh | tee solid-cpp.log 2>&1 &
-          PIDsolid=$!
-          wait $PIDsolid
       - name: Run an OpenFOAM-OpenFOAM case
         run: |
           export USER=precice
           export HOME=/home/precice
           openfoam2012 env
           cd flow-over-heated-plate/
-          (cd fluid-openfoam && /usr/bin/openfoam2012 ./run.sh | tee fluid-openfoam.log 2>&1 &)
-          (cd solid-openfoam && /usr/bin/openfoam2012 ./run.sh | tee solid-openfoam.log 2>&1 &)
+          cd fluid-openfoam && /usr/bin/openfoam2012 ./run.sh | tee fluid-openfoam.log 2>&1 &
+          cd solid-openfoam && /usr/bin/openfoam2012 ./run.sh | tee solid-openfoam.log 2>&1 &
+          PIDsolid=$!
+          wait $PIDsolid
       - name: Archive logs
         uses: actions/upload-artifact@v2
         with:
           name: logs
           path: |
-            elastic-tube-1d/fluid-cpp/fluid-cpp.log
-            elastic-tube-1d/solid-cpp/solid-cpp.log
             flow-over-heated-plate/fluid-openfoam/fluid-openfoam.log
             flow-over-heated-plate/solid-openfoam/solid-openfoam.log
       - name: Archive case files
