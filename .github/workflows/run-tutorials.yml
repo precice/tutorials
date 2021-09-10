@@ -21,6 +21,7 @@ jobs:
           cd fluid-cpp && mkdir build && cd build && cmake .. && make all && cd ..
           cd ../solid-cpp && mkdir build && cd build && cmake .. && make all && cd ..
       - name: Run elastic-tube-1d
+        run: |
           cd fluid-cpp && ./run.sh | tee fluid-cpp.log 2>&1 &
           cd ../solid-cpp && ./run.sh | tee solid-cpp.log 2>&1 &
           PIDsolid=$!
