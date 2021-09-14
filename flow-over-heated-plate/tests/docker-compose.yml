@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  prepare:
+    image: ubuntu:latest
+    volumes:
+      - ../..:/tests
+    command: >
+      /bin/bash -c "cd /tests/flow-over-heated-plate &&
+      sed -i 's|m2n:sockets from|m2n:sockets network=\"eth0\" from|g' precice-config.xml"
+
+  fluid-openfoam:
+    depends_on:
+      - prepare
+    image: ghcr.io/precice/openfoam-adapter:latest
+    volumes:
+      - ../..:/tests
+    command: >
+      /bin/bash -c "cd /tests/flow-over-heated-plate/fluid-openfoam &&
+      openfoam2012 ./run.sh | tee fluid-openfoam.log 2>&1"
+
+  solid-openfoam:
+    depends_on:
+      - prepare
+    image: ghcr.io/precice/openfoam-adapter:latest
+    volumes:
+      - ../..:/tests
+    command: >
+      /bin/bash -c "cd /tests/flow-over-heated-plate/solid-openfoam &&
+      openfoam2012 ./run.sh | tee solid-openfoam.log 2>&1"

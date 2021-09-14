@@ -1,0 +1,30 @@
+name: Run tutorials with docker-compose
+on:
+  push:
+    branches:
+      - add-nightly-tests
+jobs:
+  run-flow-over-heated-plate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Run docker-compose
+        run: |
+          cd flow-over-heated-plate/tests/
+          docker-compose up
+      - name: Archive logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs
+          path: |
+            flow-over-heated-plate/fluid-openfoam/fluid-openfoam.log
+            flow-over-heated-plate/solid-openfoam/solid-openfoam.log
+      - name: Archive case files
+        uses: actions/upload-artifact@v2
+        with:
+          name: case-files
+          path: |
+            flow-over-heated-plate/fluid-openfoam/*
+            flow-over-heated-plate/solid-openfoam/*
+        
