@@ -26,6 +26,6 @@ services:
     volumes:
       - ../..:/tests
     command: >
-      /bin/bash -c "sudo chown -R $USER:$USER /tutorials/ &&
+      /bin/bash -c "sudo chown -R $$USER:$$USER /tutorials/ &&
       cd /tests/flow-over-heated-plate/solid-openfoam &&
       openfoam2012 ./run.sh | tee solid-openfoam.log 2>&1"
