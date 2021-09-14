@@ -6,7 +6,8 @@ services:
       - ../..:/tests
     command: >
       /bin/bash -c "cd /tests/flow-over-heated-plate &&
-      sed -i 's|m2n:sockets from|m2n:sockets network=\"eth0\" from|g' precice-config.xml"
+      sed -i 's|m2n:sockets from|m2n:sockets network=\"eth0\" from|g' precice-config.xml &&
+      sudo chown -R precice:precice /tests/"
 
   fluid-openfoam:
     depends_on:
@@ -15,8 +16,7 @@ services:
     volumes:
       - ../..:/tests
     command: >
-      /bin/bash -c "sudo chown -R $$USER:$$USER /tests/ &&
-      cd /tests/flow-over-heated-plate/fluid-openfoam &&
+      /bin/bash -c "cd /tests/flow-over-heated-plate/fluid-openfoam &&
       openfoam2012 ./run.sh | tee fluid-openfoam.log 2>&1"
 
   solid-openfoam:
@@ -26,6 +26,5 @@ services:
     volumes:
       - ../..:/tests
     command: >
-      /bin/bash -c "openfoam2012 env &&
-      cd /tests/flow-over-heated-plate/solid-openfoam &&
+      /bin/bash -c "cd /tests/flow-over-heated-plate/solid-openfoam &&
       openfoam2012 ./run.sh | tee solid-openfoam.log 2>&1"
