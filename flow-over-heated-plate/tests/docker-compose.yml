@@ -15,7 +15,7 @@ services:
     volumes:
       - ../..:/tests
     command: >
-      /bin/bash -c "env &&
+      /bin/bash -c "sudo chown -R $USER:$USER /tests/ &&
       cd /tests/flow-over-heated-plate/fluid-openfoam &&
       openfoam2012 ./run.sh | tee fluid-openfoam.log 2>&1"
 
