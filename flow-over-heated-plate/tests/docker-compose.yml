@@ -7,7 +7,7 @@ services:
     command: >
       /bin/bash -c "cd /tests/flow-over-heated-plate &&
       sed -i 's|m2n:sockets from|m2n:sockets network=\"eth0\" from|g' precice-config.xml &&
-      sudo chown -R precice:precice /tests/"
+      chown -R precice:precice /tests/"
 
   fluid-openfoam:
     depends_on:
