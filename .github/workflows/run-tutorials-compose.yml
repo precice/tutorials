@@ -7,6 +7,8 @@ jobs:
   run-flow-over-heated-plate:
     runs-on: ubuntu-latest
     steps:
+      - name: Get ownership of workspace
+        run: sudo chown -R $USER:$USER /__w/tutorials/
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Run docker-compose
