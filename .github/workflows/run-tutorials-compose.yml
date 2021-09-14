@@ -9,8 +9,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Get ownership of workspace
-        run: sudo chown -R $USER:$USER /__w/tutorials/
       - name: Run docker-compose
         run: |
           cd flow-over-heated-plate/tests/

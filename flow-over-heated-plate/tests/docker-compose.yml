@@ -5,7 +5,8 @@ services:
     volumes:
       - ../..:/tests
     command: >
-      /bin/bash -c "cd /tests/flow-over-heated-plate &&
+      /bin/bash -c "env &&
+      cd /tests/flow-over-heated-plate &&
       sed -i 's|m2n:sockets from|m2n:sockets network=\"eth0\" from|g' precice-config.xml"
 
   fluid-openfoam:
