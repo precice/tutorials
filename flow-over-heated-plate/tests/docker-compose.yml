@@ -11,7 +11,7 @@ services:
   fluid-openfoam:
     depends_on:
       - prepare
-    image: ghcr.io/precice/openfoam-adapter:latest
+    image: "ghcr.io/precice/openfoam-adapter:${TAG_OPENFOAM_ADAPTER}"
     volumes:
       - ../..:/tests
     command: >
@@ -22,7 +22,7 @@ services:
   solid-openfoam:
     depends_on:
       - prepare
-    image: ghcr.io/precice/openfoam-adapter:latest
+    image: "ghcr.io/precice/openfoam-adapter:${TAG_OPENFOAM_ADAPTER}"
     volumes:
       - ../..:/tests
     command: >
