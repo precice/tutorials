@@ -17,7 +17,7 @@ services:
     command: >
       /bin/bash -c "sudo chown -R $$USER:$$USER /tests/ &&
       cd /tests/flow-over-heated-plate/fluid-openfoam &&
-      openfoam ./run.sh | tee fluid-openfoam.log 2>&1"
+      openfoam2106 ./run.sh | tee fluid-openfoam.log 2>&1"
 
   solid-openfoam:
     depends_on:
@@ -28,4 +28,4 @@ services:
     command: >
       /bin/bash -c "sudo chown -R $$USER:$$USER /tests/ &&
       cd /tests/flow-over-heated-plate/solid-openfoam &&
-      openfoam ./run.sh | tee solid-openfoam.log 2>&1"
+      openfoam2106 ./run.sh | tee solid-openfoam.log 2>&1"
