@@ -6,20 +6,40 @@ import outputConfiguration as config
 from thetaScheme import perform_partitioned_implicit_trapezoidal_rule_step, perform_partitioned_implicit_euler_step
 import numpy as np
 import tubePlotting
-
 import matplotlib.pyplot as plt
 import matplotlib.animation as manimation
-
 from output import writeOutputToVTK
-
 import precice
-from precice import *
+from precice import action_write_initial_data, action_write_iteration_checkpoint, \
+    action_read_iteration_checkpoint
+
+# physical properties of the tube
+r0 = 1 / np.sqrt(np.pi)  # radius of the tube
+a0 = r0**2 * np.pi  # cross sectional area
+u0 = 10  # mean velocity
+ampl = 3  # amplitude of varying velocity
+frequency = 10  # frequency of variation
+t_shift = 0  # temporal shift of variation
+p0 = 0  # pressure at outlet
+kappa = 100
+
+L = 10  # length of tube/simulation domain
+N = 100
+dx = L / kappa
+# helper function to create constant cross section
+
+
+def velocity_in(t): return u0 + ampl * np.sin(frequency *
+                                              (t + t_shift) * np.pi)  # inflow velocity
+
+
+def crossSection0(N):
+    return a0 * np.ones(N + 1)
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("configurationFileName", help="Name of the xml precice configuration file.",
                     nargs='?', type=str, default="../precice-config.xml")
-parser.add_argument(
-    "--write-vtk", help="Save vtk files of each timestep in the 'VTK' folder.", action='store_true')
 parser.add_argument(
     "--enable-plot", help="Show a continuously updated plot of the tube while simulating.", action='store_true')
 parser.add_argument("--write-video", help="Save a video of the simulation as 'writer_test.mp4'. \
@@ -33,7 +53,6 @@ except SystemExit:
     print("Try '$ python FluidSolver.py precice-config.xml'")
     quit()
 
-output_mode = config.OutputModes.VTK if args.write_vtk else config.OutputModes.OFF
 plotting_mode = config.PlottingModes.VIDEO if args.enable_plot else config.PlottingModes.OFF
 if args.write_video and not args.enable_plot:
     print("")
@@ -42,41 +61,14 @@ if args.write_video and not args.enable_plot:
     quit()
 writeVideoToFile = True if args.write_video else False
 
+print("Plotting Mode: {}".format(plotting_mode))
+
 print("Starting Fluid Solver...")
-
-configFileName = args.configurationFileName
-
-# physical properties of the tube
-r0 = 1 / np.sqrt(np.pi)  # radius of the tube
-a0 = r0**2 * np.pi  # cross sectional area
-E = 10000  # elasticity module
-u0 = 10  # mean velocity
-ampl = 3  # amplitude of varying velocity
-frequency = 10  # frequency of variation
-t_shift = 0  # temporal shift of variation
-p0 = 0  # pressure at outlet
-
-
-def velocity_in(t): return u0 + ampl * np.sin(frequency *
-                                              (t + t_shift) * np.pi)  # inflow velocity
-
-
-L = 10  # length of tube/simulation domain
-N = 100
-dx = L / 100
-# helper function to create constant cross section
-
-
-def crossSection0(N):
-    return a0 * np.ones(N + 1)
-
 
 print("N: " + str(N))
 
-solverName = "Fluid"
-
 print("Configure preCICE...")
-interface = precice.Interface(solverName, configFileName, 0, 1)
+interface = precice.Interface("Fluid", args.configurationFileName, 0, 1)
 print("preCICE configured...")
 
 dimensions = interface.get_dimensions()
@@ -87,7 +79,6 @@ pressure = p0 * np.ones(N + 1)
 pressure_old = p0 * np.ones(N + 1)
 crossSectionLength = a0 * np.ones(N + 1)
 crossSectionLength_old = a0 * np.ones(N + 1)
-
 
 if plotting_mode == config.PlottingModes.VIDEO:
     fig, ax = plt.subplots(1)
@@ -142,7 +133,7 @@ while interface.is_coupling_ongoing():
         velocity_old, pressure_old, crossSectionLength_old, crossSectionLength, dx, precice_dt, velocity_in(
             t + precice_dt), custom_coupling=True)
     interface.write_block_scalar_data(pressureID, vertexIDs, pressure)
-    precice_dt = interface.advance(precice_dt)
+    interface.advance(precice_dt)
     crossSectionLength = interface.read_block_scalar_data(
         crossSectionLengthID, vertexIDs)
 
@@ -160,9 +151,8 @@ while interface.is_coupling_ongoing():
         velocity_old = np.copy(velocity)
         pressure_old = np.copy(pressure)
         crossSectionLength_old = np.copy(crossSectionLength)
-        if output_mode is config.OutputModes.VTK:
-            writeOutputToVTK(time_it, "out_fluid_", dx, datanames=["velocity", "pressure", "diameter"], data=[
-                             velocity_old, pressure_old, crossSectionLength_old])
+        writeOutputToVTK(time_it, "out_fluid_", dx, datanames=["velocity", "pressure", "diameter"], data=[
+            velocity_old, pressure_old, crossSectionLength_old])
         time_it += 1
 
 print("Exiting FluidSolver")

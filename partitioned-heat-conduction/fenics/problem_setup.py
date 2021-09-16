@@ -1,16 +1,14 @@
 """
-Problem setup for partitioned-heat-conduction/fenics-fenics tutorial
+Problem setup for partitioned-heat-conduction/fenics tutorial
 """
 
-from fenics import SubDomain, Point, RectangleMesh, near, Function, VectorFunctionSpace, Expression
+from fenics import SubDomain, Point, RectangleMesh, near, Function, Expression
 from my_enums import DomainPart
 
 
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
 x_coupling = 1.0  # x coordinate of coupling interface
-radius = 0.2
-midpoint = Point(0.5, 0.5)
 
 
 class ExcludeStraightBoundary(SubDomain):
@@ -36,9 +34,6 @@ class StraightBoundary(SubDomain):
 
 def get_geometry(domain_part):
     nx = ny = 9
-    low_resolution = 5
-    high_resolution = 5
-    n_vertices = 20
 
     if domain_part is DomainPart.LEFT:
         p0 = Point(x_left, y_bottom)

@@ -9,7 +9,7 @@ FoamFile
 
 preciceConfig "../precice-config.xml";
 
-participant Inner-Fluid;
+participant Fluid-Inner;
 
 modules (CHT);
 
@@ -17,7 +17,7 @@ interfaces
 {
   Interface1
   {
-    mesh              Inner-Fluid-to-Solid;
+    mesh              Fluid-Inner-to-Solid;
     patches           (interface);
     
     readData
@@ -28,8 +28,8 @@ interfaces
     
     writeData
     (
-      Sink-Temperature-Inner-Fluid
-      Heat-Transfer-Coefficient-Inner-Fluid
+      Sink-Temperature-Fluid-Inner
+      Heat-Transfer-Coefficient-Fluid-Inner
     );
   };
 };

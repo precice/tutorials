@@ -16,7 +16,7 @@ clean_tutorial() {
             if [ "${case}" = images/ ]; then
                 continue
             fi
-            (cd "${case}" && ./clean.sh)
+            (cd "${case}" && ./clean.sh || echo "No cleaning script in ${case} - skipping")
         done
     )
 }
@@ -32,7 +32,8 @@ clean_precice_logs() {
             ./precice-*-events-summary.log \
             ./precice-postProcessingInfo.log \
             ./precice-*-watchpoint-*.log \
-            ./precice-*-watchintegral-*.log
+            ./precice-*-watchintegral-*.log \
+            ./core
     )
 }
 
@@ -62,7 +63,7 @@ clean_dealii() {
         set -e -u
         cd "$1"
         echo "--- Cleaning up deal.II case in $(pwd)"
-        rm -fv ./dealii-output/solution-*.vtk
+        rm -rfv ./dealii-output/
         clean_precice_logs .
     )
 }
@@ -72,8 +73,9 @@ clean_fenics() {
         set -e -u
         cd "$1"
         echo "--- Cleaning up FEniCS case in $(pwd)"
-        rm -fv ./*.pvd spooles.out FSI-S/*
+        rm -fv ./*.pvd spooles.out Solid/FSI-S/*
         rm -rfv ./out/
+        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }
@@ -84,6 +86,7 @@ clean_nutils() {
         cd "$1"
         echo "--- Cleaning up Nutils case in $(pwd)"
         rm -fv ./*.vtk
+        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }
@@ -99,6 +102,7 @@ clean_openfoam() {
             cleanCase
             rm -rfv 0/uniform/functionObjects/functionObjectProperties
         fi
+        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }

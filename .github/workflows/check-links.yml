@@ -1,0 +1,16 @@
+name: Check links
+on:
+  schedule:
+    - cron: '0 0 * * SUN'
+jobs:
+  check_links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Check links in markdown files (markdown-link-check)
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          use-verbose-mode: 'no'
+          config-file: '.markdown-link-check-config.json'

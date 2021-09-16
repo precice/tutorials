@@ -5,13 +5,13 @@ CODE=0
 
 # Check tutorials
 IGNORE="tools|quickstart"
-tutorials=$(find  -maxdepth 1 -type d -not -name ".*" | grep -vE $IGNORE | sed "s/^.\///")
+tutorials=$(find . -maxdepth 1 -type d -not -name ".*" | grep -vE $IGNORE | sed "s/^.\///")
 
 for tutorial in $tutorials; do
   # Check permalinks
-  docs=$(find ./$tutorial -maxdepth 1 -type f -name "*.md" | xargs grep -l "permalink:" | sed "s/^.\///")
+  docs=$(find "./$tutorial" -maxdepth 1 -type f -name "*.md" -print0 | xargs grep -l "permalink:" | sed "s/^.\///")
   for doc in $docs; do
-    link=$(grep "permalink:" $doc | sed "s/permalink: \+//")
+    link=$(grep "permalink:" "$doc" | sed "s/permalink: \+//")
     prefix="tutorials-$tutorial"
 
     if ! [[ $link =~ ^$prefix ]]; then
@@ -25,7 +25,7 @@ for tutorial in $tutorials; do
     echo
   done
 
-  images=$(find ./$tutorial/images -type f 2> /dev/null | sed "s/^.\///")
+  images=$(find "./$tutorial/images" -type f 2> /dev/null | sed "s/^.\///")
   prefix="tutorials-$tutorial-"
   for img in $images; do
     if ! [[ $img =~ ^$tutorial/images/$prefix ]]; then
@@ -40,9 +40,9 @@ for tutorial in $tutorials; do
 done
 
 # Check quickstart
-docs=$(find ./quickstart -maxdepth 1 -type f -name "*.md" | xargs grep -l "permalink:" | sed "s/^.\///")
+docs=$(find ./quickstart -maxdepth 1 -type f -name "*.md" -print0 | xargs grep -l "permalink:" | sed "s/^.\///")
 for doc in $docs; do
-  link=$(grep "permalink:" $doc | sed "s/permalink: \+//")
+  link=$(grep "permalink:" "$doc" | sed "s/permalink: \+//")
   prefix="quickstart"
 
   if ! [[ $link =~ ^$prefix ]]; then
