@@ -5,7 +5,7 @@ keywords: OpenFOAM, python
 summary: The 1D Elastic Tube is a FSI case, that consists of an internal flow in a flexible tube. The flow is unsteady and incompressible. This tutorial contains C++ and Python variants of the fluid and solid solvers. Running the simulation takes just 1-2 minutes.  
 ---
 
-{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/elastic-tube-1d). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/elastic-tube-1d). Read how in the [tutorials introduction](https://precice.org/tutorials.html)." %}
 
 ## Setup
 
@@ -31,8 +31,8 @@ Additionally the solvers use the parameters `N = 100` (number of cells), `tau = 
 
 Both fluid and solid participant are supported in:
 
-- *C++*: An example solver using the intrinsic [C++ API of preCICE](https://www.precice.org/couple-your-code-api.html). This solver also depends on LAPACK (e.g. on Ubuntu `sudo apt-get install liblapack-dev`)
-- *Python*: An example solver using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy scipy matplotlib vtk mpi4py`, which you can get from your system package manager or with `pip3 install --user <package>`.
+- *C++*: An example solver using the intrinsic [C++ API of preCICE](https://precice.org/couple-your-code-api.html). This solver also depends on LAPACK (e.g. on Ubuntu `sudo apt-get install liblapack-dev`)
+- *Python*: An example solver using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy scipy matplotlib vtk mpi4py`, which you can get from your system package manager or with `pip3 install --user <package>`.
 
 ### Building the C++ Solver
 

@@ -5,7 +5,7 @@ keywords: tutorial, CHT, conjugate-heat transfer, OpenFOAM, FEniCS, Nutils
 summary: This tutorial describes how to run a conjugate heat transfer coupled simulation using preCICE and any fluid-solid solver combination of our <a href="adapters-overview.html">officially provided adapter codes</a>.
 ---
 
-{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate). Read how in the [tutorials introduction](https://precice.org/tutorials.html)." %}
 
 ## Setup
 
@@ -23,13 +23,13 @@ By default, the fluid participant reads heat-flux values and the solid participa
 
 Fluid participant:
 
-* OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
 Solid participant:
 
-* OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
-* FEniCS. For more information, have a look at the [FeniCS adapter documentation](https://www.precice.org/adapter-fenics.html).
+* FEniCS. For more information, have a look at the [FeniCS adapter documentation](https://precice.org/adapter-fenics.html).
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
