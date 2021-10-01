@@ -98,7 +98,6 @@ cd tutorials/quickstart/fluid-openfoam
 ```
 
 You can also run OpenFOAM in parallel: `./run.sh -parallel`.
-Before the simulation again, cleanup the results and temporary files using `./clean-tutorial.sh`.
 
 In serial, the simulation should take less than a minute to compute (simulated time: 2.5s).
 
@@ -111,6 +110,12 @@ You may be curious what displacements OpenFOAM received from the rigid body solv
 ![result](images/quickstart-result.png)
 
 {% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
+
+## Running again (and again, and again)
+
+Now that you have a first working example, experiment! For example, how can you tell preCICE to simulate for a longer maximum time?
+
+Before running the simulation again, cleanup the results and temporary files using `./clean-tutorial.sh`.
 
 ## What's next?
 
