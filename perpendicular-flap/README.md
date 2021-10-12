@@ -1,7 +1,7 @@
 ---
 title: Perpendicular flap
 permalink: tutorials-perpendicular-flap.html
-keywords: fluid-structure interaction, FSI, OpenFOAM, FEniCS, Nutils, deal.II, Calculix, SU2,
+keywords: fluid-structure interaction, FSI, OpenFOAM, FEniCS, Nutils, deal.II, Calculix, SU2, Dune
 summary: This tutorial describes how to run a fluid-structure interaction using preCICE and any fluid-solid solver combination of our <a href="adapters-overview.html">officially provided adapter codes</a>.
 ---
 
@@ -32,6 +32,8 @@ Solid participant:
 * CalculiX. In order to allow a reasonable comparison to all solid codes, the geometrically non-linear solver has been disabled and only a linear model is used by default. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html)
 
 * deal.II. For compatibility reasons, the solver reads `Force` data from other `Fluid` participants. Reading and applying `Force` data is currently only implemented in the linear elastic solid model (`Model = linear` in the parameter file). Thus, the default simulation setup is only compatible with the linear elastic solid model. If you want to apply the non-linear solid model, please use `Stress` data for your read data, which is supported by the OpenFOAM adapter as well (example given in Turek-Hron-FSI). The `./run.sh` script takes the compiled executable `elasticity` as input argument (`run.sh -e=/path/to/elasticity`) and is required in case the executable is not discoverable at runtime (e.g. has been added to the system `PATH`). For more information, have a look at the [deal.II adapter documentation](https://precice.org/adapter-dealii-overview.html).
+
+* Dune. The structural model is limited to linear elasticity. The solver reads `Force` data and writes `Displacement` data. The `./run.sh` script needs the compiled executable `solid-dune` in the same directory, which can be obtained by building the dune-adapter.
 
 ## Running the Simulation
 
