@@ -1,6 +1,0 @@
-#ifndef DUNE_PERPENDICULAR_FLAP_HH
-#define DUNE_PERPENDICULAR_FLAP_HH
-
-// add your classes here
-
-#endif // DUNE_PERPENDICULAR_FLAP_HH
