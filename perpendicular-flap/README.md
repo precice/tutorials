@@ -33,7 +33,7 @@ Solid participant:
 
 * deal.II. For compatibility reasons, the solver reads `Force` data from other `Fluid` participants. Reading and applying `Force` data is currently only implemented in the linear elastic solid model (`Model = linear` in the parameter file). Thus, the default simulation setup is only compatible with the linear elastic solid model. If you want to apply the non-linear solid model, please use `Stress` data for your read data, which is supported by the OpenFOAM adapter as well (example given in Turek-Hron-FSI). The `./run.sh` script takes the compiled executable `elasticity` as input argument (`run.sh -e=/path/to/elasticity`) and is required in case the executable is not discoverable at runtime (e.g. has been added to the system `PATH`). For more information, have a look at the [deal.II adapter documentation](https://precice.org/adapter-dealii-overview.html).
 
-* Dune. The structural model is limited to linear elasticity. The solver reads `Force` data and writes `Displacement` data. The `./run.sh` script needs the compiled executable `solid-dune` in the same directory, which can be obtained by building the dune-adapter.
+* Dune. The structural model is limited to linear elasticity. The solver reads `Force` data and writes `Displacement` data. The `./run.sh` script needs the compiled executable `dune-perpendicular-flap` in the same directory, which can be obtained by building the dune-adapter.
 
 ## Running the Simulation
 
