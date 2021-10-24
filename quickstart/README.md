@@ -21,8 +21,8 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 1. Get and install preCICE. For Ubuntu 20.04 (Focal Fossa), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v2.2.1/libprecice2_2.2.1_focal.deb
-    sudo apt install ./libprecice2_2.2.1_focal.deb
+    wget https://github.com/precice/precice/releases/download/v2.3.0/libprecice2_2.3.0_focal.deb
+    sudo apt install ./libprecice2_2.3.0_focal.deb
     ```
 
     - Are you using something else? Just pick what suits you best on [this overview page](https://precice.org/installation-overview.html).
