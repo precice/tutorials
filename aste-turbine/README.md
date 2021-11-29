@@ -20,7 +20,7 @@ This case is a simple usage scenario for. Some features offered by this case:
 
 ## Running the ASTE
 
-Run the `run.sh` script. It do the followings:
+Run the `run.sh` script. It performs the following steps:
 
 * Downloads the meshes from preCICE repository.
 * Calculates function `x + y` on a finer grid.
