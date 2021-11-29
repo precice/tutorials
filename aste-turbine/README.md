@@ -5,7 +5,7 @@ keywords: ASTE, Testing, Turbine
 summary: This tutorial is an example case for ASTE, showcasing basic features and usage of ASTE.
 ---
 
-{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/turek-hron-fsi3). Read how in the [tutorials introduction](https://precice.org/tutorials.html)." %}
+{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/aste-turbine). Read how in the [tutorials introduction](https://precice.org/tutorials.html)." %}
 
 ## Setup
 
