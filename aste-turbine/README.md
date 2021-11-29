@@ -29,4 +29,4 @@ Run the `run.sh` script. It do the followings:
 * Join the result meshes into a final mesh.
 * Using calculator calculates difference between mapped and original function on coarse grid.
 
-Important note :  The `run.sh` script assumes the ASTE binaries and python scripts are in $PATH
+Important note:  The `run.sh` script assumes that the ASTE binaries and python scripts are in `$PATH`.
