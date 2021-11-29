@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-
-set -e
-set -x
+set -e -x
 
 # This script assumes the ASTE binaries and python scripts are in $PATH
 
