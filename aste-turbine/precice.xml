@@ -10,10 +10,8 @@
   
   <solver-interface dimensions="3">
     
-    <!-- Data fields that are exchanged between the solvers -->
     <data:scalar name="Data" />
 
-    <!-- A common mesh that uses these data fields -->
     <mesh name="MeshA" flip-normals="no">
       <use-data name="Data" />
     </mesh>
