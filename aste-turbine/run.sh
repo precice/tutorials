@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-
-set -e
-set -x
+set -e -x
 
 # This script assumes the ASTE binaries and python scripts are in $PATH
 
@@ -9,7 +7,7 @@ set -x
 test -f meshes.tar.gz  || wget https://gitlab.lrz.de/precice/precice2-ref-paper-setup/-/raw/main/meshes/meshes.tar.gz
 
 # Extract the meshes
-tar -xvf meshes.tar.gz
+tar -xf meshes.tar.gz
 
 # Calculate on fine mesh
 ./vtk_calculator.py 0.009.vtk x+y -t "x + y"
