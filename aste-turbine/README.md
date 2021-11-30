@@ -9,9 +9,9 @@ summary: This tutorial is an example case for ASTE, showcasing basic features an
 
 ## Setup
 
-This case is a simple usage scenario for. Some features offered by this case:
+This case is a simple usage scenario for ASTE. Some features demonstrated by this tutorial:
 
-* Mapping from finer grid to coarse grid.
+* Mapping from a fine grid (`0.009.vtk`) to a coarse grid (`0.01.vtk`).
 * Usage of ASTE partitioner.
 * Usage of ASTE mesh joiner.
 * Usage of ASTE Calculator for calculating a function on given mesh.
@@ -23,10 +23,10 @@ This case is a simple usage scenario for. Some features offered by this case:
 Run the `run.sh` script. It performs the following steps:
 
 * Downloads the meshes from preCICE repository.
-* Calculates function `x + y` on a finer grid.
-* Partitions the coarse and fine mesh into 2 domains.
-* Map the data from fine grid to coarse grid.
-* Join the result meshes into a final mesh.
-* Using calculator calculates difference between mapped and original function on coarse grid.
+* Using `vtk_calculator.py` script, calculates function `x + y` on a finer grid.
+* Using `partition_mesh.py` script, partitions the coarse and fine mesh into 2 domains.
+* Using `preciceMap` executable, maps the data from the fine grid to the coarse grid.
+* Using `join_mesh.py`script, joins the result meshes into a final mesh.
+* Using ``vtk_calculator.py` script, calculates difference between mapped and original function on coarse grid.
 
 Important note:  The `run.sh` script assumes that the ASTE binaries and python scripts are in `$PATH`.
