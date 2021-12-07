@@ -73,7 +73,7 @@ clean_fenics() {
         set -e -u
         cd "$1"
         echo "--- Cleaning up FEniCS case in $(pwd)"
-        rm -fv ./*.pvd spooles.out Solid/FSI-S/*
+        rm -fv ./*.pvd spooles.out FSI-S/*
         rm -rfv ./out/
         rm -rfv ./preCICE-output/
         clean_precice_logs .
@@ -113,6 +113,18 @@ clean_su2() {
         cd "$1"
         echo "--- Cleaning up SU2 case in $(pwd)"
         rm -fv ./restart_flow_*.dat forces_breakdown.dat ./surface_flow_*.csv ./flow_*.vtk ./history_*.vtk
+        clean_precice_logs .
+    )
+}
+
+clean_dune() {
+    (
+        set -e -u
+        cd "$1"
+        echo "--- Cleaning up DUNE case in $(pwd)"
+        rm -fv ./*.pvd
+        rm -fv ./*.vtu
+        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }
