@@ -21,6 +21,8 @@ We define the participants `Inner-Fluid`, `Solid`, and `Outer-Fluid` and two int
 
 ![Heat exchanger: three participants](images/tutorials-heat-exchanger-participants.png)
 
+{% include tip.html content="In this tutorial, we are combining two **explicit** coupling schemes. Combining multiple implicit coupling schemes does not make numerical sense. Use a [fully-implicit multi-coupling scheme](https://precice.org/configuration-coupling-multi.html), instead." %}
+
 ## Available solvers
 
 * OpenFOAM. `buoyantSimpleFoam` is used for fluid flow (both participants). This is a solver for steady-state, buoyant, turbulent flow of compressible fluids for ventilation and heat transfer. For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
