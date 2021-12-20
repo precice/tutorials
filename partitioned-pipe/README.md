@@ -46,6 +46,8 @@ An example of the visualized expected results looks as follows:
 
 Observe that the velocity and pressure values are smoothly changing around the coupling interface. The simulation starts with oscillations, which disappear after a few time steps.
 
+Note that here we are only coupling pimpleFoam and sonicLiquidFoam only to showcase that they are different solvers working on different domains. In practice, coupling such an incompressible and a compressible solver would not be trivial, due to, e.g., the different pressure units.
+
 ## References
 
 [1]  G. Chourdakis, B. Uekermann, G. V. Zwieten, and H. V. Brummelen: [Coupling OpenFOAM to different solvers, physics, models, and dimensions using preCICE](https://mediatum.ub.tum.de/1515271), 14th OpenFOAM Workshop, Duisburg, Germany, submitted (proceedings publication delayed/cancelled), July 2019.
