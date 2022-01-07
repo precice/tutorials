@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e -x
 
-# This script assumes the ASTE binaries and python scripts are in $PATH
+# This script assumes the ASTE binaries and python scripts are in $PATH or ASTE installed on your system
 
 # Download the meshes
 test -f meshes.tar.gz  || wget https://gitlab.lrz.de/precice/precice2-ref-paper-setup/-/raw/main/meshes/meshes.tar.gz
@@ -10,23 +10,25 @@ test -f meshes.tar.gz  || wget https://gitlab.lrz.de/precice/precice2-ref-paper-
 tar -xf meshes.tar.gz
 
 # Calculate on fine mesh
-vtk_calculator.py 0.009.vtk x+y -t "x + y"
+vtk_calculator.py -m 0.009.vtk -f "x^2+exp(y^3)+cos(z)" -d "x^2+exp(y^3)+cos(z)"
 
 # Decompose both meshes to two procesors
-partition_mesh.py 0.009.vtk -n 2 -o fine_mesh
-partition_mesh.py 0.01.vtk -n 2 -o coarse_mesh
+# Choose resolution 0.009 mesh as fine mesh
+partition_mesh.py -m 0.009.vtk -n 2 -o fine_mesh --dir fine_mesh --algorithm topology
+# Choose resolution 0.01 mesh as coarse mesh
+partition_mesh.py -m 0.01.vtk -n 2 -o coarse_mesh --dir coarse_mesh --algorithm topology
 
 # The result directory of preciceMap needs to exist beforehand
 mkdir -p mapped
 
 # Map from the finer mesh to coarser mesh
-mpirun -n 2 preciceMap -v -p A --mesh fine_mesh/fine_mesh --data "x + y" &
-mpirun -n 2 preciceMap -v -p B --mesh coarse_mesh/coarse_mesh --output mapped/mapped --data "x + y"
+mpirun -n 2 preciceMap -v -p A --mesh fine_mesh/fine_mesh --data "x^2+exp(y^3)+cos(z)" &
+mpirun -n 2 preciceMap -v -p B --mesh coarse_mesh/coarse_mesh --output mapped/mapped --data "x^2+exp(y^3)+cos(z)"
 
 # Join the output files together to result.vtk,
 # Recovery cannot be used since GlobalID's are not exist in mapped mesh
-join_mesh.py mapped/mapped -o result.vtk
+join_mesh.py -m mapped/mapped -o result.vtk
 
 # Measure the difference between the original function and the mapped values
 # Save into data array called difference
-vtk_calculator.py result.vtk x+y -t difference -it "x + y" --diff
+vtk_calculator.py -m result.vtk -f "x^2+exp(y^3)+cos(z)" -d difference --diffdata "x^2+exp(y^3)+cos(z)" --diff --stats
