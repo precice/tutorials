@@ -21,13 +21,13 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 1. Get and install preCICE. For Ubuntu 20.04 (Focal Fossa), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v2.2.1/libprecice2_2.2.1_focal.deb
-    sudo apt install ./libprecice2_2.2.1_focal.deb
+    wget https://github.com/precice/precice/releases/download/v2.3.0/libprecice2_2.3.0_focal.deb
+    sudo apt install ./libprecice2_2.3.0_focal.deb
     ```
 
-    - Are you using something else? Just pick what suits you best on [this overview page](https://www.precice.org/installation-overview.html).
-    - Facing any problems? [Ask for help](https://www.precice.org/community-channels.html).
-2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](https://www.precice.org/adapter-openfoam-support.html):
+    - Are you using something else? Just pick what suits you best on [this overview page](https://precice.org/installation-overview.html).
+    - Facing any problems? [Ask for help](https://precice.org/community-channels.html).
+2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](https://precice.org/adapter-openfoam-support.html):
 
     ```bash
     # Add the signing key, add the repository, update (check this):
@@ -45,7 +45,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     sudo apt install build-essential pkg-config cmake git
     ```
 
-4. Download and install the [OpenFOAM-preCICE adapter](https://www.precice.org/adapter-openfoam-get.html):
+4. Download and install the [OpenFOAM-preCICE adapter](https://precice.org/adapter-openfoam-get.html):
 
     ```bash
      git clone --branch=master --depth 1 https://github.com/precice/openfoam-adapter
@@ -61,7 +61,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     cd tutorials/quickstart
     ```
 
-If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](https://www.precice.org/installation-vm.html).
+If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](https://precice.org/installation-vm.html).
 
 ## Case setup
 
@@ -98,7 +98,6 @@ cd tutorials/quickstart/fluid-openfoam
 ```
 
 You can also run OpenFOAM in parallel: `./run.sh -parallel`.
-Before the simulation again, cleanup the results and temporary files using `./clean-tutorial.sh`.
 
 In serial, the simulation should take less than a minute to compute (simulated time: 2.5s).
 
@@ -112,14 +111,20 @@ You may be curious what displacements OpenFOAM received from the rigid body solv
 
 {% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
 
+## Running again (and again, and again)
+
+Now that you have a first working example, experiment! For example, how can you tell preCICE to simulate for a longer maximum time?
+
+Before running the simulation again, cleanup the results and temporary files using `./clean-tutorial.sh`.
+
 ## What's next?
 
 To become a preCICE pro:
 
-- Get an overview of the [preCICE docs](https://www.precice.org/docs.html).
+- Get an overview of the [preCICE docs](https://precice.org/docs.html).
 - See what users talk about in the [preCICE forum](https://precice.discourse.group/).
-- Run [tutorials with other coupled solvers](https://www.precice.org/tutorials.html).
+- Run [tutorials with other coupled solvers](https://precice.org/tutorials.html).
 - Watch some [preCICE videos](https://www.youtube.com/c/preCICECoupling/).
-- Meet our [community](https://www.precice.org/community.html).
-- Find out how to [couple your own solver](https://www.precice.org/couple-your-code-overview.html).
-- Tell us [your story](https://www.precice.org/community-projects.html).
+- Meet our [community](https://precice.org/community.html).
+- Find out how to [couple your own solver](https://precice.org/couple-your-code-overview.html).
+- Tell us [your story](https://precice.org/community-projects.html).
