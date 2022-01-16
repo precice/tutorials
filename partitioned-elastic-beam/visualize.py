@@ -25,7 +25,7 @@ def join_frd(frd1, frd2):
     with open(frd1, "r") as f1, open(frd2, "r") as f2, open("beam_full.frd", "w") as fp:
 
         # copy frd header in new file
-        for i in xrange(11):
+        for i in range(11):
             fp.write(f1.readline())
             f2.readline()
 
@@ -72,8 +72,8 @@ def join_frd(frd1, frd2):
         fp.write(" -3\n")
 
         # merging blocks of lines for each step
-        for i in xrange(nsteps):
-            print "step", i + 1
+        for i in range(nsteps):
+            print("step", i + 1)
             # step header
             fp.write(f1.readline())
             f2.readline()
@@ -81,7 +81,7 @@ def join_frd(frd1, frd2):
             line_f1 = line_f1[:33] + str(nsizem) + line_f1[36:]
             fp.write(line_f1)
             f2.readline()
-            for j in xrange(5):
+            for j in range(5):
                 fp.write(f1.readline())
                 f2.readline()
 

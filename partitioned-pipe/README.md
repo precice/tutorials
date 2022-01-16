@@ -5,7 +5,7 @@ keywords: tutorial, FF, fluid-fluid coupling, OpenFOAM, pimpleFoam, sonicLiquidF
 summary: This tutorial describes how to run a partitioned fluid simulation using preCICE.
 ---
 
-{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-pipe). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-pipe). Read how in the [tutorials introduction](https://precice.org/tutorials.html)." %}
 
 ## Setup
 
@@ -17,9 +17,9 @@ On the coupling interface, Fluid1 sends velocity and pressure gradient to Fluid2
 
 Both for Fluid1 and Fluid2, the following participants are available:
 
-* OpenFOAM (pimpleFoam). An incompressible OpenFOAM solver. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* OpenFOAM (pimpleFoam). An incompressible OpenFOAM solver. For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
-* OpenFOAM (sonicLiquidFoam). A compressible OpenFOAM solver. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* OpenFOAM (sonicLiquidFoam). A compressible OpenFOAM solver. For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
 ## Running the Simulation
 

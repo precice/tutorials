@@ -5,7 +5,7 @@ keywords: CHT, OpenFOAM, CalculiX
 summary: Tutorial for a shell-and-tube heat exchanger, using OpenFOAM and CalculiX
 ---
 
-{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/heat-exchanger). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/heat-exchanger). Read how in the [tutorials introduction](https://precice.org/tutorials.html)." %}
 
 This tutorial describes how to run a conjugate heat transfer simulation with two separate OpenFOAM solvers and CalculiX. The files for this tutorial are located in this repository (directory CHT/heat_exchanger).
 
@@ -21,11 +21,13 @@ We define the participants `Inner-Fluid`, `Solid`, and `Outer-Fluid` and two int
 
 ![Heat exchanger: three participants](images/tutorials-heat-exchanger-participants.png)
 
+{% include tip.html content="In this tutorial, we are combining two **explicit** coupling schemes. Combining multiple implicit coupling schemes does not make numerical sense. Use a [fully-implicit multi-coupling scheme](https://precice.org/configuration-coupling-multi.html), instead." %}
+
 ## Available solvers
 
-* OpenFOAM. `buoyantSimpleFoam` is used for fluid flow (both participants). This is a solver for steady-state, buoyant, turbulent flow of compressible fluids for ventilation and heat transfer. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* OpenFOAM. `buoyantSimpleFoam` is used for fluid flow (both participants). This is a solver for steady-state, buoyant, turbulent flow of compressible fluids for ventilation and heat transfer. For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
-* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html).
+* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html).
 
 ## Running the Simulation
 
