@@ -5,7 +5,9 @@ keywords: OpenFOAM, nearest-projection, CHT
 summary: This tutorial introduces an example simulation setup for a nearest-projection mapping, based on the "flow over a heated plate" scenario.
 ---
 
-{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate-nearest-projection). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+{% note %}
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate-nearest-projection). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+{% endnote %}
 
 ## Setup
 
@@ -74,4 +76,6 @@ Visualizing these files (e.g. using ParaView) will show a triangular mesh, even 
 
 Connectivity is defined on meshes associated with mesh nodes, which are named respectively e.g. `Fluid-Mesh-Nodes`. In this case, you could directly see the interface without applying filters by loading the `.vtk` files. In order to visualize additionally center based meshes, where no connectivity is provided, select a Glyph filter in ParaView. Furthermore, it makes a difference, on which participant the `<export...` tag is defined in your `precice-config.xml` file. Each participant exports interface meshes, which he provides or receives. The receiving participant filters out mesh parts that it does not need (for the mapping). Hence, a received mesh might look incomplete.
 
-{% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
+{% disclaimer %}
+This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
+{% enddisclaimer %}

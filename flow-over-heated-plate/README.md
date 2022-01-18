@@ -5,7 +5,9 @@ keywords: tutorial, CHT, conjugate-heat transfer, OpenFOAM, FEniCS, Nutils
 summary: This tutorial describes how to run a conjugate heat transfer coupled simulation using preCICE and any fluid-solid solver combination of our <a href="adapters-overview.html">officially provided adapter codes</a>.
 ---
 
-{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+{% note %}
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+{% endnote %}
 
 ## Setup
 
@@ -87,4 +89,6 @@ After that running a case from this tutorial will export data into `solid-*/preC
 
 [1]  M. Vynnycky, S. Kimura, K. Kanev, and I. Pop. Forced convection heat transfer from a flat plate: the conjugate problem. International Journal of Heat and Mass Transfer, 41(1):45 – 59, 1998.
 
-{% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
+{% disclaimer %}
+This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
+{% enddisclaimer %}

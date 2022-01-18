@@ -5,7 +5,9 @@ keywords: tutorial, FF, fluid-fluid coupling, OpenFOAM, pimpleFoam, sonicLiquidF
 summary: This tutorial describes how to run a partitioned fluid simulation using preCICE.
 ---
 
-{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-pipe). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+{% note %}
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-pipe). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+{% endnote %}
 
 ## Setup
 
@@ -52,4 +54,6 @@ Note that here we are only coupling pimpleFoam and sonicLiquidFoam only to showc
 
 [1]  G. Chourdakis, B. Uekermann, G. V. Zwieten, and H. V. Brummelen: [Coupling OpenFOAM to different solvers, physics, models, and dimensions using preCICE](https://mediatum.ub.tum.de/1515271), 14th OpenFOAM Workshop, Duisburg, Germany, submitted (proceedings publication delayed/cancelled), July 2019.
 
-{% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
+{% disclaimer %}
+This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
+{% enddisclaimer %}

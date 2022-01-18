@@ -5,7 +5,9 @@ keywords: multi-coupling, OpenFOAM, deal.II, FSI
 summary: In this case, a fluid and two solids are coupled together using a fully-implicit multi-coupling scheme.
 ---
 
-{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/multiple-perpendicular-flaps). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html)." %}
+{% note %}
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/multiple-perpendicular-flaps). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+{% endnote %}
 
 ## Case Setup
 
@@ -114,4 +116,6 @@ After the simulation has finished, you can visualize your results using e.g. Par
 <!-- markdownlint-configure-file {"MD034": false } -->
 [1] H. Bungartz, F. Linder, M. Mehl, B. Uekermann. A plug-and-play coupling approach for parallel multi-field simulations. _Comput Mech_ **55**, 1119-1129 (2015). https://doi.org/10.1007/s00466-014-1113-2
 
-{% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
+{% disclaimer %}
+This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
+{% enddisclaimer %}
