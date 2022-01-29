@@ -20,7 +20,7 @@
       <use-data name="Data" />
     </mesh>
     
-    <m2n:sockets from="A" to="B" network="lo" exchange-directory="." />
+    <m2n:sockets from="A" to="B" exchange-directory="." />
 
     <participant name="A">
       <use-mesh name="MeshA" provide="yes" />
