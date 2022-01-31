@@ -74,4 +74,6 @@ Reasons for the differences:
 * The CalculiX adapter only supports linear finite elements (deal.II uses 4th order, FEniCS 2nd order).
 * SU2 models a compressible fluid, OpenFOAM and Nutils an incompressible one.  
 
+If you want to plot all results in ParaView, you may want to use the [TemporalShiftScale filter](https://kitware.github.io/paraview-docs/v5.9.0/python/paraview.simple.TemporalShiftScale.html) to synchronize the results.
+
 {% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
