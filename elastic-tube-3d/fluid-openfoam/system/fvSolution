@@ -199,7 +199,7 @@ residualControl
 }
 */
 
-// OpenFOAM 6 (.org) or newer probably
+// OpenFOAM 6 (.org) or newer
 // see also https://bugs.openfoam.org/view.php?id=3336
 /*
 outerResidualControl
