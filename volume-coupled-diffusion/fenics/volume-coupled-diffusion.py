@@ -81,8 +81,8 @@ else:
 mesh_rank.rename("myRank", "")
 
 # Generating output files
-solution_out = File("out/%s.pvd" % precice.get_participant_name())
-ranks = File("out/ranks%s.pvd" % precice.get_participant_name())
+solution_out = File("output/%s.pvd" % precice.get_participant_name())
+ranks = File("output/ranks%s.pvd" % precice.get_participant_name())
 
 # output solution and reference solution at t=0, n=0
 n = 0
