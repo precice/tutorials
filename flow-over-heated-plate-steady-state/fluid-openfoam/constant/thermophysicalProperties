@@ -25,7 +25,6 @@ mixture
 {
     specie
     {
-        nMoles          1;
         molWeight       24.09989;
     }
     thermodynamics
