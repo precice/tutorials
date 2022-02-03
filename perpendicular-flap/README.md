@@ -1,11 +1,13 @@
 ---
 title: Perpendicular flap
 permalink: tutorials-perpendicular-flap.html
-keywords: fluid-structure interaction, FSI, OpenFOAM, FEniCS, Nutils, deal.II, Calculix, SU2, Dune
+keywords: fluid-structure interaction, FSI, OpenFOAM, FEniCS, Nutils, deal.II, Calculix, SU2,
 summary: This tutorial describes how to run a fluid-structure interaction using preCICE and any fluid-solid solver combination of our <a href="adapters-overview.html">officially provided adapter codes</a>.
 ---
 
-{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/perpendicular-flap). Read how in the [tutorials introduction](https://precice.org/tutorials.html)." %}
+{% note %}
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/perpendicular-flap). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+{% endnote %}
 
 ## Setup
 
@@ -19,21 +21,19 @@ The simulated flow domain is 6 units long (x) and 4 units tall (y). The flap is 
 
 Fluid participant:
 
-* OpenFOAM. For older OpenFOAM versions, the solver name differs: If you are using OpenFOAM v1712 / 5.x or older have a look at `fluid-openfoam/system/controlDict` and set the appropriate solver name. The solver can run in parallel using the command line argument `run.sh -parallel`. For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
+* OpenFOAM. For older OpenFOAM versions, the solver name differs: If you are using OpenFOAM v1712 / 5.x or older have a look at `fluid-openfoam/system/controlDict` and set the appropriate solver name. The solver can run in parallel using the command line argument `run.sh -parallel`. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v6.0.
+* Nutils. For more information, have a look at the [Nutils adapter documentation](https://www.precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v6.0.
 
-* SU2. As opposed to the other two fluid codes, SU2 is in particular specialized for compressible flow. Therefore the default simulation parameters haven been adjusted in order to pull the setup into the compressible flow regime. For more information, have a look at the [SU2 adapter documentation](https://precice.org/adapter-su2-overview.html).
+* SU2. As opposed to the other two fluid codes, SU2 is in particular specialized for compressible flow. Therefore the default simulation parameters haven been adjusted in order to pull the setup into the compressible flow regime. For more information, have a look at the [SU2 adapter documentation](https://www.precice.org/adapter-su2-overview.html).
 
 Solid participant:
 
-* FEniCS. The structural model is currently limited to linear elasticity. For more information, have a look at the [FeniCS adapter documentation](https://precice.org/adapter-fenics.html).
+* FEniCS. The structural model is currently limited to linear elasticity. For more information, have a look at the [FeniCS adapter documentation](https://www.precice.org/adapter-fenics.html).
 
-* CalculiX. In order to allow a reasonable comparison to all solid codes, the geometrically non-linear solver has been disabled and only a linear model is used by default. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html)
+* CalculiX. In order to allow a reasonable comparison to all solid codes, the geometrically non-linear solver has been disabled and only a linear model is used by default. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html)
 
-* deal.II. For compatibility reasons, the solver reads `Force` data from other `Fluid` participants. Reading and applying `Force` data is currently only implemented in the linear elastic solid model (`Model = linear` in the parameter file). Thus, the default simulation setup is only compatible with the linear elastic solid model. If you want to apply the non-linear solid model, please use `Stress` data for your read data, which is supported by the OpenFOAM adapter as well (example given in Turek-Hron-FSI). The `./run.sh` script takes the compiled executable `elasticity` as input argument (`run.sh -e=/path/to/elasticity`) and is required in case the executable is not discoverable at runtime (e.g. has been added to the system `PATH`). For more information, have a look at the [deal.II adapter documentation](https://precice.org/adapter-dealii-overview.html).
-
-* Dune. The structural model is limited to linear elasticity. The solver reads `Force` data and writes `Displacement` data. The `./run.sh` script needs the compiled executable `dune-perpendicular-flap` in the same directory, which can be obtained by building the dune-adapter.
+* deal.II. This tutorial works only with `Model = linear` since the deal.II codes were developed with read data `Stress` instead of `Force` as applied here (example given in Turek-Hron-FSI) in the first place. The `./run.sh` script takes the compiled executable `elasticity` as input argument (`run.sh -e=/path/to/elasticity`) and is required in case the executable is not discoverable at runtime (e.g. has been added to the system `PATH`). For more information, have a look at the [deal.II adapter documentation](https://www.precice.org/adapter-dealii-overview.html).
 
 ## Running the Simulation
 
@@ -74,4 +74,6 @@ Reasons for the differences:
 * The CalculiX adapter only supports linear finite elements (deal.II uses 4th order, FEniCS 2nd order).
 * SU2 models a compressible fluid, OpenFOAM and Nutils an incompressible one.  
 
-{% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
+{% disclaimer %}
+This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
+{% enddisclaimer %}

@@ -1,7 +1,5 @@
-name: Check links
-on:
-  schedule:
-    - cron: '0 0 * * SUN'
+name: Check links (manual)
+on: workflow_dispatch
 jobs:
   check_links:
     runs-on: ubuntu-latest
