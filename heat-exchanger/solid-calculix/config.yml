@@ -1,0 +1,14 @@
+participants:
+  # The configuration files for the Fluid-Inner and Fluid-Outer participants
+  # are located in each participant's directory.
+  Solid:
+    interfaces:
+    - mesh: Solid-to-Fluid-Inner
+      patch: inner-interface
+      read-data: [Sink-Temperature-Fluid-Inner, Heat-Transfer-Coefficient-Fluid-Inner]
+      write-data: [Sink-Temperature-Solid, Heat-Transfer-Coefficient-Solid]
+    - mesh: Solid-to-Fluid-Outer
+      patch: outer-interface
+      read-data: [Sink-Temperature-Fluid-Outer, Heat-Transfer-Coefficient-Fluid-Outer]
+      write-data: [Sink-Temperature-Solid, Heat-Transfer-Coefficient-Solid]
+precice-config-file: ../precice-config.xml

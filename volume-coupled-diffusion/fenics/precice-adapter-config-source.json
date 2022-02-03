@@ -1,0 +1,9 @@
+{
+  "participant_name": "Source",
+  "config_file_name": "../precice-config.xml",
+  "interface": {
+      "coupling_mesh_name": "Source-Mesh",
+      "write_data_name": "Source-Data",
+      "read_data_name": "Drain-Data"
+    }
+}

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<precice-configuration>
+  <log>
+    <sink
+      filter="%Severity% > debug"
+      format="---[precice] %ColorizedSeverity% %Message%"
+      enabled="true" />
+  </log>
+
+  <solver-interface dimensions="3">
+    <data:scalar name="Heat-Transfer-Coefficient-Solid" />
+    <data:scalar name="Sink-Temperature-Solid" />
+    <data:scalar name="Heat-Transfer-Coefficient-Fluid" />
+    <data:scalar name="Sink-Temperature-Fluid" />
+
+    <mesh name="Solid-Interface-Nodes">
+      <use-data name="Sink-Temperature-Solid" />
+      <use-data name="Heat-Transfer-Coefficient-Solid" />
+    </mesh>
+
+    <mesh name="Solid-Interface-Faces">
+      <use-data name="Sink-Temperature-Fluid" />
+      <use-data name="Heat-Transfer-Coefficient-Fluid" />
+    </mesh>
+
+    <mesh name="Fluid-Interface">
+      <use-data name="Sink-Temperature-Fluid" />
+      <use-data name="Heat-Transfer-Coefficient-Fluid" />
+      <use-data name="Sink-Temperature-Solid" />
+      <use-data name="Heat-Transfer-Coefficient-Solid" />
+    </mesh>
+
+    <participant name="Solid">
+      <use-mesh name="Solid-Interface-Faces" provide="yes" />
+      <use-mesh name="Solid-Interface-Nodes" provide="yes" />
+      <use-mesh name="Fluid-Interface" from="Fluid" />
+      <write-data mesh="Solid-Interface-Nodes" name="Sink-Temperature-Solid" />
+      <write-data mesh="Solid-Interface-Nodes" name="Heat-Transfer-Coefficient-Solid" />
+      <read-data mesh="Solid-Interface-Faces" name="Sink-Temperature-Fluid" />
+      <read-data mesh="Solid-Interface-Faces" name="Heat-Transfer-Coefficient-Fluid" />
+      <mapping:nearest-neighbor
+        constraint="consistent"
+        direction="read"
+        to="Solid-Interface-Faces"
+        from="Fluid-Interface" />
+    </participant>
+
+    <participant name="Fluid">
+      <use-mesh name="Fluid-Interface" provide="yes" />
+      <use-mesh name="Solid-Interface-Nodes" from="Solid" />
+      <write-data mesh="Fluid-Interface" name="Sink-Temperature-Fluid" />
+      <write-data mesh="Fluid-Interface" name="Heat-Transfer-Coefficient-Fluid" />
+      <read-data mesh="Fluid-Interface" name="Sink-Temperature-Solid" />
+      <read-data mesh="Fluid-Interface" name="Heat-Transfer-Coefficient-Solid" />
+      <mapping:nearest-neighbor
+        constraint="consistent"
+        direction="read"
+        to="Fluid-Interface"
+        from="Solid-Interface-Nodes" />
+    </participant>
+
+    <!-- TODO: Give an absolute path for the exchange-directory, as Code_Aster starts in /tmp/ -->
+    <m2n:sockets to="Fluid" from="Solid" exchange-directory=".." />
+
+    <coupling-scheme:serial-explicit>
+      <time-window-size value="1" />
+      <max-time-windows value="100" />
+      <participants first="Solid" second="Fluid" />
+      <exchange
+        data="Sink-Temperature-Solid"
+        mesh="Solid-Interface-Nodes"
+        from="Solid"
+        to="Fluid" />
+      <exchange
+        data="Heat-Transfer-Coefficient-Solid"
+        mesh="Solid-Interface-Nodes"
+        from="Solid"
+        to="Fluid" />
+      <exchange
+        data="Sink-Temperature-Fluid"
+        mesh="Fluid-Interface"
+        from="Fluid"
+        to="Solid"
+        initialize="yes" />
+      <exchange
+        data="Heat-Transfer-Coefficient-Fluid"
+        mesh="Fluid-Interface"
+        from="Fluid"
+        to="Solid"
+        initialize="yes" />
+    </coupling-scheme:serial-explicit>
+  </solver-interface>
+</precice-configuration>
