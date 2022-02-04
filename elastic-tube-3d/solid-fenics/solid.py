@@ -52,6 +52,7 @@ v = TestFunction(V)
 
 u_np1 = Function(V)
 saved_u_old = Function(V)
+u_delta = Function(V)
 
 # function known from previous timestep
 u_n = Function(V)
@@ -202,7 +203,8 @@ while precice.is_coupling_ongoing():
     dt = Constant(np.min([precice_dt, fenics_dt]))
 
     # Write new displacements to preCICE
-    precice.write_data(u_np1)
+    u_delta.vector()[:] = u_np1.vector()[:] - u_n.vector()[:]
+    precice.write_data(u_delta)
 
     # Call to advance coupling, also returns the optimum time step value
     precice_dt = precice.advance(dt(0))

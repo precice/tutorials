@@ -4,7 +4,7 @@ participants:
         - nodes-mesh-with-connectivity: Solid-Mesh
           patch: interface
           read-data: [Force]
-          write-data: [Displacement]
+          write-data: [DisplacementDelta]
           
 precice-config-file: ../precice-config.xml
 

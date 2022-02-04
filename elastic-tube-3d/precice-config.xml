@@ -9,10 +9,10 @@
 
   <solver-interface dimensions="3">
     <data:vector name="Force" />
-    <data:vector name="Displacement" />
+    <data:vector name="DisplacementDelta" />
 
     <mesh name="Fluid-Mesh-Nodes">
-      <use-data name="Displacement" />
+      <use-data name="DisplacementDelta" />
     </mesh>
 
     <mesh name="Fluid-Mesh-Faces">
@@ -20,7 +20,7 @@
     </mesh>
 
     <mesh name="Solid-Mesh">
-      <use-data name="Displacement" />
+      <use-data name="DisplacementDelta" />
       <use-data name="Force" />
     </mesh>
 
@@ -29,7 +29,7 @@
       <use-mesh name="Fluid-Mesh-Nodes" provide="yes" />
       <use-mesh name="Fluid-Mesh-Faces" provide="yes" />
       <write-data name="Force" mesh="Fluid-Mesh-Faces" />
-      <read-data name="Displacement" mesh="Fluid-Mesh-Nodes" />
+      <read-data name="DisplacementDelta" mesh="Fluid-Mesh-Nodes" />
       <mapping:nearest-projection
         direction="write"
         from="Fluid-Mesh-Faces"
@@ -47,7 +47,7 @@
     <participant name="Solid">
       <use-mesh name="Solid-Mesh" provide="yes" />
       <use-mesh name="Fluid-Mesh-Faces" from="Fluid" />
-      <write-data name="Displacement" mesh="Solid-Mesh" />
+      <write-data name="DisplacementDelta" mesh="Solid-Mesh" />
       <read-data name="Force" mesh="Solid-Mesh" />
       <watch-point mesh="Solid-Mesh" name="Tube-Midpoint" coordinate="0.0;0.005;0.025" />
     </participant>
@@ -59,12 +59,12 @@
       <max-time-windows value="100" />
       <time-window-size value="1e-4" />
       <exchange data="Force" mesh="Solid-Mesh" from="Fluid" to="Solid" />
-      <exchange data="Displacement" mesh="Solid-Mesh" from="Solid" to="Fluid" />
+      <exchange data="DisplacementDelta" mesh="Solid-Mesh" from="Solid" to="Fluid" />
       <max-iterations value="30" />
-      <relative-convergence-measure limit="1e-3" data="Displacement" mesh="Solid-Mesh" />
+      <relative-convergence-measure limit="1e-3" data="DisplacementDelta" mesh="Solid-Mesh" />
       <relative-convergence-measure limit="1e-3" data="Force" mesh="Solid-Mesh" />
       <acceleration:IQN-IMVJ>
-        <data name="Displacement" mesh="Solid-Mesh" />
+        <data name="DisplacementDelta" mesh="Solid-Mesh" />
         <preconditioner type="residual-sum" />
         <initial-relaxation value="0.1" />
         <max-used-iterations value="10" />
