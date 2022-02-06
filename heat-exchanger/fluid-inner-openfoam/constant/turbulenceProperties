@@ -1,14 +1,8 @@
 FoamFile {
-    version 2.0;
-    class dictionary;
-    object turbulenceProperties;
-    format ascii;
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      turbulenceProperties;
 }
-simulationType laminar;
 
-RAS
-{
-	RASModel	kEpsilon;
-	turbulence	off;
-	printCoeffs on;
-}
+simulationType laminar;
