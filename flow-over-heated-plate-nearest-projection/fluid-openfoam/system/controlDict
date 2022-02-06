@@ -3,10 +3,8 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
     object      controlDict;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 application     buoyantPimpleFoam;
 
@@ -46,7 +44,3 @@ functions
         libs ("libpreciceAdapterFunctionObject.so");
     }
 }
-
-
-
-// ************************************************************************* //
