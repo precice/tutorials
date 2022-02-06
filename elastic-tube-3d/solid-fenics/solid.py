@@ -59,9 +59,6 @@ u_n = Function(V)
 v_n = Function(V)
 a_n = Function(V)
 
-f_N_function = interpolate(Expression(("1", "1", "0"), degree=1), V)
-u_function = interpolate(Expression(("0", "0", "0"), degree=1), V)
-
 coupling_boundary = AutoSubDomain(neumann_boundary)
 fixed_boundary = AutoSubDomain(clamped_boundary)
 
@@ -71,7 +68,6 @@ precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
 precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fixed_boundary=fixed_boundary)
 
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
-# fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
 # clamp the tube on both sides
@@ -109,7 +105,7 @@ def Wext(u_):
     return dot(u_, p) * ds
 
 
-# Update functions
+# Functions for updating system state
 
 # Update acceleration
 def update_a(u, u_old, v_old, a_old, ufl=True):
@@ -155,7 +151,6 @@ def avg(x_old, x_new, alpha):
     return alpha * x_old + (1 - alpha) * x_new
 
 
-# residual
 a_np1 = update_a(du, u_n, v_n, a_n, ufl=True)
 v_np1 = update_v(a_np1, u_n, v_n, a_n, ufl=True)
 
@@ -184,17 +179,17 @@ while precice.is_coupling_ongoing():
     read_data = precice.read_data()
 
     # Update the point sources on the coupling boundary with the new read data
-    Forces_x, Forces_y, Forces_z = precice.get_point_sources(read_data)
+    forces_x, forces_y, forces_z = precice.get_point_sources(read_data)
 
     A, b = assemble_system(a_form, L_form, bc)
 
     b_forces = b.copy()  # b is the same for every iteration, only forces change
 
-    for ps in Forces_x:
+    for ps in forces_x:
         ps.apply(b_forces)
-    for ps in Forces_y:
+    for ps in forces_y:
         ps.apply(b_forces)
-    for ps in Forces_z:
+    for ps in forces_z:
         ps.apply(b_forces)
 
     assert (b is not b_forces)
@@ -202,7 +197,7 @@ while precice.is_coupling_ongoing():
 
     dt = Constant(np.min([precice_dt, fenics_dt]))
 
-    # Write new displacements to preCICE
+    # Write relative displacements to preCICE
     u_delta.vector()[:] = u_np1.vector()[:] - u_n.vector()[:]
     precice.write_data(u_delta)
 
