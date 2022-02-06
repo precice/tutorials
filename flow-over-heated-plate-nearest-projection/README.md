@@ -41,7 +41,7 @@ cd solid-openfoam
 ./run.sh
 ```
 
-You can also run OpenFOAM in parallel by `./run.sh -parallel`. If you are using OpenFOAM v1712 / 5.x or older have a look in the `fluid-openfoam/system/controlDict` file and set the appropriate solver name.
+You can also run OpenFOAM in parallel by `./run.sh -parallel`.
 
 ## Changes in the Simulation Setup
 

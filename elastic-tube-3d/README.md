@@ -19,15 +19,15 @@ The expanding tube test case comes with the interface surface mesh connectivity 
 
 Fluid participant:
 
-* OpenFOAM. This tutorial is known to work with OpenFOAM 4.1, 5.0, but it should also work with newer versions. The case files are prepared for the latest versions of OpenFOAM and use the solver `pimpleFoam`. In case you are using a previous OpenFOAM version you need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* OpenFOAM (pimpleFoam). In case you are using a very old OpenFOAM version, you will need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
 Solid participant:
 
-* CalculiX. This tutorial is known to work with CalculiX 2.15, but it should also work with newer versions. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html).
+* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html).
 
 ## Running the simulation
 
-You can start the simulation by running the script `./run.sh` located in each participant directory. OpenFOAM can be executed in parallel by using an additional `run.sh -parallel` flag. The default setting uses 4 MPI ranks.
+You can start the simulation by running the script `./run.sh` located in each participant directory. OpenFOAM can be executed in parallel using `run.sh -parallel`. The default setting uses 4 MPI ranks.
 
 ## Post-processing
 
