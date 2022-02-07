@@ -39,7 +39,7 @@ You can visualize the results using paraView or `cgx`(for native CalculiX resul 
 
 You can also plot the displacement of the midpoint of the tube by running `sh plot-displacement.sh <filename>`. The displacement plot for each solver combination looks like:
 
-![plot tube](images/elastic-tube-3d-plot.png) 
+![plot tube](images/elastic-tube-3d-plot.png)
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.

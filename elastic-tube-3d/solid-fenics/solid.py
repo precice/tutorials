@@ -164,7 +164,7 @@ t = 0.0
 n = 0
 E_ext = 0
 
-displacement_out = File("Solid/u_fsi.pvd")
+displacement_out = File("output/u_fsi.pvd")
 
 u_n.rename("Displacement", "")
 u_np1.rename("Displacement", "")
