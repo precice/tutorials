@@ -39,3 +39,19 @@ services:
       /bin/bash -c "id && 
       cd /tests/flow-over-heated-plate/solid-openfoam &&
       openfoam2112 ./run.sh | tee solid-openfoam.log 2>&1"
+
+  cleanup:
+    depends_on:
+      - fluid-openfoam
+      - solid-openfoam
+    image: ubuntu:latest
+    user: ${MY_UID}:${MY_GID}
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - ../..:/tests
+    command: >
+      /bin/bash -c "id &&
+      cd /tests/flow-over-heated-plate &&
+      sed -i 's|m2n:sockets network=\"eth0\" from|m2n:sockets from|g' precice-config.xml"
+    
