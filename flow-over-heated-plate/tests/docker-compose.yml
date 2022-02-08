@@ -2,30 +2,40 @@ version: "3.9"
 services:
   prepare:
     image: ubuntu:latest
+    user: ${MY_UID}:${MY_GID}
     volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
       - ../..:/tests
     command: >
-      /bin/bash -c "cd /tests/flow-over-heated-plate &&
+      /bin/bash -c "id &&
+      cd /tests/flow-over-heated-plate &&
       sed -i 's|m2n:sockets from|m2n:sockets network=\"eth0\" from|g' precice-config.xml"
 
   fluid-openfoam:
     depends_on:
       - prepare
     image: "ghcr.io/precice/openfoam-adapter:${TAG_OPENFOAM_ADAPTER}"
+    user: ${MY_UID}:${MY_GID}
     volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
       - ../..:/tests
     command: >
-      /bin/bash -c "sudo chown -R $$USER:$$USER /tests/ &&
+      /bin/bash -c "id &&
       cd /tests/flow-over-heated-plate/fluid-openfoam &&
-      openfoam2106 ./run.sh | tee fluid-openfoam.log 2>&1"
+      openfoam2112 ./run.sh | tee fluid-openfoam.log 2>&1"
 
   solid-openfoam:
     depends_on:
       - prepare
     image: "ghcr.io/precice/openfoam-adapter:${TAG_OPENFOAM_ADAPTER}"
+    user: ${MY_UID}:${MY_GID}
     volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
       - ../..:/tests
     command: >
-      /bin/bash -c "sudo chown -R $$USER:$$USER /tests/ &&
+      /bin/bash -c "id && 
       cd /tests/flow-over-heated-plate/solid-openfoam &&
-      openfoam2106 ./run.sh | tee solid-openfoam.log 2>&1"
+      openfoam2112 ./run.sh | tee solid-openfoam.log 2>&1"

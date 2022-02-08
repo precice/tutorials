@@ -5,4 +5,4 @@ set -u -e
 
 export TAG_OPENFOAM_ADAPTER=latest
 
-cd flow-over-heated-plate/tests && docker-compose up
+cd flow-over-heated-plate/tests && MY_UID="$(id -u)" MY_GID="$(id -g)" docker-compose up
