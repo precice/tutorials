@@ -3,7 +3,6 @@ FoamFile
     version 2.0;
     format ascii;
     class dictionary;
-    location system;
     object fvSolution;
 }
 
@@ -200,8 +199,9 @@ residualControl
 */
 
 // OpenFOAM 6 (.org) or newer
+// see also https://bugs.openfoam.org/view.php?id=3336
 /*
-residualControl
+outerResidualControl
 {
     U 0.0001;
     p 0.0001;

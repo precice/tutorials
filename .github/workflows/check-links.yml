@@ -1,5 +1,5 @@
-name: Check links
-on: [push, pull_request]
+name: Check links (manual)
+on: workflow_dispatch
 jobs:
   check_links:
     runs-on: ubuntu-latest

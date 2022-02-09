@@ -3,10 +3,8 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volVectorField;
-    location    "0";
     object      vorticity;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 0 -1 0 0 0 0];
 
@@ -59,6 +57,3 @@ boundaryField
         type            empty;
     }
 }
-
-
-// ************************************************************************* //

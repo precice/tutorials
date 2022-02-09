@@ -25,17 +25,17 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     sudo apt install ./libprecice2_2.3.0_focal.deb
     ```
 
-    - Are you using something else? Just pick what suits you best on [this overview page](https://www.precice.org/installation-overview.html).
-    - Facing any problems? [Ask for help](https://www.precice.org/community-channels.html).
-2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](https://www.precice.org/adapter-openfoam-support.html):
+    - Are you using something else? Just pick what suits you best on [this overview page](https://precice.org/installation-overview.html).
+    - Facing any problems? [Ask for help](https://precice.org/community-channels.html).
+2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](https://precice.org/adapter-openfoam-support.html):
 
     ```bash
     # Add the signing key, add the repository, update (check this):
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash
-    # Install OpenFOAM v2106:
-    sudo apt install openfoam2106-dev
+    # Install OpenFOAM v2112:
+    sudo apt install openfoam2112-dev
     # Enable OpenFOAM by default in your system and apply now:
-    echo "source /usr/lib/openfoam/openfoam2106/etc/bashrc" >> ~/.bashrc
+    echo "source /usr/lib/openfoam/openfoam2112/etc/bashrc" >> ~/.bashrc
     source ~/.bashrc
     ```
 
@@ -45,7 +45,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     sudo apt install build-essential pkg-config cmake git
     ```
 
-4. Download and install the [OpenFOAM-preCICE adapter](https://www.precice.org/adapter-openfoam-get.html):
+4. Download and install the [OpenFOAM-preCICE adapter](https://precice.org/adapter-openfoam-get.html):
 
     ```bash
      git clone --branch=master --depth 1 https://github.com/precice/openfoam-adapter
@@ -61,7 +61,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     cd tutorials/quickstart
     ```
 
-If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](https://www.precice.org/installation-vm.html).
+If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](https://precice.org/installation-vm.html).
 
 ## Case setup
 
@@ -123,10 +123,10 @@ Before running the simulation again, cleanup the results and temporary files usi
 
 To become a preCICE pro:
 
-- Get an overview of the [preCICE docs](https://www.precice.org/docs.html).
+- Get an overview of the [preCICE docs](https://precice.org/docs.html).
 - See what users talk about in the [preCICE forum](https://precice.discourse.group/).
-- Run [tutorials with other coupled solvers](https://www.precice.org/tutorials.html).
+- Run [tutorials with other coupled solvers](https://precice.org/tutorials.html).
 - Watch some [preCICE videos](https://www.youtube.com/c/preCICECoupling/).
-- Meet our [community](https://www.precice.org/community.html).
-- Find out how to [couple your own solver](https://www.precice.org/couple-your-code-overview.html).
-- Tell us [your story](https://www.precice.org/community-projects.html).
+- Meet our [community](https://precice.org/community.html).
+- Find out how to [couple your own solver](https://precice.org/couple-your-code-overview.html).
+- Tell us [your story](https://precice.org/community-projects.html).

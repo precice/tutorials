@@ -101,10 +101,6 @@ int main(int argc, char **argv)
       interface.markActionFulfilled(actionWriteIterationCheckpoint());
     }
     
-    if (interface.isReadDataAvailable()) {
-      interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
-    }
-
     fluidComputeSolutionSerial(
         // values from last time window
         velocity_old.data(), pressure_old.data(), crossSectionLength_old.data(),

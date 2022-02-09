@@ -21,7 +21,7 @@ The simulated flow domain is 6 units long (x) and 4 units tall (y). The flap is 
 
 Fluid participant:
 
-* OpenFOAM. For older OpenFOAM versions, the solver name differs: If you are using OpenFOAM v1712 / 5.x or older have a look at `fluid-openfoam/system/controlDict` and set the appropriate solver name. The solver can run in parallel using the command line argument `run.sh -parallel`. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* OpenFOAM (pimpleFoam). In case you are using a very old OpenFOAM version, you will need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://www.precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v6.0.
 
@@ -35,9 +35,11 @@ Solid participant:
 
 * deal.II. This tutorial works only with `Model = linear` since the deal.II codes were developed with read data `Stress` instead of `Force` as applied here (example given in Turek-Hron-FSI) in the first place. The `./run.sh` script takes the compiled executable `elasticity` as input argument (`run.sh -e=/path/to/elasticity`) and is required in case the executable is not discoverable at runtime (e.g. has been added to the system `PATH`). For more information, have a look at the [deal.II adapter documentation](https://www.precice.org/adapter-dealii-overview.html).
 
+* DUNE. For more information, have a look at the [experimental DUNE adapter](https://github.com/precice/dune-adapter) and send us your feedback.
+
 ## Running the Simulation
 
-All listed solvers can be used in order to run the simulation. Open two separate terminals and start the desired fluid and solid participant by calling the respective run script `run.sh` located in the participant directory. For example:
+All listed solvers can be used in order to run the simulation. OpenFOAM can be executed in parallel using `run.sh -parallel`. The default setting uses 4 MPI ranks. Open two separate terminals and start the desired fluid and solid participant by calling the respective run script `run.sh` located in the participant directory. For example:
 
 ```bash
 cd fluid-openfoam

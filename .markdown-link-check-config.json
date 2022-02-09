@@ -1,3 +1,11 @@
 {
-  "aliveStatusCodes": [429, 403, 200]
+  "aliveStatusCodes": [429, 200],
+  "ignorePatterns": [
+    {
+      "pattern": "^https://openfoamwiki.net/"
+    },
+    {
+      "pattern": "^https://doi.org/"
+    }
+  ]
 }

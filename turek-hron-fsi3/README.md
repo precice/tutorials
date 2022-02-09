@@ -21,7 +21,7 @@ For more information please refer to the original publication of the benchmark [
 
 Fluid participant:
 
-* OpenFOAM. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* OpenFOAM (pimpleFoam). In case you are using a very old OpenFOAM version, you will need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
 {% important %}
 For the parabolic inflow profile, this tutorial requires groovyBC. groovyBC is part of swak4Foam. You can find more explanations in [openfoamwiki.net](https://openfoamwiki.net/index.php/Contrib/swak4Foam) or get it from an [unofficial GitHub mirror](https://github.com/Unofficial-Extend-Project-Mirror/openfoam-extend-swak4Foam-dev.git). Please follow the building instructions there.
@@ -48,7 +48,6 @@ cd solid-dealii
 ```
 
 You can also run OpenFOAM in parallel by `./run.sh -parallel`. The default setting here uses 25 MPI ranks. You can change this setting in `fluid-openfoam/system/decomposeParDict`.
-For older OpenFOAM versions, the solver name will differ. If you are using OpenFOAM v1712 / 5.x or older have a look in the `fluid-openfoam/system/controlDict` file and set the appropriate solver name.
 
 You may adjust the end time in the `precice-config.xml`, or interupt the execution earlier if you want.
 

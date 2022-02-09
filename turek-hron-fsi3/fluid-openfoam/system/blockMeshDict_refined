@@ -5,7 +5,6 @@ FoamFile
     class           dictionary;
     object          blockMeshDict;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Geometry parameters
 f -0.1;   // z-front
@@ -335,10 +334,3 @@ boundary
         );
     }
 );
-
-mergePatchPairs
-(
-);
-
-
-// ************************************************************************* //

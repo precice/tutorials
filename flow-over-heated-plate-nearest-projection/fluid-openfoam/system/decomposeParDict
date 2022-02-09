@@ -5,9 +5,9 @@ FoamFile {
     format ascii;
 }
 
-numberOfSubdomains 2;
+numberOfSubdomains  2;
 
-method          simple;
+method              simple;
 
 simpleCoeffs
 {
