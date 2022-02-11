@@ -29,6 +29,8 @@ You can either couple a solver with itself or different solvers with each other.
 
 * Nutils. Install [Nutils](http://www.nutils.org/en/latest/).
 
+* OpenFOAM. This case also requires [funkySetFields](https://openfoamwiki.net/index.php/Contrib/funkySetFields) (part of [swak4Foam](https://openfoamwiki.net/index.php/Contrib/swak4Foam)). Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
+
 ## Running the simulation
 
 This tutorial is for FEniCS and Nutils. You can find the corresponding `run.sh` script in the folders `fenics` and `nutils`.
