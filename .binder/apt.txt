@@ -1,0 +1,4 @@
+libgl1-mesa-glx
+patch
+build-essential
+xvfb
