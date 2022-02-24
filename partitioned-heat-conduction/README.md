@@ -25,7 +25,7 @@ This simple case allows us to compare the solution for the partitioned case to a
 
 You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE and the python bindings installed on your system.
 
-* FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
+* FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1]. [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/BenjaminRodenberg/tutorials/use-binder)
 
 * Nutils. Install [Nutils](http://www.nutils.org/en/latest/).
 
