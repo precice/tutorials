@@ -11,6 +11,7 @@ dynamicFvMesh   dynamicMotionSolverFvMesh;
 motionSolverLibs ( "libfvMotionSolvers.so" );
 
 solver          displacementLaplacian;
+# OpenFOAM9 or newer: rename "solver" to "motionSolver"
 
 displacementLaplacianCoeffs
 {
