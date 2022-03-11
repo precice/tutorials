@@ -133,6 +133,6 @@ To become a preCICE pro:
 
 Are you just starting with simulation software on Linux? Note that much of the complexity for partitioned simulations comes from working with multiple software packages and some new tools. These resources may help your first steps:
 
-- Material of the course [Simulation Software Engineering](https://simulation-software-engineering.github.io/) (University of Stuttgart).
 - E-book [Research Software Engineering with Python](https://merely-useful.tech/py-rse/).
+- Material of the course [Simulation Software Engineering](https://simulation-software-engineering.github.io/) (University of Stuttgart).
 - Material of the course [The Missing Semester of Your CS Education](https://missing.csail.mit.edu/) (MIT).
