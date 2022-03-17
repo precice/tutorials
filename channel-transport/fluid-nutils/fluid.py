@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
-import nutils
-import treelog
+from nutils import function, mesh, cli
+import treelog as log
 import numpy as np
 import precice
 from mpi4py import MPI
@@ -12,25 +12,34 @@ def main():
     print("Running utils")
 
     # define the Nutils mesh
-    grid = [np.linspace(a, b, round((b - a) / size) + 1) for (a, b, size) in [(0, 1, 0.05), (-.25, 0, 0.05)]]
+    grid = np.linspace(0, 5, 21), np.linspace(0, 2, 9)
     domain, geom = nutils.mesh.rectilinear(grid)
+    domain = domain.withboundary(inflow='left', outflow='right', wall='top,bottom') \
+           - domain[8:13,:3].withboundary(wall='left,top,right')
+
+    gauss = domain.sample('gauss', degree=4)
 
     # Nutils namespace
     ns = nutils.function.Namespace()
     ns.x = geom
 
-    ns.basis = domain.basis('std', degree=1)  # linear finite elements
-    ns.u = 'basis_n ?lhs_n'  # solution
-    ns.dudt = 'basis_n (?lhs_n - ?lhs0_n) / ?dt'  # time derivative
-    ns.flux = 'basis_n ?fluxdofs_n'  # heat flux
-    ns.k = 100  # thermal diffusivity
-    ns.uwall = 310  # wall temperature
+    ns.ubasis = domain.basis('std', degree=2).vector(2)
+    ns.pbasis = domain.basis('std', degree=1)
+    ns.u_i = 'ubasis_ni ?u_n'  # solution
+    ns.p = 'pbasis_n ?p_n'  # solution
+    ns.dudt_i = 'ubasis_ni (?u_n - ?u0_n) / ?dt'  # time derivative
+    ns.μ = 100  # viscosity
+    ns.σ_ij = 'μ (u_i,j + u_j,i) - p δ_ij'
+    ns.uin = '10 x_1 (2 - x_1)' # inflow profile
 
     # define the weak form
-    res = domain.integral('(basis_n dudt + k basis_n,i u_,i) d:x' @ ns, degree=2)
+    ures = gauss.integral('ubasis_n,j σ_ij d:x' @ ns)
+    pres = gauss.integral('pbasis u_k,k d:x' @ ns)
 
     # define Dirichlet boundary condition
-    sqr = domain.boundary['bottom'].integral('(u - uwall)^2 d:x' @ ns, degree=2)
+    sqr = domain.boundary['inflow'].integral('(u_0 - uin)^2 d:x' @ ns, degree=2)
+    sqr += domain.boundary['inflow,outflow'].integral('u_1^2 d:x' @ ns, degree=2)
+    sqr += domain.boundary['wall'].integral('u_k u_k d:x' @ ns, degree=2)
     cons = nutils.solver.optimize('lhs', sqr, droptol=1e-15)
 
     # preCICE setup
@@ -39,19 +48,11 @@ def main():
     # define coupling mesh
     mesh_name = "Fluid-Mesh"
     mesh_id = interface.get_mesh_id(mesh_name)
-    coupling_boundary = domain.boundary['top']
-    coupling_sample = coupling_boundary.sample('gauss', degree=2)  # mesh vertices at Gauss points
-    vertices = coupling_sample.eval(ns.x)
+    vertices = gauss.eval(ns.x)
     vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)
 
     # coupling data
     velocity_id = interface.get_data_id("Velocity", mesh_id)
-
-    # helper functions to project heat flux to coupling boundary
-    projection_matrix = coupling_boundary.integrate(ns.eval_nm('basis_n basis_m d:x'), degree=2)
-    projection_cons = np.zeros(res.shape)
-    projection_cons[projection_matrix.rowsupp(1e-15)] = np.nan
-    def fluxdofs(v): return projection_matrix.solve(v, constrain=projection_cons)
 
     precice_dt = interface.initialize()
 
@@ -60,13 +61,15 @@ def main():
     timestep = 0
     dt = 0.01
 
-    # set u = uwall as initial condition and visualize
-    sqr = domain.integral('(u - uwall)^2' @ ns, degree=2)
-    lhs0 = nutils.solver.optimize('lhs', sqr)
-    bezier = domain.sample('bezier', 2)
-    x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs0)
-    with treelog.add(treelog.DataLog()):
-        nutils.export.vtk('Fluid_0', bezier.tri, x, T=u)
+    state = nutils.solver.solve_linear(['u', 'p'], [ures, pres]) # initial condition
+
+    # add convective term for navier-stokes
+    ures += gauss.integral('ubasis_ni (dudt_i + μ (u_i u_j)_,i) d:x' @ ns)
+
+#   bezier = domain.sample('bezier', 2)
+#   x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs0)
+#   with log.add(log.DataLog()):
+#       nutils.export.vtk('Fluid_0', bezier.tri, x, T=u)
 
     while interface.is_coupling_ongoing():
 
@@ -74,10 +77,11 @@ def main():
         dt = min(dt, precice_dt)
 
         # solve nutils timestep
-        lhs = nutils.solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt))
+        state['u0'] = state['u']
+        state = nutils.solver.newton(['u', 'p'], [ures, pres], constrain=cons, arguments=state).solve(1e-10)
 
         if interface.is_write_data_required(dt):
-            #velocity_values = TODO # matrix with same format as vertices above
+            velocity_values = gauss.eval(ns.u, **state)
             interface.write_block_vector_data(velocity_id, vertex_ids, velocity_values)
 
         # do the coupling
@@ -85,13 +89,16 @@ def main():
 
         # advance variables
         timestep += 1
-        lhs0 = lhs
 
-       if timestep % 20 == 0:  # visualize
-           bezier = domain.sample('bezier', 2)
-           x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs)
-           with treelog.add(treelog.DataLog()):
-               nutils.export.vtk('Fluid_' + str(timestep), bezier.tri, x, T=u)
+        bezier = domain.sample('bezier', 2)
+        u = bezier.eval(ns.u, **state)
+        export.triplot('solution.png', x, numpy.linalg.norm(u, axis=1), tri=bezier.tri, hull=bezier.hull)
+
+        #if timestep % 20 == 0:  # visualize
+        #   bezier = domain.sample('bezier', 2)
+        #   x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs)
+        #   with log.add(log.DataLog()):
+        #       nutils.export.vtk('Fluid_' + str(timestep), bezier.tri, x, T=u)
 
     interface.finalize()
 
