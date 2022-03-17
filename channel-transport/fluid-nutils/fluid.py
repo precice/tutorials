@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-from nutils import function, mesh, cli
+from nutils import function, mesh, cli, solver, export
 import treelog as log
 import numpy as np
 import precice
@@ -11,16 +11,22 @@ def main():
 
     print("Running utils")
 
+    nx = 48
+    ny = 16
+    step_start = nx // 3
+    step_end = nx // 2
+    step_hight = ny // 2
+
     # define the Nutils mesh
-    grid = np.linspace(0, 5, 21), np.linspace(0, 2, 9)
-    domain, geom = nutils.mesh.rectilinear(grid)
+    grid = np.linspace(0, 6, nx+1), np.linspace(0, 2, ny+1)
+    domain, geom = mesh.rectilinear(grid)
     domain = domain.withboundary(inflow='left', outflow='right', wall='top,bottom') \
-           - domain[8:13,:3].withboundary(wall='left,top,right')
+           - domain[step_start:step_end,:step_hight].withboundary(wall='left,top,right')
 
     gauss = domain.sample('gauss', degree=4)
 
     # Nutils namespace
-    ns = nutils.function.Namespace()
+    ns = function.Namespace()
     ns.x = geom
 
     ns.ubasis = domain.basis('std', degree=2).vector(2)
@@ -28,19 +34,19 @@ def main():
     ns.u_i = 'ubasis_ni ?u_n'  # solution
     ns.p = 'pbasis_n ?p_n'  # solution
     ns.dudt_i = 'ubasis_ni (?u_n - ?u0_n) / ?dt'  # time derivative
-    ns.μ = 100  # viscosity
+    ns.μ = 0.5  # viscosity
     ns.σ_ij = 'μ (u_i,j + u_j,i) - p δ_ij'
     ns.uin = '10 x_1 (2 - x_1)' # inflow profile
 
     # define the weak form
-    ures = gauss.integral('ubasis_n,j σ_ij d:x' @ ns)
-    pres = gauss.integral('pbasis u_k,k d:x' @ ns)
+    ures = gauss.integral('ubasis_ni,j σ_ij d:x' @ ns)
+    pres = gauss.integral('pbasis_n u_k,k d:x' @ ns)
 
     # define Dirichlet boundary condition
     sqr = domain.boundary['inflow'].integral('(u_0 - uin)^2 d:x' @ ns, degree=2)
     sqr += domain.boundary['inflow,outflow'].integral('u_1^2 d:x' @ ns, degree=2)
     sqr += domain.boundary['wall'].integral('u_k u_k d:x' @ ns, degree=2)
-    cons = nutils.solver.optimize('lhs', sqr, droptol=1e-15)
+    cons = solver.optimize(['u'], sqr, droptol=1e-15)
 
     # preCICE setup
     interface = precice.Interface("Fluid", "../precice-config.xml", 0, 1)
@@ -56,29 +62,29 @@ def main():
 
     precice_dt = interface.initialize()
 
-    cons0 = cons  # to not lose the Dirichlet BC at the bottom
-    lhs0 = np.zeros(res.shape)  # solution from previous timestep
     timestep = 0
-    dt = 0.01
+    dt = 0.005
 
-    state = nutils.solver.solve_linear(['u', 'p'], [ures, pres]) # initial condition
+    state = solver.solve_linear(('u', 'p'), (ures, pres), constrain=cons) # initial condition
 
     # add convective term for navier-stokes
-    ures += gauss.integral('ubasis_ni (dudt_i + μ (u_i u_j)_,i) d:x' @ ns)
-
-#   bezier = domain.sample('bezier', 2)
-#   x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs0)
-#   with log.add(log.DataLog()):
-#       nutils.export.vtk('Fluid_0', bezier.tri, x, T=u)
+    ures += gauss.integral('ubasis_ni (dudt_i + μ (u_i u_j)_,j) d:x' @ ns)
 
     while interface.is_coupling_ongoing():
 
+        if timestep % 1 == 0:  # visualize
+           bezier = domain.sample('bezier', 2)
+           x, u, p = bezier.eval(['x_i', 'u_i', 'p'] @ ns, **state)
+           with log.add(log.DataLog()):
+               export.vtk('Fluid_' + str(timestep), bezier.tri, x, u=u, p=p)
+        
         # potentially adjust non-matching timestep sizes
         dt = min(dt, precice_dt)
 
         # solve nutils timestep
         state['u0'] = state['u']
-        state = nutils.solver.newton(['u', 'p'], [ures, pres], constrain=cons, arguments=state).solve(1e-10)
+        state['dt'] = dt
+        state = solver.newton(('u', 'p'), (ures, pres), constrain=cons, arguments=state).solve(1e-10)
 
         if interface.is_write_data_required(dt):
             velocity_values = gauss.eval(ns.u, **state)
@@ -90,18 +96,9 @@ def main():
         # advance variables
         timestep += 1
 
-        bezier = domain.sample('bezier', 2)
-        u = bezier.eval(ns.u, **state)
-        export.triplot('solution.png', x, numpy.linalg.norm(u, axis=1), tri=bezier.tri, hull=bezier.hull)
-
-        #if timestep % 20 == 0:  # visualize
-        #   bezier = domain.sample('bezier', 2)
-        #   x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs)
-        #   with log.add(log.DataLog()):
-        #       nutils.export.vtk('Fluid_' + str(timestep), bezier.tri, x, T=u)
 
     interface.finalize()
 
 
 if __name__ == '__main__':
-    nutils.cli.run(main)
+    cli.run(main)

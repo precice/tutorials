@@ -22,8 +22,9 @@
       <use-mesh name="Fluid-Mesh" provide="yes" />
       <use-mesh name="Transport-Mesh" from="Transport" />
       <write-data name="Velocity" mesh="Fluid-Mesh" />
-      <mapping:rbf-thin-plate-splines
-        direction="write"
+      <mapping:rbf-compact-tps-c2
+	direction="write"
+        support-radius="0.4"
         from="Fluid-Mesh"
         to="Transport-Mesh"
         constraint="consistent" />
@@ -37,8 +38,8 @@
     <m2n:sockets from="Fluid" to="Transport" exchange-directory=".." />
 
     <coupling-scheme:serial-explicit>
-      <time-window-size value="0.01" />
-      <max-time value="0.2" />
+      <time-window-size value="0.005" />
+      <max-time value="1.0" />
       <participants first="Fluid" second="Transport" />
       <exchange data="Velocity" mesh="Transport-Mesh" from="Fluid" to="Transport" />
     </coupling-scheme:serial-explicit>

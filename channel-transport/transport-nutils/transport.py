@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-from nutils import function, mesh, cli
+from nutils import function, mesh, cli, solver, export
 import treelog as log
 import numpy as np
 import precice
@@ -11,23 +11,29 @@ def main():
 
     print("Running utils")
 
+    nx = 120
+    ny = 32
+    step_start = nx // 3
+    step_end = nx // 2
+    step_hight = ny // 2
+
     # define the Nutils mesh
-    grid = np.linspace(0, 5, 21), np.linspace(0, 2, 9)
-    domain, geom = nutils.mesh.rectilinear(grid)
+    grid = np.linspace(0, 6, nx+1), np.linspace(0, 2, ny+1)
+    domain, geom = mesh.rectilinear(grid)
     domain = domain.withboundary(inflow='left', outflow='right', wall='top,bottom') \
-           - domain[8:13,:3].withboundary(wall='left,top,right')
+           - domain[step_start:step_end,:step_hight].withboundary(wall='left,top,right')
 
     gauss = domain.sample('gauss', degree=2)
 
     # Nutils namespace
-    ns = nutils.function.Namespace()
+    ns = function.Namespace(fallback_length=2)
     ns.x = geom
     ns.basis = domain.basis('std', degree=1)  # linear finite elements
     ns.u = 'basis_n ?lhs_n'  # solution
     ns.dudt = 'basis_n (?lhs_n - ?lhs0_n) / ?dt'  # time derivative
-    ns.vbasis = gauss.basis().vector(2)
-    ns.velocity_i = 'vbasis_ni ?velocity_n'
-    ns.k = 100  # thermal diffusivity
+    ns.vbasis = gauss.basis()
+    ns.velocity_i = 'vbasis_n ?velocity_ni'
+    ns.k = 0.1  # thermal diffusivity
     ns.xblob = 1, 1
     ns.uinit = '.5 - .5 tanh(((x_i - xblob_i) (x_i - xblob_i) - .5) / .1)'
 
@@ -36,7 +42,7 @@ def main():
 
     # define Dirichlet boundary condition
     sqr = domain.boundary['inflow'].integral('u^2 d:x' @ ns, degree=2)
-    cons = nutils.solver.optimize('lhs', sqr, droptol=1e-15)
+    cons = solver.optimize('lhs', sqr, droptol=1e-15)
 
     # preCICE setup
     interface = precice.Interface("Transport", "../precice-config.xml", 0, 1)
@@ -53,19 +59,21 @@ def main():
     precice_dt = interface.initialize()
 
     timestep = 0
-    dt = 0.01
+    dt = 0.005
 
     # set u = uwall as initial condition and visualize
     sqr = domain.integral('(u - uinit)^2' @ ns, degree=2)
-    lhs0 = nutils.solver.optimize('lhs', sqr)
+    lhs0 = solver.optimize('lhs', sqr)
 
-    bezier = domain.sample('bezier', 2)
-    x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs0)
-    with log.add(log.DataLog()):
-        nutils.export.vtk('Solid_0', bezier.tri, x, T=u)
 
     while interface.is_coupling_ongoing():
 
+        if timestep % 1 == 0:  # visualize
+            bezier = domain.sample('bezier', 2)
+            x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs0)
+            with log.add(log.DataLog()):
+                export.vtk('Transport_' + str(timestep), bezier.tri, x, T=u)
+        
         # read temperature from interface
         if interface.is_read_data_available():
             velocity_values = interface.read_block_vector_data(velocity_id, vertex_ids)
@@ -74,7 +82,7 @@ def main():
         dt = min(dt, precice_dt)
 
         # solve nutils timestep
-        lhs = nutils.solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt, velocity=velocity_values))
+        lhs = solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt, velocity=velocity_values))
 
         # do the coupling
         precice_dt = interface.advance(dt)
@@ -83,14 +91,8 @@ def main():
         timestep += 1
         lhs0 = lhs
 
-        if timestep % 20 == 0:  # visualize
-            bezier = domain.sample('bezier', 2)
-            x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs)
-            with log.add(log.DataLog()):
-                nutils.export.vtk('Transport_' + str(timestep), bezier.tri, x, T=u)
-
     interface.finalize()
 
 
 if __name__ == '__main__':
-    nutils.cli.run(main)
+    cli.run(main)
