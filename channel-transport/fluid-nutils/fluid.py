@@ -11,19 +11,20 @@ def main():
 
     print("Running utils")
 
+    # define the Nutils mesh
     nx = 48
     ny = 16
     step_start = nx // 3
     step_end = nx // 2
     step_hight = ny // 2
 
-    # define the Nutils mesh
     grid = np.linspace(0, 6, nx + 1), np.linspace(0, 2, ny + 1)
     domain, geom = mesh.rectilinear(grid)
     domain = domain.withboundary(inflow="left", outflow="right", wall="top,bottom") - domain[
         step_start:step_end, :step_hight
     ].withboundary(wall="left,top,right")
 
+    # cloud of Gauss points
     gauss = domain.sample("gauss", degree=4)
 
     # Nutils namespace
@@ -39,7 +40,7 @@ def main():
     ns.σ_ij = "μ (u_i,j + u_j,i) - p δ_ij"
     ns.uin = "10 x_1 (2 - x_1)"  # inflow profile
 
-    # define the weak form
+    # define the weak form, Stokes problem
     ures = gauss.integral("ubasis_ni,j σ_ij d:x" @ ns)
     pres = gauss.integral("pbasis_n u_k,k d:x" @ ns)
 
@@ -68,7 +69,7 @@ def main():
 
     state = solver.solve_linear(("u", "p"), (ures, pres), constrain=cons)  # initial condition
 
-    # add convective term for navier-stokes
+    # add convective term and time derivative for Navier-Stokes
     ures += gauss.integral("ubasis_ni (dudt_i + μ (u_i u_j)_,j) d:x" @ ns)
 
     while interface.is_coupling_ongoing():
@@ -82,7 +83,7 @@ def main():
         # potentially adjust non-matching timestep sizes
         dt = min(dt, precice_dt)
 
-        # solve nutils timestep
+        # solve Nutils timestep
         state["u0"] = state["u"]
         state["dt"] = dt
         state = solver.newton(("u", "p"), (ures, pres), constrain=cons, arguments=state).solve(1e-10)

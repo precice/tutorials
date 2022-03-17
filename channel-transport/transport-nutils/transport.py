@@ -11,19 +11,20 @@ def main():
 
     print("Running utils")
 
+    # define the Nutils mesh
     nx = 120
     ny = 32
     step_start = nx // 3
     step_end = nx // 2
     step_hight = ny // 2
 
-    # define the Nutils mesh
     grid = np.linspace(0, 6, nx + 1), np.linspace(0, 2, ny + 1)
     domain, geom = mesh.rectilinear(grid)
     domain = domain.withboundary(inflow="left", outflow="right", wall="top,bottom") - domain[
         step_start:step_end, :step_hight
     ].withboundary(wall="left,top,right")
 
+    # cloud of Gauss points
     gauss = domain.sample("gauss", degree=2)
 
     # Nutils namespace
@@ -34,9 +35,9 @@ def main():
     ns.dudt = "basis_n (?lhs_n - ?lhs0_n) / ?dt"  # time derivative
     ns.vbasis = gauss.basis()
     ns.velocity_i = "vbasis_n ?velocity_ni"
-    ns.k = 0.1  # thermal diffusivity
+    ns.k = 0.1  # diffusivity
     ns.xblob = 1, 1
-    ns.uinit = ".5 - .5 tanh(((x_i - xblob_i) (x_i - xblob_i) - .5) / .1)"
+    ns.uinit = ".5 - .5 tanh(((x_i - xblob_i) (x_i - xblob_i) - .5) / .1)"  # blob
 
     # define the weak form
     res = gauss.integral("(basis_n (dudt + (velocity_i u)_,i) + k basis_n,i u_,i) d:x" @ ns)
@@ -62,7 +63,7 @@ def main():
     timestep = 0
     dt = 0.005
 
-    # set u = uwall as initial condition and visualize
+    # set blob as initial condition
     sqr = domain.integral("(u - uinit)^2" @ ns, degree=2)
     lhs0 = solver.optimize("lhs", sqr)
 
@@ -74,7 +75,7 @@ def main():
             with log.add(log.DataLog()):
                 export.vtk("Transport_" + str(timestep), bezier.tri, x, T=u)
 
-        # read temperature from interface
+        # read velocity values from interface
         if interface.is_read_data_available():
             velocity_values = interface.read_block_vector_data(velocity_id, vertex_ids)
 
