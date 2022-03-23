@@ -68,7 +68,7 @@ def main():
     lhs0 = solver.optimize("lhs", sqr)
 
     # initialize the velocity values
-    velocity_values = interface.read_block_vector_data(velocity_id, vertex_ids)
+    velocity_values = np.zeros_like(vertices)
 
     while interface.is_coupling_ongoing():
 
