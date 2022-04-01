@@ -47,7 +47,7 @@
 
     <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
 
-    <coupling-scheme:serial-implicit>
+<!--    <coupling-scheme:serial-implicit>
       <time-window-size value="0.01" />
       <max-time value="1" />
       <max-iterations value="30" />
@@ -59,6 +59,14 @@
         <data mesh="Solid-Mesh" name="Heat-Flux" />
         <initial-relaxation value="0.5" />
       </acceleration:aitken>
-    </coupling-scheme:serial-implicit>
+    </coupling-scheme:serial-implicit> -->
+    
+    <coupling-scheme:serial-explicit>
+      <time-window-size value="0.01" />
+      <max-time value="1" />
+      <participants first="Fluid" second="Solid" />
+      <exchange data="Temperature" mesh="Fluid-Mesh" from="Fluid" to="Solid" />
+    </coupling-scheme:serial-explicit>
+    
   </solver-interface>
 </precice-configuration>
