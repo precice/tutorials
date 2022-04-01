@@ -68,25 +68,27 @@ class Problem_heat:
 
         self.scheme = solutionScheme([self.A == self.b, *self.bcs], solver = 'cg')
         
-        #self.flux_expr = ((self.u - self.uold)*self.v/self.dt*ufl.dx + 
-        #                  self.k*ufl.dot(ufl.grad(self.u), ufl.grad(self.v))*ufl.dx)
-        #self.flux_expr_operator = galerkin(self.flux_expr)
-        #self.flux_sol = self.space.interpolate(self.u0, name = 'flux_sol')
+        self.flux_expr = ((self.u - self.uold)*self.v/self.dt*ufl.dx + 
+                          self.k*ufl.dot(ufl.grad(self.u), ufl.grad(self.v))*ufl.dx)
+        self.flux_expr_operator = galerkin(self.flux_expr)
+        self.flux_sol = self.space.interpolate(self.u0, name = 'flux_sol')
         
-        #self.flux_sol_expr = expression2GF(self.flux_sol.space.grid, self.flux_sol, self.flux_sol.space.order)
-        #self.sampler_weak_flux = Sampler(self.flux_sol_expr)
-        #self.flux_f_weak = lambda : self.sampler_weak_flux.lineSample([0., 0.], [1., 0.], gridsize+1)[1]
+        self.flux_sol_expr = expression2GF(self.flux_sol.space.grid, self.flux_sol, self.flux_sol.space.order)
+        self.sampler_weak_flux = Sampler(self.flux_sol_expr)
+        #self.flux_f_weak = lambda : self.sampler_weak_flux.lineSample([0. + self.eps, 0. - self.eps ], [1. - self.eps, 0. - self.eps], self.NN)[1]
+        self.flux_f_weak = lambda : self.sampler_weak_flux.lineSample([0., 0. - 1e-6], [1., 0. - 1e-6], self.NN)[1]
                
             
-        self.create_checkpoint()
+        #self.create_checkpoint()
 
        
-    #def get_flux(self):
-    #    ## compute flux, solution goes into self.flux_sol
-    #    self.flux_expr_operator(self.unew, self.flux_sol)
-    #    flux = lineSample(self.flux_sol_expr[0., 0.], [1., 0.], gridsize+1)[1] / self.dx
-    #    flux[0], flux[-1] = 0, 0
-    #    return flux        
+    def get_flux(self):
+        ## compute flux, solution goes into self.flux_sol
+        self.flux_expr_operator(self.unew, self.flux_sol)
+        flux = self.flux_f_weak() / self.dx 
+        #flux = lineSample(self.flux_sol_expr, [0., 0.], [1., 0.], gridsize+1)[1] / self.dx
+        flux[0], flux[-1] = 0, 0
+        return flux        
 
     def load_checkpoint(self):
         self.uold.interpolate(self.u_checkpoint)
@@ -101,9 +103,9 @@ class Problem_heat:
         self.ug_interp.y = ug
 
         self.scheme.solve(target = self.unew)
-        #flux = self.get_flux()
+        flux = self.get_flux()
         self.uold.assign(self.unew)
-        #return flux
+        return flux
 
 
 if __name__ == '__main__':
@@ -119,8 +121,10 @@ if __name__ == '__main__':
     mesh_name = "Solid-Mesh"
     mesh_id = interface.get_mesh_id(mesh_name)
     vertices = [[x0, 0] for x0 in solver.xx]
+    print(len(vertices))
     vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)
     temperature_id = interface.get_data_id("Temperature", mesh_id)
+    flux_id = interface.get_data_id("Heat-Flux", mesh_id)
     
     precice_dt = interface.initialize()
     
@@ -132,7 +136,13 @@ if __name__ == '__main__':
         
         temperature_values = interface.read_block_scalar_data(temperature_id, vertex_ids)
         
-        solver.do_step(dt, temperature_values)
+        flux_values = solver.do_step(dt, temperature_values)
+        
+        print(flux_values.shape)
+        
+        print(flux_values)
+        
+        interface.write_block_scalar_data(flux_id, vertex_ids, flux_values)
         
         dt = min(dt, precice_dt)
         
