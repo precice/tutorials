@@ -53,6 +53,9 @@ cd solid-fenics
 
 in order to use OpenFOAM and FEniCS for this test case. Feel free to try different combinations, they should all run and give approximately similar results.
 
+
+Note that to use CalculiX as solid solver, the configuration file `precice-config-calculix.xml` must be used instead of `precice-config.xml`. The CalculiX case is already configured to use it, but the fluid solver must be adapted. Modify the `system/preciceDict` file in the OpenFOAM case to use the correct one. This is necessary because CalculiX use different meshes for the temperature (read at the nodes) and for the heat flux, computed on face centers.
+
 ## Post-processing
 
 How to visualize the simulation results depends on the selected solvers. Most of the solvers generate VTK files which can visualized using ParaView or similar tools.
