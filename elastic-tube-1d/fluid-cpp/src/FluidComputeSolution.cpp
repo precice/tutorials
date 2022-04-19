@@ -121,10 +121,10 @@ int fluidComputeSolutionSerial(
     const double velocity_in = u0 + ampl * sin(frequency * (t + t_shift) * PI);
     Res[0] = velocity_in - velocity[0];
 
-    /* Pressure Inlet is lineary interpolated */
+    /* Pressure Inlet is linearly interpolated */
     Res[N + 1] = -pressure[0] + 2 * pressure[1] - pressure[2];
 
-    /* Velocity Outlet is lineary interpolated */
+    /* Velocity Outlet is linearly interpolated */
     Res[N] = -velocity[N] + 2 * velocity[N - 1] - velocity[N - 2];
 
     /* Pressure Outlet is "non-reflecting" */
@@ -148,7 +148,7 @@ int fluidComputeSolutionSerial(
       break;
     }
 
-    /* Initilizing the the LHS i.e. Left Hand Side */
+    /* Initializing the the LHS i.e. Left Hand Side */
     std::fill(LHS_buffer.begin(), LHS_buffer.end(), 0.0);
 
     for (int i = 1; i < N; i++) {
@@ -188,11 +188,11 @@ int fluidComputeSolutionSerial(
 
     // Velocity Inlet is prescribed
     LHS(0, 0) = 1;
-    // Pressure Inlet is lineary interpolated
+    // Pressure Inlet is linearly interpolated
     LHS(N + 1, N + 1) = 1;
     LHS(N + 1, N + 2) = -2;
     LHS(N + 1, N + 3) = 1;
-    // Velocity Outlet is lineary interpolated
+    // Velocity Outlet is linearly interpolated
     LHS(N, N)     = 1;
     LHS(N, N - 1) = -2;
     LHS(N, N - 2) = 1;

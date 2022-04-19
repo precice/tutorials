@@ -1,5 +1,5 @@
 ---
-title: Muliple perpendicular flaps
+title: Multiple perpendicular flaps
 permalink: tutorials-multiple-perpendicular-flaps.html
 keywords: multi-coupling, OpenFOAM, deal.II, FSI
 summary: In this case, a fluid and two solids are coupled together using a fully-implicit multi-coupling scheme.
@@ -27,7 +27,7 @@ For a case showing fluid-structure interaction only (no multi-coupling), take a 
 
 ## Why multi-coupling?
 
-This is a case with three participants: the fluid and each flap. In preCICE, there are two options to [couple more than two participants](https://www.precice.org/configuration-coupling-multi.html). The first option a composition of bi-coupling schemes, in which we must specify the exchange of data in a participant to participant manner. However, such a composition is not suited for combining multiple strong fluid-structure interations [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling.
+This is a case with three participants: the fluid and each flap. In preCICE, there are two options to [couple more than two participants](https://www.precice.org/configuration-coupling-multi.html). The first option a composition of bi-coupling schemes, in which we must specify the exchange of data in a participant to participant manner. However, such a composition is not suited for combining multiple strong fluid-structure interactions [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling.
 
 We can set this in our `precice-config.xml`:
 
@@ -44,7 +44,7 @@ The participant that has the control is the one that it is connected to all othe
 
 For the fluid participant we use OpenFOAM. In particular, we use the application `pimpleFoam`. The geometry of the Fluid participant is defined in the file `Fluid/system/blockMeshDict`. Besides, we must specify where are we exchanging data with the other participants. The interfaces are set in the file `Fluid/system/preciceDict`. In this file, we set to exchange stress and displacement on the surface of each flap.
 
-Most of the coupling details are specified in the file `precide-config.xml`. Here we estipulate the order in which we read/write data from one participant to another or how we map from the fluid to the solid's mesh. In particular, we have choosen the nearest-neighbor mapping scheme.
+Most of the coupling details are specified in the file `precide-config.xml`. Here we estipulate the order in which we read/write data from one participant to another or how we map from the fluid to the solid's mesh. In particular, we have chosen the nearest-neighbor mapping scheme.
 
 For the simulation of the solid participants we use the deal.II adapter. In deal.II, the geometry of the domain is specified directly on the solver. The two flaps in our case are essentially the same but for the x-coordinate. The flap geometry is given to the solver when we select the scenario in the '.prm' file.
 
