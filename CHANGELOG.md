@@ -24,7 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Ported the `visualize.py` script of the partitioned-elastic-beam to Python 3 [#247](https://github.com/precice/tutorials/pull/247).
 - Reduced the writing frequency of the partitioned-pipe OpenFOAM cases [#257](https://github.com/precice/tutorials/pull/257).
 - Renamed the output directories of all FEniCS cases for consistency [#256](https://github.com/precice/tutorials/pull/257).
-- Removed unnecessary (wrong) read statment in `elastic-tube-1d` [#232](https://github.com/precice/tutorials/pull/232).
+- Removed unnecessary (wrong) read statement in `elastic-tube-1d` [#232](https://github.com/precice/tutorials/pull/232).
 - Removed unnecessary (relic) OpenFOAM parameter `nMoles` from flow-over-heated-plate cases with OpenFOAM [#234](https://github.com/precice/tutorials/pull/234).
 - Removed unnecessary (relic) OpenFOAM parameter `RAS` from the `turbulenceProperties` files of all OpenFOAM cases (we model a laminar flow everywhere and this was confusing) [#258](https://github.com/precice/tutorials/pull/258).
 - Removed unnecessary (relic) OpenFOAM files `RASProperties` and `couplingProperties` from elastic-tube-3d [#258](https://github.com/precice/tutorials/pull/258).
