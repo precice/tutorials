@@ -7,7 +7,7 @@ set -e -x
 test -f meshes.tar.gz  || wget https://gitlab.lrz.de/precice/precice2-ref-paper-setup/-/raw/main/meshes/meshes.tar.gz
 
 # Extract the meshes
-tar -xf meshes.tar.gz
+test -f 0.009.vtk -a 0.01.vtk ||tar -xf meshes.tar.gz
 
 # Calculate on fine mesh
 vtk_calculator.py -m 0.009.vtk -f "eggholder3d" -d "EggHolder"
