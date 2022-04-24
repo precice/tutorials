@@ -22,10 +22,8 @@ This case is a simple usage scenario for ASTE. Some features demonstrated by thi
 Run the `run.sh` script. It performs the following steps:
 
 * Downloads the meshes from preCICE repository.
-* Using `vtk_calculator.py` script, calculates function `x^2+exp(y^3)+cos(z)` on a finer grid.
+* Using `vtk_calculator.py` script, calculates function `eggholder` on a finer grid.
 * Using `partition_mesh.py` script, partitions the coarse and fine mesh into 2 domains.
 * Using `preciceMap` executable, maps the data from the fine grid to the coarse grid.
 * Using `join_mesh.py`script, joins the result meshes into a final mesh.
 * Using ``vtk_calculator.py` script, calculates difference between mapped and original function on coarse grid.
-
-Important note:  The `run.sh` script assumes that the ASTE binaries and python scripts are in `$PATH` or ASTE is installed.
