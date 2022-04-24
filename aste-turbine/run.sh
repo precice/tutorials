@@ -10,7 +10,7 @@ test -f meshes.tar.gz  || wget https://gitlab.lrz.de/precice/precice2-ref-paper-
 tar -xf meshes.tar.gz
 
 # Calculate on fine mesh
-vtk_calculator.py -m 0.009.vtk -f "x^2+exp(y^3)+cos(z)" -d "x^2+exp(y^3)+cos(z)"
+vtk_calculator.py -m 0.009.vtk -f "eggholder3d" -d "EggHolder"
 
 # Decompose both meshes to two procesors
 # Choose resolution 0.009 mesh as fine mesh
@@ -22,8 +22,8 @@ partition_mesh.py -m 0.01.vtk -n 2 -o coarse_mesh --dir coarse_mesh --algorithm 
 mkdir -p mapped
 
 # Map from the finer mesh to coarser mesh
-mpirun -n 2 preciceMap -v -p A --mesh fine_mesh/fine_mesh --data "x^2+exp(y^3)+cos(z)" &
-mpirun -n 2 preciceMap -v -p B --mesh coarse_mesh/coarse_mesh --output mapped/mapped --data "x^2+exp(y^3)+cos(z)"
+mpirun -n 2 preciceMap -v -p A --mesh fine_mesh/fine_mesh --data "EggHolder" &
+mpirun -n 2 preciceMap -v -p B --mesh coarse_mesh/coarse_mesh --output mapped/mapped --data "InterpolatedData"
 
 # Join the output files together to result.vtk,
 # Recovery cannot be used since GlobalID's are not exist in mapped mesh
@@ -31,4 +31,4 @@ join_mesh.py -m mapped/mapped -o result.vtk --recovery coarse_mesh/coarse_mesh_r
 
 # Measure the difference between the original function and the mapped values
 # Save into data array called difference
-vtk_calculator.py -m result.vtk -f "x^2+exp(y^3)+cos(z)" -d difference --diffdata "x^2+exp(y^3)+cos(z)" --diff --stats
+vtk_calculator.py -m result.vtk -f "eggholder3d" -d difference --diffdata "InterpolatedData" --diff --stats
