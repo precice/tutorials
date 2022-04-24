@@ -141,14 +141,14 @@ t = 0
 u_D.t = t + dt
 
 # mark mesh w.r.t ranks
-ranks = File("Solid/VTK/ranks%s.pvd.pvd" % precice.get_participant_name())
+ranks = File("output/ranks%s.pvd.pvd" % precice.get_participant_name())
 mesh_rank = MeshFunction("size_t", mesh, mesh.topology().dim())
 mesh_rank.set_all(MPI.rank(MPI.comm_world))
 mesh_rank.rename("myRank", "")
 ranks << mesh_rank
 
 # Create output file
-file_out = File("Solid/VTK/%s.pvd" % precice.get_participant_name())
+file_out = File("output/%s.pvd" % precice.get_participant_name())
 file_out << u_n
 
 print("output vtk for time = {}".format(float(t)))

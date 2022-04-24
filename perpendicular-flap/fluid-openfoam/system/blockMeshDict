@@ -5,7 +5,6 @@ FoamFile
     class       dictionary;
     object      blockMeshDict;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 x0 -3.;
 x1 -0.05;
@@ -77,10 +76,6 @@ blocks
     simpleGrading (2 2 1)
 );
 
-edges
-(
-);
-
 boundary
 (
     inlet
@@ -148,5 +143,3 @@ boundary
         );
     }
 );
-
-// ************************************************************************* //

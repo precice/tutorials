@@ -1,25 +1,23 @@
 FoamFile
 {
-    version 2.0;
-    format ascii;
-    class dictionary;
-    location system;
-    object decomposeParDict;
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      decomposeParDict;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    numberOfSubdomains 25;
-    
-    method hierarchical;
-    hierarchicalCoeffs
-    {
-        n (5 5 1);
-        delta 0.001;
-        order xyz;
-    }
-    
-    distributed false;
-    roots
-    (
-    );
+numberOfSubdomains 25;
+
+method hierarchical;
+hierarchicalCoeffs
+{
+    n (5 5 1);
+    delta 0.001;
+    order xyz;
+}
+
+distributed false;
+roots
+(
+);
 

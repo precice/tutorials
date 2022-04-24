@@ -3,10 +3,8 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant";
     object      thermophysicalProperties;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dpdt            no;
 
@@ -25,7 +23,6 @@ mixture
 {
     specie
     {
-        nMoles          1;
         molWeight       24.09989;
     }
     thermodynamics
@@ -39,6 +36,3 @@ mixture
         Pr              0.01;
     }
 }
-
-
-// ************************************************************************* //

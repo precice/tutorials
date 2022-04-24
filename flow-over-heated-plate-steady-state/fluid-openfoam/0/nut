@@ -4,10 +4,8 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    location    "0";
     object      nut;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 2 -1 0 0 0 0];
 
@@ -50,6 +48,3 @@ boundaryField
         type            empty;
     }
 }
-
-
-// ************************************************************************* //

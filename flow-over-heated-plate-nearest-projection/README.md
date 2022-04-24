@@ -5,23 +5,25 @@ keywords: OpenFOAM, nearest-projection, CHT
 summary: This tutorial introduces an example simulation setup for a nearest-projection mapping, based on the "flow over a heated plate" scenario.
 ---
 
-{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate-nearest-projection). Read how in the [tutorials introduction](https://precice.org/tutorials.html)." %}
+{% note %}
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate-nearest-projection). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+{% endnote %}
 
 ## Setup
 
-The setup is exactly the same as described in our [flow-over-heated-plate tutorial](https://precice.org/tutorials-flow-over-heated-plate.html).
+The setup is exactly the same as described in our [flow-over-heated-plate tutorial](https://www.precice.org/tutorials-flow-over-heated-plate.html).
 
 ## Available solvers
 
 Fluid participant:
 
-* OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
+* OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
 Solid participant:
 
-* OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
+* OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
-The solvers are currently only OpenFOAM related. For information regarding the nearest-projection mapping, have a look in the [OpenFOAM configuration section](https://precice.org/adapter-openfoam-config.html).
+The solvers are currently only OpenFOAM related. For information regarding the nearest-projection mapping, have a look in the [OpenFOAM configuration section](https://www.precice.org/adapter-openfoam-config.html).
 
 ## Running the Simulation
 
@@ -39,7 +41,7 @@ cd solid-openfoam
 ./run.sh
 ```
 
-You can also run OpenFOAM in parallel by `./run.sh -parallel`. If you are using OpenFOAM v1712 / 5.x or older have a look in the `fluid-openfoam/system/controlDict` file and set the appropriate solver name.
+You can also run OpenFOAM in parallel by `./run.sh -parallel`.
 
 ## Changes in the Simulation Setup
 
@@ -66,7 +68,7 @@ From the preCICE point of view, the simulation here is in 3D, as opposed to the 
 
 ## Post-processing
 
-Have a look at the [flow-over heated-plate](https://precice.org/tutorials-flow-over-heated-plate.html) tutorial for the general aspects of post-processing.
+Have a look at the [flow-over heated-plate](https://www.precice.org/tutorials-flow-over-heated-plate.html) tutorial for the general aspects of post-processing.
 Since we now defined mesh connectivity on our interface, we can export the coupling interface with the tag `<export:vtk directory="preCICE-output" />` in our `precice-config.xml`.
 Visualizing these files (e.g. using ParaView) will show a triangular mesh, even though you use hexahedral meshes. This has nothing to do with your mesh and is just caused by the way the connectivity is defined in preCICE. As described above, the function `setMeshTriangles` is used to define the connectivity. Hence, every interface cell/face is represented by two triangles. The following image should give you an impression of a possible triangulated coupling mesh, which consists purely of hexahedral cells:
 
@@ -74,4 +76,6 @@ Visualizing these files (e.g. using ParaView) will show a triangular mesh, even 
 
 Connectivity is defined on meshes associated with mesh nodes, which are named respectively e.g. `Fluid-Mesh-Nodes`. In this case, you could directly see the interface without applying filters by loading the `.vtk` files. In order to visualize additionally center based meshes, where no connectivity is provided, select a Glyph filter in ParaView. Furthermore, it makes a difference, on which participant the `<export...` tag is defined in your `precice-config.xml` file. Each participant exports interface meshes, which he provides or receives. The receiving participant filters out mesh parts that it does not need (for the mapping). Hence, a received mesh might look incomplete.
 
-{% include disclaimer.html content="This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks." %}
+{% disclaimer %}
+This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
+{% enddisclaimer %}

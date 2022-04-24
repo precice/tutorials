@@ -1,8 +1,8 @@
 FoamFile {
-    version 2.0;
-    class dictionary;
-    object decomposeParDict;
-    format ascii;
+    version         2.0;
+    class           dictionary;
+    object          decomposeParDict;
+    format          ascii;
 }
 
 numberOfSubdomains 4;

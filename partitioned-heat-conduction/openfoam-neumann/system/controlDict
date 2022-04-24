@@ -3,12 +3,11 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
     object      controlDict;
 }
 
 // Make sure you build the solver located
-// in ./openfoam-solver before running
+// in ../../openfoam-solver/ before running
 // the case
 application     heatTransfer;
 

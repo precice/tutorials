@@ -73,8 +73,8 @@ clean_fenics() {
         set -e -u
         cd "$1"
         echo "--- Cleaning up FEniCS case in $(pwd)"
-        rm -fv ./*.pvd spooles.out Solid/FSI-S/*
-        rm -rfv ./out/
+        rm -fv spooles.out output/*
+        rm -rfv ./output/
         rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
@@ -123,6 +123,14 @@ clean_aste() {
         echo "--- Cleaning up ASTE results"
         rm -fv result.vtk result.stats.json
         rm -fvr fine_mesh coarse_mesh mapped
+clean_dune() {
+    (
+        set -e -u
+        cd "$1"
+        echo "--- Cleaning up DUNE case in $(pwd)"
+        rm -fv ./*.pvd
+        rm -fv ./*.vtu
+        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }

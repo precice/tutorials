@@ -14,10 +14,10 @@ This case is a simple usage scenario for ASTE. Some features demonstrated by thi
 * Mapping from a fine grid (`0.009.vtk`) to a coarse grid (`0.01.vtk`).
 * Usage of ASTE partitioner.
 * Usage of ASTE mesh joiner.
-* Usage of ASTE Calculator for calculating a function on given mesh.
+* Usage of ASTE calculator for calculating a function on a given mesh.
 * Usage of ASTE.
 
-## Running the ASTE
+## Running ASTE
 
 Run the `run.sh` script. It performs the following steps:
 
