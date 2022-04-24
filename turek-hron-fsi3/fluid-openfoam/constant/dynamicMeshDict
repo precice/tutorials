@@ -3,20 +3,15 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant";
     object      dynamicMeshDict;
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-dynamicFvMesh dynamicMotionSolverFvMesh;
+dynamicFvMesh   dynamicMotionSolverFvMesh;
 
 motionSolverLibs ("libfvMotionSolvers.so");
 
-solver      displacementLaplacian;
+solver          displacementLaplacian;
 
 displacementLaplacianCoeffs {
-
     diffusivity quadratic inverseDistance (flap);
-
 }

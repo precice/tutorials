@@ -3,10 +3,8 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    location    "0";
     object      alphat;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [ 1 -1 -1 0 0 0 0 ];
 
@@ -49,6 +47,3 @@ boundaryField
         type            empty;
     }
 }
-
-
-// ************************************************************************* //

@@ -5,7 +5,6 @@ FoamFile
     class       volVectorField;
     object      U;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 1 -1 0 0 0 0];
 
@@ -32,8 +31,8 @@ boundaryField
 
     inlet
     {
-     type            fixedValue;
-     value           uniform (1 0 0);
+        type            fixedValue;
+        value           uniform (1 0 0);
     }
 
     outlet
@@ -50,5 +49,3 @@ boundaryField
         type            empty;
     }
 }
-
-// ************************************************************************* //

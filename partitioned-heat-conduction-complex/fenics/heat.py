@@ -165,10 +165,10 @@ else:
 mesh_rank.rename("myRank", "")
 
 # Generating output files
-temperature_out = File("out/%s.pvd" % precice.get_participant_name())
-ref_out = File("out/ref%s.pvd" % precice.get_participant_name())
-error_out = File("out/error%s.pvd" % precice.get_participant_name())
-ranks = File("out/ranks%s.pvd" % precice.get_participant_name())
+temperature_out = File("output/%s.pvd" % precice.get_participant_name())
+ref_out = File("output/ref%s.pvd" % precice.get_participant_name())
+error_out = File("output/error%s.pvd" % precice.get_participant_name())
+ranks = File("output/ranks%s.pvd" % precice.get_participant_name())
 
 # output solution and reference solution at t=0, n=0
 n = 0

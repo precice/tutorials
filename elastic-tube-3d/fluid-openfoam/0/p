@@ -3,10 +3,8 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    location    "0";
     object      p;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 2 -2 0 0 0 0];
 
@@ -17,13 +15,13 @@ boundaryField
     auto0
     {
         type            uniformFixedValue;
-	uniformValue	table
-	(
-	(0 1.3332)
-	(3e-3 1.3332)
-	(3.1e-3 0)
-	(1e-2 0)
-	);
+	    uniformValue	table
+                        (
+                            (0 1.3332)
+                            (3e-3 1.3332)
+                            (3.1e-3 0)
+                            (1e-2 0)
+                        );
     }
     interface
     {
@@ -35,6 +33,3 @@ boundaryField
         value           uniform 0;
     }
 }
-
-
-// ************************************************************************* //
