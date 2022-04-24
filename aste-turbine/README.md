@@ -17,7 +17,7 @@ This case is a simple usage scenario for ASTE. Some features demonstrated by thi
 * Usage of ASTE calculator for calculating a function on a given mesh.
 * Usage of ASTE.
 
-## Running the ASTE
+## Running ASTE
 
 Run the `run.sh` script. It performs the following steps:
 
