@@ -27,7 +27,7 @@ mpirun -n 2 preciceMap -v -p B --mesh coarse_mesh/coarse_mesh --output mapped/ma
 
 # Join the output files together to result.vtk,
 # Recovery cannot be used since GlobalID's are not exist in mapped mesh
-join_mesh.py -m mapped/mapped -o result.vtk
+join_mesh.py -m mapped/mapped -o result.vtk --recovery coarse_mesh/coarse_mesh_recovery.json
 
 # Measure the difference between the original function and the mapped values
 # Save into data array called difference
