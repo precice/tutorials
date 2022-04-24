@@ -116,3 +116,13 @@ clean_su2() {
         clean_precice_logs .
     )
 }
+
+clean_aste() {
+    (
+        set -e -u
+        echo "--- Cleaning up ASTE results"
+        rm -fv result.vtk result.stats.json
+        rm -fvr fine_mesh coarse_mesh mapped
+        clean_precice_logs .
+    )
+}
