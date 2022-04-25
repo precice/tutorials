@@ -24,7 +24,7 @@
     <m2n:sockets from="A" to="B" exchange-directory="." />
 
     <participant name="A">
-      <use-mesh name="A-MESH" provide="yes" />
+      <use-mesh name="A-Mesh" provide="yes" />
       <write-data name="Data" mesh="A-Mesh" />
     </participant>
     
