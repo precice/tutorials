@@ -123,6 +123,9 @@ clean_aste() {
         echo "--- Cleaning up ASTE results"
         rm -fv result.vtk result.stats.json
         rm -fvr fine_mesh coarse_mesh mapped
+    )
+}
+
 clean_dune() {
     (
         set -e -u
