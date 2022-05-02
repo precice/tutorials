@@ -1,5 +1,9 @@
 #! /usr/bin/env python3
 
+#
+# Incompressible NSE solved within a channel geometry with parabolic inflow profile and an obstacle attached to the bottom towards the middle of the domain. The fluid field is initialized with a Stokes solution. The resulting velocity field is written to preCICE on the complete volume.
+#
+
 from nutils import function, mesh, cli, solver, export
 import treelog as log
 import numpy as np

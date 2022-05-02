@@ -1,5 +1,9 @@
 #! /usr/bin/env python3
 
+#
+# Advection-Diffusion equation for a single species with a velocity field read from preCICE on the complete volume. 
+#
+
 from nutils import function, mesh, cli, solver, export
 import treelog as log
 import numpy as np
