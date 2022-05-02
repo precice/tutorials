@@ -11,7 +11,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-We model a two-dimensional incompressible fluid flowing through a channel with an obstacle. The fluid problem is coupled to a simple transport problem in a uni-directional fashion. The transport problem is initialized with a circular blob close to the inflow. The convected and diffused blob after 23 timesteps:
+We model a two-dimensional incompressible fluid flowing through a channel with an obstacle. The fluid problem is coupled to a simple transport problem in a uni-directional fashion. The transport problem is initialized with a circular blob close to the inflow. The density of the species is denoted with `T` (like temperature). The convected and diffused blob after 23 timesteps:
 
 ![Flap setup](images/tutorials-channel-transport-physics.png)
 
