@@ -29,7 +29,7 @@ Transport participant:
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://www.precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
 
-## Running the Simulation
+## Running the simulation
 
 Open two separate terminals and start one fluid and one transport participant by calling the respective run scripts `run.sh` located in the participant directory. For example:
 
