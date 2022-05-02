@@ -1,8 +1,8 @@
 ---
 title: Channel transport
 permalink: tutorials-channel-transport.html
-keywords: fluid-structure interaction, FSI, OpenFOAM, FEniCS, Nutils, deal.II, Calculix, SU2,
-summary: This testcase shows how to use preCICE for simple volume-coupled problems.
+keywords: volume coupling, chemistry, OpenFOAM, Nutils, species, transport
+summary: A CFD problem is coupled to a transport (of, e.g., a chemistry species) in a uni-directional way.
 ---
 
 {% note %}
