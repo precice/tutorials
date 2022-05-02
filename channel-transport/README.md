@@ -47,4 +47,4 @@ cd transport-nutils
 
 ## Post-processing
 
-All solvers generate `vtk` files which can visualized using, e.g., ParaView.
+All solvers generate `vtk` files which can be visualized using, e.g., ParaView.
