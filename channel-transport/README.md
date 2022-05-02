@@ -31,7 +31,7 @@ Transport participant:
 
 ## Running the simulation
 
-Open two separate terminals and start one fluid and one transport participant by calling the respective run scripts `run.sh` located in the participant directory. For example:
+Open two separate terminals and start one fluid and one transport participant by calling the respective run scripts `run.sh` located in each of the participants' directory. For example:
 
 ```bash
 cd fluid-nutils
