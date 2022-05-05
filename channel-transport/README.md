@@ -17,7 +17,7 @@ We model a two-dimensional incompressible fluid flowing through a channel with a
 
 The behavior of the blob over the full 200 timesteps looks as follows:
 
-![Animation of blob over 200 timesteps](images/tutorials-channel-transport-animation.webp)
+![Animation of blob over 200 timesteps](images/tutorials-channel-transport-animation.webm)
 
 ## Available solvers
 
