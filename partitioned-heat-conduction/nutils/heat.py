@@ -7,7 +7,6 @@ import precice
 
 
 def main(side='Dirichlet'):
-
     print("Running nutils")
 
     # domain size
@@ -77,7 +76,9 @@ def main(side='Dirichlet'):
     projection_matrix = coupling_boundary.integrate(ns.eval_nm('basis_n basis_m d:x'), degree=degree * 2)
     projection_cons = np.zeros(res0.shape)
     projection_cons[projection_matrix.rowsupp(1e-15)] = np.nan
-    def fluxdofs(v): return projection_matrix.solve(v, constrain=projection_cons)
+
+    def fluxdofs(v):
+        return projection_matrix.solve(v, constrain=projection_cons)
 
     # helper data structure to apply heat flux correctly
     dx_function = 'd:x' @ ns
@@ -117,7 +118,7 @@ def main(side='Dirichlet'):
             read_function = coupling_sample.asfunction(read_data)
 
             if side == 'Dirichlet':
-                sqr = coupling_sample.integral((ns.u - read_function)**2)
+                sqr = coupling_sample.integral((ns.u - read_function) ** 2)
                 cons = solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons0, arguments=dict(t=t))
                 res = res0
             else:
@@ -170,5 +171,6 @@ def main(side='Dirichlet'):
 
     interface.finalize()
 
+
 if __name__ == '__main__':
-   cli.run(main)
+    cli.run(main)

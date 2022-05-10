@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-from nutils import cli, mesh, function, solver, export 
+from nutils import cli, mesh, function, solver, export
 import treelog
 import numpy as np
 import precice
