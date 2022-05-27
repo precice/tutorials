@@ -24,7 +24,8 @@ def reinitialize_namespace(domain):
     ns.x = geom
     ns.basis = domain.basis("std", degree=1)  # linear finite elements
     ns.u = "basis_n ?lhs_n"  # solution
-    ns.u = "u_,i"  # gradient of solution
+    ns.projectedu = "basis_n ?projectedlhs_n"
+    ns.gradu = "u_,i"  # gradient of solution
     ns.dudt = "basis_n (?lhs_n - ?lhs0_n) / ?dt"  # time derivative
     ns.vbasis = gauss.basis()
     ns.velocity_i = "vbasis_n ?velocity_ni"
@@ -52,7 +53,7 @@ def refine_mesh(ns, domain_coarse, domain_nm1, solu_nm1):
         print("refinement level = {}".format(level))
         domain_union1 = domain_nm1 & domain_ref
         smpl = domain_union1.sample('uniform', 5)
-        ielem, criterion = smpl.eval([domain.f_index, abs(ns.phi - .5) < .4], lhs=solu_nm1)
+        ielem, criterion = smpl.eval([domain_nm1.f_index, abs(ns.gradu) > 0.1], lhs=solu_nm1)
 
         # Refine the elements for which at least one point tests true.
         domain_ref = domain_ref.refined_by(np.unique(ielem[criterion]))
@@ -71,7 +72,7 @@ def refine_mesh(ns, domain_coarse, domain_nm1, solu_nm1):
 
 def main():
 
-    print("Running utils")
+    print("Running Nutils")
 
     # define the Nutils mesh
     nx = 120
@@ -113,14 +114,14 @@ def main():
     for level in range(3):
         print("refinement level = {}".format(level))
         smpl = domain.sample('uniform', 5)
-        ielem, criterion = smpl.eval([domain.f_index, abs(ns.du) > 1.0], lhs=lhs0)
+        ielem, criterion = smpl.eval([domain.f_index, abs(ns.gradu) > 0.1], lhs=lhs0)
 
         # Refine the elements for which at least one point tests true.
         domain = domain.refined_by(np.unique(ielem[criterion]))
 
         reinitialize_namespace(topo)
 
-        # set blob as initial condition
+        # set blob as initial condition after each refinement
         sqr = domain.integral("(u - uinit)^2" @ ns, degree=2)
         lhs0 = solver.optimize("lhs", sqr)
 
