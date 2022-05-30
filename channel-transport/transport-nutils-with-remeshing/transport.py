@@ -159,12 +159,13 @@ def main():
 
     while interface.is_coupling_ongoing():
 
-        domain, lhs = refine_mesh(ns, domain_coarse, domain, lhs)
-        ns, res, cons, gauss = reinitialize_namespace(domain, geom)
+        if timestep % n_remeshing == 0:
+            domain, lhs = refine_mesh(ns, domain_coarse, domain, lhs)
+            ns, res, cons, gauss = reinitialize_namespace(domain, geom)
 
-        vertices = gauss.eval(ns.x)
-        interface.reset_mesh(mesh_id)  # Throws away the entire mesh
-        vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)  # Redefine the mesh
+            vertices = gauss.eval(ns.x)
+            interface.reset_mesh(mesh_id)  # Throws away the entire mesh
+            vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)  # Redefine the mesh
 
         if timestep % 1 == 0:  # visualize
             bezier = domain.sample("bezier", 2)
