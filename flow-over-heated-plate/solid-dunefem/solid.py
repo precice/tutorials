@@ -57,7 +57,7 @@ if __name__ == '__main__':
     unew = space.interpolate(u0, name='unew')
     ucheckpoint = uold.copy(name='u_checkpoint')
 
-    # creating top boundary condition with data from the fluid
+    # creating boundary condition with data from the fluid
 
     ug_interp = interp1d(interface_x_coordinates, np.zeros(nx + 1))
     def ug_f(x): return ug_interp(x[0])
@@ -79,19 +79,15 @@ if __name__ == '__main__':
 
     scheme = solutionScheme([A == b, *bcs], solver='cg')
 
-    # Setting up the weak form of the flux
-    # Inspired from kamenskys answer here:
-    # https://fenicsproject.discourse.group/t/compute-gradient-of-scalar-field-on-boundarymesh/1172
-    consistency_term = (ufl.conditional(x[0] < eps, 1, 0) + ufl.conditional(x[0] >
-                                                                            1 - eps, 1, 0)) * k * ufl.inner(ufl.grad(u), n) * v * ufl.ds
-    flux_expr = (u - uold) * v / dt * ufl.dx + k * ufl.dot(ufl.grad(u), ufl.grad(v)) * ufl.dx - consistency_term
-
-    flux_expr_operator = galerkin(-flux_expr)
+    # Weak form of the flux
+    flux_expr = -(u - uold) * v / dt * ufl.dx - k * ufl.dot(ufl.grad(u), ufl.grad(v)) * ufl.dx
+    flux_expr_operator = galerkin(flux_expr)
     flux_sol = space.interpolate(u0, name='flux_sol')
 
+    # Sample the flux on the top edge
     flux_sol_expr = expression2GF(flux_sol.space.grid, flux_sol, flux_sol.space.order)
     sampler_weak_flux = Sampler(flux_sol_expr)
-    def flux_f_weak(): return sampler_weak_flux.lineSample([0., 0.], [1., 0.], nx + 1)[1]
+    def flux_f_weak(): return sampler_weak_flux.lineSample([0., 0.], [1., 0.], nx + 1)[1] * nx
 
     if not os.path.exists("output"):
         os.makedirs("output")
@@ -104,10 +100,9 @@ if __name__ == '__main__':
 
     while interface.is_coupling_ongoing():
 
-        if interface.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint and outfile
+        if interface.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
             t_check = t
             ucheckpoint.assign(uold)
-            vtk()
             interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
         ug = interface.read_block_scalar_data(temperature_id, vertex_ids)
@@ -118,7 +113,7 @@ if __name__ == '__main__':
 
         # compute flux, solution goes into flux_sol
         flux_expr_operator(unew, flux_sol)
-        flux_values = flux_f_weak() * nx
+        flux_values = flux_f_weak()  # sample the flux function
 
         interface.write_block_scalar_data(flux_id, vertex_ids, flux_values)
 
@@ -134,5 +129,11 @@ if __name__ == '__main__':
 
             uold.assign(unew)
             t += float(dt)
+
+        if precice.is_time_window_complete():
+            tol = 10e-5  # we need some tolerance, since otherwise output might be skipped.
+            if abs((t + tol) % dt_out) < 2 * tol:  # output if t is a multiple of dt_out
+                print("output vtk for time = {}".format(float(t)))
+                vtk()
 
     interface.finalize()
