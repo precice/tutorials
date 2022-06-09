@@ -122,9 +122,11 @@ clean_dune() {
         set -e -u
         cd "$1"
         echo "--- Cleaning up DUNE case in $(pwd)"
+        rm -fv ./dgfparser.log
         rm -fv ./*.pvd
         rm -fv ./*.vtu
         rm -rfv ./preCICE-output/
+        rm -rfv ./output/
         clean_precice_logs .
     )
 }
