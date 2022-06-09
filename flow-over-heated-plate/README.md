@@ -35,7 +35,7 @@ Solid participant:
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
-* Dune-Fem using the python bindings for both Dune-Fem and preCICE
+* Dune-Fem. For more information, have a look at the [official documentation of Dune-Fem](https://www.dune-project.org/sphinx/dune-fem/). The solver can be installed through [PyPI](https://pypi.org/project/dune-fem/). Please note that Dune-Fem uses just-in-time compilation: The first time you run the solver script, it will take some time.
 
 ## Running the Simulation
 
