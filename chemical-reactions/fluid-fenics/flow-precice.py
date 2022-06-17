@@ -13,13 +13,14 @@ from mshr import *
 import fenicsprecice
 import numpy as np
 
+outfolder = 'output'
 
 default_dt = 0.001 # time step size (preCICE handles the main loop; if this is smaller than preCICE dt, we subcycle)
 mu = 0.001 # Dynamic viscosity
 rho = 1 # Density
 
 domain = Rectangle(Point(0,0), Point(2.2, 0.41)) - Circle(Point(0.2, 0.2), 0.05)
-mesh = generate_mesh(domain, 64)
+mesh = generate_mesh(domain, 50)
 normal = FacetNormal(mesh)
 
 # Expressions for evaluating BC
@@ -115,8 +116,7 @@ k.assign(dt)
 # No implicit coupling supported, as this is uni-directional coupling
 # If needed, implement checkpointing
 t = 0
-subfolder = 'out_fine_fine_1_order'
-vtkfile = File(subfolder + '/chemical_fluid_write.pvd')
+vtkfile = File(outfolder + '/chemical_fluid_write.pvd')
 
 while precice.is_coupling_ongoing():
 

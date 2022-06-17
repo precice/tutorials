@@ -22,7 +22,6 @@
       <use-mesh name="Flow-Mesh" provide="yes" />
       <use-mesh name="Chemistry-Mesh" from="Chemistry" />
       <write-data name="Velocity" mesh="Flow-Mesh" />
-
     </participant>
 
     <participant name="Chemistry">

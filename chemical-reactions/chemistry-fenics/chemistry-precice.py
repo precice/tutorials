@@ -5,6 +5,7 @@ import numpy as np
 import csv
 from mpi4py import MPI
 
+outfolder = 'output'
 
 default_dt = 1.0 # time step size
 
@@ -39,6 +40,7 @@ v = TestFunction(V)
 u_1, u_2, u_3 = split(u_)
 v_1, v_2, v_3 = split(v)
 flow = Function(W)
+flow_old = Function(W)
 # Formulate the problem
 
 f = Expression(('pow(x[0]-0.1,2)+pow(x[1]-0.1,2)<0.05*0.05 ? 0.1 : 0',
@@ -52,25 +54,26 @@ diff = Constant(0.01) # Diffusivity
 # Velocity field when preCICE is not used
 # flow = Expression(("vmax * 4*x[1]*(1-x[1])", "0"), degree=2, vmax=0.5)
 
+average_flow = (flow + flow_old) / 2
+
 u_n1, u_n2, u_n3 = split(u_n)
-F = k * (u_1 - u_n1) * v_1 * dx + 0.5 * dot(flow, grad(u_1 + u_n1)) * v_1 * dx + diff * dot(grad(u_1), grad(v_1)) * dx - dot(f[0], v_1) * dx + r * u_1 * u_2 * v_1 * dx + \
-    k * (u_2 - u_n2) * v_2 * dx + 0.5 * dot(flow, grad(u_2 + u_n2)) * v_2 * dx + diff * dot(grad(u_2), grad(v_2)) * dx - dot(f[1], v_2) * dx + r * u_1 * u_2 * v_2 * dx + \
-    k * (u_3 - u_n3) * v_3 * dx + 0.5 * dot(flow, grad(u_3 + u_n3)) * v_3 * dx + diff * dot(grad(u_3), grad(v_3)) * dx                       - r * u_1 * u_2 * v_3 * dx + r * u_3 * v_3 * dx
+F = k * (u_1 - u_n1) * v_1 * dx + 0.5 * dot(average_flow, grad(u_1 + u_n1)) * v_1 * dx + diff * dot(grad(u_1), grad(v_1)) * dx - dot(f[0], v_1) * dx + r * u_1 * u_2 * v_1 * dx + \
+    k * (u_2 - u_n2) * v_2 * dx + 0.5 * dot(average_flow, grad(u_2 + u_n2)) * v_2 * dx + diff * dot(grad(u_2), grad(v_2)) * dx - dot(f[1], v_2) * dx + r * u_1 * u_2 * v_2 * dx + \
+    k * (u_3 - u_n3) * v_3 * dx + 0.5 * dot(average_flow, grad(u_3 + u_n3)) * v_3 * dx + diff * dot(grad(u_3), grad(v_3)) * dx                       - r * u_1 * u_2 * v_3 * dx + r * u_3 * v_3 * dx
 
 
 
 t = 0
-subfolder = 'out_fine_fine_1_order'
-vtkfileA = File(subfolder + '/chemical_A.pvd')
-vtkfileB = File(subfolder + '/chemical_B.pvd')
-vtkfileC = File(subfolder + '/chemical_C.pvd')
-vtkfileFlow = File(subfolder + '/chemical_fluid_read.pvd')
+vtkfileA = File(outfolder + '/chemical_A.pvd')
+vtkfileB = File(outfolder + '/chemical_B.pvd')
+vtkfileC = File(outfolder + '/chemical_C.pvd')
+vtkfileFlow = File(outfolder + '/chemical_fluid_read.pvd')
 
 # CSV file to keep track of integrals (i.e. total amount of A, B, C)
-#with open(subfolder + '/chemical_out.csv', 'w', newline='') as csvfile:
+#with open(outfolder + '/chemical_out.csv', 'w', newline='') as csvfile:
 
 if MPI.COMM_WORLD.rank == 0:
-    csvfile = open(subfolder + '/chemical_out.csv', 'w', newline='')
+    csvfile = open(outfolder + '/chemical_out.csv', 'w', newline='')
     writer = csv.writer(csvfile, delimiter=' ', quotechar='|',
                       quoting=csv.QUOTE_MINIMAL)
 
@@ -79,6 +82,7 @@ while precice.is_coupling_ongoing():
 
     read_data = precice.read_data()
     precice.update_coupling_expression(flow_expr, read_data)
+    flow_old.assign(flow)
     flow.interpolate(flow_expr)
     # If we add writing, do it here
 
