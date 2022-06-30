@@ -50,7 +50,8 @@ def refine_mesh(ns, domain_coarse, domain_nm1, solu_nm1):
         print("refinement level = {}".format(level))
         domain_union1 = domain_nm1 & domain_ref
         smpl = domain_union1.sample('uniform', 5)
-        ielem, criterion = smpl.eval([domain.f_index, function.sqrt(ns.gradu[0]**2 + ns.gradu[1]**2) > 2.0], lhs=lhs0)
+        ielem, criterion = smpl.eval([domain_ref.f_index, function.sqrt(ns.gradu[0]**2 + ns.gradu[1]**2) > 2.0],
+                                     lhs=lhs0)
 
         # Refine the elements for which at least one point tests true.
         domain_ref = domain_ref.refined_by(np.unique(ielem[criterion]))
@@ -126,8 +127,6 @@ def main():
         print("refinement level = {}".format(level))
         smpl = domain.sample('uniform', 5)
         ielem, criterion = smpl.eval([domain.f_index, function.sqrt(ns.gradu[0]**2 + ns.gradu[1]**2) > 2.0], lhs=lhs0)
-
-        print("ielem = {}, criterion = {}".format(ielem, criterion))
 
         # Refine the elements for which at least one point tests true.
         domain = domain.refined_by(np.unique(ielem[criterion]))
