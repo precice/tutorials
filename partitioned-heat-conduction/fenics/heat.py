@@ -62,7 +62,7 @@ parser.add_argument("-e", "--error-tol", help="set error tolerance", type=float,
 
 args = parser.parse_args()
 
-fenics_dt = .1  # time step size
+fenics_dt = .01  # time step size
 # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
 error_tol = args.error_tol
 
@@ -178,7 +178,7 @@ while precice.is_coupling_ongoing():
     if precice.is_action_required(precice.action_write_iteration_checkpoint()):
         precice.store_checkpoint(u_n, t, n)
 
-    read_data = precice.read_data()
+    read_data = precice.read_data(dt(0))
 
     # Update the coupling expression with the new read data
     precice.update_coupling_expression(coupling_expression, read_data)

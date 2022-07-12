@@ -7,7 +7,7 @@
       enabled="true" />
   </log>
 
-  <solver-interface dimensions="2">
+  <solver-interface dimensions="2" experimental="true">
     <data:scalar name="Temperature" />
     <data:scalar name="Heat-Flux" />
 
@@ -25,7 +25,7 @@
       <use-mesh name="Dirichlet-Mesh" provide="yes" />
       <use-mesh name="Neumann-Mesh" from="Neumann" />
       <write-data name="Heat-Flux" mesh="Dirichlet-Mesh" />
-      <read-data name="Temperature" mesh="Dirichlet-Mesh" />
+      <read-data name="Temperature" mesh="Dirichlet-Mesh" waveform-order="1"/>
       <mapping:rbf-thin-plate-splines
         direction="read"
         from="Neumann-Mesh"
@@ -38,7 +38,7 @@
       <use-mesh name="Neumann-Mesh" provide="yes" />
       <use-mesh name="Dirichlet-Mesh" from="Dirichlet" />
       <write-data name="Temperature" mesh="Neumann-Mesh" />
-      <read-data name="Heat-Flux" mesh="Neumann-Mesh" />
+      <read-data name="Heat-Flux" mesh="Neumann-Mesh" waveform-order="0"/>
       <mapping:rbf-thin-plate-splines
         direction="read"
         from="Dirichlet-Mesh"
