@@ -25,7 +25,6 @@
     </participant>
 
     <participant name="Chemistry">
-    <export:vtu />
       <use-mesh name="Chemistry-Mesh" provide="yes" />
       <use-mesh name="Flow-Mesh" from="Flow" />
       <read-data name="Velocity" mesh="Chemistry-Mesh" />
