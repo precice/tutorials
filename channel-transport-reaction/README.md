@@ -23,7 +23,7 @@ Both participants run on FEniCS. Install [FEniCS](https://fenicsproject.org/down
 
 ## Running the simulation
 
-Each participant has a `run.sh` file in its subfolder. 
+Each participant has a `run.sh` file in its subfolder.
 To start the `Fluid` participant, run:
 
    ```bash
