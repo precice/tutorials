@@ -1,0 +1,48 @@
+---
+title: Channel transport reaction
+permalink: tutorials-channel-transport-reaction.html
+keywords: FEniCS, Volumetric coupling, reaction, transport
+summary: We simulate chemical reactions in a moving fluid. One solver simulates the fluid flow and another handles the reactions.
+---
+
+{% note %}
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/channel-transport-reaction). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+{% endnote %}
+
+## Setup
+
+We solve a system of advection-diffusion-reaction in a fluid flowing past a cylinder. This case is inspired from [1]. A fluid flow inside a channel containing a cylinder. Chemical species A, B and C live in the fluid, with sources of A and B at the entry of the channel. Due to diffusion and fluid mixing, A and B react to form some C.
+
+**Insert pic**
+
+The simulation is split into two participants: a Fluid participant that computes the fluid flow and sends the velocity field to the Chemical participant, computing the reactions, the diffusion and advection of all chemical species. The coupling is unidirectional (`serial-explicit` with only one data transfer).
+
+## Available solvers and dependencies
+
+Both participants run on FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter).
+
+## Running the simulation
+
+Each participant has a `run.sh` file in its subfolder. 
+To start the `Fluid` participant, run:
+
+   ```bash
+   cd fluid-fenics
+   ./run.sh
+   ```
+
+To start the `Chemical` participant, run:
+
+   ```bash
+   cd chemistry-fenics
+   ./run.sh
+   ```
+
+## Postprocessing
+
+The chemical participant writes `.vtu` and `.pvd` files that can be opened with ParaView.
+
+## References
+
+<!-- markdownlint-configure-file {"MD034": false } -->
+[1] Hans Petter Langtangen and Anders Logg. Solving PDEs in Python. _Springer_ (2017). https://doi.org/10.1007/978-3-319-52462-7
