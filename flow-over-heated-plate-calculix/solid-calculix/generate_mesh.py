@@ -48,18 +48,18 @@ for i in range(0, n_x):
                                                                indices[(
                                                                    i, j, k)],
                                                                indices[(
-                                                                   i+1, j, k)],
+                                                                   i + 1, j, k)],
                                                                indices[(
-                                                                   i+1, j+1, k)],
+                                                                   i + 1, j + 1, k)],
                                                                indices[(
-                                                                   i, j+1, k)],
+                                                                   i, j + 1, k)],
                                                                indices[(
-                                                                   i, j, k+1)],
+                                                                   i, j, k + 1)],
                                                                indices[(
-                                                                   i+1, j, k+1)],
+                                                                   i + 1, j, k + 1)],
                                                                indices[(
-                                                                   i+1, j+1, k+1)],
-                                                               indices[(i, j+1, k+1)],))
+                                                                   i + 1, j + 1, k + 1)],
+                                                               indices[(i, j + 1, k + 1)],))
             if j == n_y - 1:
                 elems_top_surface.append(elem_id)
             elem_id += 1
