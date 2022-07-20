@@ -46,7 +46,6 @@ cd solid-calculix
 
 On the OpenFOAM side, you can open the `.foam` file with ParaView, or create VTK files with `foamToVTK`. CalculiX outputs `.frd` files which can be opened with `cgx` or converted into VTK files using the converter available in the adapter repository.
 
-
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
 {% enddisclaimer %}
