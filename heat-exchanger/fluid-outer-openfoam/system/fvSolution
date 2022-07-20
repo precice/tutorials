@@ -59,7 +59,7 @@ solvers
     }    
 }
 
-SIMPLE
+PIMPLE
 {
     nNonOrthogonalCorrectors 0;
 }

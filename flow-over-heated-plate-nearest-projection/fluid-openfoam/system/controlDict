@@ -6,7 +6,7 @@ FoamFile
     object      controlDict;
 }
 
-application     buoyantPimpleFoam;
+application     buoyantFoam;
 
 startFrom       startTime;
 

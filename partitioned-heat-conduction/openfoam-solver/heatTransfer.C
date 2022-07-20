@@ -34,7 +34,8 @@
 
 
 #include "fvCFD.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "simpleControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -48,7 +49,6 @@ int main(int argc, char *argv[])
 
     #include "postProcess.H"
 
-    #include "addCheckCaseOptions.H"
     #include "setRootCaseLists.H"
     #include "createTime.H"
     #include "createMesh.H"
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
          Foam::scalar(rhs))
      );
 
-    while (simple.loop())
+    while (simple.loop(runTime))
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
@@ -92,17 +92,15 @@ int main(int argc, char *argv[])
             (
                 fvm::ddt(T) - fvm::laplacian(DT, T) - fvm::Su(f,T)
              ==
-                fvOptions(T)
+                fvModels.source(T)
             );
 
-            fvOptions.constrain(TEqn);
+            fvConstraints.constrain(TEqn);
             TEqn.solve();
-            fvOptions.correct(T);
+            fvConstraints.constrain(T);
         }
 
         #include "write.H"
-
-        runTime.printExecutionTime(Info);
     }
 
     Info<< "End\n" << endl;

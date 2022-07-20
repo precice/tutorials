@@ -21,7 +21,7 @@ This is a pseudo-2D case, but we still set a 3D `solver-interface` in `precice-c
 
 Fluid participant:
 
-* OpenFOAM. We use buoyantSimpleFoam instead of the transient buoyantPimpleFoam. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* OpenFOAM. We use buoyantFoam in steady-state mode. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
 Solid participant:
 

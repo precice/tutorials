@@ -6,14 +6,14 @@ FoamFile
     object      dynamicMeshDict;
 }
 
-dynamicFvMesh       dynamicMotionSolverFvMesh;
+libs ("libfvMeshStitchers.so");
 
-motionSolverLibs    ("libfvMotionSolvers.so");
+mover {
+  type motionSolver;
 
-solver              displacementLaplacian;
-// OpenFOAM9 or newer: rename "solver" to "motionSolver"
+  libs ("libfvMeshMovers.so" "libfvMotionSolvers.so");
 
-displacementLaplacianCoeffs {
-    diffusivity quadratic inverseDistance (flap1);
-    diffusivity quadratic inverseDistance (flap2);
+  motionSolver displacementLaplacian;
+  diffusivity quadratic inverseDistance (flap1);
+  diffusivity quadratic inverseDistance (flap2);
 }
