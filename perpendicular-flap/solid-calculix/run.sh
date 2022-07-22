@@ -10,9 +10,9 @@ fi
 
 
 if [ ${1-nonmodal} = "-modal" ]; then
-    echo "Modal"
-    echo ${1-nonmodal}
+    ccx_preCICE -i frequency
+    mv frequency.eig flap_modal.eig
+    ccx_preCICE -i flap_modal -precice-participant Solid
 else
-    echo "NonModal"
-    echo ${1-nonmodal}
+    ccx_preCICE -i flap -precice-participant Solid
 fi
