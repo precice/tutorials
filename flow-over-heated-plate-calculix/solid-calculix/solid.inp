@@ -54,7 +54,7 @@ Nall,310.0
 ** written by write_step_begin function
 *STEP, INC=2000
 *HEAT TRANSFER, DIRECT
-0.01,10.0
+0.01,1.0
 
 ***********************************************************
 ** Fixed temperature constraint applied
