@@ -8,7 +8,7 @@ y_begin, y_end = -0.25, 0
 z_begin, z_end = 0, 1
 
 # Number of elements. Add one for number of nodes!
-n_x, n_y, n_z = 32, 16, 1
+n_x, n_y, n_z = 400, 50, 1
 
 # Coordinates in (i, j, k) space. i = 0, ..., n_x etc
 xs = np.linspace(x_begin, x_end, n_x + 1)
