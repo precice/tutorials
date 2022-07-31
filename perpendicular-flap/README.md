@@ -37,6 +37,8 @@ Solid participant:
 
 * DUNE. For more information, have a look at the [experimental DUNE adapter](https://github.com/precice/dune-adapter) and send us your feedback.
 
+* solids4foam. Like for CalculuX, the geometrically linear solver is used by default. For more information, see the solids4foam documentation at [solids4foam documentation](https://bitbucket.org/philip_cardiff/solids4foam-release/src/master/documentation/overview.md)
+
 ## Running the Simulation
 
 All listed solvers can be used in order to run the simulation. OpenFOAM can be executed in parallel using `run.sh -parallel`. The default setting uses 4 MPI ranks. Open two separate terminals and start the desired fluid and solid participant by calling the respective run script `run.sh` located in the participant directory. For example:
