@@ -12,7 +12,6 @@ FoamFile
     class       dictionary;
     object      mechanicalProperties;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 planeStress no;
 
@@ -28,4 +27,3 @@ mechanical
     }
 );
 
-// ************************************************************************* //

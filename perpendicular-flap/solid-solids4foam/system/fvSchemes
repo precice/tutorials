@@ -12,7 +12,6 @@ FoamFile
     class       dictionary;
     object      fvSchemes;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 d2dt2Schemes
 {
@@ -57,4 +56,3 @@ interpolationSchemes
     interpolate(sigma0) linear;
 }
 
-// ************************************************************************* //

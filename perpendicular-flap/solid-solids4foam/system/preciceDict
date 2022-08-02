@@ -13,7 +13,6 @@ FoamFile
     location    "system";
     object      preciceDict;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 preciceConfig "../precice-config.xml";
 

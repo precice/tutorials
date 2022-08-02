@@ -13,7 +13,6 @@ FoamFile
     location    "system";
     object      controlDict;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 application     solids4Foam;
 
@@ -54,4 +53,3 @@ functions
 
 
 
-// ************************************************************************* //

@@ -12,7 +12,6 @@ FoamFile
     class       dictionary;
     object      solidProperties;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 solidModel    linearGeometryTotalDisplacement;
 //solidModel    unsLinearGeometry;
@@ -36,4 +35,3 @@ solidModel    linearGeometryTotalDisplacement;
     //infoFrequency   100;
 }
 
-// ************************************************************************* //

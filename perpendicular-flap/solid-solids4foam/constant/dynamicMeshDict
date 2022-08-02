@@ -12,8 +12,6 @@ FoamFile
     class       dictionary;
     object      dynamicMeshDict;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dynamicFvMesh   staticFvMesh;
 
-// ************************************************************************* //

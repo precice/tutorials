@@ -12,7 +12,6 @@ FoamFile
     class       dictionary;
     object      blockMeshDict;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 convertToMeters 0.01;
 
@@ -61,4 +60,3 @@ mergePatchPairs
 (
 );
 
-// ************************************************************************* //
