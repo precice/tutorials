@@ -50,11 +50,6 @@ functions
         type preciceAdapterFunctionObject;
         libs ("libpreciceAdapterFunctionObject.so");
     }
-    interfaceForce
-    {
-        type solidForces;
-        historyPatch interface;
-    }
 }
 
 
