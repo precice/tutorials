@@ -7,10 +7,8 @@ FoamFile
 }
 
 solidModel    linearGeometryTotalDisplacement;
-//solidModel    unsLinearGeometry;
-//solidModel    nonLinearGeometryTotalLagrangianTotalDisplacement;
 
-"linearGeometryTotalDisplacementCoeffs|unsLinearGeometryCoeffs|nonLinearGeometryTotalLagrangianTotalDisplacementCoeffs"
+linearGeometryTotalDisplacementCoeffs
 {
     // Maximum number of momentum correctors
     nCorrectors     1000;
@@ -21,10 +19,7 @@ solidModel    linearGeometryTotalDisplacement;
     // Alternative solution tolerance for displacement
     alternativeTolerance 1e-08;
 
-    // Material law solution tolerance
-    //materialTolerance 1e-05;
-
     // Write frequency for the residuals
-    //infoFrequency   100;
+    infoFrequency   100;
 }
 
