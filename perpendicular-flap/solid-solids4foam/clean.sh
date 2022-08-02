@@ -1,9 +1,6 @@
-#!/bin/bash
+#!/bin/sh
+set -e -u
 
-# Source tutorial clean functions
-. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+. ../../tools/cleaning-tools.sh
 
-cleanCase
-rm -rf log.* *.log
-rm -f precice-Solid-events.json
-rm -rf history
+clean_openfoam .

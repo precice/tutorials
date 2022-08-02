@@ -100,7 +100,7 @@ clean_openfoam() {
             # shellcheck disable=SC1090 # This is an OpenFOAM file which we don't need to check
             . "${WM_PROJECT_DIR}/bin/tools/CleanFunctions"
             cleanCase
-            rm -rfv 0/uniform/functionObjects/functionObjectProperties
+            rm -rfv 0/uniform/functionObjects/functionObjectProperties history
         fi
         rm -rfv ./preCICE-output/
         clean_precice_logs .
