@@ -16,13 +16,11 @@ FoamFile
 
 d2dt2Schemes
 {
-    //default            Euler;
     default            backward;
 }
 
 ddtSchemes
 {
-    //default            Euler;
     default            backward;
 }
 
