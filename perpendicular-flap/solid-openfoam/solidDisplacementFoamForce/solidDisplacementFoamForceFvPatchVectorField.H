@@ -21,8 +21,8 @@ Description
     Obviously, for a uniform force field, the total force applied to the patch
     as the mesh is refined as the force per face stays constant.
 
-    The primary motivation for this condition is for use FSI cases using the
-    preCICE coupling library.
+    The primary motivation for this condition is for FSI cases using 
+    solidDisplacementFoam and the preCICE coupling library.
 
     The force field can be directly specified or specified via a "force"
     volVectorField, as used with preCICE.
