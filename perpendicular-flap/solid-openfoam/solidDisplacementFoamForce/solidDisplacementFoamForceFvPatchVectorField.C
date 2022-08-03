@@ -76,7 +76,7 @@ solidDisplacementFoamForceFvPatchVectorField
     else if (dict.found("forceField"))
     {
         Info<< "    force is specified as a field" << endl;
-        forceFieldPtr_.set
+        forceFieldPtr_.reset
         (
             new volVectorField
             (
