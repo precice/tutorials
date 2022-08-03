@@ -1,4 +1,0 @@
-SOURCE = \
-solidDisplacementFoamForceFvPatchVectorField.C \
-
-# sources
