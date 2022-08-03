@@ -37,7 +37,7 @@ Solid participant:
 
 * DUNE. For more information, have a look at the [experimental DUNE adapter](https://github.com/precice/dune-adapter) and send us your feedback.
 
-* OpenFOAM (solidDisplacementFoam). For more information, have a look at the [OpenFOAM plateHole tutorial](https://doc.cfd.direct/openfoam/user-guide-v6/platehole). The solidDisplacementFoam solver only supports linear geometry. For general solid mechanics procedures in OpenFOAM, see solids4foam.
+* OpenFOAM (solidDisplacementFoam). For more information, have a look at the [OpenFOAM plateHole tutorial](https://www.openfoam.com/documentation/tutorial-guide/5-stress-analysis/5.1-stress-analysis-of-a-plate-with-a-hole). The solidDisplacementFoam solver only supports linear geometry. For general solid mechanics procedures in OpenFOAM, see solids4foam.
 
 * solids4foam. Like for CalculuX, the geometrically linear solver is used by default. For more information, see the [solids4foam documentation](https://bitbucket.org/philip_cardiff/solids4foam-release/src/master/documentation/overview.md)
 
