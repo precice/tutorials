@@ -16,7 +16,7 @@ solidDisplacementFoamForceFvPatchVectorField
     const DimensionedField<vector, volMesh>& iF
 )
 :
-    tractionDisplacementFvPatchVectorField(p, iF),
+    fixedGradientFvPatchVectorField(p, iF),
     force_(p.size(), vector::zero),
     forceFieldPtr_(),
     curTimeIndex_(-1)
@@ -34,16 +34,12 @@ solidDisplacementFoamForceFvPatchVectorField
     const dictionary& dict
 )
 :
-    tractionDisplacementFvPatchVectorField(p, iF),
+    fixedGradientFvPatchVectorField(p, iF),
     force_(p.size(), vector::zero),
     forceFieldPtr_(),
     curTimeIndex_(-1)
 {
     Info<< "Creating " << type() << " boundary condition" << endl;
-
-    // Initialise traction and pressure to zero
-    traction() = vector::zero;
-    pressure() = 0.0;
 
     if (dict.found("gradient"))
     {
@@ -108,7 +104,7 @@ solidDisplacementFoamForceFvPatchVectorField
     const fvPatchFieldMapper& mapper
 )
 :
-    tractionDisplacementFvPatchVectorField(stpvf, p, iF, mapper),
+    fixedGradientFvPatchVectorField(stpvf, p, iF, mapper),
 #ifdef OPENFOAMFOUNDATION
     force_(mapper(stpvf.force_)),
 #else
@@ -124,7 +120,7 @@ solidDisplacementFoamForceFvPatchVectorField::solidDisplacementFoamForceFvPatchV
     const solidDisplacementFoamForceFvPatchVectorField& stpvf
 )
 :
-    tractionDisplacementFvPatchVectorField(stpvf),
+    fixedGradientFvPatchVectorField(stpvf),
     force_(stpvf.force_),
     forceFieldPtr_(),
     curTimeIndex_(stpvf.curTimeIndex_)
@@ -137,7 +133,7 @@ solidDisplacementFoamForceFvPatchVectorField::solidDisplacementFoamForceFvPatchV
     const DimensionedField<vector, volMesh>& iF
 )
 :
-    tractionDisplacementFvPatchVectorField(stpvf, iF),
+    fixedGradientFvPatchVectorField(stpvf, iF),
     force_(stpvf.force_),
     forceFieldPtr_(),
     curTimeIndex_(stpvf.curTimeIndex_)
@@ -151,7 +147,7 @@ void solidDisplacementFoamForceFvPatchVectorField::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    tractionDisplacementFvPatchVectorField::autoMap(m);
+    fixedGradientFvPatchVectorField::autoMap(m);
 
 #ifdef OPENFOAMFOUNDATION
     m(force_, force_);
@@ -168,7 +164,7 @@ void solidDisplacementFoamForceFvPatchVectorField::rmap
     const labelList& addr
 )
 {
-    tractionDisplacementFvPatchVectorField::rmap(ptf, addr);
+    fixedGradientFvPatchVectorField::rmap(ptf, addr);
 
     const solidDisplacementFoamForceFvPatchVectorField& dmptf =
         refCast<const solidDisplacementFoamForceFvPatchVectorField>(ptf);
@@ -207,10 +203,62 @@ void solidDisplacementFoamForceFvPatchVectorField::updateCoeffs()
     
     // Convert the force field to a traction field
     // Note: this assumes small strains / linear geometry
-    traction() = force_/patch().magSf();
+    const vectorField traction(force_/patch().magSf());
 
     // Apply traction
-    tractionDisplacementFvPatchVectorField::updateCoeffs();
+    // The code below comes from tractionDisplacement:updateCoeffs()
+
+    const dictionary& mechanicalProperties =
+        db().lookupObject<IOdictionary>("mechanicalProperties");
+
+    const dictionary& thermalProperties =
+        db().lookupObject<IOdictionary>("thermalProperties");
+
+    const fvPatchField<scalar>& rho =
+        patch().lookupPatchField<volScalarField, scalar>("rho");
+
+    const fvPatchField<scalar>& rhoE =
+        patch().lookupPatchField<volScalarField, scalar>("E");
+
+    const fvPatchField<scalar>& nu =
+        patch().lookupPatchField<volScalarField, scalar>("nu");
+
+    const scalarField E(rhoE/rho);
+    const scalarField mu(E/(2.0*(1.0 + nu)));
+    scalarField lambda(nu*E/((1.0 + nu)*(1.0 - 2.0*nu)));
+    scalarField threeK(E/(1.0 - 2.0*nu));
+
+    if (mechanicalProperties.get<bool>("planeStress"))
+    {
+        lambda = nu*E/((1.0 + nu)*(1.0 - nu));
+        threeK = E/(1.0 - nu);
+    }
+
+    const scalarField twoMuLambda(2*mu + lambda);
+
+    const vectorField n(patch().nf());
+
+    const fvPatchField<symmTensor>& sigmaD =
+        patch().lookupPatchField<volSymmTensorField, symmTensor>("sigmaD");
+
+    gradient() =
+    (
+        traction/rho
+      + twoMuLambda*fvPatchField<vector>::snGrad() - (n & sigmaD)
+    )/twoMuLambda;
+
+    if (thermalProperties.get<bool>("thermalStress"))
+    {
+        const fvPatchField<scalar>&  threeKalpha=
+            patch().lookupPatchField<volScalarField, scalar>("threeKalpha");
+
+        const fvPatchField<scalar>& T =
+            patch().lookupPatchField<volScalarField, scalar>("T");
+
+        gradient() += n*threeKalpha*T/twoMuLambda;
+    }
+
+    fixedGradientFvPatchVectorField::updateCoeffs();
 }
 
 void solidDisplacementFoamForceFvPatchVectorField::write(Ostream& os) const
@@ -218,7 +266,7 @@ void solidDisplacementFoamForceFvPatchVectorField::write(Ostream& os) const
     // Bug-fix: courtesy of Michael@UW at https://www.cfd-online.com/Forums/
     // openfoam-cc-toolkits-fluid-structure-interaction/221892-solved-paraview
     // -cant-read-solids-files-duplicate-entries-keyword-value.html#post762325
-    //tractionDisplacementFvPatchVectorField::write(os);
+    //fixedGradientFvPatchVectorField::write(os);
     fvPatchVectorField::write(os);
 
     if (forceFieldPtr_.valid())

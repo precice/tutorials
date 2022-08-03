@@ -16,7 +16,6 @@ endif
 
 EXE_INC = \
     $(VERSION_SPECIFIC_INC) \
-    -I$(FOAM_SOLVERS)/stressAnalysis/solidDisplacementFoam/tractionDisplacement \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 

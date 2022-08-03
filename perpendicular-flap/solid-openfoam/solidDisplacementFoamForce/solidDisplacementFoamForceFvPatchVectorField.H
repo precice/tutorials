@@ -38,7 +38,7 @@ SourceFiles
 #ifndef solidDisplacementFoamForceFvPatchVectorField_H
 #define solidDisplacementFoamForceFvPatchVectorField_H
 
-#include "tractionDisplacementFvPatchVectorField.H"
+#include "fixedGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,7 +51,7 @@ namespace Foam
 
 class solidDisplacementFoamForceFvPatchVectorField
 :
-    public tractionDisplacementFvPatchVectorField
+    public fixedGradientFvPatchVectorField
 {
 
     // Private Data
