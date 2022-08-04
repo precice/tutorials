@@ -22,7 +22,9 @@ solvers
 stressAnalysis
 {
     compactNormalStress yes;
-    nCorrectors     1000;
+    // Note: The accuracy of the solution can be significantly improved
+    // by increasing this number of iterations, but this will impact the runtime.
+    nCorrectors     30;
     D               1e-06;
 }
 
