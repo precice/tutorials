@@ -1,0 +1,29 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      mechanicalProperties;
+}
+
+rho
+{
+    type        uniform;
+    value       3000;
+}
+
+nu
+{
+    type        uniform;
+    value       0.3;
+}
+
+E
+{
+    type        uniform;
+    value       4e+6;
+}
+
+planeStress     no;
+
