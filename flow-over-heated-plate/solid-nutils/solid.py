@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import nutils
+from nutils import cli, mesh, function, solver, export
 import treelog
 import numpy as np
 import precice
@@ -9,14 +9,14 @@ from mpi4py import MPI
 
 def main():
 
-    print("Running utils")
+    print("Running nutils")
 
     # define the Nutils mesh
     grid = [np.linspace(a, b, round((b - a) / size) + 1) for (a, b, size) in [(0, 1, 0.05), (-.25, 0, 0.05)]]
-    domain, geom = nutils.mesh.rectilinear(grid)
+    domain, geom = mesh.rectilinear(grid)
 
     # Nutils namespace
-    ns = nutils.function.Namespace()
+    ns = function.Namespace()
     ns.x = geom
 
     ns.basis = domain.basis('std', degree=1)  # linear finite elements
@@ -31,7 +31,7 @@ def main():
 
     # define Dirichlet boundary condition
     sqr = domain.boundary['bottom'].integral('(u - uwall)^2 d:x' @ ns, degree=2)
-    cons = nutils.solver.optimize('lhs', sqr, droptol=1e-15)
+    cons = solver.optimize('lhs', sqr, droptol=1e-15)
 
     # preCICE setup
     interface = precice.Interface("Solid", "../precice-config.xml", 0, 1)
@@ -63,11 +63,11 @@ def main():
 
     # set u = uwall as initial condition and visualize
     sqr = domain.integral('(u - uwall)^2' @ ns, degree=2)
-    lhs0 = nutils.solver.optimize('lhs', sqr)
+    lhs0 = solver.optimize('lhs', sqr)
     bezier = domain.sample('bezier', 2)
     x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs0)
     with treelog.add(treelog.DataLog()):
-        nutils.export.vtk('Solid_0', bezier.tri, x, T=u)
+        export.vtk('Solid_0', bezier.tri, x, T=u)
 
     while interface.is_coupling_ongoing():
 
@@ -77,7 +77,7 @@ def main():
             temperature_function = coupling_sample.asfunction(temperature_values)
 
             sqr = coupling_sample.integral((ns.u - temperature_function)**2)
-            cons = nutils.solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons0)
+            cons = solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons0)
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
@@ -89,7 +89,7 @@ def main():
         dt = min(dt, precice_dt)
 
         # solve nutils timestep
-        lhs = nutils.solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt))
+        lhs = solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt))
 
         # write heat fluxes to interface
         if interface.is_write_data_required(dt):
@@ -114,10 +114,10 @@ def main():
                 bezier = domain.sample('bezier', 2)
                 x, u = bezier.eval(['x_i', 'u'] @ ns, lhs=lhs)
                 with treelog.add(treelog.DataLog()):
-                    nutils.export.vtk('Solid_' + str(timestep), bezier.tri, x, T=u)
+                    export.vtk('Solid_' + str(timestep), bezier.tri, x, T=u)
 
     interface.finalize()
 
 
 if __name__ == '__main__':
-    nutils.cli.run(main)
+    cli.run(main)

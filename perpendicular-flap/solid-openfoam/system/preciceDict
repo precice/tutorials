@@ -1,0 +1,50 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      preciceDict;
+}
+
+preciceConfig "../precice-config.xml";
+
+participant Solid;
+
+modules (FSI);
+
+interfaces
+{
+    Interface1
+    {
+        mesh              Solid-Mesh;
+        patches           (interface);
+        locations         faceCenters;
+
+        readData
+        (
+            Force
+        );
+
+        writeData
+        (
+            Displacement
+        );
+    };
+};
+
+FSI
+{
+    solverType solid;
+
+    // Name of cell displacement field
+    nameCellDisplacement D;
+
+    // The solidDisplacementFoam does not have a point displacement field so we
+    // we use the special name "unused", which tells the adapter that it is not
+    // used
+    namePointDisplacement unused;
+
+    // Name of the force field on the solid
+    forceFieldName solidForce;
+}

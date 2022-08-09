@@ -35,7 +35,10 @@ Solid participant:
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
+* Dune-Fem. For more information, have a look at the [official documentation of Dune-Fem](https://www.dune-project.org/sphinx/dune-fem/). The solver can be installed through [PyPI](https://pypi.org/project/dune-fem/). Make sure that you are in a Python virtual environment first, which you can create inside the `solid-dune` directory and load again before running (you may need to install some tools again in this environment). Please note that Dune-Fem uses just-in-time compilation: The first time you run the solver script, it will take some time.
+
 It is also possible to use CalculiX as solid solver. In that case, two coupling meshes are needed: CalculiX read/writes temperatures on nodes, but read/writes heat-fluxes on face centers. This requires some adaptation of the `precice-config.xml` file, and [a separate tutorial](tutorials-flow-over-heated-plate-two-meshes.html) has been designed for it.
+
 
 ## Running the Simulation
 

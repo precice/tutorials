@@ -1,13 +1,12 @@
 #! /usr/bin/env python3
 
-import nutils
+from nutils import cli, mesh, function, solver, export
 import treelog
 import numpy as np
 import precice
 
 
 def main(side='Dirichlet'):
-
     print("Running nutils")
 
     # domain size
@@ -27,10 +26,10 @@ def main(side='Dirichlet'):
     y_grid = np.linspace(y_bottom, y_top, n)
 
     # define the Nutils mesh
-    domain, geom = nutils.mesh.rectilinear([x_grid, y_grid])
+    domain, geom = mesh.rectilinear([x_grid, y_grid])
 
     # Nutils namespace
-    ns = nutils.function.Namespace()
+    ns = function.Namespace()
     ns.x = geom
 
     degree = 1  # linear finite elements
@@ -77,7 +76,9 @@ def main(side='Dirichlet'):
     projection_matrix = coupling_boundary.integrate(ns.eval_nm('basis_n basis_m d:x'), degree=degree * 2)
     projection_cons = np.zeros(res0.shape)
     projection_cons[projection_matrix.rowsupp(1e-15)] = np.nan
-    def fluxdofs(v): return projection_matrix.solve(v, constrain=projection_cons)
+
+    def fluxdofs(v):
+        return projection_matrix.solve(v, constrain=projection_cons)
 
     # helper data structure to apply heat flux correctly
     dx_function = 'd:x' @ ns
@@ -96,11 +97,11 @@ def main(side='Dirichlet'):
 
     # initial condition
     sqr = domain.integral('(u - uexact)^2' @ ns, degree=degree * 2)
-    lhs0 = nutils.solver.optimize('lhs', sqr, droptol=1e-15, arguments=dict(t=t))
+    lhs0 = solver.optimize('lhs', sqr, droptol=1e-15, arguments=dict(t=t))
     bezier = domain.sample('bezier', degree * 2)
     x, u, uexact = bezier.eval(['x_i', 'u', 'uexact'] @ ns, lhs=lhs0, t=t)
     with treelog.add(treelog.DataLog()):
-        nutils.export.vtk(side + '-0', bezier.tri, x, Temperature=u, reference=uexact)
+        export.vtk(side + '-0', bezier.tri, x, Temperature=u, reference=uexact)
 
     t += precice_dt
     timestep = 0
@@ -109,7 +110,7 @@ def main(side='Dirichlet'):
     while interface.is_coupling_ongoing():
 
         # update (time-dependent) boundary condition
-        cons0 = nutils.solver.optimize('lhs', sqr0, droptol=1e-15, arguments=dict(t=t))
+        cons0 = solver.optimize('lhs', sqr0, droptol=1e-15, arguments=dict(t=t))
 
         # read data from interface
         if interface.is_read_data_available():
@@ -117,8 +118,8 @@ def main(side='Dirichlet'):
             read_function = coupling_sample.asfunction(read_data)
 
             if side == 'Dirichlet':
-                sqr = coupling_sample.integral((ns.u - read_function)**2)
-                cons = nutils.solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons0, arguments=dict(t=t))
+                sqr = coupling_sample.integral((ns.u - read_function) ** 2)
+                cons = solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons0, arguments=dict(t=t))
                 res = res0
             else:
                 cons = cons0
@@ -135,7 +136,7 @@ def main(side='Dirichlet'):
         dt = min(dt, precice_dt)
 
         # solve nutils timestep
-        lhs = nutils.solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt, t=t))
+        lhs = solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt, t=t))
 
         # write data to interface
         if interface.is_write_data_required(dt):
@@ -166,10 +167,10 @@ def main(side='Dirichlet'):
             x, u, uexact = bezier.eval(['x_i', 'u', 'uexact'] @ ns, lhs=lhs, t=t)
 
             with treelog.add(treelog.DataLog()):
-                nutils.export.vtk(side + "-" + str(timestep), bezier.tri, x, Temperature=u, reference=uexact)
+                export.vtk(side + "-" + str(timestep), bezier.tri, x, Temperature=u, reference=uexact)
 
     interface.finalize()
 
 
 if __name__ == '__main__':
-    nutils.cli.run(main)
+    cli.run(main)

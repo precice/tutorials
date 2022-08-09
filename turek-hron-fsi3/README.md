@@ -49,7 +49,7 @@ cd solid-dealii
 
 You can also run OpenFOAM in parallel by `./run.sh -parallel`. The default setting here uses 25 MPI ranks. You can change this setting in `fluid-openfoam/system/decomposeParDict`.
 
-You may adjust the end time in the `precice-config.xml`, or interupt the execution earlier if you want.
+You may adjust the end time in the `precice-config.xml`, or interrupt the execution earlier if you want.
 
 In the first few timesteps, many coupling iterations are required for convergence. Don't lose hope, things get better quickly.
 

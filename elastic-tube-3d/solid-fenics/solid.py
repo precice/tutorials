@@ -30,8 +30,8 @@ def neumann_boundary(x, on_boundary):
 dim = 3  # number of dimensions
 R = 0.005
 L = 0.05
-rho = 3000
-E = 4000000
+rho = 1200
+E = 300000
 nu = 0.3
 
 mu = Constant(E / (2.0 * (1.0 + nu)))
