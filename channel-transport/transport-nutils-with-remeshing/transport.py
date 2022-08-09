@@ -8,8 +8,6 @@ from nutils import function, mesh, cli, solver, export
 import treelog as log
 import numpy as np
 import precice
-from mpi4py import MPI
-import math
 
 
 def reinitialize_namespace(domain, geom):
@@ -87,7 +85,7 @@ def main():
     domain = domain.withboundary(inflow="left", outflow="right", wall="top,bottom") - domain[
         step_start:step_end, :step_height
     ].withboundary(wall="left,top,right")
-    domain_coarse = domain
+    domain_coarse = domain  # Retain the original coarse domain for mesh refinement later on
 
     # cloud of Gauss points
     gauss = domain.sample("gauss", degree=2)
@@ -113,9 +111,6 @@ def main():
     sqr = domain.boundary["inflow"].integral("u^2 d:x" @ ns, degree=2)
     cons = solver.optimize("solu", sqr, droptol=1e-15)
 
-    ns.xblob = 1, 1
-    ns.uinit = ".5 - .5 tanh(((x_i - xblob_i) (x_i - xblob_i) - .5) / .1)"  # blob
-
     timestep = 0
     dt = 0.005
 
@@ -123,6 +118,8 @@ def main():
     sqr = domain.integral("(u - uinit)^2" @ ns, degree=2)
     solu0 = solver.optimize("solu", sqr)
 
+    # Initial refinement according to initial condition
+    print("Performing initial mesh refinement")
     for level in range(3):
         print("refinement level = {}".format(level))
         smpl = domain.sample('uniform', 5)
