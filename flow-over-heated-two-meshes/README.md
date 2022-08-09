@@ -2,7 +2,7 @@
 title: Flow over heated plate with two meshes
 permalink: tutorials-flow-over-heated-plate-two-meshes.html
 keywords: tutorial, CHT, conjugate-heat transfer, OpenFOAM, CalculiX
-summary: This tutorial describes how to run a conjugate heat transfer coupled simulation using preCICE and CalculiX as solid solver, which requires the usage of two meshes instead of one.
+summary: This tutorial describes how to run a conjugate heat transfer coupled simulation using preCICE and CalculiX as solid solver, which requires two meshes instead of one.
 ---
 
 
