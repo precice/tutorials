@@ -154,6 +154,17 @@ def main():
     solu = solu0
 
     while interface.is_coupling_ongoing():
+        # read velocity values from interface
+        if interface.is_read_data_available():
+            velocity_values = interface.read_block_vector_data(velocity_id, vertex_ids)
+
+        # potentially adjust non-matching timestep sizes
+        dt = min(dt, precice_dt)
+
+        # solve nutils timestep
+        args = dict(solu0=solu, dt=dt, velocity=velocity_values)
+        solu = solver.solve_linear("solu", res, constrain=cons, arguments=args)
+
         if timestep % n_remeshing == 0:
             domain, solu = refine_mesh(ns, domain_coarse, domain, solu)
             ns, res, cons, gauss = reinitialize_namespace(domain, geom)
@@ -164,27 +175,15 @@ def main():
 
         if timestep % 1 == 0:  # visualize
             bezier = domain.sample("bezier", 2)
-            x, u = bezier.eval(["x_i", "u"] @ ns, solu=solu0)
+            x, u = bezier.eval(["x_i", "u"] @ ns, solu=solu)
             with log.add(log.DataLog()):
                 export.vtk("Transport_" + str(timestep), bezier.tri, x, T=u)
-
-        # read velocity values from interface
-        if interface.is_read_data_available():
-            velocity_values = interface.read_block_vector_data(velocity_id, vertex_ids)
-
-        # potentially adjust non-matching timestep sizes
-        dt = min(dt, precice_dt)
-
-        # solve nutils timestep
-        args = dict(solu0=solu0, dt=dt, velocity=velocity_values)
-        solu = solver.solve_linear("solu", res, constrain=cons, arguments=args)
 
         # do the coupling
         precice_dt = interface.advance(dt)
 
         # advance variables
         timestep += 1
-        solu0 = solu
 
     interface.finalize()
 

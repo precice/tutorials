@@ -7,7 +7,7 @@
       enabled="true" />
   </log>
 
-  <solver-interface dimensions="2">
+  <solver-interface dimensions="2" experimental="true">
     <data:vector name="Velocity" />
 
     <mesh name="Fluid-Mesh">
@@ -37,11 +37,11 @@
 
     <m2n:sockets from="Fluid" to="Transport" exchange-directory=".." />
 
-    <coupling-scheme:serial-explicit>
+    <coupling-scheme:parallel-explicit>
       <time-window-size value="0.005" />
       <max-time value="1.0" />
       <participants first="Fluid" second="Transport" />
       <exchange data="Velocity" mesh="Transport-Mesh" from="Fluid" to="Transport" />
-    </coupling-scheme:serial-explicit>
+    </coupling-scheme:parallel-explicit>
   </solver-interface>
 </precice-configuration>
