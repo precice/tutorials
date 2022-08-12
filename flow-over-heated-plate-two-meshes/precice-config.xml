@@ -48,7 +48,6 @@
         constraint="consistent" />
       <read-data name="Temperature" mesh="Solid-Mesh-nodes" />
       <write-data name="Heat-Flux" mesh="Solid-Mesh" />
-    <export:vtu directory="preCICE-output" />
     <watch-point mesh="Solid-Mesh" name="MyWatchPoint" coordinate="0.5; 0.0"/>
     </participant>
 
