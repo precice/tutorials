@@ -32,10 +32,10 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     ```bash
     # Add the signing key, add the repository, update (check this):
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash
-    # Install OpenFOAM v2112:
-    sudo apt install openfoam2112-dev
+    # Install OpenFOAM v2206:
+    sudo apt install openfoam2206-dev
     # Enable OpenFOAM by default in your system and apply now:
-    echo "source /usr/lib/openfoam/openfoam2112/etc/bashrc" >> ~/.bashrc
+    echo "source /usr/lib/openfoam/openfoam2206/etc/bashrc" >> ~/.bashrc
     source ~/.bashrc
     ```
 
