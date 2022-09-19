@@ -40,3 +40,24 @@ All necessary steps in order to run the mapping setup are summarized in the `run
 ```
 
 The information above is additionally stored in a JSON file called `result.stats.json`. The json file can be used in order to further process and store the resulting data.
+
+{% note %}
+The error measures as used here are only useful for consistent mapping configurations, i.e., `constraint="consistent"`.
+{% endnote %}
+
+The tutorial here is meant as a starting point in order to investigate mapping setups. The default configuration here uses a `nearest-neighbor` mapping, but there are other mapping configurations available (commented out) in the `precice-config.xml` file. Example: using the last configuration (`rbf-compact-polynomial-c6` with a dense matrix decomposition) leads to the following error measures:
+
+```bash
+---[ASTE-Evaluate] INFO : Vertex count 3458
+---[ASTE-Evaluate] INFO : Relative l2 error 9.588343106540401e-08
+---[ASTE-Evaluate] INFO : Maximum absolute error per vertex 1.7229951972397295e-06
+---[ASTE-Evaluate] INFO : Maximum signed error per vertex 1.7229951972397295e-06
+---[ASTE-Evaluate] INFO : Minimum absolute error per vertex 3.5638159090467525e-14
+---[ASTE-Evaluate] INFO : Minimum signed error per vertex -1.6968422637542169e-06
+---[ASTE-Evaluate] INFO : Median absolute error per vertex 6.217611314696114e-09
+---[ASTE-Evaluate] INFO : 99th percentile of absolute error per vertex 3.548732313379818e-07
+---[ASTE-Evaluate] INFO : 95th percentile of absolute error per vertex 1.6012309731194814e-07
+---[ASTE-Evaluate] INFO : 90th percentile of absolute error per vertex 8.077894064206796e-08
+```
+
+which are clearly better than the `nearest-neighbor` mapping. However, this comes at the cost of a higher runtime, which can easily be observed looking at the `precice-B-events-summary.log` (e.g. the `advance/map.rbf.mapData.FromA-MeshToB-Mesh` event).
