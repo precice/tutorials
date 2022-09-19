@@ -1,7 +1,7 @@
 ---
-title: ASTE (Artificial Solver Testing Environment) Turbine Tutorial
+title: ASTE (Artificial Solver Testing Environment) turbine tutorial
 permalink: tutorials-aste-turbine.html
-keywords: ASTE, Testing, Turbine
+keywords: ASTE, mapping, turbine
 summary: This tutorial is an example case for ASTE, showcasing basic features and usage of ASTE.
 ---
 
@@ -22,8 +22,8 @@ This case is a simple usage scenario for ASTE. Some features demonstrated by thi
 Run the `run.sh` script. It performs the following steps:
 
 * Downloads the meshes from preCICE repository.
-* Using `vtk_calculator.py` script, calculates function `eggholder` on a finer grid.
-* Using `partition_mesh.py` script, partitions the coarse and fine mesh into 2 domains.
-* Using `preciceMap` executable, maps the data from the fine grid to the coarse grid.
-* Using `join_mesh.py`script, joins the result meshes into a final mesh.
-* Using ``vtk_calculator.py` script, calculates difference between mapped and original function on coarse grid.
+* Using `precice-aste-evaluate` script, calculates function `eggholder` on a finer grid.
+* Using `precice-aste-partition` script, partitions the coarse and fine mesh into 2 domains.
+* Using `precice-aste-run` executable, maps the data from the fine grid to the coarse grid.
+* Using `precice-aste-join`script, joins the result meshes into a final mesh.
+* Using `precice-aste-evaluate` script, calculates difference between mapped and original function on coarse grid.
