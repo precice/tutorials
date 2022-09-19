@@ -9,13 +9,13 @@ test -f meshes.tar.gz  || wget https://gitlab.lrz.de/precice/precice2-ref-paper-
 mkdir -p meshes
 
 # Extract the meshes
-test -f meshes/0.009.vtk -a meshes/0.01.vtk || tar -xvf meshes.tar.gz --directory meshes
+test -f meshes/0.006.vtk -a meshes/0.01.vtk || tar -xvf meshes.tar.gz --directory meshes
 
 # Generate input data for the mapping problem using the predefined Franke's function function
-precice-aste-evaluate -m meshes/0.009.vtk -f "franke3d" -d "Franke" -o input_mesh.vtu
+precice-aste-evaluate -m meshes/0.006.vtk -f "franke3d" -d "Franke" -o input_mesh.vtu
 
 # Decompose both meshes to two procesors
-# Choose resolution 0.009 mesh as fine mesh and partition the mesh using a uniform algorithm
+# Choose resolution 0.006 mesh as fine mesh and partition the mesh using a uniform algorithm
 precice-aste-partition -m input_mesh.vtu -n 2 -o fine_mesh --dir fine_mesh --algorithm uniform
 # Choose resolution 0.01 mesh as coarse mesh and partition the mesh using a meshfree algorithm
 precice-aste-partition -m meshes/0.01.vtk -n 2 -o coarse_mesh --dir coarse_mesh --algorithm meshfree
@@ -33,4 +33,4 @@ precice-aste-join -m mapped/mapped -o result.vtu --recovery coarse_mesh/coarse_m
 
 # Measure the difference between the original function and the mapped values
 # Save into data array called error
-precice-aste-evaluate -m result.vtu -f "franke3d" -d error --diffdata "InterpolatedData" --diff --stats
+precice-aste-evaluate -m result.vtu -f "franke3d" -d "Error" --diffdata "InterpolatedData" --diff --stats
