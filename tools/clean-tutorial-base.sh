@@ -7,5 +7,6 @@ set -e -u
 clean_tutorial .
 clean_aste 
 clean_precice_logs .
-rm -fv -- *.log
+rm -fv ./*.log
+rm -fv ./*.vtu
 
