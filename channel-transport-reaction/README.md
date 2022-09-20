@@ -11,7 +11,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-We solve a system of advection-diffusion-reaction in a fluid flowing past a cylinder. This case is inspired from [1]. A fluid flow inside a channel containing a cylinder. Chemical species A, B and C live in the fluid, with sources of A and B at the entry of the channel. Due to diffusion and fluid mixing, A and B react to form some C.
+We solve a system of advection-diffusion-reaction in a fluid flowing past a cylinder. This case is inspired from a FEniCS tutorial [1]. A fluid flows inside a channel containing a cylinder as an obstacle. Chemical species A, B and C live in the fluid, with sources of A and B at the entry of the channel. Due to diffusion and fluid mixing, A and B react to form a certain amount of C.
 
 **Insert pic**
 
