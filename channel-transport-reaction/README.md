@@ -1,7 +1,7 @@
 ---
 title: Channel transport reaction
 permalink: tutorials-channel-transport-reaction.html
-keywords: FEniCS, Volumetric coupling, reaction, transport
+keywords: FEniCS, volumetric coupling, reaction, transport
 summary: We simulate chemical reactions in a moving fluid. One solver simulates the fluid flow and another handles the reactions.
 ---
 
