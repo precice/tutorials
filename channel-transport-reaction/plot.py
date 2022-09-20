@@ -5,7 +5,7 @@ import numpy as np
 plt.rcParams["figure.figsize"] = [7.50, 3.50]
 plt.rcParams["figure.autolayout"] = True
 
-files = {"nn32" : 'out_nn32.csv',  "nn64" : 'out_nn64.csv', "lci32" : 'out_lci32.csv', "lci50" : 'out_lci50.csv'}
+files = {"default" : "chemistry-fenics/output/chemical_out.csv"}
 datasets = {}
 
 headers = ['Time', 'A', 'B', 'C']
