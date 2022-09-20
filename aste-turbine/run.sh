@@ -20,17 +20,17 @@ precice-aste-partition -m input_mesh.vtu -n 2 -o fine_mesh --dir fine_mesh --alg
 # Choose resolution 0.01 mesh as coarse mesh and partition the mesh using a meshfree algorithm
 precice-aste-partition -m meshes/0.01.vtk -n 2 -o coarse_mesh --dir coarse_mesh --algorithm meshfree
 
-# The result directory of precice-aste-run needs to exist beforehand
+# Create results directory of precice-aste-run
 mkdir -p mapped
 
-# Map from the finer mesh to coarser mesh
+# Map from fine mesh to coarse mesh, start to ASTE instances, one for each participant
 mpirun -n 2 precice-aste-run -p A --mesh fine_mesh/fine_mesh --data "Franke" &
 mpirun -n 2 precice-aste-run -p B --mesh coarse_mesh/coarse_mesh --output mapped/mapped --data "InterpolatedData"
 
-# Join the output files together to result.vtu,
+# Join the output files together to result.vtu
 # Recovery cannot be used since GlobalID's are not exist in mapped mesh
 precice-aste-join -m mapped/mapped -o result.vtu --recovery coarse_mesh/coarse_mesh_recovery.json
 
 # Measure the difference between the original function and the mapped values
-# Save into data array called error
+# Save into data array called Error
 precice-aste-evaluate -m result.vtu -f "franke3d" -d "Error" --diffdata "InterpolatedData" --diff --stats

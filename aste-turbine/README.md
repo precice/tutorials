@@ -19,12 +19,12 @@ Our example consists of a wind turbine blade geometry, which was triangulated us
 
 All necessary steps in order to run the mapping setup are summarized in the `run.sh` script. Have a look at the comments in the run script in order to understand what is happening. In particular, the script executes the following steps:
 
-1. Downloads the mesh files from the preCICE reference paper repository, and stores all of them in the `meshes` directory. Note that this step is only executed when running the script for the first time. For our example setup, we use only the two meshes mentioned above, but the tutorial can easily be modified in order to employ a different mesh.
-2. Generate input data for our mapping problem. As described in the [ASTE documentation](https://precice.org/tooling-aste.html#precice-aste-evaluate), we use the python script called `precice-aste-evaluate` in order to evaluate and store a test function on our mesh. Here, we arbitrarily select Franke's function, evaluate it on the input mesh `0.006.vtk` and store the data in a mesh called `input_mesh.vtu`. There are other pre-defined test functions available in the `precice-aste-evaluate` script. Use `precice-aste-evaluate --list-functions` to get a complete list of available functions and their definition.
-3. In our case, we want to execute the mapping in parallel. In order to run ASTE in parallel, we need to partition our mesh files so that each rank receives its own mesh file. The python script `precice-aste-partition`, partitions the given mesh in the specified number of pieces (here two for the input mesh and two for the output mesh). Therefore, we execute ASTE with four ranks per participant.
-4. Executing the actual mapping using `precice-aste-run`, which is the ASTE core module interfacing with preCICE. Here, we map the data from our fine input mesh to the coarse output. The executable stores the mesh and data per rank in the files `mapped/mapped...` with the data called `InterpolatedData`.
-5. In order to join the scattered mesh files, we use the python script `precice-aste-join`. As a result, we get one large mesh file called `result.vtu`.
-6. As a last step, we investigate the accuracy of our applied mapping configuration, using `precice-aste-evaluate` again. This time, we use the `--diff` flag in order to compute the error between our test function and the mapped data. We store the difference data (`Error`) on the result mesh (`result.vtu`) as well, which allows us to visualize the error distribution, e.g., using `ParaView`. `precice-aste-evaluate` also prints several global error measures to the console, which looks as follows:
+1. Download the mesh files and extract them in the `meshes` directory. This step is only executed when running the script for the first time. For our example, we only use two of the downloaded meshes. The tutorial can easily be modified to employ different meshes.
+2. Generate input data for our mapping problem. As described in the [ASTE documentation](https://precice.org/tooling-aste.html#precice-aste-evaluate), the python script `precice-aste-evaluate` evaluates a test function and stores the results on a mesh. Here, we select Franke's function, evaluate it on the input mesh `0.006.vtk`, and store the results on a mesh called `input_mesh.vtu`. Use `precice-aste-evaluate --list-functions` to get a complete list of available test functions and their definitions.
+3. Partition meshes. We want to execute the mapping in parallel. To this end, we need to partition our mesh files so that each rank receives its own mesh file. The python script `precice-aste-partition` partitions a given mesh in a specified number of pieces (here two for the input mesh and two for the output mesh).
+4. Execute the actual mapping. We start two instances of `precice-aste-run`, which is the ASTE core module interfacing with preCICE, to emulate two participants. Here, we map the data from the fine input mesh to the coarse output mesh. We store the mesh and data per rank in files `mapped/mapped...` with data called `InterpolatedData`.
+5. Join scattered mesh files. The python script `precice-aste-join` joins the results into one large mesh file `result.vtu`.
+6. Investigate accuracy of mapping configuration. We use `precice-aste-evaluate` again. This time, we use the `--diff` flag in order to compute the error between our test function and the mapped data. We store the difference data (`Error`) on the result mesh (`result.vtu`) as well, which allows us to visualize the error distribution, e.g., using `ParaView`. `precice-aste-evaluate` also prints several global error measures to the console:
 
 ```bash
 ---[ASTE-Evaluate] INFO : Vertex count 3458
@@ -39,13 +39,13 @@ All necessary steps in order to run the mapping setup are summarized in the `run
 ---[ASTE-Evaluate] INFO : 90th percentile of absolute error per vertex 0.003504421261280574
 ```
 
-The information above is additionally stored in a JSON file called `result.stats.json`. The json file can be used in order to further process and store the resulting data.
+This information is additionally stored in a JSON file `result.stats.json` for potential further processing.
 
 {% note %}
-The error measures as used here are only useful for consistent mapping configurations, i.e., `constraint="consistent"`.
+The error measures used here are only useful for consistent mapping configurations, i.e., `constraint="consistent"`.
 {% endnote %}
 
-This tutorial is meant as a starting point in order to investigate mapping setups. The provided configuration uses a `nearest-neighbor` mapping, but there are other mapping configurations available (commented out) in the `precice-config.xml` file. Example: using the last configuration (`rbf-compact-polynomial-c6` with a dense matrix decomposition) leads to the following error measures:
+This tutorial is meant as a starting point to investigate mapping setups. The provided configuration uses a `nearest-neighbor` mapping, but there are other mapping configurations available (commented out) in the `precice-config.xml` file. Example: using the last configuration (`rbf-compact-polynomial-c6` with a dense matrix decomposition) leads to the following error measures:
 
 ```bash
 ---[ASTE-Evaluate] INFO : Vertex count 3458
@@ -60,4 +60,4 @@ This tutorial is meant as a starting point in order to investigate mapping setup
 ---[ASTE-Evaluate] INFO : 90th percentile of absolute error per vertex 8.077894064206796e-08
 ```
 
-which are clearly better than the ones we got with `nearest-neighbor` mapping above. However, this comes at the cost of a higher runtime, which can easily be observed looking at the `precice-B-events-summary.log` (e.g., the `advance/map.rbf.mapData.FromA-MeshToB-Mesh` event).
+which are clearly better than the ones we got with `nearest-neighbor` mapping above. However, this comes at the cost of a much higher runtime ().
