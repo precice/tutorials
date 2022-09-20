@@ -13,7 +13,8 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 We solve a system of advection-diffusion-reaction in a fluid flowing past a cylinder. This case is inspired from a FEniCS tutorial [1]. A fluid flows inside a channel containing a cylinder as an obstacle. Chemical species A, B and C live in the fluid, with sources of A and B at the entry of the channel. Due to diffusion and fluid mixing, A and B react to form a certain amount of C.
 
-**Insert pic**
+The geometry is shown below:
+![Geometry](geometry_channel.png)
 
 The simulation is split into two participants: a Fluid participant that computes the fluid flow and sends the velocity field to the Chemical participant which computes the diffusion and advection of all chemical species. The coupling is unidirectional (`serial-explicit` with only one data entity being transferred).
 
@@ -41,6 +42,9 @@ To start the `Chemical` participant, run:
 ## Postprocessing
 
 The chemical participant writes `.vtu` and `.pvd` files that can be opened with ParaView.
+The figure below shows the state after a duration of 2 units of time. The concentration in A, B and C are plotted.
+
+![Results](state_t40.png)
 
 ## References
 
