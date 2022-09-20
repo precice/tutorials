@@ -1,5 +1,5 @@
-from fenics import FiniteElement, triangle, FunctionSpace, MixedElement, SubDomain, Function, TestFunction, split, Expression, Constant, assemble, solve, dot, grad, dx
-from mshr import Rectangle, Point, Circle, generate_mesh
+from fenics import Point, Rectangle, Circle, FiniteElement, triangle, FunctionSpace, MixedElement, SubDomain, Function, TestFunction, split, Expression, Constant, assemble, solve, dot, grad, dx
+from mshr import generate_mesh
 import fenicsprecice
 import numpy as np
 import csv
