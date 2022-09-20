@@ -103,9 +103,11 @@ while precice.is_coupling_ongoing():
     u_B.rename('data', 'data')
     u_C.rename('data', 'data')
 
+    # Compute the integrals. (All ranks must do it to synchronize)
     total_A = assemble(u_A * dx)
     total_B = assemble(u_B * dx)
     total_C = assemble(u_C * dx)
+    # Only the main rank writes to the file.
     if MPI.COMM_WORLD.rank == 0:
         print(total_A, total_B, total_C)
         writer.writerow([t, total_A, total_B, total_C])
