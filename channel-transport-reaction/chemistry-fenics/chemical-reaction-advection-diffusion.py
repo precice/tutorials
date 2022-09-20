@@ -1,5 +1,5 @@
-from fenics import
-from mshr import Rectangle,
+from fenics import FiniteElement, triangle, FunctionSpace, MixedElement, SubDomain, Function, TestFunction, split, Expression, Constant, assemble, solve, dot, grad, dx
+from mshr import Rectangle, Point, Circle, generate_mesh
 import fenicsprecice
 import numpy as np
 import csv
@@ -12,7 +12,6 @@ default_dt = 1.0  # time step size
 domain = Rectangle(Point(0, 0), Point(2.2, 0.41)) - \
     Circle(Point(0.2, 0.2), 0.05)
 mesh = generate_mesh(domain, 64)
-normal = FacetNormal(mesh)
 
 # Three dimensional vector for three species
 P = FiniteElement('P', triangle, 1)
