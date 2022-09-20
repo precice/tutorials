@@ -18,8 +18,7 @@ P = FiniteElement('P', triangle, 1)
 V = FunctionSpace(mesh, MixedElement([P, P, P]))
 W = FunctionSpace(mesh, MixedElement([P, P])) # Velocity field is 2D
 
-# No BCs: only homgenuous Von Neumann. It means nothing leaves the domain
-# Von neumann BCs give rise to surface loads, which are simply zero here.
+
 
 class CouplingDomain(SubDomain):
     def inside(self, x, on_boundary):
@@ -41,6 +40,7 @@ u_1, u_2, u_3 = split(u_)
 v_1, v_2, v_3 = split(v)
 flow = Function(W)
 flow_old = Function(W)
+
 # Formulate the problem
 
 f = Expression(('pow(x[0]-0.1,2)+pow(x[1]-0.1,2)<0.05*0.05 ? 0.1 : 0',
@@ -51,12 +51,16 @@ k = Constant(1. / dt)
 r = Constant(10.0) # Reaction speed
 diff = Constant(0.01) # Diffusivity
 
-# Velocity field when preCICE is not used
-# flow = Expression(("vmax * 4*x[1]*(1-x[1])", "0"), degree=2, vmax=0.5)
 
 average_flow = (flow + flow_old) / 2
 
 u_n1, u_n2, u_n3 = split(u_n)
+
+# Weak form of the PDE. Second order terms (from diffusion) are integrated by parts.
+# Integration by parts of laplacian(u) * v * dx yields dot(grad(u), normal) * v * ds - dot(grad(u), grad(v)).
+# The surface terms cancels due to the boundary condition dot(grad(u), normal) = 0 (for each u_i).
+# Physically speaking, this means that matter doesn't leave the domain through diffusion: it only leaves it from the fluid flow.
+
 F = k * (u_1 - u_n1) * v_1 * dx + 0.5 * dot(average_flow, grad(u_1 + u_n1)) * v_1 * dx + diff * dot(grad(u_1), grad(v_1)) * dx - dot(f[0], v_1) * dx + r * u_1 * u_2 * v_1 * dx + \
     k * (u_2 - u_n2) * v_2 * dx + 0.5 * dot(average_flow, grad(u_2 + u_n2)) * v_2 * dx + diff * dot(grad(u_2), grad(v_2)) * dx - dot(f[1], v_2) * dx + r * u_1 * u_2 * v_2 * dx + \
     k * (u_3 - u_n3) * v_3 * dx + 0.5 * dot(average_flow, grad(u_3 + u_n3)) * v_3 * dx + diff * dot(grad(u_3), grad(v_3)) * dx                       - r * u_1 * u_2 * v_3 * dx + r * u_3 * v_3 * dx
