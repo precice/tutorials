@@ -117,7 +117,7 @@ class CouplingDomain(SubDomain):
         return True
 
 
-precice = fenicsprecice.Adapter(adapter_config_filename="flow-config.json")
+precice = fenicsprecice.Adapter(adapter_config_filename="fluid-config.json")
 precice_dt = precice.initialize(
     coupling_subdomain=CouplingDomain(),
     write_object=u_)
