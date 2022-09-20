@@ -7,7 +7,6 @@ Instead of loading data to solve chemical reactions, we send the velocity field 
 """
 
 
-
 from fenics import *
 from mshr import *
 import fenicsprecice
@@ -15,11 +14,14 @@ import numpy as np
 
 outfolder = 'output'
 
-default_dt = 0.001 # time step size (preCICE handles the main loop; if this is smaller than preCICE dt, we subcycle)
-mu = 0.001 # Dynamic viscosity
-rho = 1 # Density
+# time step size (preCICE handles the main loop; if this is smaller than
+# preCICE dt, we subcycle)
+default_dt = 0.001
+mu = 0.001  # Dynamic viscosity
+rho = 1  # Density
 
-domain = Rectangle(Point(0,0), Point(2.2, 0.41)) - Circle(Point(0.2, 0.2), 0.05)
+domain = Rectangle(Point(0, 0), Point(2.2, 0.41)) - \
+    Circle(Point(0.2, 0.2), 0.05)
 mesh = generate_mesh(domain, 50)
 normal = FacetNormal(mesh)
 
@@ -37,7 +39,8 @@ Q = FunctionSpace(mesh, 'P', 1)
 inflow_profile = ("4.0*1.5*x[1]*(0.41 - x[1]) / pow(0.41, 2)", "0")
 
 # Boundary conditions
-# Imposed velocity in the outlet and free pressure at the outlet. Walls are not slipping
+# Imposed velocity in the outlet and free pressure at the outlet. Walls
+# are not slipping
 bcu_inflow = DirichletBC(V, Expression(inflow_profile, degree=2), inflow)
 bcu_walls = DirichletBC(V, Constant((0, 0)), walls)
 bcu_cylinder = DirichletBC(V, Constant((0, 0)), cylinder)
@@ -59,7 +62,7 @@ p_n = Function(Q)
 p_ = Function(Q)
 
 # Define expressions used in variational forms
-U = 0.5*(u_n + u)
+U = 0.5 * (u_n + u)
 n = FacetNormal(mesh)
 f = Constant((0, 0))
 k = Constant(default_dt)
@@ -67,28 +70,33 @@ mu = Constant(mu)
 rho = Constant(rho)
 
 # Define symmetric gradient
+
+
 def epsilon(u):
     return sym(nabla_grad(u))
 # Define stress tensor
+
+
 def sigma(u, p):
-    return 2*mu*epsilon(u) - p*Identity(len(u))
+    return 2 * mu * epsilon(u) - p * Identity(len(u))
+
 
 # Define variational problem for step 1
-F1 = rho*dot((u - u_n) / k, v)*dx \
-    + rho*dot(dot(u_n, nabla_grad(u_n)), v)*dx \
-    + inner(sigma(U, p_n), epsilon(v))*dx \
-    + dot(p_n*n, v)*ds - dot(mu*nabla_grad(U)*n, v)*ds \
-    - dot(f, v)*dx
+F1 = rho * dot((u - u_n) / k, v) * dx \
+    + rho * dot(dot(u_n, nabla_grad(u_n)), v) * dx \
+    + inner(sigma(U, p_n), epsilon(v)) * dx \
+    + dot(p_n * n, v) * ds - dot(mu * nabla_grad(U) * n, v) * ds \
+    - dot(f, v) * dx
 a1 = lhs(F1)
 L1 = rhs(F1)
 
 # Define variational problem for step 2
-a2 = dot(nabla_grad(p), nabla_grad(q))*dx
-L2 = dot(nabla_grad(p_n), nabla_grad(q))*dx - (1/k)*div(u_)*q*dx
+a2 = dot(nabla_grad(p), nabla_grad(q)) * dx
+L2 = dot(nabla_grad(p_n), nabla_grad(q)) * dx - (1 / k) * div(u_) * q * dx
 
 # Define variational problem for step 3
-a3 = dot(u, v)*dx
-L3 = dot(u_, v)*dx - k*dot(nabla_grad(p_ - p_n), v)*dx
+a3 = dot(u, v) * dx
+L3 = dot(u_, v) * dx - k * dot(nabla_grad(p_ - p_n), v) * dx
 
 # Assemble matrices
 A1 = assemble(a1)
@@ -102,12 +110,17 @@ A3 = assemble(a3)
 # Initialize preCICE
 
 # Coupling subdomain is the entire domain (volumetric coupling)
+
+
 class CouplingDomain(SubDomain):
     def inside(self, x, on_boundary):
         return True
 
+
 precice = fenicsprecice.Adapter(adapter_config_filename="flow-config.json")
-precice_dt = precice.initialize(coupling_subdomain=CouplingDomain(), write_object=u_)
+precice_dt = precice.initialize(
+    coupling_subdomain=CouplingDomain(),
+    write_object=u_)
 
 
 dt = np.min([default_dt, precice_dt])
@@ -138,8 +151,7 @@ while precice.is_coupling_ongoing():
 
     precice.write_data(u_)
 
-
-    t += dt 
+    t += dt
 
     vtkfile << u_
 
