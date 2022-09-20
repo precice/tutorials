@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e -u
 
-python3 chemistry-precice.py
+python3 chemical-reaction-advection-diffusion.py

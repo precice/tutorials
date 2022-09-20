@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e -u
 
-python3 flow-precice.py
+python3 fluid.py
