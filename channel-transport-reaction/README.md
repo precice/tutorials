@@ -15,7 +15,7 @@ We solve a system of advection-diffusion-reaction in a fluid flowing past a cyli
 
 **Insert pic**
 
-The simulation is split into two participants: a Fluid participant that computes the fluid flow and sends the velocity field to the Chemical participant, computing the reactions, the diffusion and advection of all chemical species. The coupling is unidirectional (`serial-explicit` with only one data transfer).
+The simulation is split into two participants: a Fluid participant that computes the fluid flow and sends the velocity field to the Chemical participant which computes the diffusion and advection of all chemical species. The coupling is unidirectional (`serial-explicit` with only one data entity being transferred).
 
 ## Available solvers and dependencies
 
