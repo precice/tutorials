@@ -12,11 +12,11 @@ while getopts ":dn" opt; do
   case ${opt} in
   d)
     rm -rf Dirichlet-*.vtk
-    python3 heat.py --side=Dirichlet
+    python3 heat.py side=Dirichlet
     ;;
   n)
     rm -rf Neumann-*.vtk
-    python3 heat.py --side=Neumann
+    python3 heat.py side=Neumann
     ;;
   *)
     usage
