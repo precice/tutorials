@@ -75,7 +75,6 @@ clean_fenics() {
         set -e -u
         cd "$1"
         echo "--- Cleaning up FEniCS case in $(pwd)"
-        rm -fv spooles.out output/*
         rm -rfv ./output/
         rm -rfv ./preCICE-output/
         clean_precice_logs .
