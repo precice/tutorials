@@ -27,16 +27,16 @@ All necessary steps in order to run the mapping setup are summarized in the `run
 6. Investigate accuracy of mapping configuration. We use `precice-aste-evaluate` again. This time, we use the `--diff` flag in order to compute the error between our test function and the mapped data. We store the difference data (`Error`) on the result mesh (`result.vtu`) as well, which allows us to visualize the error distribution, e.g., using `ParaView`. `precice-aste-evaluate` also prints several global error measures to the console:
 
 ```bash
----[ASTE-Evaluate] INFO : Vertex count 3458
----[ASTE-Evaluate] INFO : Relative l2 error 0.0020057221573822875
----[ASTE-Evaluate] INFO : Maximum absolute error per vertex 0.010019551121144277
----[ASTE-Evaluate] INFO : Maximum signed error per vertex 0.007814315048550458
+---[ASTE-Evaluate] INFO : Vertex count 9588
+---[ASTE-Evaluate] INFO : Relative l2 error 0.002402706834866804
+---[ASTE-Evaluate] INFO : Maximum absolute error per vertex 0.009659755828445804
+---[ASTE-Evaluate] INFO : Maximum signed error per vertex 0.00888725146042224
 ---[ASTE-Evaluate] INFO : Minimum absolute error per vertex 0.0
----[ASTE-Evaluate] INFO : Minimum signed error per vertex -0.010019551121144277
----[ASTE-Evaluate] INFO : Median absolute error per vertex 0.0009199747224788446
----[ASTE-Evaluate] INFO : 99th percentile of absolute error per vertex 0.005908856215884218
----[ASTE-Evaluate] INFO : 95th percentile of absolute error per vertex 0.004282379936870699
----[ASTE-Evaluate] INFO : 90th percentile of absolute error per vertex 0.003504421261280574
+---[ASTE-Evaluate] INFO : Minimum signed error per vertex -0.009659755828445804
+---[ASTE-Evaluate] INFO : Median absolute error per vertex 0.0011544478395176805
+---[ASTE-Evaluate] INFO : 99th percentile of absolute error per vertex 0.007066025673252374
+---[ASTE-Evaluate] INFO : 95th percentile of absolute error per vertex 0.005206080046631978
+---[ASTE-Evaluate] INFO : 90th percentile of absolute error per vertex 0.004253350142177374
 ```
 
 This information is additionally stored in a JSON file `result.stats.json` for potential further processing.
