@@ -13,7 +13,7 @@ def main(side='Dirichlet'):
     y_bottom, y_top = 0, 1
     x_left, x_right = 0, 2
     x_coupling = 1  # x coordinate of coupling interface
-
+    degree = 1  # linear finite elements
     n = 10  # number of mesh vertices per dimension
 
     if side == 'Dirichlet':
@@ -27,12 +27,12 @@ def main(side='Dirichlet'):
 
     # define the Nutils mesh
     domain, geom = mesh.rectilinear([x_grid, y_grid])
+    coupling_boundary = domain.boundary['right' if side == 'Dirichlet' else 'left']
+    coupling_sample = coupling_boundary.sample('gauss', degree=degree * 2)
 
     # Nutils namespace
     ns = function.Namespace()
     ns.x = geom
-
-    degree = 1  # linear finite elements
     ns.basis = domain.basis('std', degree=degree)
     ns.alpha = 3  # parameter of problem
     ns.beta = 1.3  # parameter of problem
@@ -41,6 +41,8 @@ def main(side='Dirichlet'):
     ns.flux = 'basis_n ?fluxdofs_n'  # heat flux
     ns.f = 'beta - 2 - 2 alpha'  # rhs
     ns.uexact = '1 + x_0 x_0 + alpha x_1 x_1 + beta ?t'  # analytical solution
+    ns.readbasis = coupling_sample.basis()
+    ns.readfunc = 'readbasis_n ?readdata_n'
 
     # define the weak form
     res0 = domain.integral('(basis_n dudt - basis_n f + basis_n,i u_,i) d:x' @ ns, degree=degree * 2)
@@ -56,8 +58,6 @@ def main(side='Dirichlet'):
     # define coupling mesh
     mesh_name = side + "-Mesh"
     mesh_id = interface.get_mesh_id(mesh_name)
-    coupling_boundary = domain.boundary['right' if side == 'Dirichlet' else 'left']
-    coupling_sample = coupling_boundary.sample('gauss', degree=degree * 2)
     vertices = coupling_sample.eval(ns.x)
     vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)
 
@@ -74,9 +74,6 @@ def main(side='Dirichlet'):
 
     def fluxdofs(v):
         return projection_matrix.solve(v, constrain=projection_cons)
-
-    # helper data structure to apply heat flux correctly
-    dx_function = 'd:x' @ ns
 
     precice_dt = interface.initialize()
 
@@ -109,16 +106,15 @@ def main(side='Dirichlet'):
 
         # read data from interface
         if interface.is_read_data_available():
-            read_data = interface.read_block_scalar_data(read_data_id, vertex_ids)
-            read_function = coupling_sample.asfunction(read_data)
+            readdata = interface.read_block_scalar_data(read_data_id, vertex_ids)
 
             if side == 'Dirichlet':
-                sqr = coupling_sample.integral((ns.u - read_function) ** 2)
-                cons = solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons0, arguments=dict(t=t))
+                sqr = coupling_sample.integral('(u - readfunc)^2 d:x' @ ns)
+                cons = solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons0, arguments=dict(t=t, readdata=readdata))
                 res = res0
             else:
                 cons = cons0
-                res = res0 + coupling_sample.integral(ns.basis * read_function * dx_function)
+                res = res0 + coupling_sample.integral('basis_n readfunc d:x' @ ns)
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
@@ -131,7 +127,7 @@ def main(side='Dirichlet'):
         dt = min(dt, precice_dt)
 
         # solve nutils timestep
-        lhs = solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt, t=t))
+        lhs = solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt, t=t, readdata=readdata))
 
         # write data to interface
         if interface.is_write_data_required(dt):
