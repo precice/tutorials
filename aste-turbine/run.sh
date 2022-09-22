@@ -28,7 +28,6 @@ mpirun -n 2 precice-aste-run -p A --mesh fine_mesh/fine_mesh --data "Franke" &
 mpirun -n 2 precice-aste-run -p B --mesh coarse_mesh/coarse_mesh --output mapped/mapped --data "InterpolatedData"
 
 # Join the output files together to result.vtu
-# Recovery cannot be used since GlobalID's are not exist in mapped mesh
 precice-aste-join -m mapped/mapped -o result.vtu --recovery coarse_mesh/coarse_mesh_recovery.json
 
 # Measure the difference between the original function and the mapped values
