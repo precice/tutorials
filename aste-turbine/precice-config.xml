@@ -35,10 +35,8 @@
 
       <mapping:nearest-neighbor constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" />
       <!-- <mapping:nearest-projection constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" /> -->
-      <!-- <mapping:rbf-gaussian shape-parameter="4" constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" x-dead="false" y-dead="false" z-dead="false" /> -->
-      <!-- <mapping:rbf-gaussian shape-parameter="5600" solver-rtol="1e-9" constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" x-dead="true" y-dead="false" z-dead="false" polynomial="separate" preallocation="tree"/> -->
-      <!-- <mapping:rbf-volume-splines solver-rtol="1e-9" constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" x-dead="false" y-dead="false" z-dead="false" /> -->
-      <!-- <export:vtk every-n-time-windows="1" directory="vtkB/" normals="0"/> -->
+      <!-- <mapping:rbf-compact-polynomial-c6 support-radius="0.1" use-qr-decomposition="false" constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" /> -->
+      <!-- <mapping:rbf-compact-polynomial-c6 support-radius="0.1" use-qr-decomposition="true" constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" /> -->
     </participant>
     
     <coupling-scheme:parallel-explicit>
