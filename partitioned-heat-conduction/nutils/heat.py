@@ -45,12 +45,17 @@ def main(side='Dirichlet'):
     ns.readfunc = 'readbasis_n ?readdata_n'
 
     # define the weak form
-    res0 = domain.integral('(basis_n dudt - basis_n f + basis_n,i u_,i) d:x' @ ns, degree=degree * 2)
+    res = domain.integral('(basis_n dudt - basis_n f + basis_n,i u_,i) d:x' @ ns, degree=degree * 2)
 
     # set boundary conditions at non-coupling boundaries
     # top and bottom boundary are non-coupling for both sides
-    sqr0 = domain.boundary['top,bottom,left' if side == 'Dirichlet'
-                      else 'top,bottom,right'].integral('(u - uexact)^2 d:x' @ ns, degree=degree * 2)
+    sqr = domain.boundary['top,bottom,left' if side == 'Dirichlet'
+                     else 'top,bottom,right'].integral('(u - uexact)^2 d:x' @ ns, degree=degree * 2)
+
+    if side == 'Dirichlet':
+        sqr += coupling_sample.integral('(u - readfunc)^2 d:x' @ ns)
+    else:
+        res += coupling_sample.integral('basis_n readfunc d:x' @ ns)
 
     # preCICE setup
     interface = precice.Interface(side, "../precice-config.xml", 0, 1)
@@ -69,7 +74,7 @@ def main(side='Dirichlet'):
 
     # helper functions to project heat flux to coupling boundary
     projection_matrix = coupling_boundary.integrate(ns.eval_nm('basis_n basis_m d:x'), degree=degree * 2)
-    projection_cons = np.zeros(res0.shape)
+    projection_cons = np.zeros(res.shape)
     projection_cons[projection_matrix.rowsupp(1e-15)] = np.nan
 
     def fluxdofs(v):
@@ -101,20 +106,9 @@ def main(side='Dirichlet'):
 
     while interface.is_coupling_ongoing():
 
-        # update (time-dependent) boundary condition
-        cons0 = solver.optimize('lhs', sqr0, droptol=1e-15, arguments=dict(t=t))
-
         # read data from interface
         if interface.is_read_data_available():
             readdata = interface.read_block_scalar_data(read_data_id, vertex_ids)
-
-            if side == 'Dirichlet':
-                sqr = coupling_sample.integral('(u - readfunc)^2 d:x' @ ns)
-                cons = solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons0, arguments=dict(t=t, readdata=readdata))
-                res = res0
-            else:
-                cons = cons0
-                res = res0 + coupling_sample.integral('basis_n readfunc d:x' @ ns)
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
@@ -125,6 +119,9 @@ def main(side='Dirichlet'):
 
         # potentially adjust non-matching timestep sizes
         dt = min(dt, precice_dt)
+
+        # update (time-dependent) boundary condition
+        cons = solver.optimize('lhs', sqr, droptol=1e-15, arguments=dict(t=t, readdata=readdata))
 
         # solve nutils timestep
         lhs = solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt, t=t, readdata=readdata))
