@@ -96,8 +96,8 @@ def main(side='Dirichlet'):
     t = 0
 
     # initial condition
-    sqr = domain.integral('(u - uexact)^2' @ ns, degree=degree * 2)
-    lhs0 = solver.optimize('lhs', sqr, droptol=1e-15, arguments=dict(t=t))
+    sqr0 = domain.integral('(u - uexact)^2' @ ns, degree=degree * 2)
+    lhs0 = solver.optimize('lhs', sqr0, arguments=dict(t=t))
     bezier = domain.sample('bezier', degree * 2)
     x, u, uexact = bezier.eval(['x_i', 'u', 'uexact'] @ ns, lhs=lhs0, t=t)
     with treelog.add(treelog.DataLog()):
