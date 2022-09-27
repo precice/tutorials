@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 from nutils import cli, mesh, function, solver, export
+import functools
 import treelog
 import numpy as np
 import precice
@@ -59,18 +60,12 @@ def main(side='Dirichlet'):
 
     # preCICE setup
     interface = precice.Interface(side, "../precice-config.xml", 0, 1)
-
-    # define coupling mesh
-    mesh_name = side + "-Mesh"
-    mesh_id = interface.get_mesh_id(mesh_name)
-    vertices = coupling_sample.eval(ns.x)
-    vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)
-
-    # coupling data
-    write_data = "Temperature" if side == "Neumann" else "Heat-Flux"
-    read_data = "Heat-Flux" if side == "Neumann" else "Temperature"
-    write_data_id = interface.get_data_id(write_data, mesh_id)
-    read_data_id = interface.get_data_id(read_data, mesh_id)
+    mesh_id = interface.get_mesh_id(side + "-Mesh")
+    vertex_ids = interface.set_mesh_vertices(mesh_id, coupling_sample.eval(ns.x))
+    precice_write = functools.partial(interface.write_block_scalar_data,
+        interface.get_data_id("Temperature" if side == "Neumann" else "Heat-Flux", mesh_id), vertex_ids)
+    precice_read = functools.partial(interface.read_block_scalar_data,
+        interface.get_data_id("Heat-Flux" if side == "Neumann" else "Temperature", mesh_id), vertex_ids)
 
     # helper functions to project heat flux to coupling boundary
     projection_matrix = coupling_boundary.integrate(ns.eval_nm('basis_n basis_m d:x'), degree=degree * 2)
@@ -84,8 +79,7 @@ def main(side='Dirichlet'):
 
     # write initial data
     if interface.is_action_required(precice.action_write_initial_data()):
-        write_data = np.zeros(len(vertex_ids))
-        interface.write_block_scalar_data(write_data_id, vertex_ids, write_data)
+        precice_write(coupling_sample.eval(0.))
         interface.mark_action_fulfilled(precice.action_write_initial_data())
 
     interface.initialize_data()
@@ -108,7 +102,7 @@ def main(side='Dirichlet'):
 
         # read data from interface
         if interface.is_read_data_available():
-            readdata = interface.read_block_scalar_data(read_data_id, vertex_ids)
+            readdata = precice_read()
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
@@ -133,8 +127,7 @@ def main(side='Dirichlet'):
                 write_data = coupling_sample.eval('flux' @ ns, fluxdofs=fluxdofs(flux_function))
             else:
                 write_data = coupling_sample.eval('u' @ ns, lhs=lhs)
-
-            interface.write_block_scalar_data(write_data_id, vertex_ids, write_data)
+            precice_write(write_data)
 
         # do the coupling
         precice_dt = interface.advance(dt)
