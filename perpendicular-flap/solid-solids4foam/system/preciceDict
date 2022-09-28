@@ -42,5 +42,5 @@ FSI
     nameCellDisplacement D;
 
     // Name of the force field on the solid
-    forceFieldName solidForce;
+    nameForce solidForce;
 }
