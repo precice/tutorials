@@ -46,5 +46,5 @@ FSI
     namePointDisplacement unused;
 
     // Name of the force field on the solid
-    forceFieldName solidForce;
+    nameForce solidForce;
 }
