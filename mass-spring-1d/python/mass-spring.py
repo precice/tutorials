@@ -7,25 +7,22 @@ import precice
 from enum import Enum
 import csv
 
+
 class Scheme(Enum):
     NEWMARK_BETA = "Newmark_beta"
     GENERALIZED_ALPHA = "generalized_alpha"
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument("participantName", help="Name of the solver.", type=str)
-parser.add_argument("-ts", "--time-stepping", help="Time stepping scheme being used.", type=str, choices=[s.value for s in Scheme], default=Scheme.NEWMARK_BETA.value)
-
-try:
-    args = parser.parse_args()
-except SystemExit:
-    print("")
-    print("Usage: python ./mass-spring participant-name")
-    quit()
+parser.add_argument("-ts", "--time-stepping", help="Time stepping scheme being used.", type=str,
+                    choices=[s.value for s in Scheme], default=Scheme.NEWMARK_BETA.value)
+args = parser.parse_args()
 
 participant_name = args.participantName
 
 m_1, m_2 = 1, 1
-k_1, k_2, k_12 = 4*np.pi**2, 4*np.pi**2, 16*(np.pi**2)
+k_1, k_2, k_12 = 4 * np.pi**2, 4 * np.pi**2, 16 * (np.pi**2)
 
 M = np.array([[m_1, 0], [0, m_2]])
 K = np.array([[k_1 + k_12, -k_12], [-k_12, k_2 + k_12]])
@@ -56,8 +53,9 @@ if participant_name == 'MassOne':
     mass = m_1
     stiffness = k_1 + k_12
     u0, v0, f0, d_dt_f0 = u0_1, v0_1, k_12 * u0_2, k_12 * v0_2
-    u_analytical = lambda t: c[0]*A[0] * np.cos(omega[0] * t) + c[1]*A[1] * np.cos(omega[1] * t)
-    v_analytical = lambda t: -c[0]*A[0]*omega[0] * np.sin(omega[0] *t) - c[1]*A[1]*omega[1] * np.sin(omega[1] * t)
+    def u_analytical(t): return c[0] * A[0] * np.cos(omega[0] * t) + c[1] * A[1] * np.cos(omega[1] * t)
+    def v_analytical(t): return -c[0] * A[0] * omega[0] * np.sin(omega[0] * t) - \
+        c[1] * A[1] * omega[1] * np.sin(omega[1] * t)
 
 elif participant_name == 'MassTwo':
     read_data_name = 'forceOne'
@@ -67,8 +65,10 @@ elif participant_name == 'MassTwo':
     mass = m_2
     stiffness = k_2 + k_12
     u0, v0, f0, d_dt_f0 = u0_2, v0_2, k_12 * u0_1, k_12 * v0_1
-    u_analytical = lambda t: c[0]*B[0] * np.cos(omega[0] * t) + c[1]*B[1] * np.cos(omega[1] * t)
-    v_analytical = lambda t: -c[0]*B[0]*omega[0] * np.sin(omega[0] *t) - c[1]*B[1]*omega[1] * np.sin(omega[1] * t)
+    def u_analytical(t): return c[0] * B[0] * np.cos(omega[0] * t) + c[1] * B[1] * np.cos(omega[1] * t)
+
+    def v_analytical(t): return -c[0] * B[0] * omega[0] * np.sin(omega[0] * t) - \
+        c[1] * B[1] * omega[1] * np.sin(omega[1] * t)
 
 else:
     raise Exception(f"wrong participant name: {participant_name}")
@@ -119,10 +119,10 @@ elif args.time_stepping == Scheme.NEWMARK_BETA.value:
 gamma = 0.5 - alpha_m + alpha_f
 beta = 0.25 * (gamma + 0.5)
 
-m = 3*[None]
-m[0] = (1-alpha_m)/(beta*dt**2)
-m[1] = (1-alpha_m)/(beta*dt)
-m[2] = (1-alpha_m-2*beta)/(2*beta)
+m = 3 * [None]
+m[0] = (1 - alpha_m) / (beta * dt**2)
+m[1] = (1 - alpha_m) / (beta * dt)
+m[2] = (1 - alpha_m - 2 * beta) / (2 * beta)
 k_bar = stiffness * (1 - alpha_f) + m[0] * mass
 
 positions = []
@@ -153,9 +153,9 @@ while interface.is_coupling_ongoing():
     f = read_data
 
     # do generalized alpha step
-    u_new = (f - alpha_f * stiffness * u + mass*(m[0]*u + m[1]*v + m[2]*a)) / k_bar
-    a_new = 1.0 / (beta * dt**2) * (u_new - u - dt * v) - (1-2*beta) / (2*beta) * a
-    v_new = v + dt * ((1-gamma)*a+gamma*a_new)
+    u_new = (f - alpha_f * stiffness * u + mass * (m[0] * u + m[1] * v + m[2] * a)) / k_bar
+    a_new = 1.0 / (beta * dt**2) * (u_new - u - dt * v) - (1 - 2 * beta) / (2 * beta) * a
+    v_new = v + dt * ((1 - gamma) * a + gamma * a_new)
 
     write_data = k_12 * u_new
 
@@ -190,13 +190,13 @@ while interface.is_coupling_ongoing():
 interface.finalize()
 
 # print errors
-error = np.max(abs(u_analytical(np.array(times))-np.array(positions)))
+error = np.max(abs(u_analytical(np.array(times)) - np.array(positions)))
 print("Error w.r.t analytical solution:")
 print(f"{my_dt},{error}")
 
 # output trajectory
 with open(f'trajectory-{participant_name}.csv', 'w') as file:
-    csv_write = csv.writer(file,delimiter=';')
-    csv_write.writerow(['time','position','velocity'])
+    csv_write = csv.writer(file, delimiter=';')
+    csv_write.writerow(['time', 'position', 'velocity'])
     for t, u, v in zip(times, positions, velocities):
         csv_write.writerow([t, u, v])

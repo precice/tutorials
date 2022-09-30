@@ -3,10 +3,12 @@ from matplotlib import pyplot as plt
 import argparse
 from enum import Enum
 
+
 class PlotType(Enum):
     U_OVER_T = "position over time"
     V_OVER_T = "velocity over time"
     TRAJECTORY = "velocity over position (trajectory)"
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("csvFile", help="CSV file.", type=str)
@@ -26,7 +28,8 @@ elif args.plotType == PlotType.TRAJECTORY.name:
     print([df['position'][0]], [df['velocity'][0]])
     plt.plot(df['position'], df['velocity'])
     plt.scatter([df['position'][0]], [df['velocity'][0]], label=f"(u,v) at t={df['time'][0]}")
-    plt.scatter([df['position'].iloc[-1]], [df['velocity'].iloc[-1]], label=f"(u,v) at t={df['time'].iloc[-1]}", marker="*")
+    plt.scatter([df['position'].iloc[-1]], [df['velocity'].iloc[-1]],
+                label=f"(u,v) at t={df['time'].iloc[-1]}", marker="*")
     plt.title(PlotType.TRAJECTORY.value)
     plt.legend()
 
