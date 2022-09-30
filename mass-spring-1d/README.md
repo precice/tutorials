@@ -42,16 +42,16 @@ cd python
 Each simulation run will create two files containing position and velocity of the two masses over time. These files are called `trajectory-MassOne.csv` and `trajectory-MassTwo.csv`. You can use the script `plot-trajectory.py` for post-processing. Type `python3 plot-trajectory --help` to see available options. You can, for example plot the trajectory by running
 
 ```bash
-python3 plot-trajectory.py python/output/trajectory-MassOne.csv TRAJECTORY
+python3 plot-trajectory.py python/output/trajectory-Mass-One.csv TRAJECTORY
 ```
 
 This allows you to study the effect of different time stepping schemes on energy conservation. Newmark beta conserves energy:
 
-![Trajectory for Newmark beta scheme](images/trajectory_Newmark_beta.png)
+![Trajectory for Newmark beta scheme](images/tutorials-mass-spring-1d-trajectory-generalized-alpha.png)
 
 Generalized alpha does not conserve energy:
 
-![Trajectory for generalized alpha scheme](images/trajectory_generalited_alpha.png)
+![Trajectory for generalized alpha scheme](images/tutorials-mass-spring-1d-trajectory-newmark-beta.png)
 
 For details, refer to [1].
 

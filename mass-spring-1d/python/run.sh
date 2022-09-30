@@ -12,10 +12,10 @@ fi
 while getopts ":mn" opt; do
   case ${opt} in
   m)
-    python3 mass-spring.py MassOne
+    python3 mass-spring.py Mass-One
     ;;
   n)
-    python3 mass-spring.py MassTwo
+    python3 mass-spring.py Mass-Two
     ;;
   *)
     usage

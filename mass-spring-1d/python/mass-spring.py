@@ -14,8 +14,13 @@ class Scheme(Enum):
     GENERALIZED_ALPHA = "generalized_alpha"
 
 
+class Participant(Enum):
+    MASS_ONE = "Mass-One"
+    MASS_TWO = "Mass-Two"
+
+
 parser = argparse.ArgumentParser()
-parser.add_argument("participantName", help="Name of the solver.", type=str)
+parser.add_argument("participantName", help="Name of the solver.", type=str, choices=[p.value for p in Participant])
 parser.add_argument("-ts", "--time-stepping", help="Time stepping scheme being used.", type=str,
                     choices=[s.value for s in Scheme], default=Scheme.NEWMARK_BETA.value)
 args = parser.parse_args()
@@ -46,10 +51,10 @@ v0_2 = 0
 
 c = np.linalg.solve(eigenvectors, [u0_1, u0_2])
 
-if participant_name == 'MassOne':
-    write_data_name = 'forceOne'
-    read_data_name = 'forceTwo'
-    mesh_name = 'MeshOne'
+if participant_name == Participant.MASS_ONE.value:
+    write_data_name = 'Force-One'
+    read_data_name = 'Force-Two'
+    mesh_name = 'Mass-One-Mesh'
 
     mass = m_1
     stiffness = k_1 + k_12
@@ -58,10 +63,10 @@ if participant_name == 'MassOne':
     def v_analytical(t): return -c[0] * A[0] * omega[0] * np.sin(omega[0] * t) - \
         c[1] * A[1] * omega[1] * np.sin(omega[1] * t)
 
-elif participant_name == 'MassTwo':
-    read_data_name = 'forceOne'
-    write_data_name = 'forceTwo'
-    mesh_name = 'MeshTwo'
+elif participant_name == Participant.MASS_TWO.value:
+    read_data_name = 'Force-One'
+    write_data_name = 'Force-Two'
+    mesh_name = 'Mass-Two-Mesh'
 
     mass = m_2
     stiffness = k_2 + k_12
