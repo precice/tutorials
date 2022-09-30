@@ -5,6 +5,7 @@ import numpy as np
 from numpy.linalg import eig
 import precice
 from enum import Enum
+import csv
 
 class Scheme(Enum):
     NEWMARK_BETA = "Newmark_beta"
@@ -145,10 +146,10 @@ while interface.is_coupling_ongoing():
         velocities += v_write
         times += t_write
 
-    read_data = interface.read_scalar_data(read_data_id, vertex_id)
     # # use this with waveform relaxation
     # read_time = (1-alpha_f) * dt
     # read_data = interface.read_scalar_data(read_data_id, vertex_id, read_time)
+    read_data = interface.read_scalar_data(read_data_id, vertex_id)
     f = read_data
 
     # do generalized alpha step
@@ -186,10 +187,6 @@ while interface.is_coupling_ongoing():
         v_write.append(v)
         t_write.append(t)
 
-    positions += u_write
-    velocities += v_write
-    times += t_write
-
 interface.finalize()
 
 # print errors
@@ -197,4 +194,9 @@ error = np.max(abs(u_analytical(np.array(times))-np.array(positions)))
 print("Error w.r.t analytical solution:")
 print(f"{my_dt},{error}")
 
-# add plot with energy trajectory? Or output file and provide postprocessing script?
+# output trajectory
+with open(f'trajectory-{participant_name}.csv', 'w') as file:
+    csv_write = csv.writer(file,delimiter=';')
+    csv_write.writerow(['time','position','velocity'])
+    for t, u, v in zip(times, positions, velocities):
+        csv_write.writerow([t, u, v])

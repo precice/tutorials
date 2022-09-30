@@ -37,7 +37,21 @@ python3 mass-spring.py MassTwo
 
 ## Post-processing
 
-TODO: Show how to perform convergence study. Show how to plot trajectory and inspect conservation of energy.
+Each simulation run will create two files containing position and velocity of the two masses over time. These files are called `trajectory-MassOne.csv` and `trajectory-MassTwo.csv`. You can find a script for post-processing in `python/plot-trajectory.py`. Type `python3 python/plot-trajectory --help` to see available options. You can, for example plot the trajectory by running
+
+```bash
+python3 python/plot-trajectory.py python/trajectory-MassOne.csv TRAJECTORY
+```
+
+This allows you to study the effect of different time stepping schemes on energy conservation. Newmark beta conserves energy:
+
+![](trajectory_Newmark_beta.png)
+
+Generalized alpha does not conserve energy:
+
+![](trajectory_generalited_alpha.png)
+
+For details, refer to [1].
 
 ## References
 
