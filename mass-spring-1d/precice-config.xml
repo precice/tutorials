@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<precice-configuration>
+  <log enabled="1">
+    <sink filter="%Severity% > debug" />
+  </log>
+
+  <solver-interface dimensions="2" >
+  <!-- Use this to activate waveforms
+  <solver-interface dimensions="2" experimental="true">
+  -->
+    <data:scalar name="forceOne"  />
+    <data:scalar name="forceTwo"  />
+
+    <mesh name="MeshOne">
+      <use-data name="forceOne" />
+      <use-data name="forceTwo" />
+    </mesh>
+
+    <mesh name="MeshTwo">
+      <use-data name="forceOne" />
+      <use-data name="forceTwo" />
+    </mesh>
+
+    <participant name="MassOne">
+      <use-mesh name="MeshOne" provide="yes"/>
+      <write-data name="forceOne" mesh="MeshOne" />
+      <read-data  name="forceTwo" mesh="MeshOne" />
+      <!-- Use this to activate first order interpolation
+      <read-data  name="forceTwo" mesh="MeshOne" waveform-order="1" />
+      -->
+    </participant>
+
+    <participant name="MassTwo">
+      <use-mesh name="MeshOne" from="MassOne"/>
+      <use-mesh name="MeshTwo" provide="yes"/>
+      <write-data name="forceTwo" mesh="MeshTwo" />
+      <read-data  name="forceOne" mesh="MeshTwo" />
+      <!-- Use this to activate first order interpolation
+      <read-data  name="forceOne" mesh="MeshTwo" waveform-order="1" />
+      -->
+      <mapping:nearest-neighbor direction="write" from="MeshTwo" to="MeshOne" constraint="conservative" />
+      <mapping:nearest-neighbor direction="read"  from="MeshOne" to="MeshTwo" constraint="conservative" />
+    </participant>
+
+    <m2n:sockets from="MassOne" to="MassTwo" exchange-directory=".." />
+
+    <coupling-scheme:serial-implicit>
+      <participants first="MassOne" second="MassTwo" />
+      <max-time value="1" />
+      <time-window-size value="0.01" />
+      <max-iterations value="200" />
+      <min-iteration-convergence-measure min-iterations="1" data="forceOne" mesh="MeshOne"/>
+      <relative-convergence-measure data="forceOne" mesh="MeshOne" limit="1e-10"/>
+      <relative-convergence-measure data="forceTwo" mesh="MeshOne" limit="1e-10"/>
+      <exchange data="forceOne" mesh="MeshOne" from="MassOne" to="MassTwo" />
+      <!-- Use this for higher accuracy with waveforms and preCICE v3
+      <exchange data="forceOne" mesh="MeshOne" from="MassOne" to="MassTwo" initialize="true" />
+      -->
+      <exchange data="forceTwo" mesh="MeshOne" from="MassTwo" to="MassOne" initialize="true"/>
+    </coupling-scheme:serial-implicit>
+  </solver-interface>
+
+</precice-configuration>
