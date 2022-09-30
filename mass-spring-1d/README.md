@@ -26,13 +26,15 @@ This tutorial is only available in python. You will need to have preCICE and the
 Open two separate terminals and start each participant by calling:
 
 ```bash
-python3 mass-spring.py MassOne
+cd python
+./run.sh -m
 ```
 
 and
 
 ```bash
-python3 mass-spring.py MassTwo
+cd python
+./run.sh -n
 ```
 
 ## Post-processing
@@ -40,7 +42,7 @@ python3 mass-spring.py MassTwo
 Each simulation run will create two files containing position and velocity of the two masses over time. These files are called `trajectory-MassOne.csv` and `trajectory-MassTwo.csv`. You can use the script `plot-trajectory.py` for post-processing. Type `python3 plot-trajectory --help` to see available options. You can, for example plot the trajectory by running
 
 ```bash
-python3 plot-trajectory.py python/trajectory-MassOne.csv TRAJECTORY
+python3 plot-trajectory.py python/output/trajectory-MassOne.csv TRAJECTORY
 ```
 
 This allows you to study the effect of different time stepping schemes on energy conservation. Newmark beta conserves energy:

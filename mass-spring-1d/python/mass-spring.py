@@ -6,6 +6,7 @@ from numpy.linalg import eig
 import precice
 from enum import Enum
 import csv
+import os
 
 
 class Scheme(Enum):
@@ -195,7 +196,10 @@ print("Error w.r.t analytical solution:")
 print(f"{my_dt},{error}")
 
 # output trajectory
-with open(f'trajectory-{participant_name}.csv', 'w') as file:
+if not os.path.exists("output"):
+    os.makedirs("output")
+
+with open(f'output/trajectory-{participant_name}.csv', 'w') as file:
     csv_write = csv.writer(file, delimiter=';')
     csv_write.writerow(['time', 'position', 'velocity'])
     for t, u, v in zip(times, positions, velocities):

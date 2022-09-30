@@ -81,6 +81,16 @@ clean_fenics() {
     )
 }
 
+clean_python() {
+    (
+        set -e -u
+        cd "$1"
+        echo "--- Cleaning up python case in $(pwd)"
+        rm -rfv ./output/
+        clean_precice_logs .
+    )
+}
+
 clean_nutils() {
     (
         set -e -u
