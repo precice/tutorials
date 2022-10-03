@@ -47,11 +47,11 @@ python3 plot-trajectory.py python/output/trajectory-Mass-One.csv TRAJECTORY
 
 This allows you to study the effect of different time stepping schemes on energy conservation. Newmark beta conserves energy:
 
-![Trajectory for Newmark beta scheme](images/tutorials-mass-spring-1d-trajectory-generalized-alpha.png)
+![Trajectory for Newmark beta scheme](images/tutorials-mass-spring-1d-trajectory-newmark-beta.png)
 
 Generalized alpha does not conserve energy:
 
-![Trajectory for generalized alpha scheme](images/tutorials-mass-spring-1d-trajectory-newmark-beta.png)
+![Trajectory for generalized alpha scheme](images/tutorials-mass-spring-1d-trajectory-generalized-alpha.png)
 
 For details, refer to [1].
 
