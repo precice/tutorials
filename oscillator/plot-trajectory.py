@@ -25,7 +25,6 @@ elif args.plotType == PlotType.V_OVER_T.name:
     plt.plot(df['time'], df['velocity'])
     plt.title(PlotType.V_OVER_T.value)
 elif args.plotType == PlotType.TRAJECTORY.name:
-    print([df['position'][0]], [df['velocity'][0]])
     plt.plot(df['position'], df['velocity'])
     plt.scatter([df['position'][0]], [df['velocity'][0]], label=f"(u,v) at t={df['time'][0]}")
     plt.scatter([df['position'].iloc[-1]], [df['velocity'].iloc[-1]],
