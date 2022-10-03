@@ -1,19 +1,19 @@
 ---
-title: 1D mass-spring system
-permalink: tutorials-mass-spring-1d.html
+title: Oscillator system
+permalink: tutorials-oscillator.html
 keywords: Python, 1D
 summary: We solve an oscillator with two masses in a partitioned fashion. Each mass is solved by an independent process.
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/mass-spring-1d). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/oscillator). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
 
 This tutorial solves a simple mass-spring oscillator with two-masses that are connected via three springs. The system is cut at the middle spring and solved in a partitioned fashion:
 
-![Schematic drawing of oscillator example](images/tutorials-mass-spring-1d-schematic-drawing.png)
+![Schematic drawing of oscillator example](images/tutorials-oscillator-schematic-drawing.png)
 
 For more information, please refer to [1].
 
@@ -51,11 +51,11 @@ python3 plot-trajectory.py python/output/trajectory-Mass-One.csv TRAJECTORY
 
 This allows you to study the effect of different time stepping schemes on energy conservation. Newmark beta conserves energy:
 
-![Trajectory for Newmark beta scheme](images/tutorials-mass-spring-1d-trajectory-newmark-beta.png)
+![Trajectory for Newmark beta scheme](images/tutorials-oscillator-trajectory-newmark-beta.png)
 
 Generalized alpha does not conserve energy:
 
-![Trajectory for generalized alpha scheme](images/tutorials-mass-spring-1d-trajectory-generalized-alpha.png)
+![Trajectory for generalized alpha scheme](images/tutorials-oscillator-trajectory-generalized-alpha.png)
 
 For details, refer to [1].
 
