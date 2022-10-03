@@ -11,7 +11,11 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-The setup is taken from [1].
+This tutorial solves a simple mass-spring oscillator with two-masses that are connected via three springs. The system is cut at the middle spring and solved in a partitioned fashion:
+
+![Schematic drawing of oscillator example](images/tutorials-mass-spring-1d-schematic-drawing.png)
+
+For more information, please refer to [1].
 
 ## Available solvers
 
