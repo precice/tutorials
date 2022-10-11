@@ -3,4 +3,4 @@ set -e -u
 
 . ../../tools/cleaning-tools.sh
 
-clean_nutils
+clean_nutils .
