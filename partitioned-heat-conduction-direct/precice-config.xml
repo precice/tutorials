@@ -7,8 +7,8 @@
       enabled="true" />
   </log>
 
-  <solver-interface dimensions="2">
-    <data:scalar name="Temperature" />
+  <solver-interface dimensions="2" experimental="yes">
+  <data:scalar name="Temperature" />
     <data:scalar name="Heat-Flux" />
 
     <mesh name="Dirichlet-Mesh">
@@ -23,28 +23,16 @@
 
     <participant name="Dirichlet">
       <use-mesh name="Dirichlet-Mesh" provide="yes" />
-      <use-mesh name="Neumann-Mesh" from="Neumann" />
-      <write-data name="Heat-Flux" mesh="Dirichlet-Mesh" />
+      <use-mesh name="Neumann-Mesh" from="Neumann" direct-access="true" />
+      <write-data name="Heat-Flux" mesh="Neumann-Mesh" />
       <read-data name="Temperature" mesh="Dirichlet-Mesh" />
-      <mapping:rbf-thin-plate-splines
-        direction="read"
-        from="Neumann-Mesh"
-        to="Dirichlet-Mesh"
-        constraint="consistent"
-        x-dead="true" />
     </participant>
 
     <participant name="Neumann">
       <use-mesh name="Neumann-Mesh" provide="yes" />
-      <use-mesh name="Dirichlet-Mesh" from="Dirichlet" />
-      <write-data name="Temperature" mesh="Neumann-Mesh" />
+      <use-mesh name="Dirichlet-Mesh" from="Dirichlet" direct-access="true" />
+      <write-data name="Temperature" mesh="Dirichlet-Mesh" />
       <read-data name="Heat-Flux" mesh="Neumann-Mesh" />
-      <mapping:rbf-thin-plate-splines
-        direction="read"
-        from="Dirichlet-Mesh"
-        to="Neumann-Mesh"
-        constraint="consistent"
-        x-dead="true" />
     </participant>
 
     <m2n:sockets from="Dirichlet" to="Neumann" exchange-directory=".." />
@@ -54,17 +42,17 @@
       <max-time value="1.0" />
       <time-window-size value="0.1" />
       <max-iterations value="100" />
-      <exchange data="Heat-Flux" mesh="Dirichlet-Mesh" from="Dirichlet" to="Neumann" />
+      <exchange data="Heat-Flux" mesh="Neumann-Mesh" from="Dirichlet" to="Neumann" />
       <exchange
         data="Temperature"
-        mesh="Neumann-Mesh"
+        mesh="Dirichlet-Mesh"
         from="Neumann"
         to="Dirichlet"
         initialize="true" />
-      <relative-convergence-measure data="Heat-Flux" mesh="Dirichlet-Mesh" limit="1e-5" />
-      <relative-convergence-measure data="Temperature" mesh="Neumann-Mesh" limit="1e-5" />
+      <relative-convergence-measure data="Heat-Flux" mesh="Neumann-Mesh" limit="1e-5" suffices="yes" />
+      <relative-convergence-measure data="Temperature" mesh="Dirichlet-Mesh" limit="1e-5" suffices="yes" />
       <acceleration:IQN-ILS>
-        <data name="Temperature" mesh="Neumann-Mesh" />
+        <data name="Temperature" mesh="Dirichlet-Mesh" />
         <initial-relaxation value="0.1" />
         <max-used-iterations value="10" />
         <time-windows-reused value="5" />

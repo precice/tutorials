@@ -20,7 +20,7 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
     # define the Nutils mesh
     domain, geom = mesh.rectilinear([x_grid, y_grid])
     coupling_boundary = domain.boundary['right' if side == 'Dirichlet' else 'left']
-    coupling_sample = coupling_boundary.sample('gauss', degree=degree * 2)
+    read_sample = coupling_boundary.sample('gauss', degree=degree * 2)
 
     # Nutils namespace
     ns = function.Namespace()
@@ -33,7 +33,7 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
     ns.flux = 'basis_n ?fluxdofs_n'  # heat flux
     ns.f = 'beta - 2 - 2 alpha'  # rhs
     ns.uexact = '1 + x_0 x_0 + alpha x_1 x_1 + beta ?t'  # analytical solution
-    ns.readbasis = coupling_sample.basis()
+    ns.readbasis = read_sample.basis()
     ns.readfunc = 'readbasis_n ?readdata_n'
 
     # define the weak form
@@ -45,18 +45,27 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
                      else 'top,bottom,right'].integral('(u - uexact)^2 d:x' @ ns, degree=degree * 2)
 
     if side == 'Dirichlet':
-        sqr += coupling_sample.integral('(u - readfunc)^2 d:x' @ ns)
+        sqr += read_sample.integral('(u - readfunc)^2 d:x' @ ns)
     else:
-        res += coupling_sample.integral('basis_n readfunc d:x' @ ns)
+        res += read_sample.integral('basis_n readfunc d:x' @ ns)
 
     # preCICE setup
     interface = precice.Interface(side, "../precice-config.xml", 0, 1)
-    mesh_id = interface.get_mesh_id(side + "-Mesh")
-    vertex_ids = interface.set_mesh_vertices(mesh_id, coupling_sample.eval(ns.x))
+
+    mesh_id_read = interface.get_mesh_id("Dirichlet-Mesh" if side == "Dirichlet" else "Neumann-Mesh")
+    mesh_id_write = interface.get_mesh_id("Neumann-Mesh" if side == "Dirichlet" else "Dirichlet-Mesh")
+
+    vertex_ids_read = interface.set_mesh_vertices(mesh_id_read, read_sample.eval(ns.x))
+    interface.set_mesh_access_region(mesh_id_write, [.9, 1.1, -.1, 1.1])
+
+    precice_dt = interface.initialize()
+
+    vertex_ids_write, coords = interface.get_mesh_vertices_and_ids(mesh_id_write)
+    write_sample = domain.locate(ns.x, coords, eps=1e-10)
     precice_write = functools.partial(interface.write_block_scalar_data,
-        interface.get_data_id("Temperature" if side == "Neumann" else "Heat-Flux", mesh_id), vertex_ids)
+        interface.get_data_id("Heat-Flux" if side == "Dirichlet" else "Temperature", mesh_id_write), vertex_ids_write)
     precice_read = functools.partial(interface.read_block_scalar_data,
-        interface.get_data_id("Heat-Flux" if side == "Neumann" else "Temperature", mesh_id), vertex_ids)
+        interface.get_data_id("Temperature" if side == "Dirichlet" else "Heat-Flux", mesh_id_read), vertex_ids_read)
 
     # helper functions to project heat flux to coupling boundary
     if side == 'Dirichlet':
@@ -76,13 +85,11 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
         fluxsqr = domain.boundary['right'].boundary['top,bottom'].integral('(flux - uexact_,0)^2 d:x' @ ns, degree=degree*2)
         fluxcons = solver.optimize('fluxdofs', fluxsqr, droptol=1e-10, constrain=np.choose(np.isnan(rightcons), [np.nan, 0.]))
         # fluxcons is NaN in dofs that are supported on ONLY the right boundary
-        fluxres = coupling_sample.integral('basis_n flux d:x' @ ns) - res
-
-    precice_dt = interface.initialize()
+        fluxres = read_sample.integral('basis_n flux d:x' @ ns) - res
 
     # write initial data
     if interface.is_action_required(precice.action_write_initial_data()):
-        precice_write(coupling_sample.eval(0.))
+        precice_write(write_sample.eval(0.))
         interface.mark_action_fulfilled(precice.action_write_initial_data())
 
     interface.initialize_data()
@@ -130,9 +137,9 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
         if interface.is_write_data_required(dt):
             if side == 'Dirichlet':
                 fluxdofs = solver.solve_linear('fluxdofs', fluxres, arguments=dict(lhs0=lhs0, lhs=lhs, dt=dt, t=t), constrain=fluxcons)
-                write_data = coupling_sample.eval('flux' @ ns, fluxdofs=fluxdofs)
+                write_data = write_sample.eval('flux' @ ns, fluxdofs=fluxdofs)
             else:
-                write_data = coupling_sample.eval('u' @ ns, lhs=lhs)
+                write_data = write_sample.eval('u' @ ns, lhs=lhs)
             precice_write(write_data)
 
         # do the coupling
