@@ -16,6 +16,7 @@ def main(side='Dirichlet'):
     x_coupling = 1  # x coordinate of coupling interface
     degree = 1  # linear finite elements
     n = 10  # number of mesh vertices per dimension
+    timestep = 0.1
 
     if side == 'Dirichlet':
         x_grid = np.linspace(x_left, x_coupling, n)
@@ -96,21 +97,23 @@ def main(side='Dirichlet'):
 
     interface.initialize_data()
 
-    t = 0
+    t = 0.
+    istep = 0
 
     # initial condition
     sqr0 = domain.integral('(u - uexact)^2' @ ns, degree=degree * 2)
-    lhs0 = solver.optimize('lhs', sqr0, arguments=dict(t=t))
+    lhs = solver.optimize('lhs', sqr0, arguments=dict(t=t))
     bezier = domain.sample('bezier', degree * 2)
-    x, u, uexact = bezier.eval(['x_i', 'u', 'uexact'] @ ns, lhs=lhs0, t=t)
-    with treelog.add(treelog.DataLog()):
-        export.vtk(side + '-0', bezier.tri, x, Temperature=u, reference=uexact)
 
-    t += precice_dt
-    timestep = 0
-    dt = 0.1
+    while True:
 
-    while interface.is_coupling_ongoing():
+        # generate output
+        x, u, uexact = bezier.eval(['x_i', 'u', 'uexact'] @ ns, lhs=lhs, t=t)
+        with treelog.add(treelog.DataLog()):
+            export.vtk(side + "-" + str(istep), bezier.tri, x, Temperature=u, reference=uexact)
+
+        if not interface.is_coupling_ongoing():
+            break
 
         # read data from interface
         if interface.is_read_data_available():
@@ -118,13 +121,14 @@ def main(side='Dirichlet'):
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
-            lhs_checkpoint = lhs0
-            t_checkpoint = t
-            timestep_checkpoint = timestep
+            checkpoint = lhs, t, istep
             interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
-        # potentially adjust non-matching timestep sizes
-        dt = min(dt, precice_dt)
+        # prepare next timestep
+        lhs0 = lhs
+        istep += 1
+        dt = min(timestep, precice_dt)
+        t += dt
 
         # update (time-dependent) boundary condition
         cons = solver.optimize('lhs', sqr, droptol=1e-15, arguments=dict(t=t, readdata=readdata))
@@ -144,23 +148,10 @@ def main(side='Dirichlet'):
         # do the coupling
         precice_dt = interface.advance(dt)
 
-        # advance variables
-        t += dt
-        timestep += 1
-        lhs0 = lhs
-
         # read checkpoint if required
         if interface.is_action_required(precice.action_read_iteration_checkpoint()):
-            lhs0 = lhs_checkpoint
-            t = t_checkpoint
-            timestep = timestep_checkpoint
+            lhs, t, istep = checkpoint
             interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
-        else:  # go to next timestep
-            bezier = domain.sample('bezier', degree * 2)
-            x, u, uexact = bezier.eval(['x_i', 'u', 'uexact'] @ ns, lhs=lhs, t=t)
-
-            with treelog.add(treelog.DataLog()):
-                export.vtk(side + "-" + str(timestep), bezier.tri, x, Temperature=u, reference=uexact)
 
     interface.finalize()
 
