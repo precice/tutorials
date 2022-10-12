@@ -68,12 +68,24 @@ def main(side='Dirichlet'):
         interface.get_data_id("Heat-Flux" if side == "Neumann" else "Temperature", mesh_id), vertex_ids)
 
     # helper functions to project heat flux to coupling boundary
-    projection_matrix = coupling_boundary.integrate(ns.eval_nm('basis_n basis_m d:x'), degree=degree * 2)
-    projection_cons = np.zeros(res.shape)
-    projection_cons[projection_matrix.rowsupp(1e-15)] = np.nan
-
-    def fluxdofs(v):
-        return projection_matrix.solve(v, constrain=projection_cons)
+    if side == 'Dirichlet':
+        # To communicate the flux to the Neumann side we should not simply
+        # evaluate u_,i n_i as this is an unbounded term leading to suboptimal
+        # convergence. Instead we project ∀ v: ∫_Γ v flux = ∫_Γ v u_,i n_i and
+        # evaluate flux. While the right-hand-side contains the same unbounded
+        # term, we can use the strong identity du/dt - u_,ii = f to rewrite it
+        # to ∫_Ω [v (du/dt - f) + v_,i u_,i] - ∫_∂Ω\Γ v u_,k n_k, in which we
+        # recognize the residual and an integral over the exterior boundary.
+        # While the latter still contains the problematic unbounded term, we
+        # can use the fact that the flux is a known value at the top and bottom
+        # via the Dirichlet boundary condition, and impose it as constraints.
+        rightsqr = domain.boundary['right'].integral('flux^2 d:x' @ ns, degree=degree*2)
+        rightcons = solver.optimize('fluxdofs', rightsqr, droptol=1e-10)
+        # rightcons is NaN in dofs that are NOT supported on the right boundary
+        fluxsqr = domain.boundary['right'].boundary['top,bottom'].integral('(flux - uexact_,0)^2 d:x' @ ns, degree=degree*2)
+        fluxcons = solver.optimize('fluxdofs', fluxsqr, droptol=1e-10, constrain=np.choose(np.isnan(rightcons), [np.nan, 0.]))
+        # fluxcons is NaN in dofs that are supported on ONLY the right boundary
+        fluxres = coupling_sample.integral('basis_n flux d:x' @ ns) - res
 
     precice_dt = interface.initialize()
 
@@ -123,8 +135,8 @@ def main(side='Dirichlet'):
         # write data to interface
         if interface.is_write_data_required(dt):
             if side == 'Dirichlet':
-                flux_function = res.eval(lhs0=lhs0, lhs=lhs, dt=dt, t=t)
-                write_data = coupling_sample.eval('flux' @ ns, fluxdofs=fluxdofs(flux_function))
+                fluxdofs = solver.solve_linear('fluxdofs', fluxres, arguments=dict(lhs0=lhs0, lhs=lhs, dt=dt, t=t), constrain=fluxcons)
+                write_data = coupling_sample.eval('flux' @ ns, fluxdofs=fluxdofs)
             else:
                 write_data = coupling_sample.eval('u' @ ns, lhs=lhs)
             precice_write(write_data)
