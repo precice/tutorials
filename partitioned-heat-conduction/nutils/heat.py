@@ -7,25 +7,15 @@ import numpy as np
 import precice
 
 
-def main(side='Dirichlet'):
-    print("Running nutils")
-
-    # domain size
-    y_bottom, y_top = 0, 1
-    x_left, x_right = 0, 2
-    x_coupling = 1  # x coordinate of coupling interface
-    degree = 1  # linear finite elements
-    n = 10  # number of mesh vertices per dimension
-    timestep = 0.1
+def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
 
     if side == 'Dirichlet':
-        x_grid = np.linspace(x_left, x_coupling, n)
+        x_grid = np.linspace(0, 1, n)
     elif side == 'Neumann':
-        x_grid = np.linspace(x_coupling, x_right, n)
+        x_grid = np.linspace(1, 2, n)
     else:
         raise Exception('invalid side {!r}'.format(side))
-
-    y_grid = np.linspace(y_bottom, y_top, n)
+    y_grid = np.linspace(0, 1, n)
 
     # define the Nutils mesh
     domain, geom = mesh.rectilinear([x_grid, y_grid])
@@ -36,8 +26,8 @@ def main(side='Dirichlet'):
     ns = function.Namespace()
     ns.x = geom
     ns.basis = domain.basis('std', degree=degree)
-    ns.alpha = 3  # parameter of problem
-    ns.beta = 1.3  # parameter of problem
+    ns.alpha = alpha  # parameter of problem
+    ns.beta = beta  # parameter of problem
     ns.u = 'basis_n ?lhs_n'  # solution
     ns.dudt = 'basis_n (?lhs_n - ?lhs0_n) / ?dt'  # time derivative
     ns.flux = 'basis_n ?fluxdofs_n'  # heat flux
