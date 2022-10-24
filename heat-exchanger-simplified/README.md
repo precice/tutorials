@@ -15,6 +15,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 This tutorial extends the [flow over heated plate: Two meshes](https://precice.org/tutorials-flow-over-heated-plate-two-meshes.html) tutorial, adding another channel flow below the plate. The plate is not heated in this scenario, but is acting as a conducting material for the two fluids, serving as a simplified heat exchanger example.
 
 Contrary to the [heat exchanger](https://precice.org/tutorials-heat-exchanger.html) tutorial, which defines Robin-Robin coupling, this case defines a Dirichlet-Neumann coupling, exchanging temperature (from the fluids to the solid) and heat flux (from the solid to the fluids). Additionally, instead of composing two explicit coupling schemes, this tutorial uses a fully-implicit multi-coupling scheme.
+
 ## Available solvers
 
 Fluid participants:
