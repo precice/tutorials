@@ -1,0 +1,17 @@
+participants:
+    Solid:
+        interfaces:
+        - nodes-mesh: Solid-Fluid1-Mesh-Nodes
+          patch: yend
+          read-data: [Temperature1]
+        - faces-mesh: Solid-Fluid1-Mesh-Faces
+          patch: flux_interface1
+          write-data: [Heat-Flux1]
+        - nodes-mesh: Solid-Fluid2-Mesh-Nodes
+          patch: ystart
+          read-data: [Temperature2]
+        - faces-mesh: Solid-Fluid2-Mesh-Faces
+          patch: flux_interface2
+          write-data: [Heat-Flux2]
+          
+precice-config-file: ../precice-config.xml
