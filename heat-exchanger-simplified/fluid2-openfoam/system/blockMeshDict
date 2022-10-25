@@ -65,7 +65,6 @@ boundary
         type wall;
         faces
         (
-            (7 6 2 3)
             (9 2 6 11)
             (13 3 7 14)
         );
@@ -86,6 +85,7 @@ boundary
         faces
         (
             (1 8 10 5)
+            (4 0 1 5)
         );
     }
 
@@ -94,7 +94,7 @@ boundary
         type wall;
         faces
         (
-            (4 0 1 5)
+            (7 6 2 3)
         );
     }
 
