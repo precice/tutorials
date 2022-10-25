@@ -3,9 +3,9 @@ import numpy as np
 # Output, geometric parameters
 output_file_name = "out.msh"
 
-x_begin, x_end = 0, 1
-y_begin, y_end = -0.25, 0
-z_begin, z_end = 0, 1
+x_begin, x_end = 0, 1.0
+y_begin, y_end = -0.5, 0
+z_begin, z_end = 0, 0.4
 
 # Number of elements. Add one for number of nodes!
 n_x, n_y, n_z = 400, 50, 1
@@ -39,6 +39,7 @@ print("** Volume elements")
 print("* Element, TYPE=C3D8, ELSET=Evolumes")
 
 elems_top_surface = []
+elems_bottom_surface = []
 
 elem_id = 1
 for i in range(0, n_x):
@@ -62,8 +63,9 @@ for i in range(0, n_x):
                                                                indices[(i, j + 1, k + 1)],))
             if j == n_y - 1:
                 elems_top_surface.append(elem_id)
+            elif j == 0:
+                elems_bottom_surface.append(elem_id)
             elem_id += 1
-
 
 # Set of border. Adapt freely
 print("** Nodes, border with y = y_end")
@@ -83,6 +85,11 @@ for i in range(0, n_x + 1):
 
 
 # Upper surface
-print("*SURFACE, NAME=Sflux_interface")
+print("*SURFACE, NAME=Sflux_interface1")
 for id in elems_top_surface:
     print("{}, S5".format(id))
+
+# Lower surface
+print("*SURFACE, NAME=Sflux_interface2")
+for id in elems_bottom_surface:
+    print("{}, S3".format(id))

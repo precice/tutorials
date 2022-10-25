@@ -8,7 +8,7 @@ participants:
           patch: flux_interface1
           write-data: [Heat-Flux1]
         - nodes-mesh: Solid-Fluid2-Mesh-Nodes
-          patch: ystart
+          patch: ybegin
           read-data: [Temperature2]
         - faces-mesh: Solid-Fluid2-Mesh-Faces
           patch: flux_interface2
