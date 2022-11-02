@@ -38,8 +38,8 @@
       <!-- Use this to activate first order interpolation
       <read-data  name="Force-One" mesh="Mass-Two-Mesh" waveform-order="1" />
       -->
-      <mapping:nearest-neighbor direction="write" from="Mass-Two-Mesh" to="Mass-One-Mesh" constraint="conservative" />
-      <mapping:nearest-neighbor direction="read"  from="Mass-One-Mesh" to="Mass-Two-Mesh" constraint="conservative" />
+      <mapping:nearest-neighbor direction="write" from="Mass-Two-Mesh" to="Mass-One-Mesh" constraint="consistent" />
+      <mapping:nearest-neighbor direction="read"  from="Mass-One-Mesh" to="Mass-Two-Mesh" constraint="consistent" />
     </participant>
 
     <m2n:sockets from="Mass-One" to="Mass-Two" exchange-directory=".." />

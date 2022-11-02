@@ -1,8 +1,8 @@
 ---
-title: Oscillator system
+title: Oscillator
 permalink: tutorials-oscillator.html
 keywords: Python, 1D
-summary: We solve an oscillator with two masses in a partitioned fashion. Each mass is solved by an independent process.
+summary: We solve an oscillator with two masses in a partitioned fashion. Each mass is solved by an independent ODE.
 ---
 
 {% note %}
@@ -11,7 +11,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-This tutorial solves a simple mass-spring oscillator with two-masses that are connected via three springs. The system is cut at the middle spring and solved in a partitioned fashion:
+This tutorial solves a simple mass-spring oscillator with two masses and three springs. The system is cut at the middle spring and solved in a partitioned fashion:
 
 ![Schematic drawing of oscillator example](images/tutorials-oscillator-schematic-drawing.png)
 
@@ -19,7 +19,7 @@ For more information, please refer to [1].
 
 ## Available solvers
 
-This tutorial is only available in python. You will need to have preCICE and the python bindings installed on your system.
+This tutorial is only available in Python. You need to have preCICE and the Python bindings installed on your system.
 
 - *Python*: An example solver using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy`, which you can get from your system package manager or with `pip3 install --user <package>`.
 
@@ -27,7 +27,7 @@ This tutorial is only available in python. You will need to have preCICE and the
 
 ### Python
 
-Open two separate terminals and start each participant by calling:
+Open two separate terminals and start both participants by calling:
 
 ```bash
 cd python
@@ -43,7 +43,7 @@ cd python
 
 ## Post-processing
 
-Each simulation run will create two files containing position and velocity of the two masses over time. These files are called `trajectory-MassOne.csv` and `trajectory-MassTwo.csv`. You can use the script `plot-trajectory.py` for post-processing. Type `python3 plot-trajectory --help` to see available options. You can, for example plot the trajectory by running
+Each simulation run creates two files containing position and velocity of the two masses over time. These files are called `trajectory-MassOne.csv` and `trajectory-MassTwo.csv`. You can use the script `plot-trajectory.py` for post-processing. Type `python3 plot-trajectory --help` to see available options. You can, for example plot the trajectory by running
 
 ```bash
 python3 plot-trajectory.py python/output/trajectory-Mass-One.csv TRAJECTORY
