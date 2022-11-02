@@ -55,7 +55,7 @@
       <time-window-size value="0.1" />
       <max-iterations value="100" />
       <exchange data="Heat-Flux" mesh="Dirichlet-Mesh" from="Dirichlet" to="Neumann" />
-      <exchange
+      <exchange 
         data="Temperature"
         mesh="Neumann-Mesh"
         from="Neumann"

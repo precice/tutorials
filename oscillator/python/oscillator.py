@@ -15,8 +15,8 @@ class Scheme(Enum):
 
 
 class Participant(Enum):
-    MASS_ONE = "Mass-One"
-    MASS_TWO = "Mass-Two"
+    MASS_ONE = "Mass-Left"
+    MASS_TWO = "Mass-Right"
 
 
 parser = argparse.ArgumentParser()
@@ -52,9 +52,9 @@ v0_2 = 0
 c = np.linalg.solve(eigenvectors, [u0_1, u0_2])
 
 if participant_name == Participant.MASS_ONE.value:
-    write_data_name = 'Force-One'
-    read_data_name = 'Force-Two'
-    mesh_name = 'Mass-One-Mesh'
+    write_data_name = 'Force-Left'
+    read_data_name = 'Force-Right'
+    mesh_name = 'Mass-Left-Mesh'
 
     mass = m_1
     stiffness = k_1 + k_12
@@ -64,9 +64,9 @@ if participant_name == Participant.MASS_ONE.value:
         c[1] * A[1] * omega[1] * np.sin(omega[1] * t)
 
 elif participant_name == Participant.MASS_TWO.value:
-    read_data_name = 'Force-One'
-    write_data_name = 'Force-Two'
-    mesh_name = 'Mass-Two-Mesh'
+    read_data_name = 'Force-Left'
+    write_data_name = 'Force-Right'
+    mesh_name = 'Mass-Right-Mesh'
 
     mass = m_2
     stiffness = k_2 + k_12

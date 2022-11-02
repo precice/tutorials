@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e -u
 
-usage() { echo "Usage: cmd [-m] [-n]" 1>&2; exit 1; }
+usage() { echo "Usage: cmd [-l] [-r]" 1>&2; exit 1; }
 
 # Check if no input argument was provided
 if [ -z "$*" ] ; then
@@ -9,13 +9,13 @@ if [ -z "$*" ] ; then
 fi
 
 # Select appropriate case
-while getopts ":mn" opt; do
+while getopts ":lr" opt; do
   case ${opt} in
-  m)
-    python3 oscillator.py Mass-One
+  l)
+    python3 oscillator.py Mass-Left
     ;;
-  n)
-    python3 oscillator.py Mass-Two
+  r)
+    python3 oscillator.py Mass-Right
     ;;
   *)
     usage

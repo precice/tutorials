@@ -15,7 +15,7 @@ This tutorial solves a simple mass-spring oscillator with two masses and three s
 
 ![Schematic drawing of oscillator example](images/tutorials-oscillator-schematic-drawing.png)
 
-Note that this case applies a Schwarz-type coupling method and not (like most other tutorials in this repository) a Dirichlet-Neumann coupling. This results in a symmetric setup of the solvers. We will refer to the solver computing the trajectory of $m_1$ as `Mass-One` and to the solver computing the trajectory of $m_2$ as `Mass-Two`. For more information, please refer to [1].
+Note that this case applies a Schwarz-type coupling method and not (like most other tutorials in this repository) a Dirichlet-Neumann coupling. This results in a symmetric setup of the solvers. We will refer to the solver computing the trajectory of $m_1$ as `Mass-Left` and to the solver computing the trajectory of $m_2$ as `Mass-Right`. For more information, please refer to [1].
 
 ## Available solvers
 
@@ -43,10 +43,10 @@ cd python
 
 ## Post-processing
 
-Each simulation run creates two files containing position and velocity of the two masses over time. These files are called `trajectory-MassOne.csv` and `trajectory-MassTwo.csv`. You can use the script `plot-trajectory.py` for post-processing. Type `python3 plot-trajectory --help` to see available options. You can, for example plot the trajectory by running
+Each simulation run creates two files containing position and velocity of the two masses over time. These files are called `trajectory-Mass-Left.csv` and `trajectory-Mass-Right.csv`. You can use the script `plot-trajectory.py` for post-processing. Type `python3 plot-trajectory --help` to see available options. You can, for example plot the trajectory by running
 
 ```bash
-python3 plot-trajectory.py python/output/trajectory-Mass-One.csv TRAJECTORY
+python3 plot-trajectory.py python/output/trajectory-Mass-Left.csv TRAJECTORY
 ```
 
 This allows you to study the effect of different time stepping schemes on energy conservation. Newmark beta conserves energy:
