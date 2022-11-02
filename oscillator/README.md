@@ -1,7 +1,7 @@
 ---
 title: Oscillator
 permalink: tutorials-oscillator.html
-keywords: Python, 1D
+keywords: Python, ODE
 summary: We solve an oscillator with two masses in a partitioned fashion. Each mass is solved by an independent ODE.
 ---
 
