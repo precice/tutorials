@@ -3,4 +3,6 @@ set -e -u
 
 . ../../tools/cleaning-tools.sh
 
-clean_python .
+rm -rfv ./output/
+
+clean_precice_logs .
