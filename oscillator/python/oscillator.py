@@ -15,8 +15,8 @@ class Scheme(Enum):
 
 
 class Participant(Enum):
-    MASS_ONE = "Mass-Left"
-    MASS_TWO = "Mass-Right"
+    MASS_LEFT = "Mass-Left"
+    MASS_RIGHT = "Mass-Right"
 
 
 parser = argparse.ArgumentParser()
@@ -51,7 +51,7 @@ v0_2 = 0
 
 c = np.linalg.solve(eigenvectors, [u0_1, u0_2])
 
-if participant_name == Participant.MASS_ONE.value:
+if participant_name == Participant.MASS_LEFT.value:
     write_data_name = 'Force-Left'
     read_data_name = 'Force-Right'
     mesh_name = 'Mass-Left-Mesh'
@@ -63,7 +63,7 @@ if participant_name == Participant.MASS_ONE.value:
     def v_analytical(t): return -c[0] * A[0] * omega[0] * np.sin(omega[0] * t) - \
         c[1] * A[1] * omega[1] * np.sin(omega[1] * t)
 
-elif participant_name == Participant.MASS_TWO.value:
+elif participant_name == Participant.MASS_RIGHT.value:
     read_data_name = 'Force-Left'
     write_data_name = 'Force-Right'
     mesh_name = 'Mass-Right-Mesh'
@@ -99,13 +99,15 @@ vertex_id = interface.set_mesh_vertex(mesh_id, vertex)
 read_data_id = interface.get_data_id(read_data_name, mesh_id)
 write_data_id = interface.get_data_id(write_data_name, mesh_id)
 
+precice_dt = interface.initialize()
+my_dt = precice_dt  # use my_dt < precice_dt for subcycling
+dt = np.min([precice_dt, my_dt])
+
 if interface.is_action_required(precice.action_write_initial_data()):
     interface.write_scalar_data(write_data_id, vertex_id, write_data)
     interface.mark_action_fulfilled(precice.action_write_initial_data())
 
-precice_dt = interface.initialize()
-my_dt = precice_dt  # use my_dt < precice_dt for subcycling
-dt = np.min([precice_dt, my_dt])
+interface.initialize_data()
 
 # Initial Conditions
 a0 = (f0 - stiffness * u0) / mass
