@@ -101,7 +101,6 @@ write_data_id = interface.get_data_id(write_data_name, mesh_id)
 
 precice_dt = interface.initialize()
 my_dt = precice_dt  # use my_dt < precice_dt for subcycling
-dt = np.min([precice_dt, my_dt])
 
 if interface.is_action_required(precice.action_write_initial_data()):
     interface.write_scalar_data(write_data_id, vertex_id, write_data)
@@ -123,15 +122,9 @@ if args.time_stepping == Scheme.GENERALIZED_ALPHA.value:
 elif args.time_stepping == Scheme.NEWMARK_BETA.value:
     alpha_f = 0.0
     alpha_m = 0.0
-
+m = 3 * [None]  # will be computed for each timestep depending on dt
 gamma = 0.5 - alpha_m + alpha_f
 beta = 0.25 * (gamma + 0.5)
-
-m = 3 * [None]
-m[0] = (1 - alpha_m) / (beta * dt**2)
-m[1] = (1 - alpha_m) / (beta * dt)
-m[2] = (1 - alpha_m - 2 * beta) / (2 * beta)
-k_bar = stiffness * (1 - alpha_f) + m[0] * mass
 
 positions = []
 velocities = []
@@ -154,6 +147,8 @@ while interface.is_coupling_ongoing():
         velocities += v_write
         times += t_write
 
+    # compute time step size for this time step
+    dt = np.min([precice_dt, my_dt])
     # # use this with waveform relaxation
     # read_time = (1-alpha_f) * dt
     # read_data = interface.read_scalar_data(read_data_id, vertex_id, read_time)
@@ -161,16 +156,20 @@ while interface.is_coupling_ongoing():
     f = read_data
 
     # do generalized alpha step
+    m[0] = (1 - alpha_m) / (beta * dt**2)
+    m[1] = (1 - alpha_m) / (beta * dt)
+    m[2] = (1 - alpha_m - 2 * beta) / (2 * beta)
+    k_bar = stiffness * (1 - alpha_f) + m[0] * mass
     u_new = (f - alpha_f * stiffness * u + mass * (m[0] * u + m[1] * v + m[2] * a)) / k_bar
     a_new = 1.0 / (beta * dt**2) * (u_new - u - dt * v) - (1 - 2 * beta) / (2 * beta) * a
     v_new = v + dt * ((1 - gamma) * a + gamma * a_new)
+    t_new = t + dt
 
     write_data = k_12 * u_new
 
     interface.write_scalar_data(write_data_id, vertex_id, write_data)
 
     precice_dt = interface.advance(dt)
-    dt = np.min([precice_dt, my_dt])
 
     if interface.is_action_required(precice.action_read_iteration_checkpoint()):
         u = u_cp
@@ -188,7 +187,7 @@ while interface.is_coupling_ongoing():
         u = u_new
         v = v_new
         a = a_new
-        t += dt
+        t = t_new
 
         # write data to buffers
         u_write.append(u)
