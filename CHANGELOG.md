@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Added new oscillator tutorial with Python [#297](https://github.com/precice/tutorials/pull/297).
+
 ## [v202202.0] 2022-02-09
 
 ### Added
