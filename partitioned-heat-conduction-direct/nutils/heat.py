@@ -79,13 +79,13 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
         # While the latter still contains the problematic unbounded term, we
         # can use the fact that the flux is a known value at the top and bottom
         # via the Dirichlet boundary condition, and impose it as constraints.
-        rightsqr = domain.boundary['right'].integral('flux^2 d:x' @ ns, degree=degree*2)
-        rightcons = solver.optimize('fluxdofs', rightsqr, droptol=1e-10)
-        # rightcons is NaN in dofs that are NOT supported on the right boundary
-        fluxsqr = domain.boundary['right'].boundary['top,bottom'].integral('(flux - uexact_,0)^2 d:x' @ ns, degree=degree*2)
-        fluxcons = solver.optimize('fluxdofs', fluxsqr, droptol=1e-10, constrain=np.choose(np.isnan(rightcons), [np.nan, 0.]))
-        # fluxcons is NaN in dofs that are supported on ONLY the right boundary
-        fluxres = read_sample.integral('basis_n flux d:x' @ ns) - res
+        right_sqr = domain.boundary['right'].integral('flux^2 d:x' @ ns, degree=degree*2)
+        right_cons = solver.optimize('fluxdofs', right_sqr, droptol=1e-10)
+        # right_cons is NaN in dofs that are NOT supported on the right boundary
+        flux_sqr = domain.boundary['right'].boundary['top,bottom'].integral('(flux - uexact_,0)^2 d:x' @ ns, degree=degree*2)
+        flux_cons = solver.optimize('fluxdofs', flux_sqr, droptol=1e-10, constrain=np.choose(np.isnan(right_cons), [np.nan, 0.]))
+        # flux_cons is NaN in dofs that are supported on ONLY the right boundary
+        flux_res = read_sample.integral('basis_n flux d:x' @ ns) - res
 
     # write initial data
     if interface.is_action_required(precice.action_write_initial_data()):
@@ -102,19 +102,11 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
     lhs = solver.optimize('lhs', sqr0, arguments=dict(t=t))
     bezier = domain.sample('bezier', degree * 2)
 
-    while True:
-
-        # generate output
-        x, u, uexact = bezier.eval(['x_i', 'u', 'uexact'] @ ns, lhs=lhs, t=t)
-        with treelog.add(treelog.DataLog()):
-            export.vtk(side + "-" + str(istep), bezier.tri, x, Temperature=u, reference=uexact)
-
-        if not interface.is_coupling_ongoing():
-            break
+    while interface.is_coupling_ongoing():
 
         # read data from interface
         if interface.is_read_data_available():
-            readdata = precice_read()
+            read_data = precice_read()
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
@@ -128,15 +120,15 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
         t += dt
 
         # update (time-dependent) boundary condition
-        cons = solver.optimize('lhs', sqr, droptol=1e-15, arguments=dict(t=t, readdata=readdata))
+        cons = solver.optimize('lhs', sqr, droptol=1e-15, arguments=dict(t=t, readdata=read_data))
 
         # solve nutils timestep
-        lhs = solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt, t=t, readdata=readdata))
+        lhs = solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt, t=t, readdata=read_data))
 
         # write data to interface
         if interface.is_write_data_required(dt):
             if side == 'Dirichlet':
-                fluxdofs = solver.solve_linear('fluxdofs', fluxres, arguments=dict(lhs0=lhs0, lhs=lhs, dt=dt, t=t), constrain=fluxcons)
+                fluxdofs = solver.solve_linear('fluxdofs', flux_res, arguments=dict(lhs0=lhs0, lhs=lhs, dt=dt, t=t), constrain=flux_cons)
                 write_data = write_sample.eval('flux' @ ns, fluxdofs=fluxdofs)
             else:
                 write_data = write_sample.eval('u' @ ns, lhs=lhs)
@@ -149,6 +141,11 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
         if interface.is_action_required(precice.action_read_iteration_checkpoint()):
             lhs, t, istep = checkpoint
             interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
+        else:
+            # generate output
+            x, u, uexact = bezier.eval(['x_i', 'u', 'uexact'] @ ns, lhs=lhs, t=t)
+            with treelog.add(treelog.DataLog()):
+                export.vtk(side + "-" + str(istep), bezier.tri, x, Temperature=u, reference=uexact)
 
     interface.finalize()
 
