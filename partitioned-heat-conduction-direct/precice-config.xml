@@ -8,7 +8,7 @@
   </log>
 
   <solver-interface dimensions="2" experimental="yes">
-  <data:scalar name="Temperature" />
+    <data:scalar name="Temperature" />
     <data:scalar name="Heat-Flux" />
 
     <mesh name="Dirichlet-Mesh">
@@ -49,8 +49,16 @@
         from="Neumann"
         to="Dirichlet"
         initialize="true" />
-      <relative-convergence-measure data="Heat-Flux" mesh="Neumann-Mesh" limit="1e-5" suffices="yes" />
-      <relative-convergence-measure data="Temperature" mesh="Dirichlet-Mesh" limit="1e-5" suffices="yes" />
+      <relative-convergence-measure
+        data="Heat-Flux"
+        mesh="Neumann-Mesh"
+        limit="1e-5"
+        suffices="yes" />
+      <relative-convergence-measure
+        data="Temperature"
+        mesh="Dirichlet-Mesh"
+        limit="1e-5"
+        suffices="yes" />
       <acceleration:IQN-ILS>
         <data name="Temperature" mesh="Dirichlet-Mesh" />
         <initial-relaxation value="0.1" />
