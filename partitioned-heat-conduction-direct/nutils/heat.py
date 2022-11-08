@@ -61,7 +61,7 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
     precice_dt = interface.initialize()
 
     vertex_ids_write, coords = interface.get_mesh_vertices_and_ids(mesh_id_write)
-    write_sample = domain.locate(ns.x, coords, eps=1e-10)
+    write_sample = domain.locate(ns.x, coords, eps=1e-10, tol=1e-10)
     precice_write = functools.partial(interface.write_block_scalar_data,
         interface.get_data_id("Heat-Flux" if side == "Dirichlet" else "Temperature", mesh_id_write), vertex_ids_write)
     precice_read = functools.partial(interface.read_block_scalar_data,
@@ -105,8 +105,7 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
     while interface.is_coupling_ongoing():
 
         # read data from interface
-        if interface.is_read_data_available():
-            read_data = precice_read()
+        read_data = precice_read()
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
@@ -126,13 +125,12 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
         lhs = solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt, t=t, readdata=read_data))
 
         # write data to interface
-        if interface.is_write_data_required(dt):
-            if side == 'Dirichlet':
-                fluxdofs = solver.solve_linear('fluxdofs', flux_res, arguments=dict(lhs0=lhs0, lhs=lhs, dt=dt, t=t), constrain=flux_cons)
-                write_data = write_sample.eval('flux' @ ns, fluxdofs=fluxdofs)
-            else:
-                write_data = write_sample.eval('u' @ ns, lhs=lhs)
-            precice_write(write_data)
+        if side == 'Dirichlet':
+            fluxdofs = solver.solve_linear('fluxdofs', flux_res, arguments=dict(lhs0=lhs0, lhs=lhs, dt=dt, t=t), constrain=flux_cons)
+            write_data = write_sample.eval('flux' @ ns, fluxdofs=fluxdofs)
+        else:
+            write_data = write_sample.eval('u' @ ns, lhs=lhs)
+        precice_write(write_data)
 
         # do the coupling
         precice_dt = interface.advance(dt)
