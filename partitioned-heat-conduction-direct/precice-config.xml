@@ -37,7 +37,7 @@
 
     <m2n:sockets from="Dirichlet" to="Neumann" exchange-directory=".." />
 
-    <coupling-scheme:serial-implicit>
+    <coupling-scheme:parallel-implicit>
       <participants first="Dirichlet" second="Neumann" />
       <max-time value="1.0" />
       <time-window-size value="0.1" />
@@ -52,20 +52,22 @@
       <relative-convergence-measure
         data="Heat-Flux"
         mesh="Neumann-Mesh"
-        limit="1e-5"
-        suffices="yes" />
+        limit="1e-5" />
       <relative-convergence-measure
         data="Temperature"
         mesh="Dirichlet-Mesh"
-        limit="1e-5"
-        suffices="yes" />
+        limit="1e-5" />
+        
       <acceleration:IQN-ILS>
         <data name="Temperature" mesh="Dirichlet-Mesh" />
+        <data name="Heat-Flux" mesh="Neumann-Mesh" />
         <initial-relaxation value="0.1" />
         <max-used-iterations value="10" />
         <time-windows-reused value="5" />
+        <preconditioner type="residual-sum" />
         <filter type="QR2" limit="1e-3" />
       </acceleration:IQN-ILS>
-    </coupling-scheme:serial-implicit>
+      
+    </coupling-scheme:parallel-implicit>
   </solver-interface>
 </precice-configuration>
