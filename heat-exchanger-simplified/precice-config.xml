@@ -91,7 +91,7 @@
 
     <coupling-scheme:multi>
       <time-window-size value="0.01" />
-      <max-time value="1" />
+      <max-time value="5" />
       <max-iterations value="30" />
       <participant name="Fluid1" />
       <participant name="Fluid2" />

@@ -42,7 +42,7 @@ Evolumes
 ** Initial temperature constraint
 ** written by write_constraints_initialtemperature function
 *INITIAL CONDITIONS,TYPE=TEMPERATURE
-Nall,310.0
+Nall,305.0
 
 ***********************************************************
 ** Sections
@@ -54,14 +54,14 @@ Nall,310.0
 ** written by write_step_begin function
 *STEP, INC=2000
 *HEAT TRANSFER, DIRECT
-0.01,1.0
+0.01,5.0
 
 ***********************************************************
 ** Fixed temperature constraint applied
 ** written by write_constraints_temperature function
 ** HeatedPlate
 *BOUNDARY
-Nybegin,11,11,310.0
+Nybegin,11,11,0.0
 
 ** ConstraintTemperature001
 *BOUNDARY
