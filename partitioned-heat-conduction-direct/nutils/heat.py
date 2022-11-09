@@ -42,7 +42,7 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
     # set boundary conditions at non-coupling boundaries
     # top and bottom boundary are non-coupling for both sides
     sqr = domain.boundary['top,bottom,left' if side == 'Dirichlet'
-                     else 'top,bottom,right'].integral('(u - uexact)^2 d:x' @ ns, degree=degree * 2)
+                          else 'top,bottom,right'].integral('(u - uexact)^2 d:x' @ ns, degree=degree * 2)
 
     if side == 'Dirichlet':
         sqr += read_sample.integral('(u - readfunc)^2 d:x' @ ns)
@@ -62,10 +62,10 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
 
     vertex_ids_write, coords = interface.get_mesh_vertices_and_ids(mesh_id_write)
     write_sample = domain.locate(ns.x, coords, eps=1e-10, tol=1e-10)
-    precice_write = functools.partial(interface.write_block_scalar_data,
-        interface.get_data_id("Heat-Flux" if side == "Dirichlet" else "Temperature", mesh_id_write), vertex_ids_write)
-    precice_read = functools.partial(interface.read_block_scalar_data,
-        interface.get_data_id("Temperature" if side == "Dirichlet" else "Heat-Flux", mesh_id_read), vertex_ids_read)
+    precice_write = functools.partial(interface.write_block_scalar_data, interface.get_data_id(
+        "Heat-Flux" if side == "Dirichlet" else "Temperature", mesh_id_write), vertex_ids_write)
+    precice_read = functools.partial(interface.read_block_scalar_data, interface.get_data_id(
+        "Temperature" if side == "Dirichlet" else "Heat-Flux", mesh_id_read), vertex_ids_read)
 
     # helper functions to project heat flux to coupling boundary
     if side == 'Dirichlet':
@@ -79,11 +79,13 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
         # While the latter still contains the problematic unbounded term, we
         # can use the fact that the flux is a known value at the top and bottom
         # via the Dirichlet boundary condition, and impose it as constraints.
-        right_sqr = domain.boundary['right'].integral('flux^2 d:x' @ ns, degree=degree*2)
+        right_sqr = domain.boundary['right'].integral('flux^2 d:x' @ ns, degree=degree * 2)
         right_cons = solver.optimize('fluxdofs', right_sqr, droptol=1e-10)
         # right_cons is NaN in dofs that are NOT supported on the right boundary
-        flux_sqr = domain.boundary['right'].boundary['top,bottom'].integral('(flux - uexact_,0)^2 d:x' @ ns, degree=degree*2)
-        flux_cons = solver.optimize('fluxdofs', flux_sqr, droptol=1e-10, constrain=np.choose(np.isnan(right_cons), [np.nan, 0.]))
+        flux_sqr = domain.boundary['right'].boundary['top,bottom'].integral(
+            '(flux - uexact_,0)^2 d:x' @ ns, degree=degree * 2)
+        flux_cons = solver.optimize('fluxdofs', flux_sqr, droptol=1e-10,
+                                    constrain=np.choose(np.isnan(right_cons), [np.nan, 0.]))
         # flux_cons is NaN in dofs that are supported on ONLY the right boundary
         flux_res = read_sample.integral('basis_n flux d:x' @ ns) - res
 
@@ -126,7 +128,9 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
 
         # write data to interface
         if side == 'Dirichlet':
-            fluxdofs = solver.solve_linear('fluxdofs', flux_res, arguments=dict(lhs0=lhs0, lhs=lhs, dt=dt, t=t), constrain=flux_cons)
+            fluxdofs = solver.solve_linear(
+                'fluxdofs', flux_res, arguments=dict(
+                    lhs0=lhs0, lhs=lhs, dt=dt, t=t), constrain=flux_cons)
             write_data = write_sample.eval('flux' @ ns, fluxdofs=fluxdofs)
         else:
             write_data = write_sample.eval('u' @ ns, lhs=lhs)
