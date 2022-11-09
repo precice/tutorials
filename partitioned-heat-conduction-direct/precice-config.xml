@@ -43,21 +43,9 @@
       <time-window-size value="0.1" />
       <max-iterations value="100" />
       <exchange data="Heat-Flux" mesh="Neumann-Mesh" from="Dirichlet" to="Neumann" />
-      <exchange
-        data="Temperature"
-        mesh="Dirichlet-Mesh"
-        from="Neumann"
-        to="Dirichlet"
-        initialize="true" />
-      <relative-convergence-measure
-        data="Heat-Flux"
-        mesh="Neumann-Mesh"
-        limit="1e-5" />
-      <relative-convergence-measure
-        data="Temperature"
-        mesh="Dirichlet-Mesh"
-        limit="1e-5" />
-        
+      <exchange data="Temperature" mesh="Dirichlet-Mesh" from="Neumann" to="Dirichlet" />
+      <relative-convergence-measure data="Heat-Flux" mesh="Neumann-Mesh" limit="1e-5" />
+      <relative-convergence-measure data="Temperature" mesh="Dirichlet-Mesh" limit="1e-5" />
       <acceleration:IQN-ILS>
         <data name="Temperature" mesh="Dirichlet-Mesh" />
         <data name="Heat-Flux" mesh="Neumann-Mesh" />
@@ -67,7 +55,6 @@
         <preconditioner type="residual-sum" />
         <filter type="QR2" limit="1e-3" />
       </acceleration:IQN-ILS>
-      
     </coupling-scheme:parallel-implicit>
   </solver-interface>
 </precice-configuration>
