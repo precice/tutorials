@@ -1,0 +1,31 @@
+*INCLUDE, INPUT=turekflap.msh
+*INCLUDE, INPUT=fix.nam
+*INCLUDE, INPUT=interface.nam
+*MATERIAL, Name=EL
+*ELASTIC
+ 5600000, 0.4
+*DENSITY
+ 1000
+*SOLID SECTION, MATERIAL=EL, ELSET=Eall
+*STEP, NLGEOM, INC=100000000
+**RESTART, WRITE, FREQUENCY=1
+*DYNAMIC, DIRECT
+0.0005, 20.0
+*BOUNDARY
+Nfix, 1, 6
+*BOUNDARY
+Nall, 3, 5
+*BOUNDARY
+Nall, 3, 3, 0
+Nall, 4, 4, 0
+Nall, 5, 5, 0
+*CLOAD
+ Nsurface, 1, 0.0
+ Nsurface, 2, 0.0
+ Nsurface, 3, 0.0
+*NODE FILE 
+ U, RF
+*EL FILE
+ S, E
+*END STEP
+
