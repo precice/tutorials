@@ -14,7 +14,7 @@ modules (FSI);
 
 interfaces
 {
-  Flap1-Centers
+  Upstream-Centers
   {
     mesh              Fluid-Upstream-Mesh-Centers;
     patches           (flap1);
@@ -30,7 +30,7 @@ interfaces
     );
   };
   
-  Flap1-Nodes
+  Upstream-Nodes
   {
     mesh              Fluid-Upstream-Mesh-Nodes;
     patches           (flap1);
@@ -46,7 +46,7 @@ interfaces
     );
   };
   
-  Flap2-Centers
+  Downstream-Centers
   {
     mesh              Fluid-Downstream-Mesh-Centers;
     patches           (flap2);
@@ -62,7 +62,7 @@ interfaces
     );
   };
   
-  Flap2-Nodes
+  Downstream-Nodes
   {
     mesh              Fluid-Downstream-Mesh-Nodes;
     patches           (flap2);
