@@ -22,7 +22,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added a gitignore for code and binaries [#290](https://github.com/precice/tutorials/pull/290).
 - Added more documentation [#264](https://github.com/precice/tutorials/pull/264), [#265](https://github.com/precice/tutorials/pull/265), [#266](https://github.com/precice/tutorials/pull/266) and fixed some typos [#285](https://github.com/precice/tutorials/pull/285).
 
-
 ### Changed
 
 - Adapted the material properties of the FEniCS case in elastic-tube-3d to match the CalculiX case results [#259](https://github.com/precice/tutorials/issues/259).
