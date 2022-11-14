@@ -24,7 +24,7 @@ Currently only `nutils` is provided as a solver.
 Open two terminals and run:
 
 ```bash
-cd fenics
+cd nutils
 ./run.sh -d
 ```
 
