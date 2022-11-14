@@ -106,13 +106,13 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
 
     while interface.is_coupling_ongoing():
 
-        # read data from interface
-        read_data = precice_read()
-
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
             checkpoint = lhs, t, istep
             interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
+
+        # read data from interface
+        read_data = precice_read()
 
         # prepare next timestep
         lhs0 = lhs
