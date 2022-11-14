@@ -92,14 +92,14 @@ The scenario settings are implemented similarly for the nonlinear case.
    The solid participants are only designed for serial runs. To run the `Solid1` participant, execute the corresponding deal.II binary file e.g. by:
 
    ```bash
-   cd solid-left-dealii
+   cd solid-upstream-dealii
    ./run.sh -linear
    ```
 
    Finally, in the third terminal we will run the solver for the `Solid2` participant by:
 
    ```bash
-   cd solid-right-dealii
+   cd solid-downstream-dealii
    ./run.sh -linear
    ```
 
