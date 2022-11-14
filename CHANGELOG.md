@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added a uni-directional volume-coupled [channel transport](https://precice.org/tutorials-channel-transport.html) tutorial [#269](https://github.com/precice/tutorials/pull/269).
 - Added a volume-coupled channel transport with chemical reactions tutorial [#278](https://github.com/precice/tutorials/pull/278).
 - Added new oscillator tutorial with Python [#297](https://github.com/precice/tutorials/pull/297).
+- Added a [partitioned heat conduction tutorial using direct mesh access](https://precice.org/tutorials-partitioned-heat-conduction-direct.html) [#299](https://github.com/precice/tutorials/pull/299).
 - Added a solid-openfoam and a solid-solids4foam case for the perpendicular-flap tutorial [#286](https://github.com/precice/tutorials/pull/286).
 - Added a dune-fem case for the flow-over-heated-plate tutorial [#274](https://github.com/precice/tutorials/pull/274).
 - Added a CalculiX case for the flow-over-heated-plate tutorial [#271](https://github.com/precice/tutorials/pull/271).
