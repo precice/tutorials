@@ -6,11 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 <!-- markdownlint-configure-file {"MD024": { "siblings_only": true } } -->
 
-## [Unreleased]
+## [v202211.0] 2022-11-14
 
 ### Added
 
+- Added a [tutorial for ASTE](https://precice.org/tutorials-aste-turbine.html) [#244](https://github.com/precice/tutorials/pull/244).
+- Added a uni-directional volume-coupled [channel transport](https://precice.org/tutorials-channel-transport.html) tutorial [#269](https://github.com/precice/tutorials/pull/269).
+- Added a volume-coupled channel transport with chemical reactions tutorial [#278](https://github.com/precice/tutorials/pull/278).
 - Added new oscillator tutorial with Python [#297](https://github.com/precice/tutorials/pull/297).
+- Added a solid-openfoam and a solid-solids4foam case for the perpendicular-flap tutorial [#286](https://github.com/precice/tutorials/pull/286).
+- Added a dune-fem case for the flow-over-heated-plate tutorial [#274](https://github.com/precice/tutorials/pull/274).
+- Added a CalculiX case for the flow-over-heated-plate tutorial [#271](https://github.com/precice/tutorials/pull/271).
+- Added a modal dynamic simulation option for the CalculiX case of the perpendicular-flap tutorial [#284](https://github.com/precice/tutorials/pull/284).
+- Added a CI workflow to automatically update the website every time there are new documentation changes [#267](https://github.com/precice/tutorials/pull/267)
+- Added a gitignore for code and binaries [#290](https://github.com/precice/tutorials/pull/290).
+- Added more documentation [#264](https://github.com/precice/tutorials/pull/264), [#265](https://github.com/precice/tutorials/pull/265), [#266](https://github.com/precice/tutorials/pull/266) and fixed some typos [#285](https://github.com/precice/tutorials/pull/285).
+
+
+### Changed
+
+- Adapted the material properties of the FEniCS case in elastic-tube-3d to match the CalculiX case results [#259](https://github.com/precice/tutorials/issues/259).
+- Adapted the solid case of the Quickstart tutorial to work with the Intel oneAPI C++ compiler [#291](https://github.com/precice/tutorials/pull/291).
+- Updated the Nutils cases [#295](https://github.com/precice/tutorials/pull/295), [#298](https://github.com/precice/tutorials/pull/298).
 
 ## [v202202.0] 2022-02-09
 
