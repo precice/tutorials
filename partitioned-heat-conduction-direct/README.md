@@ -17,7 +17,6 @@ Further minor modifications:
 
 - We use a parallel coupling scheme instead of a serial one to prevent running into the problem where we are trying to add a zero column to the quasi-Newton matrix. For serial coupling, this happens here because one data field converges much faster than the other.
 
-
 ## Available solvers
 
 Currently only `nutils` is provided as a solver. The data mapping is computed by directly sampling the FEM function representation at the inquired locations.
