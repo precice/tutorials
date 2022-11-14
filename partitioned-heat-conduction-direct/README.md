@@ -31,7 +31,7 @@ cd nutils
 and
 
 ```bash
-cd fenics
+cd nutils
 ./run.sh -n
 ```
 
