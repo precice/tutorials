@@ -15,7 +15,7 @@ We solve a system of advection-diffusion-reaction in a fluid flowing past a cyli
 
 The geometry is shown below:
 
-![Geometry](geometry_channel.png)
+![Geometry](images/geometry_channel.png)
 
 The simulation is split into two participants: a Fluid participant that computes the fluid flow and sends the velocity field to the Chemical participant which computes the reaction, diffusion and advection of all chemical species. The coupling is unidirectional (`serial-explicit` with only one data entity being transferred).
 
@@ -45,7 +45,7 @@ To start the `Chemical` participant, run:
 The chemical participant writes `.vtu` and `.pvd` files that can be opened with ParaView.
 The figure below shows the state after a duration of 2 units of time. The concentration in A, B and C are plotted.
 
-![Results](state_t40.png)
+![Results](images/state_t40.png)
 
 ## References
 
