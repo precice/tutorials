@@ -68,10 +68,10 @@ subsection precice configuration
     set precice config-file = ../precice-config.xml
 
     # Name of the participant in the precice-config.xml file
-    set Participant name    = Solid-Left
+    set Participant name    = Solid-Upstream
 
     # Name of the coupling mesh in the precice-config.xml file
-    set Mesh name           = Solid-Left-Mesh
+    set Mesh name           = Solid-Upstream-Mesh
 
     # Name of the read data in the precice-config.xml file
     set Read data name      = Stress-Upstream
