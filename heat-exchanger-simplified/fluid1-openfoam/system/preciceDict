@@ -9,25 +9,25 @@ FoamFile
 
 preciceConfig "../precice-config.xml";
 
-participant Fluid1;
+participant Fluid-Top;
 
 modules (CHT);
 
 interfaces
 {
-  Interface1
+  Interface
   {
-    mesh              Fluid1-Mesh;
+    mesh              Fluid-Top-Mesh;
     patches           (interface);
     
     readData
     (
-      Heat-Flux1
+      Heat-Flux-Top
     );
     
     writeData
     (
-      Temperature1
+      Temperature-Top
     );
   };
 };

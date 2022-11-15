@@ -1,17 +1,17 @@
 participants:
     Solid:
         interfaces:
-        - nodes-mesh: Solid-Fluid1-Mesh-Nodes
+        - nodes-mesh: Solid-Top-Mesh-Nodes
           patch: yend
-          read-data: [Temperature1]
-        - faces-mesh: Solid-Fluid1-Mesh-Faces
-          patch: flux_interface1
-          write-data: [Heat-Flux1]
-        - nodes-mesh: Solid-Fluid2-Mesh-Nodes
+          read-data: [Temperature-Top]
+        - faces-mesh: Solid-Top-Mesh-Faces
+          patch: flux_interface_top
+          write-data: [Heat-Flux-Top]
+        - nodes-mesh: Solid-Bottom-Mesh-Nodes
           patch: ybegin
-          read-data: [Temperature2]
-        - faces-mesh: Solid-Fluid2-Mesh-Faces
-          patch: flux_interface2
-          write-data: [Heat-Flux2]
+          read-data: [Temperature-Bottom]
+        - faces-mesh: Solid-Bottom-Mesh-Faces
+          patch: flux_interface_bottom
+          write-data: [Heat-Flux-Bottom]
           
 precice-config-file: ../precice-config.xml

@@ -85,11 +85,11 @@ for i in range(0, n_x + 1):
 
 
 # Upper surface
-print("*SURFACE, NAME=Sflux_interface1")
+print("*SURFACE, NAME=Sflux_interface_top")
 for id in elems_top_surface:
     print("{}, S5".format(id))
 
 # Lower surface
-print("*SURFACE, NAME=Sflux_interface2")
+print("*SURFACE, NAME=Sflux_interface_bottom")
 for id in elems_bottom_surface:
     print("{}, S3".format(id))
