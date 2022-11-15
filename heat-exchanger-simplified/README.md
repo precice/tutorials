@@ -31,14 +31,14 @@ Solid participant:
 Open two separate terminals and start the desired fluid and solid participant by calling the respective run script `run.sh` located in the participant directory. For example:
 
 ```bash
-cd fluid1-openfoam
+cd fluid-top-openfoam
 ./run.sh
 ```
 
 and
 
 ```bash
-cd fluid2-openfoam
+cd fluid-bottom-openfoam
 ./run.sh
 ```
 
