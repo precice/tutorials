@@ -42,7 +42,7 @@ To start the `Chemical` participant, run:
 
 ## Postprocessing
 
-The chemical participant writes `.vtu` and `.pvd` files that can be opened with ParaView.
+The chemical participant writes `.vtu` and `.pvd` files that can be opened with ParaView. The fluid participant also produces output files representing the velocity field. Since the fluid time step is significantly smaller than the chemical time step, there are more fluid velocity files than chemical concentration files. Keep this in mind when opening both simultaneously.
 The figure below shows the state after a duration of 2 units of time. The concentration in A, B and C are plotted.
 
 ![Results](images/tutorials-channel-transport-reaction-state-t40.png)
