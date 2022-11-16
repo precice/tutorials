@@ -1,0 +1,17 @@
+<?xml version='1.0'?>
+<!-- time='7.2' -->
+<VTKFile type='vtkMultiBlockDataSet' version='1.0' byte_order='LittleEndian' header_type='UInt64'>
+  <vtkMultiBlockDataSet>
+    <DataSet name='internal' file='Fluid2_720/internal.vtu' />
+    <Block name='boundary'>
+      <DataSet name='fixedWalls' file='Fluid2_720/boundary/fixedWalls.vtp' />
+      <DataSet name='inlet' file='Fluid2_720/boundary/inlet.vtp' />
+      <DataSet name='outlet' file='Fluid2_720/boundary/outlet.vtp' />
+    </Block>
+  </vtkMultiBlockDataSet>
+  <FieldData>
+    <DataArray type='Float32' Name='TimeValue' NumberOfTuples='1' format='ascii'>
+7.2
+    </DataArray>
+  </FieldData>
+</VTKFile>

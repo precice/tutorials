@@ -1,0 +1,16 @@
+<?xml version='1.0'?>
+<!-- time='8.79' -->
+<VTKFile type='vtkMultiBlockDataSet' version='1.0' byte_order='LittleEndian' header_type='UInt64'>
+  <vtkMultiBlockDataSet>
+    <Block name='boundary'>
+      <DataSet name='fixedWalls' file='boundary/fixedWalls.vtp' />
+      <DataSet name='inlet' file='boundary/inlet.vtp' />
+      <DataSet name='outlet' file='boundary/outlet.vtp' />
+    </Block>
+  </vtkMultiBlockDataSet>
+  <FieldData>
+    <DataArray type='Float32' Name='TimeValue' NumberOfTuples='1' format='ascii'>
+8.79
+    </DataArray>
+  </FieldData>
+</VTKFile>
