@@ -31,14 +31,14 @@ Open two separate terminals and start both participants by calling:
 
 ```bash
 cd python
-./run.sh -m
+./run.sh -l
 ```
 
 and
 
 ```bash
 cd python
-./run.sh -n
+./run.sh -r
 ```
 
 ## Post-processing
