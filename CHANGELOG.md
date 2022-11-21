@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 <!-- markdownlint-configure-file {"MD024": { "siblings_only": true } } -->
 
-## [v202211.0] 2022-11-18
+## [v202211.0] 2022-11-21
 
 ### Added
 
