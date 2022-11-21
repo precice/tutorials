@@ -20,7 +20,7 @@ for tutorial in $tutorials; do
   for img in $images; do
     actualsize=$(du -k "$img" | cut -f 1)
     # Check gifs
-    if [[ "${img}" == *.gif ]]; then
+    if [[ "${img}" == *.gif || "${img}" == *.webp || "${img}" == *.webm ]]; then
       if [ "${actualsize}" -ge "${MAXIMUMGIFSIZE}" ]; then
           echo -e "$img:$RED $actualsize kb exceeds the limit of $MAXIMUMGIFSIZE kb. $NOCOLOR"
           CODE=1

@@ -97,10 +97,10 @@ def perform_partitioned_theta_scheme_step(velocity0, pressure0, crossSection0, c
         # Velocity Inlet is prescribed
         res[0] = velocity_in - velocity1[0]
 
-        # Pressure Inlet is lineary interpolated
+        # Pressure Inlet is linearly interpolated
         res[N + 1] = -pressure1[0] + 2 * pressure1[1] - pressure1[2]
 
-        # Velocity Outlet is lineary interpolated
+        # Velocity Outlet is linearly interpolated
         res[N] = -velocity1[-1] + 2 * velocity1[-2] - velocity1[-3]
 
         # Pressure Outlet is "non-reflecting"

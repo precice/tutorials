@@ -21,8 +21,8 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 1. Get and install preCICE. For Ubuntu 20.04 (Focal Fossa), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v2.3.0/libprecice2_2.3.0_focal.deb
-    sudo apt install ./libprecice2_2.3.0_focal.deb
+    wget https://github.com/precice/precice/releases/download/v2.5.0/libprecice2_2.5.0_focal.deb
+    sudo apt install ./libprecice2_2.5.0_focal.deb
     ```
 
     - Are you using something else? Just pick what suits you best on [this overview page](https://precice.org/installation-overview.html).
@@ -32,10 +32,10 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     ```bash
     # Add the signing key, add the repository, update (check this):
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash
-    # Install OpenFOAM v2112:
-    sudo apt install openfoam2112-dev
+    # Install OpenFOAM v2206:
+    sudo apt install openfoam2206-dev
     # Enable OpenFOAM by default in your system and apply now:
-    echo "source /usr/lib/openfoam/openfoam2112/etc/bashrc" >> ~/.bashrc
+    echo "source /usr/lib/openfoam/openfoam2206/etc/bashrc" >> ~/.bashrc
     source ~/.bashrc
     ```
 
@@ -130,3 +130,9 @@ To become a preCICE pro:
 - Meet our [community](https://precice.org/community.html).
 - Find out how to [couple your own solver](https://precice.org/couple-your-code-overview.html).
 - Tell us [your story](https://precice.org/community-projects.html).
+
+Are you just starting with simulation software on Linux? Note that much of the complexity for partitioned simulations comes from working with multiple software packages and some new tools. These resources may help your first steps:
+
+- E-book [Research Software Engineering with Python](https://merely-useful.tech/py-rse/).
+- Material of the course [Simulation Software Engineering](https://simulation-software-engineering.github.io/) (University of Stuttgart).
+- Material of the course [The Missing Semester of Your CS Education](https://missing.csail.mit.edu/) (MIT).

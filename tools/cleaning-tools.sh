@@ -43,6 +43,8 @@ clean_calculix() {
         cd "$1"
         echo "--- Cleaning up CalculiX case in $(pwd)"
         rm -fv ./*.cvg ./*.dat ./*.frd ./*.sta ./*.12d spooles.out dummy
+        rm -fv WarnNodeMissMultiStage.nam
+        rm -fv ./*.eig
         clean_precice_logs .
     )
 }
@@ -73,7 +75,6 @@ clean_fenics() {
         set -e -u
         cd "$1"
         echo "--- Cleaning up FEniCS case in $(pwd)"
-        rm -fv spooles.out output/*
         rm -rfv ./output/
         rm -rfv ./preCICE-output/
         clean_precice_logs .
@@ -100,7 +101,7 @@ clean_openfoam() {
             # shellcheck disable=SC1090 # This is an OpenFOAM file which we don't need to check
             . "${WM_PROJECT_DIR}/bin/tools/CleanFunctions"
             cleanCase
-            rm -rfv 0/uniform/functionObjects/functionObjectProperties
+            rm -rfv 0/uniform/functionObjects/functionObjectProperties history
         fi
         rm -rfv ./preCICE-output/
         clean_precice_logs .
@@ -117,14 +118,25 @@ clean_su2() {
     )
 }
 
+clean_aste() {
+    (
+        set -e -u
+        echo "--- Cleaning up ASTE results"
+        rm -fv result.vtk result.stats.json
+        rm -fvr fine_mesh coarse_mesh mapped
+    )
+}
+
 clean_dune() {
     (
         set -e -u
         cd "$1"
         echo "--- Cleaning up DUNE case in $(pwd)"
+        rm -fv ./dgfparser.log
         rm -fv ./*.pvd
         rm -fv ./*.vtu
         rm -rfv ./preCICE-output/
+        rm -rfv ./output/
         clean_precice_logs .
     )
 }
