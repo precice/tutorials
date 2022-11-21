@@ -29,7 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Adapted the multiple-perpendicular-flaps tutorial to a [new naming convention](https://precice.org/community-contribute-to-precice.html#contributing-tutorials) for tutorials with multiple participants [#303](https://github.com/precice/tutorials/pull/303).
 - Adapted the material properties of the FEniCS case in elastic-tube-3d to match the CalculiX case results [#259](https://github.com/precice/tutorials/issues/259).
 - Adapted the solid case of the Quickstart tutorial to work with the Intel oneAPI C++ compiler [#291](https://github.com/precice/tutorials/pull/291).
-- Updated the Nutils cases [#295](https://github.com/precice/tutorials/pull/295), [#298](https://github.com/precice/tutorials/pull/298).
+- Made the Nutils case of the partitioned heat conduction tutorial compatible with Nutils versions 6 to 8 [#295](https://github.com/precice/tutorials/pull/295), [#298](https://github.com/precice/tutorials/pull/298).
 
 ## [v202202.0] 2022-02-09
 
