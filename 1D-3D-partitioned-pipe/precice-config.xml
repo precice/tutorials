@@ -9,7 +9,7 @@
     <solver-interface dimensions="3">
 
     <data:vector name="Velocity"/>
-    <data:vector name="Pressure"/>
+    <data:scalar name="Pressure"/>
 
 
     <mesh name="Fluid1-Mesh">
@@ -27,7 +27,7 @@
         <use-mesh name="Fluid2-Mesh" from="Fluid2"/>
         <write-data name="Velocity" mesh="Fluid1-Mesh"/>
         <read-data name="Pressure" mesh="Fluid1-Mesh"/>
-        <mapping:axial-geometric-multiscale direction="read" type="collect" radius="1.0" from="Fluid2-Mesh" to="Fluid1-Mesh" constraint="consistent"/>
+        <mapping:axial-geometric-multiscale direction="read" type="collect" radius="20.0" from="Fluid2-Mesh" to="Fluid1-Mesh" constraint="consistent"/>
     </participant>
 
     <participant name="Fluid2">
@@ -35,7 +35,7 @@
         <use-mesh name="Fluid1-Mesh" from="Fluid1"/>
         <read-data name="Velocity" mesh="Fluid2-Mesh"/>
         <write-data name="Pressure" mesh="Fluid2-Mesh"/>
-        <mapping:axial-geometric-multiscale direction="read" type="spread" radius="1.0" from="Fluid1-Mesh" to="Fluid2-Mesh" constraint="consistent"/>
+        <mapping:axial-geometric-multiscale direction="read" type="spread" radius="20.0" from="Fluid1-Mesh" to="Fluid2-Mesh" constraint="consistent"/>
     </participant>
 
     <m2n:sockets from="Fluid1" to="Fluid2"/>

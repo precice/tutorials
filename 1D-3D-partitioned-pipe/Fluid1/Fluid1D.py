@@ -21,9 +21,6 @@ def main():
     y = np.zeros(n+1)
     z = np.linspace(0,length,n+1)
 
-    x_interface = np.linspace(-5,5,20)
-    y_interface = np.linspace(-5,5,20)
-
     # initial data
 
     u = np.zeros((n+1,3))
@@ -33,7 +30,7 @@ def main():
     # preCICE setup
 
     participant_name = "Fluid1"
-    config_file_name = "./precice-config.xml"
+    config_file_name = "../precice-config.xml"
     solver_process_index = 0
     solver_process_size = 1
     interface = precice.Interface(participant_name, config_file_name, solver_process_index, solver_process_size)
@@ -47,7 +44,7 @@ def main():
     pressure_name = "Pressure"
     pressure_id = interface.get_data_id(pressure_name, mesh_id)
 
-    positions = [0, 0, z[-1]]
+    positions = [0, 0, 0]
 
     vertex_ids = interface.set_mesh_vertex(mesh_id, positions)
 
@@ -83,6 +80,8 @@ def main():
         if interface.is_read_data_available():  # get dirichlet pressure outlet value from 3D solver
             p_read_in = interface.read_scalar_data(pressure_id, vertex_ids)
             p[-1] = p_read_in
+        else:
+            p[-1] = 0
 
         # compute right-hand side of 1D PPE
 
@@ -140,8 +139,10 @@ def main():
         u_print = np.ascontiguousarray(u_print, dtype=np.float32)
         p_print = np.ascontiguousarray(p_print, dtype=np.float32)
         
-        filename = "./results/1D/Fluid1D_" + str(counter)
-        pointsToVTK(filename, x, y, z, data = {"U" : u_print, "p" : p_print})
+        filename = "./results/Fluid1D_" + str(counter)
+        
+        # TODO: uncomment if pyEVTK is installed and vtk output of 1D participant is wanted
+        # pointsToVTK(filename, x, y, z, data = {"U" : u_print, "p" : p_print})
 
         # advance simulation time
 
