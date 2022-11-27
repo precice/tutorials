@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "heatTransfer.C": "cpp",
+        "createFields.H": "cpp"
+    }
+}
