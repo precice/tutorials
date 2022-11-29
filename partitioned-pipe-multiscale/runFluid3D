@@ -1,0 +1,22 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    		    		# Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions    # Tutorial run functions
+
+# Fluid3D participant
+
+# Run this script with "-parallel" for parallel simulations
+
+echo "Preparing and running the Fluid3D participant..."
+
+rm -rfv fluid3d-openfoam/0/
+cp -r fluid3d-openfoam/0.orig/ fluid3d-openfoam/0/
+blockMesh -case fluid3d-openfoam
+checkMesh -case fluid3d-openfoam
+
+# Run
+cd fluid3d-openfoam
+	solver=$(getApplication)
+cd ..
+$solver -case fluid3d-openfoam | tee Fluid3D.log 2>&1
+
+foamToVTK -case fluid3d-openfoam

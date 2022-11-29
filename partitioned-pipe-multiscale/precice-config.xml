@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<precice-configuration>
+
+<log>
+    <sink type="stream" output="stdout"  filter= "(%Severity% > debug) or (%Severity% >= debug and %Module% contains Mapping)" enabled="false" />	
+</log>
+
+    <solver-interface dimensions="3">
+
+    <data:vector name="Velocity"/>
+    <data:scalar name="Pressure"/>
+
+
+    <mesh name="Fluid1D-Mesh">
+        <use-data name="Velocity"/>
+        <use-data name="Pressure"/>
+    </mesh>
+
+    <mesh name="Fluid3D-Mesh">
+        <use-data name="Velocity"/>
+        <use-data name="Pressure"/>
+    </mesh>
+
+    <participant name="Fluid1D">
+        <use-mesh name="Fluid1D-Mesh" provide="yes"/>
+        <use-mesh name="Fluid3D-Mesh" from="Fluid3D"/>
+        <write-data name="Velocity" mesh="Fluid1D-Mesh"/>
+        <read-data name="Pressure" mesh="Fluid1D-Mesh"/>
+        <mapping:axial-geometric-multiscale direction="read" type="collect" radius="20.0" from="Fluid3D-Mesh" to="Fluid1D-Mesh" constraint="consistent"/>
+    </participant>
+
+    <participant name="Fluid3D">
+        <use-mesh name="Fluid3D-Mesh" provide="yes"/>
+        <use-mesh name="Fluid1D-Mesh" from="Fluid1D"/>
+        <read-data name="Velocity" mesh="Fluid3D-Mesh"/>
+        <write-data name="Pressure" mesh="Fluid3D-Mesh"/>
+        <mapping:axial-geometric-multiscale direction="read" type="spread" radius="20.0" from="Fluid1D-Mesh" to="Fluid3D-Mesh" constraint="consistent"/>
+    </participant>
+
+    <m2n:sockets from="Fluid1D" to="Fluid3D"/>
+
+    <coupling-scheme:serial-implicit>
+        <time-window-size value="0.005"/>
+        <max-time value="20.0"/>
+        <participants first="Fluid1D" second="Fluid3D"/>
+        <exchange data="Velocity" mesh="Fluid1D-Mesh" from="Fluid1D" to="Fluid3D"/>
+        <exchange data="Pressure" mesh="Fluid3D-Mesh" from="Fluid3D" to="Fluid1D"/>
+
+        <max-iterations value="100"/>
+        <relative-convergence-measure limit="1.0e-3" data="Pressure" mesh="Fluid3D-Mesh"/>
+
+        <acceleration:IQN-ILS>
+            <data mesh="Fluid3D-Mesh" name="Pressure" />
+            <preconditioner type="residual-sum" />
+            <initial-relaxation value="1.0" />
+            <max-used-iterations value="3" />
+            <time-windows-reused value="10" />
+            <filter type="QR1" limit="1e-6" />
+        </acceleration:IQN-ILS>
+
+
+    </coupling-scheme:serial-implicit>
+
+    </solver-interface>
+</precice-configuration>
