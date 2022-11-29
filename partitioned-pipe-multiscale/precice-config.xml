@@ -38,7 +38,7 @@
         <mapping:axial-geometric-multiscale direction="read" type="spread" radius="20.0" from="Fluid1D-Mesh" to="Fluid3D-Mesh" constraint="consistent"/>
     </participant>
 
-    <m2n:sockets from="Fluid1D" to="Fluid3D"/>
+    <m2n:sockets from="Fluid1D" to="Fluid3D" exchange-directory=".."/>
 
     <coupling-scheme:serial-implicit>
         <time-window-size value="0.005"/>
