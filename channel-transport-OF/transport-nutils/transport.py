@@ -26,7 +26,7 @@ def main():
     domain, geom = mesh.rectilinear(grid)
     domain = domain.withboundary(inflow="left", outflow="right", wall="top,bottom") - domain[
         step_start:step_end, :step_hight
-    ].withboundary(wall="left,top,right")
+    ].withboundary(wall="left,top,right") # subtracting the obstacle
 
     # cloud of Gauss points
     gauss = domain.sample("gauss", degree=2)
