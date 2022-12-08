@@ -34,9 +34,6 @@
         <read-data name="Displacements0" mesh="Fluid-Mesh-Nodes"/>
         <mapping:rbf-thin-plate-splines solver-rtol="1e-4" direction="write" from="Fluid-Mesh-Faces" to="Solid" constraint="conservative" y-dead="true" />
         <mapping:rbf-thin-plate-splines solver-rtol="1e-4" direction="read" from="Solid" to="Fluid-Mesh-Nodes" constraint="consistent"/> 
-        <!-- <mapping:nearest-projection direction="write" from="Fluid-Mesh-Faces" to="Solid" constraint="conservative"/>
-        <mapping:nearest-neighbor direction="read" from="Solid" to="Fluid-Mesh-Nodes" constraint="consistent"/>
-        <export:csv directory="preCICE-OF-output" />-->
     </participant>
 
     <participant name="Calculix">
@@ -49,38 +46,6 @@
 
     <m2n:sockets from="Fluid" to="Calculix" exchange-directory=".." />
 
-    <!--<coupling-scheme:serial-explicit>
-        <time-window-size value="1e-4"/>
-        <max-time value="1.0"/>
-        <participants first="Fluid" second="Calculix"/>
-        <exchange data="Forces0" mesh="Solid" from="Fluid" to="Calculix"/>
-        <exchange data="Displacements0" mesh="Solid" from="Calculix" to="Fluid"/>
-    </coupling-scheme:serial-explicit>-->
-
- 
-    <!--<coupling-scheme:serial-implicit>
-            <time-window-size value="1.e-3" />
-            <max-time value="0.5"/>
-            <participants first="Fluid" second="Calculix"/>
-            <exchange data="Forces0" mesh="Solid" from="Fluid" to="Calculix"/>
-            <exchange data="Displacements0" mesh="Solid" from="Calculix" to="Fluid" />
-
-            <max-iterations value="100"/>
-            <absolute-convergence-measure limit="1e-6" data="Displacements0" mesh="Solid"/>
-            <relative-convergence-measure limit="1e-2" data="Forces0" mesh="Solid"/>
-            <extrapolation-order value="2"/>
- 
-            <acceleration:IQN-ILS>
-                <data name="Displacements0" mesh="Solid"/>
-                <preconditioner type="residual-sum"/>
-                <filter type="QR1" limit="1e-6"/>
-                <initial-relaxation value="0.01"/> 
-                <max-used-iterations value="15"/>
-                <time-windows-reused value="0"/> 
-            </acceleration:IQN-ILS> 
-
-    </coupling-scheme:serial-implicit>-->
-    
     <coupling-scheme:parallel-implicit>
             <time-window-size value="5e-3" />
             <max-time value="5"/>
@@ -95,21 +60,14 @@
             <extrapolation-order value="2"/>
  
             <acceleration:IQN-ILS>
-                <data name="Displacements" mesh="Solid"/>
-                <data name="Forces" mesh="Solid"/>
-                <preconditioner type="residual-sum" freeze-after="5" />
-                <filter type="QR2" limit="1e-3"/>
+                <data name="Displacements0" mesh="Solid"/>
+                <data name="Forces0" mesh="Solid"/>
+                <preconditioner type="residual-sum" />
+                <filter type="QR2" limit="1e-1"/>
                 <initial-relaxation value="0.1"/> 
-                <max-used-iterations value="1000"/>
+                <max-used-iterations value="100"/>
                 <time-windows-reused value="10"/> 
             </acceleration:IQN-ILS> 
-
-            
-           <!-- <acceleration:aitken>
-            <data name="Displacements0" mesh="Solid"/>
-            <data name="Forces0" mesh="Solid"/>
-            <initial-relaxation value="0.1"/>
-            </acceleration:aitken>-->
 
     </coupling-scheme:parallel-implicit>
  
