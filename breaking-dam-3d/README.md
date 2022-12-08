@@ -6,7 +6,7 @@ summary: Tutorial for an FSI simulation of a three-dimensional water column stri
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/breaking-dam-3d). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/breaking-dam-2d/breaking-dam-3d). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
