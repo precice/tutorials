@@ -12,7 +12,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 ## Setup
 
 The two-dimensional breaking dam case is a free surface problem. A large column of water comes into contact with a flexible wall, causing the wall to bend and the water to flow over and around the wall. A no slip boundary condition is applied at the bottom, the left, and the right boundary, and a
-zero pressure condition at the top boundary. The test case runs for 1s with a time step size of dt = 0.005s, for a total of 200 time steps. 
+zero pressure condition at the top boundary. The test case runs for 1s with a time step size of dt = 0.005s, for a total of 200 time steps.
 
 ![domain](images/breaking-dam-2d.png)
 
@@ -32,8 +32,7 @@ You can start the simulation by running the script `./run.sh` located in each pa
 
 ## Post-processing
 
-You can visualize the results using paraView or `cgx`(for native CalculiX resul files), as usual. 
-
+You can visualize the results using paraView or `cgx`(for native CalculiX resul files), as usual.
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.

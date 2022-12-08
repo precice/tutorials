@@ -11,8 +11,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-The three-dimensional breaking dam case is a free surface problem, that is an extension of the two-dimensional problem. Two large columns of water comes into contact with a flexible wall at different times, causing the wall to bend and twist as the water flows over and around the wall. The solid domain is fixed only at the bottom and the sides are free to move in-plane. The test case was run for 0.75s with a time step of dt = 0.005s, for a total of 150 time steps. 
-
+The three-dimensional breaking dam case is a free surface problem, that is an extension of the two-dimensional problem. Two large columns of water comes into contact with a flexible wall at different times, causing the wall to bend and twist as the water flows over and around the wall. The solid domain is fixed only at the bottom and the sides are free to move in-plane. The test case was run for 0.75s with a time step of dt = 0.005s, for a total of 150 time steps.
 
 ![domain](images/domain.png)
 
@@ -34,8 +33,7 @@ You can start the simulation by running the script `./run.sh` located in each pa
 
 ## Post-processing
 
-You can visualize the results using paraView or `cgx`(for native CalculiX resul files), as usual. 
-
+You can visualize the results using paraView or `cgx`(for native CalculiX resul files), as usual.
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
