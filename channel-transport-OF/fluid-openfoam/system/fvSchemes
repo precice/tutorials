@@ -31,6 +31,8 @@ laplacianSchemes
 interpolationSchemes
 {
     default         linear;
+    U               upwind phi;
+    p               upwind phi;
 }
 
 snGradSchemes
