@@ -22,9 +22,8 @@
       <use-mesh name="Fluid-Mesh" provide="yes" />
       <use-mesh name="Transport-Mesh" from="Transport" />
       <write-data name="Velocity" mesh="Fluid-Mesh" />
-      <mapping:rbf-compact-tps-c2
+      <mapping:nearest-neighbor
         direction="write"
-        support-radius="0.4"
         from="Fluid-Mesh"
         to="Transport-Mesh"
         constraint="consistent" />
