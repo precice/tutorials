@@ -6,7 +6,7 @@ FoamFile
     object      p;
 }
 
-dimensions      [0 2 -2 0 0 0 0]; //TODO
+dimensions      [0 2 -2 0 0 0 0];
 
 internalField   uniform 0;
 
@@ -14,7 +14,7 @@ boundaryField
 {
     inlet
     {
-        type            zeroGradient; //TODO is it different than fixedGradient + uniform 0?
+        type            zeroGradient;
     }
 
     outlet
