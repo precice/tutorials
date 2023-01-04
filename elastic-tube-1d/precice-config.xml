@@ -19,8 +19,8 @@
     </mesh>
 
     <participant name="Fluid">
-      <use-mesh name="Fluid-Nodes-Mesh" provide="yes" />
-      <use-mesh name="Solid-Nodes-Mesh" from="Solid" />
+      <provide-mesh name="Fluid-Nodes-Mesh" />
+      <receive-mesh name="Solid-Nodes-Mesh" from="Solid" />
       <write-data name="Pressure" mesh="Fluid-Nodes-Mesh" />
       <read-data name="CrossSectionLength" mesh="Fluid-Nodes-Mesh" />
       <mapping:nearest-neighbor
@@ -31,8 +31,8 @@
     </participant>
 
     <participant name="Solid">
-      <use-mesh name="Solid-Nodes-Mesh" provide="yes" />
-      <use-mesh name="Fluid-Nodes-Mesh" from="Fluid" />
+      <provide-mesh name="Solid-Nodes-Mesh" />
+      <receive-mesh name="Fluid-Nodes-Mesh" from="Fluid" />
       <write-data name="CrossSectionLength" mesh="Solid-Nodes-Mesh" />
       <read-data name="Pressure" mesh="Solid-Nodes-Mesh" />
       <mapping:nearest-neighbor

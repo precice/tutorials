@@ -31,9 +31,9 @@
     </mesh>
 
     <participant name="Solid">
-      <use-mesh name="Solid-Interface-Faces" provide="yes" />
-      <use-mesh name="Solid-Interface-Nodes" provide="yes" />
-      <use-mesh name="Fluid-Interface" from="Fluid" />
+      <provide-mesh name="Solid-Interface-Faces" />
+      <provide-mesh name="Solid-Interface-Nodes" />
+      <receive-mesh name="Fluid-Interface" from="Fluid" />
       <write-data mesh="Solid-Interface-Nodes" name="Sink-Temperature-Solid" />
       <write-data mesh="Solid-Interface-Nodes" name="Heat-Transfer-Coefficient-Solid" />
       <read-data mesh="Solid-Interface-Faces" name="Sink-Temperature-Fluid" />
@@ -46,8 +46,8 @@
     </participant>
 
     <participant name="Fluid">
-      <use-mesh name="Fluid-Interface" provide="yes" />
-      <use-mesh name="Solid-Interface-Nodes" from="Solid" />
+      <provide-mesh name="Fluid-Interface" />
+      <receive-mesh name="Solid-Interface-Nodes" from="Solid" />
       <write-data mesh="Fluid-Interface" name="Sink-Temperature-Fluid" />
       <write-data mesh="Fluid-Interface" name="Heat-Transfer-Coefficient-Fluid" />
       <read-data mesh="Fluid-Interface" name="Sink-Temperature-Solid" />

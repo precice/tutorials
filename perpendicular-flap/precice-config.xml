@@ -22,8 +22,8 @@
     </mesh>
 
     <participant name="Fluid">
-      <use-mesh name="Fluid-Mesh" provide="yes" />
-      <use-mesh name="Solid-Mesh" from="Solid" />
+      <provide-mesh name="Fluid-Mesh" />
+      <receive-mesh name="Solid-Mesh" from="Solid" />
       <write-data name="Force" mesh="Fluid-Mesh" />
       <read-data name="Displacement" mesh="Fluid-Mesh" />
       <mapping:rbf-thin-plate-splines
@@ -39,7 +39,7 @@
     </participant>
 
     <participant name="Solid">
-      <use-mesh name="Solid-Mesh" provide="yes" />
+      <provide-mesh name="Solid-Mesh" />
       <write-data name="Displacement" mesh="Solid-Mesh" />
       <read-data name="Force" mesh="Solid-Mesh" />
       <watch-point mesh="Solid-Mesh" name="Flap-Tip" coordinate="0.0;1" />

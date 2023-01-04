@@ -19,14 +19,14 @@
     </mesh>
 
     <participant name="Flow">
-      <use-mesh name="Flow-Mesh" provide="yes" />
-      <use-mesh name="Chemical-Mesh" from="Chemical" />
+      <provide-mesh name="Flow-Mesh" />
+      <receive-mesh name="Chemical-Mesh" from="Chemical" />
       <write-data name="Velocity" mesh="Flow-Mesh" />
     </participant>
 
     <participant name="Chemical">
-      <use-mesh name="Chemical-Mesh" provide="yes" />
-      <use-mesh name="Flow-Mesh" from="Flow" />
+      <provide-mesh name="Chemical-Mesh" />
+      <receive-mesh name="Flow-Mesh" from="Flow" />
       <read-data name="Velocity" mesh="Chemical-Mesh" />
       <mapping:linear-cell-interpolation
         direction="read"

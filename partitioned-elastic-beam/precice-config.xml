@@ -22,8 +22,8 @@
     </mesh>
 
     <participant name="Calculix1">
-      <use-mesh name="Calculix-Mesh1" provide="yes" />
-      <use-mesh name="Calculix-Mesh2" from="Calculix2" />
+      <provide-mesh name="Calculix-Mesh1" />
+      <receive-mesh name="Calculix-Mesh2" from="Calculix2" />
       <write-data name="Force0" mesh="Calculix-Mesh1" />
       <read-data name="Displacement0" mesh="Calculix-Mesh1" />
       <mapping:nearest-neighbor
@@ -41,7 +41,7 @@
     </participant>
 
     <participant name="Calculix2">
-      <use-mesh name="Calculix-Mesh2" provide="yes" />
+      <provide-mesh name="Calculix-Mesh2" />
       <write-data name="Displacement0" mesh="Calculix-Mesh2" />
       <read-data name="Force0" mesh="Calculix-Mesh2" />
     </participant>

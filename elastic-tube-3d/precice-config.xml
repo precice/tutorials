@@ -25,9 +25,9 @@
     </mesh>
 
     <participant name="Fluid">
-      <use-mesh name="Solid-Mesh" from="Solid" safety-factor="1.5" />
-      <use-mesh name="Fluid-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Fluid-Mesh-Faces" provide="yes" />
+      <receive-mesh name="Solid-Mesh" from="Solid" safety-factor="1.5" />
+      <provide-mesh name="Fluid-Mesh-Nodes" />
+      <provide-mesh name="Fluid-Mesh-Faces" />
       <write-data name="Force" mesh="Fluid-Mesh-Faces" />
       <read-data name="DisplacementDelta" mesh="Fluid-Mesh-Nodes" />
       <mapping:nearest-projection
@@ -45,8 +45,8 @@
     </participant>
 
     <participant name="Solid">
-      <use-mesh name="Solid-Mesh" provide="yes" />
-      <use-mesh name="Fluid-Mesh-Faces" from="Fluid" />
+      <provide-mesh name="Solid-Mesh" />
+      <receive-mesh name="Fluid-Mesh-Faces" from="Fluid" />
       <write-data name="DisplacementDelta" mesh="Solid-Mesh" />
       <read-data name="Force" mesh="Solid-Mesh" />
       <watch-point mesh="Solid-Mesh" name="Tube-Midpoint" coordinate="0.0;0.005;0.025" />
