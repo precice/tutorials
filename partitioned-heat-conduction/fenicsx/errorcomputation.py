@@ -13,5 +13,4 @@ def compute_errors(u_approx, u_ref, total_error_tol=10 ** -4):
 
     assert (error_total < total_error_tol)
 
-    # return error_total, error_pointwise
     return error_total
