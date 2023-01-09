@@ -22,8 +22,8 @@
     </mesh>
 
     <participant name="Fluid">
-      <use-mesh name="Fluid-Mesh" provide="yes" />
-      <use-mesh name="Solid-Mesh" from="Solid" />
+      <provide-mesh name="Fluid-Mesh" />
+      <receive-mesh name="Solid-Mesh" from="Solid" />
       <read-data name="Heat-Flux" mesh="Fluid-Mesh" />
       <write-data name="Temperature" mesh="Fluid-Mesh" />
       <mapping:nearest-neighbor
@@ -34,8 +34,8 @@
     </participant>
 
     <participant name="Solid">
-      <use-mesh name="Fluid-Mesh" from="Fluid" />
-      <use-mesh name="Solid-Mesh" provide="yes" />
+      <receive-mesh name="Fluid-Mesh" from="Fluid" />
+      <provide-mesh name="Solid-Mesh" />
       <mapping:nearest-neighbor
         direction="read"
         from="Fluid-Mesh"

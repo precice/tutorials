@@ -22,16 +22,16 @@
     </mesh>
 
     <participant name="Source">
-      <use-mesh name="Source-Mesh" provide="yes"/>
-      <use-mesh name="Drain-Mesh" from="Drain"/>
+      <provide-mesh name="Source-Mesh" />
+      <receive-mesh name="Drain-Mesh" from="Drain"/>
       <write-data name="Source-Data" mesh="Source-Mesh"/>
       <read-data name="Drain-Data" mesh="Source-Mesh"/>
       <mapping:rbf-thin-plate-splines direction="read" from="Drain-Mesh" to="Source-Mesh" constraint="consistent"/>
     </participant>
 
     <participant name="Drain">
-      <use-mesh name="Drain-Mesh" provide="yes"/>
-      <use-mesh name="Source-Mesh" from="Source"/>
+      <provide-mesh name="Drain-Mesh" />
+      <receive-mesh name="Source-Mesh" from="Source"/>
       <write-data name="Drain-Data" mesh="Drain-Mesh"/>
       <read-data name="Source-Data" mesh="Drain-Mesh"/>
       <mapping:rbf-thin-plate-splines direction="read" from="Source-Mesh" to="Drain-Mesh" constraint="consistent"/>

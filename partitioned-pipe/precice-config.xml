@@ -28,8 +28,8 @@
     </mesh>
 
     <participant name="Fluid1">
-      <use-mesh name="Fluid1-Mesh" provide="yes" />
-      <use-mesh name="Fluid2-Mesh" from="Fluid2" />
+      <provide-mesh name="Fluid1-Mesh" />
+      <receive-mesh name="Fluid2-Mesh" from="Fluid2" />
       <write-data name="Velocity" mesh="Fluid1-Mesh" />
       <write-data name="PressureGradient" mesh="Fluid1-Mesh" />
       <read-data name="Pressure" mesh="Fluid1-Mesh" />
@@ -42,8 +42,8 @@
     </participant>
 
     <participant name="Fluid2">
-      <use-mesh name="Fluid2-Mesh" provide="yes" />
-      <use-mesh name="Fluid1-Mesh" from="Fluid1" />
+      <provide-mesh name="Fluid2-Mesh" />
+      <receive-mesh name="Fluid1-Mesh" from="Fluid1" />
       <read-data name="Velocity" mesh="Fluid2-Mesh" />
       <read-data name="PressureGradient" mesh="Fluid2-Mesh" />
       <write-data name="Pressure" mesh="Fluid2-Mesh" />

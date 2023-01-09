@@ -44,8 +44,8 @@
     </mesh>
 
     <participant name="Solid">
-      <use-mesh name="Solid-to-Fluid-Inner" provide="yes" />
-      <use-mesh name="Fluid-Inner-to-Solid" from="Fluid-Inner" />
+      <provide-mesh name="Solid-to-Fluid-Inner" />
+      <receive-mesh name="Fluid-Inner-to-Solid" from="Fluid-Inner" />
       <write-data mesh="Solid-to-Fluid-Inner" name="Sink-Temperature-Solid" />
       <write-data mesh="Solid-to-Fluid-Inner" name="Heat-Transfer-Coefficient-Solid" />
       <read-data mesh="Solid-to-Fluid-Inner" name="Sink-Temperature-Fluid-Inner" />
@@ -55,8 +55,8 @@
         direction="read"
         to="Solid-to-Fluid-Inner"
         from="Fluid-Inner-to-Solid" />
-      <use-mesh name="Solid-to-Fluid-Outer" provide="yes" />
-      <use-mesh name="Fluid-Outer-to-Solid" from="Fluid-Outer" />
+      <provide-mesh name="Solid-to-Fluid-Outer" />
+      <receive-mesh name="Fluid-Outer-to-Solid" from="Fluid-Outer" />
       <write-data mesh="Solid-to-Fluid-Outer" name="Sink-Temperature-Solid" />
       <write-data mesh="Solid-to-Fluid-Outer" name="Heat-Transfer-Coefficient-Solid" />
       <read-data mesh="Solid-to-Fluid-Outer" name="Sink-Temperature-Fluid-Outer" />
@@ -69,8 +69,8 @@
     </participant>
 
     <participant name="Fluid-Inner">
-      <use-mesh name="Fluid-Inner-to-Solid" provide="yes" />
-      <use-mesh name="Solid-to-Fluid-Inner" from="Solid" />
+      <provide-mesh name="Fluid-Inner-to-Solid" />
+      <receive-mesh name="Solid-to-Fluid-Inner" from="Solid" />
       <write-data mesh="Fluid-Inner-to-Solid" name="Sink-Temperature-Fluid-Inner" />
       <write-data mesh="Fluid-Inner-to-Solid" name="Heat-Transfer-Coefficient-Fluid-Inner" />
       <read-data mesh="Fluid-Inner-to-Solid" name="Sink-Temperature-Solid" />
@@ -83,8 +83,8 @@
     </participant>
 
     <participant name="Fluid-Outer">
-      <use-mesh name="Fluid-Outer-to-Solid" provide="yes" />
-      <use-mesh name="Solid-to-Fluid-Outer" from="Solid" />
+      <provide-mesh name="Fluid-Outer-to-Solid" />
+      <receive-mesh name="Solid-to-Fluid-Outer" from="Solid" />
       <write-data mesh="Fluid-Outer-to-Solid" name="Sink-Temperature-Fluid-Outer" />
       <write-data mesh="Fluid-Outer-to-Solid" name="Heat-Transfer-Coefficient-Fluid-Outer" />
       <read-data mesh="Fluid-Outer-to-Solid" name="Sink-Temperature-Solid" />

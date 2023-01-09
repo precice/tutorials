@@ -25,9 +25,9 @@
     </mesh>
 
     <participant name="Fluid">
-      <use-mesh name="Fluid-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Fluid-Mesh-Centers" provide="yes" />
-      <use-mesh name="Solid-Mesh" from="Solid" />
+      <provide-mesh name="Fluid-Mesh-Nodes" />
+      <provide-mesh name="Fluid-Mesh-Centers" />
+      <receive-mesh name="Solid-Mesh" from="Solid" />
       <read-data name="Displacement" mesh="Fluid-Mesh-Nodes" />
       <write-data name="Stress" mesh="Fluid-Mesh-Centers" />
       <mapping:rbf-thin-plate-splines
@@ -38,8 +38,8 @@
     </participant>
 
     <participant name="Solid">
-      <use-mesh name="Solid-Mesh" provide="yes" />
-      <use-mesh name="Fluid-Mesh-Centers" from="Fluid" />
+      <provide-mesh name="Solid-Mesh" />
+      <receive-mesh name="Fluid-Mesh-Centers" from="Fluid" />
       <read-data name="Stress" mesh="Solid-Mesh" />
       <write-data name="Displacement" mesh="Solid-Mesh" />
       <watch-point mesh="Solid-Mesh" name="Flap-Tip" coordinate="0.6;0.2" />

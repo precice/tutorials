@@ -40,12 +40,12 @@
     </mesh>
 
     <participant name="Fluid">
-      <use-mesh name="Fluid-Upstream-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Fluid-Upstream-Mesh-Centers" provide="yes" />
-      <use-mesh name="Solid-Upstream-Mesh" from="Solid-Upstream" />
-      <use-mesh name="Fluid-Downstream-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Fluid-Downstream-Mesh-Centers" provide="yes" />
-      <use-mesh name="Solid-Downstream-Mesh" from="Solid-Downstream" />
+      <provide-mesh name="Fluid-Upstream-Mesh-Nodes" />
+      <provide-mesh name="Fluid-Upstream-Mesh-Centers" />
+      <receive-mesh name="Solid-Upstream-Mesh" from="Solid-Upstream" />
+      <provide-mesh name="Fluid-Downstream-Mesh-Nodes" />
+      <provide-mesh name="Fluid-Downstream-Mesh-Centers" />
+      <receive-mesh name="Solid-Downstream-Mesh" from="Solid-Downstream" />
       <read-data name="Displacement-Upstream" mesh="Fluid-Upstream-Mesh-Nodes" />
       <write-data name="Stress-Upstream" mesh="Fluid-Upstream-Mesh-Centers" />
       <read-data name="Displacement-Downstream" mesh="Fluid-Downstream-Mesh-Nodes" />
@@ -63,8 +63,8 @@
     </participant>
 
     <participant name="Solid-Upstream">
-      <use-mesh name="Solid-Upstream-Mesh" provide="yes" />
-      <use-mesh name="Fluid-Upstream-Mesh-Centers" from="Fluid" />
+      <provide-mesh name="Solid-Upstream-Mesh" />
+      <receive-mesh name="Fluid-Upstream-Mesh-Centers" from="Fluid" />
       <read-data name="Stress-Upstream" mesh="Solid-Upstream-Mesh" />
       <write-data name="Displacement-Upstream" mesh="Solid-Upstream-Mesh" />
       <watch-point mesh="Solid-Upstream-Mesh" name="Flap-Tip" coordinate="-1.05;1" />
@@ -76,8 +76,8 @@
     </participant>
 
     <participant name="Solid-Downstream">
-      <use-mesh name="Solid-Downstream-Mesh" provide="yes" />
-      <use-mesh name="Fluid-Downstream-Mesh-Centers" from="Fluid" />
+      <provide-mesh name="Solid-Downstream-Mesh" />
+      <receive-mesh name="Fluid-Downstream-Mesh-Centers" from="Fluid" />
       <read-data name="Stress-Downstream" mesh="Solid-Downstream-Mesh" />
       <write-data name="Displacement-Downstream" mesh="Solid-Downstream-Mesh" />
       <watch-point mesh="Solid-Downstream-Mesh" name="Flap-Tip" coordinate="0.95;1" />

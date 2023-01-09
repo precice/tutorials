@@ -22,7 +22,7 @@
     </mesh>
 
     <participant name="Mass-Left">
-      <use-mesh name="Mass-Left-Mesh" provide="yes"/>
+      <provide-mesh name="Mass-Left-Mesh" />
       <write-data name="Force-Left" mesh="Mass-Left-Mesh" />
       <read-data  name="Force-Right" mesh="Mass-Left-Mesh" />
       <!-- Use this to activate first order interpolation
@@ -31,8 +31,8 @@
     </participant>
 
     <participant name="Mass-Right">
-      <use-mesh name="Mass-Left-Mesh" from="Mass-Left"/>
-      <use-mesh name="Mass-Right-Mesh" provide="yes"/>
+      <receive-mesh name="Mass-Left-Mesh" from="Mass-Left"/>
+      <provide-mesh name="Mass-Right-Mesh" />
       <write-data name="Force-Right" mesh="Mass-Right-Mesh" />
       <read-data  name="Force-Left" mesh="Mass-Right-Mesh" />
       <!-- Use this to activate first order interpolation

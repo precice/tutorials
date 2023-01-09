@@ -22,16 +22,16 @@
     </mesh>
 
     <participant name="Dirichlet">
-      <use-mesh name="Dirichlet-Mesh" provide="yes"/>
-      <use-mesh name="Neumann-Mesh" from="Neumann"/>
-      <write-data name="Flux" mesh="Dirichlet-Mesh"/>
-      <read-data name="Temperature" mesh="Dirichlet-Mesh"/>
+      <provide-mesh name="Dirichlet-Mesh" />
+      <receive-mesh name="Neumann-Mesh" from="Neumann" />
+      <write-data name="Flux" mesh="Dirichlet-Mesh" />
+      <read-data name="Temperature" mesh="Dirichlet-Mesh" />
       <mapping:nearest-projection direction="read" from="Neumann-Mesh" to="Dirichlet-Mesh" constraint="consistent" />
     </participant>
 
     <participant name="Neumann">
-      <use-mesh name="Neumann-Mesh" provide="yes"/>
-      <use-mesh name="Dirichlet-Mesh" from="Dirichlet"/>
+      <provide-mesh name="Neumann-Mesh" />
+      <receive-mesh name="Dirichlet-Mesh" from="Dirichlet"/>
       <write-data name="Temperature" mesh="Neumann-Mesh"/>
       <read-data name="Flux" mesh="Neumann-Mesh"/>
       <mapping:nearest-projection direction="read" from="Dirichlet-Mesh" to="Neumann-Mesh" constraint="consistent" />
