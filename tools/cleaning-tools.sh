@@ -113,7 +113,7 @@ clean_su2() {
         set -e -u
         cd "$1"
         echo "--- Cleaning up SU2 case in $(pwd)"
-        rm -fv ./restart_flow_*.dat forces_breakdown.dat ./surface_flow_*.csv ./flow_*.vtk ./history_*.vtk
+        rm -fv ./restart_flow_*.dat forces_breakdown.dat ./surface_flow_*.csv ./flow_*.vtk ./history_*.vtk ./history_*.csv
         clean_precice_logs .
     )
 }
