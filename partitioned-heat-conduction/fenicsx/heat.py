@@ -5,7 +5,7 @@ Tutorial I. Springer International Publishing, 2016."
 The example code has been extended with preCICE API calls and mixed boundary conditions to allow for a Dirichlet-Neumann
 coupling of two separate heat equations. It also has been adapted to be compatible with FEniCSx.
 
-The original source code can be found on https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py.
+The original source code can be found on https://jsdokken.com/dolfinx-tutorial/chapter2/heat_code.html.
 
 Heat equation with Dirichlet conditions. (Dirichlet problem)
   u'= Laplace(u) + f  in the unit square [0,1] x [0,1]
@@ -176,10 +176,13 @@ u_ref.interpolate(u_D_function)
 
 xdmf = XDMFFile(MPI.COMM_WORLD, f"./out/{precice.get_participant_name()}.xdmf", "w")
 xdmf.write_mesh(mesh)
+ref_out = XDMFFile(MPI.COMM_WORLD, f"./out/ref{precice.get_participant_name()}.xdmf", "w")
+ref_out.write_mesh(mesh)
 
 # output solution at t=0, n=0
 n = 0
 xdmf.write_function(u_n, t)
+ref_out.write_function(u_ref, t)
 
 u_D.t = t + dt.value
 u_D_function.interpolate(u_D.eval)
@@ -233,9 +236,10 @@ while precice.is_coupling_ongoing():
         u_ref.interpolate(u_D_function)
         error = compute_errors(u_n, u_ref, total_error_tol=error_tol)
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
-        print('output u^%d' % (n))
+        print('output u^%d and u_ref^%d' % (n, n))
 
         xdmf.write_function(u_n, t)
+        ref_out.write_function(u_ref, t)
 
 
     # Update Dirichlet BC
@@ -247,3 +251,4 @@ while precice.is_coupling_ongoing():
 
 # Hold plot
 precice.finalize()
+

@@ -70,7 +70,7 @@ You can mix the Nutils and FEniCS solver, if you like. Note that the error for a
 
 Output is written into the folders `fenicsx/out`, `fenics/out` and `nutils`.
 
-For FEniCSx you can visualize the content with paraview by opening the `*.xdmf` files. The files `Dirichlet.xdmf` and `Neumann.xdmf` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem.
+For FEniCSx you can visualize the content with paraview by opening the `*.xdmf` files. The files `Dirichlet.xdmf` and `Neumann.xdmf` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution.
 
 For FEniCS you can visualize the content with paraview by opening the `*.pvd` files. The files `Dirichlet.pvd` and `Neumann.pvd` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution, the files with `error` show the error and the files with `ranks` the ranks of the solvers (if executed in parallel).
 
