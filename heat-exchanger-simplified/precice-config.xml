@@ -40,8 +40,8 @@
     </mesh>
 
     <participant name="Fluid-Top">
-      <use-mesh name="Fluid-Top-Mesh" provide="yes" />
-      <use-mesh name="Solid-Top-Mesh-Faces" from="Solid" />
+      <provide-mesh name="Fluid-Top-Mesh" />
+      <receive-mesh name="Solid-Top-Mesh-Faces" from="Solid" />
       <read-data name="Heat-Flux-Top" mesh="Fluid-Top-Mesh" />
       <write-data name="Temperature-Top" mesh="Fluid-Top-Mesh" />
       <mapping:nearest-neighbor
@@ -52,12 +52,12 @@
     </participant>
 
     <participant name="Solid">
-      <use-mesh name="Fluid-Top-Mesh" from="Fluid-Top" />
-      <use-mesh name="Solid-Top-Mesh-Faces" provide="yes" />
-      <use-mesh name="Solid-Top-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Solid-Bottom-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Solid-Bottom-Mesh-Faces" provide="yes" />
-      <use-mesh name="Fluid-Bottom-Mesh" from="Fluid-Bottom" />
+      <receive-mesh name="Fluid-Top-Mesh" from="Fluid-Top" />
+      <provide-mesh name="Solid-Top-Mesh-Faces" />
+      <provide-mesh name="Solid-Top-Mesh-Nodes" />
+      <provide-mesh name="Solid-Bottom-Mesh-Nodes" />
+      <provide-mesh name="Solid-Bottom-Mesh-Faces" />
+      <receive-mesh name="Fluid-Bottom-Mesh" from="Fluid-Bottom" />
       <mapping:nearest-neighbor
         direction="read"
         from="Fluid-Top-Mesh"
@@ -75,8 +75,8 @@
     </participant>
 
     <participant name="Fluid-Bottom">
-      <use-mesh name="Fluid-Bottom-Mesh" provide="yes" />
-      <use-mesh name="Solid-Bottom-Mesh-Faces" from="Solid" />
+      <provide-mesh name="Fluid-Bottom-Mesh" />
+      <receive-mesh name="Solid-Bottom-Mesh-Faces" from="Solid" />
       <read-data name="Heat-Flux-Bottom" mesh="Fluid-Bottom-Mesh" />
       <write-data name="Temperature-Bottom" mesh="Fluid-Bottom-Mesh" />
       <mapping:nearest-neighbor

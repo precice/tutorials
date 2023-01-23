@@ -28,9 +28,9 @@
     </mesh>
 
     <participant name="Fluid">
-      <use-mesh name="Fluid-Mesh-Centers" provide="yes" />
-      <use-mesh name="Fluid-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Solid-Mesh-Nodes" from="Solid" />
+      <provide-mesh name="Fluid-Mesh-Centers" />
+      <provide-mesh name="Fluid-Mesh-Nodes" />
+      <receive-mesh name="Solid-Mesh-Nodes" from="Solid" />
       <read-data name="Heat-Flux" mesh="Fluid-Mesh-Centers" />
       <write-data name="Temperature" mesh="Fluid-Mesh-Nodes" />
       <mapping:nearest-projection
@@ -41,9 +41,9 @@
     </participant>
 
     <participant name="Solid">
-      <use-mesh name="Fluid-Mesh-Nodes" from="Fluid" />
-      <use-mesh name="Solid-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Solid-Mesh-Centers" provide="yes" />
+      <receive-mesh name="Fluid-Mesh-Nodes" from="Fluid" />
+      <provide-mesh name="Solid-Mesh-Nodes" />
+      <provide-mesh name="Solid-Mesh-Centers" />
       <read-data name="Temperature" mesh="Solid-Mesh-Centers" />
       <write-data name="Heat-Flux" mesh="Solid-Mesh-Nodes" />
       <!-- <export:vtk directory="preCICE-output" /> -->
