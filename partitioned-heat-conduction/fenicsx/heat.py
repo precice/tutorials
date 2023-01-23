@@ -37,6 +37,7 @@ import argparse
 import numpy as np
 from problem_setup import get_geometry
 
+
 def determine_gradient(V_g, u):
     """
     compute flux following http://hplgit.github.io/INF5620/doc/pub/fenics_tutorial1.1/tu2.html#tut-poisson-gradu
@@ -51,6 +52,7 @@ def determine_gradient(V_g, u):
     L = inner(grad(u), v) * dx
     problem = LinearProblem(a, L)
     return problem.solve()
+
 
 parser = argparse.ArgumentParser(description="Solving heat equation for simple or complex interface case")
 command_group = parser.add_mutually_exclusive_group(required=True)
@@ -239,7 +241,6 @@ while precice.is_coupling_ongoing():
 
         temperature_out.write_function(u_n, t)
         ref_out.write_function(u_ref, t)
-
 
     # Update Dirichlet BC
     u_D.t = t + dt.value

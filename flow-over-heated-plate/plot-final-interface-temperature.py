@@ -23,7 +23,7 @@ def vtk_to_dict(case):
     while i < max_i:
         this_data_name = data.GetPointData().GetArray(i).GetName()
         data_names.append(this_data_name)
-        if(this_data_name == name):
+        if (this_data_name == name):
             data_id = i
             break
         i += 1
