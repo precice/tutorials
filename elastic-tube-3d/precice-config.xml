@@ -34,14 +34,12 @@
         direction="write"
         from="Fluid-Mesh-Faces"
         to="Solid-Mesh"
-        constraint="conservative"
-        timing="initial" />
+        constraint="conservative" />
       <mapping:nearest-projection
         direction="read"
         from="Solid-Mesh"
         to="Fluid-Mesh-Nodes"
-        constraint="consistent"
-        timing="initial" />
+        constraint="consistent" />
     </participant>
 
     <participant name="Solid">
