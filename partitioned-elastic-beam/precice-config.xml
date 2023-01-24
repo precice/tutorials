@@ -30,14 +30,12 @@
         direction="write"
         from="Calculix-Mesh1"
         to="Calculix-Mesh2"
-        constraint="conservative"
-        timing="initial" />
+        constraint="conservative" />
       <mapping:nearest-neighbor
         direction="read"
         from="Calculix-Mesh2"
         to="Calculix-Mesh1"
-        constraint="consistent"
-        timing="initial" />
+        constraint="consistent" />
     </participant>
 
     <participant name="Calculix2">
