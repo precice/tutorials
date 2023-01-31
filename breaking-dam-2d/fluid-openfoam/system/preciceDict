@@ -27,7 +27,7 @@ interfaces
     
     writeData
     (
-      Forces0
+      Force
     );
   };
   
@@ -39,7 +39,7 @@ interfaces
     
     readData
     (
-      Displacements0
+      Displacement
     );
     
     writeData
