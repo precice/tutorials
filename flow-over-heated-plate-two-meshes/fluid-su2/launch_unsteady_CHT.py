@@ -36,7 +36,7 @@ import sys
 from optparse import OptionParser	# use a parser for configuration
 import pysu2			            # imports the SU2 wrapped module
 from math import *
-import precice
+import precice #import precice
 import numpy
 from time import sleep
 # -------------------------------------------------------------------
@@ -84,7 +84,6 @@ def main():
 
 
   # Configure preCICE:
-  #print("Configuring preCICE...") -- Messages appear to be hidden until sys.stdout.flush()
   size = comm.Get_size()
   try:
     interface = precice.Interface(options.precice_name, options.precice_config, rank, size)#, comm)
@@ -175,7 +174,7 @@ def main():
   interface.initialize_data()
 
   # Sleep briefly
-  # This is critically important as I have found that initializeData is not called fast enough in CHyPS to be read here in time
+  # This is critically important as I have found that initializeData is not called fast enough
   sleep(3)
 
   # Time loop is defined in Python so that we have access to SU2 functionalities at each time step
@@ -253,10 +252,11 @@ def main():
       # Update control parameters
       TimeIter += 1
       time += deltaT
+
     # Include barrier after preCICE stuff
     if options.with_MPI == True:
       comm.Barrier()
-      
+
   interface.finalize()
   
   if SU2Driver != None:
