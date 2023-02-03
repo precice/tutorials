@@ -205,8 +205,8 @@ def main():
       SU2Driver.BoundaryConditionsUpdate()
 
     # Include barrier after preCICE stuff
-    if options.with_MPI == True:
-      comm.Barrier()
+    #if options.with_MPI == True:
+    #  comm.Barrier()
 
     # Update timestep based on preCICE
     deltaT = SU2Driver.GetUnsteady_TimeStep()
@@ -254,8 +254,8 @@ def main():
       time += deltaT
 
     # Include barrier after preCICE stuff
-    if options.with_MPI == True:
-      comm.Barrier()
+    #if options.with_MPI == True:
+    #  comm.Barrier()
 
   interface.finalize()
   
