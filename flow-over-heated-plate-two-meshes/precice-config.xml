@@ -27,7 +27,6 @@
     <participant name="Fluid">
       <use-mesh name="Fluid-Mesh" provide="yes" />
       <use-mesh name="Solid-Mesh" from="Solid" />
-      <use-mesh name="Solid-Mesh-nodes" from="Solid" />
       <read-data name="Heat-Flux" mesh="Fluid-Mesh" />
       <write-data name="Temperature" mesh="Fluid-Mesh" />
       <mapping:nearest-neighbor
@@ -38,6 +37,7 @@
     </participant>
 
     <participant name="Solid">
+      <export:csv directory="preCICE-output" every-n-time-windows="50" />
       <use-mesh name="Fluid-Mesh" from="Fluid" />
       <use-mesh name="Solid-Mesh" provide="yes" />
       <use-mesh name="Solid-Mesh-nodes" provide="yes" />
@@ -51,7 +51,7 @@
     <watch-point mesh="Solid-Mesh" name="MyWatchPoint" coordinate="0.5; 0.0"/>
     </participant>
 
-    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
+    <m2n:sockets from="Fluid" to="Solid" network="ib0" exchange-directory=".." />
 
     <coupling-scheme:serial-implicit>
       <time-window-size value="0.01" />

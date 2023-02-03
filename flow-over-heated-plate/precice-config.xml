@@ -34,6 +34,7 @@
     </participant>
 
     <participant name="Solid">
+      <export:csv directory="preCICE-output"  every-n-time-windows="50"/>
       <use-mesh name="Fluid-Mesh" from="Fluid" />
       <use-mesh name="Solid-Mesh" provide="yes" />
       <mapping:nearest-neighbor
@@ -45,7 +46,7 @@
       <write-data name="Heat-Flux" mesh="Solid-Mesh" />
     </participant>
 
-    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
+    <m2n:sockets from="Fluid" to="Solid" network="ib0" exchange-directory=".." />
 
     <coupling-scheme:serial-implicit>
       <time-window-size value="0.01" />

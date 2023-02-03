@@ -45,7 +45,7 @@
       <watch-point mesh="Solid-Mesh" name="Flap-Tip" coordinate="0.0;1" />
     </participant>
 
-    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
+    <m2n:sockets from="Fluid" to="Solid" network="ib0" exchange-directory=".." />
 
     <coupling-scheme:parallel-implicit>
       <time-window-size value="0.01" />
