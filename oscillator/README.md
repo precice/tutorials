@@ -42,6 +42,23 @@ cd python
 ./run.sh -r
 ```
 
+### FMU
+
+Open two separate terminals and start both participants by calling:
+
+```bash
+cd fmi
+./run.sh -l
+```
+
+and
+
+```bash
+cd fmi
+./run.sh -r
+```
+
+
 ## Post-processing
 
 Each simulation run creates two files containing position and velocity of the two masses over time. These files are called `trajectory-Mass-Left.csv` and `trajectory-Mass-Right.csv`. You can use the script `plot-trajectory.py` for post-processing. Type `python3 plot-trajectory --help` to see available options. You can, for example, plot the trajectory of the Python solver by running
