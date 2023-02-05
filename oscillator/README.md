@@ -42,7 +42,7 @@ cd python
 ./run.sh -r
 ```
 
-### FMU
+### FMI
 
 Open two separate terminals and start both participants by calling:
 
