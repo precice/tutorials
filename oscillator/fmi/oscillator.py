@@ -7,11 +7,10 @@ import precice
 from enum import Enum
 import csv
 import os
+from fmpy import read_model_description, extract
+from fmpy.fmi2 import FMU2Slave
+import shutil
 
-
-class Scheme(Enum):
-    NEWMARK_BETA = "Newmark_beta"
-    GENERALIZED_ALPHA = "generalized_alpha"
 
 
 class Participant(Enum):
@@ -21,8 +20,6 @@ class Participant(Enum):
 
 parser = argparse.ArgumentParser()
 parser.add_argument("participantName", help="Name of the solver.", type=str, choices=[p.value for p in Participant])
-parser.add_argument("-ts", "--time-stepping", help="Time stepping scheme being used.", type=str,
-                    choices=[s.value for s in Scheme], default=Scheme.NEWMARK_BETA.value)
 args = parser.parse_args()
 
 participant_name = args.participantName
@@ -51,12 +48,31 @@ v0_2 = 0
 
 c = np.linalg.solve(eigenvectors, [u0_1, u0_2])
 
+
 if participant_name == Participant.MASS_LEFT.value:
     write_data_name = 'Displacement-Left'
     read_data_name = 'Displacement-Right'
     mesh_name = 'Mass-Left-Mesh'
-
+    fmu_file_name = 'models/MassLeft.fmu'
+    
+    model_description = read_model_description(fmu_file_name)  
+    vrs = {}
+    for variable in model_description.modelVariables:
+        vrs[variable.name] = variable.valueReference 
+    vr_m 	 = vrs['mass1.m']
+    vr_k 	 = vrs['spring1.c']
+    vr_k_12 	 = vrs['spring12.c']
+    vr_u	 = vrs['mass1.s']
+    vr_v 	 = vrs['mass1.v']
+    vr_a 	 = vrs['mass1.a']
+    vr_read 	 = vrs['disp2']
+    vr_write 	 = vrs['disp1']
+    
+    k = k_1
     mass = m_1
+    disp0 = u0_2
+    
+    # Calculate analytical solution for comparison
     stiffness = k_1 + k_12
     u0, v0, f0, d_dt_f0 = u0_1, v0_1, k_12 * u0_2, k_12 * v0_2
     def u_analytical(t): return c[0] * A[0] * np.cos(omega[0] * t) + c[1] * A[1] * np.cos(omega[1] * t)
@@ -67,21 +83,40 @@ elif participant_name == Participant.MASS_RIGHT.value:
     read_data_name = 'Displacement-Left'
     write_data_name = 'Displacement-Right'
     mesh_name = 'Mass-Right-Mesh'
-
+    fmu_file_name = 'models/MassRight.fmu'
+    
+    model_description = read_model_description(fmu_file_name)
+    vrs = {}
+    for variable in model_description.modelVariables:
+        vrs[variable.name] = variable.valueReference 
+    vr_m 	 = vrs['mass2.m']
+    vr_k 	 = vrs['spring2.c']
+    vr_k_12 	 = vrs['spring12.c']
+    vr_u 	 = vrs['mass2.s']
+    vr_v 	 = vrs['mass2.v']
+    vr_a 	 = vrs['mass2.a']
+    vr_read 	 = vrs['disp1']
+    vr_write 	 = vrs['disp2']
+    
+    k = k_2
     mass = m_2
+    disp0 = u0_1
+    
+    # Calculate analytical solution for comparison
     stiffness = k_2 + k_12
     u0, v0, f0, d_dt_f0 = u0_2, v0_2, k_12 * u0_1, k_12 * v0_1
     def u_analytical(t): return c[0] * B[0] * np.cos(omega[0] * t) + c[1] * B[1] * np.cos(omega[1] * t)
-
     def v_analytical(t): return -c[0] * B[0] * omega[0] * np.sin(omega[0] * t) - \
         c[1] * B[1] * omega[1] * np.sin(omega[1] * t)
 
 else:
     raise Exception(f"wrong participant name: {participant_name}")
 
+### preCICE setup
+
 num_vertices = 1  # Number of vertices
 
-solver_process_index = 0
+solver_process_index = 0 
 solver_process_size = 1
 
 configuration_file_name = "../precice-config.xml"
@@ -102,29 +137,40 @@ write_data_id = interface.get_data_id(write_data_name, mesh_id)
 precice_dt = interface.initialize()
 my_dt = precice_dt  # use my_dt < precice_dt for subcycling
 
+# write initial data
 if interface.is_action_required(precice.action_write_initial_data()):
     interface.write_scalar_data(write_data_id, vertex_id, write_data)
     interface.mark_action_fulfilled(precice.action_write_initial_data())
 
 interface.initialize_data()
 
-# Initial Conditions
+### FMU setup
+
+unzipdir = extract(fmu_file_name)
+fmu = FMU2Slave(guid=model_description.guid, unzipDirectory=unzipdir, modelIdentifier=model_description.coSimulation.modelIdentifier, instanceName='instance1')
+
+fmu.instantiate()
+fmu.setupExperiment()
+fmu.enterInitializationMode()
+fmu.exitInitializationMode()
+
+
+# Set parameters 
+fmu.setReal([vr_m], [mass])
+fmu.setReal([vr_k], [k])
+fmu.setReal([vr_k_12], [k_12])
+
+# Set initial Conditions
 a0 = (f0 - stiffness * u0) / mass
+fmu.setReal([vr_u], [u0])
+fmu.setReal([vr_v], [v0])
+fmu.setReal([vr_a], [a0])
+
 u = u0
 v = v0
 a = a0
 t = 0
 
-# Generalized Alpha Parameters
-if args.time_stepping == Scheme.GENERALIZED_ALPHA.value:
-    alpha_f = 0.4
-    alpha_m = 0.2
-elif args.time_stepping == Scheme.NEWMARK_BETA.value:
-    alpha_f = 0.0
-    alpha_m = 0.0
-m = 3 * [None]  # will be computed for each timestep depending on dt
-gamma = 0.5 - alpha_m + alpha_f
-beta = 0.25 * (gamma + 0.5)
 
 positions = []
 velocities = []
@@ -136,10 +182,11 @@ t_write = [t]
 
 while interface.is_coupling_ongoing():
     if interface.is_action_required(precice.action_write_iteration_checkpoint()):
-        u_cp = u
-        v_cp = v
-        a_cp = a
-        t_cp = t
+        data_cp 	= fmu.getReal([vr_read])
+        u_cp 		= fmu.getReal([vr_u])
+        v_cp 		= fmu.getReal([vr_v])
+        a_cp 		= fmu.getReal([vr_a])
+        t_cp 		= t
         interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
         # store data for plotting and postprocessing
@@ -149,34 +196,30 @@ while interface.is_coupling_ongoing():
 
     # compute time step size for this time step
     dt = np.min([precice_dt, my_dt])
-    # # use this with waveform relaxation
-    # read_time = (1-alpha_f) * dt
-    # read_data = interface.read_scalar_data(read_data_id, vertex_id, read_time)
-    read_data = interface.read_scalar_data(read_data_id, vertex_id)
-    displacement = read_data
     
-    f = k_12 * displacement
-
-    # do generalized alpha step
-    m[0] = (1 - alpha_m) / (beta * dt**2)
-    m[1] = (1 - alpha_m) / (beta * dt)
-    m[2] = (1 - alpha_m - 2 * beta) / (2 * beta)
-    k_bar = stiffness * (1 - alpha_f) + m[0] * mass
-    u_new = (f - alpha_f * stiffness * u + mass * (m[0] * u + m[1] * v + m[2] * a)) / k_bar
-    a_new = 1.0 / (beta * dt**2) * (u_new - u - dt * v) - (1 - 2 * beta) / (2 * beta) * a
-    v_new = v + dt * ((1 - gamma) * a + gamma * a_new)
+    read_data = interface.read_scalar_data(read_data_id, vertex_id)
+    data = read_data
+    fmu.setReal([vr_read], [data])
+    
+    fmu.doStep(t, dt)
+    
+    result = fmu.getReal([vr_write])
+    u_new = fmu.getReal([vr_u])
+    v_new = fmu.getReal([vr_v])
+    a_new = fmu.getReal([vr_a])
     t_new = t + dt
 
-    write_data = u_new
+    write_data = result[0]
 
     interface.write_scalar_data(write_data_id, vertex_id, write_data)
 
     precice_dt = interface.advance(dt)
 
     if interface.is_action_required(precice.action_read_iteration_checkpoint()):
-        u = u_cp
-        v = v_cp
-        a = a_cp
+        fmu.setReal([vr_read], data_cp)
+        fmu.setReal([vr_u], u_cp)
+        fmu.setReal([vr_v], v_cp)
+        fmu.setReal([vr_a], a_cp)
         t = t_cp
         interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
 
@@ -192,22 +235,26 @@ while interface.is_coupling_ongoing():
         t = t_new
 
         # write data to buffers
-        u_write.append(u)
-        v_write.append(v)
+        u_write.append(u[0])
+        v_write.append(v[0])
         t_write.append(t)
 
 # store final result
 u = u_new
 v = v_new
 a = a_new
-u_write.append(u)
-v_write.append(v)
+u_write.append(u[0])
+v_write.append(v[0])
 t_write.append(t)
 positions += u_write
 velocities += v_write
 times += t_write
 
 interface.finalize()
+fmu.terminate()
+fmu.freeInstance()              
+# clean up FMU
+shutil.rmtree(unzipdir, ignore_errors=True)
 
 # print errors
 error = np.max(abs(u_analytical(np.array(times)) - np.array(positions)))
