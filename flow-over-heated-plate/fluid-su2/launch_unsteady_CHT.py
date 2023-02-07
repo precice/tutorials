@@ -86,7 +86,7 @@ def main():
   # Configure preCICE:
   size = comm.Get_size()
   try:
-    interface = precice.Interface(options.precice_name, options.precice_config, rank, size)#, comm)
+    interface = precice.Interface(options.precice_name, options.precice_config, rank, size)
   except:
     print("There was an error configuring preCICE")
     return
@@ -114,8 +114,8 @@ def main():
   nVertex_CHTMarker = 0         #total number of vertices (physical + halo) on this rank
   nVertex_CHTMarker_HALO = 0    #number of halo vertices
   nVertex_CHTMarker_PHYS = 0    #number of physical vertices
-  iVertices_CHTMarker_PHYS = [] # indices of vertices this rank is working on
-  # Datatypes must be primitive as input to SU2 wrapper code, not numpy.int8, numpy.int64, etc.. So a list is used
+  iVertices_CHTMarker_PHYS = [] #indices of vertices this rank is working on
+  # Note: Datatypes must be primitive as input to SU2 wrapper code, not numpy.int8, numpy.int64, etc.. So a list is used
 
   # If the CHT marker is defined on this rank:
   if CHTMarkerID != None:
@@ -173,8 +173,7 @@ def main():
 
   interface.initialize_data()
 
-  # Sleep briefly
-  # This is critically important as I have found that initializeData is not called fast enough
+  # Sleep briefly to allow for data initialization to be processed
   sleep(3)
 
   # Time loop is defined in Python so that we have access to SU2 functionalities at each time step
@@ -185,7 +184,7 @@ def main():
     comm.Barrier()
 
 
-  while (interface.is_coupling_ongoing()):#TimeIter < nTimeIter):
+  while (interface.is_coupling_ongoing()):
 
     # Implicit coupling
     if (interface.is_action_required(precice.action_write_iteration_checkpoint())):
@@ -203,10 +202,6 @@ def main():
 
       # Tell the SU2 drive to update the boundary conditions
       SU2Driver.BoundaryConditionsUpdate()
-
-    # Include barrier after preCICE stuff
-    #if options.with_MPI == True:
-    #  comm.Barrier()
 
     # Update timestep based on preCICE
     deltaT = SU2Driver.GetUnsteady_TimeStep()
@@ -252,10 +247,6 @@ def main():
       # Update control parameters
       TimeIter += 1
       time += deltaT
-
-    # Include barrier after preCICE stuff
-    #if options.with_MPI == True:
-    #  comm.Barrier()
 
   interface.finalize()
   
