@@ -17,12 +17,10 @@ boundaryField
     inlet
     {
         type            noSlip;;
-        //value           $internalField;
     }
     outlet
     {
          type            noSlip;;
-        //value           $internalField;
     }
     flap
     {
