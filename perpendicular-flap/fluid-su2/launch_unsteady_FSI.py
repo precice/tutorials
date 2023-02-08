@@ -111,6 +111,7 @@ def main():
     nVertex_MovingMarker_PHYS = 0    #number of physical vertices
     iVertices_MovingMarker_PHYS = [] # indices of vertices this rank is working on
     # Datatypes must be primitive as input to SU2 wrapper code, not numpy.int8, numpy.int64, etc.. So a list is used
+    
     if MovingMarkerID != None:
         nVertex_MovingMarker = SU2Driver.GetNumberVertices(MovingMarkerID)
         nVertex_MovingMarker_HALO = SU2Driver.GetNumberHaloVertices(MovingMarkerID)
@@ -146,7 +147,6 @@ def main():
     displacements = numpy.zeros((nVertex_MovingMarker_PHYS,options.nDim))
     forces = numpy.zeros((nVertex_MovingMarker_PHYS,options.nDim))
 
-
     # Retrieve some control parameters from the driver
     deltaT = SU2Driver.GetUnsteady_TimeStep()
     TimeIter = SU2Driver.GetTime_Iter()
@@ -155,13 +155,6 @@ def main():
 
     # Setup preCICE dt:
     precice_deltaT = interface.initialize()
-
-    # Extract the initial position of each node on the moving marker
-    #CoordX = np.zeros(nVertex_MovingMarker)
-    #CoordY = np.zeros(nVertex_MovingMarker)
-    #CoordZ = np.zeros(nVertex_MovingMarker)
-    #for iVertex in range(nVertex_MovingMarker):
-    #   CoordX[iVertex], CoordY[iVertex], CoordZ[iVertex] = SU2Driver.GetInitialMeshCoord(MovingMarkerID, iVertex)
 
     # Set up initial data for preCICE
     if (interface.is_action_required(precice.action_write_initial_data())):
@@ -204,13 +197,6 @@ def main():
                 DisplZ = 0 if options.nDim == 2 else displacements[i][2]
 
                 SU2Driver.SetMeshDisplacement(MovingMarkerID, iVertex, DisplX, DisplY, DisplZ)
-
-            # Communicate mesh displacements?
-            SU2Driver.CommunicateMeshDisplacement()
-        
-        # Include barrier after preCICE stuff
-        if options.with_MPI == True:
-            comm.Barrier()
 
         # Update timestep based on preCICE
         deltaT = SU2Driver.GetUnsteady_TimeStep()
@@ -258,10 +244,6 @@ def main():
             # Update control parameters
             TimeIter += 1
             time += deltaT
-
-        # Include barrier after preCICE stuff
-        if options.with_MPI == True:
-            comm.Barrier()
 
     # Postprocess the solver and exit cleanly
     SU2Driver.Postprocessing()
