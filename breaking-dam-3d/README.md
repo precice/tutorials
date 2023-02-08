@@ -1,5 +1,5 @@
 ---
-title: Breaking Dam 3D
+title: Breaking dam with flexible pillar: 3D variant
 permalink: tutorials-breaking-dam-3d.html
 keywords: FSI, OpenFOAM, CalculiX, nearest-projection, IQN-ILS
 summary: Tutorial for an FSI simulation of a three-dimensional water column striking a flexible wall, based on the two-dimensional case.
