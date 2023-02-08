@@ -41,9 +41,8 @@ solvers
 
 PIMPLE
 {
-    nCorrectors 4;
+    nCorrectors 3;
     nNonOrthogonalCorrectors 1;
-    consistent  true;
     momentumPredictor true; 
-    nOuterCorrectors	1;
+    nOuterCorrectors	2;
 }
