@@ -5,13 +5,13 @@ FoamFile {
     format      ascii;
 }
 
-numberOfSubdomains 2;
+numberOfSubdomains 4;
 
 method          simple;
 
 simpleCoeffs
 {
-    n               (2 1 1);
+    n               (2 2 1);
     delta           0.001;
 }
 
