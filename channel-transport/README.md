@@ -28,6 +28,8 @@ Fluid participant:
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://www.precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
 
+* OpenFOAM (pimpleFoam): tested with OpenFOAM v2112. For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
+
 Transport participant:
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://www.precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
