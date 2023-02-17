@@ -1,0 +1,12 @@
+{
+    "model_params": {
+            "mass.m": 1,
+            "spring_fixed.c": 39.478,
+            "spring_middle.c": 157.914
+    },
+    "initial_conditions": {
+		"mass.u": 1,
+      		"mass.v": 0, 
+      		"mass.a": -197.392
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "coupling_params": {
+            "participant_name": "Mass-Right",
+            "config_file_name": "../precice-config.xml",
+            "mesh_name": "Mass-Right-Mesh",
+            "write_data_name": "Force-Right",
+            "read_data_name": "Force-Left",
+            "num_vertices": 1,
+            "solver_process_index": 0,
+            "solver_process_size": 1
+    },
+    "simulation_params": {
+		"fmu_file_name": "./Oscillator.fmu",
+    		"output_file_name": "./output/trajectory-Mass-Right.csv",
+    		"output": ["mass.u", "mass.v"],
+    		"fmu_read_data_name": "force_in",
+    		"fmu_write_data_name": "force_out",
+    		"fmu_instance_name": "instance_right"
+    }
+}

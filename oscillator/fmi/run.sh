@@ -12,10 +12,14 @@ fi
 while getopts ":lr" opt; do
   case ${opt} in
   l)
-    python3 oscillator.py Mass-Left
+    python3 runner.py ./MassLeft/fmi-settings.json MassLeft/precice-settings.json
+    python3 calculate-error.py MassLeft/fmi-settings.json MassLeft/precice-settings.json MassRight/fmi-settings.json MassRight/precice-settings.json Mass-Left
+
     ;;
   r)
-    python3 oscillator.py Mass-Right
+    python3 runner.py MassRight/fmi-settings.json MassRight/precice-settings.json
+    python3 calculate-error.py MassLeft/fmi-settings.json MassLeft/precice-settings.json MassRight/fmi-settings.json MassRight/precice-settings.json Mass-Right
+
     ;;
   *)
     usage

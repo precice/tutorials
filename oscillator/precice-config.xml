@@ -8,23 +8,23 @@
   <!-- Use this to activate waveforms
   <solver-interface dimensions="2" experimental="true">
   -->
-    <data:scalar name="Displacement-Left"  />
-    <data:scalar name="Displacement-Right"  />
+    <data:scalar name="Force-Left"  />
+    <data:scalar name="Force-Right"  />
 
     <mesh name="Mass-Left-Mesh">
-      <use-data name="Displacement-Left" />
-      <use-data name="Displacement-Right" />
+      <use-data name="Force-Left" />
+      <use-data name="Force-Right" />
     </mesh>
 
     <mesh name="Mass-Right-Mesh">
-      <use-data name="Displacement-Left" />
-      <use-data name="Displacement-Right" />
+      <use-data name="Force-Left" />
+      <use-data name="Force-Right" />
     </mesh>
 
     <participant name="Mass-Left">
       <use-mesh name="Mass-Left-Mesh" provide="yes"/>
-      <write-data name="Displacement-Left" mesh="Mass-Left-Mesh" />
-      <read-data  name="Displacement-Right" mesh="Mass-Left-Mesh" />
+      <write-data name="Force-Left" mesh="Mass-Left-Mesh" />
+      <read-data  name="Force-Right" mesh="Mass-Left-Mesh" />
       <!-- Use this to activate first order interpolation
       <read-data  name="Force-Right" mesh="Mass-Left-Mesh" waveform-order="1" />
       -->
@@ -33,8 +33,8 @@
     <participant name="Mass-Right">
       <use-mesh name="Mass-Left-Mesh" from="Mass-Left"/>
       <use-mesh name="Mass-Right-Mesh" provide="yes"/>
-      <write-data name="Displacement-Right" mesh="Mass-Right-Mesh" />
-      <read-data  name="Displacement-Left" mesh="Mass-Right-Mesh" />
+      <write-data name="Force-Right" mesh="Mass-Right-Mesh" />
+      <read-data  name="Force-Left" mesh="Mass-Right-Mesh" />
       <!-- Use this to activate first order interpolation
       <read-data  name="Force-Left" mesh="Mass-Right-Mesh" waveform-order="1" />
       -->
@@ -47,15 +47,15 @@
     <coupling-scheme:serial-implicit>
       <participants first="Mass-Left" second="Mass-Right" />
       <max-time value="1" />
-      <time-window-size value="0.001" />
+      <time-window-size value="0.01" />
       <max-iterations value="200" />
-      <relative-convergence-measure data="Displacement-Left" mesh="Mass-Left-Mesh" limit="1e-10"/>
-      <relative-convergence-measure data="Displacement-Right" mesh="Mass-Left-Mesh" limit="1e-10"/>
-      <exchange data="Displacement-Left" mesh="Mass-Left-Mesh" from="Mass-Left" to="Mass-Right" />
+      <relative-convergence-measure data="Force-Left" mesh="Mass-Left-Mesh" limit="1e-10"/>
+      <relative-convergence-measure data="Force-Right" mesh="Mass-Left-Mesh" limit="1e-10"/>
+      <exchange data="Force-Left" mesh="Mass-Left-Mesh" from="Mass-Left" to="Mass-Right" />
       <!-- Use this for higher accuracy with waveforms and preCICE v3
       <exchange data="Force-Left" mesh="Mass-Left-Mesh" from="Mass-Left" to="Mass-Right" initialize="true" />
       -->
-      <exchange data="Displacement-Right" mesh="Mass-Left-Mesh" from="Mass-Right" to="Mass-Left" initialize="true"/>
+      <exchange data="Force-Right" mesh="Mass-Left-Mesh" from="Mass-Right" to="Mass-Left" initialize="true"/>
     </coupling-scheme:serial-implicit>
   </solver-interface>
 
