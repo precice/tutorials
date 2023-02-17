@@ -22,7 +22,7 @@ Note that this case applies a Schwarz-type coupling method and not (like most ot
 This tutorial is only available in Python. You need to have preCICE and the Python bindings installed on your system.
 
 - *Python*: An example solver using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy`, which you can get from your system package manager or with `pip3 install --user <package>`.
-- *FMI*: An example solver using FMU models for computation. This solver depends on the Python libraries `numpy` and `FMPy` which you can install with conda or pip, for example `pip3 install --user fmpy`. You also need the compiled FMU model `Oscillator.fmu`. The model for Linux is part of this repository. For other systems, please recompile the model from the provided [C-files](fmi/cmake). If you want to change the model parameters or the initial conditions of the simulation, have a look inside the setting files for [MassLeft](fmi/MassLeft) and [MassRight](fmi/MassRight).
+- *FMI*: An example solver using FMU models for computation. This solver depends on the Python libraries `numpy` and `FMPy` which you can install with conda or pip, for example `pip3 install --user fmpy`. You also need the compiled FMU model `Oscillator.fmu`. The model for Linux is part of this repository. For other systems, please recompile the model from the provided [C-files](fmi/cmake). If you want to change the model parameters or the initial conditions of the simulation, have a look inside the setting files for [MassLeft](fmi/MassLeft) and [MassRight](fmi/MassRight). For more information, please refer to [2]
 
 ## Running the Simulation
 
@@ -81,3 +81,4 @@ For details, refer to [1].
 ## References
 
 [1] V. Schüller, B. Rodenberg, B. Uekermann and H. Bungartz, A Simple Test Case for Convergence Order in Time and Energy Conservation of Black-Box Coupling Schemes, in: WCCM-APCOM2022. [URL](https://www.scipedia.com/public/Rodenberg_2022a)
+[2] L. Willeke, A preCICE-FMI Runner to couple controller models to PDEs, Master Thesis, University of Stuttgart, 2023 [URL]()
