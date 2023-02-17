@@ -76,7 +76,7 @@ fmu.setFloat64(initial_conditions_vr, initial_conditions_values)
 
 fmu.exitInitializationMode()
 
-# Get initial write data. Check this if using more than one read / write data point
+# Get initial write data
 fmu_write_data_init = fmu.getFloat64(vr_write)
 
 
@@ -122,13 +122,7 @@ recorder.sample(t, force=False)
 while interface.is_coupling_ongoing():
     if interface.is_action_required(precice.action_write_iteration_checkpoint()):
         
-        if True: # can_get_and_set_fmu_state is currently read wrong by FMPy
-            state_cp 	= fmu.getFMUState()
-        elif len(checkpoint_names) != 0:
-            checkpoint 	= fmu.getFloat64(checkpoint_vr)
-        else:
-            raise Exception('Please provide variables for the checkpoint during implicit coupling. The FMU model doesnt allow to \
-            get and set the FMU state with the built-in functions.')
+        state_cp 	= fmu.getFMUState()
         t_cp = t
         
         interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
@@ -137,7 +131,7 @@ while interface.is_coupling_ongoing():
     dt = np.min([precice_dt, my_dt])
     
     read_data 	= interface.read_scalar_data(read_data_id, vertex_id)
-    data 		= read_data
+    data 	= read_data
     
     fmu.setFloat64(vr_read, [data])
     
@@ -155,12 +149,9 @@ while interface.is_coupling_ongoing():
 
     if interface.is_action_required(precice.action_read_iteration_checkpoint()):
         
-        if True: # can_get_and_set_fmu_state is currently read wrong by FMPy
-            fmu.setFMUState(state_cp)
-        else:
-            fmu.setFloat64(checkpoint_vr, checkpoint)
-        
+        fmu.setFMUState(state_cp)
         t = t_cp
+        
         interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
         
     else:
