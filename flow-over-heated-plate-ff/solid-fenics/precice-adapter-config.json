@@ -1,0 +1,10 @@
+{
+  "participant_name": "Solid",
+  "config_file_name": "../precice-config.xml",
+  "interface": {
+      "coupling_mesh_name": "Solid-Mesh",
+      "write_data_name": "Heat-Flux",
+      "read_data_name": "Temperature",
+      "interpolation_type": "rbf"
+    }
+}
