@@ -299,16 +299,22 @@ fmiStatus fmiDoStep(fmiComponent c, fmiReal currentCommunicationPoint, fmiReal c
     ModelInstance* instance = (ModelInstance *)c;
 
     const fmiReal nextCommunicationPoint = currentCommunicationPoint + communicationStepSize + EPSILON;
+    
+    instance->solverStepSize = communicationStepSize;
+    
+    fmiBoolean nextCommunicationPointReached;
 
     while (true) {
+    
+    	nextCommunicationPointReached = instance->time + instance->communicationStepSize > nextCommunicationPoint;
 
-        if (instance->time + FIXED_SOLVER_STEP > nextCommunicationPoint) {
+        if (nextCommunicationPointReached) {
             break;  // next communcation point reached
         }
 
         bool stateEvent, timeEvent;
 
-        doFixedStep(instance, &stateEvent, &timeEvent);
+        doAlphaStep(instance, &stateEvent, &timeEvent);
 #ifdef EVENT_UPDATE
         if (stateEvent || timeEvent) {
             eventUpdate(instance);

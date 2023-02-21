@@ -16,8 +16,10 @@ parser.add_argument("plotType", help="Plot type.", type=str, choices=[pt.name fo
 args = parser.parse_args()
 
 filename = args.csvFile
+split_filename = filename.split('/')
+solver = split_filename[0]
 
-if 'python' in filename:
+if solver == 'python':
     df = pd.read_csv(filename, delimiter=';')
     if args.plotType == PlotType.U_OVER_T.name:
         plt.plot(df['time'], df['position'])
@@ -31,9 +33,8 @@ if 'python' in filename:
         plt.scatter([df['position'].iloc[-1]], [df['velocity'].iloc[-1]],
                     label=f"(u,v) at t={df['time'].iloc[-1]}", marker="*")
         plt.title(PlotType.TRAJECTORY.value)
-        plt.legend()
-        
-if 'fmi' in filename:
+        plt.legend()   
+elif solver == 'fmi':
     df = pd.read_csv(filename, delimiter=',')
     if args.plotType == PlotType.U_OVER_T.name:
         plt.plot(df['time'], df['mass.u'])

@@ -26,7 +26,7 @@ This tutorial is only available in Python. You need to have preCICE and the Pyth
 
 ## Running the Simulation
 
-You can either run both participants with one of the two solvers or use a separate solver for each participants.
+You can either run both participants with one of the two solvers or use a separate solver for each participant.
 
 ### Python
 
@@ -82,4 +82,4 @@ For details, refer to [1].
 
 [1] V. Schüller, B. Rodenberg, B. Uekermann and H. Bungartz, A Simple Test Case for Convergence Order in Time and Energy Conservation of Black-Box Coupling Schemes, in: WCCM-APCOM2022. [URL](https://www.scipedia.com/public/Rodenberg_2022a)
 
-[2] L. Willeke, A preCICE-FMI Runner to couple controller models to PDEs, Master Thesis, University of Stuttgart, 2023 [URL]()
+[2] L. Willeke, A preCICE-FMI Runner to couple controller models to PDEs, Master Thesis, University of Stuttgart, 2023 (Publication pending)

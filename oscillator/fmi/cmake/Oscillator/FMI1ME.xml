@@ -1,41 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fmiModelDescription
   fmiVersion="1.0"
-  modelName="BouncingBall"
-  modelIdentifier="BouncingBall"
-  description="This model calculates the trajectory, over time, of a ball dropped from a height of 1 m."
+  modelName="Oscillator"
+  modelIdentifier="Oscillator"
+  description="This model is used for the partitioned simulation of an oscillator with three springs and two masses. The oscillator is cut in the middle spring for partitioning. Here, two springs with one mass between them are calculated."
   generationTool="Reference FMUs (development build)"
   guid="{1AE5E10D-9521-4DE3-80B9-D0EAAA7D5AF1}"
-  numberOfContinuousStates="2"
+  numberOfContinuousStates="1"
   numberOfEventIndicators="1">
 
-  <DefaultExperiment startTime="0" stopTime="3"/>
+  <DefaultExperiment startTime="0" stopTime="1"/>
 
   <ModelVariables>
     <ScalarVariable name="time" valueReference="0" causality="internal" variability="continuous" description="Simulation time">
-      <Real/>
-    </ScalarVariable>
-    <ScalarVariable name="h" valueReference="1" causality="output" description="Position of the ball">
-      <Real start="1"/>
-    </ScalarVariable>
-    <ScalarVariable name="der(h)" valueReference="2" causality="internal" variability="continuous" description="Derivative of h">
-      <Real/>
-    </ScalarVariable>
-    <ScalarVariable name="v" valueReference="3" causality="output" variability="continuous" description="Velocity of the ball">
-      <Real start="0"/>
-    </ScalarVariable>
-    <ScalarVariable name="der(v)" valueReference="4" causality="internal" variability="continuous" description="Derivative of v">
-      <Real/>
-    </ScalarVariable>
-    <ScalarVariable name="g" valueReference="5" variability="parameter" description="Gravity acting on the ball">
-      <Real start="-9.81"/>
-    </ScalarVariable>
-    <ScalarVariable name="e" valueReference="6" variability="parameter" description="Coefficient of restitution">
-      <Real start="0.7" min="0.5" max="1"/>
-    </ScalarVariable>
-    <ScalarVariable name="v_min" valueReference="7" variability="constant" description="Velocity below which the ball stops bouncing">
-      <Real start="0.1"/>
-    </ScalarVariable>
+      <Real/></ScalarVariable>
+    <ScalarVariable name="mass.m" valueReference="1" causality="internal" variability="constant" description="Mass of the body">
+    <Real start="1" unit="kg"/></ScalarVariable>
+    <ScalarVariable name="mass.u" valueReference="2" causality="internal" variability="parameter" description="Absolute position of the body">
+    <Real start="0.0" unit="m"/></ScalarVariable>
+    <ScalarVariable name="mass.v" valueReference="3" causality="internal" variability="parameter" description="Velocity of the body">
+    <Real start="0.0" unit="m/s"/></ScalarVariable>
+    <ScalarVariable name="mass.a" valueReference="4" causality="internal" variability="parameter" description="Acceleration of the body">
+    <Real unit="m/s2"/></ScalarVariable>
+    <ScalarVariable name="spring_fixed.c" valueReference="5" causality="internal" variability="constant" description="Spring constant of the spring mounted on the wall">
+    <Real  start="3.1416" unit="N/m" /></ScalarVariable>
+    <ScalarVariable name="spring_middle.c" valueReference="6" causality="internal" variability="constant" description="Spring constant of the spring between the masses">
+    <Real  start="3.1416" unit="N/m" /></ScalarVariable>
+    <ScalarVariable name="force_in" valueReference="7" causality="internal" variability="parameter" description="Input force calculated by the other partition">
+    <Real  start="0" unit="N" /></ScalarVariable>
+    <ScalarVariable name="force_out" valueReference="8" causality="internal" variability="parameter" description="Output force calculated by this partition">
+    <Real  start="0" unit="N" /></ScalarVariable>
+    <ScalarVariable name="alpha_f" valueReference="9" causality="internal" variability="constant" description="Parameter f of generalized alpha method">
+    <Real  start="0" /></ScalarVariable>
+    <ScalarVariable name="alpha_m" valueReference="10" causality="internal" variability="constant" description="Parameter m of generalized alpha method">
+    <Real  start="0" /></ScalarVariable>
   </ModelVariables>
 
 </fmiModelDescription>
