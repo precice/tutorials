@@ -306,7 +306,7 @@ fmiStatus fmiDoStep(fmiComponent c, fmiReal currentCommunicationPoint, fmiReal c
 
     while (true) {
     
-    	nextCommunicationPointReached = instance->time + instance->communicationStepSize > nextCommunicationPoint;
+    	nextCommunicationPointReached = instance->time + instance->solverStepSize > nextCommunicationPoint;
 
         if (nextCommunicationPointReached) {
             break;  // next communcation point reached
