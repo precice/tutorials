@@ -1,19 +1,19 @@
 ---
-title: Flow over heated plate ff
-permalink: tutorials-flow-over-heated-plate-ff.html
+title: Flow over heated plate with partitioned flow
+permalink: tutorials-flow-over-heated-plate-partitioned-flow.html
 keywords: tutorial, CHT, conjugate-heat transfer, OpenFOAM, FEniCS, Nutils, FF, flow partitioning
 summary: This tutorial describes how to run a conjugate heat transfer coupled simulation using preCICE and any fluid-solid solver combination of our <a href="adapters-overview.html">officially provided adapter codes</a>.
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate-ff). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate-partitioned-flow). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
 
 The setup for this tutorial is similar to the [flow over a heated plate](https://www.precice.org/tutorials-flow-over-heated-plate.html). In this case we additionally partition the OpenFOAM fluid to create a three-way coupling using CHT (conjugate heat transfer) and FF (fluid-fluid coupling).
 
-The test case is two-dimensional and uses a serial-implicit coupling with Aitken underrelaxation for the CHT coupling and serial-implicit coupling with Quasi-Newton acceleration for the fluid-fluid coupling.
+The test case is two-dimensional and uses a serial-implicit coupling with Quasi-Newton acceleration for the fluid-fluid coupling. The CHT coupling between the solid and the fluid2 participant is changed to serial-explicit because it does not make sense numerically to have multiple serial-implicit schemes. (see also [here](https://precice.org/configuration-coupling-multi.html))
 
 The flow partitioning is done with the fluid-fluid module of the [preCICE OpenFOAM adapter](https://www.precice.org/adapter-openfoam-overview.html). Because we use buoyantPimpleFoam we have to tell the adapter that the coupled pressure has the name `p_rgh`. The temperature is coupled at the fluid-solid interface by exchanging *Temperature* and *Heat-Flux*, at the fluid-fluid interface it is *FlowTemperature* and *FlowTemperatureGradient*.
 
@@ -64,7 +64,7 @@ Have a look at the [flow-over heated-plate](https://www.precice.org/tutorials-fl
 
 An example of the visualized expected results looks as follows:
 
-![result](images/tutorials-flow-over-heated-plate-ff-results.png)
+![result](images/tutorials-flow-over-heated-plate-partitioned-flow-results.png)
 
 Observe that the temperature at the bottom of the plate is 310K and at the inlet 300K. On the interface, the temperature is between these values. An area of higher temperature is formed above the plate, which is shifted towards the front, driven by the flow. The temperature is coupled smoothly across the fluid-fluid coupling interface.
 
