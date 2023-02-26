@@ -39,7 +39,6 @@ cd fluid2-openfoam-pimplefoam
 ./run.sh
 ```
 
-
 ## Post-processing
 
 The OpenFOAM solvers generate a `.foam` file each. You can open this file in ParaView.
