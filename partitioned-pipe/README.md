@@ -28,7 +28,7 @@ Both for Fluid1 and Fluid2, the following participants are available:
 All listed solvers can be used in order to run the simulation. Open two separate terminals and start the desired fluid1 and fluid2 participants by calling the respective run script. For example:
 
 ```bash
-cd fluid1-openfoam-pimplefoam
+cd fluid1-openfoam-sonicliquidfoam
 ./run.sh
 ```
 
@@ -39,16 +39,19 @@ cd fluid2-openfoam-pimplefoam
 ./run.sh
 ```
 
+
 ## Post-processing
 
 The OpenFOAM solvers generate a `.foam` file each. You can open this file in ParaView.
 An example of the visualized expected results looks as follows:
 
-![result](images/tutorials-partitioned-pipe-results-pimpleFoam-sonicliquidfoam.png)
+![result](images/tutorials-partitioned-pipe-results-sonicliquidfoam-pimplefoam.png)
 
-Observe that the velocity and pressure values are smoothly changing around the coupling interface. The simulation starts with oscillations, which disappear after a few time steps.
+Observe that the velocity and pressure values are smoothly changing around the coupling interface.
 
-Note that here we are only coupling pimpleFoam and sonicLiquidFoam only to showcase that they are different solvers working on different domains. In practice, coupling such an incompressible and a compressible solver would not be trivial, due to, e.g., the different pressure units.
+Note that here we are only coupling sonicLiquidFoam and pimpleFoam only to showcase that they are different solvers working on different domains. In practice, coupling such a compressible and an incompressible solver would not be trivial, due to, e.g., the different pressure units.
+
+Also note that sonicLiquidFoam does not support the fixedFluxExtrapolatedPressure boundary condition. Therefore, when using sonicLiquidFoam for Fluid2, you might want to enable the exchange of the Pressure Gradient and you will observe a less perfect coupling interface.
 
 ## Non-Orthogonality
 
