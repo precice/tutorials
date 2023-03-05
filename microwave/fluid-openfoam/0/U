@@ -12,10 +12,6 @@ internalField   uniform ( 0.1 0 0 );
 
 boundaryField
 {
-    interface
-    {
-        type            noSlip;
-    }
     inlet
     {
         type            fixedValue;
@@ -25,17 +21,17 @@ boundaryField
     {
         type            zeroGradient;
     }
-    top
-    {
-        type            slip;
-    }
-    bottom
+    upperWall
     {
         type            noSlip;
     }
-    slip-bottom
+    lowerWall
     {
-        type            slip;
+        type            noSlip;
+    }
+    frontAndBack
+    {
+        type            empty;
     }
     defaultFaces
     {

@@ -12,11 +12,6 @@ internalField   uniform 0.1;
 
 boundaryField
 {
-    interface
-    {
-        type            kqRWallFunction;
-        value           uniform 0.1;
-    }
     inlet
     {
         type            kqRWallFunction;
@@ -27,20 +22,19 @@ boundaryField
         type            kqRWallFunction;
         value           uniform 0.1;
     }
-    top
+    upperWall
     {
         type            kqRWallFunction;
         value           uniform 0.1;
     }
-    slip-bottom
+    lowerWall
     {
         type            kqRWallFunction;
         value           uniform 0.1;
     }
-    bottom
+    frontAndBack
     {
-        type            kqRWallFunction;
-        value           uniform 0.1;
+        type            empty;
     }
     defaultFaces
     {

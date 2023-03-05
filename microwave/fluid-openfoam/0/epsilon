@@ -12,11 +12,6 @@ internalField   uniform 0.01;
 
 boundaryField
 {
-    interface
-    {
-        type            epsilonWallFunction;
-        value           uniform 0.01;
-    }
     inlet
     {
         type            epsilonWallFunction;
@@ -27,20 +22,19 @@ boundaryField
         type            epsilonWallFunction;
         value           uniform 0.01;
     }
-    top
+    upperWall
     {
         type            epsilonWallFunction;
         value           uniform 0.01;
     }
-    bottom
+    lowerWall
     {
         type            epsilonWallFunction;
         value           uniform 0.01;
     }
-    slip-bottom
+    frontAndBack
     {
-        type            epsilonWallFunction;
-        value           uniform 0.01;
+        type            empty;
     }
     defaultFaces
     {

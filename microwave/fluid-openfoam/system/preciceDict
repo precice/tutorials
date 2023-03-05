@@ -18,16 +18,16 @@ interfaces
   Interface1
   {
     mesh              Fluid-Mesh;
-    patches           (interface);
+    patches           ();
+    locations         volume;
     
     readData
     (
-      Heat-Flux
+      Temperature
     );
     
     writeData
     (
-      Temperature
     );
   };
 };

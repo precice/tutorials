@@ -12,11 +12,6 @@ internalField   uniform 0;
 
 boundaryField
 {
-    interface
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
     inlet
     {
         type            nutkWallFunction;
@@ -27,20 +22,19 @@ boundaryField
         type            nutkWallFunction;
         value           uniform 0;
     }
-    top
+    upperWall
     {
         type            nutkWallFunction;
         value           uniform 0;
     }
-    bottom
+    lowerWall
     {
         type            nutkWallFunction;
         value           uniform 0;
     }
-    slip-bottom
+    frontAndBack
     {
-        type            nutkWallFunction;
-        value           uniform 0;
+        type            empty;
     }
     defaultFaces
     {

@@ -12,10 +12,6 @@ internalField   uniform 103500;
 
 boundaryField
 {
-    interface
-    {
-        type            zeroGradient;
-    }
     inlet
     {
         type            zeroGradient;
@@ -25,17 +21,17 @@ boundaryField
         type            fixedValue;
         value           $internalField;
     }
-    top
+    upperWall
     {
         type            zeroGradient;
     }
-    slip-bottom
+    lowerWall
     {
         type            zeroGradient;
     }
-    bottom
+    frontAndBottom
     {
-        type            zeroGradient;
+        type            empty;
     }
     defaultFaces
     {

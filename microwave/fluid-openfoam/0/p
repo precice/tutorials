@@ -12,11 +12,6 @@ internalField   uniform 103500;
 
 boundaryField
 {
-    interface
-    {
-        type            calculated;
-        value           $internalField;
-    }
     inlet
     {
         type            calculated;
@@ -27,25 +22,19 @@ boundaryField
         type            calculated;
         value           $internalField;
     }
-    outerWall
+    upperWall
     {
         type            calculated;
         value           $internalField;
     }
-    top
+    lowerWall
     {
         type            calculated;
         value           $internalField;
     }
-    bottom
+    frontAndBack
     {
-        type            calculated;
-        value           $internalField;
-    }
-    slip-bottom
-    {
-        type            calculated;
-        value           $internalField;
+        type            empty;
     }
     defaultFaces
     {
