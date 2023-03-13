@@ -31,7 +31,7 @@
         direction="write"
         from="Temperature-Mesh"
         to="Fluid-Mesh"
-        constraint="conservative" />
+        constraint="consistent" />
       <write-data name="Temperature" mesh="Temperature-Mesh" />
     </participant>
 

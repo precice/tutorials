@@ -23,7 +23,7 @@ def main():
     domain = domain.withboundary(inflow="left", outflow="right", wall="top,bottom")
 
     # cloud of Gauss points
-    gauss = domain.sample("gauss", degree=2)
+    gauss = domain.sample("uniform", degree=1)
 
     # Nutils namespace
     ns = function.Namespace(fallback_length=2)
@@ -36,6 +36,7 @@ def main():
     mesh_name = "Temperature-Mesh"
     mesh_id = interface.get_mesh_id(mesh_name)
     vertices = gauss.eval(ns.x)
+    #print(vertices)
     vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)
 
     # define "normal" state and "heating" state
@@ -49,7 +50,9 @@ def main():
     #values_B[2443] = 400.0
 
     # coupling data
+    
     temperature_id = interface.get_data_id("Temperature", mesh_id)
+    #temperature_id = 0
 
     precice_dt = interface.initialize()
 
@@ -57,11 +60,11 @@ def main():
     dt = 0.005
 
     # initialize the velocity values
-    temperature_values = np.zeros_like(vertices)
-    if timestep > 0.3 and timestep < 0.7:
-        temperature_values = values_B
-    else:
-        temperature_values = values_A
+    #temperature_values = np.zeros_like(vertices)
+    #if timestep > 0.3 and timestep < 0.7:
+    #    temperature_values = values_B
+    #else:
+    #    temperature_values = values_A
 
     
     while interface.is_coupling_ongoing():
@@ -77,15 +80,15 @@ def main():
         #        export.vtk("Heat_" + str(timestep), bezier.tri, x, T=u)
         #        print("after")
 
-        # if timestep between 0.3 and 0.7 write verB (heated), otherwise write verA (default)
-        if timestamp > 0.3 and timestamp < 0.7:
-            interface.write_block_scalar_data(temperature_id, vertex_ids, values_B)
-        else:
-            interface.write_block_scalar_data(temperature_id, vertex_ids, values_A)
-
         # potentially adjust non-matching timestep sizes
         dt = min(dt, precice_dt)
-
+        
+        # if timestep between 0.3 and 0.7 write verB (heated), otherwise write verA (default)
+        if interface.is_write_data_required(dt):
+            if timestamp > 0.3 and timestamp < 0.7:
+                interface.write_block_scalar_data(temperature_id, vertex_ids, values_B)
+            else:
+                interface.write_block_scalar_data(temperature_id, vertex_ids, values_A)
         # do the coupling
         precice_dt = interface.advance(dt)
 
