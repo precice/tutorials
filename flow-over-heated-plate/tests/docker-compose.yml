@@ -38,12 +38,27 @@ services:
     command: >
       /bin/bash -c "id && 
       cd /tests/flow-over-heated-plate/solid-openfoam &&
-      openfoam2112 ./run.sh | tee solid-openfoam.log 2>&1"
+      openfoam2112 ./run.sh | tee solid-openfoam.log 2>&1 &&
+      cd /tests/flow-over-heated-plate/ &&
+      tar -zxf reference-output.tar.gz"
+
+  field-compare:
+    build: https://github.com/dglaeser/fieldcompare-action.git # use the docker container provided by fieldcompare
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - ../..:/tests
+    depends_on:
+      fluid-openfoam:
+        condition: service_completed_successfully
+      solid-openfoam:
+        condition: service_completed_successfully
+    command: fieldcompare dir preCICE-output reference-output
 
   cleanup:
     depends_on:
-      - fluid-openfoam
-      - solid-openfoam
+      field-compare:
+        condition: service_completed_successfully
     image: ubuntu:latest
     user: ${MY_UID}:${MY_GID}
     volumes:
