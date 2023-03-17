@@ -21,17 +21,16 @@
     <participant name="Fluid">
       <use-mesh name="Fluid-Mesh" provide="yes" />
       <use-mesh name="Temperature-Mesh" from="Heat" />
+      <mapping:nearest-neighbor
+        direction="read"
+        from="Temperature-Mesh"
+        to="Fluid-Mesh"
+        constraint="consistent" />
       <read-data name="Temperature" mesh="Fluid-Mesh" />
     </participant>
 
     <participant name="Heat">
       <use-mesh name="Temperature-Mesh" provide="yes" />
-      <use-mesh name="Fluid-Mesh" from="Fluid" />
-      <mapping:nearest-neighbor
-        direction="write"
-        from="Temperature-Mesh"
-        to="Fluid-Mesh"
-        constraint="consistent" />
       <write-data name="Temperature" mesh="Temperature-Mesh" />
     </participant>
 
