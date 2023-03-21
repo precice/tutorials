@@ -53,7 +53,9 @@ services:
         condition: service_completed_successfully
       solid-openfoam:
         condition: service_completed_successfully
-    command: fieldcompare dir preCICE-output reference-output
+    command:
+      - /tests/flow-over-heated-plate/preCICE-output 
+      - /tests/flow-over-heated-plate/reference-output
 
   cleanup:
     depends_on:
