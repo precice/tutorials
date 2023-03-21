@@ -14,7 +14,8 @@ services:
 
   fluid-openfoam:
     depends_on:
-      - prepare
+      prepare:
+        condition: service_completed_successfully
     image: "ghcr.io/precice/openfoam-adapter:${TAG_OPENFOAM_ADAPTER}"
     user: ${MY_UID}:${MY_GID}
     volumes:
@@ -22,13 +23,14 @@ services:
       - /etc/group:/etc/group:ro
       - ../..:/tests
     command: >
-      /bin/bash -c "id &&
+      /bin/bash -c "id && 
       cd /tests/flow-over-heated-plate/fluid-openfoam &&
       openfoam2112 ./run.sh | tee fluid-openfoam.log 2>&1"
 
   solid-openfoam:
     depends_on:
-      - prepare
+      prepare:
+        condition: service_completed_successfully
     image: "ghcr.io/precice/openfoam-adapter:${TAG_OPENFOAM_ADAPTER}"
     user: ${MY_UID}:${MY_GID}
     volumes:
@@ -71,4 +73,3 @@ services:
       /bin/bash -c "id &&
       cd /tests/flow-over-heated-plate &&
       sed -i 's|m2n:sockets network=\"eth0\" from|m2n:sockets from|g' precice-config.xml"
-    
