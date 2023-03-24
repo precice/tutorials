@@ -33,9 +33,9 @@ fn main() -> ExitCode {
     println!("preCICE configured...");
 
     let dimensions = interface.get_dimensions();
-    let mesh_id = interface.get_mesh_id("Solid-Nodes-Mesh");
-    let cross_section_length_id = interface.get_data_id("CrossSectionLength", mesh_id);
-    let pressure_id = interface.get_data_id("Pressure", mesh_id);
+    let mesh_name = "Solid-Nodes-Mesh";
+    let cross_section_length_name = "CrossSectionLength";
+    let pressure_name = "Pressure";
 
     let mut pressure: Vec<f64> = vec![0.0; CHUNK_SIZE as usize];
     let mut cross_section_length: Vec<f64> = vec![1.0; CHUNK_SIZE as usize];
@@ -56,52 +56,43 @@ fn main() -> ExitCode {
         let mut ids = vec![-1; CHUNK_SIZE];
         interface
             .pin_mut()
-            .set_mesh_vertices(mesh_id, &grid[..], &mut ids[..]);
+            .set_mesh_vertices(mesh_name, &grid[..], &mut ids[..]);
         ids
     };
+
+    if interface.pin_mut().requires_initial_data() {
+        interface.pin_mut().write_block_scalar_data(
+            mesh_name,
+            cross_section_length_name,
+            &vertex_ids[..],
+            &cross_section_length[..],
+        );
+    }
+
 
     println!("Initializing preCICE...");
 
     let mut t = 0.0;
     let dt = interface.pin_mut().initialize();
 
-    if interface.is_action_required(&precice::action_write_initial_data()) {
-        interface.pin_mut().write_block_scalar_data(
-            cross_section_length_id,
-            &vertex_ids[..],
-            &cross_section_length[..],
-        );
-        interface
-            .pin_mut()
-            .mark_action_fulfilled(&precice::action_write_initial_data());
-    }
-
-    interface.pin_mut().initialize_data();
-
     while interface.is_coupling_ongoing() {
-        if interface.is_action_required(&precice::action_write_iteration_checkpoint()) {
-            interface
-                .pin_mut()
-                .mark_action_fulfilled(&precice::action_write_iteration_checkpoint());
+        if interface.pin_mut().requires_writing_checkpoint() {
         }
 
-        interface.read_block_scalar_data(pressure_id, &vertex_ids[..], &mut pressure[..]);
+        interface.read_block_scalar_data(mesh_name, pressure_name, &vertex_ids[..], &mut pressure[..]);
 
         solid_compute_solution(&pressure, &mut cross_section_length);
 
         interface.pin_mut().write_block_scalar_data(
-            cross_section_length_id,
+            mesh_name,
+            cross_section_length_name,
             &vertex_ids[..],
             &cross_section_length[..],
         );
 
         interface.pin_mut().advance(dt);
 
-        if interface.is_action_required(&precice::action_read_iteration_checkpoint()) {
-            // i.e. fluid not yet converged
-            interface
-                .pin_mut()
-                .mark_action_fulfilled(&precice::action_read_iteration_checkpoint());
+        if interface.pin_mut().requires_reading_checkpoint() {
         } else {
             t += dt;
         }

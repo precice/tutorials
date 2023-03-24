@@ -8,5 +8,5 @@ description = "The fluid participant of the elastic-tube 1D tutorial"
 license = "LGPL-3.0-or-later"
 
 [dependencies]
-"precice" = "2.5"
+"precice" = { git = "https://github.com/precice/rust-bindings.git" }
 "nalgebra" = "0.31"

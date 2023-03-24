@@ -252,8 +252,7 @@ checksum = "1df8c4ec4b0627e53bdf214615ad287367e482558cf84b109250b37464dc03ae"
 [[package]]
 name = "precice"
 version = "2.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dec31fcf7edff2ec658584c7010a28da5f1e3d87b42b4f08a17df79d63305d91"
+source = "git+https://github.com/precice/rust-bindings.git#a893c06d70cc4e70f9b18c2afd0dceb71b45dc29"
 dependencies = [
  "clap",
  "cxx",
