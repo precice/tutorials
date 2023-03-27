@@ -88,25 +88,19 @@ configuration_file_name = "../precice-config.xml"
 
 interface = precice.Interface(participant_name, configuration_file_name, solver_process_index, solver_process_size)
 
-mesh_id = interface.get_mesh_id(mesh_name)
 dimensions = interface.get_dimensions()
 
 vertex = np.zeros(dimensions)
 read_data = np.zeros(num_vertices)
 write_data = k_12 * u0 * np.ones(num_vertices)
 
-vertex_id = interface.set_mesh_vertex(mesh_id, vertex)
-read_data_id = interface.get_data_id(read_data_name, mesh_id)
-write_data_id = interface.get_data_id(write_data_name, mesh_id)
+vertex_id = interface.set_mesh_vertex(mesh_name, vertex)
+
+if interface.requires_initial_data():
+    interface.write_scalar_data(mesh_name, write_data_name, vertex_id, write_data)
 
 precice_dt = interface.initialize()
 my_dt = precice_dt  # use my_dt < precice_dt for subcycling
-
-if interface.is_action_required(precice.action_write_initial_data()):
-    interface.write_scalar_data(write_data_id, vertex_id, write_data)
-    interface.mark_action_fulfilled(precice.action_write_initial_data())
-
-interface.initialize_data()
 
 # Initial Conditions
 a0 = (f0 - stiffness * u0) / mass
@@ -135,13 +129,11 @@ v_write = [v]
 t_write = [t]
 
 while interface.is_coupling_ongoing():
-    if interface.is_action_required(precice.action_write_iteration_checkpoint()):
+    if interface.requires_writing_checkpoint():
         u_cp = u
         v_cp = v
         a_cp = a
         t_cp = t
-        interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
-
         # store data for plotting and postprocessing
         positions += u_write
         velocities += v_write
@@ -151,8 +143,8 @@ while interface.is_coupling_ongoing():
     dt = np.min([precice_dt, my_dt])
     # # use this with waveform relaxation
     # read_time = (1-alpha_f) * dt
-    # read_data = interface.read_scalar_data(read_data_id, vertex_id, read_time)
-    read_data = interface.read_scalar_data(read_data_id, vertex_id)
+    # read_data = interface.read_scalar_data(mesh_name, read_data_name, vertex_id, read_time)
+    read_data = interface.read_scalar_data(mesh_name, read_data_name, vertex_id)
     f = read_data
 
     # do generalized alpha step
@@ -167,17 +159,15 @@ while interface.is_coupling_ongoing():
 
     write_data = k_12 * u_new
 
-    interface.write_scalar_data(write_data_id, vertex_id, write_data)
+    interface.write_scalar_data(mesh_name, write_data_name, vertex_id, write_data)
 
     precice_dt = interface.advance(dt)
 
-    if interface.is_action_required(precice.action_read_iteration_checkpoint()):
+    if interface.requires_reading_checkpoint():
         u = u_cp
         v = v_cp
         a = a_cp
         t = t_cp
-        interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
-
         # empty buffers for next window
         u_write = []
         v_write = []
