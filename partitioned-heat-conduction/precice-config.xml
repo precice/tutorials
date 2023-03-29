@@ -26,7 +26,7 @@
       <receive-mesh name="Neumann-Mesh" from="Neumann" />
       <write-data name="Heat-Flux" mesh="Dirichlet-Mesh" />
       <read-data name="Temperature" mesh="Dirichlet-Mesh" />
-      <mapping:rbf-thin-plate-splines
+      <mapping:rbf
         direction="read"
         from="Neumann-Mesh"
         to="Dirichlet-Mesh"
