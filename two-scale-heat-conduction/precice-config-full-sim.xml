@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+
+<precice-configuration>
+
+    <log>
+	<sink type="stream" output="stdout"  filter= "%Severity% > debug" enabled="true" />
+    </log>
+  
+  <solver-interface experimental="true" dimensions="2">
+    
+    <data:scalar name="k_00"/>
+    <data:scalar name="k_01"/>
+    <data:scalar name="k_10"/>
+    <data:scalar name="k_11"/>
+    <data:scalar name="porosity"/>
+    <data:scalar name="concentration"/>
+    <data:scalar name="micro_sim_time"/>
+    <data:scalar name="grain_size"/>
+
+    <mesh name="macro-mesh">
+       <use-data name="k_00"/>
+       <use-data name="k_01"/>
+       <use-data name="k_10"/>
+       <use-data name="k_11"/>
+       <use-data name="porosity"/>
+       <use-data name="concentration"/>
+       <use-data name="micro_sim_time"/>
+       <use-data name="grain_size"/>
+    </mesh>
+
+    <participant name="Macro-heat">
+      <use-mesh name="macro-mesh" provide="yes"/>
+      <read-data name="k_00" mesh="macro-mesh"/>
+      <read-data name="k_01" mesh="macro-mesh"/>
+      <read-data name="k_10" mesh="macro-mesh"/>
+      <read-data name="k_11" mesh="macro-mesh"/>
+      <read-data name="porosity" mesh="macro-mesh"/>
+      <write-data name="concentration" mesh="macro-mesh"/>
+    </participant>
+    
+    <participant name="Micro-Manager">
+      <use-mesh name="macro-mesh" from="Macro-heat" direct-access="true" safety-factor="0.0"/>
+      <write-data name="k_00" mesh="macro-mesh"/>
+      <write-data name="k_01" mesh="macro-mesh"/>
+      <write-data name="k_10" mesh="macro-mesh"/>
+      <write-data name="k_11" mesh="macro-mesh"/>
+      <write-data name="porosity" mesh="macro-mesh"/>
+      <read-data name="concentration" mesh="macro-mesh"/>
+      <write-data name="micro_sim_time" mesh="macro-mesh"/>
+      <write-data name="grain_size" mesh="macro-mesh"/>
+      <export:vtu directory="Micro-Manager-output" every-n-time-windows="5"/>
+    </participant>
+
+    <m2n:sockets from="Micro-Manager" to="Macro-heat" network="lo"/>
+
+    <coupling-scheme:serial-implicit>
+       <participants first="Macro-heat" second="Micro-Manager"/>
+       <max-time value="0.25"/>
+       <time-window-size value="1.0e-2"/>
+       <max-iterations value="30"/>
+       <exchange data="k_00" mesh="macro-mesh" from="Micro-Manager" to="Macro-heat" initialize="yes"/>
+       <exchange data="k_01" mesh="macro-mesh" from="Micro-Manager" to="Macro-heat" initialize="yes"/>
+       <exchange data="k_10" mesh="macro-mesh" from="Micro-Manager" to="Macro-heat" initialize="yes"/>
+       <exchange data="k_11" mesh="macro-mesh" from="Micro-Manager" to="Macro-heat" initialize="yes"/>
+       <exchange data="porosity" mesh="macro-mesh" from="Micro-Manager" to="Macro-heat" initialize="yes"/>
+       <exchange data="concentration" mesh="macro-mesh" from="Macro-heat" to="Micro-Manager"/>
+       <relative-convergence-measure limit="1e-3" data="k_00" mesh="macro-mesh"/>
+       <relative-convergence-measure limit="1e-3" data="k_11" mesh="macro-mesh"/>
+       <relative-convergence-measure limit="1e-3" data="porosity" mesh="macro-mesh"/>
+       <relative-convergence-measure limit="1e-3" data="concentration" mesh="macro-mesh"/>
+       <acceleration:IQN-ILS>
+          <data name="k_00" mesh="macro-mesh"/>
+          <data name="k_11" mesh="macro-mesh"/>
+          <data name="porosity" mesh="macro-mesh"/>
+          <preconditioner type="residual-sum"/>
+          <initial-relaxation value="0.9"/>
+          <max-used-iterations value="40"/>
+          <time-windows-reused value="20"/>
+          <filter type="QR2" limit="1e-2"/>
+       </acceleration:IQN-ILS>
+    </coupling-scheme:serial-implicit>
+
+  </solver-interface>
+</precice-configuration>
