@@ -93,7 +93,7 @@ ranks << mesh_rank
 while precice.is_coupling_ongoing():
 
     # write checkpoint
-    if precice.is_action_required(precice.action_write_iteration_checkpoint()):
+    if precice.requires_writing_checkpoint():
         precice.store_checkpoint(u_n, t, n)
 
     read_data = precice.read_data()
@@ -114,7 +114,7 @@ while precice.is_coupling_ongoing():
     dt = precice.advance(dt)
 
     # roll back to checkpoint
-    if precice.is_action_required(precice.action_read_iteration_checkpoint()):
+    if precice.requires_reading_checkpoint():
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
         u_n.assign(u_cp)
         t = t_cp
