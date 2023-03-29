@@ -31,7 +31,9 @@
         from="Neumann-Mesh"
         to="Dirichlet-Mesh"
         constraint="consistent"
-        x-dead="true" />
+        x-dead="true" >
+        <basis-function:thin-plate-splines />
+      </mapping:rbf>
     </participant>
 
     <participant name="Neumann">
@@ -44,7 +46,9 @@
         from="Dirichlet-Mesh"
         to="Neumann-Mesh"
         constraint="consistent"
-        x-dead="true" />
+        x-dead="true" >
+        <basis-function:thin-plate-splines />
+      </mapping:rbf>
     </participant>
 
     <m2n:sockets from="Dirichlet" to="Neumann" exchange-directory=".." />
