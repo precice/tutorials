@@ -26,12 +26,12 @@
       <receive-mesh name="Solid-Mesh" from="Solid" />
       <write-data name="Force" mesh="Fluid-Mesh" />
       <read-data name="Displacement" mesh="Fluid-Mesh" />
-      <mapping:rbf-thin-plate-splines
+      <mapping:rbf
         direction="write"
         from="Fluid-Mesh"
         to="Solid-Mesh"
         constraint="conservative" />
-      <mapping:rbf-thin-plate-splines
+      <mapping:rbf
         direction="read"
         from="Solid-Mesh"
         to="Fluid-Mesh"
