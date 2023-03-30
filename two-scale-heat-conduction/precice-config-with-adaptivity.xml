@@ -57,7 +57,7 @@
       <export:vtu directory="Micro-Manager-output" every-n-time-windows="5"/>
     </participant>
 
-    <m2n:sockets from="Micro-Manager" to="Macro-heat" network="lo"/>
+    <m2n:sockets from="Micro-Manager" to="Macro-heat" network="lo" exchange-directory="../"/>
 
     <coupling-scheme:serial-implicit>
        <participants first="Macro-heat" second="Micro-Manager"/>
