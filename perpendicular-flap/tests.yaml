@@ -1,0 +1,11 @@
+name: perpendicular-flap
+couples: 
+  solid: 
+    - calculix
+    - dealii
+    - dune
+    - fenics
+  fluid: 
+    - nutils
+    - openfoam
+    - su2

@@ -1,0 +1,8 @@
+name: heat-exchanger
+couples: 
+  solid: 
+    - calculix
+  fluid-inner: 
+    - openfoam
+  fluid-outer:
+    - openfoam
