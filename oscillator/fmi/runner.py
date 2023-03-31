@@ -20,8 +20,8 @@ parser.add_argument("fmi_setting_file", help="Path to the fmi setting file.", ty
 parser.add_argument("precice_setting_file", help="Path to the precice setting file for the FMU coupling.", type=str)
 args = parser.parse_args()
 
-fmi_setting_file 		= args.fmi_setting_file
-precice_setting_file 		= args.precice_setting_file
+fmi_setting_file        = args.fmi_setting_file
+precice_setting_file    = args.precice_setting_file
 
 folder = os.path.dirname(os.path.join(os.getcwd(), os.path.dirname(sys.argv[0]), fmi_setting_file))
 path = os.path.join(folder, os.path.basename(fmi_setting_file))
@@ -35,32 +35,32 @@ precice_data = json.load(read_file)
 
 ### FMU setup
 
-fmu_file_name 			= precice_data["simulation_params"]["fmu_file_name"]
-fmu_instance 			= precice_data["simulation_params"]["fmu_instance_name"]
-model_description 		= read_model_description(fmu_file_name)
+fmu_file_name       = fmi_data["simulation_params"]["fmu_file_name"]
+fmu_instance        = fmi_data["simulation_params"]["fmu_instance_name"]
+model_description   = read_model_description(fmu_file_name)
 
 vrs = {}
 for variable in model_description.modelVariables:
     vrs[variable.name] = variable.valueReference 
 
-parameter_names		= list(fmi_data["model_params"].keys())
-parameter_values		= list(fmi_data["model_params"].values())
-parameter_vr 			= [vrs.get(key) for key in parameter_names]
+parameter_names	            = list(fmi_data["model_params"].keys())
+parameter_values            = list(fmi_data["model_params"].values())
+parameter_vr                = [vrs.get(key) for key in parameter_names]
 
 
-initial_conditions_names	= list(fmi_data["initial_conditions"].keys())
-initial_conditions_values	= list(fmi_data["initial_conditions"].values())
-initial_conditions_vr		= [vrs.get(key) for key in initial_conditions_names]
+initial_conditions_names    = list(fmi_data["initial_conditions"].keys())
+initial_conditions_values   = list(fmi_data["initial_conditions"].values())
+initial_conditions_vr       = [vrs.get(key) for key in initial_conditions_names]
 
 
-can_get_and_set_fmu_state	= model_description.coSimulation.canGetAndSetFMUstate
+can_get_and_set_fmu_state   = model_description.coSimulation.canGetAndSetFMUstate
 
-output_names		 	= precice_data["simulation_params"]["output"]
+output_names                = fmi_data["simulation_params"]["output"]
 
-fmu_read_data_name		= precice_data["simulation_params"]["fmu_read_data_name"]
-fmu_write_data_name 		= precice_data["simulation_params"]["fmu_write_data_name"]
-vr_read  	 		= [vrs[fmu_read_data_name]]
-vr_write 	 		= [vrs[fmu_write_data_name]]
+fmu_read_data_name          = fmi_data["simulation_params"]["fmu_read_data_name"]
+fmu_write_data_name         = fmi_data["simulation_params"]["fmu_write_data_name"]
+vr_read                     = [vrs[fmu_read_data_name]]
+vr_write                    = [vrs[fmu_write_data_name]]
 
 unzipdir = extract(fmu_file_name)
 fmu = FMU3Slave(guid=model_description.guid, unzipDirectory=unzipdir, modelIdentifier=model_description.coSimulation.modelIdentifier, instanceName=fmu_instance)
@@ -82,29 +82,34 @@ fmu_write_data_init = fmu.getFloat64(vr_write)
 
 ### preCICE setup
 
+# Current limitations of the Runner
+solver_process_index    = 0
+solver_process_size     = 1
+num_vertices            = 1
+
 interface = precice.Interface(
-	precice_data["coupling_params"]["participant_name"],
-	precice_data["coupling_params"]["config_file_name"], 
-	precice_data["coupling_params"]["solver_process_index"], 
-	precice_data["coupling_params"]["solver_process_size"]
-	)
+    precice_data["coupling_params"]["participant_name"],
+    precice_data["coupling_params"]["config_file_name"], 
+    solver_process_index, 
+    solver_process_size
+    )
 
-mesh_id 	= interface.get_mesh_id(precice_data["coupling_params"]["mesh_name"])
-dimensions 	= interface.get_dimensions()
+mesh_id         = interface.get_mesh_id(precice_data["coupling_params"]["mesh_name"])
+dimensions      = interface.get_dimensions()
 
-vertex 	= np.zeros(dimensions)
-read_data 	= np.zeros(precice_data["coupling_params"]["num_vertices"])
+vertex          = np.zeros(dimensions)
+read_data       = np.zeros(num_vertices)
 
 # initial value for write data
-write_data = fmu_write_data_init * np.ones(precice_data["coupling_params"]["num_vertices"])
+write_data      = fmu_write_data_init * np.ones(num_vertices)
 
 
-vertex_id 	= interface.set_mesh_vertex(mesh_id, vertex)
-read_data_id 	= interface.get_data_id(precice_data["coupling_params"]["read_data_name"], mesh_id)
-write_data_id 	= interface.get_data_id(precice_data["coupling_params"]["write_data_name"], mesh_id)
+vertex_id       = interface.set_mesh_vertex(mesh_id, vertex)
+read_data_id    = interface.get_data_id(precice_data["coupling_params"]["read_data_name"], mesh_id)
+write_data_id   = interface.get_data_id(precice_data["coupling_params"]["write_data_name"], mesh_id)
 
-precice_dt = interface.initialize()
-my_dt = precice_dt  # use my_dt < precice_dt for subcycling
+precice_dt      = interface.initialize()
+my_dt           = precice_dt  # use my_dt < precice_dt for subcycling
 
 # write initial data
 if interface.is_action_required(precice.action_write_initial_data()):
@@ -122,16 +127,16 @@ recorder.sample(t, force=False)
 while interface.is_coupling_ongoing():
     if interface.is_action_required(precice.action_write_iteration_checkpoint()):
         
-        state_cp 	= fmu.getFMUState()
-        t_cp = t
+        state_cp    = fmu.getFMUState()
+        t_cp        = t
         
         interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
     # compute time step size for this time step
     dt = np.min([precice_dt, my_dt])
     
-    read_data 	= interface.read_scalar_data(read_data_id, vertex_id)
-    data 	= read_data
+    read_data   = interface.read_scalar_data(read_data_id, vertex_id)
+    data        = read_data
     
     fmu.setFloat64(vr_read, [data])
     
@@ -167,7 +172,7 @@ if not os.path.exists("output"):
 # store final result
 recorder.sample(t, force=False)
 results = recorder.result()
-write_csv(precice_data["simulation_params"]["output_file_name"], results)
+write_csv(fmi_data["simulation_params"]["output_file_name"], results)
 
 # terminate FMU
 fmu.terminate()

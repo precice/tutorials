@@ -8,6 +8,8 @@ Generate the build files with the following commands:
 mkdir build
 cd build
 cmake -DFMI_TYPE=CS -DFMI_VERSION=3 ..
+make
+mv ./Oscillator.fmu ../..
 ```
 
-Then run `make` or your preferred build tool to create the FMU. The model will be in the parent folder.
+Instead of `make`, you can also use your preferred build tool to create the FMU.

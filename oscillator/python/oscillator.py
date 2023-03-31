@@ -92,7 +92,7 @@ dimensions = interface.get_dimensions()
 
 vertex = np.zeros(dimensions)
 read_data = np.zeros(num_vertices)
-write_data = u0 * np.ones(num_vertices)
+write_data = k_12 * u0 * np.ones(num_vertices)
 
 vertex_id = interface.set_mesh_vertex(mesh_id, vertex)
 read_data_id = interface.get_data_id(read_data_name, mesh_id)

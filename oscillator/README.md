@@ -22,15 +22,11 @@ Note that this case applies a Schwarz-type coupling method and not (like most ot
 This tutorial is only available in Python. You need to have preCICE and the Python bindings installed on your system.
 
 - *Python*: An example solver using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy`, which you can get from your system package manager or with `pip3 install --user <package>`.
-- *FMI*: An example solver using FMU models for computation. This solver depends on the Python libraries `numpy` and `FMPy` which you can install with conda or pip, for example `pip3 install --user fmpy`. You also need the compiled FMU model `Oscillator.fmu`. The model for Linux is part of this repository. For other systems, please recompile the model from the provided [C-files](fmi/cmake). If you want to change the model parameters or the initial conditions of the simulation, have a look inside the setting files for [MassLeft](fmi/MassLeft) and [MassRight](fmi/MassRight). For more information, please refer to [2]
+- *FMI*: An example solver using FMU models for computation. This solver depends on the Python libraries `numpy` and `FMPy` which you can install with conda or pip, for example `pip3 install --user fmpy`. You also need the compiled FMU model `Oscillator.fmu`. The model for Linux is part of this repository. For other systems, please recompile the model from the provided [C-files](https://github.com/precice/tutorials/tree/master/oscillator/fmi/fmu). If you want to change the model parameters or the initial conditions of the simulation, have a look inside the setting files for [MassLeft](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassLeft) and [MassRight](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassRight). For more information, please refer to [2]
 
 ## Running the Simulation
 
-You can either run both participants with one of the two solvers or use a separate solver for each participant.
-
-### Python
-
-Open two separate terminals and start both participants by calling:
+Open two separate terminals and start both participants. For example, you can run a simulation where the left participant is computed in Python and the right participant is computed with FMI with these commands:
 
 ```bash
 cd python
@@ -40,25 +36,11 @@ cd python
 and
 
 ```bash
-cd python
-./run.sh -r
-```
-
-### FMI
-
-Open two separate terminals and start both participants by calling:
-
-```bash
-cd fmi
-./run.sh -l
-```
-
-and
-
-```bash
 cd fmi
 ./run.sh -r
 ```
+
+Of course, you can also use the same solver for both sides.
 
 ## Post-processing
 
