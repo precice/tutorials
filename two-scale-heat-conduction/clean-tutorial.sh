@@ -1,11 +1,11 @@
-rm -fv macro-nutils/*.log
-rm -r -fv macro-nutils/precice-run/
-rm -fv macro-nutils/*-events.json
-rm -fv macro-nutils/*.vtu
-rm -fv micro-nutils/*.log
-rm -r -fv micro-nutils/precice-run/
-rm -fv micro-nutils/*-events.json
-rm -fv micro_nutils/*.vtu
-rm -fv micro-nutils/output/*.vtu 
-rm -r -fv micro-nutils/__pycache__/
-rm -r -fv precice-run/
+#!/bin/sh
+set -e -u
+
+# shellcheck disable=SC1091
+. ../tools/cleaning-tools.sh
+
+clean_tutorial .
+clean_aste 
+clean_precice_logs .
+rm -fv ./*.log
+rm -fv ./*.vtu
