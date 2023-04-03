@@ -3,11 +3,13 @@ on:
   workflow_call:
     inputs:
       precice-version:
+        type: string
         description: 'Version of the Precice library to use (SHA or tag)'
         required: true
         default: 'master'
         # Validation pattern can be added here if needed
       adapter-versions:
+        type: string
         description: 'Versions of the adapters to use (comma-separated list of "adapter=SHA or tag" pairs)'
         required: true
         default: 'openfoam=master,dealii=master,fenics=master'
