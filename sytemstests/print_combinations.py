@@ -11,7 +11,6 @@ tutorial_dir = '../'
 # Use globbing to find all the test.yaml files in the directory
 yaml_files = glob.glob(f'{tutorial_dir}/*/tests.yaml')
 
-print("Welcome to preCICE systemtest")
 print(f'found {len(yaml_files)} test files to be loaded')
 print("\n")
 all_combinations=0
