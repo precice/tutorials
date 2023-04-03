@@ -20,10 +20,8 @@ jobs:
     steps: 
     - name: Echo Adapters used
       run: |
-        echo ${{ inputs.precice-version }}
-        for adapter in ${{ inputs.adapter-versions }}
-        do
-          adapter_name=$(echo "$adapter" | cut -d "=" -f 1)
-          adapter_version=$(echo "$adapter" | cut -d "=" -f 2)
-          echo "USING ${adapter_name} WITH ${adapter_version}"
+        IFS=','; for adapter_version in ${{ inputs.adapter-versions }}; do
+          adapter="${adapter_version%=*}"
+          version="${adapter_version#*=}"
+          echo "Adapter: $adapter @ $version"
         done
