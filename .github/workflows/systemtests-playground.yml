@@ -1,6 +1,6 @@
 name: Systemtests Playground
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       precice-version:
         description: 'Version of the Precice library to use (SHA or tag)'
@@ -13,18 +13,15 @@ on:
         default: 'openfoam=master,dealii=master,fenics=master'
         # Validation pattern can be added here if needed
 jobs:
-  test:
+  echo_adapter_names:
     runs-on: ubuntu-latest
     steps: 
     - name: Echo Adapters used
       run: |
-        for adapter in ${{ github.event.inputs.adapter-versions//,/ }}
+        echo ${{ inputs.precice-version }}
+        for adapter in ${{ inputs.adapter-versions//,/ }}
         do
           adapter_name=$(echo "$adapter" | cut -d "=" -f 1)
           adapter_version=$(echo "$adapter" | cut -d "=" -f 2)
           echo "USING ${adapter_name} WITH ${adapter_version}"
         done
-
-    - name: Build and Run Tests
-      run: |
-        # Build and run tests here
