@@ -21,7 +21,7 @@ jobs:
     - name: Echo Adapters used
       run: |
         echo ${{ inputs.precice-version }}
-        for adapter in ${{ inputs.adapter-versions//,/ }}
+        for adapter in ${{ inputs.adapter-versions }}
         do
           adapter_name=$(echo "$adapter" | cut -d "=" -f 1)
           adapter_version=$(echo "$adapter" | cut -d "=" -f 2)
