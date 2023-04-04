@@ -4,7 +4,7 @@ on:
     inputs:
       precice-version:
         type: string
-        description: 'Version of the Precice library to use (SHA or tag)'
+        description: 'Version of the preCICE library to use (SHA or tag)'
         required: true
         default: 'master'
         # Validation pattern can be added here if needed
