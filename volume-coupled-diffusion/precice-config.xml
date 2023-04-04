@@ -28,7 +28,7 @@
       <read-data name="Drain-Data" mesh="Source-Mesh"/>
       <mapping:rbf direction="read" from="Drain-Mesh" to="Source-Mesh" constraint="consistent" >
         <basis-function:compact-polynomial-c6 support-radius="1" />
-      </mapping-rbf>
+      </mapping:rbf>
     </participant>
 
     <participant name="Drain">
