@@ -31,9 +31,9 @@
         from="Neumann-Mesh"
         to="Dirichlet-Mesh"
         constraint="consistent"
-        x-dead="true" >
+        x-dead="true">
         <basis-function:thin-plate-splines />
-      </mapping:rbf>
+      </mapping-rbf>
     </participant>
 
     <participant name="Neumann">
