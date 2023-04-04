@@ -1,0 +1,19 @@
+name: partitioned-heat-conduction
+couples: 
+  heat-conduction:
+    fenics:
+      variations:
+        neumann:
+          run: ./fenics/run.sh -n 
+          clean: ./fenics/clean.sh
+        dirichlet: 
+          run: ./fenics/run.sh -n 
+          clean: ./fenics/clean.sh
+    nutils:
+      variations:
+        neumann:
+          run: ./nutils/run.sh -n 
+          clean: ./nutils/clean.sh
+        dirichlet:
+          run: ./nutils/run.sh -n 
+          clean: ./nutils/clean.sh

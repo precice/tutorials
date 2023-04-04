@@ -9,7 +9,7 @@ tutorial_dir = '../'
 
 
 # Use globbing to find all the test.yaml files in the directory
-yaml_files = glob.glob(f'{tutorial_dir}/*/tests.yaml')
+yaml_files = glob.glob(f'{tutorial_dir}/*/tutorial.yaml')
 
 print(f'found {len(yaml_files)} test files to be loaded')
 print("\n")
@@ -28,7 +28,16 @@ for yaml_path in yaml_files:
     domains = list(data['couples'].keys())
     solvers = {}
     for domain in domains:
-        solvers[domain] = data['couples'][domain]
+        current_domain = data['couples'][domain]
+        try: 
+            # Check if domain has variations
+            solvers_for_domain = list(current_domain.keys())
+            solvers[domain] = []
+            for solver in solvers_for_domain:
+                variations = list(current_domain[solver]['variations'].keys())
+                solvers[domain].extend([f"{solver}_{variation}" for variation in variations])
+        except:
+            solvers[domain] = data['couples'][domain]
     
     # Find all possible solver combinations
     solver_combinations = []
