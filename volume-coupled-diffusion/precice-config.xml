@@ -26,7 +26,9 @@
       <receive-mesh name="Drain-Mesh" from="Drain"/>
       <write-data name="Source-Data" mesh="Source-Mesh"/>
       <read-data name="Drain-Data" mesh="Source-Mesh"/>
-      <mapping:rbf-thin-plate-splines direction="read" from="Drain-Mesh" to="Source-Mesh" constraint="consistent"/>
+      <mapping:rbf direction="read" from="Drain-Mesh" to="Source-Mesh" constraint="consistent" >
+        <basis-function:compact-polynomial-c6 support-radius="1" />
+      </mapping-rbf>
     </participant>
 
     <participant name="Drain">
@@ -34,7 +36,13 @@
       <receive-mesh name="Source-Mesh" from="Source"/>
       <write-data name="Drain-Data" mesh="Drain-Mesh"/>
       <read-data name="Source-Data" mesh="Drain-Mesh"/>
-      <mapping:rbf-thin-plate-splines direction="read" from="Source-Mesh" to="Drain-Mesh" constraint="consistent"/>
+      <mapping:rbf
+        direction="read"
+        from="Source-Mesh"
+        to="Drain-Mesh"
+        constraint="consistent">
+        <basis-function:compact-polynomial-c6 support-radius="1" />
+      </mapping:rbf>
     </participant>
 
     <m2n:sockets from="Source" to="Drain" exchange-directory=".."/>

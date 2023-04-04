@@ -26,16 +26,12 @@
       <receive-mesh name="Solid-Mesh" from="Solid" />
       <read-data name="Displacement" mesh="Fluid-Mesh" />
       <write-data name="Force" mesh="Fluid-Mesh" />
-      <mapping:rbf-thin-plate-splines
-        direction="read"
-        from="Solid-Mesh"
-        to="Fluid-Mesh"
-        constraint="consistent" />
-      <mapping:rbf-thin-plate-splines
-        direction="write"
-        from="Fluid-Mesh"
-        to="Solid-Mesh"
-        constraint="conservative" />
+      <mapping:rbf direction="read" from="Solid-Mesh" to="Fluid-Mesh" constraint="consistent">
+        <basis-function:thin-plate-splines />
+      </mapping:rbf>
+      <mapping:rbf direction="write" from="Fluid-Mesh" to="Solid-Mesh" constraint="conservative">
+        <basis-function:thin-plate-splines />
+      </mapping:rbf>
     </participant>
 
     <participant name="Solid">
