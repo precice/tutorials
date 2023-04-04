@@ -20,7 +20,7 @@ jobs:
     steps: 
     - name: Echo Adapters used
       run: |
-        IFS=','; for adapter_version in ${{ inputs.adapter-versions }}; do
+        IFS=','; for adapter_version in "${{ inputs.adapter-versions }}"; do
           adapter="${adapter_version%=*}"
           version="${adapter_version#*=}"
           echo "Adapter: $adapter @ $version"
