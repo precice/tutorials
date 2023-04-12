@@ -13,8 +13,8 @@
         "fmu_file_name": "./Oscillator.fmu",
         "output_file_name": "./output/trajectory-Mass-Right.csv",
         "output": ["mass.u", "mass.v"],
-        "fmu_read_data_name": "force_in",
-        "fmu_write_data_name": "force_out",
+        "fmu_read_data_names": ["force_in"],
+        "fmu_write_data_names": ["force_out"],
         "fmu_instance_name": "instance_right"
     }
 }
