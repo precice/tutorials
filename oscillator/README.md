@@ -19,7 +19,7 @@ Note that this case applies a Schwarz-type coupling method and not (like most ot
 
 ## Available solvers
 
-This tutorial is only available in Python. You need to have preCICE and the Python bindings installed on your system.
+There are two different implementations:
 
 - *Python*: An example solver using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy`, which you can get from your system package manager or with `pip3 install --user <package>`.
 - *FMI*: An example solver using the [preCICE-FMI Runner](https://github.com/precice/fmi-runner). The Runner executes the FMU model `Oscillator.fmu` for computation. The compiled FMU model for Linux is part of this repository. For other systems, please recompile the model from the provided [C-files](https://github.com/precice/tutorials/tree/master/oscillator/fmi/fmu). If you want to change the model parameters or the initial conditions of the simulation, have a look inside the setting files for [MassLeft](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassLeft) and [MassRight](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassRight). For more information, please refer to [2]

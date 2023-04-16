@@ -72,6 +72,7 @@ elif participant_name == Participant.MASS_RIGHT.value:
     stiffness = k_2 + k_12
     u0, v0, f0, d_dt_f0 = u0_2, v0_2, k_12 * u0_1, k_12 * v0_1
     def u_analytical(t): return c[0] * B[0] * np.cos(omega[0] * t) + c[1] * B[1] * np.cos(omega[1] * t)
+    
     def v_analytical(t): return -c[0] * B[0] * omega[0] * np.sin(omega[0] * t) - \
         c[1] * B[1] * omega[1] * np.sin(omega[1] * t)
 
@@ -152,7 +153,6 @@ while interface.is_coupling_ongoing():
     # read_time = (1-alpha_f) * dt
     # read_data = interface.read_scalar_data(read_data_id, vertex_id, read_time)
     read_data = interface.read_scalar_data(read_data_id, vertex_id)
-    
     f = read_data
 
     # do generalized alpha step

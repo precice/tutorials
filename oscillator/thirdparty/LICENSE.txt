@@ -1,7 +1,7 @@
-Copyright (c) 2022, Leonard Willeke.
+Copyright (c) 2022, Modelica Association Project "FMI".
 All rights reserved.
 
-The FMUs are released under the 2-Clause BSD license:
+The Reference FMUs and FMUSim are released under the 2-Clause BSD license:
 
 --------------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
@@ -26,9 +26,9 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-The FMUs are a fork of the Reference FMUs (https://github.com/modelica/Reference-FMUs) from the Modelica Association Project "FMI". The Reference FMUs themselves are a fork of the Test FMUs (https://github.com/CATIA-Systems/Test-FMUs)
+The Reference FMUs are a fork of the Test FMUs (https://github.com/CATIA-Systems/Test-FMUs)
 by Dassault Systemes, which are a fork of the FMU SDK (https://github.com/qtronic/fmusdk)
-by QTronic. All three are released under the 2-Clause BSD License.
+by QTronic, both released under the 2-Clause BSD License.
 
 FMUSim uses the following third party libraries.
 

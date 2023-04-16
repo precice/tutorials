@@ -9,7 +9,11 @@ mkdir build
 cd build
 cmake -DFMI_TYPE=CS -DFMI_VERSION=3 ..
 make
-mv ./Oscillator.fmu ../..
+cp ./Oscillator.fmu ../..
 ```
 
 Instead of `make`, you can also use your preferred build tool to create the FMU.
+
+## License
+
+The FMU model `Oscillator.fmu` used for this tutorial is based on the [Reference-FMUs](https://github.com/modelica/Reference-FMUs) from the Modelica Association Project "FMI", which are released under the [2-Clause BSD License](https://github.com/precice/tutorials/blob/master/oscillator/thirdparty/LICENSE.txt). 
