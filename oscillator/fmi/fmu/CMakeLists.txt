@@ -204,7 +204,7 @@ endif()
 
 # license
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-  "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../../thirdparty/LICENSE.txt"
   "${FMU_BUILD_DIR}/documentation/LICENSE.txt"
 )
 
