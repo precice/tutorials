@@ -19,6 +19,7 @@ interfaces
   {
     mesh              Fluid-Mesh;
     patches           ();
+    cellSets          (box1 box2);
     locations         volume;
     
     readData

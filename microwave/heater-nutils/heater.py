@@ -41,9 +41,11 @@ def main():
 
     # define "normal" state and "heating" state
     # values have 1 value per point, so it should have the same dim as the vertices' "x" dimension
-    values_A = np.full(vertices.shape[0], 250.0)
-    values_B = np.full(vertices.shape[0], 400.0)
+    values_A = np.full(vertices.shape[0], 350.0)
+    values_B = np.full(vertices.shape[0], 500.0)
     # 4 points around the middle
+    #for i in range(640, 740):
+    #    values_A[i] = 400.0
     #values_B[2440] = 400.0
     #values_B[2441] = 400.0
     #values_B[2442] = 400.0
@@ -85,7 +87,7 @@ def main():
         
         # if timestep between 0.3 and 0.7 write verB (heated), otherwise write verA (default)
         if interface.is_write_data_required(dt):
-            if timestamp > 0.3 and timestamp < 0.7:
+            if timestamp > 0.3 and timestamp < 2.3:
                 interface.write_block_scalar_data(temperature_id, vertex_ids, values_B)
             else:
                 interface.write_block_scalar_data(temperature_id, vertex_ids, values_A)

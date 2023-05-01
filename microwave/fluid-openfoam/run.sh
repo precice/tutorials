@@ -2,6 +2,7 @@
 set -e -u
 
 blockMesh
+topoSet
 touch fluid-openfoam.foam
 
 ../../tools/run-openfoam.sh "$@"
