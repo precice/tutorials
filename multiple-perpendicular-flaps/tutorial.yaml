@@ -1,8 +1,0 @@
-name: multiple-perpendicular-flaps
-couples: 
-  solid-left: 
-    - dealii
-  solid-right: 
-    - dealii
-  fluid:
-    - openfoam

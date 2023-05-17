@@ -1,8 +1,0 @@
-name: elastic-tube-1d
-couples: 
-  solid: 
-    - cpp
-    - python
-  fluid: 
-    - cpp
-    - python

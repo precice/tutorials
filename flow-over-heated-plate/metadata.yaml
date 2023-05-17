@@ -1,0 +1,50 @@
+name: Flow over heated plate
+path: flow-over-heated-plate # relative to git repo 
+url: https://precice.org/tutorials-flow-over-heated-plate.html
+clean: ./clean-tutorial.sh 
+tags: # just exemplary here 
+  - CHT 
+  - conjugate-heat transfer
+
+participants:
+  - Fluid 
+  - Solid 
+
+cases:
+  fluid-openfoam:
+    particpant: Fluid
+    directory: ./fluid-openfoam
+    run: run.sh 
+    clean: clean.sh 
+    component: openfoam-adapter
+  
+  solid-fenics:
+    particpant: Solid
+    directory: ./solid-fenics
+    run: run.sh 
+    clean: clean.sh 
+    component: fenics-adapter 
+  
+  solid-nutils:
+    particpant: Solid
+    directory: ./solid-nutils
+    run: run.sh 
+    clean: clean.sh 
+    component: nutils-adapter 
+
+  solid-openfoam:
+    particpant: Solid
+    directory: ./solid-openfoam
+    run: run.sh 
+    clean: clean.sh 
+    component: openfoam-adapter 
+
+tests:
+  openfoam-openfoam:
+    suite: nightly
+    cases:
+      - fluid-openfoam
+      - solid-openfoam
+
+
+

@@ -1,8 +1,0 @@
-name: flow-over-heated-plate
-couples: 
-  solid: 
-    - openfoam
-    - nutils
-    - fenics
-  fluid: 
-    - openfoam

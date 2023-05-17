@@ -1,7 +1,0 @@
-name: elastic-tube-3d
-couples: 
-  solid: 
-    - calculix
-    - fenics
-  fluid: 
-    - openfoam

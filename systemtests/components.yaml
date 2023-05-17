@@ -1,0 +1,16 @@
+openfoam-adapter:
+  repository: https://github.com/precice/openfoam-adapter
+  docker-service-template: components/openfoam-adapter.yml
+  requires:
+    - openfoam:REF
+    - pythonbindings:REF
+fenics-adapter:
+  repository: https://github.com/precice/fenics-adapter
+  docker-service-template: components/nutils-adapter.yml
+  requires:
+    - fenics:REF
+    - pythonbindings:REF
+
+## maybe respostiryx
+
+#systemtests(components_with_versions{},true)
