@@ -1,7 +1,7 @@
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
     TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, project, \
-    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system
+    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system, TensorFunctionSpace, XDMFFile
 from ufl import nabla_div
 import numpy as np
 import matplotlib.pyplot as plt
@@ -66,12 +66,12 @@ u_function = interpolate(Expression(("0", "0"), degree=1), V)
 coupling_boundary = AutoSubDomain(neumann_boundary)
 fixed_boundary = AutoSubDomain(clamped_boundary)
 
-precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
+precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s-aste.json")
 
 # Initialize the coupling interface
-precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fixed_boundary=fixed_boundary)
+precice_dt = precice.initialize(coupling_boundary, read_function_space=V, fixed_boundary=fixed_boundary)
 
-fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
+fenics_dt = precice_dt # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
@@ -168,6 +168,12 @@ L_form = rhs(res)
 # parameters for Time-Stepping
 t = 0.0
 n = 0
+
+time = []
+u_tip = []
+time.append(0.0)
+u_tip.append(0.0)
+
 E_ext = 0
 
 displacement_out = File("output/u_fsi.pvd")
@@ -176,10 +182,35 @@ u_n.rename("Displacement", "")
 u_np1.rename("Displacement", "")
 displacement_out << u_n
 
-while precice.is_coupling_ongoing():
+# stress computation
+def local_project(v, V, u=None):
+    """Element-wise projection using LocalSolver"""
+    dv = TrialFunction(V)
+    v_ = TestFunction(V)
+    a_proj = inner(dv, v_)*dx
+    b_proj = inner(v, v_)*dx
+    solver = LocalSolver(a_proj, b_proj)
+    solver.factorize()
+    if u is None:
+        u = Function(V)
+        solver.solve_local_rhs(u)
+        return u
+    else:
+        solver.solve_local_rhs(u)
+        return
+    
+Vsig = TensorFunctionSpace(mesh, "CG", 1)
+sig = Function(Vsig, name="sigma")
 
-    if precice.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
-        precice.store_checkpoint(u_n, t, n)
+xdmf_file = XDMFFile("elastodynamics-results.xdmf")
+xdmf_file.parameters["flush_output"] = True
+xdmf_file.parameters["functions_share_mesh"] = True
+xdmf_file.parameters["rewrite_function_mesh"] = False
+
+# time loop for coupling
+
+  
+while precice.is_coupling_ongoing():
 
     # read data from preCICE and get a new coupling expression
     read_data = precice.read_data()
@@ -201,29 +232,39 @@ while precice.is_coupling_ongoing():
 
     dt = Constant(np.min([precice_dt, fenics_dt]))
 
-    # Write new displacements to preCICE
-    precice.write_data(u_np1)
-
-    # Call to advance coupling, also returns the optimum time step value
     precice_dt = precice.advance(dt(0))
 
-    # Either revert to old step if timestep has not converged or move to next timestep
-    if precice.is_action_required(precice.action_read_iteration_checkpoint()):  # roll back to checkpoint
-        u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
-        u_n.assign(u_cp)
-        t = t_cp
-        n = n_cp
-    else:
-        u_n.assign(u_np1)
-        t += float(dt)
-        n += 1
+    u_n.assign(u_np1)
+    t += float(dt)
+    n += 1
 
     if precice.is_time_window_complete():
+        local_project(sigma(u_n), Vsig, sig)
+
+        # Plot tip displacement evolution
+        displacement_out << u_n
+
+        xdmf_file.write(u_n,t)
+        xdmf_file.write(sig,t)           
         update_fields(u_np1, saved_u_old, v_n, a_n)
-        if n % 10 == 0:
-            displacement_out << (u_n, t)
+
+        if n % 10==0:
+            local_project(sigma(u_n), Vsig, sig)
+
+            displacement_out << (u_n,t)
+            xdmf_file.write(u_n,t)
+            xdmf_file.write(sig,t)
+
+        u_tip.append(u_n(0.,1.)[0])
+        time.append(t)
+
+
+precice.finalize()
 
 # Plot tip displacement evolution
 displacement_out << u_n
-
-precice.finalize()
+plt.figure()
+plt.plot(time, u_tip)
+plt.xlabel("Time")
+plt.ylabel("Tip displacement")
+plt.show()

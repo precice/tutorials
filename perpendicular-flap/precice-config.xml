@@ -38,10 +38,19 @@
       <provide-mesh name="Solid-Mesh" />
       <write-data name="Displacement" mesh="Solid-Mesh" />
       <read-data name="Force" mesh="Solid-Mesh" />
-      <watch-point mesh="Solid-Mesh" name="Flap-Tip" coordinate="0.0;1" />
+      <export:vtk directory="preCICE-output" />
     </participant>
 
     <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
+    <!--
+    <coupling-scheme:serial-explicit>
+      <time-window-size value="1e-2"/>
+      <max-time value="5"/>
+      <participants first="Fluid" second="Solid"/>
+      <exchange data="Force" mesh="Solid-Mesh" from="Fluid" to="Solid"/>
+      <exchange data="Displacement" mesh="Solid-Mesh" from="Solid" to="Fluid"/>
+    </coupling-scheme:serial-explicit>
+    -->
 
     <coupling-scheme:parallel-implicit>
       <time-window-size value="0.01" />

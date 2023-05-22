@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<precice-configuration>
+
+  <log enabled="true">
+    <sink type="stream" output="stdout" filter="%Severity% > debug" enabled="true" />
+    <sink type="file" output="filtered.log"  filter= "(%Severity% > debug) or (%Severity% >= trace and %Module% contains SolverInterfaceImpl)" enabled="true" />
+    <sink type="file" output="debug.log" filter="" enabled="true"/>
+  </log>
+  
+  <solver-interface dimensions="2">
+    
+    <!-- Data fields that are exchanged between the solvers -->
+    <data:vector name="Force" />
+
+    <!-- A common mesh that uses these data fields -->
+    <mesh name="Fluid-Mesh" flip-normals="no">
+      <use-data name="Force" />
+    </mesh>
+
+    <mesh name="Solid-Mesh" flip-normals="no">
+      <use-data name="Force" />
+    </mesh>
+    
+    <participant name="Fluid">
+      <use-mesh name="Fluid-Mesh" provide="yes" />
+      <use-mesh name="Solid-Mesh" provide="no" from="Solid" />
+      <write-data name="Force" mesh="Fluid-Mesh"/>
+      <mapping:nearest-neighbor constraint="conservative" direction="write" from="Fluid-Mesh" to="Solid-Mesh" />
+      <export:vtk every-n-time-windows="1" directory="vtkFluid/" normals="0"/>
+    </participant>
+    
+    <participant name="Solid">
+      <use-mesh name="Solid-Mesh" provide="yes" />
+      <read-data name="Force" mesh="Solid-Mesh" />
+      <export:vtk every-n-time-windows="1" directory="vtkSolid/" normals="0"/>
+    </participant>
+    
+    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
+    
+    <coupling-scheme:serial-explicit>
+      <participants first="Fluid" second="Solid" />
+      <max-time value="5.0" />
+      <time-window-size value="1.e-2" />
+      <exchange data="Force" mesh="Solid-Mesh" from="Fluid" to="Solid" />
+    </coupling-scheme:serial-explicit>
+    
+  </solver-interface>
+  
+</precice-configuration>
