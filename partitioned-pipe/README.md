@@ -50,7 +50,23 @@ Observe that the velocity and pressure values are smoothly changing around the c
 
 Note that here we are only coupling sonicLiquidFoam and pimpleFoam only to showcase that they are different solvers working on different domains. In practice, coupling such a compressible and an incompressible solver would not be trivial, due to, e.g., the different pressure units.
 
-Also note that sonicLiquidFoam does not support the fixedFluxExtrapolatedPressure boundary condition. Therefore, when using sonicLiquidFoam for Fluid2, you might want to enable the exchange of the Pressure Gradient and you will observe a less perfect coupling interface.
+## Coupling with pressure gradient
+
+The solver sonicLiquidFoam does not support the fixedFluxExtrapolatedPressure boundary condition. Therefore, when using sonicLiquidFoam for Fluid2, you might want to enable the exchange of the pressure gradient. For this, you have to uncomment these lines:
+
+```c++
+    // In precice-config.xml
+    <exchange data="PressureGradient" mesh="Fluid1-Mesh" from="Fluid1" to="Fluid2" />
+
+    // In fluid1*/system/preciceDict
+    writeData
+    (
+      Velocity
+      PressureGradient
+    );
+```
+
+In `fluid2-openfoam-sonicLiquidFoam/0/p`, we have to set a `fixedGradient` boundary condition at the inlet. Coupling with the pressure gradient works with all OpenFOAM solvers. However, you will observe a less perfect coupling interface.
 
 ## Non-Orthogonality
 
