@@ -54,16 +54,18 @@ Also note that sonicLiquidFoam does not support the fixedFluxExtrapolatedPressur
 
 ## Non-Orthogonality
 
-The standard mesh for the pipe is a structured mesh that is orthogonal along the z-axis. It is possible to run the case with an alternative, skewed mesh by using:
+The standard mesh for the pipe is a structured mesh that is orthogonal along the z-axis. It is possible to run the case (pimpleFoam only) with a skewed mesh by using:
 
 ```bash
-./run.sh skewed
+./run.sh -skewed
 ```
 
 The mesh looks like this:
 ![pipe_skewed](images/tutorials-partitioned-pipe-results-skewed.png)
 
-In the end of the simulation, the script runs a post-process utility to calculate the flow rate at the inlet of each participant. Comparing the output for both participants with the skewed mesh, we can observe a loss of mass across the coupling interface. To avoid this problem in cases with non-orthogonal meshes, it is possible to enable *flux corrected velocity in the preCICE FF module* by adding the following option to the ```preciceDict```:
+In the end of the simulation, the script runs a post-process utility to calculate the flow rate at the inlet of each participant. Comparing the output for both participants with the skewed mesh, we can observe a loss of mass across the coupling interface.
+
+To avoid this problem in cases with non-orthogonal meshes, it is possible to enable *flux corrected velocity in the preCICE FF module* by adding the following option to the ```preciceDict```:
 
 ```C
 // $fluid1Folder/system/preciceDict
