@@ -78,8 +78,7 @@ Now the mass flux should stay consistent across the coupling interface.
 
 ## References
 
-[1]  M. Mühlhäußer: [Partitioned flow simulations with preCICE and OpenFOAM
-](https://mediatum.ub.tum.de/node?id=1696254&change_language=en), Master's Thesis, 2022  
+[1]  M. Mühlhäußer: [Partitioned flow simulations with preCICE and OpenFOAM](https://mediatum.ub.tum.de/node?id=1696254&change_language=en), Master's Thesis, 2022  
 [2]  G. Chourdakis, B. Uekermann, G. V. Zwieten, and H. V. Brummelen: [Coupling OpenFOAM to different solvers, physics, models, and dimensions using preCICE](https://mediatum.ub.tum.de/1515271), 14th OpenFOAM Workshop, Duisburg, Germany, submitted (proceedings publication delayed/cancelled), July 2019.
 
 {% disclaimer %}
