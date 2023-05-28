@@ -30,10 +30,6 @@ boundaryField
     {
         type            slip;
     }
-    bottom
-    {
-        type            noSlip;
-    }
     slip-bottom
     {
         type            slip;

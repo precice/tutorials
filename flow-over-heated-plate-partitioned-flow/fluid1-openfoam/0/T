@@ -31,10 +31,6 @@ boundaryField
     {
         type            zeroGradient;
     }
-    bottom
-    {
-        type            zeroGradient;
-    }
     slip-bottom
     {
         type            zeroGradient;

@@ -26,14 +26,12 @@ boundaryField
 
     top
     {
-    	type            noSlip;
-        value           uniform (.1 0 0);
+    	type            slip;
     }
 
     bottom
     {
     	type			noSlip;
-    	value			uniform (0 0 0);
     }
 
     defaultFaces

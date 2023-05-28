@@ -37,11 +37,6 @@ boundaryField
         type            calculated;
         value           $internalField;
     }
-    bottom
-    {
-        type            calculated;
-        value           $internalField;
-    }
     slip-bottom
     {
         type            calculated;

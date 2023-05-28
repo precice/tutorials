@@ -33,10 +33,6 @@ boundaryField
     {
         type            zeroGradient;
     }
-    bottom
-    {
-        type            zeroGradient;
-    }
     defaultFaces
     {
         type            empty;

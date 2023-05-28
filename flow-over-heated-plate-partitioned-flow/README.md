@@ -15,7 +15,7 @@ The setup for this tutorial is similar to the [flow over a heated plate](https:/
 
 The test case is two-dimensional and uses a serial-implicit coupling with Quasi-Newton acceleration for the fluid-fluid coupling. The CHT coupling between the solid and the fluid2 participant is changed to serial-explicit because it does not make sense numerically to have multiple serial-implicit schemes. (see also [here](https://precice.org/configuration-coupling-multi.html))
 
-The flow partitioning is done with the fluid-fluid module of the [preCICE OpenFOAM adapter](https://www.precice.org/adapter-openfoam-overview.html). Because we use buoyantPimpleFoam we have to tell the adapter that the coupled pressure has the name `p_rgh`. The temperature is coupled at the fluid-solid interface by exchanging *Temperature* and *Heat-Flux*, at the fluid-fluid interface it is *FlowTemperature* and *FlowTemperatureGradient*.
+The flow partitioning is done with the fluid-fluid module of the [preCICE OpenFOAM adapter](https://www.precice.org/adapter-openfoam-overview.html). Because we use buoyantPimpleFoam we have to tell the adapter that the coupled pressure has the name `p_rgh`. The temperature is coupled at the fluid-solid interface by exchanging *Temperature* and *Heat-Flux*, at the fluid-fluid interface it is *FlowTemperature* and *FlowTemperatureGradient*. Note the difference in naming: *Temperature* is used for conjugate heat transfer and *FlowTemperature* for fluid-fluid coupling.
 
 ## Available solvers
 
@@ -29,15 +29,11 @@ Solid participant:
 
 * OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
-* FEniCS. For more information, have a look at the [FeniCS adapter documentation](https://www.precice.org/adapter-fenics.html).
-
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
-
-* Dune-Fem. For more information, have a look at the [official documentation of Dune-Fem](https://www.dune-project.org/sphinx/dune-fem/). The solver can be installed through [PyPI](https://pypi.org/project/dune-fem/). Make sure that you are in a Python virtual environment first, which you can create inside the `solid-dune` directory and load again before running (you may need to install some tools again in this environment). Please note that Dune-Fem uses just-in-time compilation: The first time you run the solver script, it will take some time.
+We only provide an OpenFOAM for the solid participant here, but other solvers would also work. See the standard [flow-over-heated-plate](https://precice.org/tutorials-flow-over-heated-plate.html) tutorial for other possible solid solvers.
 
 ## Running the Simulation
 
-All listed solvers can be used in order to run the simulation. Open three separate terminals and start the OpenFOAM fluid participant and any solid participant by calling the respective run script `run.sh` located in the participant directory. For example:
+Open three separate terminals and start the OpenFOAM fluid participants and the solid participant by calling the respective run script `run.sh` located in the participant directory:
 
 ```bash
 cd fluid1-openfoam
@@ -54,7 +50,7 @@ cd fluid2-openfoam
 and
 
 ```bash
-cd solid-fenics
+cd solid-openfoam
 ./run.sh
 ```
 

@@ -111,7 +111,7 @@
       <participants first="Fluid1" second="Fluid2" />
       <exchange data="Velocity" mesh="Fluid1-Fluid-Mesh" from="Fluid1" to="Fluid2" />
       <exchange data="VelocityGradient" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" />
-      <exchange data="Pressure" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" />
+      <exchange data="Pressure" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" initialize="true"/>
       <exchange data="FlowTemperature-Fluid" mesh="Fluid1-Fluid-Mesh" from="Fluid1" to="Fluid2" />
       <exchange data="FlowTemperatureGradient" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" />
       <relative-convergence-measure limit="1.0e-5" data="Pressure" mesh="Fluid2-Mesh" />

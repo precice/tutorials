@@ -16,18 +16,16 @@ boundaryField
 	inlet
 	{
         type            fixedFluxExtrapolatedPressure;
-        value           uniform 0;
 	}
 	outlet
 	{
         type            fixedValue;
-        value           uniform 103500;
+        value           $internalField;
 	}
     top
     {
         type            zeroGradient;
     }
-
     bottom
     {
         type            zeroGradient;
