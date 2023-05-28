@@ -27,9 +27,7 @@ boundaryField
     cplOutlet
     {
         type            coupledVelocity;
-        refValue           uniform (0 0 0);
-        refGradient         uniform (0 0 0);
-        valueFraction       uniform 0;
+        refValue        uniform (0 0 0);
     }
 
     frontAndBack

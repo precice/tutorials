@@ -25,14 +25,14 @@ The boundary conditions `coupledVelocity` and `coupledPressure` come with the pr
 Open two separate terminals and start the desired fluid1 and fluid2 participants by calling the respective run script. For example:
 
 ```bash
-cd fluid1
+cd fluid1-openfoam
 ./run.sh
 ```
 
 and
 
 ```bash
-cd fluid2
+cd fluid2-openfoam
 ./run.sh
 ```
 

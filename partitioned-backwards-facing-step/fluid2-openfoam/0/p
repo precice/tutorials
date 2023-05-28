@@ -16,17 +16,16 @@ boundaryField
     {
         type            zeroGradient;
     }
-    inlet
-    {
-        type            zeroGradient;
-    }
-
-    cplOutlet
+    cplInlet
     {
         type            coupledPressure;
-        refValue           uniform 0;
-        refGradient         uniform 0;
-        valueFraction       uniform 1;
+        refValue        uniform 0;
+    }
+
+    outlet
+    {
+        type            fixedValue;
+        value           uniform 0;
     }
 
     frontAndBack
