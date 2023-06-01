@@ -46,6 +46,6 @@ for tutorial in tutorials_to_run:
         cases_to_run.append(suitable_cases[participant][0])# think of something better to select the cases to run here
 
     systemtests.append(Systemtest(tutorial,params,cases_to_run))
-
+    print(f"About to run the following systemtests {systemtests}")
     for systest in systemtests: 
         systest.run()

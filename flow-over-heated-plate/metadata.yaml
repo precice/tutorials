@@ -14,28 +14,28 @@ cases:
   fluid-openfoam:
     particpant: Fluid
     directory: ./fluid-openfoam
-    run: run.sh 
+    run: ./run.sh 
     clean: clean.sh 
     component: openfoam-adapter
   
   solid-fenics:
     particpant: Solid
     directory: ./solid-fenics
-    run: run.sh 
+    run: ./run.sh 
     clean: clean.sh 
     component: fenics-adapter 
   
   solid-nutils:
     particpant: Solid
     directory: ./solid-nutils
-    run: run.sh 
+    run: ./run.sh 
     clean: clean.sh 
     component: nutils-adapter 
 
   solid-openfoam:
     particpant: Solid
     directory: ./solid-openfoam
-    run: run.sh 
+    run: ./run.sh 
     clean: clean.sh 
     component: openfoam-adapter 
 

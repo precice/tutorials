@@ -313,7 +313,6 @@ class Systemtest:
     def _get_docker_services(self):
         rendered_services = {}
         for case in self.cases:
-            print(case.component)
             rendered_services[case.name] = case.render_service_template(self.params_to_use)
         
         return rendered_services
@@ -327,6 +326,7 @@ class Systemtest:
         jinja_env = Environment(loader=FileSystemLoader('.'))
         template = jinja_env.get_template("docker-compose.template.yaml")
         docker_compose_file = template.render(render_dict)
+        print(f"Now running {self.tutorial.name} with {self.cases}")
         return self.__run_docker_compose(docker_compose_file)
 
     def __run_docker_compose(self,docker_compose_content):
@@ -340,7 +340,7 @@ class Systemtest:
 
         try:
             # Execute docker-compose command
-            process = subprocess.Popen(['docker-compose', 'build'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            process = subprocess.Popen(['docker-compose', 'up'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout, stderr = process.communicate()
             exit_code = process.wait()
 
@@ -349,8 +349,8 @@ class Systemtest:
             print(stderr.decode())
 
             if exit_code == 0:
-                print("Docker Compose process completed successfully.")
-                #os.remove("docker-compose.yaml")
+                print(f"Ran {self.tutorial.name} sucessfully.")
+                os.remove("docker-compose.yaml")
             else:
                 print("Docker Compose process failed with exit code:", exit_code)
             
