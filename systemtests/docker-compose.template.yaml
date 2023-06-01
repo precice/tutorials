@@ -1,0 +1,51 @@
+version: "3.9"
+services:
+  prepare:
+    image: ubuntu:latest
+    user: ${MY_UID}:${MY_GID}
+    volumes:
+      - /etc/passwd:/etc/passwd:ro #TODO: Maybe move those into a more general section ? 
+      - /etc/group:/etc/group:ro
+      - ../:/tutorials
+    command: >
+      /bin/bash -c "id &&
+      cd /tutorials/{{ tutorial }} &&
+      sed -i 's|m2n:sockets from|m2n:sockets network=\"eth0\" from|g' precice-config.xml"
+
+  
+  {% for service in services %}
+  {{ service }}:
+    {{ services[service] |indent(4) }}
+  {% endfor %}
+
+
+  field-compare:
+    build: https://github.com/dglaeser/fieldcompare-action.git # use the docker container provided by fieldcompare
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - ../..:/tests
+    depends_on:
+      {% for service in services %}
+      {{ service }}:
+        condition: service_completed_successfully
+      {% endfor %}
+    command:
+      - /tests/flow-over-heated-plate/preCICE-output 
+      - /tests/flow-over-heated-plate/reference-output
+
+  cleanup:
+    depends_on:
+      field-compare:
+        condition: service_completed_successfully
+    image: ubuntu:latest
+    user: ${MY_UID}:${MY_GID}
+    volumes:
+      - /etc/passwd:/etc/passwd:ro #TODO: Maybe move those into a more general section ? 
+      - /etc/group:/etc/group:ro
+      - ../:/tutorials
+    command: >
+      /bin/bash -c "id &&
+      cd /tutorials/{{ tutorial }} &&
+      sed -i 's|m2n:sockets network=\"eth0\" from|m2n:sockets from|g' precice-config.xml && 
+      sed -i '/<participant/,/<\/participant>/s#<\/participant>#  <export:vtk directory="preCICE-output" \/>\n&#' precice-config.xml "

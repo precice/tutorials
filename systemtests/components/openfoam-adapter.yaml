@@ -1,4 +1,4 @@
-image: "ghcr.io/precice/openfoam-adapter:{{ TAG_PRECICE }}-{{ TAG_OPENFOAM_ADAPTER }}"
+image: "ghcr.io/precice/openfoam-adapter:{{ params["openfoam-adapter-ref"] }}"
 user: ${MY_UID}:${MY_GID}
 volumes:
   - /etc/passwd:/etc/passwd:ro #TODO: Maybe move those into a more general section ? 
@@ -6,5 +6,5 @@ volumes:
   - ../:/tutorials
 command: >
   /bin/bash -c "id && 
-  cd /tutorials/{{ tutorial }}/{{ case_folder }} &&
-  {{ run_command }} | tee {{ case_name }}.log 2>&1"
+  cd /tutorials/{{ tutorial }}/{{ folder }} &&
+  {{ params["openfoam-exectuable"] }} {{ run }} | tee {{ folder }}.log 2>&1"
