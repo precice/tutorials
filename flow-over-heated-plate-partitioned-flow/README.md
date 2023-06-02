@@ -56,13 +56,18 @@ cd solid-openfoam
 
 ## Post-processing
 
-Have a look at the [flow-over heated-plate](https://www.precice.org/tutorials-flow-over-heated-plate.html) tutorial for the general aspects of post-processing.
+Have a look at the [flow-over-heated-plate](https://www.precice.org/tutorials-flow-over-heated-plate.html) tutorial for the general aspects of post-processing.
 
 An example of the visualized expected results looks as follows:
 
 ![result](images/tutorials-flow-over-heated-plate-partitioned-flow-results.png)
 
-Observe that the temperature at the bottom of the plate is 310K and at the inlet 300K. On the interface, the temperature is between these values. An area of higher temperature is formed above the plate, which is shifted towards the front, driven by the flow. The temperature is coupled smoothly across the fluid-fluid coupling interface.
+Observe that the temperature at the bottom of the plate is 310K and at the inlet 300K. On the interface, the temperature is between these values. An area of higher temperature is formed above the plate, which is shifted towards the front, driven by the flow.  
+The below graph shows that the temperature is now coupled smoothly across both the solid-fluid and the fluid-fluid coupling interface.
+
+![result](images/tutorials-flow-over-heated-plate-partitioned-flow-graph.png)
+
+The temperature is sampled along the black line seen in the inset image. It is compared to the values obtained from the basic flow-over-heated-plate tutorial case without the additional fluid-fluid coupling.
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
