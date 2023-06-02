@@ -45,12 +45,9 @@ An example of the visualized expected results at $t=3.0s$ looks as follows:
 
 We observe that the velocity and pressure values are smooth across the interface. Going through different time steps, we can also see how our inlet-outlet boundary conditions accurately changed behavior when the recirculation travelled inside the coupling interface.
 
-However, if we look closely we can observe that the values around the interface don't match the monolithic solution perfectly:
+Plotting the velocity in z-direction over the coupling interface at $t=2.5s$ shows a smooth transition from negative to positive values:
 
 ![result](images/tutorials-partitioned-backwards-facing-step-sampled.png)
-
-Above graph shows the cell values of the velocity sampled along the coupling interface.
-It is possible to reduce the observed error by using a finer mesh around the interface. But keep in mind, that a finer mesh might require finer time steps as well!
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.

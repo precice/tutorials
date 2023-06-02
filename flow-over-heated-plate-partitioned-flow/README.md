@@ -13,7 +13,8 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 The setup for this tutorial is similar to the [flow over a heated plate](https://www.precice.org/tutorials-flow-over-heated-plate.html). In this case we additionally partition the OpenFOAM fluid to create a three-way coupling using CHT (conjugate heat transfer) and FF (fluid-fluid coupling).
 
-The test case is two-dimensional and uses a serial-implicit coupling with Quasi-Newton acceleration for the fluid-fluid coupling. The CHT coupling between the solid and the fluid2 participant is changed to serial-explicit because it does not make sense numerically to have multiple serial-implicit schemes. (see also [here](https://precice.org/configuration-coupling-multi.html))
+The test case is two-dimensional and uses a serial-implicit coupling with Quasi-Newton acceleration for the fluid-fluid coupling. The CHT coupling between the solid and the fluid2 participant is changed to serial-explicit because it does not make sense numerically to have multiple serial-implicit schemes.  
+Note that it is usually recommended using the fully implicit parallel `coupling-scheme:multi` with more than two participants. (learn more about this [here](https://precice.org/configuration-coupling-multi.html)). However, in this basic example, it is sufficient to do the CHT coupling explicitly.
 
 The flow partitioning is done with the fluid-fluid module of the [preCICE OpenFOAM adapter](https://www.precice.org/adapter-openfoam-overview.html). Because we use buoyantPimpleFoam we have to tell the adapter that the coupled pressure has the name `p_rgh`. The temperature is coupled at the fluid-solid interface by exchanging *Temperature* and *Heat-Flux*, at the fluid-fluid interface it is *FlowTemperature* and *FlowTemperatureGradient*. Note the difference in naming: *Temperature* is used for conjugate heat transfer and *FlowTemperature* for fluid-fluid coupling.
 
