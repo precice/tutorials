@@ -9,6 +9,10 @@ summary: This tutorial describes how to run a partitioned fluid simulation using
 Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-pipe). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
 {% endnote %}
 
+Fluid-fluid coupling is still experimental. The following setup is needed to run this tutorial:
+
+- preCICE v2 ([release version](https://github.com/precice/precice/releases))
+- OpenFOAM adapter ([develop version](https://github.com/precice/openfoam-adapter/tree/develop))
 ## Setup
 
 This scenario consists of two pipes connected in series, both simulated with OpenFOAM solvers. A fluid enters from the left (here $$ z=0 $$) boundary of the Fluid1 participant with a uniform velocity profile ($$ u_{in} = 0.1 m/s $$) and zero pressure gradient. In its starting, uncoupled state, it exits from the right side (outlet: zero velocity gradient, zero pressure). This is also the coupling interface with Fluid2, which has the same boundary conditions as Fluid1.

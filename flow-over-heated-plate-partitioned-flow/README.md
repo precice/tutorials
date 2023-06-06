@@ -9,6 +9,11 @@ summary: This tutorial describes how to run a conjugate heat transfer coupled si
 Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate-partitioned-flow). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
 {% endnote %}
 
+Fluid-fluid coupling is still experimental. The following setup is needed to run this tutorial:
+
+- preCICE v2 ([release version](https://github.com/precice/precice/releases))
+- OpenFOAM adapter ([develop version](https://github.com/precice/openfoam-adapter/tree/develop))
+
 ## Setup
 
 The setup for this tutorial is similar to the [flow over a heated plate](https://www.precice.org/tutorials-flow-over-heated-plate.html). In this case we additionally partition the OpenFOAM fluid to create a three-way coupling using CHT (conjugate heat transfer) and FF (fluid-fluid coupling).
