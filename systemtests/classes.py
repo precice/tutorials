@@ -304,7 +304,7 @@ class Systemtest:
                 self.params_to_use[needed_param.key] = self.input_paramters.get(needed_param.key)
             else:
                 if needed_param.required:
-                    print(f"{needed_param} IS to instantiate {self.tutorial.name}")
+                    print(f"{needed_param} is needed to be given via --params to instantiate {self.tutorial.name}")
                     exit(1)
                 else:
                     self.params_to_use[needed_param.key] = needed_param.default
@@ -316,7 +316,9 @@ class Systemtest:
             rendered_services[case.name] = case.render_service_template(self.params_to_use)
         
         return rendered_services
-
+    def _copy_into_directory(self):
+        # We copy the whole tutorial over into a runs/tutorial_name folder and run it
+        
     def run(self):
         rendered_services = self._get_docker_services()
         render_dict={
@@ -344,14 +346,14 @@ class Systemtest:
             stdout, stderr = process.communicate()
             exit_code = process.wait()
 
-            # Print the stdout and stderr
-            print(stdout.decode())
-            print(stderr.decode())
-
             if exit_code == 0:
                 print(f"Ran {self.tutorial.name} sucessfully.")
                 os.remove("docker-compose.yaml")
             else:
+                # Print the stdout and stderr
+                print(stdout.decode())
+                print(stderr.decode())
+                print(f"Systemtests {self.tutorial.name} failed with code {exit_code}:")
                 print("Docker Compose process failed with exit code:", exit_code)
             
             os.chdir(current_dir)

@@ -21,50 +21,54 @@ fenics-adapter:
   docker-service-template: components/nutils-adapter.yaml
   params:
     pythonbindings:
-        type: git
-        semnantic: Version of the pythonbindings to use
+      type: git
+      semnantic: Version of the pythonbindings to use
+
     fenics:
-      type: string
+      git-ref: False
       options: ["v1","v2"]
       semantic: Version of FENICS to use
       default: "v1"
     precice:
-      type: git
-      semantic: Version of precice to use
+      git-ref: True
+      description: Version of precice to use
       default: "latest"
 
 
 calculix-adapter:
   repository: https://github.com/precice/fenics-adapter
-  docker-service-template: components/nutils-adapter.yml
+  docker-service-template: components/nutils-adapter.yaml
   params:
     pythonbindings:
-        type: git
-        semnantic: Version of the pythonbindings to use
+      type: git
+      semnantic: Version of the pythonbindings to use
+
     fenics:
-      type: string
+      git-ref: False
       options: ["v1","v2"]
       semantic: Version of FENICS to use
       default: "v1"
     precice:
-      type: git
-      semantic: Version of precice to use
+      git-ref: True
+      description: Version of precice to use
       default: "latest"
+
 
 
 nutils-adapter:
   repository: https://github.com/precice/fenics-adapter
-  docker-service-template: components/nutils-adapter.yml
+  docker-service-template: components/nutils-adapter.yaml
   params:
     pythonbindings:
-        type: git
-        semnantic: Version of the pythonbindings to use
+      type: git
+      semnantic: Version of the pythonbindings to use
+
     fenics:
-      type: string
+      git-ref: False
       options: ["v1","v2"]
       semantic: Version of FENICS to use
       default: "v1"
     precice:
-      type: git
-      semantic: Version of precice to use
+      git-ref: True
+      description: Version of precice to use
       default: "latest"
