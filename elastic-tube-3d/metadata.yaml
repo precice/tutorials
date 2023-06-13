@@ -13,21 +13,21 @@ participants:
 
 cases:
   fluid-openfoam:
-    particpant: Fluid
+    participant: Fluid
     directory: ./fluid-openfoam
     run: run.sh 
     clean: clean.sh 
     component: openfoam-adapter
   
   solid-calculix:
-    particpant: Solid
+    participant: Solid
     directory: ./solid-calculix
     run: run.sh 
     clean: clean.sh 
     component: calculix-adapter 
   
   solid-fenics:
-    particpant: Solid
+    participant: Solid
     directory: ./solid-fenics
     run: run.sh 
     clean: clean.sh 

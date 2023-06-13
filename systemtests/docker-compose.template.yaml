@@ -6,10 +6,10 @@ services:
     volumes:
       - /etc/passwd:/etc/passwd:ro #TODO: Maybe move those into a more general section ? 
       - /etc/group:/etc/group:ro
-      - ../:/tutorials
+      - {{ tutorial_path }}:/tutorial
     command: >
       /bin/bash -c "id &&
-      cd /tutorials/{{ tutorial }} &&
+      cd /tutorial &&
       sed -i 's|m2n:sockets from|m2n:sockets network=\"eth0\" from|g' precice-config.xml"
 
   
@@ -24,15 +24,15 @@ services:
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
-      - ../:/tutorials
+      - {{ tutorial_path }}:/tutorial
     depends_on:
       {% for service in services %}
       {{ service }}:
         condition: service_completed_successfully
       {% endfor %}
     command:
-      - /tutorials/{{ tutorial }}/preCICE-output 
-      - /tutorials/{{ tutorial }}/reference-output
+      - /tutorial/preCICE-output 
+      - /tutorial/reference-output
 
   cleanup:
     depends_on:
@@ -41,10 +41,10 @@ services:
     image: ubuntu:latest
     user: ${MY_UID}:${MY_GID}
     volumes:
-      - /etc/passwd:/etc/passwd:ro #TODO: Maybe move those into a more general section ? 
+      - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
-      - ../:/tutorials
+      - {{ tutorial_path }}:/tutorial
     command: >
       /bin/bash -c "id &&
-      cd /tutorials/{{ tutorial }} &&
+      cd /tutorial &&
       sed -i 's|m2n:sockets network=\"eth0\" from|m2n:sockets from|g' precice-config.xml"

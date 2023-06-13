@@ -1,0 +1,12 @@
+suites:
+  - openfoam-adapter-pr
+  - fenics-adpater-pr
+
+tests: 
+  tutorial-path: flow-over-heated-plate
+  suites:
+    - openfoam-adapter-pr
+  cases: 
+    - (fluid-openfoam, solid-fenics)
+    - (fluid-openfoam, solid-nutils)
+    - (fluid-openfoam, solid-openfoam)

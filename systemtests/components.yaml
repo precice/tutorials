@@ -1,9 +1,8 @@
 openfoam-adapter:
   repository: https://github.com/precice/openfoam-adapter
-  docker-service-template: components/openfoam-adapter.yaml
-  params: # these things mean something to the docker-service
+  template: component-templates/openfoam-adapter.yaml
+  parameters: # these things mean something to the docker-service
     openfoam-exectuable:
-      git-ref: False
       options: ["openfoam2112"]
       description: Version of openfoam to use
       default: "openfoam2112"
@@ -18,12 +17,11 @@ openfoam-adapter:
     
 fenics-adapter:
   repository: https://github.com/precice/fenics-adapter
-  docker-service-template: components/nutils-adapter.yaml
-  params:
+  template: component-templates/nutils-adapter.yaml
+  parameters:
     pythonbindings:
       type: git
       semnantic: Version of the pythonbindings to use
-
     fenics:
       git-ref: False
       options: ["v1","v2"]
@@ -37,8 +35,8 @@ fenics-adapter:
 
 calculix-adapter:
   repository: https://github.com/precice/fenics-adapter
-  docker-service-template: components/nutils-adapter.yaml
-  params:
+  template: components/nutils-adapter.yaml
+  parameters:
     pythonbindings:
       type: git
       semnantic: Version of the pythonbindings to use
@@ -57,8 +55,8 @@ calculix-adapter:
 
 nutils-adapter:
   repository: https://github.com/precice/fenics-adapter
-  docker-service-template: components/nutils-adapter.yaml
-  params:
+  template: components/nutils-adapter.yaml
+  parameters:
     pythonbindings:
       type: git
       semnantic: Version of the pythonbindings to use
