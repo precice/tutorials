@@ -62,7 +62,7 @@
       <max-time value="1.0" />
       <participants first="Fluid1" second="Fluid2" />
       <exchange data="Velocity" mesh="Fluid1-Mesh" from="Fluid1" to="Fluid2" />
-      <exchange data="PressureGradient" mesh="Fluid1-Mesh" from="Fluid1" to="Fluid2" />
+      <!-- <exchange data="PressureGradient" mesh="Fluid1-Mesh" from="Fluid1" to="Fluid2" /> -->
       <exchange data="Pressure" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" />
       <max-iterations value="100" />
       <relative-convergence-measure limit="1.0e-6" data="Pressure" mesh="Fluid2-Mesh" />
