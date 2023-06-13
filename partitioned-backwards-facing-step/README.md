@@ -9,10 +9,9 @@ summary: This tutorial describes how to run a partitioned fluid simulation using
 Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-backwards-facing-step). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
 {% endnote %}
 
-Fluid-fluid coupling is still experimental. The following setup is needed to run this tutorial:
-
-- preCICE v2 ([release version](https://github.com/precice/precice/releases))
-- OpenFOAM adapter ([develop version](https://github.com/precice/openfoam-adapter/tree/develop))
+{% note %}
+This tutorial relies on yet unreleased features of the OpenFOAM adapter. You need [preCICE v2](https://github.com/precice/precice/releases)) and [the ff-develop branch of the OpenFOAM adapter](https://github.com/precice/openfoam-adapter/tree/ff-develop) to run this tutorial.
+{% endnote %}
 
 ## Setup
 
