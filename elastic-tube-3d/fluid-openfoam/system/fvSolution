@@ -209,6 +209,25 @@ outerResidualControl
 }
 */
 
+// OpenFOAM 9 (.org) or newer
+// see also https://github.com/OpenFOAM/OpenFOAM-dev/commit/4c8122783aedaa7dadf0486163a98350e625db32
+/*
+outerCorrectorResidualControl
+{
+U
+{
+    tolerance 1e-5;
+    relTol	  0;
+}
+
+p
+{
+    tolerance 1e-5;
+    relTol	  0;
+}
+}
+*/
+
 relaxationFactors
 {
     U       0.5;
