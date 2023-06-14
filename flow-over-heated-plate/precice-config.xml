@@ -31,7 +31,6 @@
         from="Solid-Mesh"
         to="Fluid-Mesh"
         constraint="consistent" />
-      <export:vtk directory="../preCICE-output" />
 </participant>
 
     <participant name="Solid">
@@ -44,7 +43,6 @@
         constraint="consistent" />
       <read-data name="Temperature" mesh="Solid-Mesh" />
       <write-data name="Heat-Flux" mesh="Solid-Mesh" />
-    <export:vtk directory="../preCICE-output" />
 </participant>
 
     <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
