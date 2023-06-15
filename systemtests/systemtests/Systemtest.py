@@ -179,6 +179,7 @@ class Systemtest:
             stderr_data.extend(stderr.decode().splitlines())
             
             exit_code = process.wait()
+            print(f"{exit_code=}")
             if exit_code == 0:
                 return SystemtestResult(True, stdout_data,stderr_data,self)
             else:
