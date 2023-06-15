@@ -1,6 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass,field
 from pathlib import Path
-from typing import List,Tuple
+from typing import List,Tuple,Optional
 import glob
 import yaml
 import itertools
@@ -18,26 +18,31 @@ class Tutorial:
     url: str
     participants: List[str]
     cases: List[Case]
+    case_combinations : List[Tuple[Case]] = field(init=False)
 
-    def __init__(self, name, path, url, participants, cases):
-        """
-        Initializes the Tutorial instance with provided attributes.
-
-        Args:
-            name: The name of the tutorial.
-            path: The path of the tutorial.
-            url: The URL of the tutorial.
-            participants: The list of participants.
-            cases: The list of cases.
-
-        """
-        self.name = name
-        self.path = path
-        self.url = url
-        self.participants = participants or []
-        self.cases = cases or []
-        for case in cases:
+    def __post_init__(self):
+        for case in self.cases:
             case.tutorial = self
+        # get all case combinations
+
+        def get_all_possible_case_combinations(tutorial: Tutorial):
+            case_combinations = []
+            cases_dict = {}
+            for participant in tutorial.participants:
+                cases_dict[participant] = []
+            for case in tutorial.cases:
+                cases_dict[case.participant].append(case)
+            
+            for combination in itertools.product(*[cases_dict[participant] for participant in tutorial.participants]):
+                case_combinations.append(combination)
+            return case_combinations
+        
+        self.case_combinations = get_all_possible_case_combinations(self)
+
+
+
+    def __hash__(self) -> int:
+        return hash(self.path)
 
     def __repr__(self) -> str:
         """
@@ -50,19 +55,30 @@ class Tutorial:
         Cases: {self.cases}
         """
 
-    def get_all_case_combinations(self) -> List[Tuple[Case]]:
+    def get_all_case_combinations(self) -> List[List[Case]]:
         cases_combinations = []
         # first sort the cases into a dict by participant
-        cases_dict = {}
-        for participant in self.participants:
-            cases_dict[participant] = []
-        for case in self.cases:
-            cases_dict[case.participant].append(case)
         
-        for combination in itertools.product(*[cases_dict[participant] for participant in self.participants]):
-            cases_combinations.append(combination)
         return cases_combinations
 
+
+    def get_cases_by_strings(self, case_names: List[List[str]]):
+        """
+        Retrieves potential cases lists based on their names
+
+        Args:
+            case_names: The list of case combinations
+
+        Returns:
+            A dictionary of potential cases per participant.
+        """
+        potential_cases = {}
+        for participant in self.participants:
+            potential_cases[participant] = []
+            for case in self.cases:
+                if (case.participant == participant) and (case.component.name in component_names):
+                    potential_cases[participant].append(case)
+        return potential_cases
 
     def get_potential_cases(self, component_names):
         """
@@ -131,7 +147,6 @@ class Tutorials(list):
     Represents a collection of tutorials.
     """
 
-
     def __iter__(self):
         return iter(self.tutorials)
 
@@ -169,6 +184,22 @@ class Tutorials(list):
             if tutorial.can_be_run_with_components(component_names):
                 tutorials_filtered.append(tutorial)
         return tutorials_filtered
+
+    def get_by_path(self, path_to_search) -> Optional[Tutorial]:
+        """
+        Retrieves a Tutorial by its relative path.
+
+        Args:
+            path_to_search: The path of the Tutorial to search for.
+
+        Returns:
+            The Tutorial with the specified path, or None if not found.
+        """
+        for tutorial in self.tutorials:
+            if tutorial.path == path_to_search:
+                return tutorial
+
+        return None
 
     @classmethod
     def from_path(cls, path):
