@@ -24,6 +24,14 @@ Lastly we have a case. A Case is the instantiaton of a **participant** using the
 
 Therefore the workflow for the user is to just execute the `systemtests.py` file. Depending on the options given to the file i will then read in all the metada files and generate the appropriate `docker-compose.yaml` files. 
 
+### By Test-Suite
+To test a certain test-suite defined in `tests.yaml` just use `python systemtests.py --suites=openfoam-adapter-release,<someothersuite>`. 
+To discover all tests use `python print_test_suites.py`. 
+To be able to fill in the right case tuple into the `tests.yaml` you can use the `python print_case_combinations.py` script. 
+
+
+### By component
+! Do not use, this will be deprecated at some point
 To test the current state, which only supports openfoam run:
-` python systemtests.py --components=openfoam-adapter`
+` python systemtests.py --components=openfoam-adapter --params=openfoam-version=v2012,`
 
