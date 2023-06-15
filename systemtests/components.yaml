@@ -4,9 +4,9 @@ openfoam-adapter:
   parameters: # these things mean something to the docker-service
     openfoam-exectuable:
       options: ["openfoam2112"]
-      description: Version of openfoam to use
+      description: exectuable of openfoam to use
       default: "openfoam2112"
-    precice:
+    precice-tag:
       git-ref: True
       description: Version of precice to use
       default: "latest"
@@ -35,7 +35,7 @@ fenics-adapter:
 
 calculix-adapter:
   repository: https://github.com/precice/fenics-adapter
-  template: components/nutils-adapter.yaml
+  template: component-templates/nutils-adapter.yaml
   parameters:
     pythonbindings:
       type: git
@@ -55,7 +55,7 @@ calculix-adapter:
 
 nutils-adapter:
   repository: https://github.com/precice/fenics-adapter
-  template: components/nutils-adapter.yaml
+  template: component-templates/nutils-adapter.yaml
   parameters:
     pythonbindings:
       type: git

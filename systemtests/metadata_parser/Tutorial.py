@@ -7,6 +7,8 @@ import itertools
 
 from .Case import Case
 from .Component import Components
+
+system_test_dir = Path(__file__).parent.parent
 @dataclass
 class Tutorial:
     """
@@ -212,7 +214,7 @@ class Tutorials(list):
         """
         yaml_files = glob.glob(f'{path}/*/metadata.yaml')
         tutorials = []
-        available_components = Components.from_yaml("./components.yaml") # TODO FIX this realteive path shit
+        available_components = Components.from_yaml(system_test_dir / "components.yaml") # TODO FIX this realteive path shit
         for yaml_path in yaml_files:
             tut = Tutorial.from_yaml(yaml_path, available_components)
             tutorials.append(tut)

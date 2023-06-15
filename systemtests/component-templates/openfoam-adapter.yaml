@@ -6,8 +6,8 @@ depends_on:
 volumes:
   - /etc/passwd:/etc/passwd:ro #TODO: Maybe move those into a more general section ? 
   - /etc/group:/etc/group:ro
-  - {{ tutorial_path }}:/tutorial
+  - {{ run_directory }}:/runs
 command: >
   /bin/bash -c "id && 
-  cd /tutorial/{{ folder }} &&
-  {{ params["openfoam-exectuable"] }} {{ run }} | tee {{ case_name }}.log 2>&1"
+  cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&
+  {{ params["openfoam-exectuable"] }} {{ run }} | tee {{ case_folder }}.log 2>&1"

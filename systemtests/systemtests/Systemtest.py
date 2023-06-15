@@ -1,12 +1,46 @@
 import os
 import subprocess
-from typing import List,Dict
+from typing import List,Dict,Tuple
 from jinja2 import Environment, FileSystemLoader
 from dataclasses import dataclass,field
 import shutil
+from pathlib import Path
 
 from metadata_parser import Tutorial, Case
 from .CmdLineArguments import CmdLineArguments
+
+import unicodedata
+import re
+
+def slugify(value, allow_unicode=False):
+    """
+    Taken from https://github.com/django/django/blob/master/django/utils/text.py
+    Convert to ASCII if 'allow_unicode' is False. Convert spaces or repeated
+    dashes to single dashes. Remove characters that aren't alphanumerics,
+    underscores, or hyphens. Convert to lowercase. Also strip leading and
+    trailing whitespace, dashes, and underscores.
+    """
+    value = str(value)
+    if allow_unicode:
+        value = unicodedata.normalize('NFKC', value)
+    else:
+        value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+    value = re.sub(r'[^\w\s-]', '', value.lower())
+    return re.sub(r'[-\s]+', '-', value).strip('-_')
+
+
+
+system_test_dir= Path(__file__).parent.parent
+
+class Systemtest:pass
+
+@dataclass
+class SystemtestResult:
+    success: bool
+    stdout_data: List[str]
+    stderr_data: List[str]
+    systemtest: Systemtest
+
 @dataclass
 class Systemtest:
     """
@@ -15,7 +49,7 @@ class Systemtest:
 
     tutorial: Tutorial
     cmd_line_args: CmdLineArguments
-    cases: List[Case]
+    cases: Tuple[Case]
     params_to_use: Dict[str,str] = field(init=False)
 
     def __post_init__(self):
@@ -33,7 +67,6 @@ class Systemtest:
             Exception: If a required parameter is missing.
         """
         self.params_to_use={}
-        print(self.params_to_use)
         needed_parameters = set()
         for case in self.cases:
             needed_parameters.update(case.component.parameters)
@@ -54,30 +87,34 @@ class Systemtest:
         Returns:
             A dictionary of rendered services per case name.
         """
-        def render_service_template(case: Case, params_to_use: Dict[str,str] ) -> str:
+        def render_service_template_per_case(case: Case, params_to_use: Dict[str,str] ) -> str:
             render_dict = {
+                'run_directory':self.run_directory.resolve(),
+                'tutorial_folder': self.tutorial_folder,
                 'params': params_to_use,
-                'tutorial': case.tutorial.path,
-                'folder': case.path,
+                'case_folder': case.path,
                 'run': case.run_cmd
             }
-            jinja_env = Environment(loader=FileSystemLoader('.'))
+            jinja_env = Environment(loader=FileSystemLoader(system_test_dir))
+            print(system_test_dir)
             template = jinja_env.get_template(case.component.template)
             return template.render(render_dict)
 
         rendered_services = {}
         for case in self.cases:
-            rendered_services[case.name] = render_service_template(case,self.params_to_use)
+            rendered_services[case.name] = render_service_template_per_case(case,self.params_to_use)
         return rendered_services
 
 
     def __get_docker_compose_file(self):
         rendered_services = self.__get_docker_services()
         render_dict = {
+            'run_directory': self.run_directory.resolve(),
+            'tutorial_folder': self.tutorial_folder,
             'tutorial': self.tutorial.path,
-            'services': rendered_services
+            'services': rendered_services,
         }
-        jinja_env = Environment(loader=FileSystemLoader('.'))
+        jinja_env = Environment(loader=FileSystemLoader(system_test_dir))
         template = jinja_env.get_template("docker-compose.template.yaml")
         return template.render(render_dict)
 
@@ -85,49 +122,71 @@ class Systemtest:
         """
         Copies the entire tutorial into a folder to prepare for running.
         """
-        destination = run_directory / f'{self.tutorial.path}_{self.cases}'
-        try:
-            path.mkdir(parents=True, exist_ok=False)
-        except FileExistsError:
-            print("Folder already exists")
-        else:
-            print("Folder was created")
+        self.run_directory = run_directory
+        self.tutorial_folder = slugify(f'{self.tutorial.path}_{self.cases}')
+        destination = run_directory / self.tutorial_folder
+        src = Path(__file__).parent.parent.parent / self.tutorial.path
+        self.system_test_dir = destination
         shutil.copytree(src, destination)
+    
+
+    def __copy_tools(self,run_directory:Path):
+        destination = run_directory / "tools"
+        src = Path(__file__).parent.parent.parent / "tools"
+        print(f"{src}->{destination}")
+        try:
+            shutil.copytree(src, destination)
+        except Exception as e:
+            print(e)
 
 
-    def __run_docker_compose(self, docker_compose_content):
+    def __cleanup(self):
+        shutil.rmtree(self.run_directory)
+
+    def _run_docker_compose(self):
         """
         Writes the Docker Compose file to disk, executes docker-compose up, and handles the process output.
 
         Args:
             docker_compose_content: The content of the Docker Compose file.
+        
+        Returns: 
+            A SystemtestResult object containing the state.
         """
+        docker_compose_content = self.__get_docker_compose_file()
         tutorial_path = f"../{self.tutorial.path}"
-        os.chdir(tutorial_path)
-        with open("docker-compose.yaml", 'w') as file:
-            file.write(docker_compose_content)
+        stdout_data = []
+        stderr_data = []
 
+        with open(self.system_test_dir / "docker-compose.yaml", 'w') as file:
+            file.write(docker_compose_content)
         try:
             # Execute docker-compose command
-            process = subprocess.Popen(['docker-compose', 'up'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            process = subprocess.Popen(['docker', 'compose', 'up'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.system_test_dir)
+            
+            # Read the output in real-time
+            while True:
+                output = process.stdout.readline().decode()
+                if output == '' and process.poll() is not None:
+                    break
+                if output:
+                    stdout_data.append(output)
+                    print(output, end='')
+            
+            # Capture remaining output
             stdout, stderr = process.communicate()
+            stdout_data.extend(stdout.decode().splitlines())
+            stderr_data.extend(stderr.decode().splitlines())
+            
             exit_code = process.wait()
-
             if exit_code == 0:
-                print(f"Ran {self.tutorial.name} successfully.")
-                os.remove("docker-compose.yaml")
+                return SystemtestResult(True, stdout_data,stderr_data,self)
             else:
-                # Print the stdout and stderr
-                print(stdout.decode())
-                print(stderr.decode())
-                print(f"System test {self.tutorial.name} failed with code {exit_code}:")
-                print("Docker Compose process failed with exit code:", exit_code)
-
-            os.chdir(current_dir)
-
-        except OSError as e:
-            os.chdir(current_dir)
-            print("Error executing docker-compose command:", e)
+                return SystemtestResult(False, stdout_data,stderr_data,self)
+        except Exception as e:
+            print("Error executing docker compose command:", e)
+            return SystemtestResult(False, stdout_data,stderr_data,self)
+            
 
     def __repr__(self):
         return f"{self.tutorial.name} {self.cases}"
@@ -138,7 +197,9 @@ class Systemtest:
         Runs the system test by generating the Docker Compose file, copying everything into a run folder, and executing docker-compose up.
         """
         self.__copy_tutorial_into_directory(run_directory)
-       
-        print(f"Now running {self.tutorial.name} with {self.cases}")
+        self.__copy_tools(run_directory)
+        result = self._run_docker_compose()
+        if result.success:
+            self.__cleanup()
 
     
