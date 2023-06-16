@@ -20,19 +20,3 @@ services:
   {{ service }}:
     {{ services[service] |indent(4) }}
   {% endfor %}
-
-
-  field-compare:
-    build: https://github.com/dglaeser/fieldcompare-action.git # use the docker container provided by fieldcompare
-    volumes:
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-      - {{ run_directory }}:/runs
-    depends_on:
-      {% for service in services %}
-      {{ service }}:
-        condition: service_completed_successfully
-      {% endfor %}
-    command:
-      - /runs/{{ tutorial_folder }}/preCICE-output 
-      - /runs/{{ tutorial_folder }}/reference-output

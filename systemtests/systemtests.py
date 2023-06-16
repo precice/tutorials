@@ -74,4 +74,8 @@ print(f"About to run the following systemtest in the directory {run_directory}: 
 
 for systemtest in systemtests_to_run:
     result = systemtest.run(run_directory)
+    if not result.success:
+        print(f"Failed to run {result.systemtest}")
+    else:
+        print(f"Success running {result.systemtest}")
     

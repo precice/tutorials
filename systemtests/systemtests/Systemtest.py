@@ -35,11 +35,27 @@ system_test_dir= Path(__file__).parent.parent
 class Systemtest:pass
 
 @dataclass
+class DockerComposeResult:
+    exit_code: int
+    stdout_data: List[str]
+    stderr_data: List[str]
+    systemtest: Systemtest
+
+@dataclass
+class FieldCompareResult:
+    exit_code: int
+    stdout_data: List[str]
+    stderr_data: List[str]
+    systemtest: Systemtest
+
+
+@dataclass
 class SystemtestResult:
     success: bool
     stdout_data: List[str]
     stderr_data: List[str]
     systemtest: Systemtest
+
 
 @dataclass
 class Systemtest:
@@ -118,6 +134,16 @@ class Systemtest:
         template = jinja_env.get_template("docker-compose.template.yaml")
         return template.render(render_dict)
 
+
+    def __get_field_compare_compose_file(self):
+        render_dict = {
+            'run_directory': self.run_directory.resolve(),
+            'tutorial_folder': self.tutorial_folder,
+        }
+        jinja_env = Environment(loader=FileSystemLoader(system_test_dir))
+        template = jinja_env.get_template("docker-compose.field_compare.template.yaml")
+        return template.render(render_dict)
+
     def __copy_tutorial_into_directory(self,run_directory: Path):
         """
         Copies the entire tutorial into a folder to prepare for running.
@@ -143,7 +169,7 @@ class Systemtest:
     def __cleanup(self):
         shutil.rmtree(self.run_directory)
 
-    def _run_docker_compose(self):
+    def _run_field_compare(self):
         """
         Writes the Docker Compose file to disk, executes docker-compose up, and handles the process output.
 
@@ -153,16 +179,15 @@ class Systemtest:
         Returns: 
             A SystemtestResult object containing the state.
         """
-        docker_compose_content = self.__get_docker_compose_file()
-        tutorial_path = f"../{self.tutorial.path}"
+        docker_compose_content = self.__get_field_compare_compose_file()
         stdout_data = []
         stderr_data = []
 
-        with open(self.system_test_dir / "docker-compose.yaml", 'w') as file:
+        with open(self.system_test_dir / "docker-compose.field_compare.yaml", 'w') as file:
             file.write(docker_compose_content)
         try:
             # Execute docker-compose command
-            process = subprocess.Popen(['docker', 'compose', 'up'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.system_test_dir)
+            process = subprocess.Popen(['docker', 'compose', '--file', 'docker-compose.field_compare.yaml','up','--exit-code-from', 'field-compare'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.system_test_dir)
             
             # Read the output in real-time
             while True:
@@ -179,18 +204,59 @@ class Systemtest:
             stderr_data.extend(stderr.decode().splitlines())
             
             exit_code = process.wait()
-            print(f"{exit_code=}")
-            if exit_code == 0:
-                return SystemtestResult(True, stdout_data,stderr_data,self)
-            else:
-                return SystemtestResult(False, stdout_data,stderr_data,self)
+            return FieldCompareResult(exit_code,stdout_data,stderr_data,self)
         except Exception as e:
             print("Error executing docker compose command:", e)
-            return SystemtestResult(False, stdout_data,stderr_data,self)
+            return FieldCompareResult(1,stdout_data,stderr_data,self)
+
+    def _run_tutorial(self):
+        """
+        Runs precice couple
+
+        Returns: 
+            A DockerComposeResult object containing the state.
+        """
+        docker_compose_content = self.__get_docker_compose_file()
+        tutorial_path = f"../{self.tutorial.path}"
+        stdout_data = []
+        stderr_data = []
+
+        with open(self.system_test_dir / "docker-compose.tutorial.yaml", 'w') as file:
+            file.write(docker_compose_content)
+        try:
+            # Execute docker-compose command
+            process = subprocess.Popen(['docker', 'compose','--file', 'docker-compose.tutorial.yaml', 'up'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.system_test_dir)
             
+            # Read the output in real-time
+            while True:
+                output = process.stdout.readline().decode()
+                if output == '' and process.poll() is not None:
+                    break
+                if output:
+                    stdout_data.append(output)
+                    print(output, end='')
+            
+            # Capture remaining output
+            stdout, stderr = process.communicate()
+            stdout_data.extend(stdout.decode().splitlines())
+            stderr_data.extend(stderr.decode().splitlines())
+            
+            exit_code = process.wait()
+            return DockerComposeResult(exit_code,stdout_data,stderr_data,self)
+        except Exception as e:
+            print("Error executing docker compose command:", e)
+            return DockerComposeResult(1,stdout_data,stderr_data,self)
 
     def __repr__(self):
         return f"{self.tutorial.name} {self.cases}"
+    
+
+    def __handle_docker_compose_failure(self,result: DockerComposeResult):
+        print("Docker Compose failed, skipping fieldcompare")
+
+    
+    def __handle_field_compare_failure(self,result: FieldCompareResult):
+        print("Fieldcompare failed")
     
     
     def run(self,run_directory:Path):
@@ -199,8 +265,23 @@ class Systemtest:
         """
         self.__copy_tutorial_into_directory(run_directory)
         self.__copy_tools(run_directory)
-        result = self._run_docker_compose()
-        if result.success:
-            self.__cleanup()
+        std_out:List[str] = []
+        std_err:List[str] = []
+        docker_compose_result = self._run_tutorial()
+        std_out.extend(docker_compose_result.stdout_data)
+        std_err.extend(docker_compose_result.stderr_data)
+        if docker_compose_result.exit_code == 1:
+            self.__handle_docker_compose_failure(docker_compose_result)
+            return SystemtestResult(False,std_out,std_err,self)
+        
+        fieldcompare_result = self._run_field_compare()
+        std_out.extend(fieldcompare_result.stdout_data)
+        std_err.extend(fieldcompare_result.stderr_data)
+        if fieldcompare_result.exit_code == 1:
+            self.__handle_field_compare_failure(fieldcompare_result)
+            return SystemtestResult(False,std_out,std_err,self)
+
+        self.__cleanup()
+        return SystemtestResult(True,std_out,std_err,self)
 
     
