@@ -45,7 +45,7 @@
       </mapping:rbf>
     </participant>
 
-    <m2n:sockets from="Source" to="Drain" exchange-directory=".."/>
+    <m2n:sockets acceptor="Source" connector="Drain" exchange-directory=".."/>
 
     <coupling-scheme:serial-implicit>
       <participants first="Source" second="Drain"/>

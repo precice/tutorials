@@ -68,7 +68,7 @@
         constraint="consistent" />
     </participant>
 
-    <m2n:sockets from="Fluid1" to="Fluid2" exchange-directory=".." />
+    <m2n:sockets acceptor="Fluid1" connector="Fluid2" exchange-directory=".." />
 
     <coupling-scheme:serial-implicit>
       <time-window-size value="0.01" />

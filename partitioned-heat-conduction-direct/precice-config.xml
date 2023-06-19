@@ -35,7 +35,7 @@
       <read-data name="Heat-Flux" mesh="Neumann-Mesh" />
     </participant>
 
-    <m2n:sockets from="Dirichlet" to="Neumann" exchange-directory=".." />
+    <m2n:sockets acceptor="Dirichlet" connector="Neumann" exchange-directory=".." />
 
     <coupling-scheme:parallel-implicit>
       <participants first="Dirichlet" second="Neumann" />
