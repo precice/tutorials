@@ -35,7 +35,7 @@
         constraint="consistent" />
     </participant>
 
-    <m2n:sockets from="Flow" to="Chemical" exchange-directory=".." />
+    <m2n:sockets acceptor="Flow" connector="Chemical" exchange-directory=".." />
 
     <coupling-scheme:serial-explicit>
       <participants first="Flow" second="Chemical" />
