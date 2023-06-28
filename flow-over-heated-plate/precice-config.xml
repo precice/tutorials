@@ -31,7 +31,7 @@
         from="Solid-Mesh"
         to="Fluid-Mesh"
         constraint="consistent" />
-    </participant>
+</participant>
 
     <participant name="Solid">
       <use-mesh name="Fluid-Mesh" from="Fluid" />
@@ -43,7 +43,7 @@
         constraint="consistent" />
       <read-data name="Temperature" mesh="Solid-Mesh" />
       <write-data name="Heat-Flux" mesh="Solid-Mesh" />
-    </participant>
+</participant>
 
     <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
 

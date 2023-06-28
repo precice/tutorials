@@ -1,0 +1,35 @@
+name: Flow over heated plate
+path: flow-over-heated-plate # relative to git repo 
+url: https://precice.org/tutorials-flow-over-heated-plate.html
+
+participants:
+  - Fluid 
+  - Solid 
+
+cases:
+  fluid-openfoam:
+    participant: Fluid
+    directory: ./fluid-openfoam
+    run: ./run.sh 
+    component: openfoam-adapter
+  
+  solid-fenics:
+    participant: Solid
+    directory: ./solid-fenics
+    run: ./run.sh 
+    component: fenics-adapter 
+  
+  solid-nutils:
+    participant: Solid
+    directory: ./solid-nutils
+    run: ./run.sh 
+    component: nutils-adapter 
+
+  solid-openfoam:
+    participant: Solid
+    directory: ./solid-openfoam
+    run: ./run.sh 
+    component: openfoam-adapter 
+
+
+

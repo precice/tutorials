@@ -1,0 +1,12 @@
+name: Run Reusable workflow 
+on:
+  push:
+    branches:
+      - sketch-systest-framework
+
+jobs:
+  call-workflow-2-in-local-repo:
+    uses: ./.github/workflows/systemtests-playground.yml
+    with:
+      precice-version: develop
+      adapter-versions: openfoam=develop,fenics=v1.4.0

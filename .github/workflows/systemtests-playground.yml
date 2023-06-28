@@ -1,0 +1,27 @@
+name: Systemtests Playground
+on:
+  workflow_call:
+    inputs:
+      precice-version:
+        type: string
+        description: 'Version of the preCICE library to use (SHA or tag)'
+        required: true
+        default: 'master'
+        # Validation pattern can be added here if needed
+      adapter-versions:
+        type: string
+        description: 'Versions of the adapters to use (comma-separated list of "adapter=SHA or tag" pairs)'
+        required: true
+        default: 'openfoam=master,dealii=master,fenics=master'
+        # Validation pattern can be added here if needed
+jobs:
+  echo_adapter_names:
+    runs-on: ubuntu-latest
+    steps: 
+    - name: Echo Adapters used
+      run: |
+        IFS=','; for adapter_version in "${{ inputs.adapter-versions }}"; do
+          adapter="${adapter_version%=*}"
+          version="${adapter_version#*=}"
+          echo "Adapter: $adapter @ $version"
+        done
