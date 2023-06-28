@@ -34,18 +34,9 @@ fenics-adapter:
 
 
 calculix-adapter:
-  repository: https://github.com/precice/fenics-adapter
-  template: component-templates/nutils-adapter.yaml
+  repository: https://github.com/precice/calculix-adapter
+  template: component-templates/calculix-adapter.yaml
   parameters:
-    pythonbindings:
-      type: git
-      semnantic: Version of the pythonbindings to use
-
-    fenics:
-      git-ref: False
-      options: ["v1","v2"]
-      semantic: Version of FENICS to use
-      default: "v1"
     precice:
       git-ref: True
       description: Version of precice to use
@@ -54,18 +45,9 @@ calculix-adapter:
 
 
 nutils-adapter:
-  repository: https://github.com/precice/fenics-adapter
+  repository: https://github.com/precice/nutils-adapter
   template: component-templates/nutils-adapter.yaml
   parameters:
-    pythonbindings:
-      type: git
-      semnantic: Version of the pythonbindings to use
-
-    fenics:
-      git-ref: False
-      options: ["v1","v2"]
-      semantic: Version of FENICS to use
-      default: "v1"
     precice:
       git-ref: True
       description: Version of precice to use

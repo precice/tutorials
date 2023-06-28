@@ -1,17 +1,10 @@
-import glob
-import os
-import yaml
-import itertools
-import argparse
+from pathlib import Path
+from metadata_parser.Tutorial import Tutorials
+from metadata_parser.Component import Components
+from systemtests.TestSuite import TestSuites
+tutorials_path= Path(__file__).parent.parent
 
-
-from classes import Tutorials , Components
-
-available_components = Components.from_yaml("./components.yaml")
-
-tutorial_dir = '../'
-available_tutorials = Tutorials.from_path("../")
-
-print("The following tutorials are described by the metadata")
-for tutorial in available_tutorials.tutorials:
+available_tutorials = Tutorials.from_path(tutorials_path)
+print("Fount the following tutorials read from the metadata.yaml")
+for tutorial in available_tutorials:
     print(tutorial)
