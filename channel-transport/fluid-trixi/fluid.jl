@@ -12,7 +12,7 @@ equations = CompressibleEulerEquations2D(1.4)
 function initial_condition_channel(x, t, equations::CompressibleEulerEquations2D)
     rho = 1.0
     rho_v1 = 1.0
-    rho_v2 = 1.0
+    rho_v2 = 0.0
     rho_e = 10.0
     return SVector(rho, rho_v1, rho_v2, rho_e)
 end
