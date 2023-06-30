@@ -2,6 +2,7 @@
 using Downloads: download
 using OrdinaryDiffEq
 using Trixi
+using PreCICE
 
 ###############################################################################
 # semidiscretization of the compressible Euler equations
@@ -10,15 +11,15 @@ equations = CompressibleEulerEquations2D(1.4)
 
 function initial_condition_channel(x, t, equations::CompressibleEulerEquations2D)
     rho = 1.0
-    rho_v1 = 0.2
-    rho_v2 = 0.0
+    rho_v1 = 1.0
+    rho_v2 = 1.0
     rho_e = 10.0
     return SVector(rho, rho_v1, rho_v2, rho_e)
 end
 
 initial_condition = initial_condition_channel
 
-solver = DGSEM(polydeg=3, surface_flux=flux_lax_friedrichs)
+solver = DGSEM(polydeg=2, surface_flux=flux_lax_friedrichs)
 
 ###############################################################################
 # Create mesh
@@ -73,3 +74,83 @@ sol = solve(ode, CarpenterKennedy2N54(williamson_condition=false),
             dt=1.0, # solve needs some value here but it will be overwritten by the stepsize_callback
             save_everystep=false, callback=callbacks);
 summary_callback() # print the timer summary
+
+
+##################################################################################
+
+
+commRank = 0
+commSize = 1
+
+
+PreCICE.createSolverInterface("Fluid", "../precice-config.xml", commRank, commSize)
+
+dimensions = PreCICE.getDimensions()
+
+
+meshID = PreCICE.getMeshID("Fluid-Mesh")
+
+dataID = PreCICE.getDataID("Velocity", meshID)
+
+
+numberOfVertices = nelements(solver, semi.cache)
+
+vertices = transpose(semi.cache.elements.node_coordinates[1:2,2,2,1:numberOfVertices])
+
+vertexIDs = PreCICE.setMeshVertices(meshID, vertices)
+
+
+writeData = zeros(numberOfVertices, dimensions)
+
+u = Trixi.wrap_array(sol.u[end], semi)
+
+let # setting local scope for dt outside of the while loop
+
+    dt = PreCICE.initialize()
+
+    while PreCICE.isCouplingOngoing()
+
+        for i = 1:numberOfVertices
+            node_vars = Trixi.get_node_vars(u, equations, solver, 2, 2, i)
+            _, v1, v2, _ = cons2prim(node_vars, equations)
+            writeData[i, 1] = v1
+            writeData[i, 2] = v2
+        end
+
+        PreCICE.writeBlockVectorData(dataID, vertexIDs, writeData)
+
+        dt = PreCICE.advance(dt)
+
+    end # while
+
+end # let
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
