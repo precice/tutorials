@@ -63,18 +63,22 @@ alive_callback = AliveCallback(analysis_interval=analysis_interval)
 stepsize_callback = StepsizeCallback(cfl=1.0)
 
 callbacks = CallbackSet(summary_callback,
-                        analysis_callback, alive_callback,
+                        analysis_callback, alive_callback,)
                         # save_solution,
-                        stepsize_callback)
+                        # stepsize_callback)
 
 ###############################################################################
 # run the simulation
 
-sol = solve(ode, CarpenterKennedy2N54(williamson_condition=false),
-            dt=1.0, # solve needs some value here but it will be overwritten by the stepsize_callback
-            save_everystep=false, callback=callbacks);
-summary_callback() # print the timer summary
+# sol = solve(ode, CarpenterKennedy2N54(williamson_condition=false),
+#             dt=1.0, # solve needs some value here but it will be overwritten by the stepsize_callback
+#             save_everystep=false, callback=callbacks);
+# summary_callback() # print the timer summary
 
+
+integrator = init(ode, CarpenterKennedy2N54(williamson_condition=false),
+                  dt=1.0, # solve needs some value here but it will be overwritten by the stepsize_callback
+                  save_everystep=false, callback=callbacks);
 
 ##################################################################################
 
@@ -102,13 +106,19 @@ vertexIDs = PreCICE.setMeshVertices(meshID, vertices)
 
 writeData = zeros(numberOfVertices, dimensions)
 
-u = Trixi.wrap_array(sol.u[end], semi)
+
+solver_dt = 0.005
+
+u = Trixi.wrap_array(integrator.u, semi)
 
 let # setting local scope for dt outside of the while loop
 
-    dt = PreCICE.initialize()
+    precice_dt = PreCICE.initialize()
 
     while PreCICE.isCouplingOngoing()
+
+        dt = min(solver_dt, precice_dt)
+        step!(integrator, dt, true)
 
         for i = 1:numberOfVertices
             node_vars = Trixi.get_node_vars(u, equations, solver, 2, 2, i)
@@ -119,38 +129,10 @@ let # setting local scope for dt outside of the while loop
 
         PreCICE.writeBlockVectorData(dataID, vertexIDs, writeData)
 
-        dt = PreCICE.advance(dt)
+        precice_dt = PreCICE.advance(dt)
 
     end # while
 
 end # let
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+summary_callback() # print the timer summary
