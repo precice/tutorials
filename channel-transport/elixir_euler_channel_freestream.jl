@@ -8,35 +8,20 @@ using Trixi
 
 equations = CompressibleEulerEquations2D(1.4)
 
-initial_condition = initial_condition_constant
+function initial_condition_channel(x, t, equations::CompressibleEulerEquations2D)
+    rho = 1.0
+    rho_v1 = 0.2
+    rho_v2 = 0.0
+    rho_e = 10.0
+    return SVector(rho, rho_v1, rho_v2, rho_e)
+end
+
+initial_condition = initial_condition_channel
 
 solver = DGSEM(polydeg=3, surface_flux=flux_lax_friedrichs)
 
-# Mapping as described in https://arxiv.org/abs/2012.12040 but reduced to 2D
-# function mapping(xi_, eta_)
-#   # Transform input variables between -1 and 1 onto [0,3]
-#   xi = 1.5 * xi_ + 1.5
-#   eta = 1.5 * eta_ + 1.5
-# 
-#   y = eta + 3/8 * (cos(1.5 * pi * (2 * xi - 3)/3) *
-#                    cos(0.5 * pi * (2 * eta - 3)/3))
-# 
-#   x = xi + 3/8 * (cos(0.5 * pi * (2 * xi - 3)/3) *
-#                   cos(2 * pi * (2 * y - 3)/3))
-# 
-#   return SVector(x, y)
-# end
-
 ###############################################################################
-# Get the uncurved mesh from a file (downloads the file if not available locally)
-
-# Unstructured mesh with 48 cells of the square domain [-1, 1]^n
-# mesh_file = joinpath(@__DIR__, "square_unstructured_1.inp")
-# isfile(mesh_file) || download("https://gist.githubusercontent.com/efaulhaber/a075f8ec39a67fa9fad8f6f84342cbca/raw/a7206a02ed3a5d3cadacd8d9694ac154f9151db7/square_unstructured_1.inp",
-#                               mesh_file)
-# 
-# # Map the unstructured mesh with the mapping above
-# mesh = P4estMesh{2}(mesh_file, polydeg=3, mapping=mapping, initial_refinement_level=1)
+# Create mesh
 
 coordinates_min = (0.0, 0.0) # minimum coordinates (min(x), min(y))
 coordinates_max = (6.0, 2.0) # maximum coordinates (max(x), max(y))
