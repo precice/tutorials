@@ -21,7 +21,7 @@
       <use-data name="Data" />
     </mesh>
     
-    <m2n:sockets from="A" to="B" exchange-directory="." />
+    <m2n:sockets acceptor="A" connector="B" exchange-directory="." />
 
     <participant name="A">
       <provide-mesh name="A-Mesh" />
@@ -35,8 +35,12 @@
 
       <mapping:nearest-neighbor constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" />
       <!-- <mapping:nearest-projection constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" /> -->
-      <!-- <mapping:rbf-compact-polynomial-c6 support-radius="0.1" use-qr-decomposition="false" constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" /> -->
-      <!-- <mapping:rbf-compact-polynomial-c6 support-radius="0.1" use-qr-decomposition="true" constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" /> -->
+      <!-- <mapping:rbf-pum-direct constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" />
+            <basis-function:compact-polynomial-c6 support-radius="0.1" />
+           </mapping:rbf-pum-direct> -->
+      <!-- <mapping:rbf-global-direct constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" />
+            <basis-function:compact-polynomial-c6 support-radius="0.1" />
+           </mapping:rbf-global-direct> -->
     </participant>
     
     <coupling-scheme:parallel-explicit>

@@ -88,8 +88,8 @@
         constraint="consistent" />
     </participant>
 
-    <m2n:sockets from="Fluid" to="Solid-Upstream" exchange-directory=".." />
-    <m2n:sockets from="Fluid" to="Solid-Downstream" exchange-directory=".." />
+    <m2n:sockets acceptor="Fluid" connector="Solid-Upstream" exchange-directory=".." />
+    <m2n:sockets acceptor="Fluid" connector="Solid-Downstream" exchange-directory=".." />
 
     <coupling-scheme:multi>
       <time-window-size value="0.01" />

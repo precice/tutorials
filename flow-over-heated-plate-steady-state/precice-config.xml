@@ -60,7 +60,7 @@
     </participant>
 
     <!-- TODO: Give an absolute path for the exchange-directory, as Code_Aster starts in /tmp/ -->
-    <m2n:sockets to="Fluid" from="Solid" exchange-directory=".." />
+    <m2n:sockets connector="Fluid" acceptor="Solid" exchange-directory=".." />
 
     <coupling-scheme:serial-explicit>
       <time-window-size value="1" />

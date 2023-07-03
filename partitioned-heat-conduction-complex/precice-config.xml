@@ -37,7 +37,7 @@
       <mapping:nearest-projection direction="read" from="Dirichlet-Mesh" to="Neumann-Mesh" constraint="consistent" />
     </participant>
 
-    <m2n:sockets from="Dirichlet" to="Neumann" exchange-directory=".."/>
+    <m2n:sockets acceptor="Dirichlet" connector="Neumann" exchange-directory=".."/>
 
     <coupling-scheme:serial-implicit>
       <participants first="Dirichlet" second="Neumann"/>

@@ -51,7 +51,7 @@
     <watch-point mesh="Solid-Mesh" name="MyWatchPoint" coordinate="0.5; 0.0"/>
     </participant>
 
-    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
+    <m2n:sockets acceptor="Fluid" connector="Solid" exchange-directory=".." />
 
     <coupling-scheme:serial-implicit>
       <time-window-size value="0.01" />

@@ -22,12 +22,9 @@
       <provide-mesh name="Fluid-Mesh" />
       <receive-mesh name="Transport-Mesh" from="Transport" />
       <write-data name="Velocity" mesh="Fluid-Mesh" />
-      <mapping:rbf-compact-tps-c2
-        direction="write"
-        support-radius="0.4"
-        from="Fluid-Mesh"
-        to="Transport-Mesh"
-        constraint="consistent" />
+      <mapping:rbf direction="write" from="Fluid-Mesh" to="Transport-Mesh" constraint="consistent">
+        <basis-function:compact-tps-c2 support-radius="0.4" />
+      </mapping:rbf>
     </participant>
 
     <participant name="Transport">
@@ -35,7 +32,7 @@
       <read-data name="Velocity" mesh="Transport-Mesh" />
     </participant>
 
-    <m2n:sockets from="Fluid" to="Transport" exchange-directory=".." />
+    <m2n:sockets acceptor="Fluid" connector="Transport" exchange-directory=".." />
 
     <coupling-scheme:serial-explicit>
       <time-window-size value="0.005" />
