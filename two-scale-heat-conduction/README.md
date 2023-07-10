@@ -1,35 +1,42 @@
-# coupled-heat-conduction
+---
+title: Two-scale heat conduction
+permalink: tutorials-two-scale-heat-conduction.html
+keywords: Macro-micro, Micro Manager, Nutils, Heat conduction
+summary: We solve a two-scale heat conduction problem with a predefined micro structure of two materials. One macro simulation is coupled to several micro simulations using the Micro Manager.
+---
 
-<a style="text-decoration: none" href="https://github.com/precice/fenics-adapter/blob/master/LICENSE" target="_blank">
-    <img src="https://img.shields.io/github/license/IshaanDesai/coupled-heat-conduction.svg" alt="GNU LGPL license">
-</a>
+{% note %}
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/two-scale-heat-conduction). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+{% endnote %}
 
-This code solves a heat conduction problem on a 2D domain which has an underlying micro-structure. The micro-structure makes the problem two-scale with a clear scale separation.
-At each Gauss point of the macro-domain there exists a micro-simulation. The macro-domain is resolved in the file `macro-heat.py`
-and the micro-domain is resolved in the file `micro_sim/micro_heat_circular.py`. Both the macro and micro problems are solved using the finite element library [Nutils](http://www.nutils.org/en/stable/).
+## Setup
 
-The coupling between the macro-simulation and several micro-simulations is achieved using the coupling library [preCICE](https://precice.org/) 
-and a Micro Manager. The Micro Manager (`micro-manager.py`) is a controlling components which handles all micro-simulations
+This tutorial solves a heat conduction problem on a 2D domain which has an underlying micro-structure. The micro-structure makes the problem two-scale with a clear scale separation.
+
+![Case setup of two-scale-heat-conduction case](images/macro-micro-schematic.pdf)
+
+At each Gauss point of the macro domain there exists a micro simulation. The macro problem is one participant, which is coupled to many micro simulations. Both the macro and micro problems are solved using the finite element library [Nutils](http://www.nutils.org/en/stable/).
+
+The case is chosen from the first example from the paper: Bastidas, Manuela & Bringedal, Carina & Pop, Iuliu Sorin (2021), A two-scale iterative scheme for a phase-field model for precipitation and dissolution in porous media. Applied Mathematics and Computation. 396. 125933. 10.1016/j.amc.2020.125933.
+
+## Available solvers and dependencies
+
+* Both the macro and micro simulations are solved using the finite element library [Nutils](http://www.nutils.org/en/stable/).
+
+* Nutils code is written in Python
+
+* The Micro Manager (`micro-manager.py`) is a controlling components which handles all micro-simulations
 and facilitates coupling with the macro-simulation via preCICE. The macro-problem and Micro Manager are configured via JSON files.
 
-The case is chosen from the first example from the paper: Bastidas, Manuela & Bringedal, Carina & Pop, Iuliu, (2021), A two-scale iterative scheme for a phase-field model for precipitation and dissolution in porous media. Applied Mathematics and Computation. 396. 125933. 10.1016/j.amc.2020.125933. 
+## Running the simulation
 
-## Dependencies
-
-* **Nutils** can be installed through the [installation procedure](http://www.nutils.org/en/latest/intro/#installation).
-* **preCICE** can be installed in [several ways](https://precice.org/installation-overview.html).
-* [pyprecice]()
-* [micro-manager]()
-
-## Running two-scale coupled heat conduction problem
-
-The coupled macro problem can be started using the command:
+The macro problem can be started using the command:
 
 ```(python)
-python3 macro-heat.py
+python3 macro-nutils/macro.py
 ```
 
-For a coupled simulation the micro problems are managed by the micro manager. The micro-manager is imported into a Python script and then called from it. In this case, the script is [run-micro-problems.py]() which can be run as:
+The Micro Manager can be directly from the terminal or imported into a Python script and then called from it. Such a script is already provided: [run-micro-problems.py](https://github.com/precice/tutorials/tree/master/two-scale-heat-conduction/run-micro-problems.py) which can be run as:
 
 ```(python)
 python3 run-micro-problems.py
