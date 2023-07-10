@@ -42,7 +42,7 @@ def main():
 
     if is_coupled_case:
         # preCICE setup
-        interface = precice.Interface("Macro-heat", "precice-config-full-sim.xml", 0, 1)
+        interface = precice.Interface("Macro-heat", "precice-config.xml", 0, 1)
 
         # define coupling meshes
         mesh_name = "macro-mesh"
