@@ -19,14 +19,14 @@ At each Gauss point of the macro domain there exists a micro simulation. The mac
 
 The case is chosen from the first example from the paper: Bastidas, Manuela & Bringedal, Carina & Pop, Iuliu Sorin (2021), A two-scale iterative scheme for a phase-field model for precipitation and dissolution in porous media. Applied Mathematics and Computation. 396. 125933. 10.1016/j.amc.2020.125933.
 
+* The [Micro Manager](https://github.com/precice/micro-manager) is a controlling which handles all micro-simulations
+and facilitates coupling with the macro-simulation via preCICE. The macro-problem and Micro Manager are configured via JSON files.
+
 ## Available solvers and dependencies
 
 * Both the macro and micro simulations are solved using the finite element library [Nutils](http://www.nutils.org/en/stable/).
 
 * Nutils code is written in Python
-
-* The Micro Manager (`micro-manager.py`) is a controlling components which handles all micro-simulations
-and facilitates coupling with the macro-simulation via preCICE. The macro-problem and Micro Manager are configured via JSON files.
 
 ## Running the simulation
 

@@ -8,6 +8,7 @@ import math
 from nutils import mesh, function, solver, export, cli
 import treelog
 import numpy as np
+from copy import deepcopy
 
 
 class MicroSimulation:
@@ -146,9 +147,7 @@ class MicroSimulation:
     #        export.vtk("micro-heat", bezier.tri, x, T=u, phi=phi)
 
     def get_state(self):
-        self._solphi_checkpoint = self._solphi
-        self._topo_checkpoint = self._topo
-        return [self._solphi, self._topo]
+        return [self._solphi.copy(), deepcopy(self._topo)]
 
     def set_state(self, state):
         self._solphi = state[0]
@@ -282,7 +281,7 @@ class MicroSimulation:
 
 
 def main():
-    micro_problem = MicroSimulation(0)
+    micro_problem = MicroSimulation()
     dt = 1e-3
     micro_problem.initialize()
     concentrations = [0.5, 0.4]
