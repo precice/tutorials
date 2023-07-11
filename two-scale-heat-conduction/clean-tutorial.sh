@@ -5,7 +5,7 @@ set -e -u
 . ../tools/cleaning-tools.sh
 
 clean_tutorial .
-clean_aste 
+clean_nutils .
 clean_precice_logs .
 rm -fv ./*.log
 rm -fv ./*.vtu
