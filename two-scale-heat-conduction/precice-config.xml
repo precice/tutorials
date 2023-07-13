@@ -61,7 +61,7 @@
 
     <coupling-scheme:serial-implicit>
        <participants first="Macro-heat" second="Micro-Manager"/>
-       <max-time value="0.25"/>
+       <max-time value="0.02"/>
        <time-window-size value="1.0e-2"/>
        <max-iterations value="30"/>
        <exchange data="k_00" mesh="macro-mesh" from="Micro-Manager" to="Macro-heat" initialize="yes"/>
