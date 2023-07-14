@@ -26,9 +26,10 @@ def main():
 
     ns.phi = 'basis_n ?solphi_n'  # porosity, to be read from preCICE
     phi = 0.5  # initial value of porosity
- 
+
     ns.kbasis = topo.basis('std', degree=1).vector(topo.ndims).vector(topo.ndims)
-    ns.k_ij = 'kbasis_nij ?solk_n'  # conductivity matrix, to be read from preCICE (read as two vectors and then patched together)
+    # conductivity matrix, to be read from preCICE (read as two vectors and then patched together)
+    ns.k_ij = 'kbasis_nij ?solk_n'
     k = 1.0  # initial value of conductivity
 
     ns.rhos = 1.0  # density of material s
