@@ -18,7 +18,9 @@ class MicroSimulation:
         Constructor of MicroSimulation class.
         """
         # Initial parameters
-        self._nelems = 10  # Elements in one direction
+        # Original case from Bastidas et al.
+        # self._nelems = 10  # Elements in one direction
+        self._nelems = 6  # Elements in one direction
         self._ref_level = 3  # Number of levels of mesh refinement
         self._r_initial = 0.4  # Initial radius of the grain
 

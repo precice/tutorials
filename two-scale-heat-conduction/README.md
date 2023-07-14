@@ -43,4 +43,8 @@ The Micro Manager can also be run in parallel:
 mpirun -n <num_procs> python run-micro-problems.py
 ```
 
-Even though the case setup and involved physics is simple, each micro simulation is an instance of Nutils, which usually has a moderately high computation time. If the Micro Manager is run on 2 processors, the case takes approximately 20 minutes to run. Running the Micro Manager in serial is not advisable, as the run time can be more than 1 hour.
+Even though the case setup and involved physics is simple, each micro simulation is an instance of Nutils, which usually has a moderately high computation time. If the Micro Manager is run on 2 processors, the case takes approximately 10 to 15 minutes to run. Running the Micro Manager in serial is not advisable, as the run time can be more than 1 hour.
+
+## Post-processing
+
+The participant `macro-nutils` outputs `macro-*.vtk` files which can be viewed in ParaView. The Micro Manager uses the [export functionality](https://precice.org/configuration-export.html#enabling-exporters) of preCICE to output micro simulation data and [adaptivity related data](https://precice.org/tooling-micro-manager-configuration.html#adding-adaptivity-in-the-precice-xml-configuration) to VTU files which can be viewed in ParaView.
