@@ -26,9 +26,11 @@
     <provide-mesh name="Transport-Mesh" />
     <receive-mesh name="Fluid-Mesh" from="Fluid" />
     <read-data name="Velocity" mesh="Transport-Mesh" />
-    <mapping:rbf direction="read" from="Fluid-Mesh" to="Transport-Mesh" constraint="consistent">
-      <basis-function:compact-tps-c2 support-radius="0.4" />
-    </mapping:rbf>
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Fluid-Mesh"
+      to="Transport-Mesh"
+      constraint="consistent" />
   </participant>
 
   <m2n:sockets acceptor="Fluid" connector="Transport" exchange-directory=".." />
