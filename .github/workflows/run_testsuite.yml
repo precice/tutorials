@@ -35,8 +35,6 @@ on:
         options:
             - 'develop'
             - 'master'
-  pull_request:
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -51,21 +49,27 @@ jobs:
       uses: actions/checkout@v2
       with:
         ref: ${{ github.event.inputs.tutorial_branch }}
-    - name: Check out systemtests scripts etc
-      uses: Bhacaz/checkout-files@v2
-      with: 
-        files:
-            tools
-        branch:  ${{ github.event.inputs.systests_branch }}
+        path: 'tutorials'
+    - name: Check out Tutorials for systest
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.inputs.systests_branch }}
+        path: 'systest'
+    - name: Log directory
+      run: |
+        ls -al
+    - name: Copy folders and files from systest into tutorials
+      run: |
+        cp -r systest/tools tutorials/tools
     - uses: actions/setup-python@v4
       with:
         python-version: '3.9'
         cache: 'pip' # caching pip dependencies 
     - name: install python depencies
-      run: pip install -r tools/test/requirements.txt
+      run: pip install -r tutorials/tutorials/tools/test/requirements.txt
     - name: Run tests
       run: |
-        cd tools/test
+        cd tutorials/tutorials/tools/test
         python systemtests.py --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.testsuites}}
     - name: Archive run files
       uses: actions/upload-artifact@v2
