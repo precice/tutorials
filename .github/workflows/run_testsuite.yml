@@ -68,7 +68,7 @@ jobs:
       with:
         python-version: '3.9'
     - name: install python depencies
-      run: python -m pip install -r tutorials/tools/test/requirements.txt
+      run: python -m pip install -r tutorials/tools/tests/requirements.txt
     - name: Run tests
       run: |
         cd tutorials/tutorials/tools/test
