@@ -1,4 +1,4 @@
-image: "ghcr.io/precice/openfoam-adapter:{{ params["openfoam-adapter-ref"] }}"
+image: "ghcr.io/precice/openfoam-adapter:{{ params["openfoam-adapter-ref"] }}" # TODO: Update
 user: ${MY_UID}:${MY_GID}
 depends_on:    
   prepare:
