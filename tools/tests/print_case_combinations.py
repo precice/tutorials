@@ -1,5 +1,4 @@
 import yaml
-from pathlib import Path
 from metadata_parser.Tutorial import Tutorials
 from metadata_parser.Component import Components
 from paths import PRECICE_TUTORIAL_DIR,PRECICE_TESTS_DIR
