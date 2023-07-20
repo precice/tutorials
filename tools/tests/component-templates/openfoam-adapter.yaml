@@ -1,4 +1,4 @@
-image: "ghcr.io/precice/openfoam-adapter:{{ params["openfoam-adapter-ref"] }}"
+build: https://github.com/precice/openfoam-adapter.git#add-ci-docker:tools/docker
 user: ${MY_UID}:${MY_GID}
 depends_on:    
   prepare:
@@ -10,4 +10,4 @@ volumes:
 command: >
   /bin/bash -c "id && 
   cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&
-  {{ params["openfoam-exectuable"] }} {{ run }} | tee {{ case_folder }}.log 2>&1"
+  openfoam {{ run }} | tee {{ case_folder }}.log 2>&1"
