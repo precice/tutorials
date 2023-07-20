@@ -19,16 +19,6 @@ python3 systemtests.py --suites=openfoam-adapter-release,<someothersuite>
 To discover all tests, use `python print_test_suites.py`.
 To be able to fill in the right case tuple into the `tests.yaml`, you can use the `python3 print_case_combinations.py` script.
 
-### Testing specific components
-
-**! Do not use, this will be deprecated at some point !**
-
-To test the current state, which only supports OpenFOAM, run:
-
-```bash
-python3 systemtests.py --components=openfoam-adapter --params=openfoam-version=v2012
-```
-
 ## Implementation details
 
 Each tutorial contains automation scripts (mainly `run.sh` and `clean.sh`), as well as metadata (`metadata.yaml`). The metadata file describes the available cases, how to run them, as well as their dependencies. A central `tests.yaml` file in this directory defines test suites, which execute different combinations of cases. The Python script `systemtests.py` executes the tests, allowing to filter for specific components or test suites.
