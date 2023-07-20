@@ -5,9 +5,9 @@ test-suites:
         cases:
           - (fluid-openfoam, solid-openfoam)
           - (fluid-openfoam, solid-nutils)
-      elastic-tube-3d:
+      perpendicular-flap:
         cases:
-          - (fluid-openfoam, solid-fenics)
+          - (fluid-openfoam, solid-calculix)
   openfoam-adapter-release:
     tutorials:
       flow-over-heated-plate:
