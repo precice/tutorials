@@ -1,4 +1,9 @@
-build: https://github.com/precice/openfoam-adapter.git#add-ci-docker:tools/docker
+build: 
+  context: https://github.com/precice/openfoam-adapter.git#add-ci-docker:tools/docker
+  args:
+    {% for key, value in build_args.items() %}
+      - {{key}}={{value}}
+   {% endfor %}
 user: ${MY_UID}:${MY_GID}
 depends_on:    
   prepare:

@@ -9,7 +9,7 @@ openfoam-adapter:
     PRECICE_TAG:
       description: Version of preCICE to use
       default: "latest"
-    OPENFOAM_ADAPTER_TAG:
+    OPENFOAM_ADAPTER_REF:
       description: Reference/tag of the actual OpenFOAM adapter
       default: "latest"
     
