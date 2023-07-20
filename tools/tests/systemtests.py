@@ -9,8 +9,8 @@ from metadata_parser.Case import Case
 
 
 
-tutorials_path= Path(__file__).parent.parent.parent
-systemtests_path = Path(__file__).parent
+
+from paths import PRECICE_TUTORIAL_DIR,PRECICE_TESTS_RUN_DIR,PRECICE_TESTS_DIR
 
 parser = argparse.ArgumentParser(description='systemtest')
 
@@ -18,38 +18,18 @@ parser = argparse.ArgumentParser(description='systemtest')
 parser.add_argument('--components', type=str, help='Comma-separated list of components to test')
 parser.add_argument('--suites', type=str, help='Comma-separated test-suites to execute')
 parser.add_argument('--params', type=str, help='Comma-separated list of arguments provided to the components like openfoam:2102,pythonbindings:latest')
-parser.add_argument('--rundir', type=str, help='Directory to run the systemstests in.',nargs='?', const="./runs", default="./runs")
+parser.add_argument('--rundir', type=str, help='Directory to run the systemstests in.',nargs='?', const=PRECICE_TESTS_RUN_DIR, default=PRECICE_TESTS_RUN_DIR)
 
 # Parse the command-line arguments
 args = parser.parse_args()
 systemtests_to_run = []
+available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
 
-
-available_tutorials = Tutorials.from_path(tutorials_path)
 params = CmdLineArguments.from_args(args.params)
 run_directory = Path(args.rundir)
-if args.components:
-    # run by components:
-    # Extract the components as a list
-    components = args.components.split(',')
-
-    tutorials_to_run = available_tutorials.filter_by_components(components)
-    # generate systemtests from tutorials
-    systemtests = []
-    run_directory = systemtests_path / "runs" 
-    for tutorial in tutorials_to_run:
-        # find suitable cases:
-        cases_to_run = []
-        suitable_cases = tutorial.get_potential_cases(components)
-        for participant in tutorial.participants:
-            cases_to_run.append(suitable_cases[participant][0])# think of something better to select the cases to run here
-
-        systemtests_to_run.append(Systemtest(tutorial,params,cases_to_run))
-
-
-elif args.suites:
+if args.suites:
     test_suites_requested = args.suites.split(',')
-    available_testsuites = TestSuites.from_yaml(systemtests_path / "tests.yaml",available_tutorials)
+    available_testsuites = TestSuites.from_yaml(PRECICE_TESTS_DIR/ "tests.yaml",available_tutorials)
     test_suites_to_execute = []
     for test_suite_requested in test_suites_requested:
         test_suite_found = available_testsuites.get_by_name(test_suite_requested)

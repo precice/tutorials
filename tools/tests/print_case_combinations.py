@@ -2,14 +2,11 @@ import yaml
 from pathlib import Path
 from metadata_parser.Tutorial import Tutorials
 from metadata_parser.Component import Components
+from paths import PRECICE_TUTORIAL_DIR,PRECICE_TESTS_DIR
 
-tutorials_path= Path(__file__).parent.parent.parent
-systemtests_path = Path(__file__).parent
+available_components = Components.from_yaml(PRECICE_TESTS_DIR / "components.yaml")
 
-available_components = Components.from_yaml(systemtests_path / "components.yaml")
-
-tutorial_dir = '../'
-available_tutorials = Tutorials.from_path(tutorials_path)
+available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
 
 tutorials = {}
 for tutorial in available_tutorials:
