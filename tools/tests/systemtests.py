@@ -15,9 +15,8 @@ from paths import PRECICE_TUTORIAL_DIR,PRECICE_TESTS_RUN_DIR,PRECICE_TESTS_DIR
 parser = argparse.ArgumentParser(description='systemtest')
 
 # Add an argument for the components
-parser.add_argument('--components', type=str, help='Comma-separated list of components to test')
 parser.add_argument('--suites', type=str, help='Comma-separated test-suites to execute')
-parser.add_argument('--params', type=str, help='Comma-separated list of arguments provided to the components like openfoam:2102,pythonbindings:latest')
+parser.add_argument('--build_args', type=str, help='Comma-separated list of arguments provided to the components like openfoam:2102,pythonbindings:latest')
 parser.add_argument('--rundir', type=str, help='Directory to run the systemstests in.',nargs='?', const=PRECICE_TESTS_RUN_DIR, default=PRECICE_TESTS_RUN_DIR)
 
 # Parse the command-line arguments
@@ -25,7 +24,8 @@ args = parser.parse_args()
 systemtests_to_run = []
 available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
 
-params = CmdLineArguments.from_args(args.params)
+
+build_args = CmdLineArguments.from_args(args.build_args)
 run_directory = Path(args.rundir)
 if args.suites:
     test_suites_requested = args.suites.split(',')
@@ -43,7 +43,7 @@ if args.suites:
     for test_suite in test_suites_to_execute:
         for tutorial,case_list in test_suite.cases_of_tutorial.items():
             for cases in case_list:
-                systemtests_to_run.append(Systemtest(tutorial,params,cases))
+                systemtests_to_run.append(Systemtest(tutorial,build_args,cases))
 
     
 

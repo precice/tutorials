@@ -107,12 +107,12 @@ class Systemtest:
             render_dict = {
                 'run_directory':self.run_directory.resolve(),
                 'tutorial_folder': self.tutorial_folder,
+                'build_args': params_to_use,
                 'params': params_to_use,
                 'case_folder': case.path,
                 'run': case.run_cmd
             }
             jinja_env = Environment(loader=FileSystemLoader(system_test_dir))
-            print(system_test_dir)
             template = jinja_env.get_template(case.component.template)
             return template.render(render_dict)
 
@@ -159,7 +159,6 @@ class Systemtest:
     def __copy_tools(self,run_directory:Path):
         destination = run_directory / "tools"
         src = Path(__file__).parent.parent.parent.parent / "tools"
-        print(f"{src}->{destination}")
         try:
             shutil.copytree(src, destination)
         except Exception as e:
@@ -217,7 +216,6 @@ class Systemtest:
             A DockerComposeResult object containing the state.
         """
         docker_compose_content = self.__get_docker_compose_file()
-        tutorial_path = f"../{self.tutorial.path}"
         stdout_data = []
         stderr_data = []
 
@@ -225,7 +223,7 @@ class Systemtest:
             file.write(docker_compose_content)
         try:
             # Execute docker-compose command
-            process = subprocess.Popen(['docker', 'compose','--file', 'docker-compose.tutorial.yaml', 'up'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.system_test_dir)
+            process = subprocess.Popen(['docker', 'compose','--file', 'docker-compose.tutorial.yaml', 'up', "--build"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.system_test_dir)
             
             # Read the output in real-time
             while True:
