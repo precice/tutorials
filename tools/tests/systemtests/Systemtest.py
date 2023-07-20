@@ -151,14 +151,14 @@ class Systemtest:
         self.run_directory = run_directory
         self.tutorial_folder = slugify(f'{self.tutorial.path}_{self.cases}')
         destination = run_directory / self.tutorial_folder
-        src = Path(__file__).parent.parent.parent / self.tutorial.path
+        src = Path(__file__).parent.parent.parent.parent / self.tutorial.path
         self.system_test_dir = destination
         shutil.copytree(src, destination)
     
 
     def __copy_tools(self,run_directory:Path):
         destination = run_directory / "tools"
-        src = Path(__file__).parent.parent.parent / "tools"
+        src = Path(__file__).parent.parent.parent.parent / "tools"
         print(f"{src}->{destination}")
         try:
             shutil.copytree(src, destination)
