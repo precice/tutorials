@@ -58,15 +58,17 @@ jobs:
     - name: Log directory
       run: |
         ls -al
+        pwd
     - name: Copy folders and files from systest into tutorials
       run: |
         cp -r systest/tools tutorials/tools
+        cd systest
+        find . -type f -name "metadata.yaml" -exec cp --parents {} ../tutorials \; 
     - uses: actions/setup-python@v4
       with:
         python-version: '3.9'
-        cache: 'pip' # caching pip dependencies 
     - name: install python depencies
-      run: pip install -r tutorials/tutorials/tools/test/requirements.txt
+      run: python -m pip install -r tutorials/tools/test/requirements.txt
     - name: Run tests
       run: |
         cd tutorials/tutorials/tools/test
