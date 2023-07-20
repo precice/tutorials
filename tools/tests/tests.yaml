@@ -1,0 +1,15 @@
+test-suites:
+  openfoam-adapter-pr:
+    tutorials:
+      flow-over-heated-plate:
+        cases:
+          - (fluid-openfoam, solid-openfoam)
+          - (fluid-openfoam, solid-nutils)
+      elastic-tube-3d:
+        cases:
+          - (fluid-openfoam, solid-fenics)
+  openfoam-adapter-release:
+    tutorials:
+      flow-over-heated-plate:
+        cases:
+          - (fluid-openfoam, solid-openfoam)

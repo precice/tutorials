@@ -1,0 +1,28 @@
+name: Elastic tube 3D
+path: elastic-tube-3d # relative to git repo 
+url: https://precice.org/tutorials-elastic-tube-3d.html
+
+participants:
+  - Fluid 
+  - Solid 
+
+cases:
+  fluid-openfoam:
+    participant: Fluid
+    directory: ./fluid-openfoam
+    run: ./run.sh 
+    component: openfoam-adapter
+  
+  solid-calculix:
+    participant: Solid
+    directory: ./solid-calculix
+    run: ./run.sh 
+    component: calculix-adapter 
+  
+  solid-fenics:
+    participant: Solid
+    directory: ./solid-fenics
+    run: ./run.sh
+    component: fenics-adapter 
+
+
