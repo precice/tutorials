@@ -35,6 +35,7 @@ on:
         options:
             - 'develop'
             - 'master'
+  pull_request:
 
 jobs:
   build:
