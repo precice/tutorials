@@ -74,7 +74,12 @@ jobs:
         pwd
         ls -al tutorials
     - name: install python depencies
-      run: python -m pip install -r tutorials/tools/tests/requirements.txt
+      run: |
+        ls -al tutorials/tools/tests
+        ls -al tutorials/tools
+        ls -al tutorials
+        ls .
+        python -m pip install -r tutorials/tools/tests/requirements.txt
     - name: Run tests
       run: |
         cd tutorials/tools/test
