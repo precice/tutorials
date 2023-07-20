@@ -75,10 +75,10 @@ jobs:
         ls -al tutorials
     - name: install python depencies
       run: |
-        ls -al tutorials/tools/tests
-        ls -al tutorials/tools
-        ls -al tutorials
         ls .
+        ls -al tutorials
+        ls -al tutorials/tools
+        ls -al tutorials/tools/tests
         python -m pip install -r tutorials/tools/tests/requirements.txt
     - name: Run tests
       run: |
