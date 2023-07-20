@@ -64,6 +64,7 @@ jobs:
         cp -r systest/tools tutorials/tools
         cd systest
         find . -type f -name "metadata.yaml" -exec cp --parents {} ../tutorials \; 
+        cd ..
     - uses: actions/setup-python@v4
       with:
         python-version: '3.9'
