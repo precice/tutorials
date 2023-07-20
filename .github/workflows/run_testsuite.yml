@@ -56,7 +56,6 @@ jobs:
       with: 
         files:
             tools
-            flow-over-heated-plate/metadata.yaml
         branch:  ${{ github.event.inputs.systests_branch }}
     - uses: actions/setup-python@v4
       with:
