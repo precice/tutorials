@@ -3,12 +3,11 @@ from pathlib import Path
 from metadata_parser.Tutorial import Tutorials
 from metadata_parser.Component import Components
 from systemtests.TestSuite import TestSuites
-tutorials_path= Path(__file__).parent.parent
-systemtests_path = Path(__file__).parent
+from paths import PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
 
-available_tutorials = Tutorials.from_path(tutorials_path)
-available_components = Components.from_yaml(systemtests_path / "components.yaml")
-available_testsuites = TestSuites.from_yaml(systemtests_path / "tests.yaml",available_tutorials)
+available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
+available_components = Components.from_yaml(PRECICE_TESTS_DIR / "components.yaml")
+available_testsuites = TestSuites.from_yaml(PRECICE_TESTS_DIR / "tests.yaml",available_tutorials)
 
 
 
