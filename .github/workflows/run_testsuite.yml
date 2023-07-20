@@ -1,0 +1,75 @@
+name: Run Testsuite (manual) # Unfortunately, we cannot modify the name: https://github.community/t/github-actions-dynamic-name-of-the-workflow-with-workflow-dispatch/150327
+on:
+  workflow_dispatch:
+    inputs:
+      testsuites:
+        description: 'Virtual Environment'
+        default: 'openfoam-adapter-release'
+        required: true
+        type: choice
+        options:
+          - openfoam-adapter-release
+          - openfoam-adapter-pr
+      build_args:
+        description: 'Build arguments'
+        default: 'OPENFOAM_EXECUTABLE:openfoam2212,PRECICE_TAG:latest,OPENFOAM_ADAPTER_REF:master'
+        required: true
+        type: choice
+        options:
+          - 'OPENFOAM_EXECUTABLE:openfoam2212,PRECICE_TAG:latest,OPENFOAM_ADAPTER_REF:master'
+          - 'OPENFOAM_EXECUTABLE:openfoam2112,PRECICE_TAG:latest,OPENFOAM_ADAPTER_REF:master'
+          - 'OPENFOAM_EXECUTABLE:openfoam2212,PRECICE_TAG:develop,OPENFOAM_ADAPTER_REF:develop'
+      tutorial_branch:
+        description: 'Branch to take the tutorials from'
+        default: 'master'
+        required: true
+        type: choice
+        options:
+          - 'develop'
+          - 'master'
+      systests_branch:
+        description: 'Branch to take the systest from'
+        default: 'develop'
+        required: true
+        type: choice
+        options:
+            - 'develop'
+            - 'master'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Report log
+      run: |
+        echo "Initiated by: ${{ github.actor }}"
+        echo "Running systemtests --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.testsuites}}"
+        echo "Tutorials branch: ${{ github.event.inputs.tutorial_branch }}"
+        echo "Systemtests branch: ${{ github.event.inputs.systests_branch }}"
+    - name: Check out Tutorials
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.inputs.tutorial_branch }}
+    - name: Check out systemtests scripts etc
+      uses: Bhacaz/checkout-files@v2
+      with: 
+        files:
+            tools
+            ./*/metdata.yaml
+        branch:  ${{ github.event.inputs.systests_branch }}
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip' # caching pip dependencies 
+    - name: install python depencies
+      run: pip install -r tools/test/requirements.txt
+    - name: Run tests
+      run: |
+        cd tools/test
+        python systemtests.py --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.testsuites}}
+    - name: Archive run files
+      uses: actions/upload-artifact@v2
+      with:
+        name: runs
+        path: |
+          runs/*
