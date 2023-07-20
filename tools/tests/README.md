@@ -13,11 +13,11 @@ The main workflow for the user is executing the `systemtests.py` script. Dependi
 To test a certain test-suite defined in `tests.yaml`, use:
 
 ```bash
-python systemtests.py --suites=openfoam-adapter-release,<someothersuite>
+python3 systemtests.py --suites=openfoam-adapter-release,<someothersuite>
 ```
 
 To discover all tests, use `python print_test_suites.py`.
-To be able to fill in the right case tuple into the `tests.yaml`, you can use the `python print_case_combinations.py` script.
+To be able to fill in the right case tuple into the `tests.yaml`, you can use the `python3 print_case_combinations.py` script.
 
 ### Testing specific components
 
@@ -26,7 +26,7 @@ To be able to fill in the right case tuple into the `tests.yaml`, you can use th
 To test the current state, which only supports OpenFOAM, run:
 
 ```bash
-python systemtests.py --components=openfoam-adapter --params=openfoam-version=v2012
+python3 systemtests.py --components=openfoam-adapter --params=openfoam-version=v2012
 ```
 
 ## Implementation details

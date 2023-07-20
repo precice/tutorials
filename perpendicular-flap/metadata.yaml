@@ -19,11 +19,11 @@ cases:
     run: ./run.sh 
     component: openfoam-adapter
   
-  fluid-su2:
-    participant: Fluid
-    directory: ./fluid-su2
-    run: ./run.sh
-    component: su2-adapter
+  # fluid-su2:
+  #   participant: Fluid
+  #   directory: ./fluid-su2
+  #   run: ./run.sh
+  #   component: su2-adapter
   
   solid-calculix:
     participant: Solid
@@ -31,17 +31,17 @@ cases:
     run: ./run.sh 
     component: calculix-adapter 
   
-  solid-dealii:
-    participant: Solid
-    directory: ./solid-dealii
-    run: ./run.sh
-    component: dealii-adapter
+  # solid-dealii:
+  #   participant: Solid
+  #   directory: ./solid-dealii
+  #   run: ./run.sh
+  #   component: dealii-adapter
   
-  solid-dune:
-    participant: Solid
-    directory: ./solid-dune
-    run: ./run.sh
-    component: dune-adapter
+  # solid-dune:
+  #   participant: Solid
+  #   directory: ./solid-dune
+  #   run: ./run.sh
+  #   component: dune-adapter
   
   solid-fenics:
     participant: Solid
@@ -55,10 +55,10 @@ cases:
     run: ./run.sh
     component: openfoam-adapter
   
-  solid-solids4foam:
-    participant: Solid
-    directory: ./solid-solids4foam
-    run: ./run.sh
-    component: openfoam-adapter
+  # solid-solids4foam:
+  #   participant: Solid
+  #   directory: ./solid-solids4foam
+  #   run: ./run.sh
+  #   component: openfoam-adapter
 
 
