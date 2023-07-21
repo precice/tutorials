@@ -43,7 +43,7 @@ The Micro Manager can also be run in parallel:
 mpirun -n <num_procs> python run-micro-problems.py
 ```
 
-Even though the case setup and involved physics is simple, each micro simulation is an instance of Nutils, which usually has a moderately high computation time. If the Micro Manager is run on 2 processors, the case takes approximately 10 to 15 minutes to run. Running the Micro Manager in serial is not advisable, as the run time can be more than 1 hour.
+Even though the case setup and involved physics is simple, each micro simulation is an instance of Nutils, which usually has a moderately high computation time. If the Micro Manager is run on 2 processors, the case takes approximately 10 to 15 minutes to run. Running the Micro Manager in serial is not advisable, as the run time can be longer than an hour.
 
 ## Post-processing
 
