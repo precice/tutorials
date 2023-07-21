@@ -29,12 +29,13 @@ on:
           - 'master'
       systests_branch:
         description: 'Branch to take the systest from'
-        default: 'develop'
+        default: 'add-systemtests'
         required: true
         type: choice
         options:
             - 'develop'
             - 'master'
+            - 'add-systemtests'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -61,7 +62,7 @@ jobs:
         pwd
     - name: Copy folders and files from systest into tutorials
       run: |
-        cp -r systest/tools tutorials/tools
+        cp -R systest/tools tutorials/tools
         cd systest
         find . -type f -name "metadata.yaml" -exec cp --parents {} ../tutorials \; 
         cd ..
@@ -75,14 +76,10 @@ jobs:
         ls -al tutorials
     - name: install python depencies
       run: |
-        ls .
-        ls -al tutorials
-        ls -al tutorials/tools
-        ls -al tutorials/tools/tests
         python -m pip install -r tutorials/tools/tests/requirements.txt
     - name: Run tests
       run: |
-        cd tutorials/tools/test
+        cd tutorials/tools/tests
         python systemtests.py --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.testsuites}}
         cd ../../
     - name: Archive run files
