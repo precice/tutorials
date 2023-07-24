@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<precice-configuration>
+<precice-configuration dimensions="2">
   <log>
     <sink
       filter="%Severity% > debug and %Rank% = 0"
@@ -7,58 +7,56 @@
       enabled="true" />
   </log>
 
-  <solver-interface dimensions="2">
-    <data:scalar name="Temperature" />
-    <data:scalar name="Heat-Flux" />
+  <data:scalar name="Temperature" />
+  <data:scalar name="Heat-Flux" />
 
-    <mesh name="Fluid-Mesh">
-      <use-data name="Temperature" />
-      <use-data name="Heat-Flux" />
-    </mesh>
+  <mesh name="Fluid-Mesh">
+    <use-data name="Temperature" />
+    <use-data name="Heat-Flux" />
+  </mesh>
 
-    <mesh name="Solid-Mesh">
-      <use-data name="Temperature" />
-      <use-data name="Heat-Flux" />
-    </mesh>
+  <mesh name="Solid-Mesh">
+    <use-data name="Temperature" />
+    <use-data name="Heat-Flux" />
+  </mesh>
 
-    <participant name="Fluid">
-      <provide-mesh name="Fluid-Mesh" />
-      <receive-mesh name="Solid-Mesh" from="Solid" />
-      <read-data name="Heat-Flux" mesh="Fluid-Mesh" />
-      <write-data name="Temperature" mesh="Fluid-Mesh" />
-      <mapping:nearest-neighbor
-        direction="read"
-        from="Solid-Mesh"
-        to="Fluid-Mesh"
-        constraint="consistent" />
-    </participant>
+  <participant name="Fluid">
+    <provide-mesh name="Fluid-Mesh" />
+    <receive-mesh name="Solid-Mesh" from="Solid" />
+    <read-data name="Heat-Flux" mesh="Fluid-Mesh" />
+    <write-data name="Temperature" mesh="Fluid-Mesh" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Solid-Mesh"
+      to="Fluid-Mesh"
+      constraint="consistent" />
+  </participant>
 
-    <participant name="Solid">
-      <receive-mesh name="Fluid-Mesh" from="Fluid" />
-      <provide-mesh name="Solid-Mesh" />
-      <mapping:nearest-neighbor
-        direction="read"
-        from="Fluid-Mesh"
-        to="Solid-Mesh"
-        constraint="consistent" />
-      <read-data name="Temperature" mesh="Solid-Mesh" />
-      <write-data name="Heat-Flux" mesh="Solid-Mesh" />
-    </participant>
+  <participant name="Solid">
+    <receive-mesh name="Fluid-Mesh" from="Fluid" />
+    <provide-mesh name="Solid-Mesh" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Fluid-Mesh"
+      to="Solid-Mesh"
+      constraint="consistent" />
+    <read-data name="Temperature" mesh="Solid-Mesh" />
+    <write-data name="Heat-Flux" mesh="Solid-Mesh" />
+  </participant>
 
-    <m2n:sockets acceptor="Fluid" connector="Solid" exchange-directory=".." />
+  <m2n:sockets acceptor="Fluid" connector="Solid" exchange-directory=".." />
 
-    <coupling-scheme:serial-implicit>
-      <time-window-size value="0.01" />
-      <max-time value="1" />
-      <max-iterations value="30" />
-      <participants first="Fluid" second="Solid" />
-      <exchange data="Temperature" mesh="Fluid-Mesh" from="Fluid" to="Solid" />
-      <exchange data="Heat-Flux" mesh="Solid-Mesh" from="Solid" to="Fluid" />
-      <relative-convergence-measure limit="1.0e-5" data="Temperature" mesh="Fluid-Mesh" />
-      <acceleration:aitken>
-        <data mesh="Solid-Mesh" name="Heat-Flux" />
-        <initial-relaxation value="0.5" />
-      </acceleration:aitken>
-    </coupling-scheme:serial-implicit>
-  </solver-interface>
+  <coupling-scheme:serial-implicit>
+    <time-window-size value="0.01" />
+    <max-time value="1" />
+    <max-iterations value="30" />
+    <participants first="Fluid" second="Solid" />
+    <exchange data="Temperature" mesh="Fluid-Mesh" from="Fluid" to="Solid" />
+    <exchange data="Heat-Flux" mesh="Solid-Mesh" from="Solid" to="Fluid" />
+    <relative-convergence-measure limit="1.0e-5" data="Temperature" mesh="Fluid-Mesh" />
+    <acceleration:aitken>
+      <data mesh="Solid-Mesh" name="Heat-Flux" />
+      <initial-relaxation value="0.5" />
+    </acceleration:aitken>
+  </coupling-scheme:serial-implicit>
 </precice-configuration>
