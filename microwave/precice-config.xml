@@ -8,14 +8,14 @@
   </log>
 
   <solver-interface dimensions="2">
-    <data:scalar name="Temperature" />
+    <data:vector name="Velocity" />
 
     <mesh name="Fluid-Mesh">
-      <use-data name="Temperature" />
+      <use-data name="Velocity" />
     </mesh>
 
     <mesh name="Temperature-Mesh">
-      <use-data name="Temperature" />
+      <use-data name="Velocity" />
     </mesh>
 
     <participant name="Fluid">
@@ -27,13 +27,13 @@
         from="Temperature-Mesh"
         to="Fluid-Mesh"
         constraint="consistent" />
-      <read-data name="Temperature" mesh="Fluid-Mesh" />
+      <read-data name="Velocity" mesh="Fluid-Mesh" />
     </participant>
 
     <participant name="Heat">
       <use-mesh name="Temperature-Mesh" provide="yes" />
       <export:vtu directory="preCICE-output-Heat" />
-      <write-data name="Temperature" mesh="Temperature-Mesh" />
+      <write-data name="Velocity" mesh="Temperature-Mesh" />
     </participant>
 
     <m2n:sockets from="Heat" to="Fluid" exchange-directory=".." />
@@ -42,7 +42,7 @@
       <time-window-size value="0.005" />
       <max-time value="4.0" />
       <participants first="Heat" second="Fluid" />
-      <exchange data="Temperature" mesh="Temperature-Mesh" from="Heat" to="Fluid" />
+      <exchange data="Velocity" mesh="Temperature-Mesh" from="Heat" to="Fluid" />
     </coupling-scheme:serial-explicit>
   </solver-interface>
 </precice-configuration>

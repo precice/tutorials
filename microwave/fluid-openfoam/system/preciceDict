@@ -11,7 +11,7 @@ preciceConfig "../precice-config.xml";
 
 participant Fluid;
 
-modules (CHT);
+modules (FF);
 
 interfaces
 {
@@ -19,16 +19,21 @@ interfaces
   {
     mesh              Fluid-Mesh;
     patches           ();
-    cellSets          (box1 box2);
-    locations         volume;
+    cellSets          (box1);
+    locations         volumeCenters;
     
     readData
     (
-      Temperature
+      Velocity
     );
     
     writeData
     (
     );
   };
+};
+
+FF
+{
+  nameU       U_vol;
 };
