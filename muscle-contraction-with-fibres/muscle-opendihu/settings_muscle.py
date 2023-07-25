@@ -46,7 +46,7 @@ config = {
   },
 
   "PreciceAdapterVolumeCoupling": {
-    "preciceConfigFilename":        "precice-config.xml",
+    "preciceConfigFilename":        "../precice-config.xml",
     "preciceParticipantName":       "Muscle",
     "couplingEnabled":              True,
     "timeStepOutputInterval":       100,
