@@ -40,7 +40,7 @@ config = {
   },
 
   "PreciceAdapterVolumeCoupling": {
-    "preciceConfigFilename":        variables.precice_config,
+    "preciceConfigFilename":        "precice-config.xml",
     "preciceParticipantName":       "Fibers",
     "couplingEnabled":              True,
     "timeStepOutputInterval":       100,

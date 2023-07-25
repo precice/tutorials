@@ -5,9 +5,6 @@ import numpy as np
 rank_no = int(sys.argv[-2])
 n_ranks = int(sys.argv[-1])
 
-# PreCICE
-precice_config = "../../variables/precice-config.xml"
-
 # Time stepping
 dt_3D = 1e-1            # time step of 3D mechanics
 dt_splitting = 2e-3     # time step of strang splitting
@@ -75,8 +72,12 @@ for x in range(el_x):
             "face": "2+"
         }]
 
+# Define directory for cellml files
+import os
+input_dir = os.path.join(os.environ.get('OPENDIHU_HOME', '../../../../../'), "examples/electrophysiology/input/")
+
 # Fiber activation
-input_dir = "../../../../electrophysiology/input/"
+cellml_file = input_dir+"hodgkin_huxley-razumova.cellml"
 fiber_distribution_file = input_dir + "MU_fibre_distribution_3780.txt"
 firing_times_file = input_dir + "MU_firing_times_always.txt"
 specific_states_call_enable_begin = 1.0                     # time of first fiber activation
