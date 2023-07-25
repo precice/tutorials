@@ -9,12 +9,13 @@ var_file = sys.argv[0] if ".py" in sys.argv[0] else "variables.py"
 
 # add folders to python path
 script_path = os.path.dirname(os.path.abspath(__file__))
-var_path = os.path.join(script_path, "../variables")
+var_path = os.path.join(script_path, "variables")
 sys.path.insert(0, var_path)
 
 # load variables file
 scenario_name, _ = os.path.splitext(var_file)
 variables = importlib.import_module(scenario_name, package=var_file)
+
 
 # define config
 config = {

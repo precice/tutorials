@@ -14,9 +14,9 @@ end_time = 30.0         # end time of the simulation
 output_interval = dt_3D # time interval between outputs
 
 # Material parameters
-pmax = 7.3                                                  # maximum active stress
-rho = 10                                                    # density of the muscle
-material_parameters = [3.176e-10, 1.813, 1.075e-2, 1.0]     # [c1, c2, b, d]
+# pmax = 7.3                                                  # maximum active stress
+# rho = 10                                                    # density of the muscle
+# material_parameters = [3.176e-10, 1.813, 1.075e-2, 1.0]     # [c1, c2, b, d]
 diffusion_prefactor = 3.828 / (500.0 * 0.58)                # Conductivity / (Am * Cm)
 
 # Meshes

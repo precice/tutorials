@@ -9,7 +9,7 @@ var_file = sys.argv[0] if ".py" in sys.argv[0] else "variables.py"
 
 # add folders to python path
 script_path = os.path.dirname(os.path.abspath(__file__))
-var_path = os.path.join(script_path, "../variables")
+var_path = os.path.join(script_path, "variables")
 sys.path.insert(0, var_path)
 
 # load variables file
@@ -105,7 +105,7 @@ config = {
                   "OutputWriter":                   [],
 
                   "CellML": {
-                    "modelFilename":            variables.input_dir + "hodgkin_huxley-razumova.cellml",
+                    "modelFilename":            variables.cellml_file,
                     "meshName":                 "fiber{}".format(variables.get_fiber_no(fiber_x, fiber_y)),
                     "stimulationLogFilename":   "out/" + scenario_name + "/fibers_stimulation.log",
 
