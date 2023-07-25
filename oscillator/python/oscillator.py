@@ -13,19 +13,18 @@ class Scheme(Enum):
     NEWMARK_BETA = "Newmark_beta"
     GENERALIZED_ALPHA = "generalized_alpha"
 
-
-class Participant(Enum):
+class Solver(Enum):
     MASS_LEFT = "Mass-Left"
     MASS_RIGHT = "Mass-Right"
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("participantName", help="Name of the solver.", type=str, choices=[p.value for p in Participant])
+parser.add_argument("solverName", help="Name of the solver.", type=str, choices=[p.value for p in Solver])
 parser.add_argument("-ts", "--time-stepping", help="Time stepping scheme being used.", type=str,
                     choices=[s.value for s in Scheme], default=Scheme.NEWMARK_BETA.value)
 args = parser.parse_args()
 
-participant_name = args.participantName
+solver_name = args.solverName
 
 m_1, m_2 = 1, 1
 k_1, k_2, k_12 = 4 * np.pi**2, 4 * np.pi**2, 16 * (np.pi**2)
@@ -51,7 +50,7 @@ v0_2 = 0
 
 c = np.linalg.solve(eigenvectors, [u0_1, u0_2])
 
-if participant_name == Participant.MASS_LEFT.value:
+if solver_name == Solver.MASS_LEFT.value:
     write_data_name = 'Force-Left'
     read_data_name = 'Force-Right'
     mesh_name = 'Mass-Left-Mesh'
@@ -63,7 +62,7 @@ if participant_name == Participant.MASS_LEFT.value:
     def v_analytical(t): return -c[0] * A[0] * omega[0] * np.sin(omega[0] * t) - \
         c[1] * A[1] * omega[1] * np.sin(omega[1] * t)
 
-elif participant_name == Participant.MASS_RIGHT.value:
+elif solver_name == Solver.MASS_RIGHT.value:
     read_data_name = 'Force-Left'
     write_data_name = 'Force-Right'
     mesh_name = 'Mass-Right-Mesh'
@@ -77,7 +76,7 @@ elif participant_name == Participant.MASS_RIGHT.value:
         c[1] * B[1] * omega[1] * np.sin(omega[1] * t)
 
 else:
-    raise Exception(f"wrong participant name: {participant_name}")
+    raise Exception(f"wrong solver name: {solver_name}")
 
 num_vertices = 1  # Number of vertices
 
@@ -86,27 +85,24 @@ solver_process_size = 1
 
 configuration_file_name = "../precice-config.xml"
 
-interface = precice.Interface(participant_name, configuration_file_name, solver_process_index, solver_process_size)
+participant = precice.Participant(solver_name, configuration_file_name, solver_process_index, solver_process_size)
 
-mesh_id = interface.get_mesh_id(mesh_name)
-dimensions = interface.get_dimensions()
+dimensions = participant.get_mesh_dimensions(mesh_name)
 
-vertex = np.zeros(dimensions)
+vertex = np.zeros((num_vertices, dimensions))
 read_data = np.zeros(num_vertices)
 write_data = k_12 * u0 * np.ones(num_vertices)
 
-vertex_id = interface.set_mesh_vertex(mesh_id, vertex)
-read_data_id = interface.get_data_id(read_data_name, mesh_id)
-write_data_id = interface.get_data_id(write_data_name, mesh_id)
+vertex_id = participant.set_mesh_vertices(mesh_name, vertex)
 
-precice_dt = interface.initialize()
+
+if participant.requires_initial_data():
+    participant.write_data(mesh_name, write_data_name, vertex_id, write_data)
+
+participant.initialize()
+
+precice_dt = participant.get_max_time_step_size()
 my_dt = precice_dt  # use my_dt < precice_dt for subcycling
-
-if interface.is_action_required(precice.action_write_initial_data()):
-    interface.write_scalar_data(write_data_id, vertex_id, write_data)
-    interface.mark_action_fulfilled(precice.action_write_initial_data())
-
-interface.initialize_data()
 
 # Initial Conditions
 a0 = (f0 - stiffness * u0) / mass
@@ -134,13 +130,12 @@ u_write = [u]
 v_write = [v]
 t_write = [t]
 
-while interface.is_coupling_ongoing():
-    if interface.is_action_required(precice.action_write_iteration_checkpoint()):
+while participant.is_coupling_ongoing():
+    if participant.requires_writing_checkpoint():
         u_cp = u
         v_cp = v
         a_cp = a
         t_cp = t
-        interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
         # store data for plotting and postprocessing
         positions += u_write
@@ -151,8 +146,8 @@ while interface.is_coupling_ongoing():
     dt = np.min([precice_dt, my_dt])
     # # use this with waveform relaxation
     # read_time = (1-alpha_f) * dt
-    # read_data = interface.read_scalar_data(read_data_id, vertex_id, read_time)
-    read_data = interface.read_scalar_data(read_data_id, vertex_id)
+    # read_data = participant.read_data(read_data_id, vertex_id, read_time)
+    read_data = participant.read_data(mesh_name, read_data_name, vertex_id, precice_dt)
     f = read_data
 
     # do generalized alpha step
@@ -167,16 +162,17 @@ while interface.is_coupling_ongoing():
 
     write_data = k_12 * u_new
 
-    interface.write_scalar_data(write_data_id, vertex_id, write_data)
+    participant.write_data(mesh_name, write_data_name, vertex_id, write_data)
 
-    precice_dt = interface.advance(dt)
+    participant.advance(dt)
+    
+    precice_dt = participant.get_max_time_step_size()
 
-    if interface.is_action_required(precice.action_read_iteration_checkpoint()):
+    if participant.requires_reading_checkpoint():
         u = u_cp
         v = v_cp
         a = a_cp
         t = t_cp
-        interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
 
         # empty buffers for next window
         u_write = []
@@ -190,22 +186,22 @@ while interface.is_coupling_ongoing():
         t = t_new
 
         # write data to buffers
-        u_write.append(u)
-        v_write.append(v)
+        u_write.append(u[0])
+        v_write.append(v[0])
         t_write.append(t)
 
 # store final result
 u = u_new
 v = v_new
 a = a_new
-u_write.append(u)
-v_write.append(v)
+u_write.append(u[0])
+v_write.append(v[0])
 t_write.append(t)
 positions += u_write
 velocities += v_write
 times += t_write
 
-interface.finalize()
+participant.finalize()
 
 # print errors
 error = np.max(abs(u_analytical(np.array(times)) - np.array(positions)))
@@ -216,7 +212,7 @@ print(f"{my_dt},{error}")
 if not os.path.exists("output"):
     os.makedirs("output")
 
-with open(f'output/trajectory-{participant_name}.csv', 'w') as file:
+with open(f'output/trajectory-{solver_name}.csv', 'w') as file:
     csv_write = csv.writer(file, delimiter=';')
     csv_write.writerow(['time', 'position', 'velocity'])
     for t, u, v in zip(times, positions, velocities):

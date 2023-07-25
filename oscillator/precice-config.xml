@@ -1,13 +1,14 @@
-<?xml version="1.0"?>
-<precice-configuration>
-  <log enabled="1">
-    <sink filter="%Severity% > debug" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<precice-configuration dimensions="2">
+  <log>
+    <sink
+      type="stream"
+      output="stdout"
+      filter="%Severity% > debug"
+      format="preCICE:%ColorizedSeverity% %Message%"
+      enabled="true" />
   </log>
 
-  <solver-interface dimensions="2" >
-  <!-- Use this to activate waveforms
-  <solver-interface dimensions="2" experimental="true">
-  -->
     <data:scalar name="Force-Left"  />
     <data:scalar name="Force-Right"  />
 
@@ -22,7 +23,7 @@
     </mesh>
 
     <participant name="Mass-Left">
-      <use-mesh name="Mass-Left-Mesh" provide="yes"/>
+      <provide-mesh name="Mass-Left-Mesh"/>
       <write-data name="Force-Left" mesh="Mass-Left-Mesh" />
       <read-data  name="Force-Right" mesh="Mass-Left-Mesh" />
       <!-- Use this to activate first order interpolation
@@ -31,8 +32,8 @@
     </participant>
 
     <participant name="Mass-Right">
-      <use-mesh name="Mass-Left-Mesh" from="Mass-Left"/>
-      <use-mesh name="Mass-Right-Mesh" provide="yes"/>
+      <receive-mesh name="Mass-Left-Mesh" from="Mass-Left"/>
+      <provide-mesh name="Mass-Right-Mesh" />
       <write-data name="Force-Right" mesh="Mass-Right-Mesh" />
       <read-data  name="Force-Left" mesh="Mass-Right-Mesh" />
       <!-- Use this to activate first order interpolation
@@ -42,7 +43,7 @@
       <mapping:nearest-neighbor direction="read"  from="Mass-Left-Mesh" to="Mass-Right-Mesh" constraint="consistent" />
     </participant>
 
-    <m2n:sockets from="Mass-Left" to="Mass-Right" exchange-directory=".." />
+    <m2n:sockets acceptor="Mass-Left" connector="Mass-Right" exchange-directory=".." />
 
     <coupling-scheme:serial-implicit>
       <participants first="Mass-Left" second="Mass-Right" />
@@ -57,6 +58,5 @@
       -->
       <exchange data="Force-Right" mesh="Mass-Left-Mesh" from="Mass-Right" to="Mass-Left" initialize="true"/>
     </coupling-scheme:serial-implicit>
-  </solver-interface>
 
 </precice-configuration>
