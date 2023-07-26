@@ -38,14 +38,14 @@ Open two separate terminals and start each participant by calling the respective
 
 ```bash
 cd muscle-opendihu
-. run.sh
+./run.sh
 ```
 
 and
 
 ```bash
 cd fibers-opendihu
-. run.sh
+./run.sh
 ```
 
 ### FEBio
