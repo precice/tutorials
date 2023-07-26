@@ -5,6 +5,8 @@ keywords: OpenDiHu, FEBio
 summary: The muscle contraction with fibers is a solid mechanics problem. The muscle participant, is a FEM solver is used to compute the deformation of the muscle due to internal active forces. The fibers participant takes care of the computation of active forces by solving the monodomain equation in each fiber. This tutorial contains OpenDiHu and FEBio variants of the FEM solver and an OpenDiHu fibers solvers.  
 ---
 
+**Disclaimer:** This tutorial is built on the work of Silas Natterer et al. You can check out their work at their [repository](https://github.com/silasnatterer/bfp), including a student report. 
+
 ## Setup
 
 ## Available solvers
@@ -36,14 +38,14 @@ Open two separate terminals and start each participant by calling the respective
 
 ```bash
 cd muscle-opendihu
-./run.sh
+. run.sh
 ```
 
 and
 
 ```bash
 cd fibers-opendihu
-./run.sh
+. run.sh
 ```
 
 ### FEBio
