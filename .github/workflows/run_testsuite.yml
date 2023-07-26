@@ -62,7 +62,7 @@ jobs:
         pwd
     - name: Copy folders and files from systest into tutorials
       run: |
-        cp -R systest/tools tutorials/tools
+        cp -R systest/tools/* tutorials/tools
         cd systest
         find . -type f -name "metadata.yaml" -exec cp --parents {} ../tutorials \; 
         cd ..
