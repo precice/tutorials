@@ -12,17 +12,16 @@ script_path = os.path.dirname(os.path.abspath(__file__))
 var_path = os.path.join(script_path, "variables")
 sys.path.insert(0, var_path)
 
-# load variables file
-scenario_name, _ = os.path.splitext(var_file)
-variables = importlib.import_module(scenario_name, package=var_file)
+import variables
+scenario_name = "fibers-opendihu"
 
 # define config
 config = {
   "scenarioName":                   scenario_name,
 
   "logFormat":                      "csv",
-  "mappingsBetweenMeshesLogFile":   "out/" + scenario_name + "/fibers_mappings_between_meshes_log.txt",
-  "solverStructureDiagramFile":     "out/" + scenario_name + "/fibers_solver_structure_diagram.txt",
+  "mappingsBetweenMeshesLogFile":   "../output/"+ scenario_name + "/fibers_mappings_between_meshes_log.txt",
+  "solverStructureDiagramFile":     "../output/"+ scenario_name + "/fibers_solver_structure_diagram.txt",
   
   "Meshes":                         variables.meshes,
   "MappingsBetweenMeshes":          {},
@@ -107,7 +106,7 @@ config = {
                   "CellML": {
                     "modelFilename":            variables.cellml_file,
                     "meshName":                 "fiber{}".format(variables.get_fiber_no(fiber_x, fiber_y)),
-                    "stimulationLogFilename":   "out/" + scenario_name + "/fibers_stimulation.log",
+                    "stimulationLogFilename":   "../output/"+ scenario_name + "/fibers_stimulation.log",
 
                     "statesInitialValues":                          [],
                     "initializeStatesToEquilibrium":                False,
@@ -150,7 +149,7 @@ config = {
                 {
                   "format":         "Paraview",
                   "outputInterval": int(1.0 / variables.dt_splitting * variables.output_interval),
-                  "filename":       "out/" + scenario_name + "/fibers",
+                  "filename":       "../output/"+ scenario_name + "/fibers",
                   "fileNumbering":  "incremental",
                   "binary":         True,
                   "fixedFormat":    False,

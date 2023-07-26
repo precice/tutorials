@@ -36,7 +36,7 @@
         timing="initial" 
 	support-radius="0.5"
       />  
-      <export:vtk directory="../precice-output" every-n-time-windows="1"/>
+      <export:vtk directory="../output/precice-output" every-n-time-windows="1"/>
     </participant>
     
     <participant name="Muscle">
@@ -54,10 +54,10 @@
 	timing="initial"
 	support-radius="0.5"
       />
-      <export:vtk directory="../precice-output" every-n-time-windows="1"/>
+      <export:vtk directory="../output/precice-output" every-n-time-windows="1"/>
     </participant>
 
-    <m2n:sockets from="Fibers" to="Muscle" exchange-directory=".."/>
+    <m2n:sockets from="Fibers" to="Muscle" exchange-directory="../output"/>
 
     <coupling-scheme:serial-explicit>
       <participants first="Fibers" second="Muscle" />
