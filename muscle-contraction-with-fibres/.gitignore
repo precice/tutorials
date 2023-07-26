@@ -145,3 +145,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Aditional files
+fibers-opendihu/src/hodgkin_huxley-razumova_fast_monodomain.c
+fibers-opendihu/src/hodgkin_huxley-razumova.c
+**/.scons_node_count
