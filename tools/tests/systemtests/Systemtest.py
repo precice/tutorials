@@ -6,7 +6,8 @@ from dataclasses import dataclass,field
 import shutil
 from pathlib import Path
 
-from metadata_parser import Tutorial, Case
+from metadata_parser.Case import Case
+from metadata_parser.Tutorial import Tutorial
 from .CmdLineArguments import CmdLineArguments
 
 import unicodedata
