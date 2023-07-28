@@ -4,8 +4,7 @@ from pathlib import Path
 from systemtests.CmdLineArguments import CmdLineArguments
 from systemtests.Systemtest import Systemtest
 from systemtests.TestSuite import TestSuites
-from metadata_parser.Tutorial import Tutorials
-from metadata_parser.Case import Case
+from metadata_parser.metdata import Tutorials,Case
 
 
 

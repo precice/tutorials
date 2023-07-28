@@ -1,7 +1,7 @@
 from dataclasses import dataclass,field
 from typing import Optional, List, Dict
-from metadata_parser.Tutorial import Tutorials,Tutorial
-from metadata_parser.Case import Case
+from metadata_parser.metdata import Tutorials,Tutorial,Case
+
 import yaml
 @dataclass
 class TestSuite:
