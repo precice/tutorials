@@ -1,6 +1,5 @@
 import yaml
-from metadata_parser.Tutorial import Tutorials
-from metadata_parser.Component import Components
+from metadata_parser.metdata import Tutorials,Components
 from paths import PRECICE_TUTORIAL_DIR,PRECICE_TESTS_DIR
 
 available_components = Components.from_yaml(PRECICE_TESTS_DIR / "components.yaml")
