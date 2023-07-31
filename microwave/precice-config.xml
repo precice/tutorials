@@ -14,35 +14,33 @@
       <use-data name="Velocity" />
     </mesh>
 
-    <mesh name="Temperature-Mesh">
+    <mesh name="Dummy-Mesh">
       <use-data name="Velocity" />
     </mesh>
 
     <participant name="Fluid">
       <use-mesh name="Fluid-Mesh" provide="yes" />
-      <use-mesh name="Temperature-Mesh" from="Heat" />
-      <export:vtu directory="preCICE-output-Fluid" />
+      <use-mesh name="Dummy-Mesh" from="Dummy-Velocity" />
       <mapping:nearest-neighbor
         direction="read"
-        from="Temperature-Mesh"
+        from="Dummy-Mesh"
         to="Fluid-Mesh"
         constraint="consistent" />
       <read-data name="Velocity" mesh="Fluid-Mesh" />
     </participant>
 
-    <participant name="Heat">
-      <use-mesh name="Temperature-Mesh" provide="yes" />
-      <export:vtu directory="preCICE-output-Heat" />
-      <write-data name="Velocity" mesh="Temperature-Mesh" />
+    <participant name="Dummy-Velocity">
+      <use-mesh name="Dummy-Mesh" provide="yes" />
+      <write-data name="Velocity" mesh="Dummy-Mesh" />
     </participant>
 
-    <m2n:sockets from="Heat" to="Fluid" exchange-directory=".." />
+    <m2n:sockets from="Dummy-Velocity" to="Fluid" exchange-directory=".." />
 
     <coupling-scheme:serial-explicit>
       <time-window-size value="0.005" />
       <max-time value="4.0" />
-      <participants first="Heat" second="Fluid" />
-      <exchange data="Velocity" mesh="Temperature-Mesh" from="Heat" to="Fluid" />
+      <participants first="Dummy-Velocity" second="Fluid" />
+      <exchange data="Velocity" mesh="Dummy-Mesh" from="Dummy-Velocity" to="Fluid" />
     </coupling-scheme:serial-explicit>
   </solver-interface>
 </precice-configuration>
