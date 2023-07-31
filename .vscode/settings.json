@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "heatTransfer.C": "cpp",
+        "createFields.H": "cpp",
+        "fvoptions": "cpp",
+        "codedFvOptionTemplate.H": "cpp",
+        "codedFvOptionTemplate.C": "cpp",
+        "chrono": "cpp"
+    }
+}
