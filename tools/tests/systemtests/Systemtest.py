@@ -191,8 +191,16 @@ class Systemtest:
             file.write(docker_compose_content)
         try:
             # Execute docker-compose command
-            process = subprocess.Popen(['docker', 'compose', '--file', 'docker-compose.field_compare.yaml', 'up',
-                                        '--exit-code-from', 'field-compare'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.system_test_dir)
+            process = subprocess.Popen(['docker', 
+                                        'compose', 
+                                        '--file', 
+                                        'docker-compose.field_compare.yaml', 
+                                        'up',
+                                        '--exit-code-from', 
+                                        'field-compare'],
+                                        stdout=subprocess.PIPE, 
+                                        stderr=subprocess.PIPE, 
+                                        cwd=self.system_test_dir)
 
             # Read the output in real-time
             while True:
@@ -229,8 +237,15 @@ class Systemtest:
             file.write(docker_compose_content)
         try:
             # Execute docker-compose command
-            process = subprocess.Popen(['docker', 'compose', '--file', 'docker-compose.tutorial.yaml',
-                                        'up', "--build"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.system_test_dir)
+            process = subprocess.Popen(['docker', 
+                                        'compose', 
+                                        '--file', 
+                                        'docker-compose.tutorial.yaml',
+                                        'up', 
+                                        "--build"], 
+                                        stdout=subprocess.PIPE, 
+                                        stderr=subprocess.PIPE, 
+                                        cwd=self.system_test_dir)
 
             # Read the output in real-time
             while True:
