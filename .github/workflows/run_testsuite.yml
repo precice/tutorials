@@ -10,6 +10,7 @@ on:
         options:
           - openfoam-adapter-release
           - openfoam-adapter-pr
+          - fenics-test
       build_args:
         description: 'Build arguments'
         default: 'OPENFOAM_EXECUTABLE:openfoam2212,PRECICE_TAG:latest,OPENFOAM_ADAPTER_REF:master'
