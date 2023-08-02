@@ -1,22 +1,24 @@
-from dataclasses import dataclass,field
+from dataclasses import dataclass, field
 from typing import Optional, List, Dict
-from metadata_parser.metdata import Tutorials,Tutorial,Case
+from metadata_parser.metdata import Tutorials, Tutorial, Case
 
 import yaml
+
+
 @dataclass
 class TestSuite:
     name: str
     cases_of_tutorial: Dict[Tutorial, List[Case]]
 
-
     def __repr__(self) -> str:
-        return_string =  f"Test suite: {self.name} contains:"
-        for tutorial,cases in self.cases_of_tutorial.items():
+        return_string = f"Test suite: {self.name} contains:"
+        for tutorial, cases in self.cases_of_tutorial.items():
             return_string += f"""
     {tutorial.name}
         cases: {cases}"""
-    
+
         return return_string
+
 
 class TestSuites(list):
     """
@@ -27,7 +29,7 @@ class TestSuites(list):
         self.testsuites = testsuites
 
     @classmethod
-    def from_yaml(cls, path,parsed_tutorials: Tutorials):
+    def from_yaml(cls, path, parsed_tutorials: Tutorials):
         """
         Creates a TestSuites instance from a YAML file.
 
@@ -47,14 +49,17 @@ class TestSuites(list):
                 for tutorial_path in test_suites_raw[test_suite_name]['tutorials']:
                     tutorial = parsed_tutorials.get_by_path(tutorial_path)
                     if not tutorial:
-                        raise Exception(f"No tutorial with path {tutorial_path} found.")
+                        raise Exception(
+                            f"No tutorial with path {tutorial_path} found.")
                     cases_of_tutorial[tutorial] = []
                     all_cases = tutorial.case_combinations
                     cases_requested = test_suites_raw[test_suite_name]['tutorials'][tutorial_path]['cases']
                     for case_combination in all_cases:
                         if f"{case_combination}" in cases_requested:
-                            cases_of_tutorial[tutorial].append(case_combination)
-                testsuites.append(TestSuite(test_suite_name,cases_of_tutorial))
+                            cases_of_tutorial[tutorial].append(
+                                case_combination)
+                testsuites.append(
+                    TestSuite(test_suite_name, cases_of_tutorial))
 
         return cls(testsuites)
 
@@ -85,10 +90,9 @@ class TestSuites(list):
                 return testsuite
 
         return None
-    
 
     def __repr__(self) -> str:
         return_str = ""
         for tests_suite in self.testsuites:
-            return_str+=f"{tests_suite}\n\n"
+            return_str += f"{tests_suite}\n\n"
         return return_str

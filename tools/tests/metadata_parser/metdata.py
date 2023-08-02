@@ -1,6 +1,6 @@
-from dataclasses import dataclass,field
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List,Tuple,Optional
+from typing import List, Tuple, Optional
 import glob
 import yaml
 import itertools
@@ -13,16 +13,16 @@ class BuildArgument:
 
     description: str
     """The description of the parameter."""
-    
+
     key: str
     """The name of the parameter."""
-    
+
     value_options: Optional[list] = None
     """The optinal list of value options for the parameter. If none is suplied all values are accepted"""
-    
+
     default: Optional[str] = None
     """The default value for the parameter."""
-    
+
     @property
     def required(self) -> bool:
         """
@@ -32,7 +32,7 @@ class BuildArgument:
             bool: True if the parameter is required, False otherwise.
         """
         return False if self.default else True
-    
+
     def __eq__(self, other) -> bool:
         if isinstance(other, BuildArgument):
             return self.key == other.key
@@ -45,12 +45,11 @@ class BuildArgument:
         return f"{self.key}"
 
 
-
 class BuildArguments:
     """Represents a collection of parameters."""
 
     def __init__(self, arguments: List[BuildArgument]):
-        self.arguments  = arguments
+        self.arguments = arguments
 
     @classmethod
     def from_components_yaml(cls, data):
@@ -62,13 +61,15 @@ class BuildArguments:
         """
         arguments = []
         for param_name, params in data['build-arguments'].items():
-            ## TODO maybe **params
-            description = params.get('description', f"No description provided for {param_name}")
+            # TODO maybe **params
+            description = params.get(
+                'description', f"No description provided for {param_name}")
             key = param_name
             default = params.get('default', None)
             value_options = params.get('value_options', None)
 
-            arguments.append(BuildArgument(description, key, value_options, default))
+            arguments.append(BuildArgument(
+                description, key, value_options, default))
 
         return cls(arguments)
 
@@ -84,12 +85,8 @@ class BuildArguments:
     def __len__(self):
         return len(self.arguments)
 
-
     def __repr__(self) -> str:
         return f"{self.arguments}"
-
-
-
 
 
 @dataclass
@@ -135,10 +132,12 @@ class Components(list):
         with open(path, 'r') as f:
             data = yaml.safe_load(f)
             for component_name in data:
-                parameters = BuildArguments.from_components_yaml(data[component_name])
+                parameters = BuildArguments.from_components_yaml(
+                    data[component_name])
                 repository = data[component_name]["repository"]
                 template = data[component_name]["template"]
-                components.append(Component(component_name, template,repository, parameters))
+                components.append(
+                    Component(component_name, template, repository, parameters))
 
         return cls(components)
 
@@ -169,7 +168,8 @@ class Components(list):
                 return component
 
         return None
-    
+
+
 @dataclass
 class Participant:
     """Represents a participant in a coupled simulation"""
@@ -189,6 +189,7 @@ class Participant:
 class Tutorial:
     pass
 
+
 @dataclass
 class Case:
     """
@@ -206,7 +207,8 @@ class Case:
         Performs sanity checks after initializing the Case instance.
         """
         if not self.component:
-            raise Exception(f'Tried to instantiate the case {self.name} but failed. Reason: Could not find the component it uses in the components.yaml file.')
+            raise Exception(
+                f'Tried to instantiate the case {self.name} but failed. Reason: Could not find the component it uses in the components.yaml file.')
 
     @classmethod
     def from_dict(cls, name, dict, available_components):
@@ -243,7 +245,7 @@ class Tutorial:
     url: str
     participants: List[str]
     cases: List[Case]
-    case_combinations : List[Tuple[Case]] = field(init=False)
+    case_combinations: List[Tuple[Case]] = field(init=False)
 
     def __post_init__(self):
         for case in self.cases:
@@ -257,14 +259,12 @@ class Tutorial:
                 cases_dict[participant] = []
             for case in tutorial.cases:
                 cases_dict[case.participant].append(case)
-            
+
             for combination in itertools.product(*[cases_dict[participant] for participant in tutorial.participants]):
                 case_combinations.append(combination)
             return case_combinations
-        
+
         self.case_combinations = get_all_possible_case_combinations(self)
-
-
 
     def __hash__(self) -> int:
         return hash(self.path)
@@ -283,9 +283,8 @@ class Tutorial:
     def get_all_case_combinations(self) -> List[List[Case]]:
         cases_combinations = []
         # first sort the cases into a dict by participant
-        
-        return cases_combinations
 
+        return cases_combinations
 
     def get_cases_by_strings(self, case_names: List[List[str]]):
         """
@@ -361,10 +360,9 @@ class Tutorial:
             cases_raw = data.get('cases', {})
             cases = []
             for case_name in cases_raw.keys():
-                cases.append(Case.from_dict(case_name, cases_raw[case_name], available_components))
+                cases.append(Case.from_dict(
+                    case_name, cases_raw[case_name], available_components))
             return cls(name, path, url, participants, cases)
-
-
 
 
 class Tutorials(list):
@@ -384,7 +382,7 @@ class Tutorials(list):
     def __len__(self):
         return len(self.tutorials)
 
-    def __init__(self,tutorials: List[Tutorial]):
+    def __init__(self, tutorials: List[Tutorial]):
         """
         Initializes the Tutorials instance with a base path and a list of tutorials.
 
@@ -435,10 +433,10 @@ class Tutorials(list):
             path: The path containing the tutorial folders
         """
 
-        
         yaml_files = glob.glob(f'{path}/*/metadata.yaml')
         tutorials = []
-        available_components = Components.from_yaml(PRECICE_TESTS_DIR / "components.yaml")
+        available_components = Components.from_yaml(
+            PRECICE_TESTS_DIR / "components.yaml")
         for yaml_path in yaml_files:
             tut = Tutorial.from_yaml(yaml_path, available_components)
             tutorials.append(tut)
