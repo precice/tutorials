@@ -14,8 +14,10 @@ parser = argparse.ArgumentParser(description='systemtest')
 # Add an argument for the components
 parser.add_argument('--suites', type=str,
                     help='Comma-separated test-suites to execute')
-parser.add_argument('--build_args', type=str,
-                    help='Comma-separated list of arguments provided to the components like openfoam:2102,pythonbindings:latest')
+parser.add_argument(
+    '--build_args',
+    type=str,
+    help='Comma-separated list of arguments provided to the components like openfoam:2102,pythonbindings:latest')
 parser.add_argument('--rundir', type=str, help='Directory to run the systemstests in.',
                     nargs='?', const=PRECICE_TESTS_RUN_DIR, default=PRECICE_TESTS_RUN_DIR)
 
