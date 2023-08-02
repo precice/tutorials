@@ -198,9 +198,9 @@ class Systemtest:
                                         'up',
                                         '--exit-code-from',
                                         'field-compare'],
-                                        stdout=subprocess.PIPE,
-                                        stderr=subprocess.PIPE,
-                                        cwd=self.system_test_dir)
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE,
+                                       cwd=self.system_test_dir)
 
             # Read the output in real-time
             while True:
@@ -243,9 +243,9 @@ class Systemtest:
                                         'docker-compose.tutorial.yaml',
                                         'up',
                                         "--build"],
-                                        stdout=subprocess.PIPE,
-                                        stderr=subprocess.PIPE,
-                                        cwd=self.system_test_dir)
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE,
+                                       cwd=self.system_test_dir)
 
             # Read the output in real-time
             while True:
