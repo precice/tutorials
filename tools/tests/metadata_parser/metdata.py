@@ -193,7 +193,7 @@ class Tutorial:
 @dataclass
 class Case:
     """
-    Represents a case inside of a tutorial. 
+    Represents a case inside of a tutorial.
     """
     name: str
     participant: str

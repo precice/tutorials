@@ -180,7 +180,7 @@ class Systemtest:
         Args:
             docker_compose_content: The content of the Docker Compose file.
 
-        Returns: 
+        Returns:
             A SystemtestResult object containing the state.
         """
         docker_compose_content = self.__get_field_compare_compose_file()
@@ -192,7 +192,7 @@ class Systemtest:
         try:
             # Execute docker-compose command
             process = subprocess.Popen(['docker', 'compose', '--file', 'docker-compose.field_compare.yaml', 'up',
-                                       '--exit-code-from', 'field-compare'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.system_test_dir)
+                                        '--exit-code-from', 'field-compare'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.system_test_dir)
 
             # Read the output in real-time
             while True:
@@ -218,7 +218,7 @@ class Systemtest:
         """
         Runs precice couple
 
-        Returns: 
+        Returns:
             A DockerComposeResult object containing the state.
         """
         docker_compose_content = self.__get_docker_compose_file()
@@ -230,7 +230,7 @@ class Systemtest:
         try:
             # Execute docker-compose command
             process = subprocess.Popen(['docker', 'compose', '--file', 'docker-compose.tutorial.yaml',
-                                       'up', "--build"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.system_test_dir)
+                                        'up', "--build"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.system_test_dir)
 
             # Read the output in real-time
             while True:
