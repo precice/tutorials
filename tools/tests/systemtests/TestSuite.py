@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict
-from metadata_parser.metdata import Tutorials, Tutorial, Case
+from metadata_parser.metdata import Tutorials,Tutorial,Case,CaseCombination
 
 import yaml
 
@@ -46,20 +46,19 @@ class TestSuites(list):
             for test_suite_name in test_suites_raw:
                 cases_of_tutorial = {}
                 # iterate over tutorials:
-                for tutorial_path in test_suites_raw[test_suite_name]['tutorials']:
-                    tutorial = parsed_tutorials.get_by_path(tutorial_path)
+                for tutorial_case in test_suites_raw[test_suite_name]['tutorials']:
+                    print(tutorial_case)
+                    tutorial = parsed_tutorials.get_by_path(tutorial_case['path'])
+                    print(tutorial)
                     if not tutorial:
-                        raise Exception(
-                            f"No tutorial with path {tutorial_path} found.")
+                        raise Exception(f"No tutorial with path {tutorial_case['path']} found.")
                     cases_of_tutorial[tutorial] = []
-                    all_cases = tutorial.case_combinations
-                    cases_requested = test_suites_raw[test_suite_name]['tutorials'][tutorial_path]['cases']
-                    for case_combination in all_cases:
-                        if f"{case_combination}" in cases_requested:
-                            cases_of_tutorial[tutorial].append(
-                                case_combination)
-                testsuites.append(
-                    TestSuite(test_suite_name, cases_of_tutorial))
+                    all_case_combinations = tutorial.case_combinations
+                    case_combination_requested = CaseCombination.from_list(tutorial_case['case-combination'],tutorial)
+                    #for case_combination in all_cases:
+                    #    if f"{case_combination}" in cases_requested:
+                    #        cases_of_tutorial[tutorial].append(case_combination)
+                #testsuites.append(TestSuite(test_suite_name,cases_of_tutorial))
 
         return cls(testsuites)
 

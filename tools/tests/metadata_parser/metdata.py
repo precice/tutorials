@@ -185,6 +185,8 @@ class Participant:
     def __repr__(self) -> str:
         return f"{self.name}"
 
+# Forward declaration of tutorial
+
 
 class Tutorial:
     pass
@@ -233,6 +235,30 @@ class Case:
     def __repr__(self) -> str:
         return f"{self.name}"
 
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Case):
+            return (self.name == other.name) and (self.participant == other.participant) and (self.component == other.component) and (self.tutorial == other.tutorial)
+        return False
+
+
+@dataclass
+class CaseCombination:
+    """Represents a case combination able to run the tutorial"""
+
+    cases: Tuple[Case]
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, CaseCombination):
+            return set(self.cases) == set(other.cases)
+        return False
+
+    def __repr__(self) -> str:
+        return f"{self.name}"
+
+    @classmethod
+    def from_list(cls, case_names, tutorial):
+        pass
+
 
 @dataclass
 class Tutorial:
@@ -245,7 +271,7 @@ class Tutorial:
     url: str
     participants: List[str]
     cases: List[Case]
-    case_combinations: List[Tuple[Case]] = field(init=False)
+    case_combinations: List[CaseCombination] = field(init=False)
 
     def __post_init__(self):
         for case in self.cases:
@@ -265,6 +291,11 @@ class Tutorial:
             return case_combinations
 
         self.case_combinations = get_all_possible_case_combinations(self)
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Tutorial):
+            return (self.name == other.name) and (self.path == other.path)
+        return False
 
     def __hash__(self) -> int:
         return hash(self.path)
@@ -418,6 +449,7 @@ class Tutorials(list):
         Returns:
             The Tutorial with the specified path, or None if not found.
         """
+
         for tutorial in self.tutorials:
             if tutorial.path == path_to_search:
                 return tutorial

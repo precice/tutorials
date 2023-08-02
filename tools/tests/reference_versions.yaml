@@ -1,0 +1,6 @@
+OPENFOAM_EXECUTABLE:
+  value: "openfoam2112"
+PRECICE_TAG:
+  value: "2.4.0"
+OPENFOAM_ADAPTER_REF:
+  value: "v1.2.3"
