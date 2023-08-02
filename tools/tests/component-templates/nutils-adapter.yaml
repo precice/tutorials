@@ -1,0 +1,13 @@
+image: "ghcr.io/precice/openfoam-adapter:{{ params["openfoam-adapter-ref"] }}" # TODO: Update
+user: ${MY_UID}:${MY_GID}
+depends_on:    
+  prepare:
+    condition: service_completed_successfully
+volumes:
+  - /etc/passwd:/etc/passwd:ro
+  - /etc/group:/etc/group:ro
+  - {{ run_directory }}:/runs
+command: >
+  /bin/bash -c "id && 
+  cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&
+  {{ run }} | tee {{ case_folder }}.log 2>&1"
