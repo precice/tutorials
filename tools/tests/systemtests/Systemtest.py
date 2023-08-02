@@ -72,9 +72,11 @@ class Systemtest:
     cmd_line_args: CmdLineArguments
     cases: Tuple[Case]
     params_to_use: Dict[str, str] = field(init=False)
+    env: Dict[str, str] = field(init=False)
 
     def __post_init__(self):
         self.__init_args_to_use()
+        self.env = {}
 
     def __init_args_to_use(self):
         """
@@ -172,6 +174,21 @@ class Systemtest:
 
     def __cleanup(self):
         shutil.rmtree(self.run_directory)
+
+    def __get_uid_gid(self):
+        try:
+            uid = int(subprocess.check_output(["id", "-u"]).strip())
+            gid = int(subprocess.check_output(["id", "-g"]).strip())
+            return uid, gid
+        except Exception as e:
+            # Handle the exception if the 'id -u' or 'id -g' commands fail
+            # For example, you can return default values or raise an error.
+            print("Error getting group and user id: ", e)
+
+    def __write_env_file(self):
+        with open(self.system_test_dir / ".env", "w") as env_file:
+            for key, value in self.env.items():
+                env_file.write(f"{key}={value}\n")
 
     def _run_field_compare(self):
         """
@@ -284,6 +301,10 @@ class Systemtest:
         self.__copy_tools(run_directory)
         std_out: List[str] = []
         std_err: List[str] = []
+        uid, gid = self.__get_uid_gid()
+        self.env["UID"] = uid
+        self.env["GID"] = gid
+        self.__write_env_file()
         docker_compose_result = self._run_tutorial()
         std_out.extend(docker_compose_result.stdout_data)
         std_err.extend(docker_compose_result.stderr_data)

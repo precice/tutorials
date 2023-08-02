@@ -2,7 +2,7 @@ version: "3.9"
 services:
   prepare:
     image: ubuntu:latest
-    user: ${MY_UID}:${MY_GID}
+    user: ${UID}:${GID}
     volumes:
       - /etc/passwd:/etc/passwd:ro #TODO: Maybe move those into a more general section ? 
       - /etc/group:/etc/group:ro
@@ -15,7 +15,7 @@ services:
       sed -i 's|m2n:sockets from|m2n:sockets network=\"eth0\" from|g' precice-config.xml &&
       cat precice-config.xml"
 
-  
+
   {% for service in services %}
   {{ service }}:
     {{ services[service] |indent(4) }}
