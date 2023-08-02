@@ -11,18 +11,18 @@ openfoam-adapter:
       default: "latest"
     OPENFOAM_ADAPTER_REF:
       description: Reference/tag of the actual OpenFOAM adapter
-      default: "latest"
+      default: "master"
     
 fenics-adapter:
   repository: https://github.com/precice/fenics-adapter
-  template: component-templates/nutils-adapter.yaml
+  template: component-templates/fenics-adapter.yaml
   build-arguments:
-    PYTHONBINDINGS_TAG:
+    PYTHON_BINDINGS_REF:
       semnantic: Version of the Python bindings to use
-    FENICS_VERSION:
-      options: ["v1","v2"]
-      semantic: Version of FENICS to use
-      default: "v1"
+      default: "latest"
+    FENICS_ADAPTER_REF:
+      semnantic: Version of the fenics adapter to use
+      default: "latest"
     PRECICE_TAG:
       description: Version of preCICE to use
       default: "latest"

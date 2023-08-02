@@ -13,3 +13,9 @@ test-suites:
       flow-over-heated-plate:
         cases:
           - (fluid-openfoam, solid-openfoam)
+  fenics-test:
+    tutorials:
+      flow-over-heated-plate:
+        cases:
+          - (fluid-openfoam, solid-fenics)
+

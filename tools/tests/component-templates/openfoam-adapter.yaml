@@ -4,7 +4,7 @@ build:
     {% for key, value in build_args.items() %}
       - {{key}}={{value}}
    {% endfor %}
-user: ${MY_UID}:${MY_GID}
+user: ${UID}:${UID}
 depends_on:    
   prepare:
     condition: service_completed_successfully

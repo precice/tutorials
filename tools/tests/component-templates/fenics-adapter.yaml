@@ -1,5 +1,5 @@
-image: "ghcr.io/precice/openfoam-adapter:{{ params["openfoam-adapter-ref"] }}" # TODO: Update
-user: ${MY_UID}:${MY_GID}
+image: precice/fenics-adapter:{{ params["FENICS_ADAPTER_REF"] }}
+user: ${UID}:${UID}
 depends_on:    
   prepare:
     condition: service_completed_successfully
