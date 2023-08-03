@@ -1,5 +1,5 @@
 image: precice/fenics-adapter:{{ params["FENICS_ADAPTER_REF"] }}
-user: ${UID}:${UID}
+user: ${UID}:${GID}
 depends_on:    
   prepare:
     condition: service_completed_successfully
