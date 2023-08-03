@@ -15,7 +15,9 @@ This tutorial solves a heat conduction problem on a 2D domain which has an under
 
 ![Case setup of two-scale-heat-conduction case](images/macro-micro-schematic.png)
 
-At each Gauss point of the macro domain there exists a micro simulation. The macro problem is one participant, which is coupled to many micro simulations. Each micro simulation is not an individual coupling participant, instead we use a managing software which controls all the micro simulations and their coupling via preCICE. The case is chosen from the first example case in *Bastidas, Manuela & Bringedal, Carina & Pop, Iuliu Sorin (2021), A two-scale iterative scheme for a phase-field model for precipitation and dissolution in porous media. Applied Mathematics and Computation. 396. 125933. [10.1016/j.amc.2020.125933](https://doi.org/10.1016/j.amc.2020.125933)*.
+At each Gauss point of the macro domain there exists a micro simulation. The macro problem is one participant, which is coupled to many micro simulations. Each micro simulation is not an individual coupling participant, instead we use a managing software which controls all the micro simulations and their coupling via preCICE. The case is chosen from the first example case in the publication
+
+*Bastidas, Manuela & Bringedal, Carina & Pop, Iuliu Sorin (2021), A two-scale iterative scheme for a phase-field model for precipitation and dissolution in porous media. Applied Mathematics and Computation. 396. 125933. [10.1016/j.amc.2020.125933](https://doi.org/10.1016/j.amc.2020.125933)*.
 
 ## Available solvers and dependencies
 
@@ -28,19 +30,19 @@ At each Gauss point of the macro domain there exists a micro simulation. The mac
 The macro problem can be started using:
 
 ```bash
-python macro-nutils/macro.py
+python3 macro-nutils/macro.py
 ```
 
-Check the Micro Manager [configuration](https://precice.org/tooling-micro-manager-configuration.html) and [running](https://precice.org/tooling-micro-manager-running.html) documentation to understand how to set it up and launch it. There is a Python script to directly run the Micro Manager, called [run-micro-problems.py](https://github.com/precice/tutorials/tree/master/two-scale-heat-conduction/run-micro-problems.py), which can be run as:
+Check the Micro Manager [configuration](https://precice.org/tooling-micro-manager-configuration.html) and [running](https://precice.org/tooling-micro-manager-running.html) documentation to understand how to set it up and launch it. There is a Python script `run-micro-problems.py` in the tutorial directory to directly run the Micro Manager. It can be run as:
 
 ```bash
-python run-micro-problems.py
+python3 run-micro-problems.py
 ```
 
 The Micro Manager can also be run in parallel:
 
 ```bash
-mpirun -n <num_procs> python run-micro-problems.py
+mpirun -n <num_procs> python3 run-micro-problems.py
 ```
 
 Even though the case setup and involved physics is simple, each micro simulation is an instance of Nutils, which usually has a moderately high computation time. If the Micro Manager is run on 2 processors, the case takes approximately 10 to 15 minutes to run. Running the Micro Manager in serial is not advisable, as the run time can be longer than an hour.
