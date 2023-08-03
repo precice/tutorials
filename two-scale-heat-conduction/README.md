@@ -27,25 +27,28 @@ At each Gauss point of the macro domain there exists a micro simulation. The mac
 
 ## Running the simulation
 
-The macro problem can be started using:
+Run the macro problem:
 
 ```bash
-python3 macro-nutils/macro.py
+cd macro-nutils
+./run.sh
 ```
 
-Check the Micro Manager [configuration](https://precice.org/tooling-micro-manager-configuration.html) and [running](https://precice.org/tooling-micro-manager-running.html) documentation to understand how to set it up and launch it. There is a Python script `run-micro-problems.py` in the tutorial directory to directly run the Micro Manager. It can be run as:
+Check the Micro Manager [configuration](https://precice.org/tooling-micro-manager-configuration.html) and [running](https://precice.org/tooling-micro-manager-running.html) documentation to understand how to set it up and launch it. There is a Python script `run-micro-problems.py` in the tutorial directory to directly run the Micro Manager. This script imports the Micro Manager, and calls its `initialize()` and `solve()` methods. The Micro Manager can be run via this script in serial or parallel. Run it in serial:
 
 ```bash
-python3 run-micro-problems.py
+cd micro-nutils
+./run.sh -s
 ```
 
-The Micro Manager can also be run in parallel:
+Run it in parallel:
 
 ```bash
-mpirun -n <num_procs> python3 run-micro-problems.py
+cd micro-nutils
+./run.sh -p <num_procs>
 ```
 
-Even though the case setup and involved physics is simple, each micro simulation is an instance of Nutils, which usually has a moderately high computation time. If the Micro Manager is run on 2 processors, the case takes approximately 10 to 15 minutes to run. Running the Micro Manager in serial is not advisable, as the run time can be longer than an hour.
+Even though the case setup and involved physics is simple, each micro simulation is an instance of Nutils, which usually has a moderately high computation time. If the Micro Manager is run on 2 processors, the total runtime is approximately 10 to 15 minutes. Do not run the Micro Manager in serial, because the runtime can be several hours.
 
 ## Post-processing
 
