@@ -47,15 +47,15 @@ def main():
 
     timestep = 0
     dt = 0.005
-    
+
     while interface.is_coupling_ongoing():
 
         # potentially adjust non-matching timestep sizes
         dt = min(dt, precice_dt)
-        
+
         if interface.is_write_data_required(dt):
             interface.write_block_vector_data(field_id, vertex_ids, dummy_values)
-        
+
         # do the coupling
         precice_dt = interface.advance(dt)
 
