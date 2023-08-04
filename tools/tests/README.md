@@ -78,17 +78,17 @@ The components mentioned in the Metadata are defined in the central `components.
 openfoam-adapter:
   repository: https://github.com/precice/openfoam-adapter
   template: component-templates/openfoam-adapter.yaml
-  build-arguments: # these things mean something to the docker-service
+  build_arguments: # these things mean something to the docker-service
     OPENFOAM_EXECUTABLE:
-      options: ["openfoam2306"]
-      description: exectuable of OpenFOAM to use
-      default: "openfoam2306"
+      options: ["openfoam2112"]
+      description: exectuable of openfoam to use
+      default: "openfoam2112"
     PRECICE_TAG:
-      description: Version of precice to use
+      description: Version of preCICE to use
       default: "latest"
-    OPENFOAM_ADAPTER_TAG:
-      description: Ref of the actual OpenFOAM adapter
-      default: "latest"
+    OPENFOAM_ADAPTER_REF:
+      description: Reference/tag of the actual OpenFOAM adapter
+      default: "master"
 ```
 
 This `openfoam-adapter` component has the following attributes:
@@ -97,13 +97,21 @@ This `openfoam-adapter` component has the following attributes:
 - `template`: A template for a Docker Compose service of this component
 - `build-arguments`: Arguments passed to the Docker Compose service (arbitrary)
 
+#### Naming schema for build_arguments
+
+Since the docker containers are still a bit mixed in terms of capabilities and support for different build_argument combinations the following rules apply:
+
+- A build_argument ending in **_TAG** means that a image of some kind needs to be available with that tag.
+- A build_argument ending in **_REF** means that it refers to a git reference (like a branch or commit) beeing used to built.
+- All other build_arguments are free of rules and up to the container maintainer.
+
 ### Component templates
 
 Templates for defining a Docker Compose service for each component are available in `component-templates/`. For example:
 
 ```yaml
-image: "ghcr.io/precice/openfoam-adapter:{{ params["openfoam-adapter-ref"] }}"
-user: ${MY_UID}:${MY_GID}
+image: precice/fenics-adapter:{{ params["FENICS_ADAPTER_REF"] }}
+user: ${UID}:${GID}
 depends_on:    
   prepare:
     condition: service_completed_successfully
@@ -114,7 +122,7 @@ volumes:
 command: >
   /bin/bash -c "id && 
   cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&
-  {{ params["openfoam-exectuable"] }} {{ run }} | tee {{ case_folder }}.log 2>&1"
+  {{ run }} | tee {{ case_folder }}.log 2>&1"
 ```
 
 This template defines:
