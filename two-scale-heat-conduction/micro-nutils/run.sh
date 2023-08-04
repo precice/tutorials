@@ -14,7 +14,7 @@ while getopts ":sp" opt; do
     python3 run-micro-problems.py
     ;;
   p)
-    mpiexec -n $2 python3 run-micro-problems.py
+    mpiexec -n "$2" python3 run-micro-problems.py
     ;;
   *)
     usage
