@@ -1,0 +1,40 @@
+openfoam-adapter:
+  repository: https://github.com/precice/openfoam-adapter
+  template: component-templates/openfoam-adapter.yaml
+  build_arguments: # these things mean something to the docker-service
+    OPENFOAM_EXECUTABLE:
+      options: ["openfoam2112"]
+      description: exectuable of openfoam to use
+      default: "openfoam2112"
+    PRECICE_TAG:
+      description: Version of preCICE to use
+      default: "latest"
+    OPENFOAM_ADAPTER_REF:
+      description: Reference/tag of the actual OpenFOAM adapter
+      default: "master"
+    
+fenics-adapter:
+  repository: https://github.com/precice/fenics-adapter
+  template: component-templates/fenics-adapter.yaml
+  build_arguments:
+    FENICS_ADAPTER_TAG:
+      semnantic: Version of the fenics adapter image to use
+      default: "latest"
+
+calculix-adapter:
+  repository: https://github.com/precice/calculix-adapter
+  template: component-templates/calculix-adapter.yaml
+  build_arguments:
+    PRECICE_TAG:
+      description: Version of preCICE to use
+      default: "latest"
+
+
+
+nutils-adapter:
+  repository: https://github.com/precice/nutils-adapter
+  template: component-templates/nutils-adapter.yaml
+  build_arguments:
+    PRECICE_TAG:
+      description: Version of preCICE to use
+      default: "latest"
