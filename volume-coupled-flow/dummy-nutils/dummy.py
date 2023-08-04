@@ -38,7 +38,7 @@ def main():
     vertices = uniform_grid.eval(ns.x)
     vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)
 
-    dummy_values = np.full((vertices.shape[0], 2), [11.0, 0.0])
+    dummy_values = np.full((vertices.shape[0], 2), [10.0, 0.0])
 
     # coupling data
     field_id = interface.get_data_id("Velocity", mesh_id)
