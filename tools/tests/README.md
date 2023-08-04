@@ -101,8 +101,8 @@ This `openfoam-adapter` component has the following attributes:
 
 Since the docker containers are still a bit mixed in terms of capabilities and support for different build_argument combinations the following rules apply:
 
-- A build_argument ending in **_TAG** means that a image of some kind needs to be available with that tag.
-- A build_argument ending in **_REF** means that it refers to a git reference (like a branch or commit) beeing used to built.
+- A build_argument ending in **_TAG** means that an image of some kind needs to be available with that tag.
+- A build_argument ending in **_REF** means that it refers to a git reference (like a branch or commit) beeing used to build the image.
 - All other build_arguments are free of rules and up to the container maintainer.
 
 ### Component templates
