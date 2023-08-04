@@ -13,7 +13,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 This tutorial solves a heat conduction problem on a 2D domain which has an underlying micro-structure. This micro-structure changes the constituent quantities necessary for solving the problem on the macro scale. This leads to a two-scale problem with one macro-scale simulation and several micro-scale simulations.
 
-![Case setup of two-scale-heat-conduction case](images/macro-micro-schematic.png)
+![Case setup of two-scale-heat-conduction case](images/two-scale-heat-conduction-macro-micro-schematic.png)
 
 At each Gauss point of the macro domain there exists a micro simulation. The macro problem is one participant, which is coupled to many micro simulations. Each micro simulation is not an individual coupling participant, instead we use a managing software which controls all the micro simulations and their coupling via preCICE. The case is chosen from the first example case in the publication
 
