@@ -60,7 +60,7 @@ class BuildArguments:
             data: The components YAML data.
         """
         arguments = []
-        for param_name, params in data['build-arguments'].items():
+        for param_name, params in data['build_arguments'].items():
             # TODO maybe **params
             description = params.get(
                 'description', f"No description provided for {param_name}")

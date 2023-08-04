@@ -1,7 +1,7 @@
 build: 
   context: https://github.com/precice/openfoam-adapter.git#add-ci-docker:tools/docker
   args:
-    {% for key, value in build_args.items() %}
+    {% for key, value in build_arguments.items() %}
       - {{key}}={{value}}
     {% endfor %}
 user: ${UID}:${GID}

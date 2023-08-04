@@ -116,7 +116,7 @@ class Systemtest:
             render_dict = {
                 'run_directory': self.run_directory.resolve(),
                 'tutorial_folder': self.tutorial_folder,
-                'build_args': params_to_use,
+                'build_arguments': params_to_use,
                 'params': params_to_use,
                 'case_folder': case.path,
                 'run': case.run_cmd

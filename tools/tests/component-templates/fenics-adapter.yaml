@@ -1,4 +1,4 @@
-image: precice/fenics-adapter:{{ params["FENICS_ADAPTER_REF"] }}
+image: precice/fenics-adapter:{{ build_arguments["FENICS_ADAPTER_TAG"] }}
 user: ${UID}:${GID}
 depends_on:    
   prepare:
