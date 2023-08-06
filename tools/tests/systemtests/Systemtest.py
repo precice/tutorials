@@ -9,6 +9,9 @@ from pathlib import Path
 from metadata_parser.metdata import Tutorial, Case
 from .CmdLineArguments import CmdLineArguments
 
+from datetime import datetime
+
+
 import unicodedata
 import re
 
@@ -157,8 +160,9 @@ class Systemtest:
         """
         Copies the entire tutorial into a folder to prepare for running.
         """
+        current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.run_directory = run_directory
-        self.tutorial_folder = slugify(f'{self.tutorial.path}_{self.cases}')
+        self.tutorial_folder = slugify(f'{self.tutorial.path}_{self.cases}_{current_time_string}')
         destination = run_directory / self.tutorial_folder
         src = Path(__file__).parent.parent.parent.parent / self.tutorial.path
         self.system_test_dir = destination
@@ -170,7 +174,13 @@ class Systemtest:
         try:
             shutil.copytree(src, destination)
         except Exception as e:
-            print(e)
+            print("tools are already copied: ",e)
+
+    def __put_gitignore(self,run_directory: Path):
+        # Create the .gitignore file with a single asterisk
+        gitignore_file = run_directory / ".gitignore"
+        with gitignore_file.open("w") as file:
+            file.write("*")
 
     def __cleanup(self):
         shutil.rmtree(self.run_directory)
@@ -299,6 +309,7 @@ class Systemtest:
         """
         self.__copy_tutorial_into_directory(run_directory)
         self.__copy_tools(run_directory)
+        self.__put_gitignore(run_directory)
         std_out: List[str] = []
         std_err: List[str] = []
         uid, gid = self.__get_uid_gid()
