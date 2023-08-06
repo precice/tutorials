@@ -174,9 +174,9 @@ class Systemtest:
         try:
             shutil.copytree(src, destination)
         except Exception as e:
-            print("tools are already copied: ",e)
+            print("tools are already copied: ", e)
 
-    def __put_gitignore(self,run_directory: Path):
+    def __put_gitignore(self, run_directory: Path):
         # Create the .gitignore file with a single asterisk
         gitignore_file = run_directory / ".gitignore"
         with gitignore_file.open("w") as file:
