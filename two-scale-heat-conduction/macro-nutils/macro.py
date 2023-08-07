@@ -43,7 +43,7 @@ def main():
     ns.uinitial = 0.5
 
     if is_coupled_case:
-        interface = precice.Interface("Macro-heat", "precice-config.xml", 0, 1)
+        interface = precice.Interface("Macro-heat", "../precice-config.xml", 0, 1)
 
         mesh_name = "macro-mesh"
         mesh_id = interface.get_mesh_id(mesh_name)

@@ -23,7 +23,7 @@ At each Gauss point of the macro domain there exists a micro simulation. The mac
 
 * Both the macro and micro simulations are solved using the finite element library [Nutils](https://nutils.org/install.html) v7.
 * The macro simulation is written in Python, so it requires the [Python bindings of preCICE](https://precice.org/installation-bindings-python.html)
-* The [Micro Manager](https://precice.org/tooling-micro-manager-installation.html) controls all micro-simulations and facilitates coupling via preCICE.
+* The [Micro Manager](https://precice.org/tooling-micro-manager-installation.html) controls all micro-simulations and facilitates coupling via preCICE. Use the [develop](https://github.com/precice/micro-manager/tree/develop) branch of the Micro Manager.
 
 ## Running the simulation
 
