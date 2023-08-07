@@ -1,5 +1,5 @@
 {
-    "micro_file_name": "micro-nutils/micro",
+    "micro_file_name": "micro",
     "coupling_params": {
             "participant_name": "Micro-Manager",
             "config_file_name": "../precice-config.xml",
