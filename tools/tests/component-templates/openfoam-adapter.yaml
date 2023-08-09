@@ -4,13 +4,10 @@ build:
     {% for key, value in build_arguments.items() %}
       - {{key}}={{value}}
     {% endfor %}
-user: ${UID}:${GID}
 depends_on:    
   prepare:
     condition: service_completed_successfully
 volumes:
-  - /etc/passwd:/etc/passwd:ro
-  - /etc/group:/etc/group:ro
   - {{ run_directory }}:/runs
 command: >
   /bin/bash -c "id && 
