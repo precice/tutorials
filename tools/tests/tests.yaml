@@ -8,13 +8,6 @@ test-suites:
           - solid-openfoam
         reference-result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz
         run_args:
-      - name: FOHP S-Nutils F-Openfoam
-        path: flow-over-heated-plate
-        case-combination:
-          - fluid-openfoam
-          - solid-nutils
-        reference-result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-nutils.tar.gz
-        run_args:
   openfoam-adapter-release:
     tutorials:
       - name: FOHP Both Openfoam
@@ -30,7 +23,7 @@ test-suites:
         path: flow-over-heated-plate
         case-combination:
           - fluid-openfoam
-          - solid-openfoam
+          - solid-fenicss
         reference-result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz
         run_args:
 

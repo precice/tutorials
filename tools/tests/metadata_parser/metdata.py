@@ -235,6 +235,9 @@ class Case:
     def __repr__(self) -> str:
         return f"{self.name}"
 
+    def __hash__(self) -> int:
+        return hash(f"{self.name,self.participant,self.component,self.tutorial}")
+
     def __eq__(self, other) -> bool:
         if isinstance(other, Case):
             return (self.name == other.name) and (self.participant == other.participant) and (self.component == other.component) and (self.tutorial == other.tutorial)
@@ -246,6 +249,7 @@ class CaseCombination:
     """Represents a case combination able to run the tutorial"""
 
     cases: Tuple[Case]
+    tutorial: Tutorial
 
     def __eq__(self, other) -> bool:
         if isinstance(other, CaseCombination):
@@ -253,14 +257,18 @@ class CaseCombination:
         return False
 
     def __repr__(self) -> str:
-        return f"{self.name}"
+        return f"{self.tutorial.name} {self.cases}"
 
     @classmethod
-    def from_list(cls, case_names, tutorial: Tutorial):
+    def from_string_list(cls, case_names: List[str], tutorial: Tutorial):
         cases = []
         for case_name in case_names:
             cases.append(tutorial.get_case_by_string(case_name))
-        
+        return cls(tuple(cases), tutorial)
+
+    @classmethod
+    def from_cases_tuple(cls, cases: Tuple[Case], tutorial: Tutorial):
+        return cls(cases, tutorial)
 
 
 @dataclass
@@ -290,7 +298,7 @@ class Tutorial:
                 cases_dict[case.participant].append(case)
 
             for combination in itertools.product(*[cases_dict[participant] for participant in tutorial.participants]):
-                case_combinations.append(combination)
+                case_combinations.append(CaseCombination.from_cases_tuple(combination, self))
             return case_combinations
 
         self.case_combinations = get_all_possible_case_combinations(self)
@@ -381,7 +389,6 @@ class Tutorials(list):
             tutorials: The list of tutorials.
         """
         self.tutorials = tutorials
-
 
     def get_by_path(self, path_to_search) -> Optional[Tutorial]:
         """
