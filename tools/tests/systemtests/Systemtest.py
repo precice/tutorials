@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 import shutil
 from pathlib import Path
 
-from metadata_parser.metdata import Tutorial, Case
+from metadata_parser.metdata import Tutorial, CaseCombination,Case
 from .CmdLineArguments import CmdLineArguments
 
 from datetime import datetime
@@ -73,7 +73,7 @@ class Systemtest:
 
     tutorial: Tutorial
     cmd_line_args: CmdLineArguments
-    cases: Tuple[Case]
+    case_combination: CaseCombination
     params_to_use: Dict[str, str] = field(init=False)
     env: Dict[str, str] = field(init=False)
 
@@ -94,7 +94,7 @@ class Systemtest:
         """
         self.params_to_use = {}
         needed_parameters = set()
-        for case in self.cases:
+        for case in self.case_combination.cases:
             needed_parameters.update(case.component.parameters)
 
         for needed_param in needed_parameters:
@@ -129,7 +129,7 @@ class Systemtest:
             return template.render(render_dict)
 
         rendered_services = {}
-        for case in self.cases:
+        for case in self.case_combination.cases:
             rendered_services[case.name] = render_service_template_per_case(
                 case, self.params_to_use)
         return rendered_services
@@ -162,7 +162,7 @@ class Systemtest:
         """
         current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.run_directory = run_directory
-        self.tutorial_folder = slugify(f'{self.tutorial.path}_{self.cases}_{current_time_string}')
+        self.tutorial_folder = slugify(f'{self.tutorial.path}_{self.case_combination.cases}_{current_time_string}')
         destination = run_directory / self.tutorial_folder
         src = Path(__file__).parent.parent.parent.parent / self.tutorial.path
         self.system_test_dir = destination
@@ -295,7 +295,7 @@ class Systemtest:
             return DockerComposeResult(1, stdout_data, stderr_data, self)
 
     def __repr__(self):
-        return f"{self.tutorial.name} {self.cases}"
+        return f"{self.tutorial.name} {self.case_combination}"
 
     def __handle_docker_compose_failure(self, result: DockerComposeResult):
         print("Docker Compose failed, skipping fieldcompare")

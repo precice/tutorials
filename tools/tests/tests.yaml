@@ -23,7 +23,7 @@ test-suites:
         path: flow-over-heated-plate
         case-combination:
           - fluid-openfoam
-          - solid-fenicss
+          - solid-fenics
         reference-result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz
         run_args:
 
