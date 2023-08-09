@@ -47,14 +47,13 @@ class TestSuites(list):
                 cases_of_tutorial = {}
                 # iterate over tutorials:
                 for tutorial_case in test_suites_raw[test_suite_name]['tutorials']:
-                    print(tutorial_case)
                     tutorial = parsed_tutorials.get_by_path(tutorial_case['path'])
-                    print(tutorial)
                     if not tutorial:
                         raise Exception(f"No tutorial with path {tutorial_case['path']} found.")
                     cases_of_tutorial[tutorial] = []
                     all_case_combinations = tutorial.case_combinations
                     case_combination_requested = CaseCombination.from_list(tutorial_case['case-combination'],tutorial)
+                    print(case_combination_requested)
                     #for case_combination in all_cases:
                     #    if f"{case_combination}" in cases_requested:
                     #        cases_of_tutorial[tutorial].append(case_combination)

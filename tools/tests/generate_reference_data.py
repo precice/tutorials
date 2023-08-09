@@ -16,6 +16,4 @@ args = parser.parse_args()
 
 available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
 
-available_components = Components.from_yaml(PRECICE_TESTS_DIR / "components.yaml")
 test_suites = TestSuites.from_yaml(PRECICE_TESTS_DIR / "tests.yaml", available_tutorials)
-print(test_suites)

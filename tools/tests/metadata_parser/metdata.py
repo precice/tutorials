@@ -256,8 +256,11 @@ class CaseCombination:
         return f"{self.name}"
 
     @classmethod
-    def from_list(cls, case_names, tutorial):
-        pass
+    def from_list(cls, case_names, tutorial: Tutorial):
+        cases = []
+        for case_name in case_names:
+            cases.append(tutorial.get_case_by_string(case_name))
+        
 
 
 @dataclass
@@ -311,64 +314,20 @@ class Tutorial:
         Cases: {self.cases}
         """
 
-    def get_all_case_combinations(self) -> List[List[Case]]:
-        cases_combinations = []
-        # first sort the cases into a dict by participant
-
-        return cases_combinations
-
-    def get_cases_by_strings(self, case_names: List[List[str]]):
+    def get_case_by_string(self, case_name: str) -> Optional[Case]:
         """
-        Retrieves potential cases lists based on their names
+        Retrieves Optional case based on the case_name
 
         Args:
-            case_names: The list of case combinations
+            case_name: the name of the case in search
 
         Returns:
-            A dictionary of potential cases per participant.
+            Either None or a Case mathing the casename
         """
-        potential_cases = {}
-        for participant in self.participants:
-            potential_cases[participant] = []
-            for case in self.cases:
-                if (case.participant == participant) and (case.component.name in component_names):
-                    potential_cases[participant].append(case)
-        return potential_cases
-
-    def get_potential_cases(self, component_names):
-        """
-        Retrieves potential cases based on specified component names.
-
-        Args:
-            component_names: The list of component names.
-
-        Returns:
-            A dictionary of potential cases per participant.
-        """
-        potential_cases = {}
-        for participant in self.participants:
-            potential_cases[participant] = []
-            for case in self.cases:
-                if (case.participant == participant) and (case.component.name in component_names):
-                    potential_cases[participant].append(case)
-        return potential_cases
-
-    def can_be_run_with_components(self, component_names):
-        """
-        Checks if the tutorial can be run with the specified component names.
-
-        Args:
-            component_names: The list of component names.
-
-        Returns:
-            True if the tutorial can be run with the specified components, False otherwise.
-        """
-        potential_cases = self.get_potential_cases(component_names)
-        can_be_run = True
-        for participant in self.participants:
-            if len(potential_cases[participant]) == 0:
-                can_be_run = False
-        return can_be_run
+        for case in self.cases:
+            if case.name == case_name:
+                return case
+        return None
 
     @classmethod
     def from_yaml(cls, path, available_components):
@@ -423,21 +382,6 @@ class Tutorials(list):
         """
         self.tutorials = tutorials
 
-    def filter_by_components(self, component_names: List[str]) -> List[Tutorial]:
-        """
-        Filters the tutorials based on the specified component names.
-
-        Args:
-            component_names: The list of component names.
-
-        Returns:
-            A list of filtered tutorials.
-        """
-        tutorials_filtered = []
-        for tutorial in self.tutorials:
-            if tutorial.can_be_run_with_components(component_names):
-                tutorials_filtered.append(tutorial)
-        return tutorials_filtered
 
     def get_by_path(self, path_to_search) -> Optional[Tutorial]:
         """
