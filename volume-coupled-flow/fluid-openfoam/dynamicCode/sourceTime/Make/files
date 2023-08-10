@@ -1,6 +1,0 @@
-/* dynamicCode:
- * SHA1 = fa508e6ae0244268d3eb64a1b0f1e3afb6179e04
- */
-codedFvOptionTemplate.C
-
-LIB = $(PWD)/../platforms/$(WM_OPTIONS)/lib/libsourceTime_fa508e6ae0244268d3eb64a1b0f1e3afb6179e04
