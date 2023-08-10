@@ -1,0 +1,11 @@
+{
+  "meta":{
+  "name": "Fluid",
+  "rank": "0",
+  "size": "1",
+  "unix_us": "1691706455483887",
+  "tinit": "2023-08-11T00:27:35.887",
+  "mode": "fundamental"
+  },
+  "events":[
+  {"et":"n","en":"construction","eid":0},{"et":"b","eid":0,"ts":20},{"et":"n","en":"construction/configure","eid":1},{"et":"b","eid":1,"ts":27},{"et":"e","eid":1,"ts":9944},{"et":"n","en":"construction/startProfilingBackend","eid":2},{"et":"n","en":"_GLOBAL","eid":3},{"et":"b","eid":3,"ts":0},{"et":"e","eid":0,"ts":10316},{"et":"n","en":"solver.initialize","eid":4},{"et":"b","eid":4,"ts":10329},{"et":"e","eid":3,"ts":3909653}]}

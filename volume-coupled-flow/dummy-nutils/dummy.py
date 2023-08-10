@@ -30,40 +30,40 @@ def main():
     ns.x = geom
 
     # preCICE setup
-    interface = precice.Interface("Dummy-Velocity", "../precice-config.xml", 0, 1)
+    participant = precice.Participant("Dummy-Velocity", "../precice-config.xml", 0, 1)
 
     # define coupling mesh
     mesh_name = "Dummy-Mesh"
-    mesh_id = interface.get_mesh_id(mesh_name)
     vertices = uniform_grid.eval(ns.x)
-    vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)
+    vertex_ids = participant.set_mesh_vertices(mesh_name, vertices)
 
     dummy_values = np.full((vertices.shape[0], 2), [10.0, 0.0])
 
     # coupling data
-    field_id = interface.get_data_id("Velocity", mesh_id)
+    data_name = "Velocity"
 
-    precice_dt = interface.initialize()
+    participant.initialize()
+    precice_dt = participant.get_max_time_step_size()
 
     timestep = 0
     dt = 0.005
 
-    while interface.is_coupling_ongoing():
+    while participant.is_coupling_ongoing():
+
+        precice_dt = participant.get_max_time_step_size()
 
         # potentially adjust non-matching timestep sizes
         dt = min(dt, precice_dt)
 
-        if interface.is_write_data_required(dt):
-            interface.write_block_vector_data(field_id, vertex_ids, dummy_values)
-
+        participant.write_data(mesh_name, data_name, vertex_ids, dummy_values)
         # do the coupling
-        precice_dt = interface.advance(dt)
+        participant.advance(dt)
 
         # advance variables
         timestep += 1
         timestamp += dt
 
-    interface.finalize()
+    participant.finalize()
 
 
 if __name__ == "__main__":
