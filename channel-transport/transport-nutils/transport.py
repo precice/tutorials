@@ -83,11 +83,12 @@ def main():
                 export.vtk("Transport_" + str(timestep), bezier.tri, x, T=u)
 
         precice_dt = participant.get_max_time_step_size()
-        # read velocity values from participant
-        velocity_values = participant.read_data(mesh_name, data_name, vertex_ids, precice_dt)
-
+    
         # potentially adjust non-matching timestep sizes
         dt = min(dt, precice_dt)
+    
+        # read velocity values from participant
+        velocity_values = participant.read_data(mesh_name, data_name, vertex_ids, dt)
 
         # solve nutils timestep
         lhs = solver.solve_linear(
