@@ -10,7 +10,7 @@ from mpi4py import MPI
 
 def main():
 
-    print("Running utils")
+    print("Running Nutils")
 
     timestamp = 0.0
 
