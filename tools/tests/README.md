@@ -156,7 +156,7 @@ test_suites:
         reference_result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-fenics.tar.gz
 ```
 
-This defines two test suites, namely `openfoam_adapter_pr` and `openfoam_adapter_release`. Each of them defines which case combinations of which tutorials to run. 
+This defines two test suites, namely `openfoam_adapter_pr` and `openfoam_adapter_release`. Each of them defines which case combinations of which tutorials to run.
 
 ### Generate Reference Results
 
@@ -167,4 +167,4 @@ Executing `generate_reference_data.py` will then generate a the following files:
 - a `reference_results.md` in the tutorial folder describing the arguments used and a sha-1 hash of the `tar.gz` archive.
 
 The reference result archive will later be unpacked again during the systemtest and compared using `fieldcompare`
-Please note that these files should always be kept in the git lfs. 
+Please note that these files should always be kept in the git lfs.
