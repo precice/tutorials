@@ -13,7 +13,7 @@ from mpi4py import MPI
 
 def main():
 
-    print("Running utils")
+    print("Running Nutils")
 
     # define the Nutils mesh
     nx = 48
