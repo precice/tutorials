@@ -53,7 +53,7 @@ The fluid participants generates a `.foam` file which can be visualized using, e
 
 This case uses OpenFOAM's `fvOptions` to enforce source terms. Additionally, the coupled variable `U` needs to be given an alternative name in order for this to work:
 
-```
+```C++
 FF
 {
   nameU       U_vol;
