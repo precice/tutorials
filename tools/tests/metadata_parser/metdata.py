@@ -240,7 +240,11 @@ class Case:
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Case):
-            return (self.name == other.name) and (self.participant == other.participant) and (self.component == other.component) and (self.tutorial == other.tutorial)
+            return (
+                self.name == other.name) and (
+                self.participant == other.participant) and (
+                self.component == other.component) and (
+                self.tutorial == other.tutorial)
         return False
 
 

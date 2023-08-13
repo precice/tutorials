@@ -49,7 +49,8 @@ if args.suites:
     for test_suite in test_suites_to_execute:
         tutorials = test_suite.cases_of_tutorial.keys()
         for tutorial in tutorials:
-            for case, reference_result in zip(test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial]):
+            for case, reference_result in zip(
+                    test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial]):
                 systemtests_to_run.append(
                     Systemtest(tutorial, build_args, case, reference_result))
 

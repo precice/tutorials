@@ -68,7 +68,7 @@ class TestSuites(list):
                             f"Could not find the following cases {tutorial_case['case-combination']} in the current metadata of tutorial {tutorial.name}")
 
                 testsuites.append(TestSuite(test_suite_name, case_combinations_of_tutorial,
-                                  reference_results_of_tutorial))
+                                            reference_results_of_tutorial))
 
         return cls(testsuites)
 

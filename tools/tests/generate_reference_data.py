@@ -21,7 +21,10 @@ def create_tar_gz(source_folder: Path, output_filename: Path):
         tar.add(source_folder, arcname=output_filename.name.replace(".tar.gz", ""))
 
 
-def render_reference_results_info(reference_results: List[ReferenceResult], arguments_used: SystemtestArguments, time: str):
+def render_reference_results_info(
+        reference_results: List[ReferenceResult],
+        arguments_used: SystemtestArguments,
+        time: str):
     def calculate_sha1(file_path: Path):
         buffer_size = 65536
         sha1_hash = hashlib.sha1()
@@ -69,7 +72,8 @@ systemtests_to_run = set()
 for test_suite in test_suites:
     tutorials = test_suite.cases_of_tutorial.keys()
     for tutorial in tutorials:
-        for case, reference_result in zip(test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial]):
+        for case, reference_result in zip(
+                test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial]):
             systemtests_to_run.add(
                 Systemtest(tutorial, build_args, case, reference_result))
 

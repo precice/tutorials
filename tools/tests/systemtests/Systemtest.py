@@ -81,7 +81,10 @@ class Systemtest:
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Systemtest):
-            return (self.tutorial == other.tutorial) and (self.arguments == other.arguments) and (self.case_combination == other.case_combination)
+            return (
+                self.tutorial == other.tutorial) and (
+                self.arguments == other.arguments) and (
+                self.case_combination == other.case_combination)
         return False
 
     def __hash__(self) -> int:
