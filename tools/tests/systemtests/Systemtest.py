@@ -5,7 +5,7 @@ from jinja2 import Environment, FileSystemLoader
 from dataclasses import dataclass, field
 import shutil
 from pathlib import Path
-from paths import PRECICE_REL_OUTPUT_DIR, PRECICE_TOOLS_DIR, PRECICE_REL_REFERENCE_DIR
+from paths import PRECICE_REL_OUTPUT_DIR, PRECICE_TOOLS_DIR, PRECICE_REL_REFERENCE_DIR,PRECICE_TESTS_DIR
 
 from metadata_parser.metdata import Tutorial, CaseCombination, Case, ReferenceResult
 from .SystemtestArguments import SystemtestArguments
@@ -135,7 +135,8 @@ class Systemtest:
                 'build_arguments': params_to_use,
                 'params': params_to_use,
                 'case_folder': case.path,
-                'run': case.run_cmd
+                'run': case.run_cmd,
+                'dockerfile_context': PRECICE_TESTS_DIR / "dockerfiles"
             }
             jinja_env = Environment(loader=FileSystemLoader(system_test_dir))
             template = jinja_env.get_template(case.component.template)

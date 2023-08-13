@@ -1,9 +1,10 @@
 build: 
-  context: https://github.com/precice/openfoam-adapter.git#add-ci-docker:tools/docker
+  context: {{ dockerfile_context }}
   args:
     {% for key, value in build_arguments.items() %}
       - {{key}}={{value}}
     {% endfor %}
+  target: openfoam_adapter
 depends_on:    
   prepare:
     condition: service_completed_successfully
