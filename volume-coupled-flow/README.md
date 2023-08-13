@@ -15,7 +15,7 @@ We introduce flow into a fluid through a square-shaped source located between $$
 
 The state of the $$ U.x() $$ of the fluid at $$ t = 0.5s $$ (the source region is highlighted):
 
-![Ux](images/screenshot_Ux_final.png)
+![Ux](images/tutorials-volume-coupled-flow-Ux.png)
 
 This case is a convenient starting point for volume coupling where OpenFOAM is a reading participant. The dummy Nutils writer can be replaced by a more complex solver according to the user's needs.
 
@@ -53,7 +53,6 @@ The fluid participants generates a `.foam` file which can be visualized using, e
 
 This case uses OpenFOAM's `fvOptions` to enforce source terms. Additionally, the coupled variable `U` needs to be given an alternative name in order for this to work:
 
-
 ```
 FF
 {
@@ -63,4 +62,4 @@ FF
 
 Since OpenFOAM already uses `U`, we need to create an additional velocity variable to use specifically for the coupling. That allows us to carry the desired value over to OpenFOAM and apply it at the correct moment in the iteration. A simplified view of the workflow:
 
-![reading-config](images/reading-config.png)
+![reading-config](images/tutorials-volume-coupled-flow-config.png)
