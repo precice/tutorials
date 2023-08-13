@@ -1,8 +1,9 @@
 from dataclasses import dataclass
+import yaml
 
 
 @dataclass
-class CmdLineArguments:
+class SystemtestArguments:
     arguments: dict[str, str]
 
     @classmethod
@@ -16,6 +17,15 @@ class CmdLineArguments:
             key, value = param.split(":")
             arguments[key] = value
 
+        return cls(arguments)
+
+    @classmethod
+    def from_yaml(cls, yml_file):
+        if not yml_file:
+            return cls({})
+        arguments = {}
+        with open(yml_file, 'r') as f:
+            arguments = yaml.safe_load(f)
         return cls(arguments)
 
     def __repr__(self):

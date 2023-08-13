@@ -1,7 +1,7 @@
 
 import argparse
 from pathlib import Path
-from systemtests.CmdLineArguments import CmdLineArguments
+from systemtests.SystemtestArguments import SystemtestArguments
 from systemtests.Systemtest import Systemtest
 from systemtests.TestSuite import TestSuites
 from metadata_parser.metdata import Tutorials, Case
@@ -27,7 +27,7 @@ systemtests_to_run = []
 available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
 
 
-build_args = CmdLineArguments.from_args(args.build_args)
+build_args = SystemtestArguments.from_args(args.build_args)
 run_directory = Path(args.rundir)
 if args.suites:
     test_suites_requested = args.suites.split(',')
@@ -47,10 +47,11 @@ if args.suites:
             f"No matching test suites with names {test_suites_requested} found. Use print_test_suites.py to get an overview")
     # now convert the test_suites into systemtests
     for test_suite in test_suites_to_execute:
-        for tutorial, case_list in test_suite.cases_of_tutorial.items():
-            for cases in case_list:
+        tutorials = test_suite.cases_of_tutorial.keys()
+        for tutorial in tutorials:
+            for case, reference_result in zip(test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial]):
                 systemtests_to_run.append(
-                    Systemtest(tutorial, build_args, cases))
+                    Systemtest(tutorial, build_args, case, reference_result))
 
 
 if not systemtests_to_run:
@@ -60,9 +61,19 @@ if not systemtests_to_run:
 print(
     f"About to run the following systemtest in the directory {run_directory}: \n{systemtests_to_run}")
 
+results = []
 for systemtest in systemtests_to_run:
-    result = systemtest.run(run_directory)
+    results.append(systemtest.run(run_directory))
+
+system_test_success = True
+for result in results:
     if not result.success:
         print(f"Failed to run {result.systemtest}")
+        system_test_success = False
     else:
         print(f"Success running {result.systemtest}")
+
+if system_test_success:
+    exit(0)
+else:
+    exit(1)

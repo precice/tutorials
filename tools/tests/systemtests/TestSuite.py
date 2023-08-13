@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict
-from metadata_parser.metdata import Tutorials, Tutorial, Case, CaseCombination
+from metadata_parser.metdata import Tutorials, Tutorial, Case, CaseCombination, ReferenceResult
 
 import yaml
 
@@ -9,13 +9,15 @@ import yaml
 class TestSuite:
     name: str
     cases_of_tutorial: Dict[Tutorial, List[CaseCombination]]
+    reference_results: Dict[Tutorial, List[ReferenceResult]]
 
     def __repr__(self) -> str:
         return_string = f"Test suite: {self.name} contains:"
         for tutorial, cases in self.cases_of_tutorial.items():
             return_string += f"""
     {tutorial.name}
-        cases: {cases}"""
+        cases: {cases}
+        reference_results: {self.reference_results[tutorial]}"""
 
         return return_string
 
@@ -42,25 +44,31 @@ class TestSuites(list):
         testsuites = []
         with open(path, 'r') as f:
             data = yaml.safe_load(f)
-            test_suites_raw = data['test-suites']
+            test_suites_raw = data['test_suites']
             for test_suite_name in test_suites_raw:
                 case_combinations_of_tutorial = {}
+                reference_results_of_tutorial = {}
                 # iterate over tutorials:
                 for tutorial_case in test_suites_raw[test_suite_name]['tutorials']:
                     tutorial = parsed_tutorials.get_by_path(tutorial_case['path'])
                     if not tutorial:
                         raise Exception(f"No tutorial with path {tutorial_case['path']} found.")
                     case_combinations_of_tutorial[tutorial] = []
+                    reference_results_of_tutorial[tutorial] = []
                     all_case_combinations = tutorial.case_combinations
                     case_combination_requested = CaseCombination.from_string_list(
-                        tutorial_case['case-combination'], tutorial)
+                        tutorial_case['case_combination'], tutorial)
 
                     if case_combination_requested in all_case_combinations:
                         case_combinations_of_tutorial[tutorial].append(case_combination_requested)
+                        reference_results_of_tutorial[tutorial].append(ReferenceResult(
+                            tutorial_case['reference_result'], case_combination_requested))
                     else:
                         raise Exception(
                             f"Could not find the following cases {tutorial_case['case-combination']} in the current metadata of tutorial {tutorial.name}")
-                testsuites.append(TestSuite(test_suite_name, case_combinations_of_tutorial))
+
+                testsuites.append(TestSuite(test_suite_name, case_combinations_of_tutorial,
+                                  reference_results_of_tutorial))
 
         return cls(testsuites)
 

@@ -5,12 +5,13 @@ from jinja2 import Environment, FileSystemLoader
 from dataclasses import dataclass, field
 import shutil
 from pathlib import Path
+from paths import PRECICE_REL_OUTPUT_DIR, PRECICE_TOOLS_DIR, PRECICE_REL_REFERENCE_DIR
 
-from metadata_parser.metdata import Tutorial, CaseCombination,Case
-from .CmdLineArguments import CmdLineArguments
+from metadata_parser.metdata import Tutorial, CaseCombination, Case, ReferenceResult
+from .SystemtestArguments import SystemtestArguments
 
 from datetime import datetime
-
+import tarfile
 
 import unicodedata
 import re
@@ -72,10 +73,19 @@ class Systemtest:
     """
 
     tutorial: Tutorial
-    cmd_line_args: CmdLineArguments
+    arguments: SystemtestArguments
     case_combination: CaseCombination
+    reference_result: ReferenceResult
     params_to_use: Dict[str, str] = field(init=False)
     env: Dict[str, str] = field(init=False)
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Systemtest):
+            return (self.tutorial == other.tutorial) and (self.arguments == other.arguments) and (self.case_combination == other.case_combination)
+        return False
+
+    def __hash__(self) -> int:
+        return hash(f"{self.tutorial,self.arguments,self.case_combination}")
 
     def __post_init__(self):
         self.__init_args_to_use()
@@ -98,8 +108,8 @@ class Systemtest:
             needed_parameters.update(case.component.parameters)
 
         for needed_param in needed_parameters:
-            if self.cmd_line_args.contains(needed_param.key):
-                self.params_to_use[needed_param.key] = self.cmd_line_args.get(
+            if self.arguments.contains(needed_param.key):
+                self.params_to_use[needed_param.key] = self.arguments.get(
                     needed_param.key)
             else:
                 if needed_param.required:
@@ -139,8 +149,9 @@ class Systemtest:
         render_dict = {
             'run_directory': self.run_directory.resolve(),
             'tutorial_folder': self.tutorial_folder,
-            'tutorial': self.tutorial.path,
+            'tutorial': self.tutorial.path.name,
             'services': rendered_services,
+            'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
         }
         jinja_env = Environment(loader=FileSystemLoader(system_test_dir))
         template = jinja_env.get_template("docker-compose.template.yaml")
@@ -150,6 +161,8 @@ class Systemtest:
         render_dict = {
             'run_directory': self.run_directory.resolve(),
             'tutorial_folder': self.tutorial_folder,
+            'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
+            'reference_output_folder': PRECICE_REL_REFERENCE_DIR + "/" + self.reference_result.path.name.replace(".tar.gz", ""),
         }
         jinja_env = Environment(loader=FileSystemLoader(system_test_dir))
         template = jinja_env.get_template(
@@ -162,15 +175,15 @@ class Systemtest:
         """
         current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.run_directory = run_directory
-        self.tutorial_folder = slugify(f'{self.tutorial.path}_{self.case_combination.cases}_{current_time_string}')
+        self.tutorial_folder = slugify(f'{self.tutorial.path.name}_{self.case_combination.cases}_{current_time_string}')
         destination = run_directory / self.tutorial_folder
-        src = Path(__file__).parent.parent.parent.parent / self.tutorial.path
+        src = self.tutorial.path
         self.system_test_dir = destination
         shutil.copytree(src, destination)
 
     def __copy_tools(self, run_directory: Path):
         destination = run_directory / "tools"
-        src = Path(__file__).parent.parent.parent.parent / "tools"
+        src = PRECICE_TOOLS_DIR
         try:
             shutil.copytree(src, destination)
         except Exception as e:
@@ -191,14 +204,18 @@ class Systemtest:
             gid = int(subprocess.check_output(["id", "-g"]).strip())
             return uid, gid
         except Exception as e:
-            # Handle the exception if the 'id -u' or 'id -g' commands fail
-            # For example, you can return default values or raise an error.
             print("Error getting group and user id: ", e)
 
     def __write_env_file(self):
         with open(self.system_test_dir / ".env", "w") as env_file:
             for key, value in self.env.items():
                 env_file.write(f"{key}={value}\n")
+
+    def __unpack_reference_results(self):
+        with tarfile.open(self.reference_result.path) as reference_results_tared:
+            # specify which folder to extract to
+            reference_results_tared.extractall(self.system_test_dir / PRECICE_REL_REFERENCE_DIR)
+        print(f"extracting {self.reference_result.path} into {self.system_test_dir / PRECICE_REL_REFERENCE_DIR}")
 
     def _run_field_compare(self):
         """
@@ -210,6 +227,7 @@ class Systemtest:
         Returns:
             A SystemtestResult object containing the state.
         """
+        self.__unpack_reference_results()
         docker_compose_content = self.__get_field_compare_compose_file()
         stdout_data = []
         stderr_data = []
@@ -330,5 +348,30 @@ class Systemtest:
             self.__handle_field_compare_failure(fieldcompare_result)
             return SystemtestResult(False, std_out, std_err, self)
 
-        self.__cleanup()
+        # self.__cleanup()
         return SystemtestResult(True, std_out, std_err, self)
+
+    def run_for_reference_results(self, run_directory: Path):
+        """
+        Runs the system test by generating the Docker Compose files to generate the reference results
+        """
+        self.__copy_tutorial_into_directory(run_directory)
+        self.__copy_tools(run_directory)
+        self.__put_gitignore(run_directory)
+        std_out: List[str] = []
+        std_err: List[str] = []
+        uid, gid = self.__get_uid_gid()
+        self.env["UID"] = uid
+        self.env["GID"] = gid
+        self.__write_env_file()
+        docker_compose_result = self._run_tutorial()
+        std_out.extend(docker_compose_result.stdout_data)
+        std_err.extend(docker_compose_result.stderr_data)
+        if docker_compose_result.exit_code == 1:
+            self.__handle_docker_compose_failure(docker_compose_result)
+            return SystemtestResult(False, std_out, std_err, self)
+
+        return SystemtestResult(True, std_out, std_err, self)
+
+    def get_system_test_dir(self) -> Path:
+        return self.system_test_dir

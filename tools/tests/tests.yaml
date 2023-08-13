@@ -1,29 +1,15 @@
-test-suites:
-  openfoam-adapter-pr:
+test_suites:
+  openfoam_adapter_pr:
     tutorials:
-      - name: FOHP Both Openfoam
-        path: flow-over-heated-plate
-        case-combination:
+      - path: flow-over-heated-plate
+        case_combination:
           - fluid-openfoam
           - solid-openfoam
-        reference-result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz
-        run_args:
-  openfoam-adapter-release:
+        reference_result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz
+  openfoam_adapter_release:
     tutorials:
-      - name: FOHP Both Openfoam
-        path: flow-over-heated-plate
-        case-combination:
+      - path: flow-over-heated-plate
+        case_combination:
           - fluid-openfoam
           - solid-openfoam
-        reference-result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz
-        run_args:
-  fenics-test:
-    tutorials:
-      - name: FOHP Both Openfoam
-        path: flow-over-heated-plate
-        case-combination:
-          - fluid-openfoam
-          - solid-fenics
-        reference-result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz
-        run_args:
-
+        reference_result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz

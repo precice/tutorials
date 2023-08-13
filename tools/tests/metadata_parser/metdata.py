@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Dict
 import glob
 import yaml
 import itertools
-from paths import PRECICE_TESTS_DIR
+from paths import PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
 
 
 @dataclass
@@ -46,7 +46,7 @@ class BuildArgument:
 
 
 class BuildArguments:
-    """Represents a collection of parameters."""
+    """Represents a collection of build_arguments used to built the docker images."""
 
     def __init__(self, arguments: List[BuildArgument]):
         self.arguments = arguments
@@ -60,13 +60,13 @@ class BuildArguments:
             data: The components YAML data.
         """
         arguments = []
-        for param_name, params in data['build_arguments'].items():
+        for argument_name, argument_dict in data['build_arguments'].items():
             # TODO maybe **params
-            description = params.get(
-                'description', f"No description provided for {param_name}")
-            key = param_name
-            default = params.get('default', None)
-            value_options = params.get('value_options', None)
+            description = argument_dict.get(
+                'description', f"No description provided for {argument_name}")
+            key = argument_name
+            default = argument_dict.get('default', None)
+            value_options = argument_dict.get('value_options', None)
 
             arguments.append(BuildArgument(
                 description, key, value_options, default))
@@ -257,7 +257,7 @@ class CaseCombination:
         return False
 
     def __repr__(self) -> str:
-        return f"{self.tutorial.name} {self.cases}"
+        return f"{self.cases}"
 
     @classmethod
     def from_string_list(cls, case_names: List[str], tutorial: Tutorial):
@@ -269,6 +269,19 @@ class CaseCombination:
     @classmethod
     def from_cases_tuple(cls, cases: Tuple[Case], tutorial: Tutorial):
         return cls(cases, tutorial)
+
+
+@dataclass
+class ReferenceResult:
+    path: Path
+    case_combination: CaseCombination
+
+    def __repr__(self) -> str:
+        return f"{self.path.as_posix()}"
+
+    def __post_init__(self):
+        # built full path
+        self.path = PRECICE_TUTORIAL_DIR / self.path
 
 
 @dataclass
@@ -352,7 +365,7 @@ class Tutorial:
         with open(path, 'r') as f:
             data = yaml.safe_load(f)
             name = data['name']
-            path = data['path']
+            path = PRECICE_TUTORIAL_DIR / data['path']
             url = data['url']
             participants = data.get('participants', [])
             cases_raw = data.get('cases', {})
@@ -390,7 +403,7 @@ class Tutorials(list):
         """
         self.tutorials = tutorials
 
-    def get_by_path(self, path_to_search) -> Optional[Tutorial]:
+    def get_by_path(self, relative_path: str) -> Optional[Tutorial]:
         """
         Retrieves a Tutorial by its relative path.
 
@@ -402,7 +415,7 @@ class Tutorials(list):
         """
 
         for tutorial in self.tutorials:
-            if tutorial.path == path_to_search:
+            if tutorial.path.name == relative_path:
                 return tutorial
 
         return None
