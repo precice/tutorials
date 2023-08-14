@@ -56,6 +56,13 @@ RUN git clone https://github.com/precice/precice.git -b ${PRECICE_REF} precice &
     make all install -j $(nproc)
 
 FROM precice_dependecies as openfoam_adapter
+ARG OPENFOAM_EXECUTABLE=openfoam2112
+USER root
+RUN apt-get update &&\
+    wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | bash &&\
+    apt-get -qq install ${OPENFOAM_EXECUTABLE}-dev &&\
+    ln -s $(which ${OPENFOAM_EXECUTABLE} ) /usr/bin/openfoam
+
 COPY --from=precice /opt/precice/installation /opt/precice/installation
 ENV PATH="${PATH}:/home/precice/.local/bin:/opt/precice/installation/bin"
 ENV LD_LIBRARY_PATH="/opt/precice/installation/lib:${LD_LIBRARY_PATH}"
@@ -63,12 +70,7 @@ ENV CPATH="/opt/precice/installation/include:$CPATH"
 # Enable detection with pkg-config and CMake
 ENV PKG_CONFIG_PATH="/opt/precice/installation/lib/pkgconfig:$PKG_CONFIG_PATH"
 ENV CMAKE_PREFIX_PATH="/opt/precice/installation:$CMAKE_PREFIX_PATH"
-ARG OPENFOAM_EXECUTABLE=openfoam2112
-USER root
-RUN apt-get update &&\
-    wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | bash &&\
-    apt-get -qq install ${OPENFOAM_EXECUTABLE}-dev &&\
-    ln -s $(which ${OPENFOAM_EXECUTABLE} ) /usr/bin/openfoam
+
 ARG OPENFOAM_ADAPTER_REF=master
 # Build the OpenFOAM adapter 
 USER precice
