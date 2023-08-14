@@ -113,3 +113,18 @@ USER precice
 ARG FENICS_ADAPTER_REF=master
 # Building fenics-adapter
 RUN pip3 install --target=/opt/precice/installation/fencis_adapter git+https://github.com/precice/fenics-adapter.git@$FENICS_ADAPTER_REF
+
+
+FROM precice_dependecies as nutils_adapter
+COPY --from=precice /opt/precice/installation /opt/precice/installation
+COPY --from=python_bindings /opt/precice/installation/python_bindings /opt/precice/installation/python_bindings
+ENV PATH="${PATH}:/home/precice/.local/bin:/opt/precice/installation/bin"
+ENV LD_LIBRARY_PATH="/opt/precice/installation/lib:${LD_LIBRARY_PATH}"
+ENV CPATH="/opt/precice/installation/include:$CPATH"
+# Enable detection with pkg-config and CMake
+ENV PKG_CONFIG_PATH="/opt/precice/installation/lib/pkgconfig:$PKG_CONFIG_PATH"
+ENV CMAKE_PREFIX_PATH="/opt/precice/installation:$CMAKE_PREFIX_PATH"
+ENV PYTHONPATH="/opt/precice/installation/python_bindings:/opt/precice/installation/nutils_adapter:$PYTHONPATH"
+USER precice
+# Building fenics-adapter
+RUN pip3 install --target=/opt/precice/installation/nutils_adapter nutils
