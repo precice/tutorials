@@ -78,7 +78,7 @@ RUN git clone --depth 1 --branch ${OPENFOAM_ADAPTER_REF} https://github.com/prec
     cd openfoam-adapter && /usr/bin/${OPENFOAM_EXECUTABLE} ./Allwmake -j $(nproc)
 
 
-# Will probably not work
+
 FROM precice_dependecies as python_bindings
 COPY --from=precice /opt/precice/installation /opt/precice/installation
 ENV PATH="${PATH}:/home/precice/.local/bin:/opt/precice/installation/bin"
@@ -95,7 +95,6 @@ WORKDIR /opt/precice
 RUN pip3 install --target=/opt/precice/installation/python_bindings git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF}
 
 
-# Will probably not work
 FROM precice_dependecies as fenics_adapter
 COPY --from=precice /opt/precice/installation /opt/precice/installation
 COPY --from=python_bindings /opt/precice/installation/python_bindings /opt/precice/installation/python_bindings
