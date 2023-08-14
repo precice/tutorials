@@ -30,6 +30,7 @@ clean_precice_logs() {
             ./precice-*-convergence.log \
             ./precice-*-watchpoint-*.log \
             ./precice-*-watchintegral-*.log \
+            ./events.json \
             ./core
         rm -rfv ./precice-events/
     )
