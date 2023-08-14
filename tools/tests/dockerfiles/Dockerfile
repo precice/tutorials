@@ -128,3 +128,30 @@ ENV PYTHONPATH="/opt/precice/installation/python_bindings:/opt/precice/installat
 USER precice
 # Building fenics-adapter
 RUN pip3 install --target=/opt/precice/installation/nutils_adapter nutils
+
+
+FROM precice_dependecies as calculix_adapter
+COPY --from=precice /opt/precice/installation /opt/precice/installation
+ENV PATH="${PATH}:/home/precice/.local/bin:/opt/precice/installation/bin"
+ENV LD_LIBRARY_PATH="/opt/precice/installation/lib:${LD_LIBRARY_PATH}"
+ENV CPATH="/opt/precice/installation/include:$CPATH"
+# Enable detection with pkg-config and CMake
+ENV PKG_CONFIG_PATH="/opt/precice/installation/lib/pkgconfig:$PKG_CONFIG_PATH"
+ENV CMAKE_PREFIX_PATH="/opt/precice/installation:$CMAKE_PREFIX_PATH"
+USER root
+RUN apt-get -qq update && \
+    apt-get -qq install libarpack2-dev libspooles-dev libyaml-cpp-dev
+USER precice
+ARG CALULIX_VERSION="2.20"
+# Building fenics-adapter
+WORKDIR /opt/precice/calculix_source
+RUN wget http://www.dhondt.de/ccx_${CALULIX_VERSION}.src.tar.bz2 && \
+    tar xvjf ccx_${CALULIX_VERSION}.src.tar.bz2 && \
+    ln -s $PWD/CalculiX/ccx_${CALULIX_VERSION} /opt/precice/calculix_source/current
+
+ARG CALULIX_ADAPTER_REF=v2.20.0
+WORKDIR /opt/precice
+RUN git clone --depth 1 --branch ${CALULIX_ADAPTER_REF} https://github.com/precice/calculix-adapter.git && \
+    cd calculix-adapter && \
+    make CCX="/opt/precice/calculix_source/current/src" CCX_VERSION="${CALULIX_VERSION}" && \
+    ln -s /opt/precice/calculix_source/current/src/ccx_preCICE /opt/precice/installation/bin/ccx_preCICE
