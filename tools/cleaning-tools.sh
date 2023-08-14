@@ -34,6 +34,7 @@ clean_precice_logs() {
             ./precice-*-watchpoint-*.log \
             ./precice-*-watchintegral-*.log \
             ./core
+        rm -rfv ./precice-events/
     )
 }
 
