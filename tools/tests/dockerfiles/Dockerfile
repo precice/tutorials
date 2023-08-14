@@ -80,18 +80,32 @@ RUN git clone --depth 1 --branch ${OPENFOAM_ADAPTER_REF} https://github.com/prec
 
 # Will probably not work
 FROM precice_dependecies as python_bindings
-COPY --from=precice /opt/precice/precice /opt/precice/precice
+COPY --from=precice /opt/precice/installation /opt/precice/installation
+ENV PATH="${PATH}:/home/precice/.local/bin:/opt/precice/installation/bin"
+ENV LD_LIBRARY_PATH="/opt/precice/installation/lib:${LD_LIBRARY_PATH}"
+ENV CPATH="/opt/precice/installation/include:$CPATH"
+# Enable detection with pkg-config and CMake
+ENV PKG_CONFIG_PATH="/opt/precice/installation/lib/pkgconfig:$PKG_CONFIG_PATH"
+ENV CMAKE_PREFIX_PATH="/opt/precice/installation:$CMAKE_PREFIX_PATH"
+ENV PYTHONPATH="/opt/precice/installation/python_bindings:$PYTHONPATH"
 USER precice
 ARG PYTHON_BINDINGS_REF=master
 WORKDIR /opt/precice
 # Builds the precice python bindings for python3
-RUN pip3 install --target=/opt/precice/python_bindings --prefix=/opt/precice git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF}
+RUN pip3 install --target=/opt/precice/installation/python_bindings git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF}
 
 
 # Will probably not work
 FROM precice_dependecies as fenics_adapter
-COPY --from=precice /opt/precice/precice /opt/precice/precice
-COPY --from=python_bindings /opt/precice/python_bindings /opt/precice/python_bindings
+COPY --from=precice /opt/precice/installation /opt/precice/installation
+COPY --from=python_bindings /opt/precice/installation/python_bindings /opt/precice/installation/python_bindings
+ENV PATH="${PATH}:/home/precice/.local/bin:/opt/precice/installation/bin"
+ENV LD_LIBRARY_PATH="/opt/precice/installation/lib:${LD_LIBRARY_PATH}"
+ENV CPATH="/opt/precice/installation/include:$CPATH"
+# Enable detection with pkg-config and CMake
+ENV PKG_CONFIG_PATH="/opt/precice/installation/lib/pkgconfig:$PKG_CONFIG_PATH"
+ENV CMAKE_PREFIX_PATH="/opt/precice/installation:$CMAKE_PREFIX_PATH"
+ENV PYTHONPATH="/opt/precice/installation/python_bindings:/opt/precice/installation/fencis_adapter:$PYTHONPATH"
 USER root
 RUN add-apt-repository -y ppa:fenics-packages/fenics && \
     apt-get -qq update && \
@@ -99,4 +113,4 @@ RUN add-apt-repository -y ppa:fenics-packages/fenics && \
 USER precice
 ARG FENICS_ADAPTER_REF=master
 # Building fenics-adapter
-RUN pip3 install --target=/opt/precice/fenics_adapter --prefix=/opt/precice git+https://github.com/precice/fenics-adapter.git@$FENICS_ADAPTER_REF
+RUN pip3 install --target=/opt/precice/installation/fencis_adapter git+https://github.com/precice/fenics-adapter.git@$FENICS_ADAPTER_REF
