@@ -11,6 +11,6 @@ tutorials = {}
 for tutorial in available_tutorials:
     cases_combinations = [
         f"{combination}" for combination in tutorial.case_combinations]
-    tutorials[tutorial.path] = cases_combinations
+    tutorials[tutorial.path.name] = cases_combinations
 
 print(yaml.dump(tutorials))
