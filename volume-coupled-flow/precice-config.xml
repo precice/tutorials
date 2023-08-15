@@ -9,11 +9,11 @@
 
   <data:vector name="Velocity" />
 
-  <mesh name="Fluid-Mesh">
+  <mesh name="Fluid-Mesh" dimensions="2">
     <use-data name="Velocity" />
   </mesh>
 
-  <mesh name="Dummy-Mesh">
+  <mesh name="Dummy-Mesh" dimensions="2">
     <use-data name="Velocity" />
   </mesh>
 
