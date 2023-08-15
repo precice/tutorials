@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<precice-configuration dimensions="3">
+<precice-configuration>
   <log>
     <sink
       filter="%Severity% > debug and %Rank% = 0"
@@ -10,19 +10,19 @@
   <data:scalar name="Temperature" />
   <data:scalar name="Heat-Flux" />
 
-  <mesh name="Fluid-Mesh-Centers">
+  <mesh name="Fluid-Mesh-Centers" dimensions="3">
     <use-data name="Heat-Flux" />
   </mesh>
 
-  <mesh name="Fluid-Mesh-Nodes">
+  <mesh name="Fluid-Mesh-Nodes" dimensions="3">
     <use-data name="Temperature" />
   </mesh>
 
-  <mesh name="Solid-Mesh-Centers">
+  <mesh name="Solid-Mesh-Centers" dimensions="3">
     <use-data name="Temperature" />
   </mesh>
 
-  <mesh name="Solid-Mesh-Nodes">
+  <mesh name="Solid-Mesh-Nodes" dimensions="3">
     <use-data name="Heat-Flux" />
   </mesh>
 

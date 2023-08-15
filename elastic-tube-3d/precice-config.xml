@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<precice-configuration dimensions="3">
+<precice-configuration>
   <log>
     <sink
       filter="%Severity% > debug and %Rank% = 0"
@@ -10,15 +10,15 @@
   <data:vector name="Force" />
   <data:vector name="DisplacementDelta" />
 
-  <mesh name="Fluid-Mesh-Nodes">
+  <mesh name="Fluid-Mesh-Nodes" dimensions="3">
     <use-data name="DisplacementDelta" />
   </mesh>
 
-  <mesh name="Fluid-Mesh-Faces">
+  <mesh name="Fluid-Mesh-Faces" dimensions="3">
     <use-data name="Force" />
   </mesh>
 
-  <mesh name="Solid-Mesh">
+  <mesh name="Solid-Mesh" dimensions="3">
     <use-data name="DisplacementDelta" />
     <use-data name="Force" />
   </mesh>

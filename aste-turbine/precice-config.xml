@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<precice-configuration dimensions="3">
+<precice-configuration>
 
   <log>
     <sink
@@ -11,11 +11,11 @@
     
   <data:scalar name="Data" />
 
-  <mesh name="A-Mesh">
+  <mesh name="A-Mesh" dimensions="3">
     <use-data name="Data" />
   </mesh>
 
-  <mesh name="B-Mesh">
+  <mesh name="B-Mesh" dimensions="3">
     <use-data name="Data" />
   </mesh>
   

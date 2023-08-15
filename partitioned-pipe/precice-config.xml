@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<precice-configuration dimensions="3">
+<precice-configuration>
   <log>
     <sink
       filter="%Severity% > debug and %Rank% = 0"
@@ -12,14 +12,14 @@
   <data:vector name="Velocity" />
   <data:scalar name="PressureGradient" />
 
-  <mesh name="Fluid1-Mesh">
+  <mesh name="Fluid1-Mesh" dimensions="3">
     <use-data name="VelocityGradient" />
     <use-data name="Pressure" />
     <use-data name="Velocity" />
     <use-data name="PressureGradient" />
   </mesh>
 
-  <mesh name="Fluid2-Mesh">
+  <mesh name="Fluid2-Mesh" dimensions="3">
     <use-data name="VelocityGradient" />
     <use-data name="Pressure" />
     <use-data name="Velocity" />

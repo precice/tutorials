@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<precice-configuration dimensions="2">
+<precice-configuration>
   <log>
     <sink
       filter="%Severity% > debug and %Rank% = 0"
@@ -12,28 +12,28 @@
   <data:vector name="Stress-Downstream" />
   <data:vector name="Displacement-Downstream" />
 
-  <mesh name="Fluid-Upstream-Mesh-Centers">
+  <mesh name="Fluid-Upstream-Mesh-Centers" dimensions="2">
     <use-data name="Stress-Upstream" />
   </mesh>
 
-  <mesh name="Fluid-Upstream-Mesh-Nodes">
+  <mesh name="Fluid-Upstream-Mesh-Nodes" dimensions="2">
     <use-data name="Displacement-Upstream" />
   </mesh>
 
-  <mesh name="Fluid-Downstream-Mesh-Centers">
+  <mesh name="Fluid-Downstream-Mesh-Centers" dimensions="2">
     <use-data name="Stress-Downstream" />
   </mesh>
 
-  <mesh name="Fluid-Downstream-Mesh-Nodes">
+  <mesh name="Fluid-Downstream-Mesh-Nodes" dimensions="2">
     <use-data name="Displacement-Downstream" />
   </mesh>
 
-  <mesh name="Solid-Upstream-Mesh">
+  <mesh name="Solid-Upstream-Mesh" dimensions="2">
     <use-data name="Displacement-Upstream" />
     <use-data name="Stress-Upstream" />
   </mesh>
 
-  <mesh name="Solid-Downstream-Mesh">
+  <mesh name="Solid-Downstream-Mesh" dimensions="2">
     <use-data name="Displacement-Downstream" />
     <use-data name="Stress-Downstream" />
   </mesh>

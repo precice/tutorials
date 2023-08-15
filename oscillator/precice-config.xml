@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<precice-configuration dimensions="2">
+<precice-configuration>
 <!-- Use this to activate waveforms
-<precice-configuration dimensions="2" experimental="true">
+<precice-configuration experimental="true">
 -->
   <log enabled="1">
     <sink filter="%Severity% > debug" />
@@ -10,12 +10,12 @@
   <data:scalar name="Force-Left"  />
   <data:scalar name="Force-Right"  />
 
-  <mesh name="Mass-Left-Mesh">
+  <mesh name="Mass-Left-Mesh" dimensions="2">
     <use-data name="Force-Left" />
     <use-data name="Force-Right" />
   </mesh>
 
-  <mesh name="Mass-Right-Mesh">
+  <mesh name="Mass-Right-Mesh" dimensions="2">
     <use-data name="Force-Left" />
     <use-data name="Force-Right" />
   </mesh>

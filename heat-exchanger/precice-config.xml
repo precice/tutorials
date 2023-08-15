@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<precice-configuration dimensions="3">
+<precice-configuration>
   <log>
     <sink
       filter="%Severity% > debug and %Rank% = 0"
@@ -14,28 +14,28 @@
   <data:scalar name="Heat-Transfer-Coefficient-Fluid-Outer" />
   <data:scalar name="Sink-Temperature-Fluid-Outer" />
 
-  <mesh name="Solid-to-Fluid-Inner">
+  <mesh name="Solid-to-Fluid-Inner" dimensions="3">
     <use-data name="Sink-Temperature-Solid" />
     <use-data name="Heat-Transfer-Coefficient-Solid" />
     <use-data name="Sink-Temperature-Fluid-Inner" />
     <use-data name="Heat-Transfer-Coefficient-Fluid-Inner" />
   </mesh>
 
-  <mesh name="Solid-to-Fluid-Outer">
+  <mesh name="Solid-to-Fluid-Outer" dimensions="3">
     <use-data name="Sink-Temperature-Solid" />
     <use-data name="Heat-Transfer-Coefficient-Solid" />
     <use-data name="Sink-Temperature-Fluid-Outer" />
     <use-data name="Heat-Transfer-Coefficient-Fluid-Outer" />
   </mesh>
 
-  <mesh name="Fluid-Inner-to-Solid">
+  <mesh name="Fluid-Inner-to-Solid" dimensions="3">
     <use-data name="Sink-Temperature-Fluid-Inner" />
     <use-data name="Heat-Transfer-Coefficient-Fluid-Inner" />
     <use-data name="Sink-Temperature-Solid" />
     <use-data name="Heat-Transfer-Coefficient-Solid" />
   </mesh>
 
-  <mesh name="Fluid-Outer-to-Solid">
+  <mesh name="Fluid-Outer-to-Solid" dimensions="3">
     <use-data name="Sink-Temperature-Fluid-Outer" />
     <use-data name="Heat-Transfer-Coefficient-Fluid-Outer" />
     <use-data name="Sink-Temperature-Solid" />

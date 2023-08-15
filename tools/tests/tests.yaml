@@ -1,21 +1,15 @@
-test-suites:
-  openfoam-adapter-pr:
+test_suites:
+  openfoam_adapter_pr:
     tutorials:
-      flow-over-heated-plate:
-        cases:
-          - (fluid-openfoam, solid-openfoam)
-          - (fluid-openfoam, solid-nutils)
-      perpendicular-flap:
-        cases:
-          - (fluid-openfoam, solid-calculix)
-  openfoam-adapter-release:
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        reference_result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz
+  openfoam_adapter_release:
     tutorials:
-      flow-over-heated-plate:
-        cases:
-          - (fluid-openfoam, solid-openfoam)
-  fenics-test:
-    tutorials:
-      flow-over-heated-plate:
-        cases:
-          - (fluid-openfoam, solid-fenics)
-
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        reference_result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz
