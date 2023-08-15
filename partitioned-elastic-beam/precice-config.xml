@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<precice-configuration dimensions="3">
+<precice-configuration>
   <log>
     <sink
       filter="%Severity% > debug and %Rank% = 0"
@@ -10,12 +10,12 @@
   <data:vector name="Force0" />
   <data:vector name="Displacement0" />
 
-  <mesh name="Calculix-Mesh1">
+  <mesh name="Calculix-Mesh1" dimensions="3">
     <use-data name="Force0" />
     <use-data name="Displacement0" />
   </mesh>
 
-  <mesh name="Calculix-Mesh2">
+  <mesh name="Calculix-Mesh2" dimensions="3">
     <use-data name="Displacement0" />
     <use-data name="Force0" />
   </mesh>

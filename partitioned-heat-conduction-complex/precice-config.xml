@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<precice-configuration dimensions="2">
+<precice-configuration>
   <log>
     <sink filter="%Severity% > debug and %Rank% = 0" format="---[precice] %ColorizedSeverity% %Message%" enabled="true"/>
   </log>
@@ -8,12 +8,12 @@
   <data:scalar name="Temperature"/>
   <data:vector name="Flux"/>
 
-  <mesh name="Dirichlet-Mesh">
+  <mesh name="Dirichlet-Mesh" dimensions="2">
     <use-data name="Temperature"/>
     <use-data name="Flux"/>
   </mesh>
 
-  <mesh name="Neumann-Mesh">
+  <mesh name="Neumann-Mesh" dimensions="2">
     <use-data name="Temperature"/>
     <use-data name="Flux"/>
   </mesh>

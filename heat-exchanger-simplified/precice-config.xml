@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<precice-configuration dimensions="2">
+<precice-configuration>
   <log>
     <sink
       filter="%Severity% > debug and %Rank% = 0"
@@ -12,29 +12,29 @@
   <data:scalar name="Temperature-Bottom" />
   <data:scalar name="Heat-Flux-Bottom" />
 
-  <mesh name="Fluid-Top-Mesh">
+  <mesh name="Fluid-Top-Mesh" dimensions="2">
     <use-data name="Temperature-Top" />
     <use-data name="Heat-Flux-Top" />
   </mesh>
 
-  <mesh name="Fluid-Bottom-Mesh">
+  <mesh name="Fluid-Bottom-Mesh" dimensions="2">
     <use-data name="Temperature-Bottom" />
     <use-data name="Heat-Flux-Bottom" />
   </mesh>
 
-  <mesh name="Solid-Top-Mesh-Faces">
+  <mesh name="Solid-Top-Mesh-Faces" dimensions="2">
     <use-data name="Heat-Flux-Top" />
   </mesh>
 
-  <mesh name="Solid-Top-Mesh-Nodes">
+  <mesh name="Solid-Top-Mesh-Nodes" dimensions="2">
     <use-data name="Temperature-Top" />
   </mesh>
 
-  <mesh name="Solid-Bottom-Mesh-Faces">
+  <mesh name="Solid-Bottom-Mesh-Faces" dimensions="2">
     <use-data name="Heat-Flux-Bottom" />
   </mesh>
 
-  <mesh name="Solid-Bottom-Mesh-Nodes">
+  <mesh name="Solid-Bottom-Mesh-Nodes" dimensions="2">
     <use-data name="Temperature-Bottom" />
   </mesh>
 

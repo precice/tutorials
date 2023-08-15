@@ -5,5 +5,5 @@ services:
     volumes:
       - {{ run_directory }}:/runs
     command:
-      - /runs/{{ tutorial_folder }}/preCICE-output 
-      - /runs/{{ tutorial_folder }}/reference-output
+      - /runs/{{ tutorial_folder }}/{{ precice_output_folder }}
+      - /runs/{{ tutorial_folder }}/{{ reference_output_folder }}

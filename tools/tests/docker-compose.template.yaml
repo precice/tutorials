@@ -9,7 +9,7 @@ services:
     command: >
       /bin/bash -c "id &&
       cd '/runs/{{ tutorial_folder }}' && 
-      sed -i '/<participant name="[A-Za-z]\+">/a <export:vtk directory=\"../preCICE-output\" />' precice-config.xml &&
+      sed -i 's%</participant>%<export:vtk directory=\"../{{precice_output_folder}}\" /> </participant>%g' precice-config.xml &&
       sed -i 's|m2n:sockets from|m2n:sockets network=\"eth0\" from|g' precice-config.xml &&
       cat precice-config.xml"
 

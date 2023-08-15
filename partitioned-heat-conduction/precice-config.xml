@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<precice-configuration dimensions="2">
+<precice-configuration>
   <log>
     <sink
       filter="%Severity% > debug and %Rank% = 0"
@@ -10,12 +10,12 @@
   <data:scalar name="Temperature" />
   <data:scalar name="Heat-Flux" />
 
-  <mesh name="Dirichlet-Mesh">
+  <mesh name="Dirichlet-Mesh" dimensions="2">
     <use-data name="Temperature" />
     <use-data name="Heat-Flux" />
   </mesh>
 
-  <mesh name="Neumann-Mesh">
+  <mesh name="Neumann-Mesh" dimensions="2">
     <use-data name="Temperature" />
     <use-data name="Heat-Flux" />
   </mesh>
