@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<precice-configuration dimensions="2">
+<precice-configuration>
   <log>
     <sink
       filter="%Severity% > debug and %Rank% = 0"
@@ -10,12 +10,12 @@
   <data:vector name="Force" />
   <data:vector name="Displacement" />
 
-  <mesh name="Fluid-Mesh">
+  <mesh name="Fluid-Mesh" dimensions="2">
     <use-data name="Force" />
     <use-data name="Displacement" />
   </mesh>
 
-  <mesh name="Solid-Mesh">
+  <mesh name="Solid-Mesh" dimensions="2">
     <use-data name="Displacement" />
     <use-data name="Force" />
   </mesh>
