@@ -1,11 +1,11 @@
 import os
 import subprocess
-from typing import List, Dict, Tuple
+from typing import List, Dict, Optional
 from jinja2 import Environment, FileSystemLoader
 from dataclasses import dataclass, field
 import shutil
 from pathlib import Path
-from paths import PRECICE_REL_OUTPUT_DIR, PRECICE_TOOLS_DIR, PRECICE_REL_REFERENCE_DIR, PRECICE_TESTS_DIR
+from paths import PRECICE_REL_OUTPUT_DIR, PRECICE_TOOLS_DIR, PRECICE_REL_REFERENCE_DIR, PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
 
 from metadata_parser.metdata import Tutorial, CaseCombination, Case, ReferenceResult
 from .SystemtestArguments import SystemtestArguments
@@ -173,12 +173,47 @@ class Systemtest:
             "docker-compose.field_compare.template.yaml")
         return template.render(render_dict)
 
+    def _get_git_ref(self, repository: Path) -> Optional[str]:
+        try:
+            result = subprocess.run([
+                "git",
+                "-C", repository.resolve(),
+                "rev-parse",
+                "HEAD"], stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True, check=True)
+            current_ref = result.stdout.strip()
+            return current_ref
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred while getting the current Git ref: {e}")
+            return None
+
+    def _checkout_ref_in_subfolder(self, repository: Path, subfolder: Path, ref: str):
+        try:
+            result = subprocess.run([
+                "git",
+                "-C", repository.resolve(),
+                "checkout", ref,
+                "--", subfolder.resolve()
+            ], check=True)
+            if result.returncode != 0:
+                print(f"FAILD checking out '{ref}' for folder '{subfolder}'.")
+                exit(1)
+
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred while checking out '{ref}' for folder '{repository}': {e}")
+
     def __copy_tutorial_into_directory(self, run_directory: Path):
         """
-        Copies the entire tutorial into a folder to prepare for running.
+        Checks out the requested tutorial ref and copies the entire tutorial into a folder to prepare for running.
         """
         current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.run_directory = run_directory
+        current_ref = self._get_git_ref(PRECICE_TUTORIAL_DIR)
+        ref_requested = self.arguments.get("TUTORIALS_REF")
+        if ref_requested:
+            print(f"Checking out tutorials {ref_requested} before copying")
+            self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR,self.tutorial.path,ref_requested)
+        
         self.tutorial_folder = slugify(f'{self.tutorial.path.name}_{self.case_combination.cases}_{current_time_string}')
         destination = run_directory / self.tutorial_folder
         src = self.tutorial.path
@@ -341,14 +376,14 @@ class Systemtest:
         docker_compose_result = self._run_tutorial()
         std_out.extend(docker_compose_result.stdout_data)
         std_err.extend(docker_compose_result.stderr_data)
-        if docker_compose_result.exit_code == 1:
+        if docker_compose_result.exit_code != 0:
             self.__handle_docker_compose_failure(docker_compose_result)
             return SystemtestResult(False, std_out, std_err, self)
 
         fieldcompare_result = self._run_field_compare()
         std_out.extend(fieldcompare_result.stdout_data)
         std_err.extend(fieldcompare_result.stderr_data)
-        if fieldcompare_result.exit_code == 1:
+        if fieldcompare_result.exit_code != 1:
             self.__handle_field_compare_failure(fieldcompare_result)
             return SystemtestResult(False, std_out, std_err, self)
 
@@ -371,11 +406,11 @@ class Systemtest:
         docker_compose_result = self._run_tutorial()
         std_out.extend(docker_compose_result.stdout_data)
         std_err.extend(docker_compose_result.stderr_data)
-        if docker_compose_result.exit_code == 1:
+        if docker_compose_result.exit_code == 0:
+            return SystemtestResult(True, std_out, std_err, self)
+        else:
             self.__handle_docker_compose_failure(docker_compose_result)
             return SystemtestResult(False, std_out, std_err, self)
-
-        return SystemtestResult(True, std_out, std_err, self)
 
     def get_system_test_dir(self) -> Path:
         return self.system_test_dir

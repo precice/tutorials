@@ -17,7 +17,6 @@ from paths import PRECICE_TUTORIAL_DIR, PRECICE_TESTS_RUN_DIR, PRECICE_TESTS_DIR
 
 def create_tar_gz(source_folder: Path, output_filename: Path):
     with tarfile.open(output_filename, "w:gz") as tar:
-        print(source_folder, output_filename)
         tar.add(source_folder, arcname=output_filename.name.replace(".tar.gz", ""))
 
 
@@ -84,14 +83,24 @@ current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 print(f"About to run the following tests {systemtests_to_run}")
 for systemtest in systemtests_to_run:
-    systemtest.run_for_reference_results(run_directory)
+    result = systemtest.run_for_reference_results(run_directory)
+    if not result.success:
+        print(f"Failed to execute {systemtest}")
+        exit(1)
     reference_result_per_tutorial[systemtest.tutorial] = []
 
 # Put the tar.gz in there
 for systemtest in systemtests_to_run:
     reference_result_folder = systemtest.get_system_test_dir() / PRECICE_REL_OUTPUT_DIR
     reference_result_per_tutorial[systemtest.tutorial].append(systemtest.reference_result)
-    create_tar_gz(reference_result_folder, systemtest.reference_result.path)
+    # create folder if needed
+    systemtest.reference_result.path.parent.mkdir(parents=True, exist_ok=True)
+    if reference_result_folder.exists():
+        create_tar_gz(reference_result_folder, systemtest.reference_result.path)
+    else:
+        print(f"{systemtest}:")
+        print(f"\t Could not find {reference_result_folder}")
+        exit(1)
 
 # write readme
 for tutorial in reference_result_per_tutorial.keys():

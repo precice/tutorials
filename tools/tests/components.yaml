@@ -2,11 +2,14 @@ openfoam-adapter:
   repository: https://github.com/precice/openfoam-adapter
   template: component-templates/openfoam-adapter.yaml
   build_arguments: # these things mean something to the docker-service
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: ""
     OPENFOAM_EXECUTABLE:
-      options: ["openfoam2112"]
+      options: ["openfoam2306","openfoam2212",openfoam2112]
       description: exectuable of openfoam to use
-      default: "openfoam2112"
-    PRECICE_TAG:
+      default: "openfoam2306"
+    PRECICE_REF:
       description: Version of preCICE to use
       default: "latest"
     OPENFOAM_ADAPTER_REF:
@@ -17,23 +20,38 @@ fenics-adapter:
   repository: https://github.com/precice/fenics-adapter
   template: component-templates/fenics-adapter.yaml
   build_arguments:
-    FENICS_ADAPTER_TAG:
-      semnantic: Version of the fenics adapter image to use
-      default: "latest"
-
-calculix-adapter:
-  repository: https://github.com/precice/calculix-adapter
-  template: component-templates/calculix-adapter.yaml
-  build_arguments:
-    PRECICE_TAG:
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: ""
+    PRECICE_REF:
       description: Version of preCICE to use
       default: "latest"
-
-
+    PYTHON_BINDINGS_REF:
+      semnantic: Git ref of the pythonbindings to use
+      default: "master"
+    FENICS_ADAPTER_REF:
+      semnantic: Git ref of the fenics adapter to use
+      default: "master"
 
 nutils-adapter:
   repository: https://github.com/precice/nutils-adapter
   template: component-templates/nutils-adapter.yaml
+  build_arguments:
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: ""
+    PRECICE_REF:
+      description: Version of preCICE to use
+      default: "latest"
+    PYTHON_BINDINGS_REF:
+      semnantic: Git ref of the pythonbindings to use
+      default: "master"
+
+
+# NOT WORKING
+calculix-adapter:
+  repository: https://github.com/precice/calculix-adapter
+  template: component-templates/calculix-adapter.yaml
   build_arguments:
     PRECICE_TAG:
       description: Version of preCICE to use

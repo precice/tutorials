@@ -12,6 +12,7 @@ ENV CMAKE_PREFIX_PATH="/opt/precice/installation:$CMAKE_PREFIX_PATH"
 RUN useradd -ms /bin/bash precice && \
     mkdir -p /opt/precice/installation && \
     chown -R precice:precice /opt/precice/
+USER precice
 
 FROM base_image as precice_dependecies
 USER root
@@ -20,18 +21,15 @@ RUN apt-get -qq update && \
     apt-get -qq -y install \
         build-essential \
         software-properties-common \
-        ccache \
         cmake \
         curl \
         g++ \
         gfortran \
         git \
-        lcov \
         libbenchmark-dev \
         libboost-all-dev \
         libeigen3-dev \
         libxml2-dev \
-        lintian \
         lsb-release \
         petsc-dev \
         python3-dev \
@@ -46,17 +44,17 @@ RUN python3 -m pip install --user --upgrade pip
 
 FROM precice_dependecies as precice
 # Install & build precice into /opt/precice/installation
-ARG PRECICE_REF=main
+ARG PRECICE_REF
 USER precice
 WORKDIR /opt/precice
-RUN git clone https://github.com/precice/precice.git -b ${PRECICE_REF} precice && \
+RUN git clone --depth 1 https://github.com/precice/precice.git -b ${PRECICE_REF} precice && \
     cd precice && \
     mkdir build && cd build &&\
     cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/precice/installation -DPRECICE_PETScMapping=OFF -DBUILD_TESTING=OFF && \
     make all install -j $(nproc)
 
 FROM precice_dependecies as openfoam_adapter
-ARG OPENFOAM_EXECUTABLE=openfoam2112
+ARG OPENFOAM_EXECUTABLE
 USER root
 RUN apt-get update &&\
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | bash &&\
@@ -71,7 +69,7 @@ ENV CPATH="/opt/precice/installation/include:$CPATH"
 ENV PKG_CONFIG_PATH="/opt/precice/installation/lib/pkgconfig:$PKG_CONFIG_PATH"
 ENV CMAKE_PREFIX_PATH="/opt/precice/installation:$CMAKE_PREFIX_PATH"
 
-ARG OPENFOAM_ADAPTER_REF=master
+ARG OPENFOAM_ADAPTER_REF
 # Build the OpenFOAM adapter 
 USER precice
 WORKDIR /opt/precice
@@ -91,7 +89,7 @@ ENV PKG_CONFIG_PATH="/opt/precice/installation/lib/pkgconfig:$PKG_CONFIG_PATH"
 ENV CMAKE_PREFIX_PATH="/opt/precice/installation:$CMAKE_PREFIX_PATH"
 ENV PYTHONPATH="/opt/precice/installation/python_bindings:$PYTHONPATH"
 USER precice
-ARG PYTHON_BINDINGS_REF=master
+ARG PYTHON_BINDINGS_REF
 WORKDIR /opt/precice
 # Builds the precice python bindings for python3
 RUN pip3 install --target=/opt/precice/installation/python_bindings git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF}
@@ -112,7 +110,7 @@ RUN add-apt-repository -y ppa:fenics-packages/fenics && \
     apt-get -qq update && \
     apt-get -qq install --no-install-recommends fenics
 USER precice
-ARG FENICS_ADAPTER_REF=master
+ARG FENICS_ADAPTER_REF
 # Building fenics-adapter
 RUN pip3 install --target=/opt/precice/installation/fencis_adapter git+https://github.com/precice/fenics-adapter.git@$FENICS_ADAPTER_REF
 
@@ -132,6 +130,8 @@ USER precice
 RUN pip3 install --target=/opt/precice/installation/nutils_adapter nutils
 
 
+
+##  STILL WIP
 FROM precice_dependecies as calculix_adapter
 COPY --from=precice /opt/precice/installation /opt/precice/installation
 ENV PATH="${PATH}:/home/precice/.local/bin:/opt/precice/installation/bin"
