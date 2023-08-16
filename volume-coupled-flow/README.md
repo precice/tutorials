@@ -6,7 +6,7 @@ summary: A dummy writer is coupled to a fluid in a uni-directional way over a re
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/volume_coupled_flow/volume-coupled-flow). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/volume-coupled-flow). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
