@@ -30,14 +30,14 @@ def main():
     ns.x = geom
 
     # preCICE setup
-    participant = precice.Participant("Dummy-Velocity", "../precice-config.xml", 0, 1)
+    participant = precice.Participant("Source-Velocity", "../precice-config.xml", 0, 1)
 
     # define coupling mesh
-    mesh_name = "Dummy-Mesh"
+    mesh_name = "Source-Mesh"
     vertices = uniform_grid.eval(ns.x)
     vertex_ids = participant.set_mesh_vertices(mesh_name, vertices)
 
-    dummy_values = np.full((vertices.shape[0], 2), [10.0, 0.0])
+    source_values = np.full((vertices.shape[0], 2), [10.0, 0.0])
 
     # coupling data
     data_name = "Velocity"
@@ -55,7 +55,7 @@ def main():
         # potentially adjust non-matching timestep sizes
         dt = min(dt, precice_dt)
 
-        participant.write_data(mesh_name, data_name, vertex_ids, dummy_values)
+        participant.write_data(mesh_name, data_name, vertex_ids, source_values)
         # do the coupling
         participant.advance(dt)
 

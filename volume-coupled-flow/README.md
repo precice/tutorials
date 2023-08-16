@@ -2,7 +2,7 @@
 title: Volume-coupled flow
 permalink: tutorials-volume-coupled-flow.html
 keywords: volume coupling, OpenFOAM, source terms
-summary: A dummy writer is coupled to a fluid in a uni-directional way over a region of the domain. The coupling enforces source terms on that region.
+summary: A dummy source participant is coupled to a fluid in a uni-directional way over a region of the domain. The coupling enforces source terms on that region.
 ---
 
 {% note %}
@@ -17,7 +17,7 @@ The state of the $$ U.x() $$ of the fluid at $$ t = 0.5s $$ (the source region i
 
 ![Ux](images/tutorials-volume-coupled-flow-Ux.png)
 
-This case is a convenient starting point for volume coupling where OpenFOAM is a reading participant. The dummy Nutils writer can be replaced by a more complex solver according to the user's needs.
+This case is a convenient starting point for volume coupling where OpenFOAM is a reading participant. The writing Nutils participant (dummy source) can be replaced by a more complex solver according to the user's needs.
 
 ## Available solvers
 
@@ -25,7 +25,7 @@ Fluid participant:
 
 * OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
-Dummy participant:
+Source participant:
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://www.precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
 
@@ -41,7 +41,7 @@ cd fluid-openfoam
 and
 
 ```bash
-cd dummy-nutils
+cd source-nutils
 ./run.sh
 ```
 
