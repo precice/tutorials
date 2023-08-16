@@ -1,13 +1,14 @@
 #! /bin/sh
 
+# Cleaning up stray functionObjectProperties files, see https://github.com/precice/openfoam-adapter/issues/26
 openfoam_remove_empty_dirs() {
 	(
 		set -e -u
-		echo "Looking for any time directories without results (e.g. stray functionObjectProperties files, see openfoam-adapter issue #26 on GitHub)..."
+		echo "Cleaning up any time directories without results"
 
 		for f in [0-9]* [0-9]*.[0-9]*; do
                         if ! [ -f "${f}/U" ] && ! [ -f "${f}/T" ] && ! [ -f "${f}/U.gz" ] && ! [ -f "${f}/T.gz" ] && ! [ -f "${f}/D" ] && ! [ -f "${f}/pointD" ] && ! [ -f "${f}/DD" ] && ! [ -f "${f}/pointDD" ] && ! [ -f "${f}/D.gz" ] && ! [ -f "${f}/pointD.gz" ] && ! [ -f "${f}/DD.gz" ] && ! [ -f "${f}/pointDD.gz" ]; then
-				rm -rfv "${f}"
+				rm -rf "${f}"
 			fi
 		done
 		if [ -d processor0 ]; then
@@ -15,11 +16,12 @@ openfoam_remove_empty_dirs() {
 				cd "${d}"
 				for f in [0-9]* [0-9]*.[0-9]*; do
                                         if ! [ -f "${f}/U" ] && ! [ -f "${f}/T" ] && ! [ -f "${f}/U.gz" ] && ! [ -f "${f}/T.gz" ] && ! [ -f "${f}/D" ] && ! [ -f "${f}/pointD" ] && ! [ -f "${f}/DD" ] && ! [ -f "${f}/pointDD" ] && ! [ -f "${f}/D.gz" ] && ! [ -f "${f}/pointD.gz" ] && ! [ -f "${f}/DD.gz" ] && ! [ -f "${f}/pointDD.gz" ]; then
-						rm -rfv "${f}"
+						rm -rf "${f}"
 					fi
 				done
 				cd ..
 			done
 		fi
+                echo "Done."
 	)
 }
