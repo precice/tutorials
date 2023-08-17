@@ -168,7 +168,7 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
 
         # do the coupling
         participant.advance(dt)
-        precice_dt = get_max_time_step_size()
+        precice_dt = participant.get_max_time_step_size()
         dt = min(timestep, precice_dt)
 
         # read checkpoint if required
