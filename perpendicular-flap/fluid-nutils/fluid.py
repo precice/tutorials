@@ -210,7 +210,7 @@ def main(inflow: 'inflow velocity' = 10,
         oldmeshdofs = meshdofs
 
         # read checkpoint if required
-        if participant.requiresReadingCheckpoint():
+        if participant.requires_reading_checkpoint():
             lhs0 = lhs_checkpoint
             lhs00 = lhs00_checkpoint
             t = t_checkpoint
