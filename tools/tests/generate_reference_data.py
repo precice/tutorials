@@ -99,7 +99,7 @@ for systemtest in systemtests_to_run:
         create_tar_gz(reference_result_folder, systemtest.reference_result.path)
     else:
         print(f"{systemtest}:")
-        print(f"\t Could not find {reference_result_folder}")
+        print(f"\t Could not find {reference_result_folder}\n Probably the tutorial did not run through properly. Please check the logs")
         exit(1)
 
 # write readme
@@ -107,4 +107,5 @@ for tutorial in reference_result_per_tutorial.keys():
     with open(tutorial.path / "reference_results.md", 'w') as file:
         ref_results_info = render_reference_results_info(
             reference_result_per_tutorial[tutorial], build_args, current_time_string)
+        print(f"writing results for {tutorial.name}" )
         file.write(ref_results_info)

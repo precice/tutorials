@@ -155,6 +155,7 @@ class Systemtest:
             'tutorial_folder': self.tutorial_folder,
             'tutorial': self.tutorial.path.name,
             'services': rendered_services,
+            'dockerfile_context': PRECICE_TESTS_DIR / "dockerfiles",
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
         }
         jinja_env = Environment(loader=FileSystemLoader(system_test_dir))
@@ -173,12 +174,13 @@ class Systemtest:
             "docker-compose.field_compare.template.yaml")
         return template.render(render_dict)
 
-    def _get_git_ref(self, repository: Path) -> Optional[str]:
+    def _get_git_ref(self, repository: Path, abbrev_ref=False) -> Optional[str]:
         try:
             result = subprocess.run([
                 "git",
                 "-C", repository.resolve(),
                 "rev-parse",
+                "--abbrev-ref" if abbrev_ref else
                 "HEAD"], stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE, text=True, check=True)
             current_ref = result.stdout.strip()
@@ -219,6 +221,12 @@ class Systemtest:
         src = self.tutorial.path
         self.system_test_dir = destination
         shutil.copytree(src, destination)
+
+        with open(destination / "tutorials_ref", 'w') as file:
+            file.write(ref_requested)
+
+        if ref_requested:
+            self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR,self.tutorial.path,current_ref)
 
     def __copy_tools(self, run_directory: Path):
         destination = run_directory / "tools"
