@@ -11,7 +11,7 @@ import hashlib
 from jinja2 import Environment, FileSystemLoader
 import tarfile
 from datetime import datetime
-
+import logging
 from paths import PRECICE_TUTORIAL_DIR, PRECICE_TESTS_RUN_DIR, PRECICE_TESTS_DIR, PRECICE_REL_OUTPUT_DIR
 
 
@@ -81,12 +81,11 @@ reference_result_per_tutorial = {}
 current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 
-print(f"About to run the following tests {systemtests_to_run}")
+logging.info(f"About to run the following tests {systemtests_to_run}")
 for systemtest in systemtests_to_run:
     result = systemtest.run_for_reference_results(run_directory)
     if not result.success:
-        print(f"Failed to execute {systemtest}")
-        exit(1)
+        raise RuntimeError("Failed to execute {systemtest}")
     reference_result_per_tutorial[systemtest.tutorial] = []
 
 # Put the tar.gz in there
@@ -98,14 +97,13 @@ for systemtest in systemtests_to_run:
     if reference_result_folder.exists():
         create_tar_gz(reference_result_folder, systemtest.reference_result.path)
     else:
-        print(f"{systemtest}:")
-        print(f"\t Could not find {reference_result_folder}\n Probably the tutorial did not run through properly. Please check the logs")
-        exit(1)
+        raise RuntimeError(
+            f"Error executing: \n {systemtest} \n Could not find result folder {reference_result_folder}\n Probably the tutorial did not run through properly. Please check corresponding logs")
 
 # write readme
 for tutorial in reference_result_per_tutorial.keys():
     with open(tutorial.path / "reference_results.md", 'w') as file:
         ref_results_info = render_reference_results_info(
             reference_result_per_tutorial[tutorial], build_args, current_time_string)
-        print(f"writing results for {tutorial.name}" )
+        logging.info(f"writing results for {tutorial.name}")
         file.write(ref_results_info)

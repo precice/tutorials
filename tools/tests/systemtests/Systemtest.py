@@ -15,6 +15,7 @@ import tarfile
 
 import unicodedata
 import re
+import logging
 
 
 def slugify(value, allow_unicode=False):
@@ -128,6 +129,16 @@ class Systemtest:
         Returns:
             A dictionary of rendered services per case name.
         """
+        try:
+            plaform_requested = self.arguments.get("PLATFORM")
+        except Exception as exc:
+            raise KeyError("Please specify a PLATFORM argument") from exc
+
+        self.dockerfile_context = PRECICE_TESTS_DIR / "dockerfiles" / Path(plaform_requested)
+        if not self.dockerfile_context.exists():
+            raise ValueError(
+                f"The path {self.dockerfile_context.resolve()} resulting from argument PLATFORM={plaform_requested} could not be found in the system")
+
         def render_service_template_per_case(case: Case, params_to_use: Dict[str, str]) -> str:
             render_dict = {
                 'run_directory': self.run_directory.resolve(),
@@ -136,7 +147,7 @@ class Systemtest:
                 'params': params_to_use,
                 'case_folder': case.path,
                 'run': case.run_cmd,
-                'dockerfile_context': PRECICE_TESTS_DIR / "dockerfiles"
+                'dockerfile_context': self.dockerfile_context,
             }
             jinja_env = Environment(loader=FileSystemLoader(system_test_dir))
             template = jinja_env.get_template(case.component.template)
@@ -155,7 +166,7 @@ class Systemtest:
             'tutorial_folder': self.tutorial_folder,
             'tutorial': self.tutorial.path.name,
             'services': rendered_services,
-            'dockerfile_context': PRECICE_TESTS_DIR / "dockerfiles",
+            'dockerfile_context': self.dockerfile_context,
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
         }
         jinja_env = Environment(loader=FileSystemLoader(system_test_dir))
@@ -186,8 +197,7 @@ class Systemtest:
             current_ref = result.stdout.strip()
             return current_ref
         except subprocess.CalledProcessError as e:
-            print(f"An error occurred while getting the current Git ref: {e}")
-            return None
+            raise RuntimeError(f"An error occurred while getting the current Git ref: {e}") from e
 
     def _checkout_ref_in_subfolder(self, repository: Path, subfolder: Path, ref: str):
         try:
@@ -198,11 +208,10 @@ class Systemtest:
                 "--", subfolder.resolve()
             ], check=True)
             if result.returncode != 0:
-                print(f"FAILD checking out '{ref}' for folder '{subfolder}'.")
-                exit(1)
+                raise RuntimeError(f"git command return code {result.returncode}")
 
-        except subprocess.CalledProcessError as e:
-            print(f"An error occurred while checking out '{ref}' for folder '{repository}': {e}")
+        except Exception as e:
+            raise RuntimeError(f"An error occurred while checking out '{ref}' for folder '{repository}': {e}")
 
     def __copy_tutorial_into_directory(self, run_directory: Path):
         """
@@ -213,9 +222,9 @@ class Systemtest:
         current_ref = self._get_git_ref(PRECICE_TUTORIAL_DIR)
         ref_requested = self.arguments.get("TUTORIALS_REF")
         if ref_requested:
-            print(f"Checking out tutorials {ref_requested} before copying")
-            self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR,self.tutorial.path,ref_requested)
-        
+            logging.debug(f"Checking out tutorials {ref_requested} before copying")
+            self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR, self.tutorial.path, ref_requested)
+
         self.tutorial_folder = slugify(f'{self.tutorial.path.name}_{self.case_combination.cases}_{current_time_string}')
         destination = run_directory / self.tutorial_folder
         src = self.tutorial.path
@@ -226,7 +235,7 @@ class Systemtest:
             file.write(ref_requested)
 
         if ref_requested:
-            self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR,self.tutorial.path,current_ref)
+            self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR, self.tutorial.path, current_ref)
 
     def __copy_tools(self, run_directory: Path):
         destination = run_directory / "tools"
@@ -234,7 +243,7 @@ class Systemtest:
         try:
             shutil.copytree(src, destination)
         except Exception as e:
-            print("tools are already copied: ", e)
+            logging.debug("tools are already copied: ", e)
 
     def __put_gitignore(self, run_directory: Path):
         # Create the .gitignore file with a single asterisk
@@ -251,7 +260,7 @@ class Systemtest:
             gid = int(subprocess.check_output(["id", "-g"]).strip())
             return uid, gid
         except Exception as e:
-            print("Error getting group and user id: ", e)
+            logging.error("Error getting group and user id: ", e)
 
     def __write_env_file(self):
         with open(self.system_test_dir / ".env", "w") as env_file:
@@ -262,7 +271,8 @@ class Systemtest:
         with tarfile.open(self.reference_result.path) as reference_results_tared:
             # specify which folder to extract to
             reference_results_tared.extractall(self.system_test_dir / PRECICE_REL_REFERENCE_DIR)
-        print(f"extracting {self.reference_result.path} into {self.system_test_dir / PRECICE_REL_REFERENCE_DIR}")
+        logging.debug(
+            f"extracting {self.reference_result.path} into {self.system_test_dir / PRECICE_REL_REFERENCE_DIR}")
 
     def _run_field_compare(self):
         """
@@ -301,7 +311,7 @@ class Systemtest:
                     break
                 if output:
                     stdout_data.append(output)
-                    print(output, end='')
+                    logging.debug(output, end='')
 
             # Capture remaining output
             stdout, stderr = process.communicate()
@@ -311,7 +321,7 @@ class Systemtest:
             exit_code = process.wait()
             return FieldCompareResult(exit_code, stdout_data, stderr_data, self)
         except Exception as e:
-            print("Error executing docker compose command:", e)
+            logging.CRITICAL("Error executing docker compose command:", e)
             return FieldCompareResult(1, stdout_data, stderr_data, self)
 
     def _run_tutorial(self):
@@ -346,7 +356,7 @@ class Systemtest:
                     break
                 if output:
                     stdout_data.append(output)
-                    print(output, end='')
+                    logging.debug(output, end='')
 
             # Capture remaining output
             stdout, stderr = process.communicate()
@@ -356,17 +366,17 @@ class Systemtest:
             exit_code = process.wait()
             return DockerComposeResult(exit_code, stdout_data, stderr_data, self)
         except Exception as e:
-            print("Error executing docker compose command:", e)
+            logging.critical("Error executing docker compose command:", e)
             return DockerComposeResult(1, stdout_data, stderr_data, self)
 
     def __repr__(self):
         return f"{self.tutorial.name} {self.case_combination}"
 
     def __handle_docker_compose_failure(self, result: DockerComposeResult):
-        print("Docker Compose failed, skipping fieldcompare")
+        logging.critical("Docker Compose failed, skipping fieldcompare")
 
     def __handle_field_compare_failure(self, result: FieldCompareResult):
-        print("Fieldcompare failed")
+        logging.error("Fieldcompare failed")
 
     def run(self, run_directory: Path):
         """

@@ -5,7 +5,7 @@ from systemtests.SystemtestArguments import SystemtestArguments
 from systemtests.Systemtest import Systemtest
 from systemtests.TestSuite import TestSuites
 from metadata_parser.metdata import Tutorials, Case
-
+import logging
 
 from paths import PRECICE_TUTORIAL_DIR, PRECICE_TESTS_RUN_DIR, PRECICE_TESTS_DIR
 
@@ -38,12 +38,11 @@ if args.suites:
         test_suite_found = available_testsuites.get_by_name(
             test_suite_requested)
         if not test_suite_found:
-            print(
-                f"Warning: did not find the testsuite with name {test_suite_requested}")
+            logging.error(f"Did not find the testsuite with name {test_suite_requested}")
         else:
             test_suites_to_execute.append(test_suite_found)
     if not test_suites_to_execute:
-        raise Exception(
+        raise RuntimeError(
             f"No matching test suites with names {test_suites_requested} found. Use print_test_suites.py to get an overview")
     # now convert the test_suites into systemtests
     for test_suite in test_suites_to_execute:
@@ -56,11 +55,10 @@ if args.suites:
 
 
 if not systemtests_to_run:
-    raise Exception("Did not find any Systemtests to execute.")
+    raise RuntimeError("Did not find any Systemtests to execute.")
 
 
-print(
-    f"About to run the following systemtest in the directory {run_directory}: \n{systemtests_to_run}")
+logging.info(f"About to run the following systemtest in the directory {run_directory}: \n{systemtests_to_run}")
 
 results = []
 for systemtest in systemtests_to_run:
@@ -69,10 +67,10 @@ for systemtest in systemtests_to_run:
 system_test_success = True
 for result in results:
     if not result.success:
-        print(f"Failed to run {result.systemtest}")
+        logging.error(f"Failed to run {result.systemtest}")
         system_test_success = False
     else:
-        print(f"Success running {result.systemtest}")
+        logging.info(f"Success running {result.systemtest}")
 
 if system_test_success:
     exit(0)

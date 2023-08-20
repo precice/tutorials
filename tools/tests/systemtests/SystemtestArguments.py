@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import yaml
+from typing import Optional
 
 
 @dataclass
@@ -34,5 +35,5 @@ class SystemtestArguments:
     def contains(self, argument_key):
         return argument_key in self.arguments.keys()
 
-    def get(self, argument_key):
+    def get(self, argument_key) -> Optional[str]:
         return self.arguments[argument_key]
