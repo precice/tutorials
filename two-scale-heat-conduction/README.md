@@ -53,3 +53,5 @@ Even though the case setup and involved physics is simple, each micro simulation
 ## Post-processing
 
 The participant `macro-nutils` outputs `macro-*.vtk` files which can be viewed in ParaView. The Micro Manager uses the [export functionality](https://precice.org/configuration-export.html#enabling-exporters) of preCICE to output micro simulation data and [adaptivity related data](https://precice.org/tooling-micro-manager-configuration.html#adding-adaptivity-in-the-precice-xml-configuration) to VTU files which can be viewed in ParaView.
+
+![Results of two-scale-heat-conduction case](images/tutorials-two-scale-heat-conduction-results.png)

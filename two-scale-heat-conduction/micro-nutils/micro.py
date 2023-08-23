@@ -18,10 +18,10 @@ class MicroSimulation:
         Constructor of MicroSimulation class.
         """
         # Initial parameters
- 
+
         # self._nelems = 10  # Elements in one direction (original case from Bastidas et al.)
         self._nelems = 6  # Elements in one direction
- 
+
         self._ref_level = 3  # Number of levels of mesh refinement
         self._r_initial = 0.4  # Initial radius of the grain
 
@@ -51,7 +51,7 @@ class MicroSimulation:
         self._ns.phi = 'phibasis_n ?solphi_n'  # Initial phase field
         self._ns.coarsephibasis = self._topo_coarse.basis('std', degree=self._degree_phi)
         self._ns.coarsephi = 'coarsephibasis_n ?coarsesolphi_n'  # Phase field on original coarse topology
-        self._ns.lam = (3 / self._nelems) / (2 ** self._ref_level)
+        self._ns.lam = (4 / self._nelems) / (2 ** self._ref_level)
         self._ns.coarselam = 3 / self._nelems
 
         # Initialize phase field
@@ -93,7 +93,7 @@ class MicroSimulation:
         self._ns.phibasis = topo.basis('h-std', degree=self._degree_phi)
         self._ns.coarsephibasis = self._topo_coarse.basis('std', degree=self._degree_phi)
 
-        self._ns.lam = (4 / self._nelems) / (2**self._ref_level)  # Diffuse interface width
+        self._ns.lam = (4 / self._nelems) / (2 ** self._ref_level)  # Diffuse interface width
         self._ns.gam = 0.05
         self._ns.kt = 1.0
         self._ns.eqconc = 0.5  # Equilibrium concentration
