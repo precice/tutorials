@@ -18,9 +18,10 @@ class MicroSimulation:
         Constructor of MicroSimulation class.
         """
         # Initial parameters
-        # Original case from Bastidas et al.
-        # self._nelems = 10  # Elements in one direction
+ 
+        # self._nelems = 10  # Elements in one direction (original case from Bastidas et al.)
         self._nelems = 6  # Elements in one direction
+ 
         self._ref_level = 3  # Number of levels of mesh refinement
         self._r_initial = 0.4  # Initial radius of the grain
 
@@ -32,22 +33,16 @@ class MicroSimulation:
         self._topo, self._geom = mesh.rectilinear([np.linspace(-0.5, 0.5, self._nelems + 1)] * 2, periodic=(0, 1))
         self._topo_coarse = self._topo  # Save original coarse topology to use to re-refinement
 
-        self._ns = None  # Namespace is created after initial refinement
         self._solu = None  # Solution of weights for which cell problem is solved for
         self._solphi = None  # Solution of phase field
         self._solphinm1 = None  # Solution of phase field at t_{n-1}
         self._solphi_checkpoint = None  # Save the current solution of the phase field as a checkpoint.
         self._topo_checkpoint = None  # Save the refined mesh as a checkpoint.
-
         self._ucons = None
-
         self._first_iter_done = False
         self._initial_condition_is_set = False
-
-        self._psi_nm1 = 0  # Average porosity value of last time step
         self._k_nm1 = None  # Average effective conductivity of last time step
 
-    def initialize(self):
         # Define initial namespace
         self._ns = function.Namespace()
         self._ns.x = self._geom
@@ -80,30 +75,15 @@ class MicroSimulation:
 
         dt_initial = 1E-3
 
-        # Solve phase field problem for a few steps to get the correct phase field
+        # Solve Allen-Cahn equation till we reach target porosity value
         psi = 0
         while psi < target_porosity:
-            print("Solving Allen Cahn problem to achieve initial target grain structure")
+            print("Solving Allen-Cahn equation to achieve initial target grain structure")
             solphi = self._solve_allen_cahn(self._topo, solphi, 0.5, dt_initial)
             psi = self._get_avg_porosity(self._topo, solphi)
 
-        solu = self._solve_heat_cell_problem(self._topo, solphi)
-        k = self._get_eff_conductivity(self._topo, solu, solphi)
-
-        # Save solution of phi
-        self._solphi = solphi
-
-        self._psi_nm1 = psi
-
-        output_data = dict()
-        output_data["k_00"] = k[0][0]
-        output_data["k_01"] = k[0][1]
-        output_data["k_10"] = k[1][0]
-        output_data["k_11"] = k[1][1]
-        output_data["porosity"] = psi
-        output_data["grain_size"] = math.sqrt((1 - psi) / math.pi)
-
-        return output_data
+        self._solphi = solphi  # Save solution of phi
+        self._psi_nm1 = psi  # Average porosity value of last time step
 
     def _reinitialize_namespace(self, topo):
         self._ns = None  # Clear old namespace
@@ -207,8 +187,8 @@ class MicroSimulation:
 
     def _solve_allen_cahn(self, topo, phi_coeffs_nm1, concentration, dt):
         """
-        Solving the Allen-Cahn Equation using a Newton solver.
-        Returns porosity of the micro domain
+        Solving the Allen-Cahn equation using a Newton solver.
+        Returns porosity of the micro domain.
         """
         self._first_iter_done = True
         resphi = topo.integral('(lam^2 phibasis_n dphidt + gam phibasis_n ddwpdphi + gam lam^2 phibasis_n,i phi_,i + '

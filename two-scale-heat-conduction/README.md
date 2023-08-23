@@ -48,7 +48,7 @@ cd micro-nutils
 ./run.sh -p <num_procs>
 ```
 
-Even though the case setup and involved physics is simple, each micro simulation is an instance of Nutils, which usually has a moderately high computation time. If the Micro Manager is run on 2 processors, the total runtime is approximately 10 to 15 minutes. Do not run the Micro Manager in serial, because the runtime can be several hours.
+Even though the case setup and involved physics is simple, each micro simulation is an instance of Nutils, which usually has a moderately high computation time. If the Micro Manager is run on 2 processors, the total runtime is approximately 25-30 minutes. Do not run the Micro Manager in serial, because the runtime will be several hours.
 
 ## Post-processing
 
