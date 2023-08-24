@@ -13,7 +13,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 This tutorial solves a heat conduction problem on a 2D domain which has an underlying micro-structure. This micro-structure changes the constituent quantities necessary for solving the problem on the macro scale. This leads to a two-scale problem with one macro-scale simulation and several micro-scale simulations.
 
-![Case setup of two-scale-heat-conduction case](images/tutorials-two-scale-heat-conduction-macro-micro-schematic.png)
+![Case setup of two-scale-heat-conduction case](images/tutorials-two-scale-heat-conduction-macro-micro-schematic.png){ width=80% }
 
 At each Gauss point of the macro domain there exists a micro simulation. The macro problem is one participant, which is coupled to many micro simulations. Each micro simulation is not an individual coupling participant, instead we use a managing software which controls all the micro simulations and their coupling via preCICE. The case is chosen from the first example case in the publication
 
@@ -52,10 +52,10 @@ Even though the case setup and involved physics is simple, each micro simulation
 
 ## Post-processing
 
-![Results of two-scale-heat-conduction case](images/tutorials-two-scale-heat-conduction-results.png)
+![Results of two-scale-heat-conduction case](images/tutorials-two-scale-heat-conduction-results.png){ width=80% }
 
 The participant `macro-nutils` outputs `macro-*.vtk` files which can be viewed in ParaView to see the macro concentration field. The Micro Manager uses the [export functionality](https://precice.org/configuration-export.html#enabling-exporters) of preCICE to output micro simulation data and [adaptivity related data](https://precice.org/tooling-micro-manager-configuration.html#adding-adaptivity-in-the-precice-xml-configuration) to VTU files which can be viewed in ParaView. To view the data on each micro simulation, create a Glyph on the Micro Manager VTU data. In the figure above, micro-scale porosity is shown. For a lower concentration value, the porosity increases (in the lower left corner).
 
-![Evolving micro simulations](images/tutorials-two-scale-heat-conduction-evolving-micro-simulations.png)
+![Evolving micro simulations](images/tutorials-two-scale-heat-conduction-evolving-micro-simulations.png){ width=80% }
 
 The micro simulations themselves have a circular micro structure which is resolved in every time step. To output VTK files for each micro simulation, uncomment the `output()` function in the file `micro-nutils/micro.py`. The figure above shows the changing phase field used to represent the circular micro structure and the diffuse interface width.
