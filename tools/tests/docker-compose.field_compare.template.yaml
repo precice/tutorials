@@ -3,9 +3,7 @@ services:
   field-compare:
     build: https://github.com/dglaeser/fieldcompare-action.git # use the docker container provided by fieldcompare
     volumes:
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
       - {{ run_directory }}:/runs
     command:
-      - /runs/{{ tutorial_folder }}/preCICE-output 
-      - /runs/{{ tutorial_folder }}/reference-output
+      - /runs/{{ tutorial_folder }}/{{ precice_output_folder }}
+      - /runs/{{ tutorial_folder }}/{{ reference_output_folder }}

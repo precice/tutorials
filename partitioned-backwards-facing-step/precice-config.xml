@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<precice-configuration dimensions="3">
+<precice-configuration>
   <log>
     <sink
       filter="%Severity% > debug and %Rank% = 0"
@@ -14,7 +14,7 @@
   <data:vector name="VelocityGradient" />
   <data:vector name="VelocityGradientBack" />
 
-  <mesh name="Fluid1-Mesh">
+  <mesh name="Fluid1-Mesh" dimensions="3">
     <use-data name="Pressure" />
     <use-data name="Velocity" />
     <use-data name="PressureBack" />
@@ -23,19 +23,18 @@
     <use-data name="VelocityGradientBack" />
   </mesh>
 
-  <mesh name="Fluid2-Mesh">
+  <mesh name="Fluid2-Mesh" dimensions="3">
     <use-data name="Pressure" />
     <use-data name="Velocity" />
     <use-data name="PressureBack" />
     <use-data name="VelocityBack" />
     <use-data name="VelocityGradient" />
     <use-data name="VelocityGradientBack" />
-
   </mesh>
 
   <participant name="Fluid1">
-    <use-mesh name="Fluid1-Mesh" provide="yes" />
-    <use-mesh name="Fluid2-Mesh" from="Fluid2" />
+    <provide-mesh name="Fluid1-Mesh" />
+    <receive-mesh name="Fluid2-Mesh" from="Fluid2" />
     <write-data name="Velocity" mesh="Fluid1-Mesh" />
     <write-data name="PressureBack" mesh="Fluid1-Mesh" />
     <write-data name="VelocityGradientBack" mesh="Fluid1-Mesh" />
@@ -51,8 +50,8 @@
   </participant>
 
   <participant name="Fluid2">
-    <use-mesh name="Fluid2-Mesh" provide="yes" />
-    <use-mesh name="Fluid1-Mesh" from="Fluid1" />
+    <provide-mesh name="Fluid2-Mesh" />
+    <receive-mesh name="Fluid1-Mesh" from="Fluid1" />
     <read-data name="Velocity" mesh="Fluid2-Mesh" />
     <read-data name="PressureBack" mesh="Fluid2-Mesh" />
     <read-data name="VelocityGradientBack" mesh="Fluid2-Mesh" />

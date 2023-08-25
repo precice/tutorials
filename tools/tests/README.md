@@ -95,7 +95,7 @@ This `openfoam-adapter` component has the following attributes:
 
 - `repository`: URL to the Git project (without the `.git` extension), used to fetch the component
 - `template`: A template for a Docker Compose service of this component
-- `build-arguments`: Arguments passed to the Docker Compose service (arbitrary)
+- `build_arguments`: Arguments passed to the Docker Compose service (arbitrary)
 
 #### Naming schema for build_arguments
 
@@ -110,14 +110,11 @@ Since the docker containers are still a bit mixed in terms of capabilities and s
 Templates for defining a Docker Compose service for each component are available in `component-templates/`. For example:
 
 ```yaml
-image: precice/fenics-adapter:{{ params["FENICS_ADAPTER_REF"] }}
-user: ${UID}:${GID}
+image: precice/fenics-adapter:{{ build_arguments["FENICS_ADAPTER_REF"] }}
 depends_on:    
   prepare:
     condition: service_completed_successfully
 volumes:
-  - /etc/passwd:/etc/passwd:ro
-  - /etc/group:/etc/group:ro
   - {{ run_directory }}:/runs
 command: >
   /bin/bash -c "id && 
@@ -128,7 +125,6 @@ command: >
 This template defines:
 
 - `image`: The base Docker image for this component, including a Git reference (tag), provided to the template as argument (e.g., by the `systemtests.py` script).
-- `user`: The user executing the service, provided to the template as argument (e.g., by the `systemtests.py` script). This is important to ensure that the result files created are owned by the user that started the system tests.
 - `depends_on`: Other services this service depends upon, typically a preparation service that fetches all components and tutorials.
 - `volumes`: Directories mapped between the host and the container. Apart from directories relating to the users and groups, this also defines where to run the cases.
 - `command`: How to run a case depending on this component, including how and where to redirect any screen output.
@@ -138,21 +134,37 @@ This template defines:
 Concrete tests are specified centrally in the file `tests.yaml`. For example:
 
 ```yaml
-test-suites:
-  openfoam-adapter-pr:
+test_suites:
+  openfoam_adapter_pr:
     tutorials:
-      flow-over-heated-plate:
-        cases:
-          - (fluid-openfoam, solid-openfoam)
-          - (fluid-openfoam, solid-nutils)
-      elastic-tube-3d:
-        cases:
-          - (fluid-openfoam, solid-fenics)
-  openfoam-adapter-release:
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        reference_result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz
+  openfoam_adapter_release:
     tutorials:
-      flow-over-heated-plate:
-        cases:
-          - (fluid-openfoam, solid-openfoam)
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        reference_result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-fenics
+        reference_result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-fenics.tar.gz
 ```
 
-This defines two test suites, namely `openfoam-adapter-pr` and `openfoam-adapter-release`. Each of them defines which case combinations of which tutorials to run.
+This defines two test suites, namely `openfoam_adapter_pr` and `openfoam_adapter_release`. Each of them defines which case combinations of which tutorials to run.
+
+### Generate Reference Results
+
+In order to generate the reference results edit the `reference_versions.yaml` to match the required `build_arguments` otherwise passed via the cli.
+Executing `generate_reference_data.py` will then generate a the following files:
+
+- all distinct `.tar.gz` defined in the `tests.yaml`
+- a `reference_results.md` in the tutorial folder describing the arguments used and a sha-1 hash of the `tar.gz` archive.
+
+The reference result archive will later be unpacked again during the systemtest and compared using `fieldcompare`
+Please note that these files should always be kept in the git lfs.

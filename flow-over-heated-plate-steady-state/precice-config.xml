@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<precice-configuration dimensions="3">
+<precice-configuration>
   <log>
     <sink
       filter="%Severity% > debug"
@@ -12,17 +12,17 @@
   <data:scalar name="Heat-Transfer-Coefficient-Fluid" />
   <data:scalar name="Sink-Temperature-Fluid" />
 
-  <mesh name="Solid-Interface-Nodes">
+  <mesh name="Solid-Interface-Nodes" dimensions="3">
     <use-data name="Sink-Temperature-Solid" />
     <use-data name="Heat-Transfer-Coefficient-Solid" />
   </mesh>
 
-  <mesh name="Solid-Interface-Faces">
+  <mesh name="Solid-Interface-Faces" dimensions="3">
     <use-data name="Sink-Temperature-Fluid" />
     <use-data name="Heat-Transfer-Coefficient-Fluid" />
   </mesh>
 
-  <mesh name="Fluid-Interface">
+  <mesh name="Fluid-Interface" dimensions="3">
     <use-data name="Sink-Temperature-Fluid" />
     <use-data name="Heat-Transfer-Coefficient-Fluid" />
     <use-data name="Sink-Temperature-Solid" />

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<precice-configuration dimensions="2">
+<precice-configuration>
   <log>
     <sink filter="%Severity% > debug and %Rank% = 0" format="---[precice] %ColorizedSeverity% %Message%" enabled="true"/>
   </log>
@@ -8,12 +8,12 @@
   <data:scalar name="Drain-Data"/>
   <data:scalar name="Source-Data"/>
 
-  <mesh name="Source-Mesh">
+  <mesh name="Source-Mesh" dimensions="2">
     <use-data name="Drain-Data"/>
     <use-data name="Source-Data"/>
   </mesh>
 
-  <mesh name="Drain-Mesh">
+  <mesh name="Drain-Mesh" dimensions="2">
     <use-data name="Drain-Data"/>
     <use-data name="Source-Data"/>
   </mesh>

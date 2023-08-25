@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<precice-configuration dimensions="2">
+<precice-configuration>
   <log>
     <sink
       filter="%Severity% > debug and %Rank% = 0"
@@ -15,12 +15,12 @@
   <data:scalar name="FlowTemperature-Fluid" />
   <data:scalar name="FlowTemperatureGradient" />
 
-  <mesh name="Fluid1-Solid-Mesh">
+  <mesh name="Fluid1-Solid-Mesh" dimensions="2">
     <use-data name="Temperature-Solid" />
     <use-data name="Heat-Flux" />
   </mesh>
 
-  <mesh name="Fluid1-Fluid-Mesh">
+  <mesh name="Fluid1-Fluid-Mesh" dimensions="2">
     <use-data name="VelocityGradient" />
     <use-data name="Pressure" />
     <use-data name="Velocity" />
@@ -28,7 +28,7 @@
     <use-data name="FlowTemperatureGradient" />
   </mesh>
 
-  <mesh name="Fluid2-Mesh">
+  <mesh name="Fluid2-Mesh" dimensions="2">
     <use-data name="VelocityGradient" />
     <use-data name="Pressure" />
     <use-data name="Velocity" />
@@ -36,16 +36,16 @@
     <use-data name="FlowTemperatureGradient" />
   </mesh>
 
-  <mesh name="Solid-Mesh">
+  <mesh name="Solid-Mesh" dimensions="2">
     <use-data name="Temperature-Solid" />
     <use-data name="Heat-Flux" />
   </mesh>
 
   <participant name="Fluid1">
-    <use-mesh name="Fluid1-Solid-Mesh" provide="yes" />
-    <use-mesh name="Solid-Mesh" from="Solid" />
-    <use-mesh name="Fluid1-Fluid-Mesh" provide="yes" />
-    <use-mesh name="Fluid2-Mesh" from="Fluid2" />      
+    <provide-mesh name="Fluid1-Solid-Mesh" />
+    <receive-mesh name="Solid-Mesh" from="Solid" />
+    <provide-mesh name="Fluid1-Fluid-Mesh" />
+    <receive-mesh name="Fluid2-Mesh" from="Fluid2" />      
     <read-data name="Heat-Flux" mesh="Fluid1-Solid-Mesh" />
     <write-data name="Temperature-Solid" mesh="Fluid1-Solid-Mesh" />
     <write-data name="Velocity" mesh="Fluid1-Fluid-Mesh" />
@@ -66,8 +66,8 @@
   </participant>
 
   <participant name="Solid">
-    <use-mesh name="Fluid1-Solid-Mesh" from="Fluid1" />
-    <use-mesh name="Solid-Mesh" provide="yes" />
+    <receive-mesh name="Fluid1-Solid-Mesh" from="Fluid1" />
+    <provide-mesh name="Solid-Mesh" />
     <mapping:nearest-neighbor
       direction="read"
       from="Fluid1-Solid-Mesh"
@@ -78,8 +78,8 @@
   </participant>
 
   <participant name="Fluid2">
-    <use-mesh name="Fluid2-Mesh" provide="yes" />
-    <use-mesh name="Fluid1-Fluid-Mesh" from="Fluid1" />
+    <provide-mesh name="Fluid2-Mesh" />
+    <receive-mesh name="Fluid1-Fluid-Mesh" from="Fluid1" />
     <read-data name="Velocity" mesh="Fluid2-Mesh" />
     <write-data name="Pressure" mesh="Fluid2-Mesh" />
     <write-data name="VelocityGradient" mesh="Fluid2-Mesh" />

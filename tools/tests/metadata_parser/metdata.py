@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Dict
 import glob
 import yaml
 import itertools
-from paths import PRECICE_TESTS_DIR
+from paths import PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
 
 
 @dataclass
@@ -46,7 +46,7 @@ class BuildArgument:
 
 
 class BuildArguments:
-    """Represents a collection of parameters."""
+    """Represents a collection of build_arguments used to built the docker images."""
 
     def __init__(self, arguments: List[BuildArgument]):
         self.arguments = arguments
@@ -60,13 +60,13 @@ class BuildArguments:
             data: The components YAML data.
         """
         arguments = []
-        for param_name, params in data['build_arguments'].items():
+        for argument_name, argument_dict in data['build_arguments'].items():
             # TODO maybe **params
-            description = params.get(
-                'description', f"No description provided for {param_name}")
-            key = param_name
-            default = params.get('default', None)
-            value_options = params.get('value_options', None)
+            description = argument_dict.get(
+                'description', f"No description provided for {argument_name}")
+            key = argument_name
+            default = argument_dict.get('default', None)
+            value_options = argument_dict.get('value_options', None)
 
             arguments.append(BuildArgument(
                 description, key, value_options, default))
@@ -185,6 +185,8 @@ class Participant:
     def __repr__(self) -> str:
         return f"{self.name}"
 
+# Forward declaration of tutorial
+
 
 class Tutorial:
     pass
@@ -233,6 +235,58 @@ class Case:
     def __repr__(self) -> str:
         return f"{self.name}"
 
+    def __hash__(self) -> int:
+        return hash(f"{self.name,self.participant,self.component,self.tutorial}")
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Case):
+            return (
+                self.name == other.name) and (
+                self.participant == other.participant) and (
+                self.component == other.component) and (
+                self.tutorial == other.tutorial)
+        return False
+
+
+@dataclass
+class CaseCombination:
+    """Represents a case combination able to run the tutorial"""
+
+    cases: Tuple[Case]
+    tutorial: Tutorial
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, CaseCombination):
+            return set(self.cases) == set(other.cases)
+        return False
+
+    def __repr__(self) -> str:
+        return f"{self.cases}"
+
+    @classmethod
+    def from_string_list(cls, case_names: List[str], tutorial: Tutorial):
+        cases = []
+        for case_name in case_names:
+            cases.append(tutorial.get_case_by_string(case_name))
+        return cls(tuple(cases), tutorial)
+
+    @classmethod
+    def from_cases_tuple(cls, cases: Tuple[Case], tutorial: Tutorial):
+        return cls(cases, tutorial)
+
+
+@dataclass
+class ReferenceResult:
+    path: Path
+    case_combination: CaseCombination
+
+    def __repr__(self) -> str:
+        return f"{self.path.as_posix()}"
+
+    def __post_init__(self):
+        # built full path
+        self.path = PRECICE_TUTORIAL_DIR / self.path
+
 
 @dataclass
 class Tutorial:
@@ -245,7 +299,7 @@ class Tutorial:
     url: str
     participants: List[str]
     cases: List[Case]
-    case_combinations: List[Tuple[Case]] = field(init=False)
+    case_combinations: List[CaseCombination] = field(init=False)
 
     def __post_init__(self):
         for case in self.cases:
@@ -261,10 +315,15 @@ class Tutorial:
                 cases_dict[case.participant].append(case)
 
             for combination in itertools.product(*[cases_dict[participant] for participant in tutorial.participants]):
-                case_combinations.append(combination)
+                case_combinations.append(CaseCombination.from_cases_tuple(combination, self))
             return case_combinations
 
         self.case_combinations = get_all_possible_case_combinations(self)
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Tutorial):
+            return (self.name == other.name) and (self.path == other.path)
+        return False
 
     def __hash__(self) -> int:
         return hash(self.path)
@@ -280,64 +339,20 @@ class Tutorial:
         Cases: {self.cases}
         """
 
-    def get_all_case_combinations(self) -> List[List[Case]]:
-        cases_combinations = []
-        # first sort the cases into a dict by participant
-
-        return cases_combinations
-
-    def get_cases_by_strings(self, case_names: List[List[str]]):
+    def get_case_by_string(self, case_name: str) -> Optional[Case]:
         """
-        Retrieves potential cases lists based on their names
+        Retrieves Optional case based on the case_name
 
         Args:
-            case_names: The list of case combinations
+            case_name: the name of the case in search
 
         Returns:
-            A dictionary of potential cases per participant.
+            Either None or a Case mathing the casename
         """
-        potential_cases = {}
-        for participant in self.participants:
-            potential_cases[participant] = []
-            for case in self.cases:
-                if (case.participant == participant) and (case.component.name in component_names):
-                    potential_cases[participant].append(case)
-        return potential_cases
-
-    def get_potential_cases(self, component_names):
-        """
-        Retrieves potential cases based on specified component names.
-
-        Args:
-            component_names: The list of component names.
-
-        Returns:
-            A dictionary of potential cases per participant.
-        """
-        potential_cases = {}
-        for participant in self.participants:
-            potential_cases[participant] = []
-            for case in self.cases:
-                if (case.participant == participant) and (case.component.name in component_names):
-                    potential_cases[participant].append(case)
-        return potential_cases
-
-    def can_be_run_with_components(self, component_names):
-        """
-        Checks if the tutorial can be run with the specified component names.
-
-        Args:
-            component_names: The list of component names.
-
-        Returns:
-            True if the tutorial can be run with the specified components, False otherwise.
-        """
-        potential_cases = self.get_potential_cases(component_names)
-        can_be_run = True
-        for participant in self.participants:
-            if len(potential_cases[participant]) == 0:
-                can_be_run = False
-        return can_be_run
+        for case in self.cases:
+            if case.name == case_name:
+                return case
+        return None
 
     @classmethod
     def from_yaml(cls, path, available_components):
@@ -354,7 +369,7 @@ class Tutorial:
         with open(path, 'r') as f:
             data = yaml.safe_load(f)
             name = data['name']
-            path = data['path']
+            path = PRECICE_TUTORIAL_DIR / data['path']
             url = data['url']
             participants = data.get('participants', [])
             cases_raw = data.get('cases', {})
@@ -392,23 +407,7 @@ class Tutorials(list):
         """
         self.tutorials = tutorials
 
-    def filter_by_components(self, component_names: List[str]) -> List[Tutorial]:
-        """
-        Filters the tutorials based on the specified component names.
-
-        Args:
-            component_names: The list of component names.
-
-        Returns:
-            A list of filtered tutorials.
-        """
-        tutorials_filtered = []
-        for tutorial in self.tutorials:
-            if tutorial.can_be_run_with_components(component_names):
-                tutorials_filtered.append(tutorial)
-        return tutorials_filtered
-
-    def get_by_path(self, path_to_search) -> Optional[Tutorial]:
+    def get_by_path(self, relative_path: str) -> Optional[Tutorial]:
         """
         Retrieves a Tutorial by its relative path.
 
@@ -418,8 +417,9 @@ class Tutorials(list):
         Returns:
             The Tutorial with the specified path, or None if not found.
         """
+
         for tutorial in self.tutorials:
-            if tutorial.path == path_to_search:
+            if tutorial.path.name == relative_path:
                 return tutorial
 
         return None
