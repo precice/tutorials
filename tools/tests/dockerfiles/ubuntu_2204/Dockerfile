@@ -2,14 +2,14 @@ FROM ubuntu:22.04 as base_image
 USER root
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
-ENV PATH="${PATH}:/home/precice/.local/bin:/opt/precice/installation/bin"
-ENV LD_LIBRARY_PATH="/opt/precice/installation/lib:${LD_LIBRARY_PATH}"
-ENV CPATH="/opt/precice/installation/include:$CPATH"
-# Enable detection with pkg-config and CMake
-ENV PKG_CONFIG_PATH="/opt/precice/installation/pkgconfig:$PKG_CONFIG_PATH"
-ENV CMAKE_PREFIX_PATH="/opt/precice/installation:$CMAKE_PREFIX_PATH"
 
 RUN useradd -ms /bin/bash precice 
+ENV PATH="${PATH}:/home/precice/.local/bin" 
+ENV LD_LIBRARY_PATH="/home/precice/.local/lib:${LD_LIBRARY_PATH}" 
+ENV CPATH="/home/precice/.local/include:$CPATH"
+# Enable detection with pkg-config and CMake
+ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
+ENV CMAKE_PREFIX_PATH="/home/precice/.local:$CMAKE_PREFIX_PATH"
 USER precice
 
 FROM base_image as precice_dependecies
@@ -58,35 +58,20 @@ RUN apt-get update &&\
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | bash &&\
     apt-get -qq install ${OPENFOAM_EXECUTABLE}-dev &&\
     ln -s $(which ${OPENFOAM_EXECUTABLE} ) /usr/bin/openfoam
-
 USER precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
-ENV PATH="${PATH}:/home/precice/.local/bin"
-ENV LD_LIBRARY_PATH="/home/precice/.local/lib:${LD_LIBRARY_PATH}"
-ENV CPATH="/home/precice/.local/include:$CPATH"
-# Enable detection with pkg-config and CMake
-ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
-ENV CMAKE_PREFIX_PATH="/home/precice/.local:$CMAKE_PREFIX_PATH"
-
 ARG OPENFOAM_ADAPTER_REF
 # Build the OpenFOAM adapter 
 USER precice
 WORKDIR /home/precice
-RUN git clone --depth 1 --branch ${OPENFOAM_ADAPTER_REF} https://github.com/precice/openfoam-adapter.git &&\
+RUN git clone --depth 1 -b ${OPENFOAM_ADAPTER_REF} https://github.com/precice/openfoam-adapter.git &&\
     cd openfoam-adapter && /usr/bin/${OPENFOAM_EXECUTABLE} ./Allwmake -j $(nproc)
 
 
-
 FROM precice_dependecies as python_bindings
-COPY --from=precice /home/precice/.local /home/precice/.local
-ENV PATH="${PATH}:/home/precice/.local/bin"
-ENV LD_LIBRARY_PATH="/home/precice/.local/lib:${LD_LIBRARY_PATH}"
-ENV CPATH="/home/precice/.local/include:$CPATH"
-# Enable detection with pkg-config and CMake
-ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
-ENV CMAKE_PREFIX_PATH="/home/precice/.local:$CMAKE_PREFIX_PATH"
-USER precice
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG PYTHON_BINDINGS_REF
+USER precice
 WORKDIR /home/precice
 # Builds the precice python bindings for python3
 RUN pip3 install --user git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF}
@@ -99,7 +84,7 @@ RUN add-apt-repository -y ppa:fenics-packages/fenics && \
     apt-get -qq update && \
     apt-get -qq install --no-install-recommends fenics
 USER precice
-RUN pip3 install fenics-ufl
+RUN pip3 install --user fenics-ufl
 ARG FENICS_ADAPTER_REF
 # Building fenics-adapter
 RUN pip3 install --user git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
@@ -112,29 +97,22 @@ USER precice
 RUN pip3 install --user nutils
 
 
-
-##  STILL WIP
 FROM precice_dependecies as calculix_adapter
 COPY --from=precice /home/precice/.local /home/precice/.local
-ENV PATH="${PATH}:/home/precice/.local/bin"
-ENV LD_LIBRARY_PATH="/home/precice/.local/lib:${LD_LIBRARY_PATH}"
-ENV CPATH="/home/precice/.local/include:$CPATH"
-# Enable detection with pkg-config and CMake
-ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
-ENV CMAKE_PREFIX_PATH="/home/precice/.local:$CMAKE_PREFIX_PATH"
 USER root
 RUN apt-get -qq update && \
     apt-get -qq install libarpack2-dev libspooles-dev libyaml-cpp-dev
+ARG CALULIX_VERSION
 USER precice
-ARG CALULIX_VERSION="2.20"
-# Building fenics-adapter
+#Download Calculix
 WORKDIR /home/precice
 RUN wget http://www.dhondt.de/ccx_${CALULIX_VERSION}.src.tar.bz2 && \
-    tar xvjf ccx_${CALULIX_VERSION}.src.tar.bz2 && 
+    tar xvjf ccx_${CALULIX_VERSION}.src.tar.bz2 && \
+    rm -fv ccx_${CALULIX_VERSION}.src.tar.bz2
 
-ARG CALULIX_ADAPTER_REF=v2.20.0
-WORKDIR /opt/precice
+ARG CALULIX_ADAPTER_REF
+WORKDIR /home/precice
 RUN git clone --depth 1 --branch ${CALULIX_ADAPTER_REF} https://github.com/precice/calculix-adapter.git && \
     cd calculix-adapter && \
-    make CCX="/home/precice//CalculiX/ccx_${CALULIX_VERSION}/src" CCX_VERSION="${CALULIX_VERSION}" && \
-    ln -s /opt/precice/calculix_source/current/src/ccx_preCICE /home/precice/.local/bin/ccx_preCICE
+    make CXX_VERSION=${CALULIX_VERSION} ADDITIONAL_FFLAGS="-std=legacy" -j $(nproc) && \
+    ln -s /home/precice/calculix-adapter/bin/ccx_preCICE /home/precice/.local/bin/ccx_preCICE

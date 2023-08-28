@@ -8,10 +8,10 @@ This file contains an overview of the results over the reference results as well
 
 ## List of files
 
-| name | time | sha-1 |
+| name | time | sha256 |
 |------|------|-------|
 {% for file in files -%}
-| {{ file.name }} | {{ file.time }} | {{ file.sha1 }} |
+| {{ file.name }} | {{ file.time }} | {{ file.sha256 }} |
 {% endfor %}
 ## List of arguments used to generate the files
 

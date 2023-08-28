@@ -36,9 +36,6 @@ def slugify(value, allow_unicode=False):
     return re.sub(r'[-\s]+', '-', value).strip('-_')
 
 
-system_test_dir = Path(__file__).parent.parent
-
-
 class Systemtest:
     pass
 
@@ -65,6 +62,9 @@ class SystemtestResult:
     stdout_data: List[str]
     stderr_data: List[str]
     systemtest: Systemtest
+
+
+GLOBAL_TIMEOUT = 360
 
 
 @dataclass
@@ -130,7 +130,7 @@ class Systemtest:
             A dictionary of rendered services per case name.
         """
         try:
-            plaform_requested = self.arguments.get("PLATFORM")
+            plaform_requested = self.params_to_use.get("PLATFORM")
         except Exception as exc:
             raise KeyError("Please specify a PLATFORM argument") from exc
 
@@ -149,7 +149,7 @@ class Systemtest:
                 'run': case.run_cmd,
                 'dockerfile_context': self.dockerfile_context,
             }
-            jinja_env = Environment(loader=FileSystemLoader(system_test_dir))
+            jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
             template = jinja_env.get_template(case.component.template)
             return template.render(render_dict)
 
@@ -169,7 +169,7 @@ class Systemtest:
             'dockerfile_context': self.dockerfile_context,
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
         }
-        jinja_env = Environment(loader=FileSystemLoader(system_test_dir))
+        jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
         template = jinja_env.get_template("docker-compose.template.yaml")
         return template.render(render_dict)
 
@@ -180,7 +180,7 @@ class Systemtest:
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
             'reference_output_folder': PRECICE_REL_REFERENCE_DIR + "/" + self.reference_result.path.name.replace(".tar.gz", ""),
         }
-        jinja_env = Environment(loader=FileSystemLoader(system_test_dir))
+        jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
         template = jinja_env.get_template(
             "docker-compose.field_compare.template.yaml")
         return template.render(render_dict)
@@ -193,10 +193,10 @@ class Systemtest:
                 "rev-parse",
                 "--abbrev-ref" if abbrev_ref else
                 "HEAD"], stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE, text=True, check=True)
+                stderr=subprocess.PIPE, text=True, check=True, timeout=60)
             current_ref = result.stdout.strip()
             return current_ref
-        except subprocess.CalledProcessError as e:
+        except Exception as e:
             raise RuntimeError(f"An error occurred while getting the current Git ref: {e}") from e
 
     def _checkout_ref_in_subfolder(self, repository: Path, subfolder: Path, ref: str):
@@ -206,9 +206,9 @@ class Systemtest:
                 "-C", repository.resolve(),
                 "checkout", ref,
                 "--", subfolder.resolve()
-            ], check=True)
+            ], check=True, timeout=60)
             if result.returncode != 0:
-                raise RuntimeError(f"git command return code {result.returncode}")
+                raise RuntimeError(f"git command returned code {result.returncode}")
 
         except Exception as e:
             raise RuntimeError(f"An error occurred while checking out '{ref}' for folder '{repository}': {e}")
@@ -220,7 +220,7 @@ class Systemtest:
         current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.run_directory = run_directory
         current_ref = self._get_git_ref(PRECICE_TUTORIAL_DIR)
-        ref_requested = self.arguments.get("TUTORIALS_REF")
+        ref_requested = self.params_to_use.get("TUTORIALS_REF")
         if ref_requested:
             logging.debug(f"Checking out tutorials {ref_requested} before copying")
             self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR, self.tutorial.path, ref_requested)
@@ -231,10 +231,9 @@ class Systemtest:
         self.system_test_dir = destination
         shutil.copytree(src, destination)
 
-        with open(destination / "tutorials_ref", 'w') as file:
-            file.write(ref_requested)
-
         if ref_requested:
+            with open(destination / "tutorials_ref", 'w') as file:
+                file.write(ref_requested)
             self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR, self.tutorial.path, current_ref)
 
     def __copy_tools(self, run_directory: Path):
@@ -243,7 +242,7 @@ class Systemtest:
         try:
             shutil.copytree(src, destination)
         except Exception as e:
-            logging.debug("tools are already copied: ", e)
+            logging.debug(f"tools are already copied: {e} ")
 
     def __put_gitignore(self, run_directory: Path):
         # Create the .gitignore file with a single asterisk
@@ -302,24 +301,24 @@ class Systemtest:
                                         'field-compare'],
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
+                                       start_new_session=True,
                                        cwd=self.system_test_dir)
 
-            # Read the output in real-time
-            while True:
-                output = process.stdout.readline().decode()
-                if output == '' and process.poll() is not None:
-                    break
-                if output:
-                    stdout_data.append(output)
-                    logging.debug(output, end='')
-
-            # Capture remaining output
-            stdout, stderr = process.communicate()
+            try:
+                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
+            except KeyboardInterrupt as k:
+                process.kill()
+                # process.send_signal(9)
+                raise KeyboardInterrupt from k
+            except Exception as e:
+                logging.critical(
+                    f"Systemtest {self} had serious issues executin the docker compose command about to kill the docker compose command. Please check the logs! {e}")
+                process.kill()
+                stdout, stderr = process.communicate()
             stdout_data.extend(stdout.decode().splitlines())
             stderr_data.extend(stderr.decode().splitlines())
-
-            exit_code = process.wait()
-            return FieldCompareResult(exit_code, stdout_data, stderr_data, self)
+            process.poll()
+            return FieldCompareResult(process.returncode, stdout_data, stderr_data, self)
         except Exception as e:
             logging.CRITICAL("Error executing docker compose command:", e)
             return FieldCompareResult(1, stdout_data, stderr_data, self)
@@ -347,36 +346,46 @@ class Systemtest:
                                         "--build"],
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
+                                       start_new_session=True,
                                        cwd=self.system_test_dir)
 
-            # Read the output in real-time
-            while True:
-                output = process.stdout.readline().decode()
-                if output == '' and process.poll() is not None:
-                    break
-                if output:
-                    stdout_data.append(output)
-                    logging.debug(output, end='')
+            try:
+                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
+            except KeyboardInterrupt as k:
+                process.kill()
+                # process.send_signal(9)
+                raise KeyboardInterrupt from k
+            except Exception as e:
+                logging.critical(
+                    f"Systemtest {self} had serious issues executin the docker compose command about to kill the docker compose command. Please check the logs! {e}")
+                process.kill()
+                stdout, stderr = process.communicate()
 
-            # Capture remaining output
-            stdout, stderr = process.communicate()
             stdout_data.extend(stdout.decode().splitlines())
             stderr_data.extend(stderr.decode().splitlines())
 
-            exit_code = process.wait()
-            return DockerComposeResult(exit_code, stdout_data, stderr_data, self)
+            return DockerComposeResult(process.returncode, stdout_data, stderr_data, self)
         except Exception as e:
-            logging.critical("Error executing docker compose command:", e)
+            logging.critical(f"Error executing docker compose command: {e}")
             return DockerComposeResult(1, stdout_data, stderr_data, self)
 
     def __repr__(self):
         return f"{self.tutorial.name} {self.case_combination}"
 
     def __handle_docker_compose_failure(self, result: DockerComposeResult):
-        logging.critical("Docker Compose failed, skipping fieldcompare")
+        with open(self.system_test_dir / "stdout.log", 'w') as stdout_file:
+            stdout_file.write("\n".join(result.stdout_data))
+        with open(self.system_test_dir / "stderr.log", 'w') as stderr_file:
+            stderr_file.write("\n".join(result.stderr_data))
+
+        logging.critical("Docker Compose failed, skipping fieldcompare and writing stdout.log and stderr.log")
 
     def __handle_field_compare_failure(self, result: FieldCompareResult):
-        logging.error("Fieldcompare failed")
+        with open(self.system_test_dir / "stdout.log", 'w') as stdout_file:
+            stdout_file.write("\n".join(result.stdout_data))
+        with open(self.system_test_dir / "stderr.log", 'w') as stderr_file:
+            stderr_file.write("\n".join(result.stderr_data))
+        logging.error("Fieldcompare failed, writing stdout.log and stderr.log")
 
     def run(self, run_directory: Path):
         """
@@ -401,7 +410,7 @@ class Systemtest:
         fieldcompare_result = self._run_field_compare()
         std_out.extend(fieldcompare_result.stdout_data)
         std_err.extend(fieldcompare_result.stderr_data)
-        if fieldcompare_result.exit_code != 1:
+        if fieldcompare_result.exit_code != 0:
             self.__handle_field_compare_failure(fieldcompare_result)
             return SystemtestResult(False, std_out, std_err, self)
 

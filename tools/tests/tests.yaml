@@ -17,11 +17,9 @@ test_suites:
     tutorials:
       - path: flow-over-heated-plate
         case_combination:
- 
          - fluid-openfoam
          - solid-fenics
         reference_result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-fenics.tar.gz
-        reference_time: 
   nutils_test:
     tutorials:
       - path: flow-over-heated-plate
@@ -29,10 +27,11 @@ test_suites:
           - fluid-openfoam
           - solid-nutils
         reference_result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-nutils.tar.gz
-  nutils_fenics_test:
+  calculix_test:
     tutorials:
       - path: perpendicular-flap
         case_combination:
-          - fluid-nutils
-          - solid-fenics
-        reference_result: ./perpendicular-flap/reference-data/fluid-nutils_solid-nutils.tar.gz
+          - fluid-openfoam
+          - solid-calculix
+        reference_result: ./perpendicular-flap/reference-data/fluid-openfoam_solid-calculix.tar.gz
+        timeout: 
