@@ -58,10 +58,6 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
     vertex_ids_read = participant.set_mesh_vertices(mesh_name_read, read_sample.eval(ns.x))
     participant.set_mesh_access_region(mesh_name_write, [.9, 1.1, -.1, 1.1])
 
-    # write initial data
-    if participant.requires_initial_data():
-        precice_write(write_sample.eval(0.))
-
     participant.initialize()
     precice_dt = participant.get_max_time_step_size()
     dt = min(timestep, precice_dt)
