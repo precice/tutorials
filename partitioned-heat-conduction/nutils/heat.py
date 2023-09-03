@@ -53,21 +53,19 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
         res += coupling_sample.integral('basis_n readfunc d:x' @ ns)
 
     # preCICE setup
-    interface = precice.Interface(side, "../precice-config.xml", 0, 1)
-    mesh_id = interface.get_mesh_id(side + "-Mesh")
-    vertex_ids = interface.set_mesh_vertices(
-        mesh_id, coupling_sample.eval(ns.x))
+    participant = precice.Participant(side, "../precice-config.xml", 0, 1)
+    mesh_name = side + "-Mesh"
+    vertex_ids = participant.set_mesh_vertices(
+        mesh_name, coupling_sample.eval(ns.x))
     precice_write = functools.partial(
-        interface.write_block_scalar_data,
-        interface.get_data_id(
-            "Temperature" if side == "Neumann" else "Heat-Flux",
-            mesh_id),
+        participant.write_data,
+        mesh_name,
+        "Temperature" if side == "Neumann" else "Heat-Flux",
         vertex_ids)
     precice_read = functools.partial(
-        interface.read_block_scalar_data,
-        interface.get_data_id(
-            "Heat-Flux" if side == "Neumann" else "Temperature",
-            mesh_id),
+        participant.read_data,
+        mesh_name,
+        "Heat-Flux" if side == "Neumann" else "Temperature",
         vertex_ids)
 
     # helper functions to project heat flux to coupling boundary
@@ -97,14 +95,13 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
         # fluxcons is NaN in dofs that are supported on ONLY the right boundary
         fluxres = coupling_sample.integral('basis_n flux d:x' @ ns) - res
 
-    precice_dt = interface.initialize()
-
     # write initial data
-    if interface.is_action_required(precice.action_write_initial_data()):
+    if participant.requires_initial_data():
         precice_write(coupling_sample.eval(0.))
-        interface.mark_action_fulfilled(precice.action_write_initial_data())
 
-    interface.initialize_data()
+    participant.initialize()
+    precice_dt = participant.get_max_time_step_size()
+    dt = min(timestep, precice_dt)
 
     t = 0.
     istep = 0
@@ -128,19 +125,15 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
                 Temperature=u,
                 reference=uexact)
 
-        if not interface.is_coupling_ongoing():
+        if not participant.is_coupling_ongoing():
             break
 
-        # read data from interface
-        if interface.is_read_data_available():
-            readdata = precice_read()
+        # read data from participant
+        readdata = precice_read(dt)
 
         # save checkpoint
-        if interface.is_action_required(
-                precice.action_write_iteration_checkpoint()):
+        if participant.requires_writing_checkpoint():
             checkpoint = lhs, t, istep
-            interface.mark_action_fulfilled(
-                precice.action_write_iteration_checkpoint())
 
         # prepare next timestep
         lhs0 = lhs
@@ -162,29 +155,27 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
             'lhs', res, constrain=cons, arguments=dict(
                 lhs0=lhs0, dt=dt, t=t, readdata=readdata))
 
-        # write data to interface
-        if interface.is_write_data_required(dt):
-            if side == 'Dirichlet':
-                fluxdofs = solver.solve_linear(
-                    'fluxdofs', fluxres, arguments=dict(
-                        lhs0=lhs0, lhs=lhs, dt=dt, t=t), constrain=fluxcons)
-                write_data = coupling_sample.eval(
-                    'flux' @ ns, fluxdofs=fluxdofs)
-            else:
-                write_data = coupling_sample.eval('u' @ ns, lhs=lhs)
-            precice_write(write_data)
+        # write data to participant
+        if side == 'Dirichlet':
+            fluxdofs = solver.solve_linear(
+                'fluxdofs', fluxres, arguments=dict(
+                    lhs0=lhs0, lhs=lhs, dt=dt, t=t), constrain=fluxcons)
+            write_data = coupling_sample.eval(
+                'flux' @ ns, fluxdofs=fluxdofs)
+        else:
+            write_data = coupling_sample.eval('u' @ ns, lhs=lhs)
+        precice_write(write_data)
 
         # do the coupling
-        precice_dt = interface.advance(dt)
+        participant.advance(dt)
+        precice_dt = participant.get_max_time_step_size()
+        dt = min(timestep, precice_dt)
 
         # read checkpoint if required
-        if interface.is_action_required(
-                precice.action_read_iteration_checkpoint()):
+        if participant.requires_reading_checkpoint():
             lhs, t, istep = checkpoint
-            interface.mark_action_fulfilled(
-                precice.action_read_iteration_checkpoint())
 
-    interface.finalize()
+    participant.finalize()
 
 
 if __name__ == '__main__':

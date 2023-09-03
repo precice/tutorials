@@ -50,22 +50,27 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
         res += read_sample.integral('basis_n readfunc d:x' @ ns)
 
     # preCICE setup
-    interface = precice.Interface(side, "../precice-config.xml", 0, 1)
+    participant = precice.Participant(side, "../precice-config.xml", 0, 1)
 
-    mesh_id_read = interface.get_mesh_id("Dirichlet-Mesh" if side == "Dirichlet" else "Neumann-Mesh")
-    mesh_id_write = interface.get_mesh_id("Neumann-Mesh" if side == "Dirichlet" else "Dirichlet-Mesh")
+    mesh_name_read = "Dirichlet-Mesh" if side == "Dirichlet" else "Neumann-Mesh"
+    mesh_name_write = "Neumann-Mesh" if side == "Dirichlet" else "Dirichlet-Mesh"
 
-    vertex_ids_read = interface.set_mesh_vertices(mesh_id_read, read_sample.eval(ns.x))
-    interface.set_mesh_access_region(mesh_id_write, [.9, 1.1, -.1, 1.1])
+    vertex_ids_read = participant.set_mesh_vertices(mesh_name_read, read_sample.eval(ns.x))
+    participant.set_mesh_access_region(mesh_name_write, [.9, 1.1, -.1, 1.1])
 
-    precice_dt = interface.initialize()
+    participant.initialize()
+    precice_dt = participant.get_max_time_step_size()
+    dt = min(timestep, precice_dt)
 
-    vertex_ids_write, coords = interface.get_mesh_vertices_and_ids(mesh_id_write)
+    vertex_ids_write, coords = participant.get_mesh_vertex_ids_and_coordinates(mesh_name_write)
     write_sample = domain.locate(ns.x, coords, eps=1e-10, tol=1e-10)
-    precice_write = functools.partial(interface.write_block_scalar_data, interface.get_data_id(
-        "Heat-Flux" if side == "Dirichlet" else "Temperature", mesh_id_write), vertex_ids_write)
-    precice_read = functools.partial(interface.read_block_scalar_data, interface.get_data_id(
-        "Temperature" if side == "Dirichlet" else "Heat-Flux", mesh_id_read), vertex_ids_read)
+
+    precice_write = functools.partial(participant.write_data, mesh_name_write,
+        "Heat-Flux" if side == "Dirichlet" else "Temperature", vertex_ids_write)
+    precice_read = functools.partial(participant.read_data, mesh_name_read,
+        "Temperature" if side == "Dirichlet" else "Heat-Flux", vertex_ids_read)
+
+
 
     # helper functions to project heat flux to coupling boundary
     if side == 'Dirichlet':
@@ -89,13 +94,6 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
         # flux_cons is NaN in dofs that are supported on ONLY the right boundary
         flux_res = read_sample.integral('basis_n flux d:x' @ ns) - res
 
-    # write initial data
-    if interface.is_action_required(precice.action_write_initial_data()):
-        precice_write(write_sample.eval(0.))
-        interface.mark_action_fulfilled(precice.action_write_initial_data())
-
-    interface.initialize_data()
-
     t = 0.
     istep = 0
 
@@ -104,15 +102,14 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
     lhs = solver.optimize('lhs', sqr0, arguments=dict(t=t))
     bezier = domain.sample('bezier', degree * 2)
 
-    while interface.is_coupling_ongoing():
+    while participant.is_coupling_ongoing():
 
         # save checkpoint
-        if interface.is_action_required(precice.action_write_iteration_checkpoint()):
+        if participant.requires_writing_checkpoint():
             checkpoint = lhs, t, istep
-            interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
-        # read data from interface
-        read_data = precice_read()
+        # read data from participant
+        read_data = precice_read(dt)
 
         # prepare next timestep
         lhs0 = lhs
@@ -126,7 +123,7 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
         # solve nutils timestep
         lhs = solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt, t=t, readdata=read_data))
 
-        # write data to interface
+        # write data to participant
         if side == 'Dirichlet':
             fluxdofs = solver.solve_linear(
                 'fluxdofs', flux_res, arguments=dict(
@@ -137,19 +134,20 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
         precice_write(write_data)
 
         # do the coupling
-        precice_dt = interface.advance(dt)
+        participant.advance(dt)
+        precice_dt = participant.get_max_time_step_size()
+        dt = min(timestep, precice_dt)
 
         # read checkpoint if required
-        if interface.is_action_required(precice.action_read_iteration_checkpoint()):
+        if participant.requires_reading_checkpoint():
             lhs, t, istep = checkpoint
-            interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
         else:
             # generate output
             x, u, uexact = bezier.eval(['x_i', 'u', 'uexact'] @ ns, lhs=lhs, t=t)
             with treelog.add(treelog.DataLog()):
                 export.vtk(side + "-" + str(istep), bezier.tri, x, Temperature=u, reference=uexact)
 
-    interface.finalize()
+    participant.finalize()
 
 
 if __name__ == '__main__':
