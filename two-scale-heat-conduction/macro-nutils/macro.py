@@ -11,7 +11,7 @@ import precice
 def main():
     """
     2D heat conduction problem solved on a rectangular domain.
-    The material cons8ists of a mixture of two materials "g" and "s".
+    The material consists of a mixture of two materials "g" and "s".
     """
     is_coupled_case = True  # If False, single-physics problem is solved
 
