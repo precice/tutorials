@@ -1,4 +1,3 @@
-import os
 import subprocess
 from typing import List, Dict, Optional
 from jinja2 import Environment, FileSystemLoader
@@ -12,10 +11,14 @@ from .SystemtestArguments import SystemtestArguments
 
 from datetime import datetime
 import tarfile
+import time
 
 import unicodedata
 import re
 import logging
+
+
+GLOBAL_TIMEOUT = 360
 
 
 def slugify(value, allow_unicode=False):
@@ -46,6 +49,7 @@ class DockerComposeResult:
     stdout_data: List[str]
     stderr_data: List[str]
     systemtest: Systemtest
+    runtime: float  # in seconds
 
 
 @dataclass
@@ -54,6 +58,7 @@ class FieldCompareResult:
     stdout_data: List[str]
     stderr_data: List[str]
     systemtest: Systemtest
+    runtime: float  # in seconds
 
 
 @dataclass
@@ -62,9 +67,32 @@ class SystemtestResult:
     stdout_data: List[str]
     stderr_data: List[str]
     systemtest: Systemtest
+    build_time: float  # in seconds
+    solver_time: float  # in seconds
+    fieldcompare_time: float  # in seconds
 
 
-GLOBAL_TIMEOUT = 360
+def display_systemtestresults_as_table(results: List[SystemtestResult]):
+    """
+    Prints the result in a nice tabluated way to get an easy overview
+    """
+    def _get_length_of_name(results: List[SystemtestResult]) -> int:
+        return max(len(str(result.systemtest)) for result in results)
+
+    max_name_length = _get_length_of_name(results)
+
+    header = f"| {'systemtest':<{max_name_length + 2}} | {'success':^7} | {'building time [s]':^17} | {'solver time [s]':^15} | {'fieldcompare time [s]':^21} |"
+    separator = "+-" + "-" * (max_name_length + 2) + \
+        "-+---------+-------------------+-----------------+-----------------------+"
+
+    print(separator)
+    print(header)
+    print(separator)
+
+    for result in results:
+        row = f"| {str(result.systemtest):<{max_name_length + 2}} | {result.success:^7} | {result.build_time:^17.2f} | {result.solver_time:^15.2f} | {result.fieldcompare_time:^21.2f} |"
+        print(row)
+        print(separator)
 
 
 @dataclass
@@ -283,6 +311,8 @@ class Systemtest:
         Returns:
             A SystemtestResult object containing the state.
         """
+        logging.debug(f"Running fieldcompare for {self}")
+        time_start = time.perf_counter()
         self.__unpack_reference_results()
         docker_compose_content = self.__get_field_compare_compose_file()
         stdout_data = []
@@ -318,16 +348,19 @@ class Systemtest:
             stdout_data.extend(stdout.decode().splitlines())
             stderr_data.extend(stderr.decode().splitlines())
             process.poll()
-            return FieldCompareResult(process.returncode, stdout_data, stderr_data, self)
+            elapsed_time = time.perf_counter() - time_start
+            return FieldCompareResult(process.returncode, stdout_data, stderr_data, self, elapsed_time)
         except Exception as e:
             logging.CRITICAL("Error executing docker compose command:", e)
-            return FieldCompareResult(1, stdout_data, stderr_data, self)
+            elapsed_time = time.perf_counter() - time_start
+            return FieldCompareResult(1, stdout_data, stderr_data, self, elapsed_time)
 
     def _build_docker(self):
         """
         Builds the docker image
         """
         logging.debug(f"Building docker image for {self}")
+        time_start = time.perf_counter()
         docker_compose_content = self.__get_docker_compose_file()
         with open(self.system_test_dir / "docker-compose.tutorial.yaml", 'w') as file:
             file.write(docker_compose_content)
@@ -361,11 +394,12 @@ class Systemtest:
 
             stdout_data.extend(stdout.decode().splitlines())
             stderr_data.extend(stderr.decode().splitlines())
-
-            return DockerComposeResult(process.returncode, stdout_data, stderr_data, self)
+            elapsed_time = time.perf_counter() - time_start
+            return DockerComposeResult(process.returncode, stdout_data, stderr_data, self, elapsed_time)
         except Exception as e:
             logging.critical(f"Error executing docker compose build command: {e}")
-            return DockerComposeResult(1, stdout_data, stderr_data, self)
+            elapsed_time = time.perf_counter() - time_start
+            return DockerComposeResult(1, stdout_data, stderr_data, self, elapsed_time)
 
     def _run_tutorial(self):
         """
@@ -374,8 +408,8 @@ class Systemtest:
         Returns:
             A DockerComposeResult object containing the state.
         """
-
         logging.debug(f"Running tutorial {self}")
+        time_start = time.perf_counter()
         stdout_data = []
         stderr_data = []
         try:
@@ -404,11 +438,12 @@ class Systemtest:
 
             stdout_data.extend(stdout.decode().splitlines())
             stderr_data.extend(stderr.decode().splitlines())
-
-            return DockerComposeResult(process.returncode, stdout_data, stderr_data, self)
+            elapsed_time = time.perf_counter() - time_start
+            return DockerComposeResult(process.returncode, stdout_data, stderr_data, self, elapsed_time)
         except Exception as e:
             logging.critical(f"Error executing docker compose up command: {e}")
-            return DockerComposeResult(1, stdout_data, stderr_data, self)
+            elapsed_time = time.perf_counter() - time_start
+            return DockerComposeResult(1, stdout_data, stderr_data, self, elapsed_time)
 
     def __repr__(self):
         return f"{self.tutorial.name} {self.case_combination}"
@@ -419,19 +454,25 @@ class Systemtest:
         with open(self.system_test_dir / "stderr.log", 'w') as stderr_file:
             stderr_file.write("\n".join(stderr_data))
 
-    def run(self, run_directory: Path):
+    def __prepare_for_run(self, run_directory: Path):
         """
-        Runs the system test by generating the Docker Compose file, copying everything into a run folder, and executing docker-compose up.
+        Prepares the run_directory with folders and datastructures needed for every systemtest execution
         """
         self.__copy_tutorial_into_directory(run_directory)
         self.__copy_tools(run_directory)
         self.__put_gitignore(run_directory)
-        std_out: List[str] = []
-        std_err: List[str] = []
         uid, gid = self.__get_uid_gid()
         self.env["UID"] = uid
         self.env["GID"] = gid
         self.__write_env_file()
+
+    def run(self, run_directory: Path):
+        """
+        Runs the system test by generating the Docker Compose file, copying everything into a run folder, and executing docker-compose up.
+        """
+        self.__prepare_for_run(run_directory)
+        std_out: List[str] = []
+        std_err: List[str] = []
 
         docker_build_result = self._build_docker()
         std_out.extend(docker_build_result.stdout_data)
@@ -439,15 +480,15 @@ class Systemtest:
         if docker_build_result.exit_code != 0:
             self.__write_logs(std_out, std_err)
             logging.critical(f"Could not build the docker images, {self} failed")
-            return SystemtestResult(False, std_out, std_err, self)
+            return SystemtestResult(False, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=0, fieldcompare_time=0)
 
-        docker_compose_result = self._run_tutorial()
-        std_out.extend(docker_compose_result.stdout_data)
-        std_err.extend(docker_compose_result.stderr_data)
-        if docker_compose_result.exit_code != 0:
+        docker_run_result = self._run_tutorial()
+        std_out.extend(docker_run_result.stdout_data)
+        std_err.extend(docker_run_result.stderr_data)
+        if docker_run_result.exit_code != 0:
             self.__write_logs(std_out, std_err)
             logging.critical(f"Could not run the tutorial, {self} failed")
-            return SystemtestResult(False, std_out, std_err, self)
+            return SystemtestResult(False, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=docker_run_result.runtime, fieldcompare_time=0)
 
         fieldcompare_result = self._run_field_compare()
         std_out.extend(fieldcompare_result.stdout_data)
@@ -455,33 +496,55 @@ class Systemtest:
         if fieldcompare_result.exit_code != 0:
             self.__write_logs(std_out, std_err)
             logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
-            return SystemtestResult(False, std_out, std_err, self)
+            return SystemtestResult(False, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=docker_run_result.runtime, fieldcompare_time=fieldcompare_result.runtime)
 
         # self.__cleanup()
         self.__write_logs(std_out, std_err)
-        return SystemtestResult(True, std_out, std_err, self)
+        return SystemtestResult(True, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=docker_run_result.runtime, fieldcompare_time=fieldcompare_result.runtime)
 
     def run_for_reference_results(self, run_directory: Path):
         """
         Runs the system test by generating the Docker Compose files to generate the reference results
         """
-        self.__copy_tutorial_into_directory(run_directory)
-        self.__copy_tools(run_directory)
-        self.__put_gitignore(run_directory)
+        self.__prepare_for_run(run_directory)
         std_out: List[str] = []
         std_err: List[str] = []
-        uid, gid = self.__get_uid_gid()
-        self.env["UID"] = uid
-        self.env["GID"] = gid
-        self.__write_env_file()
-        docker_compose_result = self._run_tutorial()
-        std_out.extend(docker_compose_result.stdout_data)
-        std_err.extend(docker_compose_result.stderr_data)
-        if docker_compose_result.exit_code == 0:
-            return SystemtestResult(True, std_out, std_err, self)
-        else:
-            self.__handle_docker_compose_failure(docker_compose_result)
-            return SystemtestResult(False, std_out, std_err, self)
+        docker_build_result = self._build_docker()
+        std_out.extend(docker_build_result.stdout_data)
+        std_err.extend(docker_build_result.stderr_data)
+        if docker_build_result.exit_code != 0:
+            self.__write_logs(std_out, std_err)
+            logging.critical(f"Could not build the docker images, {self} failed")
+            return SystemtestResult(False, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=0, fieldcompare_time=0)
+
+        docker_run_result = self._run_tutorial()
+        std_out.extend(docker_run_result.stdout_data)
+        std_err.extend(docker_run_result.stderr_data)
+        if docker_run_result.exit_code != 0:
+            self.__write_logs(std_out, std_err)
+            logging.critical(f"Could not run the tutorial, {self} failed")
+            return SystemtestResult(False, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=docker_run_result.runtime, fieldcompare_time=0)
+
+        self.__write_logs(std_out, std_err)
+        return SystemtestResult(True, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=docker_run_result.runtime, fieldcompare_time=0)
+
+    def run_only_build(self, run_directory: Path):
+        """
+        Runs only the build commmand, for example to preheat the caches of the docker builder. 
+        """
+        self.__prepare_for_run(run_directory)
+        std_out: List[str] = []
+        std_err: List[str] = []
+        docker_build_result = self._build_docker()
+        std_out.extend(docker_build_result.stdout_data)
+        std_err.extend(docker_build_result.stderr_data)
+        if docker_build_result.exit_code != 0:
+            self.__write_logs(std_out, std_err)
+            logging.critical(f"Could not build the docker images, {self} failed")
+            return SystemtestResult(False, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=0, fieldcompare_time=0)
+
+        self.__write_logs(std_out, std_err)
+        return SystemtestResult(True, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=0, fieldcompare_time=0)
 
     def get_system_test_dir(self) -> Path:
         return self.system_test_dir

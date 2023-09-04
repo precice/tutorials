@@ -2,7 +2,7 @@
 import argparse
 from pathlib import Path
 from systemtests.SystemtestArguments import SystemtestArguments
-from systemtests.Systemtest import Systemtest
+from systemtests.Systemtest import Systemtest, display_systemtestresults_as_table
 from systemtests.TestSuite import TestSuites
 from metadata_parser.metdata import Tutorials, Case
 import logging
@@ -85,6 +85,7 @@ def main():
         else:
             logging.info(f"Success running {result.systemtest}")
 
+    display_systemtestresults_as_table(results)
     if system_test_success:
         exit(0)
     else:
