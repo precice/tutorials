@@ -480,7 +480,14 @@ class Systemtest:
         if docker_build_result.exit_code != 0:
             self.__write_logs(std_out, std_err)
             logging.critical(f"Could not build the docker images, {self} failed")
-            return SystemtestResult(False, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=0, fieldcompare_time=0)
+            return SystemtestResult(
+                False,
+                std_out,
+                std_err,
+                self,
+                build_time=docker_build_result.runtime,
+                solver_time=0,
+                fieldcompare_time=0)
 
         docker_run_result = self._run_tutorial()
         std_out.extend(docker_run_result.stdout_data)
@@ -488,7 +495,14 @@ class Systemtest:
         if docker_run_result.exit_code != 0:
             self.__write_logs(std_out, std_err)
             logging.critical(f"Could not run the tutorial, {self} failed")
-            return SystemtestResult(False, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=docker_run_result.runtime, fieldcompare_time=0)
+            return SystemtestResult(
+                False,
+                std_out,
+                std_err,
+                self,
+                build_time=docker_build_result.runtime,
+                solver_time=docker_run_result.runtime,
+                fieldcompare_time=0)
 
         fieldcompare_result = self._run_field_compare()
         std_out.extend(fieldcompare_result.stdout_data)
@@ -496,11 +510,25 @@ class Systemtest:
         if fieldcompare_result.exit_code != 0:
             self.__write_logs(std_out, std_err)
             logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
-            return SystemtestResult(False, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=docker_run_result.runtime, fieldcompare_time=fieldcompare_result.runtime)
+            return SystemtestResult(
+                False,
+                std_out,
+                std_err,
+                self,
+                build_time=docker_build_result.runtime,
+                solver_time=docker_run_result.runtime,
+                fieldcompare_time=fieldcompare_result.runtime)
 
         # self.__cleanup()
         self.__write_logs(std_out, std_err)
-        return SystemtestResult(True, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=docker_run_result.runtime, fieldcompare_time=fieldcompare_result.runtime)
+        return SystemtestResult(
+            True,
+            std_out,
+            std_err,
+            self,
+            build_time=docker_build_result.runtime,
+            solver_time=docker_run_result.runtime,
+            fieldcompare_time=fieldcompare_result.runtime)
 
     def run_for_reference_results(self, run_directory: Path):
         """
@@ -515,7 +543,14 @@ class Systemtest:
         if docker_build_result.exit_code != 0:
             self.__write_logs(std_out, std_err)
             logging.critical(f"Could not build the docker images, {self} failed")
-            return SystemtestResult(False, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=0, fieldcompare_time=0)
+            return SystemtestResult(
+                False,
+                std_out,
+                std_err,
+                self,
+                build_time=docker_build_result.runtime,
+                solver_time=0,
+                fieldcompare_time=0)
 
         docker_run_result = self._run_tutorial()
         std_out.extend(docker_run_result.stdout_data)
@@ -523,14 +558,28 @@ class Systemtest:
         if docker_run_result.exit_code != 0:
             self.__write_logs(std_out, std_err)
             logging.critical(f"Could not run the tutorial, {self} failed")
-            return SystemtestResult(False, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=docker_run_result.runtime, fieldcompare_time=0)
+            return SystemtestResult(
+                False,
+                std_out,
+                std_err,
+                self,
+                build_time=docker_build_result.runtime,
+                solver_time=docker_run_result.runtime,
+                fieldcompare_time=0)
 
         self.__write_logs(std_out, std_err)
-        return SystemtestResult(True, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=docker_run_result.runtime, fieldcompare_time=0)
+        return SystemtestResult(
+            True,
+            std_out,
+            std_err,
+            self,
+            build_time=docker_build_result.runtime,
+            solver_time=docker_run_result.runtime,
+            fieldcompare_time=0)
 
     def run_only_build(self, run_directory: Path):
         """
-        Runs only the build commmand, for example to preheat the caches of the docker builder. 
+        Runs only the build commmand, for example to preheat the caches of the docker builder.
         """
         self.__prepare_for_run(run_directory)
         std_out: List[str] = []
@@ -541,10 +590,24 @@ class Systemtest:
         if docker_build_result.exit_code != 0:
             self.__write_logs(std_out, std_err)
             logging.critical(f"Could not build the docker images, {self} failed")
-            return SystemtestResult(False, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=0, fieldcompare_time=0)
+            return SystemtestResult(
+                False,
+                std_out,
+                std_err,
+                self,
+                build_time=docker_build_result.runtime,
+                solver_time=0,
+                fieldcompare_time=0)
 
         self.__write_logs(std_out, std_err)
-        return SystemtestResult(True, std_out, std_err, self, build_time=docker_build_result.runtime, solver_time=0, fieldcompare_time=0)
+        return SystemtestResult(
+            True,
+            std_out,
+            std_err,
+            self,
+            build_time=docker_build_result.runtime,
+            solver_time=0,
+            fieldcompare_time=0)
 
     def get_system_test_dir(self) -> Path:
         return self.system_test_dir
