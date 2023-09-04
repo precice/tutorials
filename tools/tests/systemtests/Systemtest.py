@@ -323,6 +323,50 @@ class Systemtest:
             logging.CRITICAL("Error executing docker compose command:", e)
             return FieldCompareResult(1, stdout_data, stderr_data, self)
 
+    def _build_docker(self):
+        """
+        Builds the docker image
+        """
+        logging.debug(f"Building docker image for {self}")
+        docker_compose_content = self.__get_docker_compose_file()
+        with open(self.system_test_dir / "docker-compose.tutorial.yaml", 'w') as file:
+            file.write(docker_compose_content)
+
+        stdout_data = []
+        stderr_data = []
+
+        try:
+            # Execute docker-compose command
+            process = subprocess.Popen(['docker',
+                                        'compose',
+                                        '--file',
+                                        'docker-compose.tutorial.yaml',
+                                        'build'],
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE,
+                                       start_new_session=True,
+                                       cwd=self.system_test_dir)
+
+            try:
+                stdout, stderr = process.communicate()
+            except KeyboardInterrupt as k:
+                process.kill()
+                # process.send_signal(9)
+                raise KeyboardInterrupt from k
+            except Exception as e:
+                logging.critical(
+                    f"systemtest {self} had serious issues building the docker images via the `docker compose build` command. About to kill the docker compose command. Please check the logs! {e}")
+                process.kill()
+                stdout, stderr = process.communicate()
+
+            stdout_data.extend(stdout.decode().splitlines())
+            stderr_data.extend(stderr.decode().splitlines())
+
+            return DockerComposeResult(process.returncode, stdout_data, stderr_data, self)
+        except Exception as e:
+            logging.critical(f"Error executing docker compose build command: {e}")
+            return DockerComposeResult(1, stdout_data, stderr_data, self)
+
     def _run_tutorial(self):
         """
         Runs precice couple
@@ -330,20 +374,17 @@ class Systemtest:
         Returns:
             A DockerComposeResult object containing the state.
         """
-        docker_compose_content = self.__get_docker_compose_file()
+
+        logging.debug(f"Running tutorial {self}")
         stdout_data = []
         stderr_data = []
-
-        with open(self.system_test_dir / "docker-compose.tutorial.yaml", 'w') as file:
-            file.write(docker_compose_content)
         try:
             # Execute docker-compose command
             process = subprocess.Popen(['docker',
                                         'compose',
                                         '--file',
                                         'docker-compose.tutorial.yaml',
-                                        'up',
-                                        "--build"],
+                                        'up'],
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
                                        start_new_session=True,
@@ -366,26 +407,17 @@ class Systemtest:
 
             return DockerComposeResult(process.returncode, stdout_data, stderr_data, self)
         except Exception as e:
-            logging.critical(f"Error executing docker compose command: {e}")
+            logging.critical(f"Error executing docker compose up command: {e}")
             return DockerComposeResult(1, stdout_data, stderr_data, self)
 
     def __repr__(self):
         return f"{self.tutorial.name} {self.case_combination}"
 
-    def __handle_docker_compose_failure(self, result: DockerComposeResult):
+    def __write_logs(self, stdout_data: List[str], stderr_data: List[str]):
         with open(self.system_test_dir / "stdout.log", 'w') as stdout_file:
-            stdout_file.write("\n".join(result.stdout_data))
+            stdout_file.write("\n".join(stdout_data))
         with open(self.system_test_dir / "stderr.log", 'w') as stderr_file:
-            stderr_file.write("\n".join(result.stderr_data))
-
-        logging.critical("Docker Compose failed, skipping fieldcompare and writing stdout.log and stderr.log")
-
-    def __handle_field_compare_failure(self, result: FieldCompareResult):
-        with open(self.system_test_dir / "stdout.log", 'w') as stdout_file:
-            stdout_file.write("\n".join(result.stdout_data))
-        with open(self.system_test_dir / "stderr.log", 'w') as stderr_file:
-            stderr_file.write("\n".join(result.stderr_data))
-        logging.error("Fieldcompare failed, writing stdout.log and stderr.log")
+            stderr_file.write("\n".join(stderr_data))
 
     def run(self, run_directory: Path):
         """
@@ -400,21 +432,33 @@ class Systemtest:
         self.env["UID"] = uid
         self.env["GID"] = gid
         self.__write_env_file()
+
+        docker_build_result = self._build_docker()
+        std_out.extend(docker_build_result.stdout_data)
+        std_err.extend(docker_build_result.stderr_data)
+        if docker_build_result.exit_code != 0:
+            self.__write_logs(std_out, std_err)
+            logging.critical(f"Could not build the docker images, {self} failed")
+            return SystemtestResult(False, std_out, std_err, self)
+
         docker_compose_result = self._run_tutorial()
         std_out.extend(docker_compose_result.stdout_data)
         std_err.extend(docker_compose_result.stderr_data)
         if docker_compose_result.exit_code != 0:
-            self.__handle_docker_compose_failure(docker_compose_result)
+            self.__write_logs(std_out, std_err)
+            logging.critical(f"Could not run the tutorial, {self} failed")
             return SystemtestResult(False, std_out, std_err, self)
 
         fieldcompare_result = self._run_field_compare()
         std_out.extend(fieldcompare_result.stdout_data)
         std_err.extend(fieldcompare_result.stderr_data)
         if fieldcompare_result.exit_code != 0:
-            self.__handle_field_compare_failure(fieldcompare_result)
+            self.__write_logs(std_out, std_err)
+            logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
             return SystemtestResult(False, std_out, std_err, self)
 
         # self.__cleanup()
+        self.__write_logs(std_out, std_err)
         return SystemtestResult(True, std_out, std_err, self)
 
     def run_for_reference_results(self, run_directory: Path):
