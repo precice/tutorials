@@ -12,7 +12,7 @@ openfoam-adapter:
       description: Tutorial git reference to use
       default: "master"
     OPENFOAM_EXECUTABLE:
-      options: ["openfoam2306","openfoam2212",openfoam2112]
+      options: ["openfoam2306","openfoam2212","openfoam2112"]
       description: exectuable of openfoam to use
       default: "openfoam2306"
     OPENFOAM_ADAPTER_REF:
