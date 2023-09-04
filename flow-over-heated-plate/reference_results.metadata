@@ -10,7 +10,9 @@ This file contains an overview of the results over the reference results as well
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-calculix.tar.gz | 2023-08-28 23:42:54 | 35686e4cb9dd8d1b58efd1d17fd63db4dba75fa9b650b2ec9bceca1a71951c04 |
+| fluid-openfoam_solid-nutils.tar.gz | 2023-09-04 23:41:09 | 8b3157902d3ad78593c5471a3a94dd5559fe6970e4cb54658b22ffd270c00297 |
+| fluid-openfoam_solid-fenics.tar.gz | 2023-09-04 23:41:09 | 2565ffc51c8d80fab06ccdda33f62efceb6cdc03318998f5adc9ed0ac84acac2 |
+| fluid-openfoam_solid-openfoam.tar.gz | 2023-09-04 23:41:09 | c29989e0118ade759e7313330aa8d3d900c660c404eaacd529e979aae6b899c7 |
 
 ## List of arguments used to generate the files
 

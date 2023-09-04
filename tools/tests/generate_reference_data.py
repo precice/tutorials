@@ -42,7 +42,7 @@ def render_reference_results_info(
         'files': files
     }
     jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
-    template = jinja_env.get_template("reference_results.template")
+    template = jinja_env.get_template("reference_results.metadata.template")
     return template.render(render_dict)
 
 
@@ -106,7 +106,7 @@ def main():
 
     # write readme
     for tutorial in reference_result_per_tutorial.keys():
-        with open(tutorial.path / "reference_results.md", 'w') as file:
+        with open(tutorial.path / "reference_results.metadata", 'w') as file:
             ref_results_info = render_reference_results_info(
                 reference_result_per_tutorial[tutorial], build_args, current_time_string)
             logging.info(f"Writing results for {tutorial.name}")
