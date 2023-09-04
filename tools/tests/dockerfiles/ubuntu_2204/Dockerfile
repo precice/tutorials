@@ -93,7 +93,7 @@ RUN pip3 install --user git+https://github.com/precice/fenics-adapter.git@${FENI
 FROM precice_dependecies as nutils_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
 USER precice
-# Building fenics-adapter
+# Installing nutils - There is no adapter
 RUN pip3 install --user nutils
 
 
@@ -114,5 +114,5 @@ ARG CALULIX_ADAPTER_REF
 WORKDIR /home/precice
 RUN git clone --depth 1 --branch ${CALULIX_ADAPTER_REF} https://github.com/precice/calculix-adapter.git && \
     cd calculix-adapter && \
-    make CXX_VERSION=${CALULIX_VERSION} ADDITIONAL_FFLAGS="-std=legacy" -j $(nproc) && \
+    make CXX_VERSION=${CALULIX_VERSION} ADDITIONAL_FFLAGS="-fallow-argument-mismatch" -j $(nproc) && \
     ln -s /home/precice/calculix-adapter/bin/ccx_preCICE /home/precice/.local/bin/ccx_preCICE
