@@ -31,7 +31,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         ref: ${{ github.event.inputs.systests_branch }}
-        fetch-depth: 0
+        lfs: true
     - name: Log directory
       run: |
         ls -al
