@@ -8,14 +8,15 @@ This file contains an overview of the results over the reference results as well
 
 ## List of files
 
-| name | time | sha-1 |
+| name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-openfoam.tar.gz | 2023-08-13 14:52:04 | bd8b4d235c8326e75deef3f03a1d8277c429972a |
-
+{% for file in files -%}
+| {{ file.name }} | {{ file.time }} | {{ file.sha256 }} |
+{% endfor %}
 ## List of arguments used to generate the files
 
 | name | value |
 |------|------|
-| OPENFOAM_EXECUTABLE | openfoam2112 |
-| PRECICE_TAG | latest |
-| OPENFOAM_ADAPTER_REF | master |
+{% for name,value in arguments.items() -%}
+| {{ name }} | {{ value }} |
+{% endfor -%}

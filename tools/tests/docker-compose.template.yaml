@@ -1,11 +1,12 @@
 version: "3.9"
 services:
   prepare:
-    image: ubuntu:latest
-    user: ${UID}:${GID}
+    build: 
+      context: {{ dockerfile_context }}
+      target: base_image
     volumes:
       - {{ run_directory }}:/runs
-    #      tar -zxf reference-output.tar.gz &&
+
     command: >
       /bin/bash -c "id &&
       cd '/runs/{{ tutorial_folder }}' && 

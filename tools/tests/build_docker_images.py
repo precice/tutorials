@@ -4,14 +4,14 @@ from pathlib import Path
 from systemtests.SystemtestArguments import SystemtestArguments
 from systemtests.Systemtest import Systemtest, display_systemtestresults_as_table
 from systemtests.TestSuite import TestSuites
-from metadata_parser.metdata import Tutorials, Case
+from metadata_parser.metdata import Tutorials
 import logging
 import time
 from paths import PRECICE_TUTORIAL_DIR, PRECICE_TESTS_RUN_DIR, PRECICE_TESTS_DIR
 
 
 def main():
-    parser = argparse.ArgumentParser(description='systemtest')
+    parser = argparse.ArgumentParser(description='build docker images')
 
     # Add an argument for the components
     parser.add_argument('--suites', type=str,
@@ -66,27 +66,27 @@ def main():
     if not systemtests_to_run:
         raise RuntimeError("Did not find any Systemtests to execute.")
 
-    logging.info(f"About to run the following systemtest in the directory {run_directory}:\n {systemtests_to_run}")
+    logging.info(f"About to build the images for the following systemtests:\n {systemtests_to_run}")
 
     results = []
     for number, systemtest in enumerate(systemtests_to_run):
-        logging.info(f"Started running {systemtest},  {number}/{len(systemtests_to_run)}")
+        logging.info(f"Started building {systemtest},  {number}/{len(systemtests_to_run)}")
         t = time.perf_counter()
-        result = systemtest.run(run_directory)
+        result = systemtest.run_only_build(run_directory)
         elapsed_time = time.perf_counter() - t
-        logging.info(f"Running {systemtest} took {elapsed_time} seconds")
+        logging.info(f"Building image for {systemtest} took {elapsed_time} seconds")
         results.append(result)
 
-    system_test_success = True
+    build_docker_success = True
     for result in results:
         if not result.success:
             logging.error(f"Failed to run {result.systemtest}")
-            system_test_success = False
+            build_docker_success = False
         else:
             logging.info(f"Success running {result.systemtest}")
 
     display_systemtestresults_as_table(results)
-    if system_test_success:
+    if build_docker_success:
         exit(0)
     else:
         exit(1)
