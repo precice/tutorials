@@ -32,6 +32,7 @@ jobs:
       with:
         ref: ${{ github.event.inputs.systests_branch }}
         lfs: true
+        fetch-depth: 0
     - name: Log directory
       run: |
         ls -al
@@ -46,6 +47,8 @@ jobs:
         python -m pip install -r ./tools/tests/requirements.txt
     - name: Run tests
       run: |
+        export GIT_TRACE=true
+        export GIT_CURL_VERBOSE=true
         cd ./tools/tests
         python systemtests.py --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.suites}}
         cd ../../
