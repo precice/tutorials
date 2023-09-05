@@ -188,8 +188,8 @@ def main(inflow: 'inflow velocity' = 10,
         # write forces to participant
         F = solver.solve_linear('F', resF, constrain=consF,
                                 arguments=dict(lhs00=lhs00, lhs0=lhs0, lhs=lhs1, dt=dt, meshdofs=meshdofs,
-                                                oldmeshdofs=oldmeshdofs, oldoldmeshdofs=oldoldmeshdofs,
-                                                oldoldoldmeshdofs=oldoldoldmeshdofs))
+                                               oldmeshdofs=oldmeshdofs, oldoldmeshdofs=oldoldmeshdofs,
+                                               oldoldoldmeshdofs=oldoldoldmeshdofs))
         # writedata = couplingsample.eval(ns.F, F=F) # for stresses
         writedata = couplingsample.eval('F_i d:x' @ ns, F=F, meshdofs=meshdofs) * \
             numpy.concatenate([p.weights for p in couplingsample.points])[:, numpy.newaxis]
