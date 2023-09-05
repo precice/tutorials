@@ -66,11 +66,9 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
     write_sample = domain.locate(ns.x, coords, eps=1e-10, tol=1e-10)
 
     precice_write = functools.partial(participant.write_data, mesh_name_write,
-        "Heat-Flux" if side == "Dirichlet" else "Temperature", vertex_ids_write)
+                                      "Heat-Flux" if side == "Dirichlet" else "Temperature", vertex_ids_write)
     precice_read = functools.partial(participant.read_data, mesh_name_read,
-        "Temperature" if side == "Dirichlet" else "Heat-Flux", vertex_ids_read)
-
-
+                                     "Temperature" if side == "Dirichlet" else "Heat-Flux", vertex_ids_read)
 
     # helper functions to project heat flux to coupling boundary
     if side == 'Dirichlet':
