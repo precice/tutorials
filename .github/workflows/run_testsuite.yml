@@ -19,6 +19,17 @@ on:
             - 'develop'
             - 'master'
             - 'add-test-workflows'
+      loglevel:
+        description: 'loglevel used for the systemtests'
+        default: 'INFO'
+        required: true
+        type: choice
+        options:
+            - 'DEBUG'
+            - 'INFO'
+            - 'WARNING'
+            - 'ERROR'
+            - 'CRITICAL'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -46,19 +57,10 @@ jobs:
     - name: install python depencies
       run: |
         python -m pip install -r ./tools/tests/requirements.txt
-    - name: run git branch -v
-      run: |
-        export GIT_TRACE=true
-        export GIT_CURL_VERBOSE=true
-        cd ./tools/tests
-        git branch -v 
-        cd ../../
     - name: Run tests
       run: |
-        export GIT_TRACE=true
-        export GIT_CURL_VERBOSE=true
         cd ./tools/tests
-        python systemtests.py --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.suites}}
+        python systemtests.py --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.suites}} --log-level=${{github.event.inputs.loglevel}} 
         cd ../../
     - name: Archive run files
       uses: actions/upload-artifact@v2
