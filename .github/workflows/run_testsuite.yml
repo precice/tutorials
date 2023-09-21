@@ -46,6 +46,13 @@ jobs:
     - name: install python depencies
       run: |
         python -m pip install -r ./tools/tests/requirements.txt
+    - name: run git branch -v
+      run: |
+        export GIT_TRACE=true
+        export GIT_CURL_VERBOSE=true
+        cd ./tools/tests
+        git branch -v 
+        cd ../../
     - name: Run tests
       run: |
         export GIT_TRACE=true
