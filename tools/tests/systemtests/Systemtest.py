@@ -236,7 +236,7 @@ class Systemtest:
                 "-C", os.fspath(repository.resolve()),
                 "fetch", 
                 "origin", 
-                ref
+                f"{ref}:{ref}"
             ], check=True, timeout=60)
             if result.returncode != 0:
                 raise RuntimeError(f"git command returned code {result.returncode}")
