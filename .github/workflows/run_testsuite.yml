@@ -18,6 +18,7 @@ on:
         options:
             - 'develop'
             - 'master'
+            - 'add-test-workflows'
 jobs:
   build:
     runs-on: ubuntu-latest
