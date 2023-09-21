@@ -16,6 +16,7 @@ import time
 import unicodedata
 import re
 import logging
+import os
 
 
 GLOBAL_TIMEOUT = 360
@@ -217,7 +218,7 @@ class Systemtest:
         try:
             result = subprocess.run([
                 "git",
-                "-C", repository.resolve(),
+                "-C", os.fspath(repository.resolve()),
                 "rev-parse",
                 "--abbrev-ref" if abbrev_ref else
                 "HEAD"], stdout=subprocess.PIPE,
@@ -231,9 +232,9 @@ class Systemtest:
         try:
             result = subprocess.run([
                 "git",
-                "-C", repository.resolve(),
+                "-C", os.fspath(repository.resolve()),
                 "checkout", ref,
-                "--", subfolder.resolve()
+                "--", os.fspath(subfolder.resolve())
             ], check=True, timeout=60)
             if result.returncode != 0:
                 raise RuntimeError(f"git command returned code {result.returncode}")
