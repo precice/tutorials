@@ -63,6 +63,7 @@ jobs:
         python systemtests.py --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.suites}} --log-level=${{github.event.inputs.loglevel}} 
         cd ../../
     - name: Archive run files
+      if: success() || failure()
       uses: actions/upload-artifact@v2
       with:
         name: runs
