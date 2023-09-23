@@ -8,7 +8,7 @@ build:
   cache_from:
   - type=gha
   cache_to:
-  - type=gha
+  - type=gha,mode=max
 depends_on:    
   prepare:
     condition: service_completed_successfully
