@@ -3,7 +3,7 @@ USER root
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN useradd -ms /bin/bash precice 
+RUN useradd -ms /bin/bash precice
 ENV PATH="${PATH}:/home/precice/.local/bin" 
 ENV LD_LIBRARY_PATH="/home/precice/.local/lib:${LD_LIBRARY_PATH}" 
 ENV CPATH="/home/precice/.local/include:$CPATH"
