@@ -4,6 +4,7 @@ services:
     build: https://github.com/dglaeser/fieldcompare-action.git # use the docker container provided by fieldcompare
     volumes:
       - {{ run_directory }}:/runs
+    user: ${UID}:${GID}
     command:
       - /runs/{{ tutorial_folder }}/{{ precice_output_folder }}
       - /runs/{{ tutorial_folder }}/{{ reference_output_folder }}

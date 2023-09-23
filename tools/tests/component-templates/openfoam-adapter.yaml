@@ -14,6 +14,7 @@ depends_on:
     condition: service_completed_successfully
 volumes:
   - {{ run_directory }}:/runs
+user: ${UID}:${GID}
 command: >
   /bin/bash -c "id && 
   cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&
