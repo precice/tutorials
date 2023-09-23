@@ -11,11 +11,10 @@ services:
 
     volumes:
       - {{ run_directory }}:/runs
-
+    user: ${UID}:${GID}
     command: >
       /bin/bash -c "id &&
       cd '/runs/{{ tutorial_folder }}' && 
-      chown -R precice:precice /runs &&
       ls -al && 
       touch somefile.permissions && 
       sed -i 's%</participant>%<export:vtk directory=\"../{{precice_output_folder}}\" /> </participant>%g' precice-config.xml &&
