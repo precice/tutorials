@@ -8,7 +8,7 @@ build:
   cache_from:
   - type=gha
   cache_to:
-  - type=gha,mode=max,scope=openfoam_adapter
+  - type=gha,mode=min,scope=openfoam_adapter
 depends_on:    
   prepare:
     condition: service_completed_successfully

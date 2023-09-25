@@ -7,7 +7,7 @@ services:
       cache_from:
       - type=gha
       cache_to:
-      - type=gha,mode=max,scope=prepare
+      - type=gha,mode=min,scope=prepare
       args:
         {% for key, value in build_arguments.items() %}
           - {{key}}={{value}}
