@@ -1,6 +1,6 @@
-name: Run Testsuite (manual) # Unfortunately, we cannot modify the name: https://github.community/t/github-actions-dynamic-name-of-the-workflow-with-workflow-dispatch/150327
+name: Run Testsuite Workflow 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       suites:
         description: 'Comma seperated testsuites to execute'
@@ -14,24 +14,14 @@ on:
         description: 'Branch to take the systest from'
         default: 'develop'
         required: true
-        type: choice
-        options:
-            - 'develop'
-            - 'master'
-            - 'add-test-workflows'
+        type: string
       loglevel:
         description: 'loglevel used for the systemtests'
         default: 'INFO'
-        required: true
-        type: choice
-        options:
-            - 'DEBUG'
-            - 'INFO'
-            - 'WARNING'
-            - 'ERROR'
-            - 'CRITICAL'
+        required: false
+        type: string
 jobs:
-  build:
+  run_testsuite:
     runs-on: ubuntu-latest
     steps:
     - name: Report log
