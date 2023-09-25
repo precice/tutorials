@@ -195,6 +195,7 @@ class Systemtest:
             'tutorial_folder': self.tutorial_folder,
             'tutorial': self.tutorial.path.name,
             'services': rendered_services,
+            'build_arguments': self.params_to_use,
             'dockerfile_context': self.dockerfile_context,
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
         }
@@ -479,10 +480,9 @@ class Systemtest:
         self.__copy_tutorial_into_directory(run_directory)
         self.__copy_tools(run_directory)
         self.__put_gitignore(run_directory)
-        uid, gid = self.__get_uid_gid()
-        self.env["UID"] = uid
-        self.env["GID"] = gid
-        self.__write_env_file()
+        host_uid, host_gid = self.__get_uid_gid()
+        self.params_to_use['PRECICE_UID'] = host_uid
+        self.params_to_use['PRECICE_GID'] = host_gid
 
     def run(self, run_directory: Path):
         """

@@ -2,8 +2,9 @@ FROM ubuntu:22.04 as base_image
 USER root
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
-
-RUN useradd -ms /bin/bash precice
+ARG PRECICE_UID=1000
+ARG PRECICE_GID=1000
+RUN groupadd -g ${PRECICE_GID} precice && useradd -u ${PRECICE_UID} -g ${PRECICE_GID} -ms /bin/bash precice
 ENV PATH="${PATH}:/home/precice/.local/bin" 
 ENV LD_LIBRARY_PATH="/home/precice/.local/lib:${LD_LIBRARY_PATH}" 
 ENV CPATH="/home/precice/.local/include:$CPATH"

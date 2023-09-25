@@ -8,10 +8,12 @@ services:
       - type=gha
       cache_to:
       - type=gha,mode=max
-
+      args:
+        {% for key, value in build_arguments.items() %}
+          - {{key}}={{value}}
+        {% endfor %}
     volumes:
       - {{ run_directory }}:/runs
-    user: ${UID}:${GID}
     command: >
       /bin/bash -c "id &&
       cd '/runs/{{ tutorial_folder }}' && 
