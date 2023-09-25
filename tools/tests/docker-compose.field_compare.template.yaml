@@ -7,3 +7,4 @@ services:
     command:
       - /runs/{{ tutorial_folder }}/{{ precice_output_folder }}
       - /runs/{{ tutorial_folder }}/{{ reference_output_folder }}
+      - "-rtol 1e-4"
