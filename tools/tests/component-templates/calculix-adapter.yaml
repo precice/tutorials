@@ -8,7 +8,7 @@ build:
   cache_from:
   - type=gha
   cache_to:
-  - type=gha,mode=max
+  - type=gha,mode=max,scope=calculix_adapter
 depends_on:    
   prepare:
     condition: service_completed_successfully
