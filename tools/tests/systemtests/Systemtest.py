@@ -229,14 +229,13 @@ class Systemtest:
         except Exception as e:
             raise RuntimeError(f"An error occurred while getting the current Git ref: {e}") from e
 
-
     def _fetch_ref(self, repository: Path, ref: str):
         try:
             result = subprocess.run([
                 "git",
                 "-C", os.fspath(repository.resolve()),
-                "fetch", 
-                "origin", 
+                "fetch",
+                "origin",
                 f"{ref}:{ref}"
             ], check=True, timeout=60)
             if result.returncode != 0:
@@ -269,7 +268,7 @@ class Systemtest:
         ref_requested = self.params_to_use.get("TUTORIALS_REF")
         if ref_requested:
             logging.debug(f"Checking out tutorials {ref_requested} before copying")
-            self._fetch_ref(PRECICE_TUTORIAL_DIR,ref_requested)
+            self._fetch_ref(PRECICE_TUTORIAL_DIR, ref_requested)
             self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR, self.tutorial.path, ref_requested)
 
         self.tutorial_folder = slugify(f'{self.tutorial.path.name}_{self.case_combination.cases}_{current_time_string}')
