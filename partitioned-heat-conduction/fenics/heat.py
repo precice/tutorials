@@ -101,10 +101,12 @@ precice, precice_dt, initial_data = None, 0.0, None
 # Initialize the adapter according to the specific participant
 if problem is ProblemType.DIRICHLET:
     precice = Adapter(adapter_config_filename="precice-adapter-config-D.json")
-    precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=f_N_function)
+    precice.initialize(coupling_boundary, read_function_space=V, write_object=f_N_function)
+    precice_dt = precice.get_max_time_step_size()
 elif problem is ProblemType.NEUMANN:
     precice = Adapter(adapter_config_filename="precice-adapter-config-N.json")
-    precice_dt = precice.initialize(coupling_boundary, read_function_space=W, write_object=u_D_function)
+    precice.initialize(coupling_boundary, read_function_space=W, write_object=u_D_function)
+    precice_dt = precice.get_max_time_step_size()
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -175,7 +177,7 @@ if problem is ProblemType.DIRICHLET:
 while precice.is_coupling_ongoing():
 
     # write checkpoint
-    if precice.is_action_required(precice.action_write_iteration_checkpoint()):
+    if precice.requires_writing_checkpoint():
         precice.store_checkpoint(u_n, t, n)
 
     read_data = precice.read_data(dt(0))
@@ -198,10 +200,11 @@ while precice.is_coupling_ongoing():
         # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
         precice.write_data(u_np1)
 
-    precice_dt = precice.advance(dt(0))
+    precice.advance(dt(0))
+    precice_dt = precice.get_max_time_step_size()
 
     # roll back to checkpoint
-    if precice.is_action_required(precice.action_read_iteration_checkpoint()):
+    if precice.requires_reading_checkpoint():
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
         u_n.assign(u_cp)
         t = t_cp
