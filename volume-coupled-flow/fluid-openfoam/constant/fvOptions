@@ -1,0 +1,42 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvOptions;
+}
+
+codedSource
+{
+    type            vectorCodedSource;
+    selectionMode   cellSet;
+    cellSet         box1;
+
+    fields          (U);
+    name            sourceTime;
+
+    codeConstrain //constrain
+    #{
+        return;
+    #};
+
+    codeCorrect //correct
+    #{
+        const labelList& cells = this->cells();
+        const volVectorField& U_vol = mesh_.lookupObject<volVectorField>("U_vol");
+        for(auto cell : cells)
+        {
+            fld[cell].x() = U_vol[cell].x();
+        }
+    #};
+
+    codeAddSup // source term
+    #{
+        return;
+    #};
+
+    codeAddSupRho
+    #{
+        return;
+    #};
+}

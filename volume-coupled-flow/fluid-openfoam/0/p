@@ -1,0 +1,43 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      p;
+}
+
+dimensions      [ 1 -1 -2 0 0 0 0 ];
+
+internalField   uniform 103500;
+
+boundaryField
+{
+    inlet
+    {
+        type            calculated;
+        value           $internalField;
+    }
+    outlet
+    {
+        type            calculated;
+        value           $internalField;
+    }
+    upperWall
+    {
+        type            calculated;
+        value           $internalField;
+    }
+    lowerWall
+    {
+        type            calculated;
+        value           $internalField;
+    }
+    frontAndBack
+    {
+        type            empty;
+    }
+    defaultFaces
+    {
+        type            empty;
+    }
+}
