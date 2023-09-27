@@ -28,12 +28,11 @@ clean_precice_logs() {
         echo "---- Cleaning up preCICE logs in $(pwd)"
         rm -fv ./precice-*-iterations.log \
             ./precice-*-convergence.log \
-            ./precice-*-events.json \
-            ./precice-*-events-summary.log \
-            ./precice-postProcessingInfo.log \
             ./precice-*-watchpoint-*.log \
             ./precice-*-watchintegral-*.log \
+            ./events.json \
             ./core
+        rm -rfv ./precice-events/
     )
 }
 
@@ -43,6 +42,8 @@ clean_calculix() {
         cd "$1"
         echo "--- Cleaning up CalculiX case in $(pwd)"
         rm -fv ./*.cvg ./*.dat ./*.frd ./*.sta ./*.12d spooles.out dummy
+        rm -fv WarnNodeMissMultiStage.nam
+        rm -fv ./*.eig
         clean_precice_logs .
     )
 }
@@ -73,7 +74,6 @@ clean_fenics() {
         set -e -u
         cd "$1"
         echo "--- Cleaning up FEniCS case in $(pwd)"
-        rm -fv spooles.out output/*
         rm -rfv ./output/
         rm -rfv ./preCICE-output/
         clean_precice_logs .
@@ -100,7 +100,7 @@ clean_openfoam() {
             # shellcheck disable=SC1090 # This is an OpenFOAM file which we don't need to check
             . "${WM_PROJECT_DIR}/bin/tools/CleanFunctions"
             cleanCase
-            rm -rfv 0/uniform/functionObjects/functionObjectProperties
+            rm -rfv 0/uniform/functionObjects/functionObjectProperties history
         fi
         rm -rfv ./preCICE-output/
         clean_precice_logs .
@@ -114,6 +114,15 @@ clean_su2() {
         echo "--- Cleaning up SU2 case in $(pwd)"
         rm -fv ./restart_flow_*.dat forces_breakdown.dat ./surface_flow_*.csv ./flow_*.vtk ./history_*.vtk
         clean_precice_logs .
+    )
+}
+
+clean_aste() {
+    (
+        set -e -u
+        echo "--- Cleaning up ASTE results"
+        rm -fv result.vtk result.stats.json
+        rm -fvr fine_mesh coarse_mesh mapped
     )
 }
 

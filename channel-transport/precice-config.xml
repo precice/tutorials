@@ -7,41 +7,36 @@
       enabled="true" />
   </log>
 
-  <solver-interface dimensions="2">
-    <data:vector name="Velocity" />
+  <data:vector name="Velocity" />
 
-    <mesh name="Fluid-Mesh">
-      <use-data name="Velocity" />
-    </mesh>
+  <mesh name="Fluid-Mesh" dimensions="2">
+    <use-data name="Velocity" />
+  </mesh>
 
-    <mesh name="Transport-Mesh">
-      <use-data name="Velocity" />
-    </mesh>
+  <mesh name="Transport-Mesh" dimensions="2">
+    <use-data name="Velocity" />
+  </mesh>
 
-    <participant name="Fluid">
-      <use-mesh name="Fluid-Mesh" provide="yes" />
-      <use-mesh name="Transport-Mesh" from="Transport" />
-      <write-data name="Velocity" mesh="Fluid-Mesh" />
-      <mapping:rbf-compact-tps-c2
-        direction="write"
-        support-radius="0.4"
-        from="Fluid-Mesh"
-        to="Transport-Mesh"
-        constraint="consistent" />
-    </participant>
+  <participant name="Fluid">
+    <provide-mesh name="Fluid-Mesh" />
+    <receive-mesh name="Transport-Mesh" from="Transport" />
+    <write-data name="Velocity" mesh="Fluid-Mesh" />
+    <mapping:rbf direction="write" from="Fluid-Mesh" to="Transport-Mesh" constraint="consistent">
+      <basis-function:compact-tps-c2 support-radius="0.4" />
+    </mapping:rbf>
+  </participant>
 
-    <participant name="Transport">
-      <use-mesh name="Transport-Mesh" provide="yes" />
-      <read-data name="Velocity" mesh="Transport-Mesh" />
-    </participant>
+  <participant name="Transport">
+    <provide-mesh name="Transport-Mesh" />
+    <read-data name="Velocity" mesh="Transport-Mesh" />
+  </participant>
 
-    <m2n:sockets from="Fluid" to="Transport" exchange-directory=".." />
+  <m2n:sockets acceptor="Fluid" connector="Transport" exchange-directory=".." />
 
-    <coupling-scheme:serial-explicit>
-      <time-window-size value="0.005" />
-      <max-time value="1.0" />
-      <participants first="Fluid" second="Transport" />
-      <exchange data="Velocity" mesh="Transport-Mesh" from="Fluid" to="Transport" />
-    </coupling-scheme:serial-explicit>
-  </solver-interface>
+  <coupling-scheme:serial-explicit>
+    <time-window-size value="0.005" />
+    <max-time value="1.0" />
+    <participants first="Fluid" second="Transport" />
+    <exchange data="Velocity" mesh="Transport-Mesh" from="Fluid" to="Transport" />
+  </coupling-scheme:serial-explicit>
 </precice-configuration>

@@ -6,7 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 <!-- markdownlint-configure-file {"MD024": { "siblings_only": true } } -->
 
-## [Unreleased]
+## [v202211.0] 2022-11-21
+
+### Added
+
+- Added an [ASTE tutorial](https://precice.org/tutorials-aste-turbine.html) [#244](https://github.com/precice/tutorials/pull/244).
+- Added an [oscillator tutorial](https://precice.org/tutorials-oscillator.html) with Python [#297](https://github.com/precice/tutorials/pull/297).
+- Added a uni-directional volume-coupled [channel transport tutorial](https://precice.org/tutorials-channel-transport.html) [#269](https://github.com/precice/tutorials/pull/269).
+- Added a volume-coupled [channel transport with chemical reactions tutorial](https://precice.org/tutorials-channel-transport-reaction.html) [#278](https://github.com/precice/tutorials/pull/278).
+- Added a [partitioned heat conduction using direct mesh access tutorial](https://precice.org/tutorials-partitioned-heat-conduction-direct.html) [#299](https://github.com/precice/tutorials/pull/299).
+- Added a [simplified heat exchanger tutorial](https://precice.org/tutorials-heat-exchanger-simplified.html) [#301](https://github.com/precice/tutorials/pull/301).
+- Added a solid-openfoam and a solid-solids4foam case for the perpendicular-flap tutorial [#286](https://github.com/precice/tutorials/pull/286).
+- Added a dune-fem case for the flow-over-heated-plate tutorial [#274](https://github.com/precice/tutorials/pull/274).
+- Added a CalculiX case for the flow-over-heated-plate tutorial [#271](https://github.com/precice/tutorials/pull/271).
+- Added a modal dynamic simulation option for the CalculiX case of the perpendicular-flap tutorial [#284](https://github.com/precice/tutorials/pull/284).
+- Added a CI workflow to automatically update the website every time there are new documentation changes [#267](https://github.com/precice/tutorials/pull/267)
+- Added a gitignore for code and binaries [#290](https://github.com/precice/tutorials/pull/290).
+- Added more documentation [#264](https://github.com/precice/tutorials/pull/264), [#265](https://github.com/precice/tutorials/pull/265), [#266](https://github.com/precice/tutorials/pull/266) and fixed some typos [#285](https://github.com/precice/tutorials/pull/285).
+
+### Changed
+
+- Adapted the multiple-perpendicular-flaps tutorial to a [new naming convention](https://precice.org/community-contribute-to-precice.html#contributing-tutorials) for tutorials with multiple participants [#303](https://github.com/precice/tutorials/pull/303).
+- Adapted the material properties of the FEniCS case in elastic-tube-3d to match the CalculiX case results [#259](https://github.com/precice/tutorials/issues/259).
+- Adapted the solid case of the Quickstart tutorial to work with the Intel oneAPI C++ compiler [#291](https://github.com/precice/tutorials/pull/291).
+- Made the Nutils case of the partitioned heat conduction tutorial compatible with Nutils versions 6 to 8 [#295](https://github.com/precice/tutorials/pull/295), [#298](https://github.com/precice/tutorials/pull/298).
 
 ## [v202202.0] 2022-02-09
 
