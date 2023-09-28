@@ -118,10 +118,8 @@ class CouplingDomain(SubDomain):
 
 
 precice = fenicsprecice.Adapter(adapter_config_filename="fluid-config.json")
-precice_dt = precice.initialize(
-    coupling_subdomain=CouplingDomain(),
-    write_object=u_)
-
+precice.initialize(coupling_subdomain=CouplingDomain(), write_object=u_)
+precice_dt = precice.get_max_time_step_size()
 
 dt = np.min([default_dt, precice_dt])
 k.assign(dt)
@@ -155,7 +153,8 @@ while precice.is_coupling_ongoing():
 
     vtkfile << u_
 
-    precice_dt = precice.advance(dt)
+    precice.advance(dt)
+    precice_dt = precice.get_max_time_step_size()
     dt = np.min([default_dt, precice_dt])
     k.assign(dt)
 

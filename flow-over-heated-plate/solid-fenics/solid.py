@@ -115,13 +115,14 @@ u_n.rename("T", "")
 # Adapter definition and initialization
 precice = Adapter(adapter_config_filename="precice-adapter-config.json")
 
-precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V_flux_y)
+precice.initialize(coupling_boundary, read_function_space=V, write_object=V_flux_y)
 
 # Create a FEniCS Expression to define and control the coupling boundary values
 coupling_expression = precice.create_coupling_expression()
 
 # Assigning appropriate dt
 dt = Constant(0)
+precice_dt = precice.get_max_time_step_size()
 dt.assign(np.min([fenics_dt, precice_dt]))
 
 # Define variational problem
@@ -162,12 +163,13 @@ while precice.is_coupling_ongoing():
     if precice.requires_writing_checkpoint():  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
 
-    read_data = precice.read_data()
+    precice_dt = precice.get_max_time_step_size()
+    dt.assign(np.min([fenics_dt, precice_dt]))
+    read_data = precice.read_data(dt)
 
     # Update the coupling expression with the new read data
     precice.update_coupling_expression(coupling_expression, read_data)
 
-    dt.assign(np.min([fenics_dt, precice_dt]))
 
     # Compute solution
     solve(a == L, u_np1, bcs)
@@ -177,7 +179,7 @@ while precice.is_coupling_ongoing():
     fluxes_y = fluxes.sub(1)  # only exchange y component of flux.
     precice.write_data(fluxes_y)
 
-    precice_dt = precice.advance(dt(0))
+    precice.advance(dt(0))
 
     if precice.requires_reading_checkpoint():  # roll back to checkpoint
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()

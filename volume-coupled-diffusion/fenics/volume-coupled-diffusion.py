@@ -48,11 +48,11 @@ elif args.drain:
 u_n = interpolate(u_ini, V)
 
 
-dt = precice.initialize(AllDomain(), read_function_space=V, write_object=u_n)
+precice.initialize(AllDomain(), read_function_space=V, write_object=u_n)
 volume_term = precice.create_coupling_expression()
 f = Function(V)
 
-
+dt = precice.get_max_time_step_size()
 dt_inv = Constant(1 / dt)
 
 diffusion_source = 1
@@ -96,7 +96,8 @@ while precice.is_coupling_ongoing():
     if precice.requires_writing_checkpoint():
         precice.store_checkpoint(u_n, t, n)
 
-    read_data = precice.read_data()
+    dt = precice.get_max_time_step_size()
+    read_data = precice.read_data(dt)
 
     # Update the coupling expression with the new read data
     precice.update_coupling_expression(volume_term, read_data)
@@ -111,7 +112,7 @@ while precice.is_coupling_ongoing():
     # Write data to preCICE according to which problem is being solved
     precice.write_data(u_np1)
 
-    dt = precice.advance(dt)
+    precice.advance(dt)
 
     # roll back to checkpoint
     if precice.requires_reading_checkpoint():
