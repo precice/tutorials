@@ -65,8 +65,8 @@
       to="Dirichlet"
       initialize="true"
       substeps="true" />
-    <relative-convergence-measure data="Heat-Flux" mesh="Dirichlet-Mesh" limit="1e-5" />
-    <relative-convergence-measure data="Temperature" mesh="Neumann-Mesh" limit="1e-5" />
+    <relative-convergence-measure data="Heat-Flux" mesh="Dirichlet-Mesh" limit="1e-10" />
+    <relative-convergence-measure data="Temperature" mesh="Neumann-Mesh" limit="1e-10" />
     <!-- <acceleration:IQN-ILS>
       <data name="Temperature" mesh="Neumann-Mesh" />
       <initial-relaxation value="0.1" />
