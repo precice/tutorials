@@ -27,9 +27,8 @@ class CouplingDomain(SubDomain):
 # Initialize preCICE
 precice = fenicsprecice.Adapter(
     adapter_config_filename="chemical-reaction-advection-diffusion.json")
-precice_dt = precice.initialize(
-    coupling_subdomain=CouplingDomain(),
-    read_function_space=W)
+precice.initialize(coupling_subdomain=CouplingDomain(), read_function_space=W)
+precice_dt = precice.get_max_time_step_size()
 
 flow_expr = precice.create_coupling_expression()
 
@@ -95,13 +94,14 @@ if MPI.COMM_WORLD.rank == 0:
   # No implicit coupling
 while precice.is_coupling_ongoing():
 
-    read_data = precice.read_data()
+    precice_dt = precice.get_max_time_step_size()
+    dt = np.min([default_dt, precice_dt])
+    read_data = precice.read_data(dt)
     precice.update_coupling_expression(flow_expr, read_data)
     flow_old.assign(flow)
     flow.interpolate(flow_expr)
     # If we add writing, do it here
 
-    dt = np.min([default_dt, precice_dt])
     k.assign(1. / dt)
 
     t += dt
@@ -128,6 +128,6 @@ while precice.is_coupling_ongoing():
     vtkfileC << u_C, t
     vtkfileFlow << flow, t
 
-    precice_dt = precice.advance(dt)
+    precice.advance(dt)
 
 precice.finalize()

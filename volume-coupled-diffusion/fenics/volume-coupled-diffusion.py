@@ -48,11 +48,11 @@ elif args.drain:
 u_n = interpolate(u_ini, V)
 
 
-dt = precice.initialize(AllDomain(), read_function_space=V, write_object=u_n)
+precice.initialize(AllDomain(), read_function_space=V, write_object=u_n)
 volume_term = precice.create_coupling_expression()
 f = Function(V)
 
-
+dt = precice.get_max_time_step_size()
 dt_inv = Constant(1 / dt)
 
 diffusion_source = 1
@@ -87,16 +87,17 @@ ranks = File("output/ranks%s.pvd" % precice.get_participant_name())
 # output solution and reference solution at t=0, n=0
 n = 0
 print('output u^%d and u_ref^%d' % (n, n))
-solution_out << u_n
+solution_out << (u_n, t)
 ranks << mesh_rank
 
 while precice.is_coupling_ongoing():
 
     # write checkpoint
-    if precice.is_action_required(precice.action_write_iteration_checkpoint()):
+    if precice.requires_writing_checkpoint():
         precice.store_checkpoint(u_n, t, n)
 
-    read_data = precice.read_data()
+    dt = precice.get_max_time_step_size()
+    read_data = precice.read_data(dt)
 
     # Update the coupling expression with the new read data
     precice.update_coupling_expression(volume_term, read_data)
@@ -111,10 +112,10 @@ while precice.is_coupling_ongoing():
     # Write data to preCICE according to which problem is being solved
     precice.write_data(u_np1)
 
-    dt = precice.advance(dt)
+    precice.advance(dt)
 
     # roll back to checkpoint
-    if precice.is_action_required(precice.action_read_iteration_checkpoint()):
+    if precice.requires_reading_checkpoint():
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
         u_n.assign(u_cp)
         t = t_cp
@@ -125,7 +126,7 @@ while precice.is_coupling_ongoing():
         n += 1
 
     if precice.is_time_window_complete():
-        solution_out << u_n
+        solution_out << (u_n, t)
 
 # Hold plot
 precice.finalize()
