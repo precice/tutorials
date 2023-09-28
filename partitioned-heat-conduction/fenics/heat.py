@@ -58,7 +58,7 @@ command_group = parser.add_mutually_exclusive_group(required=True)
 command_group.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest="dirichlet",
                            action="store_true")
 command_group.add_argument("-n", "--neumann", help="create a neumann problem", dest="neumann", action="store_true")
-parser.add_argument("-e", "--error-tol", help="set error tolerance", type=float, default=10**-6,)
+parser.add_argument("-e", "--error-tol", help="set error tolerance", type=float, default=10**-8,)
 
 args = parser.parse_args()
 
@@ -158,7 +158,7 @@ ranks = File("output/ranks%s.pvd" % precice.get_participant_name())
 # output solution and reference solution at t=0, n=0
 n = 0
 print('output u^%d and u_ref^%d' % (n, n))
-temperature_out << u_n
+temperature_out << (u_n, t)
 ref_out << u_ref
 ranks << mesh_rank
 
@@ -180,12 +180,11 @@ while precice.is_coupling_ongoing():
     if precice.requires_writing_checkpoint():
         precice.store_checkpoint(u_n, t, n)
 
-    read_data = precice.read_data(dt(0))
+    dt.assign(np.min([fenics_dt, precice_dt]))
+    read_data = precice.read_data(dt)
 
     # Update the coupling expression with the new read data
     precice.update_coupling_expression(coupling_expression, read_data)
-
-    dt.assign(np.min([fenics_dt, precice_dt]))
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
@@ -200,7 +199,7 @@ while precice.is_coupling_ongoing():
         # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
         precice.write_data(u_np1)
 
-    precice.advance(dt(0))
+    precice.advance(dt)
     precice_dt = precice.get_max_time_step_size()
 
     # roll back to checkpoint
@@ -221,7 +220,7 @@ while precice.is_coupling_ongoing():
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
         print('output u^%d and u_ref^%d' % (n, n))
-        temperature_out << u_n
+        temperature_out << (u_n, t)
         ref_out << u_ref
         error_out << error_pointwise
 

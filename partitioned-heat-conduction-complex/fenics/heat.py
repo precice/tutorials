@@ -59,9 +59,6 @@ parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0,
                     type=float)
-parser.add_argument("-a", "--arbitrary-coupling-interface",
-                    help="uses more general, but less exact method for interpolation on coupling interface,"
-                    "see https://github.com/precice/fenics-adapter/milestone/1", action='store_true')
 parser.add_argument("-i", "--interface", metavar="interface_type string", type=str, choices=['simple', 'complex'],
                     help="Type of coupling interface case to be solved. Options: simple, complex", default="simple")
 parser.add_argument("-dom", "--domain", metavar='domain_type string', type=str,
@@ -103,14 +100,15 @@ precice, precice_dt, initial_data = None, 0.0, None
 # Initialize the adapter according to the specific participant
 if problem is ProblemType.DIRICHLET:
     precice = Adapter(adapter_config_filename="precice-adapter-config-D.json")
-    precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=f_N_function)
+    precice.initialize(coupling_boundary, read_function_space=V, write_object=f_N_function)
 elif problem is ProblemType.NEUMANN:
     precice = Adapter(adapter_config_filename="precice-adapter-config-N.json")
-    precice_dt = precice.initialize(coupling_boundary, read_function_space=V_g, write_object=u_D_function)
+    precice.initialize(coupling_boundary, read_function_space=V_g, write_object=u_D_function)
 
 boundary_marker = False
 
 dt = Constant(0)
+precice_dt = precice.get_max_time_step_size()
 dt.assign(np.min([fenics_dt, precice_dt]))
 
 # Define variational problem
@@ -173,7 +171,7 @@ ranks = File("output/ranks%s.pvd" % precice.get_participant_name())
 # output solution and reference solution at t=0, n=0
 n = 0
 print('output u^%d and u_ref^%d' % (n, n))
-temperature_out << u_n
+temperature_out << (u_n, t)
 ref_out << u_ref
 ranks << mesh_rank
 
@@ -191,10 +189,12 @@ flux.rename("Flux", "")
 while precice.is_coupling_ongoing():
 
     # write checkpoint
-    if precice.is_action_required(precice.action_write_iteration_checkpoint()):
+    if precice.requires_writing_checkpoint():
         precice.store_checkpoint(u_n, t, n)
 
-    read_data = precice.read_data()
+    precice_dt = precice.get_max_time_step_size()
+    dt.assign(np.min([fenics_dt, precice_dt]))
+    read_data = precice.read_data(dt)
     if problem is ProblemType.DIRICHLET and (domain_part is DomainPart.CIRCULAR or domain_part is DomainPart.RECTANGLE):
         # We have to data for an arbitrary point that is not on the circle, to obtain exact solution.
         # See https://github.com/precice/fenics-adapter/issues/113 for details.
@@ -202,8 +202,6 @@ while precice.is_coupling_ongoing():
 
     # Update the coupling expression with the new read data
     precice.update_coupling_expression(coupling_expression, read_data)
-
-    dt.assign(np.min([fenics_dt, precice_dt]))
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
@@ -217,10 +215,10 @@ while precice.is_coupling_ongoing():
         # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
         precice.write_data(u_np1)
 
-    precice_dt = precice.advance(dt(0))
+    precice.advance(dt(0))
 
     # roll back to checkpoint
-    if precice.is_action_required(precice.action_read_iteration_checkpoint()):
+    if precice.requires_reading_checkpoint():
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
         u_n.assign(u_cp)
         t = t_cp
@@ -237,7 +235,7 @@ while precice.is_coupling_ongoing():
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
         print('output u^%d and u_ref^%d' % (n, n))
-        temperature_out << u_n
+        temperature_out << (u_n, t)
         ref_out << u_ref
         error_out << error_pointwise
 
