@@ -159,7 +159,7 @@ ranks = File("output/ranks%s.pvd" % precice.get_participant_name())
 # output solution and reference solution at t=0, n=0
 n = 0
 print('output u^%d and u_ref^%d' % (n, n))
-temperature_out << u_n
+temperature_out << (u_n, t)
 ref_out << u_ref
 ranks << mesh_rank
 
@@ -221,7 +221,7 @@ while precice.is_coupling_ongoing():
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
         # output solution and reference solution at t_n+1
         print('output u^%d and u_ref^%d' % (n, n))
-        temperature_out << u_n
+        temperature_out << (u_n, t)
         ref_out << u_ref
         error_out << error_pointwise
 

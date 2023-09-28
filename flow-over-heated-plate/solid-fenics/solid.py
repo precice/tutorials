@@ -150,7 +150,7 @@ ranks << mesh_rank
 
 # Create output file
 file_out = File("output/%s.pvd" % precice.get_participant_name())
-file_out << u_n
+file_out << (u_n, t)
 
 print("output vtk for time = {}".format(float(t)))
 n = 0
@@ -194,7 +194,7 @@ while precice.is_coupling_ongoing():
         tol = 10e-5  # we need some tolerance, since otherwise output might be skipped.
         if abs((t + tol) % dt_out) < 2 * tol:  # output if t is a multiple of dt_out
             print("output vtk for time = {}".format(float(t)))
-            file_out << u_n
+            file_out << (u_n, t)
 
     # Update dirichlet BC
     u_D.t = t + float(dt)

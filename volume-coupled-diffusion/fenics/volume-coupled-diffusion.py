@@ -87,7 +87,7 @@ ranks = File("output/ranks%s.pvd" % precice.get_participant_name())
 # output solution and reference solution at t=0, n=0
 n = 0
 print('output u^%d and u_ref^%d' % (n, n))
-solution_out << u_n
+solution_out << (u_n, t)
 ranks << mesh_rank
 
 while precice.is_coupling_ongoing():
@@ -126,7 +126,7 @@ while precice.is_coupling_ongoing():
         n += 1
 
     if precice.is_time_window_complete():
-        solution_out << u_n
+        solution_out << (u_n, t)
 
 # Hold plot
 precice.finalize()

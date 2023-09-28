@@ -169,7 +169,7 @@ displacement_out = File("output/u_fsi.pvd")
 
 u_n.rename("Displacement", "")
 u_np1.rename("Displacement", "")
-displacement_out << u_n
+displacement_out << (u_n, t)
 
 while precice.is_coupling_ongoing():
 
@@ -223,6 +223,6 @@ while precice.is_coupling_ongoing():
             displacement_out << (u_n, t)
 
 # Plot tip displacement evolution
-displacement_out << u_n
+displacement_out << (u_n, t)
 
 precice.finalize()
