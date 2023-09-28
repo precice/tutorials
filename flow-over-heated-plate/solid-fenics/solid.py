@@ -170,7 +170,6 @@ while precice.is_coupling_ongoing():
     # Update the coupling expression with the new read data
     precice.update_coupling_expression(coupling_expression, read_data)
 
-
     # Compute solution
     solve(a == L, u_np1, bcs)
 

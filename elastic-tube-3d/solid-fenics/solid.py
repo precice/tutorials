@@ -199,7 +199,6 @@ while precice.is_coupling_ongoing():
     assert (b is not b_forces)
     solve(A, u_np1.vector(), b_forces)
 
-
     # Write relative displacements to preCICE
     u_delta.vector()[:] = u_np1.vector()[:] - u_n.vector()[:]
     precice.write_data(u_delta)
