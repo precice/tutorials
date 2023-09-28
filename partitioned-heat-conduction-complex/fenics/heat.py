@@ -59,9 +59,6 @@ parser.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest
 parser.add_argument("-n", "--neumann", help="create a neumann problem", dest='neumann', action='store_true')
 parser.add_argument("-g", "--gamma", help="parameter gamma to set temporal dependence of heat flux", default=0.0,
                     type=float)
-parser.add_argument("-a", "--arbitrary-coupling-interface",
-                    help="uses more general, but less exact method for interpolation on coupling interface,"
-                    "see https://github.com/precice/fenics-adapter/milestone/1", action='store_true')
 parser.add_argument("-i", "--interface", metavar="interface_type string", type=str, choices=['simple', 'complex'],
                     help="Type of coupling interface case to be solved. Options: simple, complex", default="simple")
 parser.add_argument("-dom", "--domain", metavar='domain_type string', type=str,
