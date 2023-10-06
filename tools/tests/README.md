@@ -19,6 +19,22 @@ python3 systemtests.py --suites=openfoam-adapter-release,<someothersuite>
 To discover all tests, use `python print_test_suites.py`.
 To be able to fill in the right case tuple into the `tests.yaml`, you can use the `python3 print_case_combinations.py` script.
 
+## Adding new tests
+
+### Adding tutorials
+
+In order for the systemtests to pick up the tutorial we need to define a `metadata.yaml` in the folder of the tutorial. There are a few `metadata.yaml` already present to get inspiration from. You can also have a look at the implementation details but normally the currently available ones should be easy to adopt. You can check your metadata parsing by `python print_metadata.py` and `python print_case_combinations.py`
+
+### Adding Testsuites
+
+To add a testsuite just open the `tests.yaml` file and use the output of `python print_case_combinations.py` to add the right case combinations you want to test. Note that you can specify a `reference_result` which is not yet present. The `generate_reference_data.py` will pick that up and create it for you.
+Note that its important to carefully check the paths of the `reference_result` in order to not have typos in there. Also note that same cases in different testsuites should use the same `reference_result`.
+
+### Generate reference results
+
+Since we need data to compare against, you need to run `python generate_reference_data.py`. This process might take a while.
+Please include the generated reference results in the pull request as they are strongly connected to the new testsuites.
+
 ## Implementation details
 
 Each tutorial contains automation scripts (mainly `run.sh` and `clean.sh`), as well as metadata (`metadata.yaml`). The metadata file describes the available cases, how to run them, as well as their dependencies. A central `tests.yaml` file in this directory defines test suites, which execute different combinations of cases. The Python script `systemtests.py` executes the tests, allowing to filter for specific components or test suites.
