@@ -7,7 +7,6 @@ int main(int argc, char **argv)
 {
   std::cout << "Starting Solid Solver..." << std::endl;
   using namespace precice;
-  using namespace precice::constants;
 
   if (argc != 2) {
     std::cout << "Fluid: Usage: " << argv[0] << " configurationFileName>" << std::endl;
@@ -29,9 +28,9 @@ int main(int argc, char **argv)
   std::cout << "preCICE configured..." << std::endl;
 
   int dimensions           = interface.getDimensions();
-  int meshID               = interface.getMeshID("Solid-Nodes-Mesh");
-  int crossSectionLengthID = interface.getDataID("CrossSectionLength", meshID);
-  int pressureID           = interface.getDataID("Pressure", meshID);
+  auto meshName               = "Solid-Nodes-Mesh";
+  auto crossSectionLengthName = "CrossSectionLength";
+  auto pressureName           = "Pressure";
 
   std::vector<double> pressure(chunkLength, 0.0);
   std::vector<double> crossSectionLength(chunkLength, 1.0);
@@ -44,40 +43,28 @@ int main(int argc, char **argv)
   }
 
   std::vector<int> vertexIDs(chunkLength);
-  interface.setMeshVertices(meshID, chunkLength, grid.data(), vertexIDs.data());
+  interface.setMeshVertices(meshName, chunkLength, grid.data(), vertexIDs.data());
 
-  double t  = 0;
+  if (interface.requiresInitialData()) {
+    interface.writeBlockScalarData(meshName, crossSectionLengthName, chunkLength, vertexIDs.data(), crossSectionLength.data());
+  }
+
   std::cout << "Initialize preCICE..." << std::endl;
   double dt = interface.initialize();
 
-  if (interface.isActionRequired(actionWriteInitialData())) {
-    interface.writeBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
-    interface.markActionFulfilled(actionWriteInitialData());
-  }
-
-  interface.initializeData();
-
   while (interface.isCouplingOngoing()) {
-    if (interface.isActionRequired(actionWriteIterationCheckpoint())) {
-      interface.markActionFulfilled(actionWriteIterationCheckpoint());
+    if (interface.requiresWritingCheckpoint()) {
     }
 
-    if (interface.isReadDataAvailable()) {
-      interface.readBlockScalarData(pressureID, chunkLength, vertexIDs.data(), pressure.data());
-    }
+    interface.readBlockScalarData(meshName, pressureName, chunkLength, vertexIDs.data(), pressure.data());
 
     SolidComputeSolution(chunkLength, pressure.data(), crossSectionLength.data()); // Call Solver
 
-    if (interface.isWriteDataRequired(dt)) {
-      interface.writeBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
-    }
+    interface.writeBlockScalarData(meshName, crossSectionLengthName, chunkLength, vertexIDs.data(), crossSectionLength.data());
 
     interface.advance(dt);
 
-    if (interface.isActionRequired(actionReadIterationCheckpoint())) { // i.e. fluid not yet converged
-      interface.markActionFulfilled(actionReadIterationCheckpoint());
-    } else {
-      t += dt;
+    if (interface.requiresReadingCheckpoint()) { // i.e. fluid not yet converged
     }
   }
 

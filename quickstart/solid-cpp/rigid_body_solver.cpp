@@ -114,7 +114,7 @@ int main()
   // The moment of inertia is computed according to the rigid body configuration:
   // a thin rectangular plate of height h, length l and mass m with axis of rotation
   // at the end of the plate: I = (1/12)*m*(4*l^2+h^2)
-  constexpr double inertia_moment = (1. / 12) * mass * (4 * std::pow(length, 2) + std::pow(height, 2));
+  constexpr double inertia_moment = (1. / 12) * mass * (4 * length * length + height * height);
   constexpr double delta_y        = height / (n_vertical_nodes - 1);
   constexpr double delta_x        = length / (n_horizontal_nodes - 1);
 
