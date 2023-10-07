@@ -8,7 +8,7 @@ jobs:
   run_testsuite_manual:
     uses: ./.github/workflows/run_testsuite_workflow.yml
     with: 
-      suites: ${{ inputs.suites }}
-      build_args: ${{ inputs.build_args }}
-      systests_branch: ${{ inputs.systests_branch }}
-      loglevel: ${{ inputs.loglevel }}
+      suites: fenics_test
+      build_args: ""
+      systests_branch: develop
+      loglevel: "DEBUG"
