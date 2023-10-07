@@ -1,0 +1,14 @@
+name: Run Testsuite (onPush) # Unfortunately, we cannot modify the name: https://github.community/t/github-actions-dynamic-name-of-the-workflow-with-workflow-dispatch/150327
+on:
+  push:
+    branches:
+      - 'develop'
+      - 'gha_triggering_mechanism'
+jobs:
+  run_testsuite_manual:
+    uses: ./.github/workflows/run_testsuite_workflow.yml
+    with: 
+      suites: ${{ inputs.suites }}
+      build_args: ${{ inputs.build_args }}
+      systests_branch: ${{ inputs.systests_branch }}
+      loglevel: ${{ inputs.loglevel }}
