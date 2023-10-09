@@ -22,7 +22,7 @@ boundaryField
     DirichletBoundary
     {
         type            groovyBC;
-        variables       "val=1+pow(pos().x,2)+(3*pow(pos().y,2))+1.3*time();";
+        variables       "val=1+pow(pos().x,2)+(3*pow(pos().y,2))+1.2*time();";
         valueExpression "val";
         value           uniform 0;
         evaluateDuringConstruction 1;
