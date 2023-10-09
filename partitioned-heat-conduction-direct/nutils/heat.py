@@ -7,7 +7,7 @@ import numpy as np
 import precice
 
 
-def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.3):
+def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
 
     if side == 'Dirichlet':
         x_grid = np.linspace(0, 1, n)

@@ -75,7 +75,7 @@ fenics_dt = .1
 # Error is bounded by coupling accuracy. In theory we can obtain the analytical solution.
 error_tol = 10 ** -6
 alpha = 3  # parameter alpha
-beta = 1.3  # parameter beta
+beta = 1.2  # parameter beta
 gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 
 # Create mesh and separate mesh components for grid, boundary and coupling interface

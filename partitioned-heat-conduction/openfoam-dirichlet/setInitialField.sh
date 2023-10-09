@@ -5,4 +5,4 @@ set -e -u
 rm -rf ./0
 cp -r ./0.orig 0
 # Initialize the new field
-funkySetFields -keepPatches -field T -expression '1+pow(pos().x,2)+(3*pow(pos().y,2))+1.3*time()' -time '0'
+funkySetFields -keepPatches -field T -expression '1+pow(pos().x,2)+(3*pow(pos().y,2))+1.2*time()' -time '0'
