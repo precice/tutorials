@@ -166,11 +166,6 @@ ranks << mesh_rank
 error_total, error_pointwise = compute_errors(u_n, u_ref, V)
 error_out << error_pointwise
 
-# set t_1 = t_0 + dt, this gives u_D^1
-# call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
-u_D.t = t + dt(0)
-f.t = t + dt(0)
-
 if problem is ProblemType.DIRICHLET:
     flux = Function(V_g)
     flux.rename("Heat-Flux", "")
@@ -181,7 +176,14 @@ while precice.is_coupling_ongoing():
     if precice.requires_writing_checkpoint():
         precice.store_checkpoint(u_n, t, n)
 
+    precice_dt = precice.get_max_time_step_size()
     dt.assign(np.min([fenics_dt, precice_dt]))
+
+    # Dirichlet BC and RHS need to point to end of current timestep
+    u_D.t = t + float(dt)
+    f.t = t + float(dt)
+
+    # Coupling BC needs to point to end of current timestep
     read_data = precice.read_data(dt)
 
     # Update the coupling expression with the new read data
@@ -224,10 +226,6 @@ while precice.is_coupling_ongoing():
         temperature_out << (u_n, t)
         ref_out << u_ref
         error_out << error_pointwise
-
-    # Update Dirichlet BC
-    u_D.t = t + float(dt)
-    f.t = t + float(dt)
 
 # Hold plot
 precice.finalize()

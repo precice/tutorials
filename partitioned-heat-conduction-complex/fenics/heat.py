@@ -178,11 +178,6 @@ ranks << mesh_rank
 error_total, error_pointwise = compute_errors(u_n, u_ref, V)
 error_out << error_pointwise
 
-# set t_1 = t_0 + dt, this gives u_D^1
-# call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
-u_D.t = t + dt(0)
-f.t = t + dt(0)
-
 flux = Function(V_g)
 flux.rename("Flux", "")
 
@@ -194,7 +189,14 @@ while precice.is_coupling_ongoing():
 
     precice_dt = precice.get_max_time_step_size()
     dt.assign(np.min([fenics_dt, precice_dt]))
+
+    # Dirichlet BC and RHS need to point to end of current timestep
+    u_D.t = t + float(dt)
+    f.t = t + float(dt)
+
+    # Coupling BC needs to point to end of current timestep
     read_data = precice.read_data(dt)
+
     if problem is ProblemType.DIRICHLET and (domain_part is DomainPart.CIRCULAR or domain_part is DomainPart.RECTANGLE):
         # We have to data for an arbitrary point that is not on the circle, to obtain exact solution.
         # See https://github.com/precice/fenics-adapter/issues/113 for details.
@@ -238,10 +240,6 @@ while precice.is_coupling_ongoing():
         temperature_out << (u_n, t)
         ref_out << u_ref
         error_out << error_pointwise
-
-    # Update Dirichlet BC
-    u_D.t = t + float(dt)
-    f.t = t + float(dt)
 
 # Hold plot
 precice.finalize()
