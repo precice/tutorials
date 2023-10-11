@@ -21,5 +21,7 @@ This tutorial is for FEniCS.
 
 For choosing whether you want to run the left or right participant, please provide the following commandline input:
 
-* `heat.py left` flag will run the left participant.
-* `heat.py right` flag will run the right participant.
+* `python3 heat.py left` flag will run the left participant.
+* `python3 heat.py right` flag will run the right participant.
+
+Like for the case `partitioned-heat-conduction` (using Dirichlet-Neumann coupling), we can also expect for the overlapping domain decomposition applied here to recover the analytical solution. `errorcomputation.py` checks this explicitly, by comparing the numerical to the analytical solution and raising an error, if the approximation error is not within a given tolerance.
