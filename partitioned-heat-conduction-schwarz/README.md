@@ -1,8 +1,8 @@
 ---
-title: Partitioned heat conduction with Schwarz-type Domain Decomposition
+title: Partitioned heat conduction with Schwarz-type domain decomposition
 permalink: tutorials-partitioned-heat-conduction-schwarz.html
 keywords: FEniCS, Nutils, Heat conduction
-summary: We solve a simple heat equation. The domain is partitioned and the coupling is established in a Overlapping Schwarz type domain decomposition.
+summary: We solve a simple heat equation. The domain is partitioned and the coupling is established in an overlapping-Schwarz-type domain decomposition.
 ---
 
 {% note %}
