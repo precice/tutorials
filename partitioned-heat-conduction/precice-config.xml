@@ -25,14 +25,7 @@
     <receive-mesh name="Neumann-Mesh" from="Neumann" />
     <write-data name="Heat-Flux" mesh="Dirichlet-Mesh" />
     <read-data name="Temperature" mesh="Dirichlet-Mesh" />
-    <mapping:rbf
-      direction="read"
-      from="Neumann-Mesh"
-      to="Dirichlet-Mesh"
-      constraint="consistent"
-      x-dead="true">
-      <basis-function:thin-plate-splines />
-    </mapping:rbf>
+    <mapping:nearest-neighbor direction="read" from="Neumann-Mesh" to="Dirichlet-Mesh" constraint="consistent" />
   </participant>
 
   <participant name="Neumann">
@@ -40,14 +33,7 @@
     <receive-mesh name="Dirichlet-Mesh" from="Dirichlet" />
     <write-data name="Temperature" mesh="Neumann-Mesh" />
     <read-data name="Heat-Flux" mesh="Neumann-Mesh" />
-    <mapping:rbf
-      direction="read"
-      from="Dirichlet-Mesh"
-      to="Neumann-Mesh"
-      constraint="consistent"
-      x-dead="true" >
-      <basis-function:thin-plate-splines />
-    </mapping:rbf>
+    <mapping:nearest-neighbor direction="read" from="Dirichlet-Mesh" to="Neumann-Mesh" constraint="consistent" />
   </participant>
 
   <m2n:sockets acceptor="Dirichlet" connector="Neumann" exchange-directory=".." />
