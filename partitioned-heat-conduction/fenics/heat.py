@@ -35,6 +35,7 @@ import numpy as np
 from problem_setup import get_geometry
 import dolfin
 from dolfin import FacetNormal, dot
+import sympy as sp
 
 
 def determine_gradient(V_g, u, flux):
@@ -84,12 +85,15 @@ V_g = VectorFunctionSpace(mesh, 'P', 1)
 W = V_g.sub(0).collapse()
 
 # Define boundary conditions
-u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, t=0)
+# create sympy expression of manufactured solution
+x_sp, y_sp, t_sp = sp.symbols(['x[0]','x[1]','t'])
+u_D_sp = 1+x_sp*x_sp+alpha*y_sp*y_sp+ beta*t_sp
+u_D = Expression(sp.ccode(u_D_sp), degree=2, alpha=alpha, beta=beta, t=0)
 u_D_function = interpolate(u_D, V)
 
 if problem is ProblemType.DIRICHLET:
     # Define flux in x direction
-    f_N = Expression("2 * x[0]", degree=1, alpha=alpha, t=0)
+    f_N = Expression(sp.ccode(u_D_sp.diff(x_sp)), degree=1, alpha=alpha, t=0)
     f_N_function = interpolate(f_N, W)
 
 # Define initial value
@@ -115,7 +119,9 @@ dt.assign(np.min([fenics_dt, precice_dt]))
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-f = Expression('beta - 2 - 2*alpha', degree=2, alpha=alpha, beta=beta, t=0)
+# du_dt-Δu = f
+f_sp = u_D_sp.diff(t_sp)-u_D_sp.diff(x_sp).diff(x_sp)-u_D_sp.diff(y_sp).diff(y_sp)
+f = Expression(sp.ccode(f_sp), degree=2, alpha=alpha, beta=beta, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
