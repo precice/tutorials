@@ -38,8 +38,9 @@ from problem_setup import get_geometry
 import dolfin
 from dolfin import FacetNormal, dot, project
 import sympy as sp
-from utils.ButcherTableaux import RadauIIA
+from utils.ButcherTableaux import RadauIIA, BackwardEuler
 from utils.high_order_setup import getVariationalProblem, time_derivative
+import utils.utils as utl
 
 
 def determine_gradient(V_g, u, flux):
@@ -90,9 +91,9 @@ beta = 1.3  # parameter beta
 # create sympy expression of function to derive the required forms of the equation
 x_ ,y_ ,t_ = sp.symbols(['x[0]','x[1]','t'])
 u_expr = 1+x_*x_+alpha*y_*y_+beta*t_
-u = Expression(sp.ccode(u_expr), degree=2, t=0)
+u_D = Expression(sp.ccode(u_expr), degree=2, t=0)
 # initial condition
-u_n = interpolate(u, V)
+u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
 fenics_dt = .1  # time step size
@@ -124,7 +125,7 @@ if problem is ProblemType.DIRICHLET:
     precice_dt = precice.get_max_time_step_size()
 elif problem is ProblemType.NEUMANN:
     precice = Adapter(adapter_config_filename="precice-adapter-config-N.json")
-    u_D_function = interpolate(u, V)
+    u_D_function = interpolate(u_D, V)
     precice.initialize(coupling_boundary, read_function_space=W, write_object=u_D_function)
     precice_dt = precice.get_max_time_step_size()
 
@@ -144,7 +145,7 @@ f = tsm.num_stages * [None]
 f_expr = u_expr.diff(t_)-u_expr.diff(x_).diff(x_)-u_expr.diff(y_).diff(y_)
 for i in range(tsm.num_stages):
     f[i] = Expression(sp.ccode(f_expr), degree=2, t=0)
-    f[i].t = tsm.c[i] * dt  # initial time assumed to be 0
+    f[i].t = tsm.c[i] * float(dt)  # initial time assumed to be 0
 # get variational form of the problem
 # F = u * v * dx + dt * dot(grad(u), grad(v)) * dx - (u_n + dt * f) * v * dx
 F = getVariationalProblem(v=v, initialCondition=u_n, dt=dt, f=f, tsm=tsm, k=u)
@@ -166,16 +167,26 @@ bc = []
 coupling_expressions = [precice.create_coupling_expression()] * tsm.num_stages
 # for the boundary which is not the coupling boundary, we can just use the boundary conditions as usual
 # each stage needs a boundary condition
-if problem is ProblemType.DIRICHLET:
-    for i in range(tsm.num_stages):
-        bc.append(DirichletBC(Vbig.sub(i), du_dt[i], remaining_boundary))
-        bc.append(DirichletBC(Vbig.sub(i), coupling_expressions[i], coupling_boundary))
+if tsm.num_stages > 1:
+    if problem is ProblemType.DIRICHLET:
+        for i in range(tsm.num_stages):
+            bc.append(DirichletBC(Vbig.sub(i), du_dt[i], remaining_boundary))
+            bc.append(DirichletBC(Vbig.sub(i), coupling_expressions[i], coupling_boundary))
+    else:
+        vs = split(v)
+        for i in range(tsm.num_stages):
+            bc.append(DirichletBC(Vbig.sub(i), du_dt[i], remaining_boundary))
+            # Fixme: Is that really correct? We have a different variational form compared to heat.py!
+            F += vs[i] * coupling_expressions[i] * dolfin.ds
 else:
-    vs = split(v)
-    for i in range(tsm.num_stages):
-        bc.append(DirichletBC(Vbig.sub(i), du_dt[i], remaining_boundary))
+    if problem is ProblemType.DIRICHLET:
+        bc.append(DirichletBC(Vbig, du_dt[0], remaining_boundary))
+        bc.append(DirichletBC(Vbig, coupling_expressions[0], coupling_boundary))
+    else:
+        bc.append(DirichletBC(Vbig, du_dt[0], remaining_boundary))
         # Fixme: Is that really correct? We have a different variational form compared to heat.py!
-        F += vs[i] * coupling_expressions[i] * dolfin.ds
+        F += v * coupling_expressions[0] * dolfin.ds
+
 
 # get lhs and rhs of variational form
 a, L = lhs(F), rhs(F)
@@ -190,7 +201,7 @@ u_np1.rename("Temperature", "")
 t = 0
 
 # reference solution at t=0
-u_ref = interpolate(u, V)
+u_ref = interpolate(u_D, V)
 u_ref.rename("reference", " ")
 
 # mark mesh w.r.t ranks
@@ -231,7 +242,7 @@ while precice.is_coupling_ongoing():
     dt.assign(np.min([fenics_dt, precice_dt]))
 
 #    # Dirichlet BC and RHS need to point to end of current timestep
-#    u.t = t + float(dt)
+    u_D.t = t + float(dt)
 #    f.t = t + float(dt)
 
     # update boundary conditions
@@ -242,9 +253,12 @@ while precice.is_coupling_ongoing():
     # boundary conditions of the coupling boundary needs to be updated as well
     # preCICE must read num_stages times at respective time for each stage
     for i in range(tsm.num_stages):
-        read_data = precice.read_data(tsm.c[i]*dt)
+        #read_data = precice.read_data(tsm.c[i]*dt)
+        # time derivatives are required!!!
+        deriv = utl.approx_derivative(precice, tsm.c[i]*float(dt), float(dt))
+        pups = precice.read_data(dt)
         # update coupling expression
-        precice.update_coupling_expression(coupling_expressions[i], read_data)
+        precice.update_coupling_expression(coupling_expressions[i], deriv)
 
     # getting the solution of the current time step
 
@@ -289,7 +303,7 @@ while precice.is_coupling_ongoing():
         n += 1
 
     if precice.is_time_window_complete():
-        u_ref = interpolate(u, V)
+        u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
         print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
