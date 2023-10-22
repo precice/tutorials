@@ -107,7 +107,7 @@ if problem is ProblemType.DIRICHLET:
 
 # time stepping setup
 # scheme
-tsm = RadauIIA(3)
+tsm = BackwardEuler()
 # depending on tsm, we define the trial and test function space
 if tsm.num_stages == 1:
     Vbig = V
@@ -256,8 +256,6 @@ while precice.is_coupling_ongoing():
         #read_data = precice.read_data(tsm.c[i]*dt)
         # time derivatives are required!!!
         deriv = utl.approx_derivative(precice, tsm.c[i]*float(dt), float(dt))
-        pups = precice.read_data(dt)
-        # update coupling expression
         precice.update_coupling_expression(coupling_expressions[i], deriv)
 
     # getting the solution of the current time step

@@ -33,6 +33,7 @@ def approx_derivative(precice, x, max_x):
     h = 0.5
     # iterate over all cells on the boundary
     for k in precice.read_data(x).keys():
+        h=0.5
         # reset variables for stopping criterion
         delta_last = sys.float_info.max
         d_n = sys.float_info.max
@@ -117,6 +118,7 @@ def approx_derivative_forw(precice, x, max_x):
     h = 0.5
     # iterate over all cells on the boundary
     for k in precice.read_data(x).keys():
+        h=0.5
         # reset variables for stopping criterion
         delta_last = sys.float_info.max
         d_n = sys.float_info.max
@@ -189,7 +191,7 @@ def approx_derivative_backw(precice, x, max_x):
         return {}
 
     derivatives = {}
-    # convergence order of 8
+    # convergence order of 16
     order = 8
     # minimal difference between d_n and d_np1 to iterate again
     delta_tol = 1e-15
@@ -253,6 +255,7 @@ def approx_derivative_backw(precice, x, max_x):
             h /= 2
             # avoid that h gets too small to evade instabilities
             if h < 1e-12:
+                print("EDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
                 # just use the current approximation if it gets to small
                 derivatives[k] = d_np1
                 break
