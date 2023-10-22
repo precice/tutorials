@@ -21,8 +21,8 @@ def b_splines(precice, degree, dt):
         nodes.append(x_dist * i)
         weights.append(precice.read_data(x_dist * i))
     for k in weights[0].keys():
+        weights_k = []
         for i in range(2 * degree + 3):
-            weights_k = []
             weights_k.append(weights[i][k])
         b_splines[k] = interpol.BSpline(nodes, weights_k, degree)
     return b_splines

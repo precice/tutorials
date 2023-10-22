@@ -251,12 +251,21 @@ while precice.is_coupling_ongoing():
         du_dt[i].t = t + tsm.c[i] * float(dt)
 
     # boundary conditions of the coupling boundary needs to be updated as well
+
+    # approximate the function which preCICE uses with BSplines
+    bsplns = utl.b_splines(precice, 8, float(dt))
+    # get first derivative
+    bsplns_der = {}
+    for ki in bsplns.keys():
+        bsplns_der[ki] = bsplns[ki].derivative(1)
+
     # preCICE must read num_stages times at respective time for each stage
     for i in range(tsm.num_stages):
-        #read_data = precice.read_data(tsm.c[i]*dt)
-        # time derivatives are required!!!
-        deriv = utl.approx_derivative(precice, tsm.c[i]*float(dt), float(dt))
-        precice.update_coupling_expression(coupling_expressions[i], deriv)
+        # values of derivative of current time
+        val = {}
+        for ki in bsplns_der.keys():
+            val[ki] = bsplns_der[ki](tsm.c[i]*float(dt))
+        precice.update_coupling_expression(coupling_expressions[i], val)
 
     # getting the solution of the current time step
 
