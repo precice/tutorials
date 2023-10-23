@@ -28,13 +28,19 @@ from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
     File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, MeshFunction, MPI
 from fenicsprecice import Adapter
+from ufl_legacy import MixedElement, split
+
 from errorcomputation import compute_errors
 from my_enums import ProblemType, DomainPart
 import argparse
 import numpy as np
 from problem_setup import get_geometry
 import dolfin
-from dolfin import FacetNormal, dot
+from dolfin import FacetNormal, dot, project
+import sympy as sp
+from utils.ButcherTableaux import RadauIIA, BackwardEuler
+from utils.high_order_setup import getVariationalProblem, time_derivative
+import utils.utils as utl
 
 
 def determine_gradient(V_g, u, flux):
@@ -62,13 +68,8 @@ parser.add_argument("-e", "--error-tol", help="set error tolerance", type=float,
 
 args = parser.parse_args()
 
-fenics_dt = .1  # time step size
-# Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
-error_tol = args.error_tol
-
-alpha = 3  # parameter alpha
-beta = 1.3  # parameter beta
-
+# define problem setup
+# get domain part and according problem type
 if args.dirichlet and not args.neumann:
     problem = ProblemType.DIRICHLET
     domain_part = DomainPart.LEFT
@@ -76,6 +77,7 @@ elif args.neumann and not args.dirichlet:
     problem = ProblemType.NEUMANN
     domain_part = DomainPart.RIGHT
 
+# get computation domain
 mesh, coupling_boundary, remaining_boundary = get_geometry(domain_part)
 
 # Define function space using mesh
@@ -83,55 +85,112 @@ V = FunctionSpace(mesh, 'P', 2)
 V_g = VectorFunctionSpace(mesh, 'P', 1)
 W = V_g.sub(0).collapse()
 
-# Define boundary conditions
-u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, t=0)
-u_D_function = interpolate(u_D, V)
-
-if problem is ProblemType.DIRICHLET:
-    # Define flux in x direction
-    f_N = Expression("2 * x[0]", degree=1, alpha=alpha, t=0)
-    f_N_function = interpolate(f_N, W)
-
-# Define initial value
+# manufactured solution
+alpha = 3  # parameter alpha
+beta = 1.3  # parameter beta
+# create sympy expression of function to derive the required forms of the equation
+x_ ,y_ ,t_ = sp.symbols(['x[0]','x[1]','t'])
+u_expr = 1+x_*x_+alpha*y_*y_+beta*t_
+u_D = Expression(sp.ccode(u_expr), degree=2, t=0)
+# initial condition
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
-precice, precice_dt, initial_data = None, 0.0, None
+fenics_dt = .1  # time step size
+error_tol = args.error_tol
+# define flux function if we are on the dirichlet side of the domain
+if problem is ProblemType.DIRICHLET:
+    # Define flux in x direction
+    flux_expr = Expression(sp.ccode(u_expr.diff(x_)), degree=1, alpha=alpha, t=0)
+    flux_fun = interpolate(flux_expr, W)
 
+# time stepping setup
+# scheme
+tsm = BackwardEuler()
+# depending on tsm, we define the trial and test function space
+if tsm.num_stages == 1:
+    Vbig = V
+else:
+    # for multi-stage RK methods, we need more dimensional function spaces
+    mixed = MixedElement(tsm.num_stages * [V.ufl_element()])
+    Vbig = FunctionSpace(V.mesh(), mixed)
+
+# precice setup
+precice, precice_dt, initial_data = None, 0.0, None
 # Initialize the adapter according to the specific participant
 if problem is ProblemType.DIRICHLET:
     precice = Adapter(adapter_config_filename="precice-adapter-config-D.json")
-    precice.initialize(coupling_boundary, read_function_space=V, write_object=f_N_function)
+    precice.initialize(coupling_boundary, read_function_space=V, write_object=flux_fun)
     precice_dt = precice.get_max_time_step_size()
 elif problem is ProblemType.NEUMANN:
     precice = Adapter(adapter_config_filename="precice-adapter-config-N.json")
+    u_D_function = interpolate(u_D, V)
     precice.initialize(coupling_boundary, read_function_space=W, write_object=u_D_function)
     precice_dt = precice.get_max_time_step_size()
-
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
 
 # Define variational problem
-u = TrialFunction(V)
-v = TestFunction(V)
-f = Expression('beta - 2 - 2*alpha', degree=2, alpha=alpha, beta=beta, t=0)
-F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
+# trial and test functions
+u = TrialFunction(Vbig)
+v = TestFunction(Vbig)
+# if dim(Vbig)>1, f needs to be stored in an array with different time stamps,
+# because in each stage, of an RK method it is evaluated at a different time
+f = tsm.num_stages * [None]
+# derive f from sol_expr: f= δu/δt - ∇u
+f_expr = u_expr.diff(t_)-u_expr.diff(x_).diff(x_)-u_expr.diff(y_).diff(y_)
+for i in range(tsm.num_stages):
+    f[i] = Expression(sp.ccode(f_expr), degree=2, t=0)
+    f[i].t = tsm.c[i] * float(dt)  # initial time assumed to be 0
+# get variational form of the problem
+# F = u * v * dx + dt * dot(grad(u), grad(v)) * dx - (u_n + dt * f) * v * dx
+F = getVariationalProblem(v=v, initialCondition=u_n, dt=dt, f=f, tsm=tsm, k=u)
+a = lhs(F)
+L = rhs(F)
 
-bcs = [DirichletBC(V, u_D, remaining_boundary)]
 
-# Set boundary conditions at coupling interface once wrt to the coupling
-# expression
-coupling_expression = precice.create_coupling_expression()
-if problem is ProblemType.DIRICHLET:
-    # modify Dirichlet boundary condition on coupling interface
-    bcs.append(DirichletBC(V, coupling_expression, coupling_boundary))
-if problem is ProblemType.NEUMANN:
-    # modify Neumann boundary condition on coupling interface, modify weak
-    # form correspondingly
-    F += v * coupling_expression * dolfin.ds
+# boundary conditions
 
+# we define variational form for each RK stage. According to [Irksome tutorial], All of those stages
+# represent time derivatives of the actual solution. Thus, we need time derivatives as boundary conditions
+
+# get time derivative of u
+du_dt = time_derivative(u_expr, tsm, dt,t_)
+# set up boundary conditions
+bc = []
+# Create for each dimension of Vbig a coupling expression for either the time derivatives (Dirichlet side)
+#  or Neumann side (no time derivatives required as they are enforced with changing F)
+coupling_expressions = [precice.create_coupling_expression()] * tsm.num_stages
+# for the boundary which is not the coupling boundary, we can just use the boundary conditions as usual
+# each stage needs a boundary condition
+if tsm.num_stages > 1:
+    if problem is ProblemType.DIRICHLET:
+        for i in range(tsm.num_stages):
+            bc.append(DirichletBC(Vbig.sub(i), du_dt[i], remaining_boundary))
+            bc.append(DirichletBC(Vbig.sub(i), coupling_expressions[i], coupling_boundary))
+    else:
+        vs = split(v)
+        for i in range(tsm.num_stages):
+            bc.append(DirichletBC(Vbig.sub(i), du_dt[i], remaining_boundary))
+            # Fixme: Is that really correct? We have a different variational form compared to heat.py!
+            F += vs[i] * coupling_expressions[i] * dolfin.ds
+else:
+    if problem is ProblemType.DIRICHLET:
+        bc.append(DirichletBC(Vbig, du_dt[0], remaining_boundary))
+        bc.append(DirichletBC(Vbig, coupling_expressions[0], coupling_boundary))
+    else:
+        bc.append(DirichletBC(Vbig, du_dt[0], remaining_boundary))
+        # Fixme: Is that really correct? We have a different variational form compared to heat.py!
+        F += v * coupling_expressions[0] * dolfin.ds
+
+
+# get lhs and rhs of variational form
 a, L = lhs(F), rhs(F)
+
+# we additionally need the values of the stages from the RK method.
+# they are stored here
+k = Function(Vbig)
 
 # Time-stepping
 u_np1 = Function(V)
@@ -179,28 +238,59 @@ while precice.is_coupling_ongoing():
     precice_dt = precice.get_max_time_step_size()
     dt.assign(np.min([fenics_dt, precice_dt]))
 
-    # Dirichlet BC and RHS need to point to end of current timestep
+#    # Dirichlet BC and RHS need to point to end of current timestep
     u_D.t = t + float(dt)
-    f.t = t + float(dt)
+#    f.t = t + float(dt)
 
-    # Coupling BC needs to point to end of current timestep
-    read_data = precice.read_data(dt)
+    # update boundary conditions
+    for i in range(tsm.num_stages):
+        f[i].t = t + tsm.c[i] * float(dt)
+        du_dt[i].t = t + tsm.c[i] * float(dt)
 
-    # Update the coupling expression with the new read data
-    precice.update_coupling_expression(coupling_expression, read_data)
+    # boundary conditions of the coupling boundary needs to be updated as well
 
-    # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
-    solve(a == L, u_np1, bcs)
+    # approximate the function which preCICE uses with BSplines
+    bsplns = utl.b_splines(precice, 8, float(dt))
+    # get first derivative
+    bsplns_der = {}
+    for ki in bsplns.keys():
+        bsplns_der[ki] = bsplns[ki].derivative(1)
+
+    # preCICE must read num_stages times at respective time for each stage
+    for i in range(tsm.num_stages):
+        # values of derivative of current time
+        val = {}
+        for ki in bsplns_der.keys():
+            val[ki] = bsplns_der[ki](tsm.c[i]*float(dt))
+        precice.update_coupling_expression(coupling_expressions[i], val)
+
+    # getting the solution of the current time step
+
+    # instead of directly solving for u, we look for the values of k.
+    # with those we can assemble the solution and thus get the discrete evolution
+    solve(a == L, k, bc)
+
+    # now we need to add up the stages k according to the time stepping scheme
+    # -> assembly of discrete evolution
+    if tsm.num_stages == 1:
+        u_np1 = u_n + dt * tsm.b[0] * k
+    else:
+        u_np1 = u_n
+        for i in range(tsm.num_stages):
+            u_np1 = u_np1 + dt * tsm.b[i] * k.sub(i)
+
+    # u_sol is in function space V and not Vbig -> project u_np1 to V
+    u_sol = project(u_np1, V)
 
     # Write data to preCICE according to which problem is being solved
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem reads temperature and writes flux on boundary to Neumann problem
-        determine_gradient(V_g, u_np1, flux)
+        determine_gradient(V_g, u_sol, flux)
         flux_x = interpolate(flux.sub(0), W)
         precice.write_data(flux_x)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
-        precice.write_data(u_np1)
+        precice.write_data(u_sol)
 
     precice.advance(dt)
     precice_dt = precice.get_max_time_step_size()
@@ -212,7 +302,7 @@ while precice.is_coupling_ongoing():
         t = t_cp
         n = n_cp
     else:  # update solution
-        u_n.assign(u_np1)
+        u_n.assign(u_sol)
         t += float(dt)
         n += 1
 
