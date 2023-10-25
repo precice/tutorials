@@ -18,8 +18,15 @@ def b_splines(precice, degree, dt):
     weights = []
     b_splines = {}
     for i in range(2 * degree + 3):
-        nodes.append(x_dist * i)
-        weights.append(precice.read_data(x_dist * i))
+        if i==0:
+            nodes.append(0)
+            weights.append(precice.read_data(0))
+        elif i==2*degree+2:
+            nodes.append(dt)
+            weights.append(precice.read_data(dt))
+        else:
+            nodes.append(x_dist * i)
+            weights.append(precice.read_data(x_dist * i))
     for k in weights[0].keys():
         weights_k = []
         for i in range(2 * degree + 3):
