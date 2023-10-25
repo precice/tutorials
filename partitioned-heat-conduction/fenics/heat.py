@@ -119,7 +119,7 @@ dt.assign(np.min([fenics_dt, precice_dt]))
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-# du_dt-Δu = f
+# du_dt-Laplace(u) = f
 f_sp = u_D_sp.diff(t_sp)-u_D_sp.diff(x_sp).diff(x_sp)-u_D_sp.diff(y_sp).diff(y_sp)
 f = Expression(sp.ccode(f_sp), degree=2, alpha=alpha, beta=beta, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
