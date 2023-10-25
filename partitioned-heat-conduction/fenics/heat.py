@@ -173,7 +173,6 @@ if tsm.num_stages > 1:
         vs = split(v)
         for i in range(tsm.num_stages):
             bc.append(DirichletBC(Vbig.sub(i), du_dt[i], remaining_boundary))
-            # Fixme: Is that really correct? We have a different variational form compared to heat.py!
             F += vs[i] * coupling_expressions[i] * dolfin.ds
 else:
     if problem is ProblemType.DIRICHLET:
@@ -181,7 +180,6 @@ else:
         bc.append(DirichletBC(Vbig, coupling_expressions[0], coupling_boundary))
     else:
         bc.append(DirichletBC(Vbig, du_dt[0], remaining_boundary))
-        # Fixme: Is that really correct? We have a different variational form compared to heat.py!
         F += v * coupling_expressions[0] * dolfin.ds
 
 
@@ -249,20 +247,26 @@ while precice.is_coupling_ongoing():
 
     # boundary conditions of the coupling boundary needs to be updated as well
 
-    # approximate the function which preCICE uses with BSplines
-    bsplns = utl.b_splines(precice, 8, float(dt))
-    # get first derivative
-    bsplns_der = {}
-    for ki in bsplns.keys():
-        bsplns_der[ki] = bsplns[ki].derivative(1)
+    # only dirichlet boundaries need time derivatives
+    if problem is ProblemType.DIRICHLET:
+        # approximate the function which preCICE uses with BSplines
+        bsplns = utl.b_splines(precice, 8, float(dt))
+        # get first derivative
+        bsplns_der = {}
+        for ki in bsplns.keys():
+            bsplns_der[ki] = bsplns[ki].derivative(1)
 
-    # preCICE must read num_stages times at respective time for each stage
-    for i in range(tsm.num_stages):
-        # values of derivative of current time
-        val = {}
-        for ki in bsplns_der.keys():
-            val[ki] = bsplns_der[ki](tsm.c[i]*float(dt))
-        precice.update_coupling_expression(coupling_expressions[i], val)
+        # preCICE must read num_stages times at respective time for each stage
+        for i in range(tsm.num_stages):
+            # values of derivative of current time
+            val = {}
+            for ki in bsplns_der.keys():
+                val[ki] = bsplns_der[ki](tsm.c[i]*float(dt))
+            precice.update_coupling_expression(coupling_expressions[i], val)
+    else:
+        # Neumann boundaries just need temperature flux
+        for i in range(tsm.num_stages):
+            precice.update_coupling_expression(coupling_expressions[i], precice.read_data(tsm.c[i]*dt))
 
     # getting the solution of the current time step
 
