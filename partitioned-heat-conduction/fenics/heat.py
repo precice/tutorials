@@ -38,7 +38,7 @@ from problem_setup import get_geometry
 import dolfin
 from dolfin import FacetNormal, dot, project
 import sympy as sp
-from utils.ButcherTableaux import RadauIIA, BackwardEuler
+from utils.ButcherTableaux import RadauIIA, BackwardEuler, LobattoIIIC
 from utils.high_order_setup import getVariationalProblem, time_derivative
 import utils.utils as utl
 
@@ -250,7 +250,7 @@ while precice.is_coupling_ongoing():
     # only dirichlet boundaries need time derivatives
     if problem is ProblemType.DIRICHLET:
         # approximate the function which preCICE uses with BSplines
-        bsplns = utl.b_splines(precice, 8, float(dt))
+        bsplns = utl.b_splines(precice, 2, float(dt))
         # get first derivative
         bsplns_der = {}
         for ki in bsplns.keys():
