@@ -120,7 +120,7 @@ while participant.is_coupling_ongoing():
     # compute time step size for this time step
     precice_dt = participant.get_max_time_step_size()
     dt = np.min([precice_dt, my_dt])
-    read_time = (1-alpha_f) * dt
+    read_time = (1 - alpha_f) * dt
     read_data = participant.read_data(mesh_name, read_data_name, vertex_ids, read_time)
     f = read_data[0]
 
