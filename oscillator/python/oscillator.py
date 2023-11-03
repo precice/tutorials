@@ -8,6 +8,8 @@ from enum import Enum
 import csv
 import os
 
+import problemDefinition
+
 
 class Scheme(Enum):
     NEWMARK_BETA = "Newmark_beta"
@@ -27,57 +29,32 @@ args = parser.parse_args()
 
 participant_name = args.participantName
 
-m_1, m_2 = 1, 1
-k_1, k_2, k_12 = 4 * np.pi**2, 4 * np.pi**2, 16 * (np.pi**2)
-
-M = np.array([[m_1, 0], [0, m_2]])
-K = np.array([[k_1 + k_12, -k_12], [-k_12, k_2 + k_12]])
-
-# system:
-# m ddu + k u = f
-# compute analytical solution from eigenvalue ansatz
-
-eigenvalues, eigenvectors = eig(K)
-omega = np.sqrt(eigenvalues)
-A, B = eigenvectors
-
-# can change initial displacement
-u0_1 = 1
-u0_2 = 0
-
-# cannot change initial velocities!
-v0_1 = 0
-v0_2 = 0
-
-c = np.linalg.solve(eigenvectors, [u0_1, u0_2])
-
 if participant_name == Participant.MASS_LEFT.value:
     write_data_name = 'Force-Left'
     read_data_name = 'Force-Right'
     mesh_name = 'Mass-Left-Mesh'
 
-    mass = m_1
-    stiffness = k_1 + k_12
-    u0, v0, f0, d_dt_f0 = u0_1, v0_1, k_12 * u0_2, k_12 * v0_2
-    def u_analytical(t): return c[0] * A[0] * np.cos(omega[0] * t) + c[1] * A[1] * np.cos(omega[1] * t)
-    def v_analytical(t): return -c[0] * A[0] * omega[0] * np.sin(omega[0] * t) - \
-        c[1] * A[1] * omega[1] * np.sin(omega[1] * t)
+    this_mass = problemDefinition.MassLeft
+    this_spring = problemDefinition.SpringLeft
+    connecting_spring = problemDefinition.SpringMiddle
+    other_mass = problemDefinition.MassRight
 
 elif participant_name == Participant.MASS_RIGHT.value:
     read_data_name = 'Force-Left'
     write_data_name = 'Force-Right'
     mesh_name = 'Mass-Right-Mesh'
 
-    mass = m_2
-    stiffness = k_2 + k_12
-    u0, v0, f0, d_dt_f0 = u0_2, v0_2, k_12 * u0_1, k_12 * v0_1
-    def u_analytical(t): return c[0] * B[0] * np.cos(omega[0] * t) + c[1] * B[1] * np.cos(omega[1] * t)
-
-    def v_analytical(t): return -c[0] * B[0] * omega[0] * np.sin(omega[0] * t) - \
-        c[1] * B[1] * omega[1] * np.sin(omega[1] * t)
+    this_mass = problemDefinition.MassRight
+    this_spring = problemDefinition.SpringRight
+    connecting_spring = problemDefinition.SpringMiddle
+    other_mass = problemDefinition.MassLeft
 
 else:
     raise Exception(f"wrong participant name: {participant_name}")
+
+mass = this_mass.m
+stiffness = this_spring.k + connecting_spring.k
+u0, v0, f0, d_dt_f0 = this_mass.u0, this_mass.v0, connecting_spring.k * other_mass.u0, connecting_spring.k * other_mass.v0
 
 num_vertices = 1  # Number of vertices
 
@@ -92,7 +69,7 @@ dimensions = participant.get_mesh_dimensions(mesh_name)
 
 vertex = np.zeros(dimensions)
 read_data = np.zeros(num_vertices)
-write_data = k_12 * u0 * np.ones(num_vertices)
+write_data = connecting_spring.k * u0 * np.ones(num_vertices)
 
 vertex_ids = [participant.set_mesh_vertex(mesh_name, vertex)]
 
@@ -157,7 +134,7 @@ while participant.is_coupling_ongoing():
     v_new = v + dt * ((1 - gamma) * a + gamma * a_new)
     t_new = t + dt
 
-    write_data = [k_12 * u_new]
+    write_data = [connecting_spring.k * u_new]
 
     participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
 
@@ -198,7 +175,7 @@ times += t_write
 participant.finalize()
 
 # print errors
-error = np.max(abs(u_analytical(np.array(times)) - np.array(positions)))
+error = np.max(abs(this_mass.u_analytical(np.array(times)) - np.array(positions)))
 print("Error w.r.t analytical solution:")
 print(f"{my_dt},{error}")
 
