@@ -86,20 +86,21 @@ solver_process_size = 1
 
 configuration_file_name = "../precice-config.xml"
 
-interface = precice.Interface(participant_name, configuration_file_name, solver_process_index, solver_process_size)
+participant = precice.Participant(participant_name, configuration_file_name, solver_process_index, solver_process_size)
 
-dimensions = interface.get_dimensions()
+dimensions = participant.get_mesh_dimensions(mesh_name)
 
 vertex = np.zeros(dimensions)
 read_data = np.zeros(num_vertices)
 write_data = k_12 * u0 * np.ones(num_vertices)
 
-vertex_id = interface.set_mesh_vertex(mesh_name, vertex)
+vertex_ids = [participant.set_mesh_vertex(mesh_name, vertex)]
 
-if interface.requires_initial_data():
-    interface.write_scalar_data(mesh_name, write_data_name, vertex_id, write_data)
+if participant.requires_initial_data():
+    participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
 
-precice_dt = interface.initialize()
+participant.initialize()
+precice_dt = participant.get_max_time_step_size()
 my_dt = precice_dt  # use my_dt < precice_dt for subcycling
 
 # Initial Conditions
@@ -128,8 +129,8 @@ u_write = [u]
 v_write = [v]
 t_write = [t]
 
-while interface.is_coupling_ongoing():
-    if interface.requires_writing_checkpoint():
+while participant.is_coupling_ongoing():
+    if participant.requires_writing_checkpoint():
         u_cp = u
         v_cp = v
         a_cp = a
@@ -140,12 +141,11 @@ while interface.is_coupling_ongoing():
         times += t_write
 
     # compute time step size for this time step
+    precice_dt = participant.get_max_time_step_size()
     dt = np.min([precice_dt, my_dt])
-    # # use this with waveform relaxation
-    # read_time = (1-alpha_f) * dt
-    # read_data = interface.read_scalar_data(mesh_name, read_data_name, vertex_id, read_time)
-    read_data = interface.read_scalar_data(mesh_name, read_data_name, vertex_id)
-    f = read_data
+    read_time = (1-alpha_f) * dt
+    read_data = participant.read_data(mesh_name, read_data_name, vertex_ids, read_time)
+    f = read_data[0]
 
     # do generalized alpha step
     m[0] = (1 - alpha_m) / (beta * dt**2)
@@ -157,13 +157,13 @@ while interface.is_coupling_ongoing():
     v_new = v + dt * ((1 - gamma) * a + gamma * a_new)
     t_new = t + dt
 
-    write_data = k_12 * u_new
+    write_data = [k_12 * u_new]
 
-    interface.write_scalar_data(mesh_name, write_data_name, vertex_id, write_data)
+    participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
 
-    precice_dt = interface.advance(dt)
+    participant.advance(dt)
 
-    if interface.requires_reading_checkpoint():
+    if participant.requires_reading_checkpoint():
         u = u_cp
         v = v_cp
         a = a_cp
@@ -195,7 +195,7 @@ positions += u_write
 velocities += v_write
 times += t_write
 
-interface.finalize()
+participant.finalize()
 
 # print errors
 error = np.max(abs(u_analytical(np.array(times)) - np.array(positions)))
