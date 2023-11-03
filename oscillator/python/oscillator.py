@@ -19,8 +19,14 @@ class Participant(Enum):
 
 parser = argparse.ArgumentParser()
 parser.add_argument("participantName", help="Name of the solver.", type=str, choices=[p.value for p in Participant])
-parser.add_argument("-ts", "--time-stepping", help="Time stepping scheme being used.", type=str,
-                    choices=[s.value for s in timeSteppers.TimeSteppingSchemes], default=timeSteppers.TimeSteppingSchemes.NEWMARK_BETA.value)
+parser.add_argument(
+    "-ts",
+    "--time-stepping",
+    help="Time stepping scheme being used.",
+    type=str,
+    choices=[
+        s.value for s in timeSteppers.TimeSteppingSchemes],
+    default=timeSteppers.TimeSteppingSchemes.NEWMARK_BETA.value)
 args = parser.parse_args()
 
 participant_name = args.participantName
@@ -74,7 +80,7 @@ if participant.requires_initial_data():
 
 participant.initialize()
 precice_dt = participant.get_max_time_step_size()
-my_dt = precice_dt/4  # use my_dt < precice_dt for subcycling
+my_dt = precice_dt / 4  # use my_dt < precice_dt for subcycling
 
 # Initial Conditions
 a0 = (f0 - stiffness * u0) / mass
@@ -89,18 +95,19 @@ elif args.time_stepping == timeSteppers.TimeSteppingSchemes.NEWMARK_BETA.value:
     time_stepper = timeSteppers.GeneralizedAlpha(stiffness=stiffness, mass=mass, alpha_f=0.0, alpha_m=0.0)
 elif args.time_stepping == timeSteppers.TimeSteppingSchemes.RUNGE_KUTTA_4.value:
     ode_system = np.array([
-        [0,          mass], # du
-        [-stiffness, 0   ], # dv
+        [0, mass],  # du
+        [-stiffness, 0],  # dv
     ])
     time_stepper = timeSteppers.RungeKutta4(ode_system=ode_system)
 elif args.time_stepping == timeSteppers.TimeSteppingSchemes.Radau_IIA.value:
     ode_system = np.array([
-        [0,          mass], # du
-        [-stiffness, 0   ], # dv
+        [0, mass],  # du
+        [-stiffness, 0],  # dv
     ])
     time_stepper = timeSteppers.RadauIIA(ode_system=ode_system)
 else:
-    raise Exception(f"Invalid time stepping scheme {args.time_stepping}. Please use one of {[ts.value for ts in timeSteppers.TimeSteppingSchemes]}")
+    raise Exception(
+        f"Invalid time stepping scheme {args.time_stepping}. Please use one of {[ts.value for ts in timeSteppers.TimeSteppingSchemes]}")
 
 
 positions = []
@@ -127,7 +134,7 @@ while participant.is_coupling_ongoing():
     dt = np.min([precice_dt, my_dt])
 
     read_times = time_stepper.rhs_eval_points(dt)
-    f = len(read_times)*[None]
+    f = len(read_times) * [None]
 
     for i in range(len(read_times)):
         read_data = participant.read_data(mesh_name, read_data_name, vertex_ids, read_times[i])
