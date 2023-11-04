@@ -36,7 +36,7 @@ import argparse
 import numpy as np
 from problem_setup import get_geometry
 import dolfin
-from dolfin import FacetNormal, dot, project
+from dolfin import FacetNormal, dot, project, Point
 import sympy as sp
 from utils.ButcherTableaux import RadauIIA, BackwardEuler, LobattoIIIC
 from utils.high_order_setup import getVariationalProblem, time_derivative
@@ -90,13 +90,13 @@ alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 # create sympy expression of function to derive the required forms of the equation
 x_ ,y_ ,t_ = sp.symbols(['x[0]','x[1]','t'])
-u_expr = 1+x_*x_+alpha*y_*y_+beta*t_
+u_expr = 1+x_*x_+alpha*y_*y_+beta*t_*t_
 u_D = Expression(sp.ccode(u_expr), degree=2, t=0)
 # initial condition
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
-fenics_dt = .1  # time step size
+fenics_dt = .05  # time step size
 error_tol = args.error_tol
 # define flux function if we are on the dirichlet side of the domain
 if problem is ProblemType.DIRICHLET:
@@ -106,7 +106,7 @@ if problem is ProblemType.DIRICHLET:
 
 # time stepping setup
 # scheme
-tsm = BackwardEuler()
+tsm = LobattoIIIC(2)
 # depending on tsm, we define the trial and test function space
 if tsm.num_stages == 1:
     Vbig = V
@@ -144,7 +144,6 @@ for i in range(tsm.num_stages):
     f[i] = Expression(sp.ccode(f_expr), degree=2, t=0)
     f[i].t = tsm.c[i] * float(dt)  # initial time assumed to be 0
 # get variational form of the problem
-# F = u * v * dx + dt * dot(grad(u), grad(v)) * dx - (u_n + dt * f) * v * dx
 F = getVariationalProblem(v=v, initialCondition=u_n, dt=dt, f=f, tsm=tsm, k=u)
 a = lhs(F)
 L = rhs(F)
@@ -212,7 +211,6 @@ temperature_out = File("output/%s.pvd" % precice.get_participant_name())
 ref_out = File("output/ref%s.pvd" % precice.get_participant_name())
 error_out = File("output/error%s.pvd" % precice.get_participant_name())
 ranks = File("output/ranks%s.pvd" % precice.get_participant_name())
-
 # output solution and reference solution at t=0, n=0
 n = 0
 print('output u^%d and u_ref^%d' % (n, n))
@@ -238,8 +236,6 @@ while precice.is_coupling_ongoing():
 
 #    # Dirichlet BC and RHS need to point to end of current timestep
     u_D.t = t + float(dt)
-#    f.t = t + float(dt)
-
     # update boundary conditions
     for i in range(tsm.num_stages):
         f[i].t = t + tsm.c[i] * float(dt)
@@ -311,6 +307,12 @@ while precice.is_coupling_ongoing():
         n += 1
 
     if precice.is_time_window_complete():
+        pts = []
+        for keyss in precice.read_data(0).keys():
+            pts.append(Point(keyss[0], keyss[1], 0))
+        for p in pts:
+            # check the difference of the boundary values
+            print(u_sol(p))
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
