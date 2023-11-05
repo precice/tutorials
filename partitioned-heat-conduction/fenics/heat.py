@@ -316,7 +316,7 @@ while precice.is_coupling_ongoing():
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
-        print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
+        print('n = %d, t = %.2f: L2 error on domain = %.13g' % (n, t, error))
         # output solution and reference solution at t_n+1
         print('output u^%d and u_ref^%d' % (n, n))
         temperature_out << (u_n, t)
