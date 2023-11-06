@@ -69,8 +69,9 @@ fixed_boundary = AutoSubDomain(clamped_boundary)
 precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
 
 # Initialize the coupling interface
-precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fixed_boundary=fixed_boundary)
+precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fixed_boundary=fixed_boundary)
 
+precice_dt = precice.get_max_time_step_size()
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
 # fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
@@ -174,15 +175,18 @@ displacement_out = File("output/u_fsi.pvd")
 
 u_n.rename("Displacement", "")
 u_np1.rename("Displacement", "")
-displacement_out << u_n
+displacement_out << (u_n, t)
 
 while precice.is_coupling_ongoing():
 
-    if precice.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
+    if precice.requires_writing_checkpoint():  # write checkpoint
         precice.store_checkpoint(u_n, t, n)
 
+    precice_dt = precice.get_max_time_step_size()
+    dt = Constant(np.min([precice_dt, fenics_dt]))
+
     # read data from preCICE and get a new coupling expression
-    read_data = precice.read_data()
+    read_data = precice.read_data(dt)
 
     # Update the point sources on the coupling boundary with the new read data
     Forces_x, Forces_y = precice.get_point_sources(read_data)
@@ -199,16 +203,14 @@ while precice.is_coupling_ongoing():
     assert (b is not b_forces)
     solve(A, u_np1.vector(), b_forces)
 
-    dt = Constant(np.min([precice_dt, fenics_dt]))
-
     # Write new displacements to preCICE
     precice.write_data(u_np1)
 
     # Call to advance coupling, also returns the optimum time step value
-    precice_dt = precice.advance(dt(0))
+    precice.advance(dt(0))
 
     # Either revert to old step if timestep has not converged or move to next timestep
-    if precice.is_action_required(precice.action_read_iteration_checkpoint()):  # roll back to checkpoint
+    if precice.requires_reading_checkpoint():  # roll back to checkpoint
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
         u_n.assign(u_cp)
         t = t_cp
@@ -224,6 +226,6 @@ while precice.is_coupling_ongoing():
             displacement_out << (u_n, t)
 
 # Plot tip displacement evolution
-displacement_out << u_n
+displacement_out << (u_n, t)
 
 precice.finalize()
