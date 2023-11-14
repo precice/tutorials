@@ -24,9 +24,6 @@
     <provide-mesh name="Mass-Left-Mesh" />
     <write-data name="Force-Left" mesh="Mass-Left-Mesh" />
     <read-data  name="Force-Right" mesh="Mass-Left-Mesh" />
-    <!-- Use this to activate first order interpolation
-    <read-data  name="Force-Right" mesh="Mass-Left-Mesh" waveform-order="1" />
-    -->
   </participant>
 
   <participant name="Mass-Right">
@@ -34,9 +31,6 @@
     <provide-mesh name="Mass-Right-Mesh" />
     <write-data name="Force-Right" mesh="Mass-Right-Mesh" />
     <read-data  name="Force-Left" mesh="Mass-Right-Mesh" />
-    <!-- Use this to activate first order interpolation
-    <read-data  name="Force-Left" mesh="Mass-Right-Mesh" waveform-order="1" />
-    -->
     <mapping:nearest-neighbor direction="write" from="Mass-Right-Mesh" to="Mass-Left-Mesh" constraint="consistent" />
     <mapping:nearest-neighbor direction="read"  from="Mass-Left-Mesh" to="Mass-Right-Mesh" constraint="consistent" />
   </participant>
@@ -50,10 +44,7 @@
     <max-iterations value="200" />
     <relative-convergence-measure data="Force-Left" mesh="Mass-Left-Mesh" limit="1e-10"/>
     <relative-convergence-measure data="Force-Right" mesh="Mass-Left-Mesh" limit="1e-10"/>
-    <exchange data="Force-Left" mesh="Mass-Left-Mesh" from="Mass-Left" to="Mass-Right" />
-    <!-- Use this for higher accuracy with waveforms and preCICE v3
-    <exchange data="Force-Left" mesh="Mass-Left-Mesh" from="Mass-Left" to="Mass-Right" initialize="true" />
-    -->
+    <exchange data="Force-Left" mesh="Mass-Left-Mesh" from="Mass-Left" to="Mass-Right" initialize="true"/>
     <exchange data="Force-Right" mesh="Mass-Left-Mesh" from="Mass-Right" to="Mass-Left" initialize="true"/>
   </coupling-scheme:serial-implicit>
 </precice-configuration>
