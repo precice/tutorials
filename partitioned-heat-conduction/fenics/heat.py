@@ -168,19 +168,21 @@ ranks << mesh_rank
 
 error_total, error_pointwise = compute_errors(u_n, u_ref, V)
 
-# create buffer for output. We need this buffer, because we only want to write the converged output at the end of the window, but we also want to write the samples that are resulting from substeps inside the window
+# create buffer for output. We need this buffer, because we only want to
+# write the converged output at the end of the window, but we also want to
+# write the samples that are resulting from substeps inside the window
 u_write = []
 ref_write = []
 error_write = []
 # copy data to buffer and rename
 uu = u_n.copy()
-uu.rename("u","")
+uu.rename("u", "")
 u_write.append((uu, t))
 uu_ref = u_ref.copy()
-uu_ref.rename("u_ref","")
+uu_ref.rename("u_ref", "")
 ref_write.append(uu_ref)
 err = error_pointwise.copy()
-err.rename("err","")
+err.rename("err", "")
 error_write.append(err)
 
 # set t_1 = t_0 + dt, this gives u_D^1
@@ -254,13 +256,13 @@ while precice.is_coupling_ongoing():
         n += 1
         # copy data to buffer and rename
         uu = u_n.copy()
-        uu.rename("u","u")
+        uu.rename("u", "")
         u_write.append((uu, t))
         uu_ref = u_ref.copy()
-        uu_ref.rename("u_ref","u_ref")
+        uu_ref.rename("u_ref", "")
         ref_write.append(uu_ref)
         err = error_pointwise.copy()
-        err.rename("err","err")
+        err.rename("err", "")
         error_write.append(err)
 
     if precice.is_time_window_complete():
@@ -268,7 +270,6 @@ while precice.is_coupling_ongoing():
         u_ref.rename("reference", " ")
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
         print("n = %d, t = %.2f: L2 error on domain = %.3g" % (n, t, error))
-
 
     # Update Dirichlet BC
     u_D.t = t + float(dt)
