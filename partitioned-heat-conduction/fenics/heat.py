@@ -259,8 +259,8 @@ while precice.is_coupling_ongoing():
             bsplns_der[ki] = bsplns[ki].derivative(1)
             # Fixme 3: Gehört noch zu Fixme 3, weil ich hier noch prüfe, ob die Ableitung der BSplines ungefähr der
             #           exakten entspricht
-            # if(bsplns_der[ki](0.05)-u_expr.diff(t_).subs(t_,t+dt(0)) > 1e-10):
-            #    print("Something is wrong")
+            #if(abs(bsplns_der[ki](0.05)-u_expr.diff(t_).subs(t_,t+dt(0))) > 1e-10 or abs(bsplns_der[ki](0.0)-u_expr.diff(t_).subs(t_,t)) > 1e-10):
+            #   print("Something is wrong")
 
 
         # preCICE must read num_stages times at respective time for each stage
