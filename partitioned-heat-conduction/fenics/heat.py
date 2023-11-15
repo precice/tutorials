@@ -96,7 +96,7 @@ u_D = Expression(sp.ccode(u_expr), degree=2, t=0)
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
 
-fenics_dt = .05  # time step size
+fenics_dt = 0.05  # time step size
 error_tol = args.error_tol
 # define flux function if we are on the dirichlet side of the domain
 if problem is ProblemType.DIRICHLET:
@@ -246,7 +246,7 @@ while precice.is_coupling_ongoing():
     # only dirichlet boundaries need time derivatives
     if problem is ProblemType.DIRICHLET:
         # approximate the function which preCICE uses with BSplines
-        bsplns = utl.b_splines(precice, 2, float(dt))
+        bsplns = utl.b_splines(precice, 3, float(dt))
         # get first derivative
         bsplns_der = {}
         for ki in bsplns.keys():
@@ -285,11 +285,16 @@ while precice.is_coupling_ongoing():
     # Write data to preCICE according to which problem is being solved
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem reads temperature and writes flux on boundary to Neumann problem
-        determine_gradient(V_g, u_sol, flux)
-        flux_x = interpolate(flux.sub(0), W)
-        precice.write_data(flux_x)
+        flux___ = Expression(sp.ccode(u_expr.diff(x_)), degree=2)
+        flux__ = interpolate(flux___, W)
+        precice.write_data(flux__)
+        #determine_gradient(V_g, u_sol, flux)
+        #flux_x = interpolate(flux.sub(0), W)
+        #precice.write_data(flux_x)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
+        #tmp = interpolate(tmp, V)
+        #precice.write_data(tmp2)
         precice.write_data(u_sol)
 
     precice.advance(dt)
