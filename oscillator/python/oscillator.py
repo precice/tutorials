@@ -95,14 +95,14 @@ elif args.time_stepping == timeSteppers.TimeSteppingSchemes.NEWMARK_BETA.value:
     time_stepper = timeSteppers.GeneralizedAlpha(stiffness=stiffness, mass=mass, alpha_f=0.0, alpha_m=0.0)
 elif args.time_stepping == timeSteppers.TimeSteppingSchemes.RUNGE_KUTTA_4.value:
     ode_system = np.array([
-        [0, mass],  # du
-        [-stiffness, 0],  # dv
+        [0, 1],  # du
+        [-stiffness / mass, 0],  # dv
     ])
     time_stepper = timeSteppers.RungeKutta4(ode_system=ode_system)
 elif args.time_stepping == timeSteppers.TimeSteppingSchemes.Radau_IIA.value:
     ode_system = np.array([
-        [0, mass],  # du
-        [-stiffness, 0],  # dv
+        [0, 1],  # du
+        [-stiffness / mass, 0],  # dv
     ])
     time_stepper = timeSteppers.RadauIIA(ode_system=ode_system)
 else:
