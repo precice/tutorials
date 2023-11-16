@@ -27,7 +27,7 @@ on:
             - 'ERROR'
             - 'CRITICAL'
       upload_artifacts:
-        description: 'Upload artifacts always (not only on failure)'
+        description: 'Upload artifacts also on success (not only on failure)'
         default: 'FALSE'
         type: choice
         options:
