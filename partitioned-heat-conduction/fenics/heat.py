@@ -178,7 +178,7 @@ else:
         bc.append(DirichletBC(Vbig, coupling_expressions[0], coupling_boundary))
     else:
         bc.append(DirichletBC(Vbig, du_dt[0], remaining_boundary))
-        F += v * coupling_expressions[i] * dolfin.ds
+        F += v * coupling_expressions[0] * dolfin.ds
 
 
 # get lhs and rhs of variational form
