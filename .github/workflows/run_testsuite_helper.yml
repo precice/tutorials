@@ -7,7 +7,7 @@ jobs:
   run_testsuite_manual:
     uses: ./.github/workflows/run_testsuite_workflow.yml@move-systest-runners-to-vm
     with: 
-      suites: calculix_test
+      suites: calculix_test,fenics_test
       build_args:
       systests_branch: develop
       loglevel: DEBUG
