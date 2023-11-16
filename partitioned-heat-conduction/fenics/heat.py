@@ -171,14 +171,14 @@ if tsm.num_stages > 1:
         vs = split(v)
         for i in range(tsm.num_stages):
             bc.append(DirichletBC(Vbig.sub(i), du_dt[i], remaining_boundary))
-            F += vs[i] * coupling_expressions[i] * dolfin.ds
+            F += vs[i] * coupling_expressions[-1] * dolfin.ds
 else:
     if problem is ProblemType.DIRICHLET:
         bc.append(DirichletBC(Vbig, du_dt[0], remaining_boundary))
         bc.append(DirichletBC(Vbig, coupling_expressions[0], coupling_boundary))
     else:
         bc.append(DirichletBC(Vbig, du_dt[0], remaining_boundary))
-        F += v * coupling_expressions[0] * dolfin.ds
+        F += v * coupling_expressions[-1] * dolfin.ds
 
 
 # get lhs and rhs of variational form
