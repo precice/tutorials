@@ -27,8 +27,8 @@ jobs:
     - name: Display a quick job summary
       run: |
         echo "Initiated by: ${{ github.actor }}"
-        echo "Running systemtests --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.suites}}"
-        echo "Systemtests branch: ${{ github.event.inputs.systests_branch }}"
+        echo "Running systemtests --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}"
+        echo "Systemtests branch: ${{ inputs.systests_branch }}"
     - name: Move LFS URL to local LFS server
       run: |
         /home/precice/runners_root/scripts/make_lfs_local.sh
@@ -41,7 +41,7 @@ jobs:
     - name: Check out Tutorials for systest
       uses: actions/checkout@v4
       with:
-        ref: ${{ github.event.inputs.systests_branch }}
+        ref: ${{ inputs.systests_branch }}
         lfs: true
         fetch-depth: 0
     - name: install python depencies
@@ -50,7 +50,7 @@ jobs:
     - name: Run tests
       run: |
         cd tools/tests
-        python systemtests.py --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.suites}} --log-level=${{github.event.inputs.loglevel}}
+        python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log-level=${{ inputs.loglevel}}
         cd ../../
     - name: Archive run files
       if: success() || failure()

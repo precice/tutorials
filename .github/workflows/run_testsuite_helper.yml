@@ -7,7 +7,7 @@ jobs:
   run_testsuite_manual:
     uses: ./.github/workflows/run_testsuite_workflow.yml # should be from the same comimt anyaway
     with: 
-      suites: "calculix_test,fenics_test"
-      build_args:
-      systests_branch: "develop"
-      loglevel: "DEBUG"
+      suites: 'calculix_test,fenics_test'
+      build_args: ''
+      systests_branch: 'develop'
+      loglevel: 'DEBUG'
