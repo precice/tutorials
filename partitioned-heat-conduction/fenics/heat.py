@@ -159,14 +159,14 @@ du_dt = time_derivative(u_expr, tsm, dt,t_)
 bc = []
 # Create for each dimension of Vbig a coupling expression for either the time derivatives (Dirichlet side)
 #  or Neumann side (no time derivatives required as they are enforced with changing F)
-coupling_expressions = [precice.create_coupling_expression()] * tsm.num_stages
+coupling_expressions = [precice.create_coupling_expression() for _ in range(tsm.num_stages)]
 # for the boundary which is not the coupling boundary, we can just use the boundary conditions as usual
 # each stage needs a boundary condition
 if tsm.num_stages > 1:
     if problem is ProblemType.DIRICHLET:
         for i in range(tsm.num_stages):
             bc.append(DirichletBC(Vbig.sub(i), du_dt[i], remaining_boundary))
-            bc. append(DirichletBC(Vbig.sub(i), coupling_expressions[i], coupling_boundary))
+            bc.append(DirichletBC(Vbig.sub(i), coupling_expressions[i], coupling_boundary))
             # Fixme 4: Damit würde man die richtigen Ergebnisse erhalten
             # bc.append(DirichletBC(Vbig.sub(i), du_dt[i], coupling_boundary))
     else:
