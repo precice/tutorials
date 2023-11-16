@@ -33,6 +33,7 @@ jobs:
         echo "Initiated by: ${{ github.actor }}"
         echo "Running systemtests --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}"
         echo "Systemtests branch: ${{ inputs.systests_branch }}"
+        echo "Uploading the runs folder on success: ${{ inputs.upload_artifacts }}"
     - name: Move LFS URL to local LFS server
       run: |
         /home/precice/runners_root/scripts/make_lfs_local.sh
@@ -57,7 +58,7 @@ jobs:
         python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log-level=${{ inputs.loglevel}}
         cd ../../
     - name: Archive run files
-      if: failure() || ${{ inputs.upload_artifacts == 'TRUE' }}
+      if: ${{  failure() || inputs.upload_artifacts == 'TRUE' }}
       uses: actions/upload-artifact@v3
       with:
         name: runs
