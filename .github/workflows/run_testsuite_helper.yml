@@ -1,0 +1,13 @@
+name: Run Testsuite (manual) # Unfortunately, we cannot modify the name: https://github.community/t/github-actions-dynamic-name-of-the-workflow-with-workflow-dispatch/150327
+on:
+  push:
+    branches:
+      - move-systest-runners-to-vm
+jobs:
+  run_testsuite_manual:
+    uses: ./.github/workflows/run_testsuite_workflow.yml@move-systest-runners-to-vm
+    with: 
+      suites: calculix_test
+      build_args:
+      systests_branch: develop
+      loglevel: DEBUG
