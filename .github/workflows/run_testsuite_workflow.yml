@@ -40,16 +40,15 @@ jobs:
         ls -la ./
     - name: Check out Tutorials for systest
       uses: actions/checkout@v4
-      env:
-        GIT_TRACE: 1
-        GIT_CURL_VERBOSE: 1
       with:
         ref: ${{ github.event.inputs.systests_branch }}
         lfs: true
         fetch-depth: 0
-    - name: cd into tools/tests directory
+    - name: cd into tutorials/tools/tests directory
       run: |
-        cd ./tools/tests
+        pwd
+        ls -alh
+        cd .tutorials/tools/tests
     - name: install python depencies
       run: |
         pip install --user -r ./requirements.txt
@@ -58,7 +57,7 @@ jobs:
         python systemtests.py --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.suites}} --log-level=${{github.event.inputs.loglevel}}
     - name: cd into main directory
       run: |
-          cd ../../
+          cd ../../../
     - name: Archive run files
       if: success() || failure()
       uses: actions/upload-artifact@v3
