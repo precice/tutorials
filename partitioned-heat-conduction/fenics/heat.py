@@ -26,9 +26,8 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
-    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, MeshFunction, MPI
+    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, MeshFunction, MPI, MixedElement, split
 from fenicsprecice import Adapter
-from ufl_legacy import MixedElement, split
 
 from errorcomputation import compute_errors
 from my_enums import ProblemType, DomainPart
