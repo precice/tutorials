@@ -20,6 +20,10 @@ on:
         default: 'INFO'
         required: false
         type: string
+      upload_artifacts:
+          description: 'TRUE or FALSE (Default: FALSE -> Upload only when the workflow fails)'
+          default: 'FALSE'
+          type: string
 jobs:
   run_testsuite:
     runs-on: [self-hosted, linux, x64, precice-tests-vm]
@@ -53,7 +57,7 @@ jobs:
         python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log-level=${{ inputs.loglevel}}
         cd ../../
     - name: Archive run files
-      if: success() || failure()
+      if: failure() || ${{ inputs.upload_artifacts == 'TRUE' }}
       uses: actions/upload-artifact@v3
       with:
         name: runs

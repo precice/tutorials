@@ -11,3 +11,4 @@ jobs:
       build_args: ''
       systests_branch: 'develop'
       loglevel: 'DEBUG'
+      upload_artifacts: 'FALSE'
