@@ -52,6 +52,7 @@ jobs:
         cd tools/tests
     - name: install python depencies
       run: |
+        ls -alh
         pip install --user -r ./requirements.txt
     - name: Run tests
       run: |
