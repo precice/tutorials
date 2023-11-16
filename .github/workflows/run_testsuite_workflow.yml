@@ -48,7 +48,8 @@ jobs:
       run: |
         pwd
         ls -alh
-        cd .tutorials/tools/tests
+        ls -alh tools
+        cd tools/tests
     - name: install python depencies
       run: |
         pip install --user -r ./requirements.txt
@@ -57,7 +58,7 @@ jobs:
         python systemtests.py --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.suites}} --log-level=${{github.event.inputs.loglevel}}
     - name: cd into main directory
       run: |
-          cd ../../../
+          cd ../../
     - name: Archive run files
       if: success() || failure()
       uses: actions/upload-artifact@v3
