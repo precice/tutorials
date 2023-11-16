@@ -22,38 +22,43 @@ on:
         type: string
 jobs:
   run_testsuite:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, precice-tests-vm]
     steps:
-    - name: Report log
+    - name: Display a quick job summary
       run: |
         echo "Initiated by: ${{ github.actor }}"
         echo "Running systemtests --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.suites}}"
         echo "Systemtests branch: ${{ github.event.inputs.systests_branch }}"
+    - name: Move LFS URL to local LFS server
+      run: |
+        /home/precice/runners_root/scripts/make_lfs_local.sh
+    - name: 'Cleanup the folder'
+      run: |
+        ls -la ./
+        rm -rf ./* || true
+        rm -rf ./.??* || true
+        ls -la ./
     - name: Check out Tutorials for systest
       uses: actions/checkout@v4
+      env:
+        GIT_TRACE: 1
+        GIT_CURL_VERBOSE: 1
       with:
         ref: ${{ github.event.inputs.systests_branch }}
         lfs: true
         fetch-depth: 0
-    - name: Log directory
-      run: |
-        ls -al
-        pwd
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-    - name: install python depencies
-      run: |
-        python -m pip install -r ./tools/tests/requirements.txt
-    - name: Expose GitHub Runtime (needed for accessing the gha cache)
-      uses: crazy-max/ghaction-github-runtime@v3
-    - name: Run tests
+    - name: cd into tools/tests directory
       run: |
         cd ./tools/tests
-        python systemtests.py --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.suites}} --log-level=${{github.event.inputs.loglevel}} 
-        cd ../../
+    - name: install python depencies
+      run: |
+        pip install --user -r ./requirements.txt
+    - name: Run tests
+      run: |
+        python systemtests.py --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.suites}} --log-level=${{github.event.inputs.loglevel}}
+    - name: cd into main directory
+      run: |
+          cd ../../
     - name: Archive run files
       if: success() || failure()
       uses: actions/upload-artifact@v3
@@ -61,3 +66,6 @@ jobs:
         name: runs
         path: |
           runs/*
+    - name: Delete tutorial dir used for this test
+      run : |
+        
