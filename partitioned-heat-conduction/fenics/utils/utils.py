@@ -13,7 +13,7 @@ def b_splines(precice, degree, dt):
     '''
     # use equidistant samples
     # apparently you need 2k+2 samples for degree k
-    nodes = np.linspace(0,dt,2*3+3)  # <-- But these are 2k+3 samples
+    nodes = np.linspace(0,dt,2*degree+3)  # <-- But these are 2k+3 samples
     weights = []
     b_splines = {}
 
