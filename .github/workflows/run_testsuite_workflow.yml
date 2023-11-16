@@ -66,6 +66,3 @@ jobs:
         name: runs
         path: |
           runs/*
-    - name: Delete tutorial dir used for this test
-      run : |
-        
