@@ -5,7 +5,7 @@ on:
       - move-systest-runners-to-vm
 jobs:
   run_testsuite_manual:
-    uses: ./.github/workflows/run_testsuite_workflow.yml@move-systest-runners-to-vm
+    uses: ./.github/workflows/run_testsuite_workflow.yml # should be from the same comimt anyaway
     with: 
       suites: calculix_test,fenics_test
       build_args:
