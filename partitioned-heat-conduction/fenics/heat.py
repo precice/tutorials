@@ -162,23 +162,22 @@ bc = []
 coupling_expressions = [precice.create_coupling_expression() for _ in range(tsm.num_stages)]
 # for the boundary which is not the coupling boundary, we can just use the boundary conditions as usual
 # each stage needs a boundary condition
-if tsm.num_stages > 1:
-    if problem is ProblemType.DIRICHLET:
-        for i in range(tsm.num_stages):
-            bc.append(DirichletBC(Vbig.sub(i), du_dt[i], remaining_boundary))
-            bc.append(DirichletBC(Vbig.sub(i), coupling_expressions[i], coupling_boundary))
-    else:
-        vs = split(v)
-        for i in range(tsm.num_stages):
-            bc.append(DirichletBC(Vbig.sub(i), du_dt[i], remaining_boundary))
-            F += vs[i] * coupling_expressions[i] * dolfin.ds
+if tsm.num_stages == 1:  # if there is only a single stage, wrap Vbig and v into lists to allow consistent treatment below
+    Vbigs = [Vbig]
+    vs = [v]
 else:
+    Vbigs = [Vbig.sub(i) for i in range(tsm.num_stages)]
+    vs = split(v)
+
+for i in range(tsm.num_stages):
     if problem is ProblemType.DIRICHLET:
-        bc.append(DirichletBC(Vbig, du_dt[0], remaining_boundary))
-        bc.append(DirichletBC(Vbig, coupling_expressions[0], coupling_boundary))
+        bc.append(DirichletBC(Vbigs[i], du_dt[i], remaining_boundary))
+        bc.append(DirichletBC(Vbigs[i], coupling_expressions[i], coupling_boundary))
+        # Fixme 4: Damit würde man die richtigen Ergebnisse erhalten
+        # bc.append(DirichletBC(Vbigs[i], du_dt[i], coupling_boundary))
     else:
-        bc.append(DirichletBC(Vbig, du_dt[0], remaining_boundary))
-        F += v * coupling_expressions[0] * dolfin.ds
+        bc.append(DirichletBC(Vbigs[i], du_dt[i], remaining_boundary))
+        F += vs[i] * coupling_expressions[i] * dolfin.ds
 
 
 # get lhs and rhs of variational form
@@ -270,14 +269,16 @@ while precice.is_coupling_ongoing():
     # with those we can assemble the solution and thus get the discrete evolution
     solve(a == L, k, bc)
 
-    # now we need to add up the stages k according to the time stepping scheme
-    # -> assembly of discrete evolution
-    if tsm.num_stages == 1:
-        u_np1 = u_n + dt * tsm.b[0] * k
+    if tsm.num_stages == 1:  # if there is only a single stage, wrap Vbig and v into lists to allow consistent treatment below
+        ks = [k]
     else:
-        u_np1 = u_n
-        for i in range(tsm.num_stages):
-            u_np1 = u_np1 + dt * tsm.b[i] * k.sub(i)
+        ks = [k.sub(i) for i in range(tsm.num_stages)]
+
+    # -> assembly of discrete evolution
+    # now we need to add up the stages k according to the time stepping scheme
+    u_np1 = u_n
+    for i in range(tsm.num_stages):
+        u_np1 += dt * tsm.b[i] * ks[i]
 
     # u_sol is in function space V and not Vbig -> project u_np1 to V
     u_sol = project(u_np1, V)
