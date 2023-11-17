@@ -3,6 +3,8 @@ import numpy
 from numpy import vander
 
 
+# This file originates from https://github.com/firedrakeproject/Irksome/blob/master/irksome/ButcherTableaux.py, please add a corresponding note or delete this file and make irksome a dependency of this code.
+
 class ButcherTableau(object):
     """Top-level class representing a Butcher tableau encoding
        a Runge-Kutta method.  It has members

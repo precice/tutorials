@@ -26,9 +26,8 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
-    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, MeshFunction, MPI
+    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, MeshFunction, MPI, MixedElement, split
 from fenicsprecice import Adapter
-from ufl_legacy import MixedElement, split
 
 from errorcomputation import compute_errors
 from my_enums import ProblemType, DomainPart
@@ -160,7 +159,7 @@ du_dt = time_derivative(u_expr, tsm, dt,t_)
 bc = []
 # Create for each dimension of Vbig a coupling expression for either the time derivatives (Dirichlet side)
 #  or Neumann side (no time derivatives required as they are enforced with changing F)
-coupling_expressions = [precice.create_coupling_expression()] * tsm.num_stages
+coupling_expressions = [precice.create_coupling_expression() for _ in range(tsm.num_stages)]
 # for the boundary which is not the coupling boundary, we can just use the boundary conditions as usual
 # each stage needs a boundary condition
 if tsm.num_stages == 1:  # if there is only a single stage, wrap Vbig and v into lists to allow consistent treatment below
@@ -246,19 +245,11 @@ while precice.is_coupling_ongoing():
     if problem is ProblemType.DIRICHLET:
         # approximate the function which preCICE uses with BSplines
         bsplns = utl.b_splines(precice, 3, float(dt))
-        # Fixme 3: wenn man die BSplines mit den analytischen Werten berechnet, scheinen auch die Ableitungen
-        #           passend approximiert zu werden
-        # bsplns = utl.b_splines_tmp(precice, u_expr, x_, y_, t_, t, 3, float(dt))
 
         # get first derivative
         bsplns_der = {}
         for ki in bsplns.keys():
             bsplns_der[ki] = bsplns[ki].derivative(1)
-            # Fixme 3: Gehört noch zu Fixme 3, weil ich hier noch prüfe, ob die Ableitung der BSplines ungefähr der
-            #           exakten entspricht
-            #if(abs(bsplns_der[ki](0.05)-u_expr.diff(t_).subs(t_,t+dt(0))) > 1e-10 or abs(bsplns_der[ki](0.0)-u_expr.diff(t_).subs(t_,t)) > 1e-10):
-            #   print("Something is wrong")
-
 
         # preCICE must read num_stages times at respective time for each stage
         for i in range(tsm.num_stages):
@@ -295,20 +286,11 @@ while precice.is_coupling_ongoing():
     # Write data to preCICE according to which problem is being solved
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem reads temperature and writes flux on boundary to Neumann problem
-        # Fixme 1: Damit erhält man die richtigen Ergebnisse
-        #flux___ = Expression(sp.ccode(u_expr.diff(x_)), degree=2)
-        #flux__ = interpolate(flux___, W)
-        #precice.write_data(flux__)
         determine_gradient(V_g, u_sol, flux)
         flux_x = interpolate(flux.sub(0), W)
         precice.write_data(flux_x)
     elif problem is ProblemType.NEUMANN:
         # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
-        # Fixme 2: Damit erhält man nicht die richtigen Ergebnisse. In u_D sollten doch die exakten Werte stehen
-        #       und auch u_D.t = t+dt(0),
-        #       doch auf der Dirichlet Seite stimmt nur der Wert am Anfang des Zeitschritts bei 0
-        #tmp = interpolate(u_D, V)
-        #precice.write_data(tmp2)
         precice.write_data(u_sol)
 
     precice.advance(dt)
