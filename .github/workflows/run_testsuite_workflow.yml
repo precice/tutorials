@@ -1,4 +1,4 @@
-name: Run Testsuite Workflow 
+name: Run Testsuite reusable workflow 
 on:
   workflow_call:
     inputs:
@@ -20,42 +20,45 @@ on:
         default: 'INFO'
         required: false
         type: string
+      upload_artifacts:
+          description: 'TRUE or FALSE (Default: FALSE -> Upload only when the workflow fails)'
+          default: 'FALSE'
+          type: string
 jobs:
   run_testsuite:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, precice-tests-vm]
     steps:
-    - name: Report log
+    - name: Display a quick job summary
       run: |
         echo "Initiated by: ${{ github.actor }}"
-        echo "Running systemtests --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.suites}}"
-        echo "Systemtests branch: ${{ github.event.inputs.systests_branch }}"
+        echo "Running systemtests --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}"
+        echo "Systemtests branch: ${{ inputs.systests_branch }}"
+        echo "Uploading the runs folder on success: ${{ inputs.upload_artifacts }}"
+    - name: Move LFS URL to local LFS server
+      run: |
+        /home/precice/runners_root/scripts/make_lfs_local.sh
+    - name: 'Cleanup the folder'
+      run: |
+        ls -la ./
+        rm -rf ./*
+        rm -rf ./.??*
+        ls -la ./
     - name: Check out Tutorials for systest
       uses: actions/checkout@v4
       with:
-        ref: ${{ github.event.inputs.systests_branch }}
+        ref: ${{ inputs.systests_branch }}
         lfs: true
         fetch-depth: 0
-    - name: Log directory
+    - name: Install Python dependencies
       run: |
-        ls -al
-        pwd
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-    - name: install python depencies
-      run: |
-        python -m pip install -r ./tools/tests/requirements.txt
-    - name: Expose GitHub Runtime (needed for accessing the gha cache)
-      uses: crazy-max/ghaction-github-runtime@v3
+        pip install --user -r tools/tests/requirements.txt
     - name: Run tests
       run: |
-        cd ./tools/tests
-        python systemtests.py --build_args=${{github.event.inputs.build_args}} --suites=${{github.event.inputs.suites}} --log-level=${{github.event.inputs.loglevel}} 
+        cd tools/tests
+        python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log-level=${{ inputs.loglevel}}
         cd ../../
     - name: Archive run files
-      if: success() || failure()
+      if: ${{  failure() || inputs.upload_artifacts == 'TRUE' }}
       uses: actions/upload-artifact@v3
       with:
         name: runs
