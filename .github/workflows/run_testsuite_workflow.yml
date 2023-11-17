@@ -40,8 +40,8 @@ jobs:
     - name: 'Cleanup the folder'
       run: |
         ls -la ./
-        rm -rf ./* || true
-        rm -rf ./.??* || true
+        rm -rf ./*
+        rm -rf ./.??*
         ls -la ./
     - name: Check out Tutorials for systest
       uses: actions/checkout@v4
