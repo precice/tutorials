@@ -10,15 +10,41 @@ from paths import PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
 import hashlib
 from jinja2 import Environment, FileSystemLoader
 import tarfile
+import subprocess
 from datetime import datetime
 import logging
+
 from paths import PRECICE_TUTORIAL_DIR, PRECICE_TESTS_RUN_DIR, PRECICE_TESTS_DIR, PRECICE_REL_OUTPUT_DIR
 import time
+
 
 
 def create_tar_gz(source_folder: Path, output_filename: Path):
     with tarfile.open(output_filename, "w:gz") as tar:
         tar.add(source_folder, arcname=output_filename.name.replace(".tar.gz", ""))
+
+
+def get_machine_informations():
+    def command_is_avail(command: str):
+        try:
+            rc = subprocess.call(['which', command], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except FileNotFoundError:
+            return False
+
+        return rc==0
+    uname_info="uname not available on the machine the systemtests were executed."
+    lscpu_info="lscpu not available on the machine the systemtests were executed."
+    if(command_is_avail("uname")):
+        result = subprocess.run(["uname", "-a"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if result.returncode==0:
+            uname_info = result.stdout
+
+    if(command_is_avail("lscpu")):
+        result = subprocess.run(["lscpu"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if result.returncode==0:
+            lscpu_info = result.stdout
+
+    return (uname_info,lscpu_info)
 
 
 def render_reference_results_info(
@@ -36,11 +62,15 @@ def render_reference_results_info(
             'time': time,
             'name': reference_result.path.name,
         })
-
+    uname, lscpu = get_machine_informations()
     render_dict = {
         'arguments': arguments_used.arguments,
-        'files': files
+        'files': files,
+        'uname': uname,
+        'lscpu': lscpu,
     }
+
+
     jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
     template = jinja_env.get_template("reference_results.metadata.template")
     return template.render(render_dict)
