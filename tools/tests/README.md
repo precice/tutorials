@@ -111,7 +111,7 @@ Implementation scripts:
   - `systemtests/`: Main implementation classes
     - `Systemtest.py`
     - `SystemtestArguments.py`
-    - `TestSuite.py` 
+    - `TestSuite.py`
 
 ### Metadata
 
