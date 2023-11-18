@@ -19,6 +19,16 @@ python3 systemtests.py --suites=openfoam-adapter-release,<someothersuite>
 To discover all tests, use `python print_test_suites.py`.
 To be able to fill in the right case tuple into the `tests.yaml`, you can use the `python3 print_case_combinations.py` script.
 
+## Running the system tests on GitHub Actions
+
+Go to Actions > [Run Testsuite (manual)](https://github.com/precice/tutorials/actions/workflows/run_testsuite_manual.yml) to see this workflow.
+
+After bringing these changes to `master`, the manual triggering option should be visible on the top right. Until that happens, we can only trigger this workflow manually from the [GitHub CLI](https://github.blog/changelog/2021-04-15-github-cli-1-9-enables-you-to-work-with-github-actions-from-your-terminal/):
+
+```shell
+gh workflow run run_testsuite_manual.yml -f suites=fenics_test --ref=develop
+```
+
 ## Adding new tests
 
 ### Adding tutorials
