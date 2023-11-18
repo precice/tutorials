@@ -95,13 +95,19 @@ openfoam-adapter:
   repository: https://github.com/precice/openfoam-adapter
   template: component-templates/openfoam-adapter.yaml
   build_arguments: # these things mean something to the docker-service
-    OPENFOAM_EXECUTABLE:
-      options: ["openfoam2112"]
-      description: exectuable of openfoam to use
-      default: "openfoam2112"
-    PRECICE_TAG:
+    PRECICE_REF:
       description: Version of preCICE to use
-      default: "latest"
+      default: "main"
+    PLATFORM:
+      description: Dockerfile platform used
+      default: "ubuntu_2204"
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: "master"
+    OPENFOAM_EXECUTABLE:
+      options: ["openfoam2306","openfoam2212","openfoam2112"]
+      description: exectuable of openfoam to use
+      default: "openfoam2306"
     OPENFOAM_ADAPTER_REF:
       description: Reference/tag of the actual OpenFOAM adapter
       default: "master"
@@ -117,7 +123,6 @@ This `openfoam-adapter` component has the following attributes:
 
 Since the docker containers are still a bit mixed in terms of capabilities and support for different build_argument combinations the following rules apply:
 
-- A build_argument ending in **_TAG** means that an image of some kind needs to be available with that tag.
 - A build_argument ending in **_REF** means that it refers to a git reference (like a branch or commit) beeing used to build the image.
 - All other build_arguments are free of rules and up to the container maintainer.
 
