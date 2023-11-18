@@ -1,0 +1,32 @@
+name: Elastic tube 1D
+path: elastic-tube-1d
+url: https://precice.org/tutorials-elastic-tube-1d.html
+
+participants:
+  - Fluid
+  - Solid
+
+cases:
+  fluid-cpp:
+    participant: Fluid
+    directory: ./fluid-cpp
+    run: ./run.sh
+    component: bare
+  
+  solid-cpp:
+    participant: Solid
+    directory: ./solid-cpp
+    run: ./run.sh
+    component: bare
+  
+  fluid-python:
+    participant: Fluid
+    directory: ./fluid-python
+    run: ./run.sh
+    component: python-bindings
+  
+  solid-python:
+    participant: Solid
+    directory: ./solid-python
+    run: ./run.sh
+    component: python-bindings

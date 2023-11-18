@@ -1,7 +1,32 @@
+bare: # A default component used when the solver does not have any dependencies apart from preCICE itself
+  repository: https://github.com/precice/precice
+  template: component-templates/bare.yaml
+  build_arguments: # these things mean something to the docker-service
+    PRECICE_REF:
+      description: Version of preCICE to use
+      default: "main"
+    PLATFORM:
+      description: Dockerfile platform used
+      default: "ubuntu_2204"
+
+python-bindings:
+  repository: https://github.com/precice/python-bindings
+  template: component-templates/python-bindings.yaml
+  build_arguments:
+    PRECICE_REF:
+      description: Version of preCICE to use
+      default: "main"
+    PLATFORM:
+      description: Dockerfile platform used
+      default: "ubuntu_2204"
+    PYTHON_BINDINGS_REF:
+      semnantic: Git ref of the pythonbindings to use
+      default: "master"
+
 openfoam-adapter:
   repository: https://github.com/precice/openfoam-adapter
   template: component-templates/openfoam-adapter.yaml
-  build_arguments: # these things mean something to the docker-service
+  build_arguments:
     PRECICE_REF:
       description: Version of preCICE to use
       default: "main"
