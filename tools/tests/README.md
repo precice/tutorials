@@ -41,6 +41,68 @@ Each tutorial contains automation scripts (mainly `run.sh` and `clean.sh`), as w
 
 Let's dive deeper into some of these aspects.
 
+### General architecture
+
+Each tutorial directory contains a metadata file, describing which participants each case directory implements, and how to run it.
+
+A list of tests describes all tests to be executed, grouped by test suites. Each test is a combination of tutorial cases.
+
+Test steps include modifying the tutorial configuration files for the test system, building the Docker containers used by the respective Docker Compose service of each component, and comparing results to reference results using fieldcompare.
+
+Tests are executed by the `systemtests.py` script, which starts the Docker Compose. This can be executed locally, and it is the same script that GitHub Actions also execute.
+
+The multi-stage Docker build allows building each component separately from the same Dockerfile, while Docker reuses cached layers. The Docker Compose services consider GitHub Actions Cache when building the services, although the cache is currently only updated, but not hit (see https://github.com/precice/tutorials/pull/372#issuecomment-1748335750).
+
+### File structure
+
+Metadata and workflow/script files:
+
+- `.github/workflows/`
+  - `run_testsuite_workflow.yml`: workflow for running the tests, triggered by other workflows (e.g., other repositories)
+  - `run_testsuite_manual.yml`: manual triggering front-end for `run_testsuite_workflow.yml`
+- `flow-over-a-heated-plate/`
+  - `fluid-openfoam/`
+    - `run.sh`: describes how to execute the respective case
+  - `solid-fenics/`
+  - `solid-openfoam/`
+  - ...
+  - `metadata.yml`: describes each case directory (which participant, which component, which script to run, ...)
+- `tools/tests/`
+  - `component-templates/`: jinja2 templates for Docker Compose services, specifying cache system
+    - `calculix-adapter.yaml`
+    - `fenics-adapter.yaml`
+    - `openfoam-adapter.yaml`
+    - ...
+  - `dockerfiles/ubuntu_2204/`
+    - Dockerfile: a multi-stage build Dockerfile that defines how to build each component, in a layered approach
+  - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Componse service template)
+  - `docker-compose.field_compare.template.yaml`: Describes how to compare results with fieldcompare (Docker Compose service template)
+  - `components.yaml`: Declares the available components and their parameters/options
+  - `reference_results.metadata.template`: Template for reporting the versions used to generate the reference results
+  - `reference_versions.yaml`: Versions of components to use for generating the reference results
+  - `tests.yaml`: Declares the available tests, grouped in test suites
+
+User-facing tools:
+
+- `tools/tests/`
+  - `systemtests.py`: Executes the system tests, starting Docker Compose services of each required component (after building them), running each test, and comparing the results to reference results.
+  - `print_test_suites.py`: Prints the available tests.
+  - `print_metadata.py`: Prints the metadata of each tutorial that contains a `metadata.yaml` file.
+  - `print_case_combinations.py`: Prints all possible combinations of tutorial cases, using the `metadata.yaml` files.
+  - `build_docker_images.py`: Build the Docker images for each test
+  - `generate_reference_data.py`: Executes the system tests with the versions defined in `reference_versions.yaml` and generates the reference data archives, with the names described in `tests.yaml`.
+
+Implementation scripts:
+
+- `tools/tests/`
+  - `systemtests.py`: Main entry point
+  - `requirements.txt`: Dependencies (jinja2, pyyaml)
+  - `metadata_parser/`: Reads the YAML files into Python objects (defines the schema)
+  - `systemtests/`: Main implementation classes
+    - `Systemtest.py`
+    - `SystemtestArguments.py`
+    - `TestSuite.py` 
+
 ### Metadata
 
 Every tutorial contains a file called `metadata.yaml` describing some important properties of the tutorial. For example:
