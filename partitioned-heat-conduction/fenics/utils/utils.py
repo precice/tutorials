@@ -94,10 +94,7 @@ def time_derivative(expr, tsm, dt, t):
     du_dt = tsm.num_stages * [None]
     for i in range(tsm.num_stages):
         du_dt[i] = Expression(ccode(du_dt_expr), degree=2, t=0)
-        # initial time assumed to be 0
-        for j in range(i - 1):
-            du_dt[i].t = du_dt[i].t + tsm.c[j] * dt
-        #du_dt[i].t = du_dt[i].t + tsm.c[i]*dt
+        du_dt[i].t = du_dt[i].t + tsm.c[i]*dt(0)
     return du_dt
 
 def determine_gradient(V_g, u, flux):
