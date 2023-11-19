@@ -26,37 +26,19 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
-    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, MeshFunction, MPI, MixedElement, split
+    File, solve, lhs, rhs, grad, inner, dx, interpolate, VectorFunctionSpace, MeshFunction, MPI, MixedElement, split
 from fenicsprecice import Adapter
+import argparse
+import numpy as np
+import dolfin
+from dolfin import project
+import sympy as sp
 
 from errorcomputation import compute_errors
 from my_enums import ProblemType, DomainPart
-import argparse
-import numpy as np
 from problem_setup import get_geometry
-import dolfin
-from dolfin import FacetNormal, dot, project, Point
-import sympy as sp
-from utils.ButcherTableaux import RadauIIA, BackwardEuler, LobattoIIIC
-from utils.high_order_setup import getVariationalProblem, time_derivative
+from utils.ButcherTableaux import *
 import utils.utils as utl
-
-
-def determine_gradient(V_g, u, flux):
-    """
-    compute flux following http://hplgit.github.io/INF5620/doc/pub/fenics_tutorial1.1/tu2.html#tut-poisson-gradu
-    :param V_g: Vector function space
-    :param u: solution where gradient is to be determined
-    :param flux: returns calculated flux into this value
-    """
-
-    w = TrialFunction(V_g)
-    v = TestFunction(V_g)
-
-    a = inner(w, v) * dx
-    L = inner(grad(u), v) * dx
-    solve(a == L, flux)
-
 
 parser = argparse.ArgumentParser(description="Solving heat equation for simple or complex interface case")
 command_group = parser.add_mutually_exclusive_group(required=True)
@@ -88,7 +70,7 @@ W = V_g.sub(0).collapse()
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 # create sympy expression of function to derive the required forms of the equation
-x_ ,y_ ,t_ = sp.symbols(['x[0]','x[1]','t'])
+x_, y_, t_ = sp.symbols(['x[0]', 'x[1]', 't'])
 u_expr = 1+x_*x_+alpha*y_*y_+beta*t_*t_
 u_D = Expression(sp.ccode(u_expr), degree=2, t=0)
 # initial condition
@@ -143,7 +125,7 @@ for i in range(tsm.num_stages):
     f[i] = Expression(sp.ccode(f_expr), degree=2, t=0)
     f[i].t = tsm.c[i] * float(dt)  # initial time assumed to be 0
 # get variational form of the problem
-F = getVariationalProblem(v=v, initialCondition=u_n, dt=dt, f=f, tsm=tsm, k=u)
+F = utl.getVariationalProblem(v=v, initialCondition=u_n, dt=dt, f=f, tsm=tsm, k=u)
 a = lhs(F)
 L = rhs(F)
 
@@ -154,31 +136,30 @@ L = rhs(F)
 # represent time derivatives of the actual solution. Thus, we need time derivatives as boundary conditions
 
 # get time derivative of u
-du_dt = time_derivative(u_expr, tsm, dt,t_)
+du_dt = utl.time_derivative(u_expr, tsm, dt, t_)
 # set up boundary conditions
 bc = []
 # Create for each dimension of Vbig a coupling expression for either the time derivatives (Dirichlet side)
 #  or Neumann side (no time derivatives required as they are enforced with changing F)
 coupling_expressions = [precice.create_coupling_expression() for _ in range(tsm.num_stages)]
-# for the boundary which is not the coupling boundary, we can just use the boundary conditions as usual
-# each stage needs a boundary condition
-if tsm.num_stages == 1:  # if there is only a single stage, wrap Vbig and v into lists to allow consistent treatment below
+
+# wrap Vbig into array independent of the length to allow equal treatment below
+if tsm.num_stages == 1:
     Vbigs = [Vbig]
     vs = [v]
 else:
     Vbigs = [Vbig.sub(i) for i in range(tsm.num_stages)]
     vs = split(v)
 
+# for the boundary which is not the coupling boundary, we can just use the boundary conditions as usual.
+# Each stage needs a boundary condition
 for i in range(tsm.num_stages):
     if problem is ProblemType.DIRICHLET:
         bc.append(DirichletBC(Vbigs[i], du_dt[i], remaining_boundary))
         bc.append(DirichletBC(Vbigs[i], coupling_expressions[i], coupling_boundary))
-        # Fixme 4: Damit würde man die richtigen Ergebnisse erhalten
-        # bc.append(DirichletBC(Vbigs[i], du_dt[i], coupling_boundary))
     else:
         bc.append(DirichletBC(Vbigs[i], du_dt[i], remaining_boundary))
         F += vs[i] * coupling_expressions[i] * dolfin.ds
-
 
 # get lhs and rhs of variational form
 a, L = lhs(F), rhs(F)
@@ -250,10 +231,8 @@ while precice.is_coupling_ongoing():
         bsplns_der = {}
         for ki in bsplns.keys():
             bsplns_der[ki] = bsplns[ki].derivative(1)
-
-        # preCICE must read num_stages times at respective time for each stage
         for i in range(tsm.num_stages):
-            # values of derivative of current time
+            # values of derivative at current time
             val = {}
             for ki in bsplns_der.keys():
                 val[ki] = bsplns_der[ki](tsm.c[i]*float(dt))
@@ -269,7 +248,7 @@ while precice.is_coupling_ongoing():
     # with those we can assemble the solution and thus get the discrete evolution
     solve(a == L, k, bc)
 
-    if tsm.num_stages == 1:  # if there is only a single stage, wrap Vbig and v into lists to allow consistent treatment below
+    if tsm.num_stages == 1:
         ks = [k]
     else:
         ks = [k.sub(i) for i in range(tsm.num_stages)]
@@ -286,7 +265,7 @@ while precice.is_coupling_ongoing():
     # Write data to preCICE according to which problem is being solved
     if problem is ProblemType.DIRICHLET:
         # Dirichlet problem reads temperature and writes flux on boundary to Neumann problem
-        determine_gradient(V_g, u_sol, flux)
+        utl.determine_gradient(V_g, u_sol, flux)
         flux_x = interpolate(flux.sub(0), W)
         precice.write_data(flux_x)
     elif problem is ProblemType.NEUMANN:
@@ -308,12 +287,6 @@ while precice.is_coupling_ongoing():
         n += 1
 
     if precice.is_time_window_complete():
-        pts = []
-        for keyss in precice.read_data(0).keys():
-            pts.append(Point(keyss[0], keyss[1], 0))
-        for p in pts:
-            # check the difference of the boundary values
-            print(u_sol(p))
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
