@@ -29,6 +29,60 @@ After bringing these changes to `master`, the manual triggering option should be
 gh workflow run run_testsuite_manual.yml -f suites=fenics_test --ref=develop
 ```
 
+Another example, to use the latest develop branches and enable debug information of the tests:
+
+```shell
+gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop,PYTHON_BINDINGS_REF:develop,FENICS_ADAPTER_REF:develop" -f loglevel=DEBUG --ref=develop
+```
+
+where the `*_REF` can also be specific Git commits.
+
+Example output:
+
+```
+Run cd tools/tests
+  cd tools/tests
+  python systemtests.py --build_args=PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop,PYTHON_BINDINGS_REF:develop,FENICS_ADAPTER_REF:develop --suites=fenics_test --log-level=DEBUG
+  cd ../../
+  shell: /usr/bin/bash -e {0}
+INFO: About to run the following systemtest in the directory /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs:
+ [Flow over heated plate (fluid-openfoam, solid-fenics)]
+INFO: Started running Flow over heated plate (fluid-openfoam, solid-fenics),  0/1
+DEBUG: Checking out tutorials master before copying
+From https://github.com/precice/tutorials
+ * [new branch]      master     -> master
+DEBUG: Building docker image for Flow over heated plate (fluid-openfoam, solid-fenics)
+DEBUG: Running tutorial Flow over heated plate (fluid-openfoam, solid-fenics)
+DEBUG: Running fieldcompare for Flow over heated plate (fluid-openfoam, solid-fenics)
+DEBUG: extracting /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/flow-over-heated-plate/reference-data/fluid-openfoam_solid-fenics.tar.gz into /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs/flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723/reference_results
+Using log-level: DEBUG
++---------------------------------------------------------+---------+-------------------+-----------------+-----------------------+
+| systemtest                                              | success | building time [s] | solver time [s] | fieldcompare time [s] |
+CRITICAL: Fieldcompare returned non zero exit code, therefore Flow over heated plate (fluid-openfoam, solid-fenics) failed
+INFO: Running Flow over heated plate (fluid-openfoam, solid-fenics) took 280.5861554039875 seconds
+ERROR: Failed to run Flow over heated plate (fluid-openfoam, solid-fenics)
++---------------------------------------------------------+---------+-------------------+-----------------+-----------------------+
+| Flow over heated plate (fluid-openfoam, solid-fenics)   |    0    |      271.80       |      5.60       |         2.42          |
++---------------------------------------------------------+---------+-------------------+-----------------+-----------------------+
+```
+
+In this case, building and running seems to work out, but the tests fail because the results differ from the reference results. This may be incorrect, as the previous step may have silently failed.
+
+## Understanding what went wrong
+
+Let's first see how the workflow was triggered. If we expand the `Set up job` step, we can see the inputs provided:
+
+```
+ Inputs
+    build_args: PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop,PYTHON_BINDINGS_REF:develop,FENICS_ADAPTER_REF:develop
+    loglevel: DEBUG
+    suites: fenics_test
+    systests_branch: develop
+    upload_artifacts: FALSE
+```
+
+In the summary, we can find the results and more logs as a build artifact. This includes two interesting files: `stdout.log` and `stderr.log`. These include all Docker build steps and the simulation output, as well as the exact git clone command.
+
 ## Adding new tests
 
 ### Adding tutorials
