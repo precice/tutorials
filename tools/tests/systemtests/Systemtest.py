@@ -234,9 +234,7 @@ class Systemtest:
             result = subprocess.run([
                 "git",
                 "-C", os.fspath(repository.resolve()),
-                "fetch",
-                "origin",
-                f"{ref}:{ref}"
+                "fetch"
             ], check=True, timeout=60)
             if result.returncode != 0:
                 raise RuntimeError(f"git command returned code {result.returncode}")
