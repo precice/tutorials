@@ -49,6 +49,9 @@ jobs:
         ref: ${{ inputs.systests_branch }}
         lfs: true
         fetch-depth: 0
+    - name: Map remote branches to local ones
+      run: |
+        /home/precice/runners_root/scripts/make_lfs_local.sh ./
     - name: Install Python dependencies
       run: |
         pip install --user -r tools/tests/requirements.txt
