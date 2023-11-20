@@ -67,3 +67,6 @@ jobs:
         name: runs
         path: |
           runs/*
+    - name: tidy up the docker
+      run: |
+        docker network prune -f
