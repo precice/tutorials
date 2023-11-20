@@ -25,7 +25,11 @@
     <receive-mesh name="Neumann-Mesh" from="Neumann" />
     <write-data name="Heat-Flux" mesh="Dirichlet-Mesh" />
     <read-data name="Temperature" mesh="Dirichlet-Mesh" />
-    <mapping:nearest-neighbor direction="read" from="Neumann-Mesh" to="Dirichlet-Mesh" constraint="consistent" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Neumann-Mesh"
+      to="Dirichlet-Mesh"
+      constraint="consistent" />
   </participant>
 
   <participant name="Neumann">
@@ -33,7 +37,11 @@
     <receive-mesh name="Dirichlet-Mesh" from="Dirichlet" />
     <write-data name="Temperature" mesh="Neumann-Mesh" />
     <read-data name="Heat-Flux" mesh="Neumann-Mesh" />
-    <mapping:nearest-neighbor direction="read" from="Dirichlet-Mesh" to="Neumann-Mesh" constraint="consistent" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Dirichlet-Mesh"
+      to="Neumann-Mesh"
+      constraint="consistent" />
   </participant>
 
   <m2n:sockets acceptor="Dirichlet" connector="Neumann" exchange-directory=".." />
@@ -43,8 +51,20 @@
     <max-time value="1.0" />
     <time-window-size value="0.1" />
     <max-iterations value="100" />
-    <exchange data="Heat-Flux" mesh="Dirichlet-Mesh" from="Dirichlet" to="Neumann" initialize="true" substeps="true" />
-    <exchange data="Temperature" mesh="Neumann-Mesh" from="Neumann" to="Dirichlet" initialize="true" substeps="true" />
+    <exchange
+      data="Heat-Flux"
+      mesh="Dirichlet-Mesh"
+      from="Dirichlet"
+      to="Neumann"
+      initialize="true"
+      substeps="true" />
+    <exchange
+      data="Temperature"
+      mesh="Neumann-Mesh"
+      from="Neumann"
+      to="Dirichlet"
+      initialize="true"
+      substeps="true" />
     <relative-convergence-measure data="Heat-Flux" mesh="Dirichlet-Mesh" limit="1e-10" />
     <relative-convergence-measure data="Temperature" mesh="Neumann-Mesh" limit="1e-10" />
     <!-- <acceleration:IQN-ILS>
@@ -55,7 +75,7 @@
       <filter type="QR2" limit="1e-3" />
     </acceleration:IQN-ILS> -->
     <acceleration:constant>
-      <relaxation value="0.5"/>
+      <relaxation value="0.5" />
     </acceleration:constant>
   </coupling-scheme:serial-implicit>
 </precice-configuration>
