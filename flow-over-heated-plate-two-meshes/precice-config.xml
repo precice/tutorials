@@ -26,7 +26,6 @@
   <participant name="Fluid">
     <provide-mesh name="Fluid-Mesh" />
     <receive-mesh name="Solid-Mesh" from="Solid" />
-    <receive-mesh name="Solid-Mesh-nodes" from="Solid" />
     <read-data name="Heat-Flux" mesh="Fluid-Mesh" />
     <write-data name="Temperature" mesh="Fluid-Mesh" />
     <mapping:nearest-neighbor
