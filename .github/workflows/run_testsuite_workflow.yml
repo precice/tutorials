@@ -49,6 +49,9 @@ jobs:
         ref: ${{ inputs.systests_branch }}
         lfs: true
         fetch-depth: 0
+    - name: Map remote branches to local ones
+      run: |
+        /home/precice/runners_root/scripts/map_origin_to_local.sh ./
     - name: Install Python dependencies
       run: |
         pip install --user -r tools/tests/requirements.txt
@@ -64,3 +67,6 @@ jobs:
         name: runs
         path: |
           runs/*
+    - name: tidy up the docker
+      run: |
+        docker network prune -f
