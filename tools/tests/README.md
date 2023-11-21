@@ -19,6 +19,70 @@ python3 systemtests.py --suites=openfoam-adapter-release,<someothersuite>
 To discover all tests, use `python print_test_suites.py`.
 To be able to fill in the right case tuple into the `tests.yaml`, you can use the `python3 print_case_combinations.py` script.
 
+## Running the system tests on GitHub Actions
+
+Go to Actions > [Run Testsuite (manual)](https://github.com/precice/tutorials/actions/workflows/run_testsuite_manual.yml) to see this workflow.
+
+After bringing these changes to `master`, the manual triggering option should be visible on the top right. Until that happens, we can only trigger this workflow manually from the [GitHub CLI](https://github.blog/changelog/2021-04-15-github-cli-1-9-enables-you-to-work-with-github-actions-from-your-terminal/):
+
+```shell
+gh workflow run run_testsuite_manual.yml -f suites=fenics_test --ref=develop
+```
+
+Another example, to use the latest develop branches and enable debug information of the tests:
+
+```shell
+gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop,PYTHON_BINDINGS_REF:develop,FENICS_ADAPTER_REF:develop" -f loglevel=DEBUG --ref=develop
+```
+
+where the `*_REF` can also be specific Git commits.
+
+Example output:
+
+```text
+Run cd tools/tests
+  cd tools/tests
+  python systemtests.py --build_args=PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop,PYTHON_BINDINGS_REF:develop,FENICS_ADAPTER_REF:develop --suites=fenics_test --log-level=DEBUG
+  cd ../../
+  shell: /usr/bin/bash -e {0}
+INFO: About to run the following systemtest in the directory /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs:
+ [Flow over heated plate (fluid-openfoam, solid-fenics)]
+INFO: Started running Flow over heated plate (fluid-openfoam, solid-fenics),  0/1
+DEBUG: Checking out tutorials master before copying
+From https://github.com/precice/tutorials
+ * [new branch]      master     -> master
+DEBUG: Building docker image for Flow over heated plate (fluid-openfoam, solid-fenics)
+DEBUG: Running tutorial Flow over heated plate (fluid-openfoam, solid-fenics)
+DEBUG: Running fieldcompare for Flow over heated plate (fluid-openfoam, solid-fenics)
+DEBUG: extracting /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/flow-over-heated-plate/reference-data/fluid-openfoam_solid-fenics.tar.gz into /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs/flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723/reference_results
+Using log-level: DEBUG
++---------------------------------------------------------+---------+-------------------+-----------------+-----------------------+
+| systemtest                                              | success | building time [s] | solver time [s] | fieldcompare time [s] |
+CRITICAL: Fieldcompare returned non zero exit code, therefore Flow over heated plate (fluid-openfoam, solid-fenics) failed
+INFO: Running Flow over heated plate (fluid-openfoam, solid-fenics) took 280.5861554039875 seconds
+ERROR: Failed to run Flow over heated plate (fluid-openfoam, solid-fenics)
++---------------------------------------------------------+---------+-------------------+-----------------+-----------------------+
+| Flow over heated plate (fluid-openfoam, solid-fenics)   |    0    |      271.80       |      5.60       |         2.42          |
++---------------------------------------------------------+---------+-------------------+-----------------+-----------------------+
+```
+
+In this case, building and running seems to work out, but the tests fail because the results differ from the reference results. This may be incorrect, as the previous step may have silently failed.
+
+## Understanding what went wrong
+
+Let's first see how the workflow was triggered. If we expand the `Set up job` step, we can see the inputs provided:
+
+```text
+ Inputs
+    build_args: PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop,PYTHON_BINDINGS_REF:develop,FENICS_ADAPTER_REF:develop
+    loglevel: DEBUG
+    suites: fenics_test
+    systests_branch: develop
+    upload_artifacts: FALSE
+```
+
+In the summary, we can find the results and more logs as a build artifact. This includes two interesting files: `stdout.log` and `stderr.log`. These include all Docker build steps and the simulation output, as well as the exact git clone command.
+
 ## Adding new tests
 
 ### Adding tutorials
@@ -40,6 +104,68 @@ Please include the generated reference results in the pull request as they are s
 Each tutorial contains automation scripts (mainly `run.sh` and `clean.sh`), as well as metadata (`metadata.yaml`). The metadata file describes the available cases, how to run them, as well as their dependencies. A central `tests.yaml` file in this directory defines test suites, which execute different combinations of cases. The Python script `systemtests.py` executes the tests, allowing to filter for specific components or test suites.
 
 Let's dive deeper into some of these aspects.
+
+### General architecture
+
+Each tutorial directory contains a metadata file, describing which participants each case directory implements, and how to run it.
+
+A list of tests describes all tests to be executed, grouped by test suites. Each test is a combination of tutorial cases.
+
+Test steps include modifying the tutorial configuration files for the test system, building the Docker containers used by the respective Docker Compose service of each component, and comparing results to reference results using fieldcompare.
+
+Tests are executed by the `systemtests.py` script, which starts the Docker Compose. This can be executed locally, and it is the same script that GitHub Actions also execute.
+
+The multi-stage Docker build allows building each component separately from the same Dockerfile, while Docker reuses cached layers. The Docker Compose services consider GitHub Actions Cache when building the services, although the cache is currently only updated, but not hit (see https://github.com/precice/tutorials/pull/372#issuecomment-1748335750).
+
+### File structure
+
+Metadata and workflow/script files:
+
+- `.github/workflows/`
+  - `run_testsuite_workflow.yml`: workflow for running the tests, triggered by other workflows (e.g., other repositories)
+  - `run_testsuite_manual.yml`: manual triggering front-end for `run_testsuite_workflow.yml`
+- `flow-over-a-heated-plate/`
+  - `fluid-openfoam/`
+    - `run.sh`: describes how to execute the respective case
+  - `solid-fenics/`
+  - `solid-openfoam/`
+  - ...
+  - `metadata.yml`: describes each case directory (which participant, which component, which script to run, ...)
+- `tools/tests/`
+  - `component-templates/`: jinja2 templates for Docker Compose services, specifying cache system
+    - `calculix-adapter.yaml`
+    - `fenics-adapter.yaml`
+    - `openfoam-adapter.yaml`
+    - ...
+  - `dockerfiles/ubuntu_2204/`
+    - Dockerfile: a multi-stage build Dockerfile that defines how to build each component, in a layered approach
+  - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Componse service template)
+  - `docker-compose.field_compare.template.yaml`: Describes how to compare results with fieldcompare (Docker Compose service template)
+  - `components.yaml`: Declares the available components and their parameters/options
+  - `reference_results.metadata.template`: Template for reporting the versions used to generate the reference results
+  - `reference_versions.yaml`: Versions of components to use for generating the reference results
+  - `tests.yaml`: Declares the available tests, grouped in test suites
+
+User-facing tools:
+
+- `tools/tests/`
+  - `systemtests.py`: Executes the system tests, starting Docker Compose services of each required component (after building them), running each test, and comparing the results to reference results.
+  - `print_test_suites.py`: Prints the available tests.
+  - `print_metadata.py`: Prints the metadata of each tutorial that contains a `metadata.yaml` file.
+  - `print_case_combinations.py`: Prints all possible combinations of tutorial cases, using the `metadata.yaml` files.
+  - `build_docker_images.py`: Build the Docker images for each test
+  - `generate_reference_data.py`: Executes the system tests with the versions defined in `reference_versions.yaml` and generates the reference data archives, with the names described in `tests.yaml`.
+
+Implementation scripts:
+
+- `tools/tests/`
+  - `systemtests.py`: Main entry point
+  - `requirements.txt`: Dependencies (jinja2, pyyaml)
+  - `metadata_parser/`: Reads the YAML files into Python objects (defines the schema)
+  - `systemtests/`: Main implementation classes
+    - `Systemtest.py`
+    - `SystemtestArguments.py`
+    - `TestSuite.py`
 
 ### Metadata
 
@@ -95,13 +221,19 @@ openfoam-adapter:
   repository: https://github.com/precice/openfoam-adapter
   template: component-templates/openfoam-adapter.yaml
   build_arguments: # these things mean something to the docker-service
-    OPENFOAM_EXECUTABLE:
-      options: ["openfoam2112"]
-      description: exectuable of openfoam to use
-      default: "openfoam2112"
-    PRECICE_TAG:
+    PRECICE_REF:
       description: Version of preCICE to use
-      default: "latest"
+      default: "main"
+    PLATFORM:
+      description: Dockerfile platform used
+      default: "ubuntu_2204"
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: "master"
+    OPENFOAM_EXECUTABLE:
+      options: ["openfoam2306","openfoam2212","openfoam2112"]
+      description: exectuable of openfoam to use
+      default: "openfoam2306"
     OPENFOAM_ADAPTER_REF:
       description: Reference/tag of the actual OpenFOAM adapter
       default: "master"
@@ -117,7 +249,6 @@ This `openfoam-adapter` component has the following attributes:
 
 Since the docker containers are still a bit mixed in terms of capabilities and support for different build_argument combinations the following rules apply:
 
-- A build_argument ending in **_TAG** means that an image of some kind needs to be available with that tag.
 - A build_argument ending in **_REF** means that it refers to a git reference (like a branch or commit) beeing used to build the image.
 - All other build_arguments are free of rules and up to the container maintainer.
 
