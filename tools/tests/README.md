@@ -39,7 +39,7 @@ where the `*_REF` can also be specific Git commits.
 
 Example output:
 
-```
+```text
 Run cd tools/tests
   cd tools/tests
   python systemtests.py --build_args=PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop,PYTHON_BINDINGS_REF:develop,FENICS_ADAPTER_REF:develop --suites=fenics_test --log-level=DEBUG
@@ -72,7 +72,7 @@ In this case, building and running seems to work out, but the tests fail because
 
 Let's first see how the workflow was triggered. If we expand the `Set up job` step, we can see the inputs provided:
 
-```
+```text
  Inputs
     build_args: PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop,PYTHON_BINDINGS_REF:develop,FENICS_ADAPTER_REF:develop
     loglevel: DEBUG
