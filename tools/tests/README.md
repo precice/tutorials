@@ -1,4 +1,10 @@
-# preCICE system tests
+---
+title: preCICE system tests
+permalink: dev-docs-system-tests.html
+sidebar: docs_sidebar
+keywords: pages, development, tests
+summary: "Test complete simulations combining preCICE components of specific versions."
+---
 
 The tutorials repository hosts cases that need multiple components from the preCICE ecosystem to run. This directory provides tools that can automatically run complete simulations, using different versions of each component, and compare the results to references. While the main purpose is to run complete tests in the continuous integration workflows of preCICE, you can also run these tests on your laptop.
 
