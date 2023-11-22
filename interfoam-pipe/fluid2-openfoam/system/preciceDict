@@ -1,0 +1,47 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      preciceDict;
+}
+
+preciceConfig "../precice-config.xml";
+
+participant Fluid2;
+
+modules (FF);
+
+interfaces
+{
+  Interface1
+  {
+    mesh              Fluid2-Mesh;
+    patches           (inlet);
+    
+    readData
+    (
+      Velocity
+      // PressureBack
+      // VelocityGradientBack
+      Alpha
+      // Phi
+    );
+    
+    writeData
+    (
+      Pressure
+      // VelocityBack
+      VelocityGradient
+      AlphaGradient
+      // PhiBack
+    );
+  };
+};
+
+FF
+{
+  nameP   p_rgh;
+  nameAlpha alpha.water;
+}

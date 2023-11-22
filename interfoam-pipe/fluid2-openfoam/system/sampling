@@ -1,0 +1,55 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2112                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      sampling;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+functions
+{
+    sampleSets
+    {
+        type    sets;
+        libs    (sampling);
+
+        writeControl  timeStep;
+        writeInterval 1;
+
+        setFormat           vtk;
+        interpolationScheme cellPointFace;
+        fields ( alpha.water );
+
+        sets
+        (
+            gauge_1
+            {
+                type    face;
+                axis    y;
+                start   (0.02 0.20 0.005);
+                end     (0.02 0.25 0.005);
+                nPoints 100;
+            }
+
+            gauge_2
+            {
+                type    face;
+                axis    y;
+                start   (0.2 0.03 0.005);
+                end     (0.2 0.55 0.005);
+                nPoints 100;
+            }
+        );
+    }
+}
+
+
+// ************************************************************************* //
