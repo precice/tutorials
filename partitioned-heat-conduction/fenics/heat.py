@@ -228,11 +228,6 @@ err = error_pointwise.copy()
 err.rename("err", "")
 error_write.append(err)
 
-# set t_1 = t_0 + dt, this gives u_D^1
-# call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
-u_D.t = t + dt(0)
-f.t = t + dt(0)
-
 if problem is ProblemType.DIRICHLET:
     flux = Function(V_g)
     flux.rename("Heat-Flux", "")
@@ -350,9 +345,6 @@ while precice.is_coupling_ongoing():
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
         print("n = %d, t = %.2f: L2 error on domain = %.3g" % (n, t, error))
 
-    # Update Dirichlet BC
-    u_D.t = t + float(dt)
-    f.t = t + float(dt)
 
 # output solution and reference solution at t_n+1 and substeps (read from buffer)
 print("output u^%d and u_ref^%d" % (n, n))
