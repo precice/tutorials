@@ -105,7 +105,6 @@
     <relative-convergence-measure limit="1e-4" data="Displacement-Upstream" mesh="Solid-Upstream-Mesh" />
     <relative-convergence-measure limit="1e-4" data="Stress-Downstream" mesh="Fluid-Downstream-Mesh-Centers" />
     <relative-convergence-measure limit="1e-4" data="Displacement-Downstream" mesh="Solid-Downstream-Mesh" />
-    <extrapolation-order value="2" />
     <acceleration:IQN-ILS>
       <data name="Displacement-Upstream" mesh="Solid-Upstream-Mesh" />
       <data name="Displacement-Downstream" mesh="Solid-Downstream-Mesh" />

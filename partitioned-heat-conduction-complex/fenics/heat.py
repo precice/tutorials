@@ -35,6 +35,7 @@ import numpy as np
 from problem_setup import get_geometry, get_problem_setup
 import dolfin
 from dolfin import FacetNormal, dot
+import sympy as sp
 
 
 def determine_gradient(V_g, u, flux):
@@ -84,11 +85,13 @@ V = FunctionSpace(mesh, 'P', 2)
 V_g = VectorFunctionSpace(mesh, 'P', 1)
 
 # Define boundary conditions
-u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha,
-                 beta=beta, gamma=gamma, t=0)
+# create sympy expression of manufactured solution
+x_sp, y_sp, t_sp = sp.symbols(['x[0]', 'x[1]', 't'])
+u_D_sp = 1 + gamma * t_sp * x_sp * x_sp + (1 - gamma) * x_sp * x_sp + alpha * y_sp * y_sp + beta * t_sp
+u_D = Expression(sp.ccode(u_D_sp), degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 u_D_function = interpolate(u_D, V)
 # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
-f_N = Expression(("2 * gamma*t*x[0] + 2 * (1-gamma)*x[0]", "2 * alpha*x[1]"), degree=1, gamma=gamma, alpha=alpha, t=0)
+f_N = Expression((sp.ccode(u_D_sp.diff(x_sp)), sp.ccode(u_D_sp.diff(y_sp))), degree=1, gamma=gamma, alpha=alpha, t=0)
 f_N_function = interpolate(f_N, V_g)
 
 # Define initial value
@@ -114,8 +117,9 @@ dt.assign(np.min([fenics_dt, precice_dt]))
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-f = Expression('beta + gamma*x[0]*x[0] - 2*gamma*t - 2*(1-gamma) - 2*alpha',
-               degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
+# du_dt-Laplace(u) = f
+f_sp = u_D_sp.diff(t_sp) - u_D_sp.diff(x_sp).diff(x_sp) - u_D_sp.diff(y_sp).diff(y_sp)
+f = Expression(sp.ccode(f_sp), degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
