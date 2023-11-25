@@ -132,8 +132,9 @@ L = rhs(F)
 
 # boundary conditions
 
-# we define variational form for each RK stage. According to [Irksome tutorial], All of those stages
-# represent time derivatives of the actual solution. Thus, we need time derivatives as boundary conditions
+# we define variational form for each RK stage. According to
+# https://doi.org/10.48550/arXiv.2006.16282, All of those stages
+# represent time derivatives and not the actual solution. Thus, we need time derivatives as boundary conditions
 
 # get time derivative of u
 du_dt = utl.time_derivative(u_expr, tsm, dt, t_)
@@ -225,7 +226,7 @@ while precice.is_coupling_ongoing():
     # only dirichlet boundaries need time derivatives
     if problem is ProblemType.DIRICHLET:
         # approximate the function which preCICE uses with BSplines
-        bsplns = utl.b_splines(precice, 3, float(dt))
+        bsplns = utl.b_splines(precice, 5, float(dt))
 
         # get first derivative
         bsplns_der = {}
