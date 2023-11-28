@@ -28,8 +28,10 @@ class MicroSimulation:
         # File and folder names
         self._foldername = 'ruc_' + self._id_as_string
 
+        self._base_folder = os.getcwd()
+
         # Set the working directory to the micro_ruc_abaqus folder
-        os.chdir(os.getcwd() + '/micro_ruc_abaqus')
+        os.chdir(self._base_folder)
 
         # Create a new directory for this micro simulation
         subprocess.call('mkdir ' + self._foldername, shell=True)
