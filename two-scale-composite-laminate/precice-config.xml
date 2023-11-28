@@ -34,7 +34,7 @@
       <write-data name="stresses4to6" mesh="laminate-meso-mesh"/>
     </participant>
 
-    <m2n:sockets acceptor="Micro-Manager" connector="Laminate-3D-ply" network="ib0" exchange-directory="/home/desaii/composite-multiscale/"/>
+    <m2n:sockets acceptor="Micro-Manager" connector="Laminate-3D-ply" network="ib0" exchange-directory=".."/>
 
     <coupling-scheme:serial-explicit>
        <participants first="Laminate-3D-ply" second="Micro-Manager"/>
