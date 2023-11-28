@@ -139,3 +139,37 @@ clean_dune() {
         clean_precice_logs .
     )
 }
+
+clean_abaqus() {
+    (
+        set -e -u
+	    cd "$1"
+	    echo "--- Cleaning up ABAQUS case in $(pwd)"
+        rm -rfv ./*.abq
+        rm -rfv ./*.com
+        rm -rfv ./*.dat
+        rm -rfv ./*mdl
+        rm -rfv ./*.msg
+        rm -rfv ./*.odb
+        rm -rfv ./*.pac
+        rm -rfv ./*.prt
+        rm -rfv ./*.res
+        rm -rfv ./*.sel
+        rm -rfv ./*.sta
+        rm -rfv ./*.stt
+        rm -rfv ./*.src
+        rm -rfv ./*.exception
+        rm -rfv ./*.cid
+        rm -rfv ./*.lck
+        rm -rfv ./*.env
+        rm -rfv ./*.simlog
+        rm -rfv ./*.simdir
+        rm -fv ./*.bak
+        rm -fv ./*.rpy
+        rm -fv ./*.par
+        rm -fv ./*.pes
+        rm -fv ./*.pmg
+        rm -fv ./*.sim
+        clean_precice_logs .
+    )
+}

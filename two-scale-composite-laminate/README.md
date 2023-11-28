@@ -1,45 +1,41 @@
-# composite-multiscale
+---
+title: Two-scale composite laminate
+permalink: tutorials-two-scale-composite-laminate.html
+keywords: Macro-micro, Micro Manager, Nutils, Composite laminate
+summary: We solve a two-scale composite laminate problem with a predefined micro structure. One macro simulation is coupled to several micro simulations using the Micro Manager.
+---
 
-Two-scale coupled simulation of a composite structure using the preCICE coupling library. One meso-scale simulation is coupled to many micro-scale simulations. Both the scales are solved using [Abaqus](https://www.3ds.com/products-services/simulia/products/abaqus/).
+{% note %}
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/two-scale-composite-laminate). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+{% endnote %}
+
+This tutorial solves a two-scale coupled simulation of a composite structure using the preCICE coupling library. One meso-scale simulation is coupled to many micro-scale simulations. Both the scales are solved using [ABAQUS](https://www.3ds.com/products-services/simulia/products/abaqus/). This case was developed at the [Composite Structures Lab](https://sites.google.com/umich.edu/um-csl) of the University of Michigan, with a significant contribution from @mhoangnUM.
 
 ## Setup
 
 The meso-scale model is a 3D beam structure which is being axially loaded.
 
+![Meso Laminate](images/tutorials-two-scale-composite-laminate-meso-laminate.png)
 
+The micro-scale model is a 3D fibre structure.
 
-The micro-scale model is a 3D single fibre structure.
+![Micro RUC](images/tutorials-two-scale-composite-laminate-ruc.png)
 
-## Solvers
+## Available solvers and dependencies
 
-### Meso scale
-
-#### Abaqus
-
-
-
-### Micro scale
-
-#### Abaqus
-
-### NASMAT
-
-## Dependencies
-
-* Abaqus
-
-* preCICE: See the scripts to [build_precice with MPI](build_scripts/build_precice_v3_with_Intel_MPI.sh) and [wihtout MPI](build_scripts/build_precice_v3_without_MPI.sh).
-
-* Micro Manager: See the script to [build the Micro Manager](build_scripts/build_micro_manager.sh).
+* Both the macro and micro simulations are solved using the finite element software [ABAQUS](https://nutils.org/install.html) 2022.
+* The [Micro Manager](https://precice.org/tooling-micro-manager-installation.html) controls all micro-simulations and facilitates coupling via preCICE. To solve this case, use the [develop](https://github.com/precice/micro-manager/tree/develop) branch of the Micro Manager.
 
 ## Running the simulation
 
-This case is designed to be run on the [Great Lakes HPC cluster](https://arc.umich.edu/greatlakes/) at the University of Michigan. In principle the setup should work on any cluster which has access to an adequate amount of Abaqus licenses.
-
-To run the case, submit a job via the job script:
-
-```bash
-sbatch submit_job.sbat 
-```
+This case was developed by running it on the [Great Lakes HPC cluster](https://arc.umich.edu/greatlakes/) at the University of Michigan. In principle the setup should work on any machine or cluster which has an adequate amount of ABAQUS licenses. To case is run on the Great Lakes HPC cluster via a SLURM job submission script, which is given for reference as [submit_job.sbat](submit_job.sbat).
 
 ## Post-processing
+
+Both the meso and micro scale simulations produce output files which can be viewed in ABAQUS. The axial displacement on the meso scale looks like
+
+![Meso laminate result](images/tutorials-two-scale-composite-laminate-meso-u1.png)
+
+The displacement on the micro scale looks like
+
+![Micro ruc result](images/tutorials-two-scale-composite-laminate-ruc-u1.png)
