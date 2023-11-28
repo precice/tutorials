@@ -31,8 +31,6 @@ class MicroSimulation:
         # Set the working directory to the micro_ruc_abaqus folder
         os.chdir('/home/desaii/tutorials/two-scale-composite-laminate/micro_ruc_abaqus/')
 
-        print("Working directory: " + os.getcwd())
-
         # Create a new directory for this micro simulation
         subprocess.call('mkdir ' + self._foldername, shell=True)
 
@@ -48,8 +46,6 @@ class MicroSimulation:
         # Change the working directory to the ruc_ folder
         os.chdir(self._foldername)
 
-        print("Working directory: " + os.getcwd())
-
         self._jobname = 'RUC_' + self._id_as_string
 
         log_filename = 'log_ruc_' + self._id_as_string + '_' + str(self._n)
@@ -62,8 +58,8 @@ class MicroSimulation:
     def solve(self, strains, dt):
         assert dt != 0
 
-        # Set the working directory to the micro_ruc/ folder
-        os.chdir(os.getcwd() + self._foldername)
+        # Set the working directory to the micro_ruc_abaqus/ruc_{} folder
+        os.chdir('/home/desaii/tutorials/two-scale-composite-laminate/micro_ruc_abaqus/' + self._foldername)
 
         # Clean the working directory
         subprocess.call('sh clean_ruc.sh', shell=True)
