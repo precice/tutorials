@@ -32,7 +32,7 @@ clean_precice_logs() {
             ./precice-*-watchintegral-*.log \
             ./events.json \
             ./core
-        rm -rfv ./precice-events/
+        rm -rfv ./precice-events/ ./precice-profiling/
     )
 }
 
