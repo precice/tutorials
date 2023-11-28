@@ -29,7 +29,7 @@ class MicroSimulation:
         self._foldername = 'ruc_' + self._id_as_string
 
         # Set the working directory to the micro_ruc_abaqus folder
-        os.chdir('~/tutorials/two-scale-composite-laminate/micro_ruc_abaqus/')
+        os.chdir('/home/desaii/tutorials/two-scale-composite-laminate/micro_ruc_abaqus/')
 
         print("Working directory: " + os.getcwd())
 
