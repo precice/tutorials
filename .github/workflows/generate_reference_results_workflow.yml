@@ -46,7 +46,10 @@ jobs:
     - name: Run tests
       run: |
         cd tools/tests
-        python generate_reference_results.py --log-level=${{inputs.loglevel}}
+        test -f generate_reference_results.py && export GENERATE_REF_RESULTS=generate_reference_results.py
+        test -f generate_reference_data.py && export GENERATE_REF_RESULTS=generate_reference_data.py
+        echo "Selected $GENERATE_REF_RESULTS to run"
+        python $GENERATE_REF_RESULTS --log-level=${{inputs.loglevel}}
         cd ../../
     - name: Create commit
       if: success()
