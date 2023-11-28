@@ -1,0 +1,56 @@
+#!/bin/bash
+#SBATCH --job-name=precice-mm
+#SBATCH --mail-type=ALL
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem-per-cpu=2000
+#SBATCH --time=24:00:00
+#SBATCH --licenses=abaqus@slurmdb:20
+#SBATCH --account=awaas1
+
+myhost=`hostname`
+echo "Hostname: $myhost"
+
+if [[ $SLURM_JOB_NODELIST ]] ; then
+ echo "SLURM_NPROCS=$SLURM_NPROCS"
+ echo "SLURM_JOB_NUM_NODES=$SLURM_JOB_NUM_NODES"
+fi
+
+module load RestrictedLicense abaqus
+module load abaqus
+
+# Load user defined gcc to avoid conflict with intel
+module load use.own gcc/my_gcc10
+
+# modules required by preCICE at runtime
+module load eigen/3.4.0 boost/1.78.0
+
+# modules required by Micro Manager
+module load openmpi/4.1.6
+
+# modules required by Abaqus
+module load intel
+
+module list
+
+#unset SLURM_GTIDS
+#rm -rfv abq1.*
+
+# Pre-load preCICE shared library to ensure linking to preCICE
+export LD_PRELOAD=~/precice-installation/lib64/libprecice.so:/sw/pkgs/arc/gcc/10.3.0/lib64/libstdc++.so.6:$LD_PRELOAD
+
+echo "Launching meso participant"
+
+cd meso_laminate_abaqus/
+
+abaqus job=Crossply_meso input=Crossply_meso_18elements \
+	scratch=/home/desaii/composite-multiscale/meso_laminate_abaqus \
+	interactive user=VUMAT.f double=both &> log_meso.log &
+
+echo "Launching Micro Manager"
+
+cd ../micro_ruc_abaqus/
+
+python3 run_micro_manager.py --config micro-manager-config.json &> log_micro.log
+
+echo "Meso simulation and Micro Manager have been launched"

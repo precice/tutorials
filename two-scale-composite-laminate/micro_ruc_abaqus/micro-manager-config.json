@@ -1,0 +1,12 @@
+{
+    "micro_file_name": "ruc_abaqus_restart",
+    "coupling_params": {
+        "config_file_name": "../precice-config.xml",
+        "macro_mesh_name": "laminate-meso-mesh",
+        "read_data_names": {"strains1to3": "vector", "strains4to6": "vector"},
+        "write_data_names": {"stresses1to3": "vector", "stresses4to6": "vector"}
+    },
+    "simulation_params": {
+        "macro_domain_bounds": [-0.9144, 0.9144, -0.4572, 0.4572, 0.0, 0.73152]
+    }
+}
