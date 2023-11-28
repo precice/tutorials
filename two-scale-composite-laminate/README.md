@@ -15,11 +15,11 @@ This tutorial solves a two-scale coupled simulation of a composite structure usi
 
 The meso-scale model is a 3D beam structure which is being axially loaded.
 
-![Meso Laminate](images/tutorials-two-scale-composite-laminate-meso-laminate.png)
+<img src="images/tutorials-two-scale-composite-laminate-meso-laminate.png" width="500" height="400">
 
 The micro-scale model is a 3D fibre structure.
 
-![Micro RUC](images/tutorials-two-scale-composite-laminate-ruc.png)
+<img src="images/tutorials-two-scale-composite-laminate-ruc.png" width="200" height="220">
 
 ## Available solvers and dependencies
 
@@ -34,8 +34,8 @@ This case was developed by running it on the [Great Lakes HPC cluster](https://a
 
 Both the meso and micro scale simulations produce output files which can be viewed in ABAQUS. The axial displacement on the meso scale looks like
 
-![Meso laminate result](images/tutorials-two-scale-composite-laminate-meso-u1.png)
+<img src="images/tutorials-two-scale-composite-laminate-meso-u1.png" width="400" height="250">
 
 The displacement on the micro scale looks like
 
-![Micro ruc result](images/tutorials-two-scale-composite-laminate-ruc-u1.png)
+<img src="images/tutorials-two-scale-composite-laminate-micro-ruc-u1.png" width="400" height="300">
