@@ -9,7 +9,9 @@ summary: We solve a two-scale composite laminate problem with a predefined micro
 Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/two-scale-composite-laminate). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
 {% endnote %}
 
-This tutorial solves a two-scale coupled simulation of a composite structure using the preCICE coupling library. One meso-scale simulation is coupled to many micro-scale simulations. Both the scales are solved using [ABAQUS](https://www.3ds.com/products-services/simulia/products/abaqus/). This case was developed at the [Composite Structures Lab](https://sites.google.com/umich.edu/um-csl) of the University of Michigan, with a significant contribution from @mhoangnUM.
+This tutorial solves a two-scale coupled simulation of a composite structure using the preCICE coupling library. One meso-scale simulation is coupled to many micro-scale simulations. Both the scales are solved using [ABAQUS](https://www.3ds.com/products-services/simulia/products/abaqus/). This case was developed at the [Composite Structures Lab](https://sites.google.com/umich.edu/um-csl) of the University of Michigan, with a significant contribution from [Minh Hoang Nguyen](https://github.com/mhoangnUM).
+
+This tutorial shows how to couple ABAQUS to other simulation software via preCICE. The [VUMAT.f](meso-laminate-abaqus/VUMAT.f) uses the Fortran bindings of the preCICE API for coupling. On the micro scale, ABAQUS simulations for each micro simulation are started from scratch in every time step.
 
 ## Setup
 
@@ -19,7 +21,7 @@ The meso-scale model is a 3D beam structure which is being axially loaded.
 
 The micro-scale model is a 3D fibre structure.
 
-<img src="images/tutorials-two-scale-composite-laminate-ruc.png" width="200" height="220">
+<img src="images/tutorials-two-scale-composite-laminate-ruc.png" width="300" height="330">
 
 ## Available solvers and dependencies
 
@@ -38,4 +40,4 @@ Both the meso and micro scale simulations produce output files which can be view
 
 The displacement on the micro scale looks like
 
-<img src="images/tutorials-two-scale-composite-laminate-micro-ruc-u1.png" width="400" height="300">
+<img src="images/tutorials-two-scale-composite-laminate-micro-ruc-u1.png" width="400" height="350">
