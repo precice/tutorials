@@ -21,6 +21,11 @@ on:
             - 'WARNING'
             - 'ERROR'
             - 'CRITICAL'
+  push:
+    branches:
+      - 'add-wf-reference-results'
+
+
 
 jobs:
   generate_reference_results_manual:
