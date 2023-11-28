@@ -135,7 +135,7 @@ v = TestFunction(Vbig)
 # if dim(Vbig)>1, f needs to be stored in an array with different time stamps,
 # because in each stage, of an RK method it is evaluated at a different time
 f = tsm.num_stages * [None]
-# derive f from sol_expr: f= δu/δt - ∇u
+# du_dt-Laplace(u) = f
 f_sp = u_D_sp.diff(t_sp)-u_D_sp.diff(x_sp).diff(x_sp)-u_D_sp.diff(y_sp).diff(y_sp)
 for i in range(tsm.num_stages):
     f[i] = Expression(sp.ccode(f_sp), degree=2, t=0)
@@ -259,10 +259,8 @@ while precice.is_coupling_ongoing():
         f[i].t = t + tsm.c[i] * float(dt)
         du_dt[i].t = t + tsm.c[i] * float(dt)
 
-    # boundary conditions of the coupling boundary needs to be updated as well
-
-    # only dirichlet boundaries need time derivatives
     if problem is ProblemType.DIRICHLET:
+        # only dirichlet boundaries need time derivatives
         # approximate the function which preCICE uses with BSplines
         bsplns = utl.b_splines(precice, 5, float(dt))
 
@@ -292,13 +290,13 @@ while precice.is_coupling_ongoing():
     else:
         ks = [k.sub(i) for i in range(tsm.num_stages)]
 
-    # -> assembly of discrete evolution
     # now we need to add up the stages k according to the time stepping scheme
+    # -> assembly of discrete evolution
     u_np1 = u_n
     for i in range(tsm.num_stages):
         u_np1 += dt * tsm.b[i] * ks[i]
 
-    # u_sol is in function space V and not Vbig -> project u_np1 to V
+    # u is in function space V and not Vbig -> project u_np1 to V
     u_np1 = project(u_np1, V)
 
     # Write data to preCICE according to which problem is being solved

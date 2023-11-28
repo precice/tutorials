@@ -96,18 +96,3 @@ def time_derivative(expr, tsm, dt, t):
         du_dt[i] = Expression(ccode(du_dt_expr), degree=2, t=0)
         du_dt[i].t = du_dt[i].t + tsm.c[i]*dt(0)
     return du_dt
-
-def determine_gradient(V_g, u, flux):
-    """
-    compute flux following http://hplgit.github.io/INF5620/doc/pub/fenics_tutorial1.1/tu2.html#tut-poisson-gradu
-    :param V_g: Vector function space
-    :param u: solution where gradient is to be determined
-    :param flux: returns calculated flux into this value
-    """
-
-    w = TrialFunction(V_g)
-    v = TestFunction(V_g)
-
-    a = inner(w, v) * dx
-    L = inner(grad(u), v) * dx
-    solve(a == L, flux)
