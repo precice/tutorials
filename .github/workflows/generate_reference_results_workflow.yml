@@ -1,6 +1,6 @@
 name: Generate reference results workflow
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       from_ref:
         description: 'Use the systemtests + tutorial metadata + reference_version from this ref'
@@ -14,14 +14,7 @@ on:
         description: 'loglevel used for the systemtests'
         default: 'INFO'
         required: true
-        type: choice
-        options:
-            - 'DEBUG'
-            - 'INFO'
-            - 'WARNING'
-            - 'ERROR'
-            - 'CRITICAL'
-
+        type: string
 jobs:
   generate_reference_results:
     runs-on: [self-hosted, linux, x64, precice-tests-vm]
