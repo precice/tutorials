@@ -28,10 +28,10 @@ class MicroSimulation:
         # File and folder names
         self._foldername = 'ruc_' + self._id_as_string
 
-        self._base_folder = os.getcwd()
-
         # Set the working directory to the micro_ruc_abaqus folder
-        os.chdir(self._base_folder)
+        os.chdir('$HOME/tutorials/two-scale-composite-laminate/micro_ruc_abaqus/')
+
+        print("Working directory: " + os.getcwd())
 
         # Create a new directory for this micro simulation
         subprocess.call('mkdir ' + self._foldername, shell=True)
@@ -47,6 +47,8 @@ class MicroSimulation:
 
         # Change the working directory to the ruc_ folder
         os.chdir(self._foldername)
+
+        print("Working directory: " + os.getcwd())
 
         self._jobname = 'RUC_' + self._id_as_string
 
