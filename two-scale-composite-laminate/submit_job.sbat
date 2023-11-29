@@ -2,7 +2,7 @@
 #SBATCH --job-name=precice-mm
 #SBATCH --mail-type=ALL
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=3
+#SBATCH --ntasks-per-node=1
 #SBATCH --mem-per-cpu=2000
 #SBATCH --time=24:00:00
 #SBATCH --licenses=abaqus@slurmdb:20
@@ -50,6 +50,6 @@ echo "Launching Micro Manager"
 
 cd ../micro-ruc-abaqus/
 
-mpiexec -n 2 python3 run_micro_manager.py --config micro-manager-config.json &> log_micro.log
+mpiexec -n 1 python3 run_micro_manager.py --config micro-manager-config.json &> log_micro.log
 
 echo "Meso simulation and Micro Manager have been launched"
