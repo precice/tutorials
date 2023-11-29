@@ -121,7 +121,7 @@ clean_aste() {
     (
         set -e -u
         cd "$1"
-        echo "--- Cleaning up ASTE results in $(pwd)"
+        echo "--- Looking for and cleaning up any potential ASTE results in $(pwd)"
         rm -fv result.vtk result.stats.json
         rm -fvr fine_mesh coarse_mesh mapped
     )
