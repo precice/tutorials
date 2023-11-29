@@ -43,8 +43,7 @@ echo "Launching meso participant"
 
 cd meso-laminate-abaqus/
 
-abaqus job=Crossply_meso input=Crossply_meso_18elements \
-	scratch=/home/desaii/composite-multiscale/meso-laminate-abaqus \
+abaqus job=Crossply_meso input=Crossply_meso_18elements scratch=$(pwd) \
 	interactive user=VUMAT.f double=both &> log_meso.log &
 
 echo "Launching Micro Manager"

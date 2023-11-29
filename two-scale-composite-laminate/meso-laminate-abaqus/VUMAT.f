@@ -59,7 +59,7 @@
 
             ! Create preCICE participant
             call precicef_create("Laminate-3D-ply",
-     *       "/home/desaii/composite-multiscale/precice-config.xml",
+     *       "../precice-config.xml",
      *       rank, size)
 
             ! Get problem dimensions from preCICE
