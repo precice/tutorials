@@ -28,8 +28,11 @@ class MicroSimulation:
         # File and folder names
         self._foldername = 'ruc_' + self._id_as_string
 
+        # Set working directory manually to the micro_ruc_abaqus folder
+        self._working_directory = '/home/desaii/tutorials/two-scale-composite-laminate/micro-ruc-abaqus/'
+
         # Set the working directory to the micro_ruc_abaqus folder
-        os.chdir('/home/desaii/tutorials/two-scale-composite-laminate/micro-ruc-abaqus/')
+        os.chdir(self._working_directory)
 
         # Create a new directory for this micro simulation
         subprocess.call('mkdir ' + self._foldername, shell=True)
@@ -41,7 +44,7 @@ class MicroSimulation:
         subprocess.call('cp get_stresses.py ' + self._foldername, shell=True)
 
         # Copy the cleaning script as we clean the working directory in every time step
-        subprocess.call('cp clean_ruc.sh ' + self._foldername, shell=True)
+        subprocess.call('cp clean-ruc.sh ' + self._foldername, shell=True)
 
         # Change the working directory to the ruc_ folder
         os.chdir(self._foldername)
@@ -62,7 +65,7 @@ class MicroSimulation:
         os.chdir('/home/desaii/tutorials/two-scale-composite-laminate/micro-ruc-abaqus/' + self._foldername)
 
         # Clean the working directory
-        subprocess.call('sh clean_ruc.sh', shell=True)
+        subprocess.call('sh clean-ruc.sh', shell=True)
 
         if self._first_step:
             subprocess.call('mv RUC_initial.inp RUC_nm1.inp', shell=True)
