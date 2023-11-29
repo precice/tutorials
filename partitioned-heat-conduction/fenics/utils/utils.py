@@ -1,3 +1,8 @@
+"""
+The core functionality of weak_lhs, getVariationalProblem and time_derivative were taken from:
+    https://github.com/NikoWul/FenicsIrksome
+"""
+
 import numpy as np
 import scipy.interpolate as interpol
 from fenics import *

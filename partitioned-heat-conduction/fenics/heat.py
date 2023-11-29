@@ -22,6 +22,9 @@ Heat equation with mixed boundary conditions. (Neumann problem)
   u = u_0             at t = 0
   u = 1 + x^2 + alpha*y^2 + \beta*t
   f = beta - 2 - 2*alpha
+
+The implementation of the higher-order implicit Runge-Kutta methods was mostly taken from:
+    https://github.com/NikoWul/FenicsIrksome
 """
 
 from __future__ import print_function, division
