@@ -28,7 +28,7 @@
      1     stressNew(nblock, ndir + nshr), stateNew(nblock, nstatev),
      2     enerInternNew(nblock), enerInelasNew(nblock)
 !
-      character*80 cmname
+      character*80 cmname, cwd
 
       real*8, dimension(nblock, nstatev) :: state
       real*8, dimension(nblock, ndir + nshr) :: strains, stresses
@@ -56,6 +56,10 @@
             ! Get MPI rank and size (total number of MPI processors in this job)
             call vgetnumcpus(size)
             call vgetrank(rank)
+
+            call getcwd(cwd)
+
+            write(*,*) "VUMAT: cwd = ", cwd
 
             ! Create preCICE participant
             call precicef_create("Laminate-3D-ply",
