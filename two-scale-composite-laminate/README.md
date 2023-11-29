@@ -2,7 +2,7 @@
 title: Two-scale composite laminate
 permalink: tutorials-two-scale-composite-laminate.html
 keywords: Meso-micro, Micro Manager, Composite laminate
-summary: We solve a two-scale composite laminate problem with a predefined micro structure. One macro simulation is coupled to several micro simulations using the Micro Manager.
+summary: We solve a two-scale composite laminate problem with a predefined micro structure. One meso simulation is coupled to several micro simulations using the Micro Manager.
 ---
 
 {% note %}
