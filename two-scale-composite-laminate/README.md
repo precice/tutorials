@@ -32,6 +32,8 @@ The micro-scale model is a 3D fibre structure.
 
 This case was developed by running it on the [Great Lakes HPC cluster](https://arc.umich.edu/greatlakes/) at the University of Michigan. In principle the setup should work on any machine or cluster which has an adequate amount of ABAQUS licenses. To case is run on the Great Lakes HPC cluster via a SLURM job submission script, which is given for reference as [submit_job.sbat](submit_job.sbat).
 
+Due to restrictions in the way ABAQUS creates folder and starts the simulation, some paths are hard coded in this example. The exchange directory in [precice-config.xml](precice-config.xml) and the directory paths in [micro-ruc-abaqus/ruc_abaqus_restart.py](micro-ruc-abaqus/ruc_abaqus_restart.py) are currently set manually.
+
 ## Post-processing
 
 Both the meso and micro scale simulations produce output files which can be viewed in ABAQUS. The axial displacement on the meso scale looks like
