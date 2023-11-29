@@ -132,11 +132,11 @@ dt.assign(np.min([fenics_dt, precice_dt]))
 # trial and test functions
 u = TrialFunction(Vbig)
 v = TestFunction(Vbig)
-# if dim(Vbig)>1, f needs to be stored in an array with different time stamps,
+# if dim(Vbig)>1, f needs to be stored in an array with different times,
 # because in each stage, of an RK method it is evaluated at a different time
 f = tsm.num_stages * [None]
 # du_dt-Laplace(u) = f
-f_sp = u_D_sp.diff(t_sp)-u_D_sp.diff(x_sp).diff(x_sp)-u_D_sp.diff(y_sp).diff(y_sp)
+f_sp = u_D_sp.diff(t_sp) - u_D_sp.diff(x_sp).diff(x_sp) - u_D_sp.diff(y_sp).diff(y_sp)
 for i in range(tsm.num_stages):
     f[i] = Expression(sp.ccode(f_sp), degree=2, t=0)
     f[i].t = tsm.c[i] * float(dt)  # initial time assumed to be 0
