@@ -28,7 +28,7 @@
      1     stressNew(nblock, ndir + nshr), stateNew(nblock, nstatev),
      2     enerInternNew(nblock), enerInelasNew(nblock)
 !
-      character*80 cmname, cwd
+      character*80 cmname
 
       real*8, dimension(nblock, nstatev) :: state
       real*8, dimension(nblock, ndir + nshr) :: strains, stresses
@@ -57,13 +57,8 @@
             call vgetnumcpus(size)
             call vgetrank(rank)
 
-            call getcwd(cwd)
-
-            write(*,*) "VUMAT: cwd = ", cwd
-
             ! Create preCICE participant
-            call precicef_create("Laminate-3D-ply",
-     *       "../precice-config.xml",
+            call precicef_create("Laminate-3D-ply", "../../precice-config.xml",
      *       rank, size)
 
             ! Get problem dimensions from preCICE
