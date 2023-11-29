@@ -7,6 +7,7 @@
         "write_data_names": {"stresses1to3": "vector", "stresses4to6": "vector"}
     },
     "simulation_params": {
-        "macro_domain_bounds": [-0.9144, 0.9144, -0.4572, 0.4572, 0.0, 0.73152]
+        "macro_domain_bounds": [-0.9144, 0.9144, -0.4572, 0.4572, 0.0, 0.73152],
+        "decomposition": [2, 1, 1]
     }
 }
