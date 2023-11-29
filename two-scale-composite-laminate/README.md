@@ -1,7 +1,7 @@
 ---
 title: Two-scale composite laminate
 permalink: tutorials-two-scale-composite-laminate.html
-keywords: Macro-micro, Micro Manager, Nutils, Composite laminate
+keywords: Macro-micro, Micro Manager, Composite laminate
 summary: We solve a two-scale composite laminate problem with a predefined micro structure. One macro simulation is coupled to several micro simulations using the Micro Manager.
 ---
 
@@ -25,7 +25,7 @@ The micro-scale model is a 3D fibre structure.
 
 ## Available solvers and dependencies
 
-* Both the macro and micro simulations are solved using the finite element software [ABAQUS](https://nutils.org/install.html) 2022.
+* Both the macro and micro simulations are solved using the finite element software [ABAQUS](https://www.3ds.com/products-services/simulia/products/abaqus/) 2022.
 * The [Micro Manager](https://precice.org/tooling-micro-manager-installation.html) controls all micro-simulations and facilitates coupling via preCICE. To solve this case, use the [develop](https://github.com/precice/micro-manager/tree/develop) branch of the Micro Manager.
 
 ## Running the simulation
