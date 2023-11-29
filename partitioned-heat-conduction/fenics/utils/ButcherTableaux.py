@@ -1,9 +1,15 @@
+"""
+The original source code can be found on https://github.com/firedrakeproject/Irksome/blob/master/irksome/ButcherTableaux.py
+See also:
+    Irksome: Automating Runge–Kutta Time-Stepping for Finite Element Methods
+    by Farrell, Patrick E. and Kirby, Robert C. and Marchena-Menendez, Jorge,
+    2021, https://doi.org/10.1145/3466168
+"""
+
 import FIAT
 import numpy
 from numpy import vander
 
-
-# This file originates from https://github.com/firedrakeproject/Irksome/blob/master/irksome/ButcherTableaux.py, please add a corresponding note or delete this file and make irksome a dependency of this code.
 
 class ButcherTableau(object):
     """Top-level class representing a Butcher tableau encoding
