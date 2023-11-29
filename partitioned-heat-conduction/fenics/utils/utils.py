@@ -7,7 +7,7 @@ from sympy import ccode, diff
 def b_splines(precice, degree, dt):
     '''
     :param degree: Degree of BSpline
-    :param precice: Object of precice
+    :param precice: Object of preCICE
     :param dt: current time step size
 
     Determines an approximation of the waveform from preCICE with BSplines. \n
@@ -59,7 +59,6 @@ def getVariationalProblem(v, k, tsm, f, dt, initialCondition):
     :param initialCondition: function which defined the inital value/initial condition
     :return: returns variational problem (F=0) of the given params from the constructor
     """
-    # cf.: Nikolas code in heatConv.py
     num_stages = tsm.num_stages
     ks = split(k)
     vs = split(v)
