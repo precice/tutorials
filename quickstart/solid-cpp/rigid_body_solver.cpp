@@ -1,7 +1,9 @@
 #include <cmath>
 #include <iostream>
-#include <precice/SolverInterface.hpp>
+#include <vector>
 #include <string>
+// Include precice
+#include <precice/precice.hpp>
 
 using Vector = std::vector<double>;
 
@@ -118,16 +120,13 @@ int main()
   constexpr double delta_y        = height / (n_vertical_nodes - 1);
   constexpr double delta_x        = length / (n_horizontal_nodes - 1);
 
-  // Create Solverinterface
-  precice::SolverInterface precice(solver_name,
-                                   config_file_name,
-                                   /*comm_rank*/ 0,
-                                   /*comm_size*/ 1);
+  // Create Participant
+  precice::Participant precice(solver_name,
+                               config_file_name,
+                               /*comm_rank*/ 0,
+                               /*comm_size*/ 1);
 
-  const int mesh_id  = precice.getMeshID(mesh_name);
-  const int dim      = precice.getDimensions();
-  const int write_id = precice.getDataID(data_write_name, mesh_id);
-  const int read_id  = precice.getDataID(data_read_name, mesh_id);
+  const int dim      = precice.getMeshDimensions(mesh_name);
 
   // Set up data structures
   Vector           forces(dim * n_nodes);
@@ -177,13 +176,13 @@ int main()
   const Vector initial_vertices = vertices;
 
   // Pass the vertices to preCICE
-  precice.setMeshVertices(mesh_id,
-                          n_nodes,
-                          vertices.data(),
-                          vertex_ids.data());
+  precice.setMeshVertices(mesh_name,
+                          vertices,
+                          vertex_ids);
 
-  // initialize the Solverinterface
-  double dt = precice.initialize();
+  // initialize precice
+  precice.initialize();
+  double dt = precice.getMaxTimeStepSize();
 
   // Compute the absolute displacement between the current vertices and the
   // initial configuration. Here, this is mostly done for consistency reasons.
@@ -202,20 +201,17 @@ int main()
     std::cout << "Rigid body: t = " << time << "s \n";
 
     std::cout << "Rigid body: reading initial data \n";
-    if (precice.isReadDataAvailable())
-      precice.readBlockVectorData(read_id,
-                                  n_nodes,
-                                  vertex_ids.data(),
-                                  forces.data());
+    // We use an explicit time integration scheme, thus we always read data
+    // at the beginning of a time window (0)
+    precice.readData(mesh_name,
+                     data_read_name,
+                     vertex_ids,
+                     0,
+                     forces);
 
     // Store time dependent values
-    if (precice.isActionRequired(
-            precice::constants::actionWriteIterationCheckpoint())) {
+    if (precice.requiresWritingCheckpoint())
       data_container.save_old_state(vertices, theta, theta_dot);
-
-      precice.markActionFulfilled(
-          precice::constants::actionWriteIterationCheckpoint());
-    }
 
     const double current_spring = time > switch_time ? spring_constant * stiffening_factor : spring_constant;
     // Solve system
@@ -227,23 +223,18 @@ int main()
       displacement[i] = vertices[i] - initial_vertices[i];
 
     std::cout << "Rigid body: writing coupling data \n";
-    if (precice.isWriteDataRequired(dt))
-      precice.writeBlockVectorData(write_id,
-                                   n_nodes,
-                                   vertex_ids.data(),
-                                   displacement.data());
+    precice.writeData(mesh_name,
+                      data_write_name,
+                      vertex_ids,
+                      displacement);
 
     std::cout << "Rigid body: advancing in time\n";
-    dt = precice.advance(dt);
+    precice.advance(dt);
+    dt = precice.getMaxTimeStepSize();
 
     // Reload time dependent values
-    if (precice.isActionRequired(
-            precice::constants::actionReadIterationCheckpoint())) {
+    if (precice.requiresReadingCheckpoint())
       data_container.reload_old_state(vertices, theta, theta_dot);
-
-      precice.markActionFulfilled(
-          precice::constants::actionReadIterationCheckpoint());
-    }
 
     // Increment time in case the time window has been completed
     if (precice.isTimeWindowComplete())
