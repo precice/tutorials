@@ -41,7 +41,7 @@
       constraint="consistent" />
   </participant>
 
-  <m2n:sockets acceptor="Fluid" connector="Solid" exchange-directory=".."/>
+  <m2n:sockets acceptor="Fluid" connector="Solid" exchange-directory=".." />
 
   <coupling-scheme:serial-implicit>
     <participants first="Fluid" second="Solid" />
@@ -56,10 +56,7 @@
       to="Fluid"
       initialize="true" />
     <relative-convergence-measure data="Pressure" mesh="Fluid-Nodes-Mesh" limit="1e-5" />
-    <relative-convergence-measure
-      data="CrossSectionLength"
-      mesh="Solid-Nodes-Mesh"
-      limit="1e-5" />
+    <relative-convergence-measure data="CrossSectionLength" mesh="Solid-Nodes-Mesh" limit="1e-5" />
     <acceleration:IQN-ILS>
       <data name="CrossSectionLength" mesh="Solid-Nodes-Mesh" />
       <initial-relaxation value="0.01" />
