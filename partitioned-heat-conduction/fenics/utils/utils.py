@@ -1,5 +1,5 @@
 """
-The core functionality of weak_lhs, getVariationalProblem and time_derivative were taken from:
+The core functionality of weak_lhs and get_variational_problem were taken from:
     https://github.com/NikoWul/FenicsIrksome
 """
 
@@ -54,22 +54,31 @@ def weak_lhs(u, v, k):
     return inner(k, v) * dx + inner(grad(u), grad(v)) * dx
 
 
-def getVariationalProblem(v, k, tsm, f, dt, initialCondition):
+def get_variational_problem(v, k, tsm, f, dt, initial_condition):
     """
+    Following https://doi.org/10.1145/3466168, this function creates for each stage of the time stepping scheme
+    (implicit Runge-Kutta methods)
+    ``tsm``, a weak formulation of a given equation.
+    As the stages of Runge-Kutta methods are the time derivatives at different times of the actual solution,
+    the solution of the variational problem this function returns, are the time derivatives at the respective stage times.
+    It is therefore necessary to assemble after solving the variational form returned by this function
+    the discrete evolution according to the time stepping scheme which is used.\n
+    **Note that this approach requires the time derivative of Dirichlet boundary conditions.
+    Neumann and Robin BCs do not need to be changed.**
     :param v: test function
     :param k: trial function
     :param tsm: time stepping method which should be used
-    :param f: f of the problem
+    :param f: rhs of the problem
     :param dt: time step (must not be a float but a fenics expression! e.g. Constant(0))
-    :param initialCondition: function which defined the inital value/initial condition
-    :return: returns variational problem (F=0) of the given params from the constructor
+    :param initial_condition: function which defined the inital value/initial condition
+    :return: returns variational problem (F=0) for the given parameters
     """
     num_stages = tsm.num_stages
     ks = split(k)
     vs = split(v)
     u = num_stages * [None]
     for i in range(num_stages):
-        uhelp = initialCondition
+        uhelp = initial_condition
         for j in range(num_stages):
             uhelp = uhelp + tsm.A[i][j] * dt * ks[j]
         u[i] = uhelp
@@ -80,23 +89,7 @@ def getVariationalProblem(v, k, tsm, f, dt, initialCondition):
     # Assemble weak form from lhs and rhs
     F = 0
     for i in range(num_stages):
-        F = F + weak_lhs(v=vs[i], u=u[i], k=ks[i])  # cf. irksome tutorial p.5 eq. 14
+        # cf. https://doi.org/10.1145/3466168 p.5 equation 14
+        F = F + weak_lhs(v=vs[i], u=u[i], k=ks[i])
     F = F - rh
     return F
-
-
-def time_derivative(expr, tsm, dt, t):
-    """
-    :param expr: sympy expression of u
-    :param t: sympy symbol for time variable of expr
-    :param tsm: time stepping method
-    :param dt: length of time step
-    :return: expression with the time derivative according to tsm
-    """
-    # get the time derivative of expr
-    du_dt_expr = expr.diff(t)
-    du_dt = tsm.num_stages * [None]
-    for i in range(tsm.num_stages):
-        du_dt[i] = Expression(ccode(du_dt_expr), degree=2, t=0)
-        du_dt[i].t = du_dt[i].t + tsm.c[i]*dt(0)
-    return du_dt

@@ -29,15 +29,13 @@ The implementation of the higher-order implicit Runge-Kutta methods was mostly t
 
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
-    File, solve, lhs, rhs, grad, inner, dx, interpolate, VectorFunctionSpace, MeshFunction, MPI, MixedElement, split
+    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, MeshFunction, MPI, MixedElement, split, project
 from fenicsprecice import Adapter
 from errorcomputation import compute_errors
 from my_enums import ProblemType, DomainPart
 import argparse
 import numpy as np
 from problem_setup import get_geometry
-import dolfin
-from dolfin import FacetNormal, dot, project
 import sympy as sp
 from utils.ButcherTableaux import *
 import utils.utils as utl
@@ -131,29 +129,32 @@ elif problem is ProblemType.NEUMANN:
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
 
+# stage times of the time stepping scheme relative to the current time and dependent on the current dt
+stage_times = [tsm.c[i]*dt for i in range(tsm.num_stages)]
+
 # Define variational problem
 # trial and test functions
 u = TrialFunction(Vbig)
 v = TestFunction(Vbig)
 # if dim(Vbig)>1, f needs to be stored in an array with different times,
 # because in each stage, of an RK method it is evaluated at a different time
-f = tsm.num_stages * [None]
 # du_dt-Laplace(u) = f
 f_sp = u_D_sp.diff(t_sp) - u_D_sp.diff(x_sp).diff(x_sp) - u_D_sp.diff(y_sp).diff(y_sp)
-for i in range(tsm.num_stages):
-    f[i] = Expression(sp.ccode(f_sp), degree=2, t=0)
-    f[i].t = tsm.c[i] * float(dt)  # initial time assumed to be 0
+# initial time assumed to be 0
+f = [Expression(sp.ccode(f_sp), degree=2, t=float(stage_times[i])) for i in range(tsm.num_stages)]
 # get variational form of the problem
-F = utl.getVariationalProblem(v=v, initialCondition=u_n, dt=dt, f=f, tsm=tsm, k=u)
+F = utl.get_variational_problem(v=v, initial_condition=u_n, dt=dt, f=f, tsm=tsm, k=u)
 
 # boundary conditions
 
 # we define variational form for each RK stage. According to
-# https://doi.org/10.48550/arXiv.2006.16282, All of those stages
-# represent time derivatives and not the actual solution. Thus, we need time derivatives as boundary conditions
+# https://doi.org/10.1145/3466168, All of those stages
+# represent time derivatives and not the actual solution.
+# Thus, we need time derivatives of the Dirichlet boundaries as boundary conditions
 
 # get time derivative of u
-du_dt = utl.time_derivative(u_D_sp, tsm, dt, t_sp)
+du_dt_expr = u_D_sp.diff(t_sp)
+du_dt = [Expression(sp.ccode(du_dt_expr), degree=2, t=float(stage_times[i])) for i in range(tsm.num_stages)]
 # set up boundary conditions
 bc = []
 # Create for each dimension of Vbig a coupling expression for either the time derivatives (Dirichlet side)
@@ -176,7 +177,7 @@ for i in range(tsm.num_stages):
         bc.append(DirichletBC(Vbigs[i], coupling_expressions[i], coupling_boundary))
     else:
         bc.append(DirichletBC(Vbigs[i], du_dt[i], remaining_boundary))
-        F += vs[i] * coupling_expressions[i] * dolfin.ds
+        F += vs[i] * coupling_expressions[i] * ds
 
 a, L = lhs(F), rhs(F)
 
@@ -259,8 +260,8 @@ while precice.is_coupling_ongoing():
     u_D.t = t + float(dt)
     # update boundary conditions
     for i in range(tsm.num_stages):
-        f[i].t = t + tsm.c[i] * float(dt)
-        du_dt[i].t = t + tsm.c[i] * float(dt)
+        f[i].t = t + float(stage_times[i])
+        du_dt[i].t = t + float(stage_times[i])
 
     if problem is ProblemType.DIRICHLET:
         # only dirichlet boundaries need time derivatives
@@ -275,12 +276,12 @@ while precice.is_coupling_ongoing():
             # values of derivative at current time
             val = {}
             for ki in bsplns_der.keys():
-                val[ki] = bsplns_der[ki](tsm.c[i]*float(dt))
+                val[ki] = bsplns_der[ki](float(stage_times[i]))
             precice.update_coupling_expression(coupling_expressions[i], val)
     else:
         # Neumann boundaries just need temperature flux
         for i in range(tsm.num_stages):
-            precice.update_coupling_expression(coupling_expressions[i], precice.read_data(tsm.c[i]*dt))
+            precice.update_coupling_expression(coupling_expressions[i], precice.read_data(stage_times[i]))
 
     # getting the solution of the current time step
 
@@ -345,6 +346,12 @@ while precice.is_coupling_ongoing():
         u_ref.rename("reference", " ")
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
         print("n = %d, t = %.2f: L2 error on domain = %.3g" % (n, t, error))
+
+    # Update Dirichlet BC
+    u_D.t = t + float(dt)
+    for i in range(tsm.num_stages):
+        f[i].t = t + float(stage_times[i])
+        du_dt[i].t = t + float(stage_times[i])
 
 
 # output solution and reference solution at t_n+1 and substeps (read from buffer)
