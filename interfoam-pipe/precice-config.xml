@@ -70,7 +70,7 @@
 
   <coupling-scheme:serial-implicit>
     <time-window-size value="0.05" />
-    <max-time value="40" />
+    <max-time value="20" />
     <participants first="Fluid1" second="Fluid2" />
     <exchange data="Velocity" mesh="Fluid1-Mesh" from="Fluid1" to="Fluid2" />
     <exchange data="VelocityGradient" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" />
@@ -88,8 +88,8 @@
     
     <acceleration:IQN-ILS>
       <data mesh="Fluid2-Mesh" name="VelocityGradient" />
-      <!-- <data mesh="Fluid2-Mesh" name="Pressure" /> -->
-      <data mesh="Fluid2-Mesh" name="AlphaGradient" />        
+      <data mesh="Fluid2-Mesh" name="Pressure" />
+      <!-- <data mesh="Fluid2-Mesh" name="AlphaGradient" /> -->
       <initial-relaxation value="1" />
       <max-used-iterations value="10" />
       <time-windows-reused value="1" />

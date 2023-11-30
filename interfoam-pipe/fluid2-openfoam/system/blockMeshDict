@@ -10,8 +10,8 @@ FoamFile
 scale 1;
 
 
-zmin   20;
-zmax  40;
+zmin   10;
+zmax  20;
 
 xcells 1; // per block (5 blocks)
 ycells 10; // per block (5 blocks)
@@ -19,14 +19,14 @@ zcells 20;
 
 vertices
 (
-    (0.0 -5.0 $zmin) // 0
-    (0.0 5.0  $zmin) // 1
-    (0.0 -5.0 $zmax) // 2
-    (0.0 5.0 $zmax)// 3
-    (-1.0 -5.0 $zmin) // 4
-    (-1.0 5.0 $zmin) // 5
-    (-1.0 -5.0 $zmax) // 6
-    (-1.0 5.0 $zmax) // 7
+    (0.0 -2.0 $zmin) // 0
+    (0.0 2.0  $zmin) // 1
+    (0.0 -2.0 $zmax) // 2
+    (0.0 2.0 $zmax)// 3
+    (-1.0 -2.0 $zmin) // 4
+    (-1.0 2.0 $zmin) // 5
+    (-1.0 -2.0 $zmax) // 6
+    (-1.0 2.0 $zmax) // 7
 );
 
 blocks
