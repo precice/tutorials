@@ -33,8 +33,6 @@ from my_enums import ProblemType, DomainPart
 import argparse
 import numpy as np
 from problem_setup import get_geometry
-import dolfin
-from dolfin import FacetNormal, dot
 import sympy as sp
 
 
@@ -134,7 +132,7 @@ if problem is ProblemType.DIRICHLET:
 if problem is ProblemType.NEUMANN:
     # modify Neumann boundary condition on coupling interface, modify weak
     # form correspondingly
-    F += v * coupling_expression * dolfin.ds
+    F += v * coupling_expression * ds
 
 a, L = lhs(F), rhs(F)
 
