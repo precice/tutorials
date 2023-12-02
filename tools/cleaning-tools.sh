@@ -12,6 +12,10 @@ clean_tutorial() {
         echo "-- Cleaning up all cases in $(pwd)..."
         rm -rfv ./precice-run/
 
+        if test "clean.sh"; then
+            ./clean.sh
+        fi
+
         for case in */; do
             if [ "${case}" = images/ ]; then
                 continue
