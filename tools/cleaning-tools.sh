@@ -12,6 +12,7 @@ clean_tutorial() {
         echo "-- Cleaning up all cases in $(pwd)..."
         rm -rfv ./precice-run/
 
+        # Run clean.sh if it exists in the base tutorial directory
         if test "clean.sh"; then
             ./clean.sh
         fi
