@@ -30,9 +30,9 @@ clean_precice_logs() {
             ./precice-*-convergence.log \
             ./precice-*-watchpoint-*.log \
             ./precice-*-watchintegral-*.log \
-            ./events.json \
             ./core
-        rm -rfv ./precice-events/
+        rm -rfv ./precice-profiling/ profiling.json trace.json
+        rm -rfv ./preCICE-output/
     )
 }
 
@@ -75,7 +75,6 @@ clean_fenics() {
         cd "$1"
         echo "--- Cleaning up FEniCS case in $(pwd)"
         rm -rfv ./output/
-        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }
@@ -86,7 +85,6 @@ clean_nutils() {
         cd "$1"
         echo "--- Cleaning up Nutils case in $(pwd)"
         rm -fv ./*.vtk
-        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }
@@ -102,7 +100,6 @@ clean_openfoam() {
             cleanCase
             rm -rfv 0/uniform/functionObjects/functionObjectProperties history
         fi
-        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }
@@ -134,7 +131,6 @@ clean_dune() {
         rm -fv ./dgfparser.log
         rm -fv ./*.pvd
         rm -fv ./*.vtu
-        rm -rfv ./preCICE-output/
         rm -rfv ./output/
         clean_precice_logs .
     )
