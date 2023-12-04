@@ -20,8 +20,7 @@ def b_splines(precice, degree, dt):
     '''
     # use equidistant samples
     # documentation is not clear about how many samples are required.
-    # 2*degree seemingly work fine
-    no_samples = 2 * degree
+    no_samples = 1 + degree
     nodes = np.linspace(0, dt, no_samples)
     weights = np.array([None] * len(nodes))
     b_splns = {}
@@ -57,7 +56,7 @@ def weak_lhs(u, v, k):
 def get_variational_problem(v, k, tsm, f, dt, initial_condition):
     """
     Following https://doi.org/10.1145/3466168, this function creates for each stage of the time stepping scheme
-    (implicit Runge-Kutta methods)
+    (Runge-Kutta methods)
     ``tsm``, a weak formulation of a given equation.
     As the stages of Runge-Kutta methods are the time derivatives at different times of the actual solution,
     the solution of the variational problem this function returns, are the time derivatives at the respective stage times.
