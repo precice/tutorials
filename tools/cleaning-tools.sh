@@ -12,6 +12,11 @@ clean_tutorial() {
         echo "-- Cleaning up all cases in $(pwd)..."
         rm -rfv ./precice-run/
 
+        # Run clean.sh if it exists in the base tutorial directory
+        if test "clean.sh"; then
+            ./clean.sh
+        fi
+
         for case in */; do
             if [ "${case}" = images/ ]; then
                 continue
@@ -117,7 +122,8 @@ clean_su2() {
 clean_aste() {
     (
         set -e -u
-        echo "--- Cleaning up ASTE results"
+        cd "$1"
+        echo "--- Cleaning up ASTE results in $(pwd)"
         rm -fv result.vtk result.stats.json
         rm -fvr fine_mesh coarse_mesh mapped
     )
