@@ -38,6 +38,8 @@ This case was developed by running it on the [Great Lakes HPC cluster](https://a
 
 Due to restrictions in the way ABAQUS creates folder and starts the simulation, some paths are hard coded in this example. The exchange directory in [precice-config.xml](precice-config.xml) and the directory paths in [micro-ruc-abaqus/ruc_abaqus_restart.py](micro-ruc-abaqus/ruc_abaqus_restart.py) are currently set manually.
 
+Currently simulations on both the scales are run in serial. Running all the micro simulations in serial is extremely slow, which makes the total run time of this case several days. The main idea of this tutorial is to show how ABAQUS can be coupled via preCICE in a mutliscale setting.
+
 ## Post-processing
 
 Both the meso and micro scale simulations produce output files which can be viewed in ABAQUS. The axial displacement on the meso scale looks like
