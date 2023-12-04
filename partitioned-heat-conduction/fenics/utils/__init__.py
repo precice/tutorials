@@ -5,4 +5,3 @@ from .ButcherTableaux import BackwardEuler    # noqa: F401
 from .ButcherTableaux import RadauIIA         # noqa: F401
 from .ButcherTableaux import PareschiRusso    # noqa: F401
 from .ButcherTableaux import QinZhang         # noqa: F401
-

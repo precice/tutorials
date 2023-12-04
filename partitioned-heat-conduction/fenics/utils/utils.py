@@ -21,7 +21,7 @@ def b_splines(precice, degree, dt):
     # use equidistant samples
     # documentation is not clear about how many samples are required.
     # 2*degree seemingly work fine
-    no_samples = 2*degree
+    no_samples = 2 * degree
     nodes = np.linspace(0, dt, no_samples)
     weights = np.array([None] * len(nodes))
     b_splns = {}
@@ -39,7 +39,7 @@ def b_splines(precice, degree, dt):
         weights_k = [None] * len(nodes)
         for i in range(no_samples):
             weights_k[i] = weights[i][k]
-        b1, b2, b3 = interpol.splrep(nodes, weights_k,s=0, k=degree)
+        b1, b2, b3 = interpol.splrep(nodes, weights_k, s=0, k=degree)
         b_splns[k] = interpol.BSpline(b1, b2, b3, extrapolate=False)
     return b_splns
 

@@ -25,6 +25,7 @@ class ButcherTableau(object):
             terms are evaluated.
     :arg order: the (integer) formal order of accuracy of the method
     """
+
     def __init__(self, A, b, btilde, c, order):
 
         self.A = A
@@ -39,7 +40,7 @@ class ButcherTableau(object):
         return len(self.b)
 
     def __str__(self):
-        return str(self.__class__).split(".")[-1][:-2]+"()"
+        return str(self.__class__).split(".")[-1][:-2] + "()"
 
 
 class CollocationButcherTableau(ButcherTableau):
@@ -51,6 +52,7 @@ class CollocationButcherTableau(ButcherTableau):
             evaluation.
     :arg order: the order of the resulting RK method.
     """
+
     def __init__(self, L, order):
         assert L.ref_el == FIAT.ufc_simplex(1)
 
@@ -62,7 +64,7 @@ class CollocationButcherTableau(ButcherTableau):
 
         num_stages = len(c)
 
-        Q = FIAT.make_quadrature(L.ref_el, 2*num_stages)
+        Q = FIAT.make_quadrature(L.ref_el, 2 * num_stages)
         qpts = Q.get_points()
         qwts = Q.get_weights()
 
@@ -80,7 +82,7 @@ class CollocationButcherTableau(ButcherTableau):
             A[i, :] = Lvals_i @ qwts_i
 
         V = vander(c, increasing=True)
-        rhs = numpy.array([1.0/(s+1) for s in range(num_stages-1)] + [0])
+        rhs = numpy.array([1.0 / (s + 1) for s in range(num_stages - 1)] + [0])
         btilde = numpy.linalg.solve(V.T, rhs)
 
         super(CollocationButcherTableau, self).__init__(A, b, btilde, c, order)
@@ -93,6 +95,7 @@ class GaussLegendre(CollocationButcherTableau):
 
     :arg num_stages: The number of stages (1 or greater)
     """
+
     def __init__(self, num_stages):
         assert num_stages > 0
         U = FIAT.ufc_simplex(1)
@@ -110,6 +113,7 @@ class LobattoIIIA(CollocationButcherTableau):
 
     :arg num_stages: The number of stages (2 or greater)
     """
+
     def __init__(self, num_stages):
         assert num_stages > 1
         U = FIAT.ufc_simplex(1)
@@ -127,6 +131,7 @@ class RadauIIA(CollocationButcherTableau):
 
     :arg num_stages: The number of stages (2 or greater)
     """
+
     def __init__(self, num_stages):
         assert num_stages >= 1
         U = FIAT.ufc_simplex(1)
@@ -139,6 +144,7 @@ class RadauIIA(CollocationButcherTableau):
 
 class BackwardEuler(RadauIIA):
     """The rock-solid first-order implicit method."""
+
     def __init__(self):
         super(BackwardEuler, self).__init__(1)
 
@@ -153,6 +159,7 @@ class LobattoIIIC(ButcherTableau):
 
     :arg num_stages: The number of stages (2 or greater)
     """
+
     def __init__(self, num_stages):
         assert num_stages > 1
         # mooch the b and c from IIIA
@@ -167,9 +174,9 @@ class LobattoIIIC(ButcherTableau):
             A[-1, j] = b[j]
 
         mat = numpy.vander(c[1:], increasing=True).T
-        for i in range(num_stages-1):
-            rhs = numpy.array([(c[i]**(k+1))/(k+1) - b[0] * c[0]**k
-                               for k in range(num_stages-1)])
+        for i in range(num_stages - 1):
+            rhs = numpy.array([(c[i]**(k + 1)) / (k + 1) - b[0] * c[0]**k
+                               for k in range(num_stages - 1)])
             A[i, 1:] = numpy.linalg.solve(mat, rhs)
 
         super(LobattoIIIC, self).__init__(A, b, None, c, 2 * num_stages - 2)
@@ -181,11 +188,12 @@ class LobattoIIIC(ButcherTableau):
 class PareschiRusso(ButcherTableau):
     """Second order, diagonally implicit, 2-stage.
     A-stable if x >= 1/4 and L-stable iff x = 1 plus/minus 1/sqrt(2)."""
+
     def __init__(self, x):
         self.x = x
-        A = numpy.array([[x, 0.0], [1-2*x, x]])
+        A = numpy.array([[x, 0.0], [1 - 2 * x, x]])
         b = numpy.array([0.5, 0.5])
-        c = numpy.array([x, 1-x])
+        c = numpy.array([x, 1 - x])
         super(PareschiRusso, self).__init__(A, b, None, c, 2)
 
     def __str__(self):
@@ -194,6 +202,7 @@ class PareschiRusso(ButcherTableau):
 
 class QinZhang(PareschiRusso):
     "Symplectic Pareschi-Russo DIRK"
+
     def __init__(self):
         super(QinZhang, self).__init__(0.25)
 

@@ -130,7 +130,7 @@ dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
 
 # stage times of the time stepping scheme relative to the current time and dependent on the current dt
-stage_times = [tsm.c[i]*dt for i in range(tsm.num_stages)]
+stage_times = [tsm.c[i] * dt for i in range(tsm.num_stages)]
 
 # Define variational problem
 # trial and test functions
@@ -263,8 +263,10 @@ while precice.is_coupling_ongoing():
         f[i].t = t + float(stage_times[i])
         du_dt[i].t = t + float(stage_times[i])
 
+    # can be deleted, if preCICE offers an API call for getting the time derivative of the waveform
+    # (see https://github.com/precice/precice/issues/1908)
+    # compute time derivatives for dirichlet side
     if problem is ProblemType.DIRICHLET:
-        # only dirichlet boundaries need time derivatives
         # approximate the function which preCICE uses with BSplines
         bsplns = utl.b_splines(precice, 5, float(dt))
 
@@ -272,6 +274,10 @@ while precice.is_coupling_ongoing():
         bsplns_der = {}
         for ki in bsplns.keys():
             bsplns_der[ki] = bsplns[ki].derivative(1)
+
+    if problem is ProblemType.DIRICHLET:
+        # if preCICE offers API to get the time derivative directly from it, you can remove the entire for-loop
+        # and directly insert it into update_coupling_expression
         for i in range(tsm.num_stages):
             # values of derivative at current time
             val = {}

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
   <log>
     <sink
@@ -98,20 +98,27 @@
     <exchange data="Temperature-Top" mesh="Fluid-Top-Mesh" from="Fluid-Top" to="Solid" />
     <exchange data="Heat-Flux-Top" mesh="Solid-Top-Mesh-Faces" from="Solid" to="Fluid-Top" />
     <exchange data="Temperature-Bottom" mesh="Fluid-Bottom-Mesh" from="Fluid-Bottom" to="Solid" />
-    <exchange data="Heat-Flux-Bottom" mesh="Solid-Bottom-Mesh-Faces" from="Solid" to="Fluid-Bottom" />
-
+    <exchange
+      data="Heat-Flux-Bottom"
+      mesh="Solid-Bottom-Mesh-Faces"
+      from="Solid"
+      to="Fluid-Bottom" />
     <relative-convergence-measure limit="1.0e-5" data="Temperature-Top" mesh="Fluid-Top-Mesh" />
     <relative-convergence-measure limit="1.0e-5" data="Heat-Flux-Top" mesh="Solid-Top-Mesh-Faces" />
-    <relative-convergence-measure limit="1.0e-5" data="Heat-Flux-Bottom" mesh="Solid-Bottom-Mesh-Faces" />
-    <relative-convergence-measure limit="1.0e-5" data="Temperature-Bottom" mesh="Fluid-Bottom-Mesh" />
-
+    <relative-convergence-measure
+      limit="1.0e-5"
+      data="Heat-Flux-Bottom"
+      mesh="Solid-Bottom-Mesh-Faces" />
+    <relative-convergence-measure
+      limit="1.0e-5"
+      data="Temperature-Bottom"
+      mesh="Fluid-Bottom-Mesh" />
     <acceleration:IQN-ILS>
       <data name="Temperature-Top" mesh="Fluid-Top-Mesh" />
       <data name="Heat-Flux-Top" mesh="Solid-Top-Mesh-Faces" />
       <data name="Heat-Flux-Bottom" mesh="Solid-Bottom-Mesh-Faces" />
       <data name="Temperature-Bottom" mesh="Fluid-Bottom-Mesh" />
       <initial-relaxation value="0.5" />
-
       <preconditioner type="residual-sum" />
       <filter type="QR1" limit="1e-6" />
       <max-used-iterations value="50" />
