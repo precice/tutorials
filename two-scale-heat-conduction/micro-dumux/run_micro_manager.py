@@ -9,3 +9,4 @@ manager = MicroManager("micro-manager-config.json")
 manager.initialize()
 
 manager.solve()
+
