@@ -8,6 +8,9 @@ bare: # A default component used when the solver does not have any dependencies 
     PLATFORM:
       description: Dockerfile platform used
       default: "ubuntu_2204"
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: "master"
 
 python-bindings:
   repository: https://github.com/precice/python-bindings
@@ -19,6 +22,9 @@ python-bindings:
     PLATFORM:
       description: Dockerfile platform used
       default: "ubuntu_2204"
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: "master"
     PYTHON_BINDINGS_REF:
       semnantic: Git ref of the pythonbindings to use
       default: "master"
