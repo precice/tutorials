@@ -33,8 +33,9 @@
 #include <dumux/common/parameters.hh>
 #include <dumux/common/dumuxmessage.hh>
 
-#include <dumux/linear/seqsolverbackend.hh>
+#include <dumux/linear/istlsolvers.hh>
 #include <dumux/linear/linearsolvertraits.hh>
+#include <dumux/linear/linearalgebratraits.hh>
 #include <dumux/nonlinear/newtonsolver.hh>
 
 #include <dumux/assembly/fvassembler.hh>
@@ -94,7 +95,7 @@ int main(int argc, char** argv)
     // - What rank of how many ranks this instance is
     // Configure preCICE. For now the config file is hardcoded.
     std::string preciceConfigFilename = "../../../precice-config-full-sim.xml";
-    const precice::string_view meshNameView("macro-mesh", 9)
+    const precice::string_view meshNameView("macro-mesh", 9);
     if (argc > 2)
         preciceConfigFilename = argv[argc - 1];
 
@@ -139,7 +140,7 @@ int main(int argc, char** argv)
     std::cout << "Number of Coupled Cells:" << coupledElementIdxs.size() << std::endl;
 
     // initialize preCICE
-    auto numberOfElements = coords.size()/couplingParticipant.getDimensions();
+    auto numberOfElements = coords.size()/couplingParticipant.getMeshDimensions(meshNameView);
     if (getParam<bool>("Precice.RunWithCoupling") == true)
     {
         couplingParticipant.setMesh(meshNameView, coordsSpan);
@@ -197,7 +198,6 @@ int main(int argc, char** argv)
         couplingParticipant.writeQuantityVector(meshNameView,readDatak10, kInitial);
         couplingParticipant.writeQuantityVector(meshNameView,readDatak11, kInitial);
         couplingParticipant.writeQuantityVector(meshNameView,readDataPorosity, porosityInitial);
-        }
     }
     
     // the grid variables                           
@@ -241,8 +241,8 @@ int main(int argc, char** argv)
     auto assembler = std::make_shared<Assembler>(problem, gridGeometry, gridVariables, timeLoop, xOld);
 
     // the linear solver
-    using LinearSolver = ILU0BiCGSTABBackend;
-    auto linearSolver = std::make_shared<LinearSolver>();
+    using LinearSolver = ILUBiCGSTABIstlSolver<LinearSolverTraits<GridGeometry>, LinearAlgebraTraitsFromAssembler<Assembler>>;
+    auto linearSolver = std::make_shared<LinearSolver>(gridGeometry->gridView(), gridGeometry->dofMapper());
 
     // the non-linear solver
     using NewtonSolver = Dumux::NewtonSolver<Assembler, LinearSolver>;
@@ -258,7 +258,7 @@ int main(int argc, char** argv)
                 break;
 
             // write checkpoint
-            if (couplingParticipant.requiresToWriteCheckPoint()) 
+            if (couplingParticipant.requiresToWriteCheckpoint()) 
             {
                 xOld = x;
             }
@@ -303,7 +303,7 @@ int main(int argc, char** argv)
         
         if (getParam<bool>("Precice.RunWithCoupling") == true)
         {
-            if (couplingParticipant.requiresToReadCheckPoint()) 
+            if (couplingParticipant.requiresToReadCheckpoint()) 
             {
                 // make the new solution the old solution
                 x = xOld;
