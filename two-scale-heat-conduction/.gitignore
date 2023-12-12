@@ -1,0 +1,4 @@
+dumux/dumux*
+dumux/dune-*
+dumux/*/build-cmake/
+install*
