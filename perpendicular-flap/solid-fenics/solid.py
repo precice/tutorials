@@ -1,7 +1,10 @@
 """
-This source code is based on https://gitlab.enpc.fr/jeremy.bleyer/comet-fenics/-/blob/master/examples/elastodynamics/demo_elastodynamics.py.rst
+This source code is based on:
+https://gitlab.enpc.fr/jeremy.bleyer/comet-fenics/-/blob/master/examples/elastodynamics/demo_elastodynamics.py.rst
+
 See also: 
-    Jeremy Bleyer. (2018). Numerical Tours of Computational Mechanics with FEniCS. Zenodo. https://doi.org/10.5281/zenodo.1287832
+    Jeremy Bleyer. (2018). Numerical Tours of Computational Mechanics with FEniCS. 
+    Zenodo. https://doi.org/10.5281/zenodo.1287832
 """
 
 # Import required libs
