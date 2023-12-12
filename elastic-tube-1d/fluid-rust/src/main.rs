@@ -252,14 +252,14 @@ fn main() -> ExitCode {
     const DOMAIN_SIZE: usize = 100;
     const CHUNK_SIZE: usize = DOMAIN_SIZE + 1;
 
-    let mut interface = precice::new("Fluid", &config, 0, 1);
+    let mut participant = precice::new("Fluid", &config, 0, 1);
 
     println!("preCICE configured...");
 
-    let dimensions = interface.get_dimensions();
-    let mesh_id = interface.get_mesh_id("Fluid-Nodes-Mesh");
-    let cross_section_length_id = interface.get_data_id("CrossSectionLength", mesh_id);
-    let pressure_id = interface.get_data_id("Pressure", mesh_id);
+    let mesh_name = "Fluid-Nodes-Mesh";
+    let dimensions = participant.get_mesh_dimensions(mesh_name);
+    assert!(participant.get_data_dimensions(mesh_name, "CrossSectionLength") == 1);
+    assert!(participant.get_data_dimensions(mesh_name, "Pressure") == 1);
 
     const KAPPA: f64 = 100_f64;
     const L: f64 = 10_f64;
@@ -293,33 +293,30 @@ fn main() -> ExitCode {
 
     let vertex_ids = {
         let mut ids = vec![-1; CHUNK_SIZE];
-        interface
+        participant
             .pin_mut()
-            .set_mesh_vertices(mesh_id, &grid[..], &mut ids[..]);
+            .set_mesh_vertices(mesh_name, &grid[..], &mut ids[..]);
         ids
     };
 
     println!("Initializing preCICE...");
 
-    let mut t = 0.0;
-    let dt = interface.pin_mut().initialize();
-
-    if interface.is_action_required(&precice::action_write_initial_data()) {
-        interface.pin_mut().write_block_scalar_data(
-            cross_section_length_id,
+    if participant.pin_mut().requires_initial_data() {
+        participant.pin_mut().write_data(
+            mesh_name,
+            "Pressure",
             &vertex_ids[..],
             &pressure[..],
         );
-        interface
-            .pin_mut()
-            .mark_action_fulfilled(&precice::action_write_initial_data());
     }
 
-    interface.pin_mut().initialize_data();
+    participant.pin_mut().initialize();
 
-    interface.read_block_scalar_data(
-        cross_section_length_id,
+    participant.read_data(
+        mesh_name,
+        "CrossSectionLength",
         &vertex_ids[..],
+        0.0,
         &mut cross_section_length[..],
     );
 
@@ -336,12 +333,14 @@ fn main() -> ExitCode {
 
     let mut out_counter = 0;
 
-    while interface.is_coupling_ongoing() {
-        if interface.is_action_required(&precice::action_write_iteration_checkpoint()) {
-            interface
-                .pin_mut()
-                .mark_action_fulfilled(&precice::action_write_iteration_checkpoint());
+    let mut t = 0.0;
+
+    while participant.is_coupling_ongoing() {
+        if participant.pin_mut().requires_writing_checkpoint() {
+            // do nothing
         }
+
+        let dt = participant.get_max_time_step_size();
 
         fluid_compute_solution(
             &velocity_old[..],
@@ -356,23 +355,23 @@ fn main() -> ExitCode {
             &mut pressure[..],
         );
 
-        interface
+        participant
             .pin_mut()
-            .write_block_scalar_data(pressure_id, &vertex_ids[..], &pressure[..]);
+            .write_data(mesh_name, "Pressure", &vertex_ids[..], &pressure[..]);
 
-        interface.pin_mut().advance(dt);
+        participant.pin_mut().advance(dt);
 
-        interface.read_block_scalar_data(
-            cross_section_length_id,
+
+        participant.read_data(
+            mesh_name,
+            "CrossSectionLength",
             &vertex_ids[..],
+            participant.get_max_time_step_size(),
             &mut cross_section_length[..],
         );
 
-        if interface.is_action_required(&precice::action_read_iteration_checkpoint()) {
+        if participant.pin_mut().requires_reading_checkpoint() {
             // i.e. fluid not yet converged
-            interface
-                .pin_mut()
-                .mark_action_fulfilled(&precice::action_read_iteration_checkpoint());
 
             //pressure.copy_from_slice(&pressure_old[..]);
             //velocity.copy_from_slice(&velocity_old[..]);
@@ -397,7 +396,7 @@ fn main() -> ExitCode {
     }
 
     println!("Exiting FluidSolver at t={}", t);
-    interface.pin_mut().finalize();
+    participant.pin_mut().finalize();
 
     return ExitCode::SUCCESS;
 }

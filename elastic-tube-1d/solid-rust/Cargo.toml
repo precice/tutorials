@@ -8,4 +8,4 @@ description = "The solid participant of the elastic-tube 1D tutorial"
 license = "LGPL-3.0-or-later"
 
 [dependencies]
-"precice" = "2.5"
+"precice" = "3"
