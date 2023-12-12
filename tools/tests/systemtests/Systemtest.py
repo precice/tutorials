@@ -354,13 +354,12 @@ class Systemtest:
                 stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
             except KeyboardInterrupt as k:
                 process.kill()
-                # process.send_signal(9)
                 raise KeyboardInterrupt from k
             except Exception as e:
                 logging.critical(
-                    f"Systemtest {self} had serious issues executin the docker compose command about to kill the docker compose command. Please check the logs! {e}")
+                    f"Systemtest {self} had serious issues executing the docker compose command about to kill the docker compose command. Please check the logs! {e}")
                 process.kill()
-                stdout, stderr = process.communicate()
+                process.communicate(timeout=10)
             stdout_data.extend(stdout.decode().splitlines())
             stderr_data.extend(stderr.decode().splitlines())
             process.poll()
@@ -397,7 +396,7 @@ class Systemtest:
                                        cwd=self.system_test_dir)
 
             try:
-                stdout, stderr = process.communicate()
+                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
             except KeyboardInterrupt as k:
                 process.kill()
                 # process.send_signal(9)
@@ -405,8 +404,8 @@ class Systemtest:
             except Exception as e:
                 logging.critical(
                     f"systemtest {self} had serious issues building the docker images via the `docker compose build` command. About to kill the docker compose command. Please check the logs! {e}")
+                process.communicate(timeout=10)
                 process.kill()
-                stdout, stderr = process.communicate()
 
             stdout_data.extend(stdout.decode().splitlines())
             stderr_data.extend(stderr.decode().splitlines())
@@ -448,9 +447,10 @@ class Systemtest:
                 raise KeyboardInterrupt from k
             except Exception as e:
                 logging.critical(
-                    f"Systemtest {self} had serious issues executin the docker compose command about to kill the docker compose command. Please check the logs! {e}")
+                    f"Systemtest {self} had serious issues executing the docker compose command about to kill the docker compose command. Please check the logs! {e}")
                 process.kill()
-                stdout, stderr = process.communicate()
+                stdout, stderr = process.communicate(timeout=10)
+                process.kill()
 
             stdout_data.extend(stdout.decode().splitlines())
             stderr_data.extend(stderr.decode().splitlines())
