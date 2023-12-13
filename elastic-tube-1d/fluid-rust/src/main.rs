@@ -6,6 +6,7 @@ use std::fs;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::path;
+use precice;
 
 fn write_vtk(
     file: &str,
@@ -252,7 +253,7 @@ fn main() -> ExitCode {
     const DOMAIN_SIZE: usize = 100;
     const CHUNK_SIZE: usize = DOMAIN_SIZE + 1;
 
-    let mut participant = precice::new("Fluid", &config, 0, 1);
+    let mut participant = precice::Participant::new("Fluid", &config, 0, 1);
 
     println!("preCICE configured...");
 
@@ -293,16 +294,14 @@ fn main() -> ExitCode {
 
     let vertex_ids = {
         let mut ids = vec![-1; CHUNK_SIZE];
-        participant
-            .pin_mut()
-            .set_mesh_vertices(mesh_name, &grid[..], &mut ids[..]);
+        participant.set_mesh_vertices(mesh_name, &grid[..], &mut ids[..]);
         ids
     };
 
     println!("Initializing preCICE...");
 
-    if participant.pin_mut().requires_initial_data() {
-        participant.pin_mut().write_data(
+    if participant.requires_initial_data() {
+        participant.write_data(
             mesh_name,
             "Pressure",
             &vertex_ids[..],
@@ -310,7 +309,7 @@ fn main() -> ExitCode {
         );
     }
 
-    participant.pin_mut().initialize();
+    participant.initialize();
 
     participant.read_data(
         mesh_name,
@@ -336,7 +335,7 @@ fn main() -> ExitCode {
     let mut t = 0.0;
 
     while participant.is_coupling_ongoing() {
-        if participant.pin_mut().requires_writing_checkpoint() {
+        if participant.requires_writing_checkpoint() {
             // do nothing
         }
 
@@ -355,11 +354,9 @@ fn main() -> ExitCode {
             &mut pressure[..],
         );
 
-        participant
-            .pin_mut()
-            .write_data(mesh_name, "Pressure", &vertex_ids[..], &pressure[..]);
+        participant.write_data(mesh_name, "Pressure", &vertex_ids[..], &pressure[..]);
 
-        participant.pin_mut().advance(dt);
+        participant.advance(dt);
 
 
         participant.read_data(
@@ -370,7 +367,7 @@ fn main() -> ExitCode {
             &mut cross_section_length[..],
         );
 
-        if participant.pin_mut().requires_reading_checkpoint() {
+        if participant.requires_reading_checkpoint() {
             // i.e. fluid not yet converged
 
             //pressure.copy_from_slice(&pressure_old[..]);
@@ -396,7 +393,7 @@ fn main() -> ExitCode {
     }
 
     println!("Exiting FluidSolver at t={}", t);
-    participant.pin_mut().finalize();
+    participant.finalize();
 
     return ExitCode::SUCCESS;
 }

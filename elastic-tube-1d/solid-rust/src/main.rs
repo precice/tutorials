@@ -1,5 +1,6 @@
 use std::env;
 use std::process::ExitCode;
+use precice;
 
 fn solid_compute_solution(pressure: &[f64], cross_section_length: &mut [f64]) {
     assert!(pressure.len() == cross_section_length.len());
@@ -28,7 +29,7 @@ fn main() -> ExitCode {
     const DOMAIN_SIZE: usize = 100;
     const CHUNK_SIZE: usize = DOMAIN_SIZE + 1;
 
-    let mut participant = precice::new("Solid", &config, 0, 1);
+    let mut participant = precice::Participant::new("Solid", &config, 0, 1);
 
     println!("preCICE configured...");
 
@@ -54,14 +55,12 @@ fn main() -> ExitCode {
 
     let vertex_ids = {
         let mut ids = vec![-1; CHUNK_SIZE];
-        participant
-            .pin_mut()
-            .set_mesh_vertices(mesh_name, &grid[..], &mut ids[..]);
+        participant.set_mesh_vertices(mesh_name, &grid[..], &mut ids[..]);
         ids
     };
 
-    if participant.pin_mut().requires_initial_data() {
-        participant.pin_mut().write_data(
+    if participant.requires_initial_data() {
+        participant.write_data(
             mesh_name,
             "CrossSectionLength",
             &vertex_ids[..],
@@ -72,11 +71,11 @@ fn main() -> ExitCode {
 
     println!("Initializing preCICE...");
 
-    participant.pin_mut().initialize();
+    participant.initialize();
 
     let mut t = 0.0;
     while participant.is_coupling_ongoing() {
-        if participant.pin_mut().requires_writing_checkpoint() {
+        if participant.requires_writing_checkpoint() {
             // no nothing
         }
 
@@ -86,16 +85,16 @@ fn main() -> ExitCode {
 
         solid_compute_solution(&pressure, &mut cross_section_length);
 
-        participant.pin_mut().write_data(
+        participant.write_data(
             mesh_name,
             "CrossSectionLength",
             &vertex_ids[..],
             &cross_section_length[..],
         );
 
-        participant.pin_mut().advance(dt);
+        participant.advance(dt);
 
-        if participant.pin_mut().requires_reading_checkpoint() {
+        if participant.requires_reading_checkpoint() {
             // i.e. fluid not yet converged
             // do nothing
         } else {
@@ -104,7 +103,7 @@ fn main() -> ExitCode {
     }
 
     println!("Exiting SolidSolver at t={}", t);
-    participant.pin_mut().finalize();
+    participant.finalize();
 
     return ExitCode::SUCCESS;
 }
