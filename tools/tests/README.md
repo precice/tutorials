@@ -151,7 +151,7 @@ User-facing tools:
   - `print_metadata.py`: Prints the metadata of each tutorial that contains a `metadata.yaml` file.
   - `print_case_combinations.py`: Prints all possible combinations of tutorial cases, using the `metadata.yaml` files.
   - `build_docker_images.py`: Build the Docker images for each test
-  - `generate_reference_data.py`: Executes the system tests with the versions defined in `reference_versions.yaml` and generates the reference data archives, with the names described in `tests.yaml`. (should only be used by the CI Pipeline)
+  - `generate_reference_results.py`: Executes the system tests with the versions defined in `reference_versions.yaml` and generates the reference data archives, with the names described in `tests.yaml`. (should only be used by the CI Pipeline)
 
 Implementation scripts:
 
@@ -316,7 +316,7 @@ The workflow will checkout the `from_ref`, take the status of the systemtests of
 #### manually
 
 In order to generate the reference results edit the `reference_versions.yaml` to match the required `build_arguments` otherwise passed via the cli.
-Executing `generate_reference_data.py` will then generate a the following files:
+Executing `generate_reference_results.py` will then generate a the following files:
 
 - all distinct `.tar.gz` defined in the `tests.yaml`
 - a `reference_results.md` in the tutorial folder describing the arguments used and a sha-1 hash of the `tar.gz` archive.
