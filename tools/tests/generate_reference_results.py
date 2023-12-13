@@ -38,8 +38,9 @@ def get_machine_informations():
         if result.returncode == 0:
             uname_info = result.stdout
 
-    if (command_is_avail("lscpu")):
-        result = subprocess.run(["lscpu"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    if (command_is_avail("lscpu") and command_is_avail("grep")):
+        result_lscpu = subprocess.run(["lscpu"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(["grep","-v", "Vulner"], input=result_lscpu.stdout,stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if result.returncode == 0:
             lscpu_info = result.stdout
 
