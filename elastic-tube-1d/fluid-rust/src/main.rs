@@ -2,11 +2,11 @@ use nalgebra as na;
 use std::env;
 use std::process::ExitCode;
 
+use precice;
 use std::fs;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::path;
-use precice;
 
 fn write_vtk(
     file: &str,
@@ -301,12 +301,7 @@ fn main() -> ExitCode {
     println!("Initializing preCICE...");
 
     if participant.requires_initial_data() {
-        participant.write_data(
-            mesh_name,
-            "Pressure",
-            &vertex_ids[..],
-            &pressure[..],
-        );
+        participant.write_data(mesh_name, "Pressure", &vertex_ids[..], &pressure[..]);
     }
 
     participant.initialize();
@@ -357,7 +352,6 @@ fn main() -> ExitCode {
         participant.write_data(mesh_name, "Pressure", &vertex_ids[..], &pressure[..]);
 
         participant.advance(dt);
-
 
         participant.read_data(
             mesh_name,

@@ -1,6 +1,6 @@
+use precice;
 use std::env;
 use std::process::ExitCode;
-use precice;
 
 fn solid_compute_solution(pressure: &[f64], cross_section_length: &mut [f64]) {
     assert!(pressure.len() == cross_section_length.len());
@@ -68,7 +68,6 @@ fn main() -> ExitCode {
         );
     }
 
-
     println!("Initializing preCICE...");
 
     participant.initialize();
@@ -81,7 +80,13 @@ fn main() -> ExitCode {
 
         let dt = participant.get_max_time_step_size();
 
-        participant.read_data(mesh_name, "Pressure", &vertex_ids[..], dt, &mut pressure[..]);
+        participant.read_data(
+            mesh_name,
+            "Pressure",
+            &vertex_ids[..],
+            dt,
+            &mut pressure[..],
+        );
 
         solid_compute_solution(&pressure, &mut cross_section_length);
 
