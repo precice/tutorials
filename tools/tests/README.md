@@ -311,7 +311,7 @@ The preferred way of adding reference results is via the manual triggerable `Gen
 - `from_ref`: branch where the new test configuration (e.g added tests, new reference_versions.yaml) is
 - `commit_msg`: commit message for adding the reference results into the branch
 
-The workflow will checkout the `from_ref`, take the status of the systemtests of that branch and execute `python generate_reference_results.py`, upload the LFS objects into the self-hosted LFS server and add a commit with `commit_msg` onto the `from_ref` branch. 
+The workflow will checkout the `from_ref`, take the status of the systemtests of that branch and execute `python generate_reference_results.py`, upload the LFS objects into the self-hosted LFS server and add a commit with `commit_msg` onto the `from_ref` branch.
 
 #### manually
 
