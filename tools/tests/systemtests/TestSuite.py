@@ -53,12 +53,14 @@ class TestSuites(list):
                     tutorial = parsed_tutorials.get_by_path(tutorial_case['path'])
                     if not tutorial:
                         raise Exception(f"No tutorial with path {tutorial_case['path']} found.")
-                    case_combinations_of_tutorial[tutorial] = []
-                    reference_results_of_tutorial[tutorial] = []
+                    # initialize the datastructure for the new Testsuite
+                    if tutorial not in case_combinations_of_tutorial:
+                        case_combinations_of_tutorial[tutorial] = []
+                        reference_results_of_tutorial[tutorial] = []
+
                     all_case_combinations = tutorial.case_combinations
                     case_combination_requested = CaseCombination.from_string_list(
                         tutorial_case['case_combination'], tutorial)
-
                     if case_combination_requested in all_case_combinations:
                         case_combinations_of_tutorial[tutorial].append(case_combination_requested)
                         reference_results_of_tutorial[tutorial].append(ReferenceResult(
