@@ -20,6 +20,7 @@ import os
 
 
 GLOBAL_TIMEOUT = 360
+SHORT_TIMEOUT = 10
 
 
 def slugify(value, allow_unicode=False):
@@ -359,7 +360,7 @@ class Systemtest:
                 logging.critical(
                     f"Systemtest {self} had serious issues executing the docker compose command about to kill the docker compose command. Please check the logs! {e}")
                 process.kill()
-                process.communicate(timeout=10)
+                process.communicate(timeout=SHORT_TIMEOUT)
             stdout_data.extend(stdout.decode().splitlines())
             stderr_data.extend(stderr.decode().splitlines())
             process.poll()
@@ -404,7 +405,7 @@ class Systemtest:
             except Exception as e:
                 logging.critical(
                     f"systemtest {self} had serious issues building the docker images via the `docker compose build` command. About to kill the docker compose command. Please check the logs! {e}")
-                process.communicate(timeout=10)
+                process.communicate(timeout=SHORT_TIMEOUT)
                 process.kill()
 
             stdout_data.extend(stdout.decode().splitlines())
@@ -449,7 +450,7 @@ class Systemtest:
                 logging.critical(
                     f"Systemtest {self} had serious issues executing the docker compose command about to kill the docker compose command. Please check the logs! {e}")
                 process.kill()
-                stdout, stderr = process.communicate(timeout=10)
+                stdout, stderr = process.communicate(timeout=SHORT_TIMEOUT)
                 process.kill()
 
             stdout_data.extend(stdout.decode().splitlines())
