@@ -94,7 +94,7 @@ int main(int argc, char** argv)
     // - Name of solver
     // - What rank of how many ranks this instance is
     // Configure preCICE. For now the config file is hardcoded.
-    std::string preciceConfigFilename = "../../../precice-config-full-sim.xml";
+    std::string preciceConfigFilename = "../../../precice-config.xml";
     const precice::string_view meshNameView("macro-mesh", 9);
     if (argc > 2)
         preciceConfigFilename = argv[argc - 1];
@@ -103,7 +103,7 @@ int main(int argc, char** argv)
     
     if (getParam<bool>("Precice.RunWithCoupling") == true)
     {
-        couplingParticipant.announceSolver("Macro-heat", preciceConfigFilename,
+        couplingParticipant.announceSolver("macro-heat", preciceConfigFilename,
                                      mpiHelper.rank(), mpiHelper.size());
         // verify that dimensions match
         const int preciceDim = couplingParticipant.getMeshDimensions(meshNameView);
