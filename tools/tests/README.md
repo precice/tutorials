@@ -78,7 +78,7 @@ In this case, building and running seems to work out, but the tests fail because
 
 The easiest way to debug a systemtest run is first to have a look at the output written into the action on GitHub.
 If this does not provide enough hints, the next step is to download the generated `runs` artifact. Note that by default this will only be generated if the systemtests fail.
-After openening the archive the test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contain both a `stderr.log` and `stdout.log`. This can be a starting point for a further investigation.
+Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains two log files: a `stderr.log` and `stdout.log`. This can be a starting point for a further investigation.
 
 ## Adding new tests
 
