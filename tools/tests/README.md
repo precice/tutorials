@@ -316,7 +316,7 @@ The workflow will checkout the `from_ref`, take the status of the systemtests of
 #### manually
 
 In order to generate the reference results edit the `reference_versions.yaml` to match the required `build_arguments` otherwise passed via the cli.
-Executing `generate_reference_results.py` will then generate a the following files:
+Executing `generate_reference_results.py` will then generate the following files:
 
 - all distinct `.tar.gz` defined in the `tests.yaml`
 - a `reference_results.md` in the tutorial folder describing the arguments used and a sha-1 hash of the `tar.gz` archive.
