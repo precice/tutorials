@@ -29,6 +29,8 @@ jobs:
       run: |
         /home/precice/runners_root/scripts/make_lfs_local.sh
     - name: 'Cleanup the folder'
+      # The first rf -rf ./* removes all non hidden files
+      # The second rf -rf ./.??* removes all hidden files (but not . and ..)
       run: |
         ls -la ./
         rm -rf ./*
