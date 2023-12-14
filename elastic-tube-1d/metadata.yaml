@@ -10,13 +10,13 @@ cases:
   fluid-cpp:
     participant: Fluid
     directory: ./fluid-cpp
-    run: ./run.sh
+    run: mkdir build && cmake -S . -B build && cmake --build build && ./run.sh
     component: bare
   
   solid-cpp:
     participant: Solid
     directory: ./solid-cpp
-    run: ./run.sh
+    run: mkdir build && cmake -S . -B build && cmake --build build && ./run.sh
     component: bare
   
   fluid-python:
