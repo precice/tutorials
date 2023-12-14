@@ -11,7 +11,7 @@ rm -r dumux-install
 
 # Get additional required DUNE modules
 # DuMux-preCICE adapter
-git clone -b develop https://github.com/precice/dumux-adapter.git
+git clone -b feature/export-module-library https://github.com/precice/dumux-adapter.git
 # DuMux phasefield implementation
 git clone -b cell_problems https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git
 # DUNE SPGrid for periodic boundary conditions
