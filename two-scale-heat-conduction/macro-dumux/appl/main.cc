@@ -95,7 +95,7 @@ int main(int argc, char** argv)
     // - What rank of how many ranks this instance is
     // Configure preCICE. For now the config file is hardcoded.
     std::string preciceConfigFilename = "../../../precice-config.xml";
-    const precice::string_view meshNameView("macro-mesh", 10);
+    const std::string meshName = "macro-mesh";
     if (argc > 2)
         preciceConfigFilename = argv[argc - 1];
 
@@ -106,7 +106,7 @@ int main(int argc, char** argv)
         couplingParticipant.announceSolver("macro-heat", preciceConfigFilename,
                                      mpiHelper.rank(), mpiHelper.size());
         // verify that dimensions match
-        const int preciceDim = couplingParticipant.getMeshDimensions(meshNameView);
+        const int preciceDim = couplingParticipant.getMeshDimensions(meshName);
         const int dim = int(leafGridView.dimension); 
         std::cout << "coupling Dims = " << dim << " , leafgrid dims = " << dim << std::endl;
         if (preciceDim != dim)
@@ -116,7 +116,6 @@ int main(int argc, char** argv)
     // get mesh coordinates 
     std::vector<double> coords;  
     std::vector<int> coupledElementIdxs;
-    precice::span<double> coordsSpan(coords);
     
     // coordinate loop (created vectors are 1D)
     // these positions of cell centers are later communicated to precice
@@ -137,36 +136,37 @@ int main(int argc, char** argv)
             std::cout << " ;" << std::endl;         
         }
     }
+    precice::span<double> coordsSpan(coords);
     std::cout << "Number of Coupled Cells:" << coupledElementIdxs.size() << std::endl;
 
     // initialize preCICE
-    auto numberOfElements = coords.size()/couplingParticipant.getMeshDimensions(meshNameView);
+    auto numberOfElements = coords.size()/couplingParticipant.getMeshDimensions(meshName);
     if (getParam<bool>("Precice.RunWithCoupling") == true)
     {
-        couplingParticipant.setMesh(meshNameView, coordsSpan);
+        couplingParticipant.setMesh(meshName, coordsSpan);
 
         // couples between dumux element indices and preciceIndices; 
         couplingParticipant.createIndexMapping(coupledElementIdxs);
     }
 
     // initialize the coupling data
-    const precice::string_view readDatak00("k_00", 4);
-    const precice::string_view readDatak01("k_01", 4);
-    const precice::string_view readDatak10("k_10", 4);
-    const precice::string_view readDatak11("k_11", 4);
-    const precice::string_view readDataPorosity("porosity", 8);
-    const precice::string_view writeDataConcentration("concentration", 13);
-    const precice::string_view writeDataTemperature("temperature", 11);
+    const std::string readDatak00 = "k_00";
+    const std::string readDatak01 = "k_01";
+    const std::string readDatak10 = "k_10";
+    const std::string readDatak11 = "k_11";
+    const std::string readDataPorosity = "porosity";
+    const std::string writeDataConcentration = "concentration";
+    //const std::string writeDataTemperature = "temperature";
     
     if (getParam<bool>("Precice.RunWithCoupling") == true)
     {
-        couplingParticipant.announceQuantity(meshNameView, readDatak00);
-        couplingParticipant.announceQuantity(meshNameView, readDatak01);
-        couplingParticipant.announceQuantity(meshNameView, readDatak10);
-        couplingParticipant.announceQuantity(meshNameView, readDatak11);
-        couplingParticipant.announceQuantity(meshNameView, readDataPorosity);
-        couplingParticipant.announceQuantity(meshNameView, writeDataConcentration);
-        couplingParticipant.announceQuantity(meshNameView, writeDataTemperature);
+        couplingParticipant.announceQuantity(meshName, readDatak00);
+        couplingParticipant.announceQuantity(meshName, readDatak01);
+        couplingParticipant.announceQuantity(meshName, readDatak10);
+        couplingParticipant.announceQuantity(meshName, readDatak11);
+        couplingParticipant.announceQuantity(meshName, readDataPorosity);
+        couplingParticipant.announceQuantity(meshName, writeDataConcentration);
+        //couplingParticipant.announceQuantity(meshName, writeDataTemperature);
 
     }
 
@@ -177,27 +177,27 @@ int main(int argc, char** argv)
     auto xOld = x;
 
     // initialize the coupling data
-    std::vector<double> temperatures;
-    for (int solIdx=0; solIdx< numberOfElements; ++solIdx)
-    {
-        temperatures.push_back(x[solIdx][problem->returnTemperatureIdx()]);
-    };
+    //std::vector<double> temperatures;
+    //for (int solIdx=0; solIdx< numberOfElements; ++solIdx)
+    //{
+    //    temperatures.push_back(x[solIdx][problem->returnTemperatureIdx()]);
+    //};
 
     if (getParam<bool>("Precice.RunWithCoupling") == true)
     {
-        couplingParticipant.writeQuantityVector(meshNameView,writeDataTemperature, temperatures);
+        //couplingParticipant.writeQuantityVector(meshName,writeDataTemperature, temperatures);
         if (couplingParticipant.requiresToWriteInitialData()){ //not called in our example
-            couplingParticipant.writeQuantityToOtherSolver(meshNameView, writeDataTemperature);
+        //    couplingParticipant.writeQuantityToOtherSolver(meshName, writeDataTemperature);
         }
 
         //initialize other data since they are not allowed to be read from micro side
         std::vector<double> kInitial(numberOfElements, 1.0);
         std::vector<double> porosityInitial(numberOfElements, 0.5);
-        couplingParticipant.writeQuantityVector(meshNameView,readDatak00, kInitial);
-        couplingParticipant.writeQuantityVector(meshNameView,readDatak01, kInitial);
-        couplingParticipant.writeQuantityVector(meshNameView,readDatak10, kInitial);
-        couplingParticipant.writeQuantityVector(meshNameView,readDatak11, kInitial);
-        couplingParticipant.writeQuantityVector(meshNameView,readDataPorosity, porosityInitial);
+        couplingParticipant.writeQuantityVector(meshName,readDatak00, kInitial);
+        couplingParticipant.writeQuantityVector(meshName,readDatak01, kInitial);
+        couplingParticipant.writeQuantityVector(meshName,readDatak10, kInitial);
+        couplingParticipant.writeQuantityVector(meshName,readDatak11, kInitial);
+        couplingParticipant.writeQuantityVector(meshName,readDataPorosity, porosityInitial);
     }
     
     // the grid variables                           
@@ -264,24 +264,24 @@ int main(int argc, char** argv)
             }
 
             // read porosity and conductivity data from other solver
-            couplingParticipant.readQuantityFromOtherSolver(meshNameView, readDatak00, dt);
-            couplingParticipant.readQuantityFromOtherSolver(meshNameView, readDatak01, dt);
-            couplingParticipant.readQuantityFromOtherSolver(meshNameView, readDatak10, dt);
-            couplingParticipant.readQuantityFromOtherSolver(meshNameView, readDatak11, dt);
-            couplingParticipant.readQuantityFromOtherSolver(meshNameView, readDataPorosity, dt);
+            couplingParticipant.readQuantityFromOtherSolver(meshName, readDatak00, dt);
+            couplingParticipant.readQuantityFromOtherSolver(meshName, readDatak01, dt);
+            couplingParticipant.readQuantityFromOtherSolver(meshName, readDatak10, dt);
+            couplingParticipant.readQuantityFromOtherSolver(meshName, readDatak11, dt);
+            couplingParticipant.readQuantityFromOtherSolver(meshName, readDataPorosity, dt);
         }
         std::cout << "Solver starts" << std::endl;
 
         // linearize & solve
         nonLinearSolver.solve(x, *timeLoop);
 
-        for (int solIdx=0; solIdx< numberOfElements; ++solIdx)
-            temperatures[solIdx] = x[solIdx][problem->returnTemperatureIdx()];
+        //for (int solIdx=0; solIdx< numberOfElements; ++solIdx)
+        //    temperatures[solIdx] = x[solIdx][problem->returnTemperatureIdx()];
 
         if (getParam<bool>("Precice.RunWithCoupling") == true)
         {
-            couplingParticipant.writeQuantityVector(meshNameView, writeDataTemperature, temperatures);
-            couplingParticipant.writeQuantityToOtherSolver(meshNameView, writeDataTemperature);
+        //    couplingParticipant.writeQuantityVector(meshName, writeDataTemperature, temperatures);
+        //    couplingParticipant.writeQuantityToOtherSolver(meshName, writeDataTemperature);
         }
 
         // advance precice 
