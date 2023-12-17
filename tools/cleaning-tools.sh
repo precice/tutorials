@@ -145,8 +145,8 @@ clean_dune() {
 clean_abaqus() {
     (
         set -e -u
-	    cd "$1"
-	    echo "--- Cleaning up ABAQUS case in $(pwd)"
+	cd "$1"
+	echo "--- Cleaning up ABAQUS case in $(pwd)"
         rm -rfv ./*.abq
         rm -rfv ./*.com
         rm -rfv ./*.dat
