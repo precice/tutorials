@@ -1,5 +1,11 @@
 # This script sets up a DUNE environment in the working directory to solve the two-scale-heat-conduction problem with DuMuX on one or both scales
 
+# Clean any old leftover dumux or dune folders
+rm -rfv dumux/ dumux-adapter/ dumux-phasefield/
+rm -rfv dune-*/
+rm -rfv install*
+
+
 # Get the DuMuX install script and install it
 wget https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/-/raw/master/bin/installdumux.py
 python3 installdumux.py
