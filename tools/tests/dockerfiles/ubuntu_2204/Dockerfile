@@ -50,8 +50,9 @@ FROM precice_dependecies as precice
 ARG PRECICE_REF
 USER precice
 WORKDIR /home/precice
-RUN git clone --depth 1 https://github.com/precice/precice.git -b ${PRECICE_REF} precice && \
+RUN git clone https://github.com/precice/precice.git precice && \
     cd precice && \
+    git checkout ${PRECICE_REF} && \
     mkdir build && cd build &&\
     cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DPRECICE_PETScMapping=OFF -DBUILD_TESTING=OFF && \
     make all install -j $(nproc)
@@ -69,8 +70,10 @@ ARG OPENFOAM_ADAPTER_REF
 # Build the OpenFOAM adapter 
 USER precice
 WORKDIR /home/precice
-RUN git clone --depth 1 -b ${OPENFOAM_ADAPTER_REF} https://github.com/precice/openfoam-adapter.git &&\
-    cd openfoam-adapter && /usr/bin/${OPENFOAM_EXECUTABLE} ./Allwmake -j $(nproc)
+RUN git clone https://github.com/precice/openfoam-adapter.git &&\
+    cd openfoam-adapter && \
+    git checkout ${OPENFOAM_ADAPTER_REF} && \
+    /usr/bin/${OPENFOAM_EXECUTABLE} ./Allwmake -j $(nproc)
 
 
 FROM precice_dependecies as python_bindings
@@ -117,7 +120,8 @@ RUN wget http://www.dhondt.de/ccx_${CALULIX_VERSION}.src.tar.bz2 && \
 
 ARG CALULIX_ADAPTER_REF
 WORKDIR /home/precice
-RUN git clone --depth 1 --branch ${CALULIX_ADAPTER_REF} https://github.com/precice/calculix-adapter.git && \
+RUN git clone https://github.com/precice/calculix-adapter.git && \
     cd calculix-adapter && \
+    git checkout ${CALULIX_ADAPTER_REF} &&\
     make CXX_VERSION=${CALULIX_VERSION} ADDITIONAL_FFLAGS="-fallow-argument-mismatch" -j $(nproc) && \
     ln -s /home/precice/calculix-adapter/bin/ccx_preCICE /home/precice/.local/bin/ccx_preCICE

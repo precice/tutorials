@@ -6,3 +6,9 @@ The purpose of these cases is not to teach you how to use preCICE from scratch, 
 As a general rule, you can start each participant from inside their `<tutorial>/<participant>-<solver>` using `./run.sh`. Look into these short scripts and copy the parts you need for your new case. Before running again, execute the cleaning scripts you can find at each level, to clean from this point and deeper.
 
 Contributions to this repository are very welcome. Please refer to the page [Contribute to preCICE](https://precice.org/community-contribute-to-precice.html) for a few guidelines and hints to help you in this direction.
+
+## LFS usage
+
+Since we rely on LFS to version systemtest artifacts like reference solutions, we host our own LFS server.
+Please note, that during a small phase of initial setup, this server might not be reachable from your machine.
+Therefore your git lfs fetch might fail.

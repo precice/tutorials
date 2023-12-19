@@ -29,7 +29,7 @@ Fluid participant:
 
 Solid participant:
 
-* FEniCS. The structural model is currently limited to linear elasticity. For more information, have a look at the [FeniCS adapter documentation](https://www.precice.org/adapter-fenics.html).
+* FEniCS. The structural model is currently limited to linear elasticity. For more information, have a look at the [FEniCS adapter documentation](https://www.precice.org/adapter-fenics.html).
 
 * CalculiX. In order to allow a reasonable comparison to all solid codes, the geometrically non-linear solver has been disabled and only a linear model is used by default. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html). Two cases are provided: one as a regular simulation, and one with modal dynamic simulations where a few eigenmodes are computed, and then used to simulate a reduced model. In that case, the `run.sh` script runs the frequency analysis, renames the output file to match with the actual input file, and then runs it. For more details, see the [adapter configuration documentation](http://precice.org/adapter-calculix-config.html). To run the modal dynamic version, add the `-modal` argument to the `run.sh` script.
 
