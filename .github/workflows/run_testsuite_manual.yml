@@ -42,3 +42,4 @@ jobs:
       build_args: ${{ inputs.build_args }}
       systests_branch: ${{ inputs.systests_branch }}
       loglevel: ${{ inputs.loglevel }}
+      upload_artifacts: ${{ inputs.upload_artifacts }}

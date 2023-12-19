@@ -1,5 +1,13 @@
 name: autopep8
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
 jobs:
   autopep8:
     runs-on: ubuntu-latest

@@ -38,17 +38,17 @@ gh workflow run run_testsuite_manual.yml -f suites=fenics_test --ref=develop
 Another example, to use the latest develop branches and enable debug information of the tests:
 
 ```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop,PYTHON_BINDINGS_REF:develop,FENICS_ADAPTER_REF:develop" -f loglevel=DEBUG --ref=develop
+gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v2.5.0,OPENFOAM_ADAPTER_REF:v1.2.3,PYTHON_BINDINGS_REF:v2.5.0.4,FENICS_ADAPTER_REF:v1.4.0" -f loglevel=DEBUG --ref=develop
 ```
 
-where the `*_REF` can also be specific Git commits.
+where the `*_REF` should be a specific [commit-ish](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefcommit-ishacommit-ishalsocommittish).
 
 Example output:
 
 ```text
 Run cd tools/tests
   cd tools/tests
-  python systemtests.py --build_args=PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop,PYTHON_BINDINGS_REF:develop,FENICS_ADAPTER_REF:develop --suites=fenics_test --log-level=DEBUG
+  python systemtests.py --build_args=PRECICE_REF:v2.5.0,OPENFOAM_ADAPTER_REF:v1.2.3,PYTHON_BINDINGS_REF:v2.5.0.4,FENICS_ADAPTER_REF:v1.4.0 --suites=fenics_test --log-level=DEBUG
   cd ../../
   shell: /usr/bin/bash -e {0}
 INFO: About to run the following systemtest in the directory /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs:
@@ -76,18 +76,9 @@ In this case, building and running seems to work out, but the tests fail because
 
 ## Understanding what went wrong
 
-Let's first see how the workflow was triggered. If we expand the `Set up job` step, we can see the inputs provided:
-
-```text
- Inputs
-    build_args: PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop,PYTHON_BINDINGS_REF:develop,FENICS_ADAPTER_REF:develop
-    loglevel: DEBUG
-    suites: fenics_test
-    systests_branch: develop
-    upload_artifacts: FALSE
-```
-
-In the summary, we can find the results and more logs as a build artifact. This includes two interesting files: `stdout.log` and `stderr.log`. These include all Docker build steps and the simulation output, as well as the exact git clone command.
+The easiest way to debug a systemtest run is first to have a look at the output written into the action on GitHub.
+If this does not provide enough hints, the next step is to download the generated `runs` artifact. Note that by default this will only be generated if the systemtests fail.
+Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains two log files: a `stderr.log` and `stdout.log`. This can be a starting point for a further investigation.
 
 ## Adding new tests
 
@@ -138,7 +129,7 @@ Metadata and workflow/script files:
   - ...
   - `metadata.yml`: describes each case directory (which participant, which component, which script to run, ...)
 - `tools/tests/`
-  - `component-templates/`: jinja2 templates for Docker Compose services, specifying cache system
+  - `component-templates/`: jinja2 templates for Docker Compose services for the components
     - `calculix-adapter.yaml`
     - `fenics-adapter.yaml`
     - `openfoam-adapter.yaml`
@@ -149,7 +140,7 @@ Metadata and workflow/script files:
   - `docker-compose.field_compare.template.yaml`: Describes how to compare results with fieldcompare (Docker Compose service template)
   - `components.yaml`: Declares the available components and their parameters/options
   - `reference_results.metadata.template`: Template for reporting the versions used to generate the reference results
-  - `reference_versions.yaml`: Versions of components to use for generating the reference results
+  - `reference_versions.yaml`: List of arguments to use for generating the reference results
   - `tests.yaml`: Declares the available tests, grouped in test suites
 
 User-facing tools:
@@ -160,7 +151,7 @@ User-facing tools:
   - `print_metadata.py`: Prints the metadata of each tutorial that contains a `metadata.yaml` file.
   - `print_case_combinations.py`: Prints all possible combinations of tutorial cases, using the `metadata.yaml` files.
   - `build_docker_images.py`: Build the Docker images for each test
-  - `generate_reference_data.py`: Executes the system tests with the versions defined in `reference_versions.yaml` and generates the reference data archives, with the names described in `tests.yaml`.
+  - `generate_reference_results.py`: Executes the system tests with the versions defined in `reference_versions.yaml` and generates the reference data archives, with the names described in `tests.yaml`. (should only be used by the CI Pipeline)
 
 Implementation scripts:
 
@@ -226,7 +217,7 @@ The components mentioned in the Metadata are defined in the central `components.
 openfoam-adapter:
   repository: https://github.com/precice/openfoam-adapter
   template: component-templates/openfoam-adapter.yaml
-  build_arguments: # these things mean something to the docker-service
+  build_arguments:
     PRECICE_REF:
       description: Version of preCICE to use
       default: "main"
@@ -247,7 +238,7 @@ openfoam-adapter:
 
 This `openfoam-adapter` component has the following attributes:
 
-- `repository`: URL to the Git project (without the `.git` extension), used to fetch the component
+- `repository`: URL to the Git projects
 - `template`: A template for a Docker Compose service of this component
 - `build_arguments`: Arguments passed to the Docker Compose service (arbitrary)
 
@@ -255,7 +246,7 @@ This `openfoam-adapter` component has the following attributes:
 
 Since the docker containers are still a bit mixed in terms of capabilities and support for different build_argument combinations the following rules apply:
 
-- A build_argument ending in **_REF** means that it refers to a git reference (like a branch or commit) beeing used to build the image.
+- A build_argument ending in **_REF** means that it refers to a git commit-ish (like a tag or commit) beeing used to build the image. Its important to not use branch names here as we heavily rely on dockers build cache to speedup things. But since the input variable to the docker builder will not change, we might have wrong cache hits.
 - All other build_arguments are free of rules and up to the container maintainer.
 
 ### Component templates
@@ -313,8 +304,19 @@ This defines two test suites, namely `openfoam_adapter_pr` and `openfoam_adapter
 
 ### Generate Reference Results
 
+#### via GitHub workflow (recommended)
+
+The preferred way of adding reference results is via the manual triggerable `Generate reference results (manual)` workflow. This takes two inputs:
+
+- `from_ref`: branch where the new test configuration (e.g added tests, new reference_versions.yaml) is
+- `commit_msg`: commit message for adding the reference results into the branch
+
+The workflow will checkout the `from_ref`, take the status of the systemtests of that branch and execute `python generate_reference_results.py`, upload the LFS objects into the self-hosted LFS server and add a commit with `commit_msg` onto the `from_ref` branch.
+
+#### manually
+
 In order to generate the reference results edit the `reference_versions.yaml` to match the required `build_arguments` otherwise passed via the cli.
-Executing `generate_reference_data.py` will then generate a the following files:
+Executing `generate_reference_results.py` will then generate the following files:
 
 - all distinct `.tar.gz` defined in the `tests.yaml`
 - a `reference_results.md` in the tutorial folder describing the arguments used and a sha-1 hash of the `tar.gz` archive.
