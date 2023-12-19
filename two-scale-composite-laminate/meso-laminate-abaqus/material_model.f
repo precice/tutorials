@@ -1,4 +1,5 @@
 ! Solve material model for stresses. Written originally by Minh Hoang Nguyen
+! This model is solved only for the first time step, when micro stresses are zero
       subroutine solve_material_model(
      *   nblock, ndir, nshr, nprops,
      *   props, strains, stresses)
