@@ -4,10 +4,10 @@ on:
     branches:
       - master
       - develop
-    pull_request:
-      branches:
-        - master
-        - develop
+  pull_request:
+    branches:
+      - master
+      - develop
 jobs:
   check_md:
     runs-on: ubuntu-latest
