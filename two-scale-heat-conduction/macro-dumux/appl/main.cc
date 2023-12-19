@@ -132,7 +132,6 @@ int main(int argc, char **argv) {
       std::cout << " ;" << std::endl;
     }
   }
-  precice::span<double> coordsSpan(coords);
   std::cout << "Number of Coupled Cells:" << coupledElementIdxs.size()
             << std::endl;
 
@@ -140,7 +139,7 @@ int main(int argc, char **argv) {
   auto numberOfElements =
       coords.size() / couplingParticipant.getMeshDimensions(meshName);
   if (getParam<bool>("Precice.RunWithCoupling") == true) {
-    couplingParticipant.setMesh(meshName, coordsSpan);
+    couplingParticipant.setMesh(meshName, coords);
 
     // couples between dumux element indices and preciceIndices;
     couplingParticipant.createIndexMapping(coupledElementIdxs);

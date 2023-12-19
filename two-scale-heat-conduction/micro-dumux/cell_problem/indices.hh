@@ -22,8 +22,9 @@
 
 namespace Dumux {
 
-template <int offset = 0> struct CellProblemIndices { // Primary variable
-                                                      // indices
+template <int offset = 0>
+struct CellProblemIndices { // Primary variable
+                            // indices
   static const int psi1Idx = 0;
   static const int psi2Idx = 1;
 

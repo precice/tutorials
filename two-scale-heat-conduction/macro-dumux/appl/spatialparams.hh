@@ -70,11 +70,9 @@ public:
   template <class ElementSolution>
   Scalar porosity(const Element &element, const SubControlVolume &scv,
                   const ElementSolution &elemSol) const {
-    const std::string meshName = "macro-mesh";
-    const std::string readDataPorosity = "porosity";
     if (getParam<bool>("Precice.RunWithCoupling") == true)
       return couplingParticipant_.getScalarQuantityOnFace(
-          meshName, readDataPorosity, scv.elementIndex());
+          "macro-mesh", "porosity", scv.elementIndex());
     else
       return getParam<Scalar>("Problem.DefaultPorosity");
   }
@@ -86,20 +84,16 @@ public:
   DimWorldMatrix solidThermalConductivity(const Element &element,
                                           const SubControlVolume &scv) const {
     DimWorldMatrix K;
-    const std::string meshName = "macro-mesh";
-    const std::string readDatak00 = "k_00";
-    const std::string readDatak01 = "k_01";
-    const std::string readDatak10 = "k_10";
-    const std::string readDatak11 = "k_11";
+
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
       K[0][0] = couplingParticipant_.getScalarQuantityOnFace(
-          meshName, readDatak00, scv.elementIndex());
+          "macro-mesh", "k_00", scv.elementIndex());
       K[0][1] = couplingParticipant_.getScalarQuantityOnFace(
-          meshName, readDatak01, scv.elementIndex());
+          "macro-mesh", "k_01", scv.elementIndex());
       K[1][0] = couplingParticipant_.getScalarQuantityOnFace(
-          meshName, readDatak10, scv.elementIndex());
+          "macro-mesh", "k_10", scv.elementIndex());
       K[1][1] = couplingParticipant_.getScalarQuantityOnFace(
-          meshName, readDatak11, scv.elementIndex());
+          "macro-mesh", "k_11", scv.elementIndex());
     } else {
       K[0][0] = getParam<Scalar>("Component.SolidThermalConductivity");
       K[0][1] = 0.0;
