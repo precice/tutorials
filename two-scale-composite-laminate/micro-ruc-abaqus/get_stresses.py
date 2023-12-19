@@ -1,4 +1,8 @@
-# Minh Hoang Nguyen, mhoangn@umich.edu, 2023
+"""
+This file is used to extract stresses from the odb file of the RUC simulation and write them to a file called stresses.txt.
+The file stresses.txt is then read by the ruc_abaqus_restart.py file to get the stresses for the current iteration.
+File written by Minh Hoang Nguyen, mhoangn@umich.edu, 2023
+"""
 
 from abaqus import *
 from abaqusConstants import *
@@ -36,7 +40,7 @@ for iRefP in range(3 + 1)[1:]:
                                   steps=('Step-1', ), __linkedVpName__='Viewport: 1')
 
 # Areas
-stresses = np.zeros(6)  # [11, 22, 33, 12, 23, 13]
+stresses = np.zeros(6)  # Only the following components of the stress tensor are non-zero: [11, 22, 33, 12, 23, 13]
 
 Lx = 2.600E-03
 Ly = 6.447E-03
