@@ -17,35 +17,43 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.   *
  *****************************************************************************/
 
-//adapted from dumux/examples/1ptracer/properties.hh
+// adapted from dumux/examples/1ptracer/properties.hh
 
 #ifndef DUMUX_CELL_PROBLEM_PROPERTIES_HH
 #define DUMUX_CELL_PROBLEM_PROPERTIES_HH
 
-#include <dune/grid/yaspgrid.hh>
 #include <dumux/common/properties.hh>
 #include <dumux/discretization/cctpfa.hh>
+#include <dune/grid/yaspgrid.hh>
 
-#include "problem_cellproblem.hh"
 #include "cell_problem/model.hh"
+#include "problem_cellproblem.hh"
 
 namespace Dumux::Properties {
 
 namespace TTag {
-struct CellProblem { using InheritsFrom = std::tuple<CellModel, CCTpfaModel>; }; 
-}
+struct CellProblem {
+  using InheritsFrom = std::tuple<CellModel, CCTpfaModel>;
+};
+} // namespace TTag
 
-template<class TypeTag>
-struct Grid<TypeTag, TTag::CellProblem> { using type = Dune::SPGrid<double, 2>;}; 
+template <class TypeTag> struct Grid<TypeTag, TTag::CellProblem> {
+  using type = Dune::SPGrid<double, 2>;
+};
 
-template<class TypeTag>
-struct Problem<TypeTag, TTag::CellProblem> { using type = CellProblemProblem<TypeTag>; };
+template <class TypeTag> struct Problem<TypeTag, TTag::CellProblem> {
+  using type = CellProblemProblem<TypeTag>;
+};
 
-template<class TypeTag>
-struct EnableGridFluxVariablesCache<TypeTag, TTag::CellProblem> { static constexpr bool value = true; };
+template <class TypeTag>
+struct EnableGridFluxVariablesCache<TypeTag, TTag::CellProblem> {
+  static constexpr bool value = true;
+};
 
-template<class TypeTag>
-struct EnableGridGeometryCache<TypeTag, TTag::CellProblem> { static constexpr bool value = true; };
+template <class TypeTag>
+struct EnableGridGeometryCache<TypeTag, TTag::CellProblem> {
+  static constexpr bool value = true;
+};
 
 } // end namespace Dumux::Properties
 

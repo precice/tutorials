@@ -24,18 +24,15 @@
 
 namespace Dumux {
 
-template<class Traits>
-class CellProblemVolumeVariables : public PhasefieldVolumeVariables<Traits>
-{
-    using Scalar = typename Traits::PrimaryVariables::value_type;
+template <class Traits>
+class CellProblemVolumeVariables : public PhasefieldVolumeVariables<Traits> {
+  using Scalar = typename Traits::PrimaryVariables::value_type;
 
 public:
-    
-    template<class Problem, class Scv>
-    Scalar phi0delta(const Problem& problem, const Scv& scv) const
-    {
-        return problem.spatialParams().phi0delta(scv);
-    }
+  template <class Problem, class Scv>
+  Scalar phi0delta(const Problem &problem, const Scv &scv) const {
+    return problem.spatialParams().phi0delta(scv);
+  }
 };
 
 } // end namespace Dumux
