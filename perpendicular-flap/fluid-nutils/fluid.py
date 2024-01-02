@@ -15,11 +15,11 @@ def subs0(f):
     if isinstance(f, function.Argument) and f._name == 'lhs':
         return function.Argument(name='lhs0', shape=f.shape, nderiv=f._nderiv)
     if isinstance(f, function.Argument) and f._name == 'meshdofs':
-        return function.Argument(name='oldmeshdofs', shape=f.shape, nderiv=f._nderiv)
-    if isinstance(f, function.Argument) and f._name == 'oldmeshdofs':
-        return function.Argument(name='oldoldmeshdofs', shape=f.shape, nderiv=f._nderiv)
-    if isinstance(f, function.Argument) and f._name == 'oldoldmeshdofs':
-        return function.Argument(name='oldoldoldmeshdofs', shape=f.shape, nderiv=f._nderiv)
+        return function.Argument(name='meshdofs0', shape=f.shape, nderiv=f._nderiv)
+    if isinstance(f, function.Argument) and f._name == 'meshdofs0':
+        return function.Argument(name='meshdofs00', shape=f.shape, nderiv=f._nderiv)
+    if isinstance(f, function.Argument) and f._name == 'meshdofs00':
+        return function.Argument(name='meshdofs000', shape=f.shape, nderiv=f._nderiv)
 
 # some helper function to shift variables by two timesteps
 
@@ -82,7 +82,7 @@ def main(inflow: 'inflow velocity' = 10,
     ns.x0 = geom  # reference geometry
     ns.dbasis = domain.basis('std', degree=1).vector(2)
     ns.d_i = 'dbasis_ni ?meshdofs_n'
-    ns.umesh_i = 'dbasis_ni (1.5 ?meshdofs_n - 2 ?oldmeshdofs_n + 0.5 ?oldoldmeshdofs_n ) / ?dt'
+    ns.umesh_i = 'dbasis_ni (1.5 ?meshdofs_n - 2 ?meshdofs0_n + 0.5 ?meshdofs00_n ) / ?dt'
     ns.x_i = 'x0_i + d_i'  # moving geometry
     ns.ubasis, ns.pbasis = function.chain([domain.basis('std', degree=2).vector(2), domain.basis('std', degree=1), ])
     ns.F_i = 'ubasis_ni ?F_n'  # stress field
@@ -92,9 +92,9 @@ def main(inflow: 'inflow velocity' = 10,
 
     # initialization of dofs
     meshdofs = numpy.zeros(len(ns.dbasis))
-    oldmeshdofs = meshdofs
-    oldoldmeshdofs = meshdofs
-    oldoldoldmeshdofs = meshdofs
+    meshdofs0 = meshdofs
+    meshdofs00 = meshdofs
+    meshdofs000 = meshdofs
     lhs0 = numpy.zeros(len(ns.ubasis))
 
     # for visualization
@@ -156,7 +156,7 @@ def main(inflow: 'inflow velocity' = 10,
 
     # better initial guess: start from Stokes solution, comment out for comparison with other solvers
     #res_stokes = domain.integral('(ubasis_ni,j ((u_i,j + u_j,i) rho nu - p δ_ij) + pbasis_n u_k,k) d:x' @ ns, degree=4)
-    #lhs0 = solver.solve_linear('lhs', res_stokes, constrain=cons, arguments=dict(meshdofs=meshdofs, oldmeshdofs=oldmeshdofs, oldoldmeshdofs=oldoldmeshdofs, oldoldoldmeshdofs=oldoldoldmeshdofs, dt=dt))
+    #lhs0 = solver.solve_linear('lhs', res_stokes, constrain=cons, arguments=dict(meshdofs=meshdofs, meshdofs0=meshdofs0, meshdofs00=meshdofs00, meshdofs000=meshdofs000, dt=dt))
     lhs00 = lhs0
 
     timestep = 0
@@ -174,21 +174,21 @@ def main(inflow: 'inflow velocity' = 10,
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
-            checkpoint = lhs0, lhs00, t, timestep, oldmeshdofs, oldoldmeshdofs, oldoldoldmeshdofs
+            checkpoint = lhs0, lhs00, t, timestep, meshdofs0, meshdofs00, meshdofs000
             interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
         # solve fluid equations
         lhs1 = solver.newton('lhs', res, lhs0=lhs0, constrain=cons,
-                             arguments=dict(lhs0=lhs0, dt=dt, meshdofs=meshdofs, oldmeshdofs=oldmeshdofs,
-                                            oldoldmeshdofs=oldoldmeshdofs, oldoldoldmeshdofs=oldoldoldmeshdofs)
+                             arguments=dict(lhs0=lhs0, dt=dt, meshdofs=meshdofs, meshdofs0=meshdofs0,
+                                            meshdofs00=meshdofs00, meshdofs000=meshdofs000)
                              ).solve(tol=1e-6)
 
         # write forces to interface
         if interface.is_write_data_required(dt):
             F = solver.solve_linear('F', resF, constrain=consF,
                                     arguments=dict(lhs00=lhs00, lhs0=lhs0, lhs=lhs1, dt=dt, meshdofs=meshdofs,
-                                                   oldmeshdofs=oldmeshdofs, oldoldmeshdofs=oldoldmeshdofs,
-                                                   oldoldoldmeshdofs=oldoldoldmeshdofs))
+                                                   meshdofs0=meshdofs0, meshdofs00=meshdofs00,
+                                                   meshdofs000=meshdofs000))
             # writedata = couplingsample.eval(ns.F, F=F) # for stresses
             writedata = couplingsample.eval('F_i d:x' @ ns, F=F, meshdofs=meshdofs) * \
                 numpy.concatenate([p.weights for p in couplingsample.points])[:, numpy.newaxis]
@@ -203,18 +203,18 @@ def main(inflow: 'inflow velocity' = 10,
         t += dt
         lhs00 = lhs0
         lhs0 = lhs1
-        oldoldoldmeshdofs = oldoldmeshdofs
-        oldoldmeshdofs = oldmeshdofs
-        oldmeshdofs = meshdofs
+        meshdofs000 = meshdofs00
+        meshdofs00 = meshdofs0
+        meshdofs0 = meshdofs
 
         # read checkpoint if required
         if interface.is_action_required(precice.action_read_iteration_checkpoint()):
-            lhs0, lhs00, t, timestep, oldmeshdofs, oldoldmeshdofs, oldoldoldmeshdofs = checkpoint
+            lhs0, lhs00, t, timestep, meshdofs0, meshdofs00, meshdofs000 = checkpoint
             interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
 
         if interface.is_time_window_complete():
-            x, u, p = bezier.eval(['x_i', 'u_i', 'p'] @ ns, lhs=lhs1, meshdofs=meshdofs, oldmeshdofs=oldmeshdofs,
-                                  oldoldmeshdofs=oldoldmeshdofs, oldoldoldmeshdofs=oldoldoldmeshdofs, dt=dt)
+            x, u, p = bezier.eval(['x_i', 'u_i', 'p'] @ ns, lhs=lhs1, meshdofs=meshdofs, meshdofs0=meshdofs0,
+                                  meshdofs00=meshdofs00, meshdofs000=meshdofs000, dt=dt)
             with treelog.add(treelog.DataLog()):
                 export.vtk('Fluid_' + str(timestep), bezier.tri, x, u=u, p=p)
 
