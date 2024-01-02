@@ -21,14 +21,6 @@ def subs0(f):
     if isinstance(f, function.Argument) and f._name == 'meshdofs00':
         return function.Argument(name='meshdofs000', shape=f.shape, nderiv=f._nderiv)
 
-# some helper function to shift variables by two timesteps
-
-
-@function.replace
-def subs00(f):
-    if isinstance(f, function.Argument) and f._name == 'lhs':
-        return function.Argument(name='lhs00', shape=f.shape, nderiv=f._nderiv)
-
 
 def main(inflow: 'inflow velocity' = 10,
          viscosity: 'kinematic viscosity' = 1.0,
@@ -65,7 +57,7 @@ def main(inflow: 'inflow velocity' = 10,
     # 1st order FD
     δt = lambda f: (f - subs0(f)) / dt
     # 2nd order FD
-    tt = lambda f: (1.5 * f - 2 * subs0(f) + 0.5 * subs00(f)) / dt
+    tt = lambda f: (1.5 * f - 2 * subs0(f) + 0.5 * subs0(subs0(f))) / dt
     # extrapolation for pressure
     tp = lambda f: (1.5 * f - 0.5 * subs0(f))
 
