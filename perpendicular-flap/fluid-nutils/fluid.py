@@ -7,19 +7,9 @@ import precice
 
 # for details on this solver see https://doi.org/10.1002/nme.6443
 
-# some helper function to shift variables by one timestep
-
-
-@function.replace
 def subs0(f):
-    if isinstance(f, function.Argument) and f._name == 'lhs':
-        return function.Argument(name='lhs0', shape=f.shape, nderiv=f._nderiv)
-    if isinstance(f, function.Argument) and f._name == 'meshdofs':
-        return function.Argument(name='meshdofs0', shape=f.shape, nderiv=f._nderiv)
-    if isinstance(f, function.Argument) and f._name == 'meshdofs0':
-        return function.Argument(name='meshdofs00', shape=f.shape, nderiv=f._nderiv)
-    if isinstance(f, function.Argument) and f._name == 'meshdofs00':
-        return function.Argument(name='meshdofs000', shape=f.shape, nderiv=f._nderiv)
+    'helper function to shift variables by one timestep'
+    return function.replace_arguments(f, {arg: function.Argument(arg+'0', shape=shape, dtype=dtype) for arg, (shape, dtype) in f.arguments.items() if arg != 'dt'})
 
 
 def main(inflow: 'inflow velocity' = 10,
@@ -82,6 +72,7 @@ def main(inflow: 'inflow velocity' = 10,
     meshdofs0 = meshdofs
     meshdofs00 = meshdofs
     meshdofs000 = meshdofs
+    meshdofs0000 = meshdofs
     lhs0 = numpy.zeros(len(ns.ubasis))
 
     # for visualization
@@ -161,13 +152,13 @@ def main(inflow: 'inflow velocity' = 10,
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
-            checkpoint = lhs0, lhs00, t, timestep, meshdofs0, meshdofs00, meshdofs000
+            checkpoint = lhs0, lhs00, t, timestep, meshdofs0, meshdofs00, meshdofs000, meshdofs0000
             interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
         # solve fluid equations
         lhs1 = solver.newton('lhs', res, lhs0=lhs0, constrain=cons,
                              arguments=dict(lhs0=lhs0, dt=dt, meshdofs=meshdofs, meshdofs0=meshdofs0,
-                                            meshdofs00=meshdofs00, meshdofs000=meshdofs000)
+                                            meshdofs00=meshdofs00, meshdofs000=meshdofs000, meshdofs0000=meshdofs0000)
                              ).solve(tol=1e-6)
 
         # write forces to interface
@@ -175,7 +166,7 @@ def main(inflow: 'inflow velocity' = 10,
             F = solver.solve_linear('F', resF, constrain=consF,
                                     arguments=dict(lhs00=lhs00, lhs0=lhs0, lhs=lhs1, dt=dt, meshdofs=meshdofs,
                                                    meshdofs0=meshdofs0, meshdofs00=meshdofs00,
-                                                   meshdofs000=meshdofs000))
+                                                   meshdofs000=meshdofs000, meshdofs0000=meshdofs0000))
             # writedata = couplingsample.eval(ns.F, F=F) # for stresses
             writedata = couplingsample.eval('F_i d:x' @ ns, F=F, meshdofs=meshdofs) * \
                 numpy.concatenate([p.weights for p in couplingsample.points])[:, numpy.newaxis]
@@ -190,18 +181,19 @@ def main(inflow: 'inflow velocity' = 10,
         t += dt
         lhs00 = lhs0
         lhs0 = lhs1
+        meshdofs0000 = meshdofs000
         meshdofs000 = meshdofs00
         meshdofs00 = meshdofs0
         meshdofs0 = meshdofs
 
         # read checkpoint if required
         if interface.is_action_required(precice.action_read_iteration_checkpoint()):
-            lhs0, lhs00, t, timestep, meshdofs0, meshdofs00, meshdofs000 = checkpoint
+            lhs0, lhs00, t, timestep, meshdofs0, meshdofs00, meshdofs000, meshdofs0000 = checkpoint
             interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
 
         if interface.is_time_window_complete():
             x, u, p = bezier.eval(['x_i', 'u_i', 'p'] @ ns, lhs=lhs1, meshdofs=meshdofs, meshdofs0=meshdofs0,
-                                  meshdofs00=meshdofs00, meshdofs000=meshdofs000, dt=dt)
+                                  meshdofs00=meshdofs00, meshdofs000=meshdofs000, meshdofs0000=meshdofs0000, dt=dt)
             with treelog.add(treelog.DataLog()):
                 export.vtk('Fluid_' + str(timestep), bezier.tri, x, u=u, p=p)
 
