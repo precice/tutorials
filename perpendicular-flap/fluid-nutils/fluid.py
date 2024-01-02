@@ -174,13 +174,7 @@ def main(inflow: 'inflow velocity' = 10,
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
-            lhs_checkpoint = lhs0
-            lhs00_checkpoint = lhs00
-            t_checkpoint = t
-            timestep_checkpoint = timestep
-            oldmeshdofs_checkpoint = oldmeshdofs
-            oldoldmeshdofs_checkpoint = oldoldmeshdofs
-            oldoldoldmeshdofs_checkpoint = oldoldoldmeshdofs
+            checkpoint = lhs0, lhs00, t, timestep, oldmeshdofs, oldoldmeshdofs, oldoldoldmeshdofs
             interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
         # solve fluid equations
@@ -215,13 +209,7 @@ def main(inflow: 'inflow velocity' = 10,
 
         # read checkpoint if required
         if interface.is_action_required(precice.action_read_iteration_checkpoint()):
-            lhs0 = lhs_checkpoint
-            lhs00 = lhs00_checkpoint
-            t = t_checkpoint
-            timestep = timestep_checkpoint
-            oldmeshdofs = oldmeshdofs_checkpoint
-            oldoldmeshdofs = oldoldmeshdofs_checkpoint
-            oldoldoldmeshdofs = oldoldoldmeshdofs_checkpoint
+            lhs0, lhs00, t, timestep, oldmeshdofs, oldoldmeshdofs, oldoldoldmeshdofs = checkpoint
             interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
 
         if interface.is_time_window_complete():
