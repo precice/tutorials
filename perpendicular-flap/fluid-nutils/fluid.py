@@ -192,6 +192,8 @@ def main(inflow: 'inflow velocity' = 10,
         if interface.is_time_window_complete():
             x, u, p = bezier.eval(['x_i', 'u_i', 'p'] @ ns, lhs=lhs1, meshdofs=meshdofs, meshdofs0=meshdofs0,
                                   meshdofs00=meshdofs00, meshdofs000=meshdofs000, meshdofs0000=meshdofs0000, dt=dt)
+            export.triplot('velocity.jpg', x, numpy.linalg.norm(u, axis=1), tri=bezier.tri, cmap='jet')
+            export.triplot('pressure.jpg', x, p, tri=bezier.tri, cmap='jet')
             with treelog.add(treelog.DataLog()):
                 export.vtk('Fluid_' + str(timestep), bezier.tri, x, u=u, p=p)
 
