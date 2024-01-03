@@ -124,6 +124,8 @@ def main(inflow: 'inflow velocity' = 10,
     # boundary conditions mesh displacements
     sqr = domain.boundary['inflow,outflow,wall'].integral('d_i d_i' @ ns, degree=2)
     meshcons0 = solver.optimize('meshdofs', sqr, droptol=1e-15)
+    sqr = couplingsample.integral('d_k d_k' @ ns)
+    meshcons = solver.optimize('meshdofs', sqr, droptol=1e-15, constrain=meshcons0)
 
     # weak form mesh displacements
     meshsqr = domain.integral('d_i,x0_j d_i,x0_j d:x0' @ ns, degree=2)
@@ -143,7 +145,6 @@ def main(inflow: 'inflow velocity' = 10,
             coupledata = couplingsample.asfunction(readdata)
             sqr = couplingsample.integral(((ns.d - coupledata)**2).sum(0))
             meshcons = solver.optimize('meshdofs', sqr, droptol=1e-15, constrain=meshcons0)
-            meshdofs = solver.optimize('meshdofs', meshsqr, constrain=meshcons)
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
@@ -159,6 +160,9 @@ def main(inflow: 'inflow velocity' = 10,
         meshdofs00 = meshdofs0
         meshdofs0 = meshdofs
         dt = min(precice_dt, timestepsize)
+
+        # solve mesh deformation
+        meshdofs = solver.optimize('meshdofs', meshsqr, constrain=meshcons)
 
         # solve fluid equations
         lhs = solver.newton('lhs', res, lhs0=lhs0, constrain=cons,
