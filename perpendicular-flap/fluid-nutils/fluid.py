@@ -14,25 +14,19 @@ def main(inflow: 'inflow velocity' = 10,
          timestepsize=0.01):
 
     # mesh and geometry definition
-    grid_x_1 = numpy.linspace(-3, -1, 7)
-    grid_x_1 = grid_x_1[:-1]
-    grid_x_2 = numpy.linspace(-1, -0.3, 8)
-    grid_x_2 = grid_x_2[:-1]
-    grid_x_3 = numpy.linspace(-0.3, 0.3, 13)
-    grid_x_3 = grid_x_3[:-1]
-    grid_x_4 = numpy.linspace(0.3, 1, 8)
-    grid_x_4 = grid_x_4[:-1]
-    grid_x_5 = numpy.linspace(1, 3, 7)
-    grid_x = numpy.concatenate((grid_x_1, grid_x_2, grid_x_3, grid_x_4, grid_x_5), axis=None)
-    grid_y_1 = numpy.linspace(0, 1.5, 16)
-    grid_y_1 = grid_y_1[:-1]
-    grid_y_2 = numpy.linspace(1.5, 2, 4)
-    grid_y_2 = grid_y_2[:-1]
-    grid_y_3 = numpy.linspace(2, 4, 7)
-    grid_y = numpy.concatenate((grid_y_1, grid_y_2, grid_y_3), axis=None)
-    grid = [grid_x, grid_y]
+    topo, geom = mesh.rectilinear([
+        numpy.concatenate((
+            numpy.linspace(-3, -1, 6, endpoint=False),
+            numpy.linspace(-1, -0.3, 7, endpoint=False),
+            numpy.linspace(-0.3, 0.3, 12, endpoint=False),
+            numpy.linspace(0.3, 1, 7, endpoint=False),
+            numpy.linspace(1, 3, 7))),
+        numpy.concatenate((
+            numpy.linspace(0, 1.5, 15, endpoint=False),
+            numpy.linspace(1.5, 2, 3, endpoint=False),
+            numpy.linspace(2, 4, 7))),
+    ])
 
-    topo, geom = mesh.rectilinear(grid)
     domain = topo.withboundary(inflow='left', wall='top,bottom', outflow='right') - \
         topo[18:20, :10].withboundary(flap='left,right,top')
 
