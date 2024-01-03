@@ -43,10 +43,10 @@ def main(inflow: 'inflow velocity' = 10,
     tθ = lambda f: theta * f + (1 - theta) * t0(f)
     # 1st order FD
     δt = lambda f: (f - t0(f)) / function.Argument('dt', ())
-    # 2nd order FD
-    tt = lambda f: (1.5 * f - 2 * t0(f) + 0.5 * t0(t0(f))) / function.Argument('dt', ())
     # extrapolation for pressure
     tp = lambda f: (1.5 * f - 0.5 * t0(f))
+    # 2nd order FD
+    tt = lambda f: tp(δt(f))
 
     # Nutils namespace
     ns = function.Namespace()
