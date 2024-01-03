@@ -38,7 +38,7 @@ def main(inflow: 'inflow velocity' = 10,
 
     # time approximations
     t0 = lambda f: function.replace_arguments(f, {arg: function.Argument(arg+'0', shape=shape, dtype=dtype)
-                        for arg, (shape, dtype) in f.arguments.items() if arg != 'dt'})
+                        for arg, (shape, dtype) in f.arguments.items()})
     # TR interpolation
     tθ = lambda f: theta * f + (1 - theta) * t0(f)
     # 1st order FD
@@ -63,14 +63,6 @@ def main(inflow: 'inflow velocity' = 10,
     ns.urel_i = 'ubasis_ni ?lhs_n'  # relative velocity
     ns.u_i = 'umesh_i + urel_i'  # total velocity
     ns.p = 'pbasis_n ?lhs_n'  # pressure
-
-    # initialization of dofs
-    meshdofs = numpy.zeros(len(ns.dbasis))
-    meshdofs0 = meshdofs
-    meshdofs00 = meshdofs
-    meshdofs000 = meshdofs
-    lhs = numpy.zeros(len(ns.ubasis))
-    lhs0 = lhs
 
     # for visualization
     bezier = domain.sample('bezier', 2)
@@ -135,6 +127,10 @@ def main(inflow: 'inflow velocity' = 10,
     #lhs0 = solver.solve_linear('lhs', res_stokes, constrain=cons, arguments=dict(meshdofs=meshdofs, meshdofs0=meshdofs0, meshdofs00=meshdofs00, meshdofs000=meshdofs000, dt=dt))
 
     timestep = 0
+    arguments = dict(lhs=numpy.zeros(len(ns.ubasis)), meshdofs=numpy.zeros(len(ns.dbasis)), dt=timestepsize)
+
+    nhist = 4 # history length required by the formulation
+    arguments.update((k+'0'*i, v) for k, v in tuple(arguments.items()) for i in range(nhist))
 
     while interface.is_coupling_ongoing():
       with treelog.context(f'timestep {timestep}'):
@@ -148,36 +144,21 @@ def main(inflow: 'inflow velocity' = 10,
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
-            checkpoint = timestep, lhs, lhs0, meshdofs, meshdofs0, meshdofs00, meshdofs000
+            checkpoint = timestep, arguments
             interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
         # advance variables
         timestep += 1
-        lhs00 = lhs0
-        lhs0 = lhs
-        meshdofs0000 = meshdofs000
-        meshdofs000 = meshdofs00
-        meshdofs00 = meshdofs0
-        meshdofs0 = meshdofs
-        dt = min(precice_dt, timestepsize)
-
-        # solve mesh deformation
-        meshdofs = solver.optimize('meshdofs', meshsqr, constrain=meshcons)
-
-        # solve fluid equations
-        lhs = solver.newton('lhs', res, lhs0=lhs0, constrain=cons,
-                             arguments=dict(lhs0=lhs0, dt=dt, meshdofs=meshdofs, meshdofs0=meshdofs0,
-                                            meshdofs00=meshdofs00, meshdofs000=meshdofs000, meshdofs0000=meshdofs0000)
-                             ).solve(tol=1e-6)
+        arguments = {k+'0'*(i+1): arguments[k+'0'*i] for k in ('lhs', 'meshdofs', 'dt') for i in range(nhist)}
+        arguments['dt'] = dt = min(precice_dt, timestepsize)
+        arguments['meshdofs'] = solver.optimize('meshdofs', meshsqr, constrain=meshcons) # solve mesh deformation
+        arguments['lhs'] = arguments['lhs0'] # initial guess for newton
+        arguments['lhs'] = solver.newton('lhs', res, arguments=arguments, constrain=cons).solve(tol=1e-6) # solve fluid equations
+        arguments['F'] = solver.solve_linear('F', resF, constrain=consF, arguments=arguments)
 
         # write forces to interface
         if interface.is_write_data_required(dt):
-            F = solver.solve_linear('F', resF, constrain=consF,
-                                    arguments=dict(lhs00=lhs00, lhs0=lhs0, lhs=lhs, dt=dt, meshdofs=meshdofs,
-                                                   meshdofs0=meshdofs0, meshdofs00=meshdofs00,
-                                                   meshdofs000=meshdofs000, meshdofs0000=meshdofs0000))
-            # writedata = couplingsample.eval(ns.F, F=F) # for stresses
-            writedata = couplingsample.eval('F_i d:x' @ ns, F=F, meshdofs=meshdofs) * \
+            writedata = couplingsample.eval('F_i d:x' @ ns, **arguments) * \
                 numpy.concatenate([p.weights for p in couplingsample.points])[:, numpy.newaxis]
             interface.write_block_vector_data(writedataID, dataIndices, writedata)
 
@@ -186,12 +167,11 @@ def main(inflow: 'inflow velocity' = 10,
 
         # read checkpoint if required
         if interface.is_action_required(precice.action_read_iteration_checkpoint()):
-            timestep, lhs, lhs0, meshdofs, meshdofs0, meshdofs00, meshdofs000 = checkpoint
+            timestep, arguments = checkpoint
             interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
 
         if interface.is_time_window_complete():
-            x, u, p = bezier.eval(['x_i', 'u_i', 'p'] @ ns, lhs=lhs, meshdofs=meshdofs, meshdofs0=meshdofs0,
-                                  meshdofs00=meshdofs00, meshdofs000=meshdofs000, meshdofs0000=meshdofs0000, dt=dt)
+            x, u, p = bezier.eval(['x_i', 'u_i', 'p'] @ ns, **arguments)
             export.triplot('velocity.jpg', x, numpy.linalg.norm(u, axis=1), tri=bezier.tri, cmap='jet')
             export.triplot('pressure.jpg', x, p, tri=bezier.tri, cmap='jet')
             with treelog.add(treelog.DataLog()):
