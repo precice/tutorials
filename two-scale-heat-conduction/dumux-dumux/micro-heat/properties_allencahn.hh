@@ -20,30 +20,38 @@
 #ifndef PROPERTIES_ALLENCAHN_HH
 #define PROPERTIES_ALLENCAHN_HH
 
-#include <dune/grid/yaspgrid.hh>
 #include <dumux/common/properties.hh>
 #include <dumux/discretization/cctpfa.hh>
 #include <dumux/phasefield/model.hh>
+#include <dune/grid/yaspgrid.hh>
 
 #include "problem_allencahn.hh"
 
 namespace Dumux::Properties {
 
 namespace TTag {
-struct AllenCahn { using InheritsFrom = std::tuple<Phasefield, CCTpfaModel>; };
-}
+struct AllenCahn {
+  using InheritsFrom = std::tuple<Phasefield, CCTpfaModel>;
+};
+} // namespace TTag
 
-template<class TypeTag>
-struct Grid<TypeTag, TTag::AllenCahn> { using type = Dune::SPGrid<double, 2>; };
+template <class TypeTag> struct Grid<TypeTag, TTag::AllenCahn> {
+  using type = Dune::SPGrid<double, 2>;
+};
 
-template<class TypeTag>
-struct Problem<TypeTag, TTag::AllenCahn> { using type = AllenCahnProblem<TypeTag>; };
+template <class TypeTag> struct Problem<TypeTag, TTag::AllenCahn> {
+  using type = AllenCahnProblem<TypeTag>;
+};
 
-template<class TypeTag>
-struct EnableGridVolumeVariablesCache<TypeTag, TTag::AllenCahn> { static constexpr bool value = true; };
+template <class TypeTag>
+struct EnableGridVolumeVariablesCache<TypeTag, TTag::AllenCahn> {
+  static constexpr bool value = true;
+};
 
-template<class TypeTag>
-struct EnableGridGeometryCache<TypeTag, TTag::AllenCahn> { static constexpr bool value = true; };
+template <class TypeTag>
+struct EnableGridGeometryCache<TypeTag, TTag::AllenCahn> {
+  static constexpr bool value = true;
+};
 
 } // end namespace Dumux::Properties
 

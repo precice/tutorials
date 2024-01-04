@@ -21,67 +21,71 @@
 #define DUMUX_1PNI_CONDUCTION_PROBLEM_PROPERTIES_HH
 
 #include <cmath>
-#include <dune/grid/yaspgrid.hh>
-#include <dumux/discretization/elementsolution.hh>
 #include <dumux/discretization/cctpfa.hh>
-#include <dumux/porousmediumflow/1p/model.hh>
-#include <dumux/material/fluidsystems/1pliquid.hh>
+#include <dumux/discretization/elementsolution.hh>
 #include <dumux/material/fluidmatrixinteractions/1p/thermalconductivityaverage.hh>
+#include <dumux/material/fluidsystems/1pliquid.hh>
+#include <dumux/porousmediumflow/1p/model.hh>
+#include <dune/grid/yaspgrid.hh>
 
 #include "mysimpleliquid.hh"
+#include "myvolumevariables.hh"
 #include "problem.hh"
 #include "spatialparams.hh"
-#include "myvolumevariables.hh"
 
 namespace Dumux::Properties {
 // Create new type tags
 namespace TTag {
-struct OnePNIConduction { using InheritsFrom = std::tuple<OnePNI>; };
-struct OnePNIConductionCCTpfa { using InheritsFrom = std::tuple<OnePNIConduction, CCTpfaModel>; };
+struct OnePNIConduction {
+  using InheritsFrom = std::tuple<OnePNI>;
+};
+struct OnePNIConductionCCTpfa {
+  using InheritsFrom = std::tuple<OnePNIConduction, CCTpfaModel>;
+};
 } // end namespace TTag
 
 // Set the grid type
-template<class TypeTag>
-struct Grid<TypeTag, TTag::OnePNIConduction> { using type = Dune::YaspGrid<2>; }; //structured parallel 2D grid
+template <class TypeTag> struct Grid<TypeTag, TTag::OnePNIConduction> {
+  using type = Dune::YaspGrid<2>;
+}; // structured parallel 2D grid
 // Set the problem property
-template<class TypeTag>
-struct Problem<TypeTag, TTag::OnePNIConduction> { using type = OnePNIConductionProblem<TypeTag>; }; 
+template <class TypeTag> struct Problem<TypeTag, TTag::OnePNIConduction> {
+  using type = OnePNIConductionProblem<TypeTag>;
+};
 
 // Set the fluid system
-template<class TypeTag>
-struct FluidSystem<TypeTag, TTag::OnePNIConduction>
-{
-    using type = FluidSystems::OnePLiquid<GetPropType<TypeTag, Properties::Scalar>,
-                                          Components::MySimpleLiquid<GetPropType<TypeTag, Properties::Scalar>> >;
+template <class TypeTag> struct FluidSystem<TypeTag, TTag::OnePNIConduction> {
+  using type = FluidSystems::OnePLiquid<
+      GetPropType<TypeTag, Properties::Scalar>,
+      Components::MySimpleLiquid<GetPropType<TypeTag, Properties::Scalar>>>;
 };
 
 //! Set the volume variables property
-template<class TypeTag>
-struct VolumeVariables<TypeTag, TTag::OnePNIConduction>
-{
+template <class TypeTag>
+struct VolumeVariables<TypeTag, TTag::OnePNIConduction> {
 private:
-    using PV = GetPropType<TypeTag, Properties::PrimaryVariables>;
-    using FSY = GetPropType<TypeTag, Properties::FluidSystem>;
-    using FST = GetPropType<TypeTag, Properties::FluidState>;
-    using SSY = GetPropType<TypeTag, Properties::SolidSystem>;
-    using SST = GetPropType<TypeTag, Properties::SolidState>;
-    using PT = typename GetPropType<TypeTag, Properties::SpatialParams>::PermeabilityType;
-    using MT = GetPropType<TypeTag, Properties::ModelTraits>;
+  using PV = GetPropType<TypeTag, Properties::PrimaryVariables>;
+  using FSY = GetPropType<TypeTag, Properties::FluidSystem>;
+  using FST = GetPropType<TypeTag, Properties::FluidState>;
+  using SSY = GetPropType<TypeTag, Properties::SolidSystem>;
+  using SST = GetPropType<TypeTag, Properties::SolidState>;
+  using PT = typename GetPropType<TypeTag,
+                                  Properties::SpatialParams>::PermeabilityType;
+  using MT = GetPropType<TypeTag, Properties::ModelTraits>;
 
-    using Traits = OnePVolumeVariablesTraits<PV, FSY, FST, SSY, SST, PT, MT>; 
+  using Traits = OnePVolumeVariablesTraits<PV, FSY, FST, SSY, SST, PT, MT>;
+
 public:
-    using type = MyOnePVolumeVariables<Traits>;
+  using type = MyOnePVolumeVariables<Traits>;
 };
 
 // Set the spatial parameters
-template<class TypeTag>
-struct SpatialParams<TypeTag, TTag::OnePNIConduction>
-{
-    using GridGeometry = GetPropType<TypeTag, Properties::GridGeometry>;
-    using Scalar = GetPropType<TypeTag, Properties::Scalar>;
-    using type = OnePNISpatialParams<GridGeometry, Scalar>;
+template <class TypeTag> struct SpatialParams<TypeTag, TTag::OnePNIConduction> {
+  using GridGeometry = GetPropType<TypeTag, Properties::GridGeometry>;
+  using Scalar = GetPropType<TypeTag, Properties::Scalar>;
+  using type = OnePNISpatialParams<GridGeometry, Scalar>;
 };
 
-}
+} // namespace Dumux::Properties
 // end namespace Dumux
 #endif

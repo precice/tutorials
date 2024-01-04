@@ -20,69 +20,73 @@
 #ifndef CELL_PROBLEM_MODEL_HH
 #define CELL_PROBLEM_MODEL_HH
 
-#include <string>
 #include <dumux/common/properties.hh>
 #include <dumux/common/properties/model.hh>
 #include <dumux/flux/fluxvariablescaching.hh>
+#include <string>
 
 #include "../spatialparams_cellproblem.hh"
 #include "indices.hh"
-#include "volumevariables.hh"
 #include "localresidual.hh"
+#include "volumevariables.hh"
 
 namespace Dumux {
 
-struct CellProblemModelTraits 
-{   
-    using Indices = CellProblemIndices<>;
-    static constexpr int numEq() { return 2; }
-    static constexpr int numComponents() {return 1;}
+struct CellProblemModelTraits {
+  using Indices = CellProblemIndices<>;
+  static constexpr int numEq() { return 2; }
+  static constexpr int numComponents() { return 1; }
 };
 
-template<class PV, class MT>
-struct CellProblemVolumeVariablesTraits
-{
-    using PrimaryVariables = PV;
-    using ModelTraits = MT;
+template <class PV, class MT> struct CellProblemVolumeVariablesTraits {
+  using PrimaryVariables = PV;
+  using ModelTraits = MT;
 };
 
 namespace Properties {
 namespace TTag {
-struct CellModel { using InheritsFrom = std::tuple<ModelProperties>; };
-}
+struct CellModel {
+  using InheritsFrom = std::tuple<ModelProperties>;
+};
+} // namespace TTag
 
-template<class TypeTag>
-struct SpatialParams<TypeTag, TTag::CellModel> {
+template <class TypeTag> struct SpatialParams<TypeTag, TTag::CellModel> {
 private:
-    using GridGeometry = GetPropType<TypeTag, Properties::GridGeometry>;
-    using Scalar = GetPropType<TypeTag, Properties::Scalar>;
+  using GridGeometry = GetPropType<TypeTag, Properties::GridGeometry>;
+  using Scalar = GetPropType<TypeTag, Properties::Scalar>;
+
 public:
-    using type = CellProblemSpatialParams<GridGeometry, Scalar>;
+  using type = CellProblemSpatialParams<GridGeometry, Scalar>;
 };
 
-template<class TypeTag>
-struct LocalResidual<TypeTag, TTag::CellModel> { using type = CellProblemLocalResidual<TypeTag>; };
-
-template<class TypeTag>
-struct ModelTraits<TypeTag, TTag::CellModel> { using type = CellProblemModelTraits; };
-
-template<class TypeTag>
-struct VolumeVariables<TypeTag, TTag::CellModel>
-{
-private:
-    using PV = GetPropType<TypeTag, Properties::PrimaryVariables>;
-    using MT = GetPropType<TypeTag, Properties::ModelTraits>;
-
-    using Traits = CellProblemVolumeVariablesTraits<PV, MT>;
-public:
-    using type = CellProblemVolumeVariables<Traits>;
+template <class TypeTag> struct LocalResidual<TypeTag, TTag::CellModel> {
+  using type = CellProblemLocalResidual<TypeTag>;
 };
 
-template<class TypeTag>
-struct FluxVariablesCache<TypeTag, TTag::CellModel> { using type = FluxVariablesCaching::EmptyCache<GetPropType<TypeTag, Properties::Scalar>>; };
+template <class TypeTag> struct ModelTraits<TypeTag, TTag::CellModel> {
+  using type = CellProblemModelTraits;
+};
 
-template<class TypeTag>
-struct FluxVariablesCacheFiller<TypeTag, TTag::CellModel> { using type = FluxVariablesCaching::EmptyCacheFiller; };
+template <class TypeTag> struct VolumeVariables<TypeTag, TTag::CellModel> {
+private:
+  using PV = GetPropType<TypeTag, Properties::PrimaryVariables>;
+  using MT = GetPropType<TypeTag, Properties::ModelTraits>;
+
+  using Traits = CellProblemVolumeVariablesTraits<PV, MT>;
+
+public:
+  using type = CellProblemVolumeVariables<Traits>;
+};
+
+template <class TypeTag> struct FluxVariablesCache<TypeTag, TTag::CellModel> {
+  using type = FluxVariablesCaching::EmptyCache<
+      GetPropType<TypeTag, Properties::Scalar>>;
+};
+
+template <class TypeTag>
+struct FluxVariablesCacheFiller<TypeTag, TTag::CellModel> {
+  using type = FluxVariablesCaching::EmptyCacheFiller;
+};
 
 } // end namespace Properties
 } // end namespace Dumux

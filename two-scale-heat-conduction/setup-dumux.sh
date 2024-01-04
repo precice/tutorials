@@ -5,7 +5,6 @@ rm -rfv dumux/ dumux-adapter/ dumux-phasefield/
 rm -rfv dune-*/
 rm -rfv install*
 
-
 # Get the DuMuX install script and install it
 wget https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/-/raw/master/bin/installdumux.py
 python3 installdumux.py
