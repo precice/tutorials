@@ -36,6 +36,9 @@ def main(inflow: 'inflow velocity' = 10,
     domain = topo.withboundary(inflow='left', wall='top,bottom', outflow='right') - \
         topo[18:20, :10].withboundary(flap='left,right,top')
 
+    couplinginterface = domain.boundary['flap']
+    couplingsample = couplinginterface.sample('gauss', degree=2)  # mesh located at Gauss points
+
     # time approximations
     t0 = lambda f: function.replace_arguments(f, {arg: function.Argument(arg+'0', shape=shape, dtype=dtype)
                         for arg, (shape, dtype) in f.arguments.items()})
@@ -63,6 +66,7 @@ def main(inflow: 'inflow velocity' = 10,
     ns.urel_i = 'ubasis_ni ?lhs_n'  # relative velocity
     ns.u_i = 'umesh_i + urel_i'  # total velocity
     ns.p = 'pbasis_n ?lhs_n'  # pressure
+    ns.qw = couplingsample.asfunction(numpy.concatenate([p.weights for p in couplingsample.points]))
 
     # for visualization
     bezier = domain.sample('bezier', 2)
@@ -77,9 +81,6 @@ def main(inflow: 'inflow velocity' = 10,
     # define coupling meshes
     meshName = "Fluid-Mesh"
     meshID = interface.get_mesh_id(meshName)
-
-    couplinginterface = domain.boundary['flap']
-    couplingsample = couplinginterface.sample('gauss', degree=2)  # mesh located at Gauss points
     dataIndices = interface.set_mesh_vertices(meshID, couplingsample.eval(ns.x0))
 
     # coupling data
@@ -158,8 +159,7 @@ def main(inflow: 'inflow velocity' = 10,
 
         # write forces to interface
         if interface.is_write_data_required(dt):
-            writedata = couplingsample.eval('F_i d:x' @ ns, **arguments) * \
-                numpy.concatenate([p.weights for p in couplingsample.points])[:, numpy.newaxis]
+            writedata = couplingsample.eval('F_i qw d:x' @ ns, **arguments)
             interface.write_block_vector_data(writedataID, dataIndices, writedata)
 
         # do the coupling
