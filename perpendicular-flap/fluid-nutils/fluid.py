@@ -40,10 +40,6 @@ def main(inflow: 'inflow velocity' = 10,
     tθ = lambda f: theta * f + (1 - theta) * t0(f)
     # 1st order FD
     δt = lambda f: (f - t0(f)) / function.Argument('dt', ())
-    # extrapolation for pressure
-    tp = lambda f: (1.5 * f - 0.5 * t0(f))
-    # 2nd order FD
-    tt = lambda f: tp(δt(f))
 
     # Nutils namespace
     ns = function.Namespace()
@@ -53,7 +49,7 @@ def main(inflow: 'inflow velocity' = 10,
     ns.x0 = geom  # reference geometry
     ns.dbasis = domain.basis('std', degree=1).vector(2)
     ns.d_i = 'dbasis_ni ?meshdofs_n'
-    ns.umesh = tt(ns.d) # mesh velocity
+    ns.umesh = δt(ns.d) # mesh velocity
     ns.x_i = 'x0_i + d_i'  # moving geometry
     ns.ubasis, ns.pbasis = function.chain([domain.basis('std', degree=2).vector(2), domain.basis('std', degree=1), ])
     ns.F_i = 'ubasis_ni ?F_n'  # stress field
@@ -118,7 +114,7 @@ def main(inflow: 'inflow velocity' = 10,
     timestep = 0
     arguments = dict(lhs=numpy.zeros(len(ns.ubasis)), meshdofs=numpy.zeros(len(ns.dbasis)), dt=timestepsize)
 
-    nhist = 4 # history length required by the formulation
+    nhist = 2 # history length required by the formulation
     arguments.update((k+'0'*i, v) for k, v in tuple(arguments.items()) for i in range(nhist))
 
     while interface.is_coupling_ongoing():
