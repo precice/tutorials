@@ -69,8 +69,8 @@ def main(inflow: 'inflow velocity' = 10,
     meshdofs0 = meshdofs
     meshdofs00 = meshdofs
     meshdofs000 = meshdofs
-    meshdofs0000 = meshdofs
-    lhs0 = numpy.zeros(len(ns.ubasis))
+    lhs = numpy.zeros(len(ns.ubasis))
+    lhs0 = lhs
 
     # for visualization
     bezier = domain.sample('bezier', 2)
@@ -98,7 +98,6 @@ def main(inflow: 'inflow velocity' = 10,
 
     # initialize preCICE
     precice_dt = interface.initialize()
-    dt = min(precice_dt, timestepsize)
 
     # boundary conditions for fluid equations
     sqr = domain.boundary['wall,flap'].integral('urel_k urel_k d:x0' @ ns, degree=4)
@@ -132,7 +131,6 @@ def main(inflow: 'inflow velocity' = 10,
     # better initial guess: start from Stokes solution, comment out for comparison with other solvers
     #res_stokes = domain.integral('(ubasis_ni,j ((u_i,j + u_j,i) rho nu - p δ_ij) + pbasis_n u_k,k) d:x' @ ns, degree=4)
     #lhs0 = solver.solve_linear('lhs', res_stokes, constrain=cons, arguments=dict(meshdofs=meshdofs, meshdofs0=meshdofs0, meshdofs00=meshdofs00, meshdofs000=meshdofs000, dt=dt))
-    lhs00 = lhs0
 
     timestep = 0
 
@@ -149,8 +147,18 @@ def main(inflow: 'inflow velocity' = 10,
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
-            checkpoint = lhs0, lhs00, timestep, meshdofs0, meshdofs00, meshdofs000, meshdofs0000
+            checkpoint = timestep, lhs, lhs0, meshdofs, meshdofs0, meshdofs00, meshdofs000
             interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
+
+        # advance variables
+        timestep += 1
+        lhs00 = lhs0
+        lhs0 = lhs
+        meshdofs0000 = meshdofs000
+        meshdofs000 = meshdofs00
+        meshdofs00 = meshdofs0
+        meshdofs0 = meshdofs
+        dt = min(precice_dt, timestepsize)
 
         # solve fluid equations
         lhs = solver.newton('lhs', res, lhs0=lhs0, constrain=cons,
@@ -171,20 +179,10 @@ def main(inflow: 'inflow velocity' = 10,
 
         # do the coupling
         precice_dt = interface.advance(dt)
-        dt = min(precice_dt, timestepsize)
-
-        # advance variables
-        timestep += 1
-        lhs00 = lhs0
-        lhs0 = lhs
-        meshdofs0000 = meshdofs000
-        meshdofs000 = meshdofs00
-        meshdofs00 = meshdofs0
-        meshdofs0 = meshdofs
 
         # read checkpoint if required
         if interface.is_action_required(precice.action_read_iteration_checkpoint()):
-            lhs0, lhs00, timestep, meshdofs0, meshdofs00, meshdofs000, meshdofs0000 = checkpoint
+            timestep, lhs, lhs0, meshdofs, meshdofs0, meshdofs00, meshdofs000 = checkpoint
             interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
 
         if interface.is_time_window_complete():
