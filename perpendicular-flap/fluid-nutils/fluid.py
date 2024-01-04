@@ -135,7 +135,6 @@ def main(inflow: 'inflow velocity' = 10,
     lhs00 = lhs0
 
     timestep = 0
-    t = 0
 
     while interface.is_coupling_ongoing():
       with treelog.context(f'timestep {timestep}'):
@@ -150,7 +149,7 @@ def main(inflow: 'inflow velocity' = 10,
 
         # save checkpoint
         if interface.is_action_required(precice.action_write_iteration_checkpoint()):
-            checkpoint = lhs0, lhs00, t, timestep, meshdofs0, meshdofs00, meshdofs000, meshdofs0000
+            checkpoint = lhs0, lhs00, timestep, meshdofs0, meshdofs00, meshdofs000, meshdofs0000
             interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
         # solve fluid equations
@@ -176,7 +175,6 @@ def main(inflow: 'inflow velocity' = 10,
 
         # advance variables
         timestep += 1
-        t += dt
         lhs00 = lhs0
         lhs0 = lhs1
         meshdofs0000 = meshdofs000
@@ -186,7 +184,7 @@ def main(inflow: 'inflow velocity' = 10,
 
         # read checkpoint if required
         if interface.is_action_required(precice.action_read_iteration_checkpoint()):
-            lhs0, lhs00, t, timestep, meshdofs0, meshdofs00, meshdofs000, meshdofs0000 = checkpoint
+            lhs0, lhs00, timestep, meshdofs0, meshdofs00, meshdofs000, meshdofs0000 = checkpoint
             interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
 
         if interface.is_time_window_complete():
