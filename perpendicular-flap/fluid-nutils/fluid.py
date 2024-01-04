@@ -105,8 +105,7 @@ def main(inflow: 'inflow velocity' = 10,
     resF += tt(domain.integral('rho ubasis_ni u_i d:x' @ ns, degree=4))
     resF += domain.integral('rho ubasis_ni (u_i,j urel_j d:x)' @ ns, degree=4)
     resF += couplinginterface.sample('gauss', 4).integral('ubasis_ni F_i d:x' @ ns)
-    consF = numpy.isnan(solver.optimize('F', couplinginterface.sample('gauss', 4).integral('F_i F_i' @ ns),
-                                        droptol=1e-10))
+    consF = couplingsample.integrate((ns.ubasis**2).sum(1)) == 0
 
     # boundary conditions mesh displacements
     sqr = domain.boundary['inflow,outflow,wall'].integral('d_i d_i' @ ns, degree=2)
