@@ -153,7 +153,7 @@ def main(inflow: 'inflow velocity' = 10,
             interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
         # solve fluid equations
-        lhs1 = solver.newton('lhs', res, lhs0=lhs0, constrain=cons,
+        lhs = solver.newton('lhs', res, lhs0=lhs0, constrain=cons,
                              arguments=dict(lhs0=lhs0, dt=dt, meshdofs=meshdofs, meshdofs0=meshdofs0,
                                             meshdofs00=meshdofs00, meshdofs000=meshdofs000, meshdofs0000=meshdofs0000)
                              ).solve(tol=1e-6)
@@ -161,7 +161,7 @@ def main(inflow: 'inflow velocity' = 10,
         # write forces to interface
         if interface.is_write_data_required(dt):
             F = solver.solve_linear('F', resF, constrain=consF,
-                                    arguments=dict(lhs00=lhs00, lhs0=lhs0, lhs=lhs1, dt=dt, meshdofs=meshdofs,
+                                    arguments=dict(lhs00=lhs00, lhs0=lhs0, lhs=lhs, dt=dt, meshdofs=meshdofs,
                                                    meshdofs0=meshdofs0, meshdofs00=meshdofs00,
                                                    meshdofs000=meshdofs000, meshdofs0000=meshdofs0000))
             # writedata = couplingsample.eval(ns.F, F=F) # for stresses
@@ -176,7 +176,7 @@ def main(inflow: 'inflow velocity' = 10,
         # advance variables
         timestep += 1
         lhs00 = lhs0
-        lhs0 = lhs1
+        lhs0 = lhs
         meshdofs0000 = meshdofs000
         meshdofs000 = meshdofs00
         meshdofs00 = meshdofs0
@@ -188,7 +188,7 @@ def main(inflow: 'inflow velocity' = 10,
             interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
 
         if interface.is_time_window_complete():
-            x, u, p = bezier.eval(['x_i', 'u_i', 'p'] @ ns, lhs=lhs1, meshdofs=meshdofs, meshdofs0=meshdofs0,
+            x, u, p = bezier.eval(['x_i', 'u_i', 'p'] @ ns, lhs=lhs, meshdofs=meshdofs, meshdofs0=meshdofs0,
                                   meshdofs00=meshdofs00, meshdofs000=meshdofs000, meshdofs0000=meshdofs0000, dt=dt)
             export.triplot('velocity.jpg', x, numpy.linalg.norm(u, axis=1), tri=bezier.tri, cmap='jet')
             export.triplot('pressure.jpg', x, p, tri=bezier.tri, cmap='jet')
