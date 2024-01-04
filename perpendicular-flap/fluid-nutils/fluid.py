@@ -56,7 +56,7 @@ def main(inflow: 'inflow velocity' = 10,
     ns.x0 = geom  # reference geometry
     ns.dbasis = domain.basis('std', degree=1).vector(2)
     ns.d_i = 'dbasis_ni ?meshdofs_n'
-    ns.umesh_i = 'dbasis_ni (1.5 ?meshdofs_n - 2 ?meshdofs0_n + 0.5 ?meshdofs00_n ) / ?dt'
+    ns.umesh = tt(ns.d) # mesh velocity
     ns.x_i = 'x0_i + d_i'  # moving geometry
     ns.ubasis, ns.pbasis = function.chain([domain.basis('std', degree=2).vector(2), domain.basis('std', degree=1), ])
     ns.F_i = 'ubasis_ni ?F_n'  # stress field
