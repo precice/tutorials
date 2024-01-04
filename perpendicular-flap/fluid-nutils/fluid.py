@@ -7,11 +7,7 @@ import precice
 
 # for details on this solver see https://doi.org/10.1002/nme.6443
 
-def main(inflow: 'inflow velocity' = 10,
-         viscosity: 'kinematic viscosity' = 1.0,
-         density: 'density' = 1.0,
-         theta=0.5,
-         timestepsize=0.01):
+def main(inflow=10., viscosity=1., density=1., theta=.5, timestepsize=.01):
 
     # mesh and geometry definition
     topo, geom = mesh.rectilinear([
