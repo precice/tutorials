@@ -27,7 +27,9 @@ def main(inflow=10., viscosity=1., density=1., theta=.5, timestepsize=.01):
         topo[18:20, :10].withboundary(flap='left,right,top')
 
     couplinginterface = domain.boundary['flap']
-    couplingsample = couplinginterface.sample('gauss', degree=2)  # mesh located at Gauss points
+    couplingsample = couplinginterface.sample('uniform', degree=npoints_per_elem)
+
+    bezier = domain.sample('bezier', 2)
 
     # time approximations
     t0 = lambda f: function.replace_arguments(f, {arg: function.Argument(arg+'0', shape=shape, dtype=dtype)
@@ -53,30 +55,6 @@ def main(inflow=10., viscosity=1., density=1., theta=.5, timestepsize=.01):
     ns.u_i = 'umesh_i + urel_i'  # total velocity
     ns.p = 'pbasis_n ?lhs_n'  # pressure
     ns.qw = couplingsample.asfunction(numpy.concatenate([p.weights for p in couplingsample.points]))
-
-    # for visualization
-    bezier = domain.sample('bezier', 2)
-
-    # preCICE setup
-    configFileName = "../precice-config.xml"
-    participantName = "Fluid"
-    solverProcessIndex = 0
-    solverProcessSize = 1
-    interface = precice.Interface(participantName, configFileName, solverProcessIndex, solverProcessSize)
-
-    # define coupling meshes
-    meshName = "Fluid-Mesh"
-    meshID = interface.get_mesh_id(meshName)
-    dataIndices = interface.set_mesh_vertices(meshID, couplingsample.eval(ns.x0))
-
-    # coupling data
-    writeData = "Force"
-    readData = "Displacement"
-    writedataID = interface.get_data_id(writeData, meshID)
-    readdataID = interface.get_data_id(readData, meshID)
-
-    # initialize preCICE
-    precice_dt = interface.initialize()
 
     # boundary conditions for fluid equations
     sqr = domain.boundary['wall,flap'].integral('urel_k urel_k d:x0' @ ns, degree=4)
@@ -106,6 +84,18 @@ def main(inflow=10., viscosity=1., density=1., theta=.5, timestepsize=.01):
     # better initial guess: start from Stokes solution, comment out for comparison with other solvers
     #res_stokes = domain.integral('(ubasis_ni,j ((u_i,j + u_j,i) rho nu - p δ_ij) + pbasis_n u_k,k) d:x' @ ns, degree=4)
     #lhs0 = solver.solve_linear('lhs', res_stokes, constrain=cons, arguments=dict(meshdofs=meshdofs, meshdofs0=meshdofs0, meshdofs00=meshdofs00, meshdofs000=meshdofs000, dt=dt))
+
+    # preCICE setup
+    solverProcessIndex = 0
+    solverProcessSize = 1
+    interface = precice.Interface("Fluid", "../precice-config.xml", solverProcessIndex, solverProcessSize)
+    meshID = interface.get_mesh_id("Fluid-Mesh")
+    dataIndices = interface.set_mesh_vertices(meshID, couplingsample.eval(ns.x0))
+    writedataID = interface.get_data_id("Force", meshID)
+    readdataID = interface.get_data_id("Displacement", meshID)
+
+    # initialize preCICE
+    precice_dt = interface.initialize()
 
     timestep = 0
     arguments = dict(lhs=numpy.zeros(len(ns.ubasis)), meshdofs=numpy.zeros(len(ns.dbasis)), dt=timestepsize)
