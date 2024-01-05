@@ -7,7 +7,7 @@ import precice
 
 # for details on this solver see https://doi.org/10.1002/nme.6443
 
-def main(inflow=10., viscosity=1., density=1., theta=.5, timestepsize=.01):
+def main(inflow=10., viscosity=1., density=1., theta=.5, timestepsize=.01, npoints_per_elem=3):
 
     # mesh and geometry definition
     topo, geom = mesh.rectilinear([
@@ -54,7 +54,7 @@ def main(inflow=10., viscosity=1., density=1., theta=.5, timestepsize=.01):
     ns.urel_i = 'ubasis_ni ?lhs_n'  # relative velocity
     ns.u_i = 'umesh_i + urel_i'  # total velocity
     ns.p = 'pbasis_n ?lhs_n'  # pressure
-    ns.qw = couplingsample.asfunction(numpy.concatenate([p.weights for p in couplingsample.points]))
+    ns.qw = 1 / npoints_per_elem
 
     # boundary conditions for fluid equations
     sqr = domain.boundary['wall,flap'].integral('urel_k urel_k d:x0' @ ns, degree=4)
