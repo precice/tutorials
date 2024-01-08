@@ -99,12 +99,7 @@ def main(inflow: 'inflow velocity' = 10,
     res += tθ(domain.integral('rho ubasis_ni u_i,j urel_j d:x' @ ns, degree=4))
 
     # weak form for force computation
-    resF = domain.integral('(ubasis_ni,j (u_i,j + u_j,i) rho nu d:x)' @ ns, degree=4)
-    resF += tp(domain.integral('-ubasis_ni,j p δ_ij d:x' @ ns, degree=4))
-    resF += domain.integral('pbasis_n u_k,k d:x' @ ns, degree=4)
-    resF += tt(domain.integral('rho ubasis_ni u_i d:x' @ ns, degree=4))
-    resF += domain.integral('rho ubasis_ni (u_i,j urel_j d:x)' @ ns, degree=4)
-    resF += couplinginterface.sample('gauss', 4).integral('ubasis_ni F_i d:x' @ ns)
+    resF = res + couplinginterface.sample('gauss', 4).integral('ubasis_ni F_i d:x' @ ns)
     consF = couplingsample.integrate((ns.ubasis**2).sum(1)) == 0
 
     # boundary conditions mesh displacements
