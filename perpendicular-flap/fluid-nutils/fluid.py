@@ -59,23 +59,18 @@ def main(inflow: 'inflow velocity' = 10,
     domain = topo.withboundary(inflow='left', wall='top,bottom', outflow='right') - \
         topo[18:20, :10].withboundary(flap='left,right,top')
 
-    # Nutils namespace
-    ns = function.Namespace()
-
     # time approximations
     # TR interpolation
-    ns._functions['t'] = lambda f: theta * f + (1 - theta) * subs0(f)
-    ns._functions_nargs['t'] = 1
+    tθ = lambda f: theta * f + (1 - theta) * subs0(f)
     # 1st order FD
-    ns._functions['δt'] = lambda f: (f - subs0(f)) / dt
-    ns._functions_nargs['δt'] = 1
+    δt = lambda f: (f - subs0(f)) / dt
     # 2nd order FD
-    ns._functions['tt'] = lambda f: (1.5 * f - 2 * subs0(f) + 0.5 * subs00(f)) / dt
-    ns._functions_nargs['tt'] = 1
+    tt = lambda f: (1.5 * f - 2 * subs0(f) + 0.5 * subs00(f)) / dt
     # extrapolation for pressure
-    ns._functions['tp'] = lambda f: (1.5 * f - 0.5 * subs0(f))
-    ns._functions_nargs['tp'] = 1
+    tp = lambda f: (1.5 * f - 0.5 * subs0(f))
 
+    # Nutils namespace
+    ns = function.Namespace()
     ns.nu = viscosity
     ns.rho = density
     ns.uin = inflow
@@ -132,16 +127,16 @@ def main(inflow: 'inflow velocity' = 10,
     cons = solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons)
 
     # weak form fluid equations
-    res = domain.integral('t(ubasis_ni,j (u_i,j + u_j,i) rho nu d:x)' @ ns, degree=4)
+    res = tθ(domain.integral('ubasis_ni,j (u_i,j + u_j,i) rho nu d:x' @ ns, degree=4))
     res += domain.integral('(-ubasis_ni,j p δ_ij + pbasis_n u_k,k) d:x' @ ns, degree=4)
-    res += domain.integral('rho ubasis_ni δt(u_i d:x)' @ ns, degree=4)
-    res += domain.integral('rho ubasis_ni t(u_i,j urel_j d:x)' @ ns, degree=4)
+    res += δt(domain.integral('rho ubasis_ni u_i d:x' @ ns, degree=4))
+    res += tθ(domain.integral('rho ubasis_ni u_i,j urel_j d:x' @ ns, degree=4))
 
     # weak form for force computation
     resF = domain.integral('(ubasis_ni,j (u_i,j + u_j,i) rho nu d:x)' @ ns, degree=4)
-    resF += domain.integral('tp(-ubasis_ni,j p δ_ij d:x)' @ ns, degree=4)
+    resF += tp(domain.integral('-ubasis_ni,j p δ_ij d:x' @ ns, degree=4))
     resF += domain.integral('pbasis_n u_k,k d:x' @ ns, degree=4)
-    resF += domain.integral('rho ubasis_ni tt(u_i d:x)' @ ns, degree=4)
+    resF += tt(domain.integral('rho ubasis_ni u_i d:x' @ ns, degree=4))
     resF += domain.integral('rho ubasis_ni (u_i,j urel_j d:x)' @ ns, degree=4)
     resF += couplinginterface.sample('gauss', 4).integral('ubasis_ni F_i d:x' @ ns)
     consF = numpy.isnan(solver.optimize('F', couplinginterface.sample('gauss', 4).integral('F_i F_i' @ ns),
