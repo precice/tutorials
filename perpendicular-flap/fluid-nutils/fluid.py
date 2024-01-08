@@ -138,6 +138,7 @@ def main(inflow: 'inflow velocity' = 10,
     t = 0
 
     while interface.is_coupling_ongoing():
+      with treelog.context(f'timestep {timestep}'):
 
         # read displacements from interface
         if interface.is_read_data_available():
