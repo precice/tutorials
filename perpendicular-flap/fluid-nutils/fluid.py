@@ -33,7 +33,7 @@ def main(inflow=10., viscosity=1., density=1., theta=.5, timestepsize=.01, npoin
 
     # time approximations
     t0 = lambda f: function.replace_arguments(f, {arg: function.Argument(arg+'0', shape=shape, dtype=dtype)
-                        for arg, (shape, dtype) in f.arguments.items()})
+                        for arg, (shape, dtype) in f.arguments.items() if arg in ('lhs', 'meshdofs', 'F')})
     # TR interpolation
     tθ = lambda f: theta * f + (1 - theta) * t0(f)
     # 1st order FD
@@ -47,7 +47,7 @@ def main(inflow=10., viscosity=1., density=1., theta=.5, timestepsize=.01, npoin
     ns.x0 = geom  # reference geometry
     ns.dbasis = domain.basis('std', degree=1).vector(2)
     ns.d_i = 'dbasis_ni ?meshdofs_n'
-    ns.umesh = δt(ns.d) # mesh velocity
+    ns.umesh_i = 'dbasis_ni ?umesh_n' # mesh velocity
     ns.x_i = 'x0_i + d_i'  # moving geometry
     ns.ubasis, ns.pbasis = function.chain([domain.basis('std', degree=2).vector(2), domain.basis('std', degree=1), ])
     ns.F_i = 'ubasis_ni ?F_n'  # stress field
@@ -98,10 +98,7 @@ def main(inflow=10., viscosity=1., density=1., theta=.5, timestepsize=.01, npoin
     precice_dt = interface.initialize()
 
     timestep = 0
-    arguments = dict(lhs=numpy.zeros(len(ns.ubasis)), meshdofs=numpy.zeros(len(ns.dbasis)), dt=timestepsize)
-
-    nhist = 2 # history length required by the formulation
-    arguments.update((k+'0'*i, v) for k, v in tuple(arguments.items()) for i in range(nhist))
+    arguments = dict(lhs=numpy.zeros(len(ns.ubasis)), meshdofs=numpy.zeros(len(ns.dbasis)))
 
     while interface.is_coupling_ongoing():
       with treelog.context(f'timestep {timestep}'):
@@ -120,9 +117,10 @@ def main(inflow=10., viscosity=1., density=1., theta=.5, timestepsize=.01, npoin
 
         # advance variables
         timestep += 1
-        arguments = {k+'0'*(i+1): arguments[k+'0'*i] for k in ('lhs', 'meshdofs', 'dt') for i in range(nhist)}
+        arguments = {k+'0': arguments[k] for k in ('lhs', 'meshdofs')}
         arguments['dt'] = dt = min(precice_dt, timestepsize)
         arguments['meshdofs'] = solver.optimize('meshdofs', meshsqr, constrain=meshcons) # solve mesh deformation
+        arguments['umesh'] = (arguments['meshdofs'] - arguments['meshdofs0']) / dt
         arguments['lhs'] = arguments['lhs0'] # initial guess for newton
         arguments['lhs'] = solver.newton('lhs', res, arguments=arguments, constrain=cons).solve(tol=1e-6) # solve fluid equations
         arguments['F'] = solver.solve_linear('F', resF, constrain=consF, arguments=arguments)
