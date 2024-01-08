@@ -46,6 +46,7 @@ jobs:
     - name: Check out Tutorials for systest
       uses: actions/checkout@v4
       with:
+        repository: precice/tutorials
         ref: ${{ inputs.systests_branch }}
         lfs: true
         fetch-depth: 0
