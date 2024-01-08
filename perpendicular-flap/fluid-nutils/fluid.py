@@ -7,11 +7,6 @@ import precice
 
 # for details on this solver see https://doi.org/10.1002/nme.6443
 
-def subs0(f):
-    'helper function to shift variables by one timestep'
-    return function.replace_arguments(f, {arg: function.Argument(arg+'0', shape=shape, dtype=dtype) for arg, (shape, dtype) in f.arguments.items() if arg != 'dt'})
-
-
 def main(inflow: 'inflow velocity' = 10,
          viscosity: 'kinematic viscosity' = 1.0,
          density: 'density' = 1.0,
@@ -42,14 +37,16 @@ def main(inflow: 'inflow velocity' = 10,
         topo[18:20, :10].withboundary(flap='left,right,top')
 
     # time approximations
+    t0 = lambda f: function.replace_arguments(f, {arg: function.Argument(arg+'0', shape=shape, dtype=dtype)
+                        for arg, (shape, dtype) in f.arguments.items() if arg != 'dt'})
     # TR interpolation
-    tθ = lambda f: theta * f + (1 - theta) * subs0(f)
+    tθ = lambda f: theta * f + (1 - theta) * t0(f)
     # 1st order FD
-    δt = lambda f: (f - subs0(f)) / dt
+    δt = lambda f: (f - t0(f)) / dt
     # 2nd order FD
-    tt = lambda f: (1.5 * f - 2 * subs0(f) + 0.5 * subs0(subs0(f))) / dt
+    tt = lambda f: (1.5 * f - 2 * t0(f) + 0.5 * t0(t0(f))) / dt
     # extrapolation for pressure
-    tp = lambda f: (1.5 * f - 0.5 * subs0(f))
+    tp = lambda f: (1.5 * f - 0.5 * t0(f))
 
     # Nutils namespace
     ns = function.Namespace()
