@@ -43,17 +43,7 @@ def b_splines(precice, degree, dt):
     return b_splns
 
 
-def weak_lhs(u, v, k):
-    """
-    Defines the weak left hand side of a given problem
-    :param u: trial function
-    :param v: test function
-    :param k: function of function space for stages of RK methods
-    """
-    return inner(k, v) * dx + inner(grad(u), grad(v)) * dx
-
-
-def get_variational_problem(v, k, tsm, f, dt, initial_condition):
+def get_variational_problem(v, k, tsm, fs, dt, initial_condition):
     """
     Following https://doi.org/10.1145/3466168, this function creates for each stage of the time stepping scheme
     (Runge-Kutta methods)
@@ -67,7 +57,7 @@ def get_variational_problem(v, k, tsm, f, dt, initial_condition):
     :param v: test function
     :param k: trial function
     :param tsm: time stepping method which should be used
-    :param f: rhs of the problem
+    :param fs: rhs of the problem
     :param dt: time step (must not be a float but a fenics expression! e.g. Constant(0))
     :param initial_condition: function which defined the inital value/initial condition
     :return: returns variational problem (F=0) for the given parameters
@@ -75,20 +65,15 @@ def get_variational_problem(v, k, tsm, f, dt, initial_condition):
     num_stages = tsm.num_stages
     ks = split(k)
     vs = split(v)
-    u = num_stages * [None]
+    us = num_stages * [None]
     for i in range(num_stages):
-        uhelp = initial_condition
+        us[i] = initial_condition
         for j in range(num_stages):
-            uhelp = uhelp + tsm.A[i][j] * dt * ks[j]
-        u[i] = uhelp
-    rh = 0
-    for i in range(num_stages):
-        rh = rh + f[i] * vs[i] * dx
+            us[i] += tsm.A[i][j] * dt * ks[j]
 
-    # Assemble weak form from lhs and rhs
+    # Assemble weak form
     F = 0
     for i in range(num_stages):
         # cf. https://doi.org/10.1145/3466168 p.5 equation 14
-        F = F + weak_lhs(v=vs[i], u=u[i], k=ks[i])
-    F = F - rh
+        F += inner(ks[i], vs[i]) * dx + inner(grad(us[i]), grad(vs[i])) * dx - fs[i] * vs[i] * dx
     return F
