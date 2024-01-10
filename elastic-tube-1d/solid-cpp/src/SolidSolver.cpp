@@ -1,7 +1,7 @@
 #include "SolidSolver.h"
 #include <iostream>
 #include <stdlib.h>
-#include "precice/SolverInterface.hpp"
+#include "precice/precice.hpp"
 
 int main(int argc, char **argv)
 {
@@ -24,13 +24,13 @@ int main(int argc, char **argv)
 
   const std::string solverName = "Solid";
 
-  SolverInterface interface(solverName, configFileName, 0, 1);
+  precice::Participant interface(solverName, configFileName, 0, 1);
   std::cout << "preCICE configured..." << std::endl;
 
-  int dimensions           = interface.getDimensions();
   auto meshName               = "Solid-Nodes-Mesh";
   auto crossSectionLengthName = "CrossSectionLength";
   auto pressureName           = "Pressure";
+  const int dimensions        = interface.getMeshDimensions(meshName);
 
   std::vector<double> pressure(chunkLength, 0.0);
   std::vector<double> crossSectionLength(chunkLength, 1.0);
@@ -43,24 +43,25 @@ int main(int argc, char **argv)
   }
 
   std::vector<int> vertexIDs(chunkLength);
-  interface.setMeshVertices(meshName, chunkLength, grid.data(), vertexIDs.data());
+  interface.setMeshVertices(meshName, grid, vertexIDs);
 
   if (interface.requiresInitialData()) {
-    interface.writeBlockScalarData(meshName, crossSectionLengthName, chunkLength, vertexIDs.data(), crossSectionLength.data());
+    interface.writeData(meshName, crossSectionLengthName, vertexIDs, crossSectionLength);
   }
 
   std::cout << "Initialize preCICE..." << std::endl;
-  double dt = interface.initialize();
+  interface.initialize();
 
   while (interface.isCouplingOngoing()) {
     if (interface.requiresWritingCheckpoint()) {
     }
+    double dt = interface.getMaxTimeStepSize();
 
-    interface.readBlockScalarData(meshName, pressureName, chunkLength, vertexIDs.data(), pressure.data());
+    interface.readData(meshName, pressureName, vertexIDs, dt, pressure);
 
     SolidComputeSolution(chunkLength, pressure.data(), crossSectionLength.data()); // Call Solver
 
-    interface.writeBlockScalarData(meshName, crossSectionLengthName, chunkLength, vertexIDs.data(), crossSectionLength.data());
+    interface.writeData(meshName, crossSectionLengthName, vertexIDs, crossSectionLength);
 
     interface.advance(dt);
 
@@ -69,6 +70,5 @@ int main(int argc, char **argv)
   }
 
   std::cout << "Exiting SolidSolver" << std::endl;
-  interface.finalize();
   return 0;
 }
