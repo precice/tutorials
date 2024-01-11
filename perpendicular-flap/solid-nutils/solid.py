@@ -67,20 +67,20 @@ def main(young=4e6, density=3e3, poisson=0.3, nelems=2, solver_dt=0.01, npoints_
 
     while participant.is_coupling_ongoing():
         with treelog.context(f'timestep {timestep}'):
-        
+   
             # save checkpoint
             if participant.requires_writing_checkpoint():
                 checkpoint = timestep, arguments
-        
+
             precice_dt = participant.get_max_time_step_size()
             dt = min(precice_dt, solver_dt)
-            
+  
             # read forces from participant at the end of the timestep
             force = participant.read_data(mesh_name, read_data_name, vertex_ids, dt)
 
             # advance variables
             timestep += 1
-            
+  
             arguments = dict(dt=dt, u0=arguments['u'], v0=arguments['v'], F=force)
             arguments = solver.solve_linear('u:testu,v:testv', res, arguments=arguments, constrain=cons)
 
