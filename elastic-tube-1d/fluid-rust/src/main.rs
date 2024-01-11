@@ -372,7 +372,7 @@ fn main() -> ExitCode {
             velocity_old.copy_from_slice(&velocity[..]);
             cross_section_length_old.copy_from_slice(&cross_section_length[..]);
 
-            let filename = format!("./output/out_fluid{out_counter}.vtk");
+            let filename = format!("./output/out_fluid_{out_counter}.vtk");
             println!("writing timestep at t={} to {}", t, filename);
             write_vtk(
                 &filename,
