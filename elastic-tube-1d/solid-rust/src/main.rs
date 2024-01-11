@@ -28,6 +28,7 @@ fn main() -> ExitCode {
 
     const DOMAIN_SIZE: usize = 100;
     const CHUNK_SIZE: usize = DOMAIN_SIZE + 1;
+    const TUBE_LENGTH: f64 = 10.0;
 
     let mut participant = precice::Participant::new("Solid", &config, 0, 1);
 
@@ -44,11 +45,9 @@ fn main() -> ExitCode {
     let grid_size = CHUNK_SIZE * dimensions as usize;
     let grid: Vec<f64> = {
         let mut v: Vec<f64> = vec![0_f64; grid_size];
+        const DX : f64 = TUBE_LENGTH / DOMAIN_SIZE as f64;
         for i in 0..CHUNK_SIZE - 1 {
-            for j in 0..(dimensions as usize) - 1 {
-                let idx = i * dimensions as usize + j;
-                v[idx] = (i * (1 - j)) as f64;
-            }
+            v[i * dimensions as usize] = DX * i as f64;
         }
         v
     };
