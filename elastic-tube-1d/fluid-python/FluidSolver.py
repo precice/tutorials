@@ -106,7 +106,7 @@ t = 0
 
 print("Fluid: init precice...")
 # preCICE defines timestep size of solver via precice-config.xml
-precice_dt = interface.initialize()
+interface.initialize()
 
 crossSectionLength = interface.read_data(meshName, crossSectionLengthName, vertexIDs, 0)
 
