@@ -90,9 +90,7 @@ if plotting_mode == config.PlottingModes.VIDEO:
         writer = FFMpegWriter(fps=15, metadata=metadata)
         writer.setup(fig, "writer_test.mp4", 100)
 
-vertexIDs = np.zeros(N + 1)
 grid = np.zeros([N + 1, dimensions])
-
 grid[:, 0] = np.linspace(0, L, N + 1)  # x component
 grid[:, 1] = 0  # y component, leave blank
 
@@ -118,19 +116,19 @@ velocity_old = velocity_in(
 print(crossSectionLength_old)
 
 time_it = 0
-precice_dt = interface.get_max_time_step_size()
 while interface.is_coupling_ongoing():
     # When an implicit coupling scheme is used, checkpointing is required
     if interface.requires_writing_checkpoint():
         pass
 
+    precice_dt = interface.get_max_time_step_size()
+
+    crossSectionLength = interface.read_data(meshName, crossSectionLengthName, vertexIDs, precice_dt)
     velocity, pressure, success = perform_partitioned_implicit_euler_step(
         velocity_old, pressure_old, crossSectionLength_old, crossSectionLength, dx, precice_dt, velocity_in(
             t + precice_dt), custom_coupling=True)
     interface.write_data(meshName, pressureName, vertexIDs, pressure)
     interface.advance(precice_dt)
-    precice_dt = interface.get_max_time_step_size()
-    crossSectionLength = interface.read_data(meshName, crossSectionLengthName, vertexIDs, precice_dt)
 
     # i.e. not yet converged
     if interface.requires_reading_checkpoint():
