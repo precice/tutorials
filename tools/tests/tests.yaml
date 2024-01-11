@@ -51,7 +51,7 @@ test_suites:
           - fluid-cpp
           - solid-python
         reference_result: ./elastic-tube-1d/reference-data/fluid-cpp_solid-python.tar.gz
-  release_tests:
+  release_test:
     tutorials:
       - path: elastic-tube-1d
         case_combination:
