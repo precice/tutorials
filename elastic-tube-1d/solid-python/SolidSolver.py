@@ -49,9 +49,8 @@ dimensions = interface.get_mesh_dimensions(meshName)
 pressure = p0 * np.ones(N + 1)
 crossSectionLength = a0 * np.ones(N + 1)
 
-vertexIDs = np.zeros(N + 1)
+# Define mesh coordinates and register coordinates
 grid = np.zeros([N + 1, dimensions])
-
 grid[:, 0] = np.linspace(0, L, N + 1)  # x component
 grid[:, 1] = 0  # np.linspace(0, config.L, N+1)  # y component, leave blank
 
@@ -60,33 +59,37 @@ vertexIDs = interface.set_mesh_vertices(meshName, grid)
 if interface.requires_initial_data():
     interface.write_data(meshName, crossSectionLengthName, vertexIDs, crossSectionLength)
 
-t = 0
-
 print("Solid: init precice...")
 
-# preCICE defines timestep size of solver via precice-config.xml
 interface.initialize()
 
+# Calculate initial crossSection and local pressure from initial received pressure
 pressure = interface.read_data(meshName, pressureName, vertexIDs, 0)
 
 crossSection0 = crossSection0(pressure.shape[0] - 1)
 pressure0 = p0 * np.ones_like(pressure)
+
+
+def solve(pressure):
+    return crossSection0 * ( (pressure0 - 2.0 * c_mk ** 2) ** 2 / (pressure - 2.0 * c_mk ** 2) ** 2)
+
 
 while interface.is_coupling_ongoing():
     # When an implicit coupling scheme is used, checkpointing is required
     if interface.requires_writing_checkpoint():
         pass
 
-    crossSectionLength = crossSection0 * (
-        (pressure0 - 2.0 * c_mk ** 2) ** 2 / (pressure - 2.0 * c_mk ** 2) ** 2)
+    precice_dt = interface.get_max_time_step_size()
 
+    # Read data, solve timestep, and write data
+    pressure = interface.read_data(meshName, pressureName, vertexIDs, precice_dt)
+    crossSectionLength = solve(pressure)
     interface.write_data(meshName, crossSectionLengthName, vertexIDs, crossSectionLength)
-    interface.advance(interface.get_max_time_step_size())
-    pressure = interface.read_data(meshName, pressureName, vertexIDs, interface.get_max_time_step_size())
+
+    # Advance the coupling
+    interface.advance(precice_dt)
 
     if interface.requires_reading_checkpoint():
         pass
-    else:
-        t += interface.get_max_time_step_size()
 
 print("Exiting SolidSolver")
