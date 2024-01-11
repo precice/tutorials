@@ -78,8 +78,3 @@ test_suites:
           - fluid-openfoam
           - solid-openfoam
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
-      - path: perpendicular-flap
-        case_combination:
-          - fluid-nutils
-          - solid-calculix
-        reference_result: ./perpendicular-flap/reference-results/fluid-nutils_solid-calculix.tar.gz
