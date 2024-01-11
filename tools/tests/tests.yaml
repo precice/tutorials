@@ -51,3 +51,35 @@ test_suites:
           - fluid-cpp
           - solid-python
         reference_result: ./elastic-tube-1d/reference-data/fluid-cpp_solid-python.tar.gz
+  release_tests:
+    tutorials:
+      - path: elastic-tube-1d
+        case_combination:
+          - fluid-cpp
+          - solid-python
+        reference_result: ./elastic-tube-1d/reference-data/fluid-cpp_solid-python.tar.gz
+      - path: elastic-tube-3d
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        reference_result: ./elastic-tube-3d/reference-data/fluid-openfoam_solid-calculix.tar.gz
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-nutils
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-nutils.tar.gz
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-fenics
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-nutils
+          - solid-calculix
+        reference_result: ./perpendicular-flap/reference-results/fluid-nutils_solid-calculix.tar.gz
