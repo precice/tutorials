@@ -106,7 +106,8 @@ print("Fluid: init precice...")
 # preCICE defines timestep size of solver via precice-config.xml
 interface.initialize()
 
-crossSectionLength = interface.read_data(meshName, crossSectionLengthName, vertexIDs, 0)
+crossSectionLength = interface.read_data(
+    meshName, crossSectionLengthName, vertexIDs, 0)
 
 crossSectionLength_old = np.copy(crossSectionLength)
 # initialize such that mass conservation is fulfilled
@@ -123,7 +124,8 @@ while interface.is_coupling_ongoing():
 
     precice_dt = interface.get_max_time_step_size()
 
-    crossSectionLength = interface.read_data(meshName, crossSectionLengthName, vertexIDs, precice_dt)
+    crossSectionLength = interface.read_data(
+        meshName, crossSectionLengthName, vertexIDs, precice_dt)
     velocity, pressure, success = perform_partitioned_implicit_euler_step(
         velocity_old, pressure_old, crossSectionLength_old, crossSectionLength, dx, precice_dt, velocity_in(
             t + precice_dt), custom_coupling=True)
