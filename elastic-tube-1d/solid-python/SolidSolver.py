@@ -57,7 +57,8 @@ grid[:, 1] = 0  # np.linspace(0, config.L, N+1)  # y component, leave blank
 vertexIDs = interface.set_mesh_vertices(meshName, grid)
 
 if interface.requires_initial_data():
-    interface.write_data(meshName, crossSectionLengthName, vertexIDs, crossSectionLength)
+    interface.write_data(meshName, crossSectionLengthName,
+                         vertexIDs, crossSectionLength)
 
 print("Solid: init precice...")
 
@@ -71,7 +72,7 @@ pressure0 = p0 * np.ones_like(pressure)
 
 
 def solve(pressure):
-    return crossSection0 * ( (pressure0 - 2.0 * c_mk ** 2) ** 2 / (pressure - 2.0 * c_mk ** 2) ** 2)
+    return crossSection0 * ((pressure0 - 2.0 * c_mk ** 2) ** 2 / (pressure - 2.0 * c_mk ** 2) ** 2)
 
 
 while interface.is_coupling_ongoing():
@@ -82,9 +83,11 @@ while interface.is_coupling_ongoing():
     precice_dt = interface.get_max_time_step_size()
 
     # Read data, solve timestep, and write data
-    pressure = interface.read_data(meshName, pressureName, vertexIDs, precice_dt)
+    pressure = interface.read_data(
+        meshName, pressureName, vertexIDs, precice_dt)
     crossSectionLength = solve(pressure)
-    interface.write_data(meshName, crossSectionLengthName, vertexIDs, crossSectionLength)
+    interface.write_data(meshName, crossSectionLengthName,
+                         vertexIDs, crossSectionLength)
 
     # Advance the coupling
     interface.advance(precice_dt)
