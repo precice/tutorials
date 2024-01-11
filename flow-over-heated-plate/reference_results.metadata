@@ -11,9 +11,9 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-nutils.tar.gz | 2023-12-14 16:20:26 | bb432426dc3a737fd79704a0baf5dab405478cdc4ee160b12520c8f8368c5231 |
-| fluid-openfoam_solid-fenics.tar.gz | 2023-12-14 16:20:26 | 6e204c5ef1ed001981d0b432c12fd93920ecef053fdac644c98118323eb25d91 |
-| fluid-openfoam_solid-openfoam.tar.gz | 2023-12-14 16:20:26 | cb0212291630004bdc9acf0cdbaed4e952fb1155cc4175f22bac714fb16f5130 |
+| fluid-openfoam_solid-fenics.tar.gz | 2024-01-11 20:52:11 | ec027fafb234e7e6277a781c96d0b2a6d5048f912bb106d174b6d8817b3a49fd |
+| fluid-openfoam_solid-nutils.tar.gz | 2024-01-11 20:52:11 | 6bd5abefb23c900951768dec0ae38cc0be14f0344422560888ebe52481575869 |
+| fluid-openfoam_solid-openfoam.tar.gz | 2024-01-11 20:52:11 | 844a54543a5c81ca03c1f7ffb0739cf5125357237bcdb79b60ab957b919e425d |
 
 ## List of arguments used to generate the files
 
@@ -32,7 +32,7 @@ We also include some information on the machine used to generate them
 
 ### uname -a
 
-Linux precice-tests 5.15.0-89-generic #99-Ubuntu SMP Mon Oct 30 20:42:41 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
+Linux precice-tests 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
 
 
 ### lscpu
