@@ -16,8 +16,9 @@ int main(int argc, char **argv)
   }
 
   std::string configFileName(argv[1]);
-  int         domainSize  = 100; // N
-  int         chunkLength = domainSize + 1;
+  const int         domainSize  = 100; // N
+  const int         chunkLength = domainSize + 1;
+  const double      tubeLength = 10;
 
   std::cout << "N: " << domainSize << std::endl;
   std::cout << "inputs: " << argc << std::endl;
@@ -34,12 +35,11 @@ int main(int argc, char **argv)
 
   std::vector<double> pressure(chunkLength, 0.0);
   std::vector<double> crossSectionLength(chunkLength, 1.0);
-  std::vector<double> grid(dimensions * chunkLength);
 
-  for (int i = 0; i < chunkLength; i++) {
-    for (int j = 0; j < dimensions; j++) {
-      grid[i * dimensions + j] = i * (1 - j);
-    }
+  std::vector<double> grid(dimensions * chunkLength, 0.0);
+  const double dx = tubeLength/domainSize;
+  for (int i = 0; i < chunkLength; ++i) {
+    grid[i * dimensions] = dx*i;
   }
 
   std::vector<int> vertexIDs(chunkLength);
