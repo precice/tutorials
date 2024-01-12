@@ -18,11 +18,11 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 
 ## Installation
 
-1. Get and install preCICE. For Ubuntu 20.04 (Focal Fossa), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
+1. Get and install preCICE. For Ubuntu 22.04 (Jammy Jellyfish), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v2.5.0/libprecice2_2.5.0_focal.deb
-    sudo apt install ./libprecice2_2.5.0_focal.deb
+    wget https://github.com/precice/precice/releases/download/v2.5.0/libprecice2_2.5.0_jammy.deb
+    sudo apt install ./libprecice2_2.5.0_jammy.deb
     ```
 
     - Are you using something else? Just pick what suits you best on [this overview page](https://precice.org/installation-overview.html).

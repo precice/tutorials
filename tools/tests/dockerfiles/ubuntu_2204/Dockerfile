@@ -82,8 +82,9 @@ ARG PYTHON_BINDINGS_REF
 USER precice
 WORKDIR /home/precice
 # Builds the precice python bindings for python3
-RUN pip3 install --user git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF}
-
+# Installs also matplotlib as its needed for the elastic-tube 1d fluid-python participant.
+RUN pip3 install --user git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
+    pip3 install --user matplotlib 
 
 FROM precice_dependecies as fenics_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local

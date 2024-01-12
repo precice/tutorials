@@ -13,7 +13,7 @@ clean_tutorial() {
         rm -rfv ./precice-run/
 
         # Run clean.sh if it exists in the base tutorial directory
-        if test "clean.sh"; then
+        if test -f "clean.sh"; then
             ./clean.sh
         fi
 
