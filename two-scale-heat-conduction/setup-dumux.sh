@@ -1,3 +1,6 @@
+#!/bin/sh
+set -e -u
+
 # This script sets up a DUNE environment in the working directory to solve the two-scale-heat-conduction problem with DuMuX on one or both scales
 
 # Clean any old leftover dumux or dune folders

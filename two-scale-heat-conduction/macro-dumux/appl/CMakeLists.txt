@@ -5,6 +5,3 @@ target_compile_definitions(macro_dumux PUBLIC TYPETAG=OnePNIConductionCCTpfa)
 
 # add a symlink for each input file
 add_input_file_links()
-
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/clean-example.sh
-        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
