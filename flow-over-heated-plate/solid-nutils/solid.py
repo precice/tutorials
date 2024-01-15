@@ -55,8 +55,6 @@ def main():
     dt = 0.01
 
     participant.initialize()
-    precice_dt = participant.get_max_time_step_size()
-    dt = min(dt, precice_dt)
 
     # set u = uwall as initial condition and visualize
     sqr = domain.integral('(u - uwall)^2' @ ns, degree=2)
@@ -81,6 +79,7 @@ def main():
             timestep_checkpoint = timestep
 
         # potentially adjust non-matching timestep sizes
+        precice_dt = participant.get_max_time_step_size()
         dt = min(dt, precice_dt)
 
         # solve nutils timestep
@@ -93,7 +92,6 @@ def main():
 
         # do the coupling
         participant.advance(dt)
-        precice_dt = participant.get_max_time_step_size()
 
         # advance variables
         timestep += 1
