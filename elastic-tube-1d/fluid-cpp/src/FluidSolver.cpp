@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include "precice/SolverInterface.hpp"
+#include "precice/precice.hpp"
 
 using namespace precice;
 
@@ -29,13 +29,13 @@ int main(int argc, char **argv)
 
   std::string outputFilePrefix = "./output/out_fluid"; //extra
 
-  SolverInterface interface(solverName, configFileName, 0, 1);
+  precice::Participant interface(solverName, configFileName, 0, 1);
   std::cout << "preCICE configured..." << std::endl;
 
-  const int dimensions           = interface.getDimensions();
   auto meshName               = "Fluid-Nodes-Mesh";
   auto pressureName           = "Pressure";
   auto crossSectionLengthName = "CrossSectionLength";
+  const int dimensions        = interface.getMeshDimensions(meshName);
 
   std::vector<int>    vertexIDs(chunkLength);
 
@@ -69,17 +69,17 @@ int main(int argc, char **argv)
     }
   }
 
-  interface.setMeshVertices(meshName, chunkLength, grid.data(), vertexIDs.data());
+  interface.setMeshVertices(meshName, grid, vertexIDs);
 
   if (interface.requiresInitialData()) {
-    interface.writeBlockScalarData(meshName, pressureName, chunkLength, vertexIDs.data(), pressure.data());
+    interface.writeData(meshName, pressureName, vertexIDs, pressure);
   }
 
   double t  = 0.0;
   std::cout << "Initialize preCICE..." << std::endl;
-  double dt = interface.initialize();
+  interface.initialize();
 
-  interface.readBlockScalarData(meshName, crossSectionLengthName, chunkLength, vertexIDs.data(), crossSectionLength.data());
+  interface.readData(meshName, crossSectionLengthName, vertexIDs, 0, crossSectionLength);
 
   std::copy(crossSectionLength.begin(), crossSectionLength.end(), crossSectionLength_old.begin());
 
@@ -93,6 +93,8 @@ int main(int argc, char **argv)
   while (interface.isCouplingOngoing()) {
     if (interface.requiresWritingCheckpoint()) {
     }
+
+    auto dt = interface.getMaxTimeStepSize();
     
     fluidComputeSolutionSerial(
         // values from last time window
@@ -107,12 +109,11 @@ int main(int argc, char **argv)
         velocity.data(),
         pressure.data());
     
-    interface.writeBlockScalarData(meshName, pressureName, chunkLength, vertexIDs.data(), pressure.data());
+    interface.writeData(meshName, pressureName, vertexIDs, pressure);
     
     interface.advance(dt);
 
-    //interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
-    interface.readBlockScalarData(meshName,crossSectionLengthName, chunkLength, vertexIDs.data(), crossSectionLength.data());
+    interface.readData(meshName,crossSectionLengthName, vertexIDs, interface.getMaxTimeStepSize(),  crossSectionLength);
 
     if (interface.requiresReadingCheckpoint()) {
     } else {
@@ -128,6 +129,5 @@ int main(int argc, char **argv)
   }
 
   std::cout << "Exiting FluidSolver" << std::endl;
-  interface.finalize();
   return 0;
 }
