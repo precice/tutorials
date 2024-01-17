@@ -82,7 +82,6 @@ def main():
         sqr = coupling_sample.integral((ns.u - temperature_function)**2)
         cons = solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons0)
 
-
         # solve nutils timestep
         lhs = solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt))
 
