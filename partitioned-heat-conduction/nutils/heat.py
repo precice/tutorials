@@ -100,8 +100,6 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
         precice_write(coupling_sample.eval(0.))
 
     participant.initialize()
-    precice_dt = participant.get_max_time_step_size()
-    dt = min(timestep, precice_dt)
 
     t = 0.
     istep = 0
@@ -128,17 +126,17 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
         if not participant.is_coupling_ongoing():
             break
 
-        # read data from participant
-        readdata = precice_read(dt)
-
         # save checkpoint
         if participant.requires_writing_checkpoint():
             checkpoint = lhs, t, istep
 
         # prepare next timestep
+        precice_dt = participant.get_max_time_step_size()
+        dt = min(timestep, precice_dt)
         lhs0 = lhs
         istep += 1
-        dt = min(timestep, precice_dt)
+        # read data from participant
+        readdata = precice_read(dt)
         t += dt
 
         # update (time-dependent) boundary condition
@@ -168,8 +166,6 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
 
         # do the coupling
         participant.advance(dt)
-        precice_dt = participant.get_max_time_step_size()
-        dt = min(timestep, precice_dt)
 
         # read checkpoint if required
         if participant.requires_reading_checkpoint():
