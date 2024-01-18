@@ -120,6 +120,8 @@ def main(inflow: 'inflow velocity' = 10,
 
     # initialize preCICE
     participant.initialize()
+    precice_dt = participant.get_max_time_step_size()
+    dt = min(precice_dt, timestepsize)
 
     # boundary conditions for fluid equations
     sqr = domain.boundary['wall,flap'].integral('urel_k urel_k d:x0' @ ns, degree=4)

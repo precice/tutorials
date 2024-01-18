@@ -59,6 +59,9 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
     participant.set_mesh_access_region(mesh_name_write, [.9, 1.1, -.1, 1.1])
 
     participant.initialize()
+    precice_dt = participant.get_max_time_step_size()
+    solver_dt = timestep
+    dt = min(precice_dt, solver_dt)
 
     vertex_ids_write, coords = participant.get_mesh_vertex_ids_and_coordinates(mesh_name_write)
     write_sample = domain.locate(ns.x, coords, eps=1e-10, tol=1e-10)
@@ -106,7 +109,7 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
 
         # prepare next timestep
         precice_dt = participant.get_max_time_step_size()
-        dt = min(timestep, precice_dt)
+        dt = min(precice_dt, solver_dt)
         lhs0 = lhs
         istep += 1
         t += dt

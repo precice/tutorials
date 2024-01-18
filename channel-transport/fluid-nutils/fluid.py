@@ -69,6 +69,8 @@ def main():
 
     timestep = 0
     solver_dt = 0.005
+    precice_dt = participant.get_max_time_step_size()
+    dt = min(precice_dt, solver_dt)
 
     state = solver.solve_linear(("u", "p"), (ures, pres), constrain=cons)  # initial condition
 

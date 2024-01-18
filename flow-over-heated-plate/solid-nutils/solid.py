@@ -56,6 +56,9 @@ def main():
 
     participant.initialize()
 
+    precice_dt = participant.get_max_time_step_size()
+    dt = min(precice_dt, solver_dt)
+
     # set u = uwall as initial condition and visualize
     sqr = domain.integral('(u - uwall)^2' @ ns, degree=2)
     lhs0 = solver.optimize('lhs', sqr)

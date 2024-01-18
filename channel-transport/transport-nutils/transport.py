@@ -65,6 +65,8 @@ def main():
 
     timestep = 0
     solver_dt = 0.005
+    precice_dt = participant.get_max_time_step_size()
+    dt = min(precice_dt, solver_dt)
 
     # set blob as initial condition
     sqr = domain.integral("(u - uinit)^2" @ ns, degree=2)
