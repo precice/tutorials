@@ -1,7 +1,7 @@
 #include <cmath>
 #include <iostream>
-#include <vector>
 #include <string>
+#include <vector>
 // Include precice
 #include <precice/precice.hpp>
 
@@ -10,25 +10,30 @@ using Vector = std::vector<double>;
 struct DataContainer {
   void save_old_state(const Vector &vertices,
                       const double &theta,
-                      const double &theta_dot)
+                      const double &theta_dot,
+                      const double &time)
   {
     old_vertices  = vertices;
     old_theta     = theta;
     old_theta_dot = theta_dot;
+    old_time      = time;
   }
 
   void reload_old_state(Vector &vertices,
                         double &theta,
-                        double &theta_dot) const
+                        double &theta_dot,
+                        double &time) const
   {
     vertices  = old_vertices;
     theta     = old_theta;
     theta_dot = old_theta_dot;
+    time      = old_time;
   }
 
   Vector old_vertices;
   double old_theta;
   double old_theta_dot;
+  double old_time;
 };
 
 class Solver {
@@ -41,9 +46,9 @@ public:
   void
   solve(const Vector &forces,
         const Vector &initial_vertices,
-        Vector &      vertices,
-        double &      theta,
-        double &      theta_dot,
+        Vector       &vertices,
+        double       &theta,
+        double       &theta_dot,
         const double  spring_constant,
         const double  delta_t) const
   {
@@ -95,7 +100,7 @@ int main()
   // Mesh configuration
   constexpr int vertical_refinement   = 3;
   constexpr int horizontal_refinement = 6;
-  // Rotation centre is at (0,0)
+  // Rotation center is at (0,0)
   constexpr double length = 0.2;
   constexpr double height = 0.02;
 
@@ -110,7 +115,7 @@ int main()
   // Derived quantities
   constexpr int n_vertical_nodes   = vertical_refinement * 2 + 1;
   constexpr int n_horizontal_nodes = horizontal_refinement * 2 + 1;
-  // Substract shared nodes at each rigid body corner
+  // Subtract shared nodes at each rigid body corner
   constexpr int    n_nodes = (n_vertical_nodes + n_horizontal_nodes - 2) * 2;
   constexpr double mass    = length * height * density;
   // The moment of inertia is computed according to the rigid body configuration:
@@ -126,7 +131,7 @@ int main()
                                /*comm_rank*/ 0,
                                /*comm_size*/ 1);
 
-  const int dim      = precice.getMeshDimensions(mesh_name);
+  const int dim = precice.getMeshDimensions(mesh_name);
 
   // Set up data structures
   Vector           forces(dim * n_nodes);
@@ -180,14 +185,23 @@ int main()
                           vertices,
                           vertex_ids);
 
-  // initialize precice
-  precice.initialize();
-  double dt = precice.getMaxTimeStepSize();
+  // we don't set any mesh connectivity here
 
   // Compute the absolute displacement between the current vertices and the
   // initial configuration. Here, this is mostly done for consistency reasons.
   for (uint i = 0; i < displacement.size(); ++i)
     displacement[i] = vertices[i] - initial_vertices[i];
+
+  // Not required by the configuration, but we do it here for completeness
+  if (precice.requiresInitialData()) {
+    precice.writeData(mesh_name,
+                      data_write_name,
+                      vertex_ids,
+                      displacement);
+  }
+
+  // initialize precice
+  precice.initialize();
 
   // Set up a struct in order to store time dependent values
   DataContainer data_container;
@@ -198,9 +212,16 @@ int main()
   double time = 0;
   while (precice.isCouplingOngoing()) {
 
+    // Store time dependent values
+    if (precice.requiresWritingCheckpoint())
+      data_container.save_old_state(vertices, theta, theta_dot, time);
+
+    // We don't introduce a solver-specific time-step size here
+    double dt = precice.getMaxTimeStepSize();
+    time += dt;
     std::cout << "Rigid body: t = " << time << "s \n";
 
-    std::cout << "Rigid body: reading initial data \n";
+    std::cout << "Rigid body: reading coupling data \n";
     // We use an explicit time integration scheme, thus we always read data
     // at the beginning of a time window (0)
     precice.readData(mesh_name,
@@ -209,16 +230,12 @@ int main()
                      0,
                      forces);
 
-    // Store time dependent values
-    if (precice.requiresWritingCheckpoint())
-      data_container.save_old_state(vertices, theta, theta_dot);
-
     const double current_spring = time > switch_time ? spring_constant * stiffening_factor : spring_constant;
     // Solve system
     solver.solve(forces, initial_vertices, vertices, theta, theta_dot, current_spring, dt);
 
     // Advance coupled system
-    // Compute absolute displacement with respect to the initial configuration
+    // Compute absolute displacement with respect to the initial configuration (write data)
     for (uint i = 0; i < displacement.size(); ++i)
       displacement[i] = vertices[i] - initial_vertices[i];
 
@@ -230,15 +247,15 @@ int main()
 
     std::cout << "Rigid body: advancing in time\n";
     precice.advance(dt);
-    dt = precice.getMaxTimeStepSize();
 
     // Reload time dependent values
     if (precice.requiresReadingCheckpoint())
-      data_container.reload_old_state(vertices, theta, theta_dot);
+      data_container.reload_old_state(vertices, theta, theta_dot, time);
 
     // Increment time in case the time window has been completed
-    if (precice.isTimeWindowComplete())
-      time += dt;
+    if (precice.isTimeWindowComplete()) {
+      // Nothing to do in our simple case here
+    }
   }
 
   std::cout << "Rigid body: closing...\n";
