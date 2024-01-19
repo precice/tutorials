@@ -19,8 +19,10 @@
 #include <dumux/common/dumuxmessage.hh>
 #include <dumux/common/defaultusagemessage.hh>
 
-#include <dumux/linear/seqsolverbackend.hh>
-#include <dumux/linear/pdesolver.hh>        
+#include <dumux/linear/istlsolvers.hh>
+#include <dumux/linear/linearsolvertraits.hh>
+#include <dumux/linear/linearalgebratraits.hh>
+#include <dumux/linear/pdesolver.hh>
 #include <dumux/nonlinear/newtonsolver.hh>
 
 #include <dumux/assembly/fvassembler.hh>
@@ -47,8 +49,10 @@ class MicroSimulation
     using CPGridVariables = Dumux::GetPropType<CellProblemTypeTag, Dumux::Properties::GridVariables>;
     using ACAssembler = Dumux::FVAssembler<AllenCahnTypeTag, Dumux::DiffMethod::numeric>;
     using CPAssembler = Dumux::FVAssembler<CellProblemTypeTag, Dumux::DiffMethod::numeric>; 
-    using LinearSolver = Dumux::UMFPackBackend;
-    using CPLinearSolver = Dumux::UMFPackBackend;
+    using LinearSolver = Dumux::UMFPackIstlSolver<SeqLinearSolverTraits,
+                                                  LinearAlgebraTraitsFromAssembler<ACAssembler>>;
+    using CPLinearSolver = Dumux::UMFPackIstlSolver<SeqLinearSolverTraits,
+                                                    LinearAlgebraTraitsFromAssembler<CPAssembler>>;
     using CPLinearPDESolver = Dumux::LinearPDESolver<CPAssembler, CPLinearSolver>;
     using ACNewtonSolver = Dumux::NewtonSolver<ACAssembler, LinearSolver>;
     using GridGeometry = Dumux::GetPropType<AllenCahnTypeTag, Dumux::Properties::GridGeometry>;   
