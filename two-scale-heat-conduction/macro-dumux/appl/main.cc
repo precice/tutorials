@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
   // - Name of solver
   // - What rank of how many ranks this instance is
   // Configure preCICE. For now the config file is hardcoded.
-  std::string preciceConfigFilename = "../../../precice-config.xml";
+  std::string preciceConfigFilename = "../../../precice-config-dumux.xml";
   const std::string meshName = "macro-mesh";
   if (argc > 2)
     preciceConfigFilename = argv[argc - 1];
@@ -171,16 +171,16 @@ int main(int argc, char **argv) {
   problem->applyInitialSolution(x);
   auto xOld = x;
 
-  // initialize the coupling data
-  // std::vector<double> temperatures;
-  // for (int solIdx=0; solIdx< numberOfElements; ++solIdx)
-  //{
-  //    temperatures.push_back(x[solIdx][problem->returnTemperatureIdx()]);
-  //};
+   // initialize the coupling data
+   std::vector<double> temperatures;
+   for (int solIdx=0; solIdx< numberOfElements; ++solIdx)
+  {
+      temperatures.push_back(x[solIdx][problem->returnTemperatureIdx()]);
+  };
 
   if (getParam<bool>("Precice.RunWithCoupling") == true) {
-    // couplingParticipant.writeQuantityVector(meshName,writeDataTemperature,
-    // temperatures);
+     couplingParticipant.writeQuantityVector(meshName,writeDataConcentration,
+     temperatures);
     if (couplingParticipant
             .requiresToWriteInitialData()) { // not called in our example
       //    couplingParticipant.writeQuantityToOtherSolver(meshName,
@@ -283,14 +283,14 @@ int main(int argc, char **argv) {
     // linearize & solve
     nonLinearSolver.solve(x, *timeLoop);
 
-    // for (int solIdx=0; solIdx< numberOfElements; ++solIdx)
-    //     temperatures[solIdx] = x[solIdx][problem->returnTemperatureIdx()];
+    for (int solIdx=0; solIdx< numberOfElements; ++solIdx)
+        temperatures[solIdx] = x[solIdx][problem->returnTemperatureIdx()];
 
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
-      //    couplingParticipant.writeQuantityVector(meshName,
-      //    writeDataTemperature, temperatures);
-      //    couplingParticipant.writeQuantityToOtherSolver(meshName,
-      //    writeDataTemperature);
+          couplingParticipant.writeQuantityVector(meshName,
+          writeDataConcentration, temperatures);
+         couplingParticipant.writeQuantityToOtherSolver(meshName,
+          writeDataConcentration);
     }
 
     // advance precice
@@ -304,7 +304,7 @@ int main(int argc, char **argv) {
         std::cout << "preciceDt too large. We currently assume fixed timestep "
                      "size but timesteps no longer correspond: preciceDt = "
                   << preciceDt << " and dt =" << dt << std::endl;
-        exit(1);
+        // exit(1);
       }
     } else
       dt = std::min(
