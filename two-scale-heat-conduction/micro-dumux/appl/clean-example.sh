@@ -1,3 +1,5 @@
+#!/bin/sh
+
 rm -fv *.log
 rm -r -fv precice-*/
 rm -fv *-events.json
