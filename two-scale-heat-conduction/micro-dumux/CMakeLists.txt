@@ -1,11 +1,28 @@
-#copy all source code to build directory to make available to pybind
-add_custom_target(copy_micro_heat_all ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
-# add a symlink for each input file
-add_input_file_links()
-    
-#build using pybind
-add_subdirectory(pybind11)
-pybind11_add_module(micro_sim micro_sim.cpp)
-target_link_libraries(micro_sim PRIVATE dumux-precice)
+cmake_minimum_required(VERSION 3.13)
+project(micro_sim CXX)
+
+if(NOT (dune-common_DIR OR dune-common_ROOT OR
+      "${CMAKE_PREFIX_PATH}" MATCHES ".*dune-common.*"))
+    string(REPLACE  ${PROJECT_NAME} dune-common dune-common_DIR
+      ${PROJECT_BINARY_DIR})
+endif()
+
+#find dune-common and set the module path
+find_package(dune-common REQUIRED)
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules"
+  ${dune-common_MODULE_PATH})
+
+#include the dune macros
+include(DuneMacros)
+
+# start a dune project with information from dune.module
+dune_project()
+
+dune_enable_all_packages()
+
+add_subdirectory(appl)
+
+# finalize the dune project, e.g. generating config.h etc.
+finalize_dune_project(GENERATE_CONFIG_H_CMAKE)
+

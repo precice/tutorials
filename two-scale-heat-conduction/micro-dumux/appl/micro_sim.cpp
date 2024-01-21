@@ -20,9 +20,10 @@
 #include <dumux/common/defaultusagemessage.hh>
 
 #include <dumux/linear/istlsolvers.hh>
-#include <dumux/linear/linearsolvertraits.hh>
 #include <dumux/linear/linearalgebratraits.hh>
-#include <dumux/linear/pdesolver.hh>
+#include <dumux/linear/linearsolvertraits.hh>
+
+#include <dumux/linear/pdesolver.hh>        
 #include <dumux/nonlinear/newtonsolver.hh>
 
 #include <dumux/assembly/fvassembler.hh>
@@ -36,7 +37,8 @@
 #include "properties_cellproblem.hh"
 
 namespace py = pybind11; 
-
+namespace Dumux
+{
 class MicroSimulation
 {   
     using AllenCahnTypeTag = Dumux::Properties::TTag::AllenCahn;
@@ -49,10 +51,11 @@ class MicroSimulation
     using CPGridVariables = Dumux::GetPropType<CellProblemTypeTag, Dumux::Properties::GridVariables>;
     using ACAssembler = Dumux::FVAssembler<AllenCahnTypeTag, Dumux::DiffMethod::numeric>;
     using CPAssembler = Dumux::FVAssembler<CellProblemTypeTag, Dumux::DiffMethod::numeric>; 
-    using LinearSolver = Dumux::UMFPackIstlSolver<SeqLinearSolverTraits,
-                                                  LinearAlgebraTraitsFromAssembler<ACAssembler>>;
+    using LinearSolver =
+        Dumux::UMFPackIstlSolver<SeqLinearSolverTraits,
+                                 LinearAlgebraTraitsFromAssembler<ACAssembler>>;
     using CPLinearSolver = Dumux::UMFPackIstlSolver<SeqLinearSolverTraits,
-                                                    LinearAlgebraTraitsFromAssembler<CPAssembler>>;
+                                 LinearAlgebraTraitsFromAssembler<CPAssembler>>;
     using CPLinearPDESolver = Dumux::LinearPDESolver<CPAssembler, CPLinearSolver>;
     using ACNewtonSolver = Dumux::NewtonSolver<ACAssembler, LinearSolver>;
     using GridGeometry = Dumux::GetPropType<AllenCahnTypeTag, Dumux::Properties::GridGeometry>;   
@@ -103,11 +106,7 @@ private:
 };
 
 // Constructor
-MicroSimulation::MicroSimulation() {};
-
-// Initialize
-void MicroSimulation::initialize()
-{   
+MicroSimulation::MicroSimulation() {
     using namespace Dumux;
 
     std::cout << "Initialize micro problem \n";
@@ -180,6 +179,12 @@ void MicroSimulation::initialize()
 
     // start tracking time
     _timeLoop->start();
+};
+
+// Initialize
+void MicroSimulation::initialize()
+{   
+    
 }
 
 // Solve
@@ -310,3 +315,4 @@ PYBIND11_MODULE(micro_sim, m) {
             }
         ));
 }
+} //  end namespace Dumux
