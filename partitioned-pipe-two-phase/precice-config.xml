@@ -89,11 +89,11 @@
     <acceleration:IQN-ILS>
       <data mesh="Fluid2-Mesh" name="VelocityGradient" />
       <data mesh="Fluid2-Mesh" name="Pressure" />
-      <!-- <data mesh="Fluid2-Mesh" name="AlphaGradient" /> -->
+      <data mesh="Fluid2-Mesh" name="AlphaGradient" />
       <initial-relaxation value="1" />
       <max-used-iterations value="10" />
-      <time-windows-reused value="1" />
-      <filter type="QR1" limit="1e-7" />
+      <time-windows-reused value="2" />
+      <filter type="QR2" limit="1e-4" />
     </acceleration:IQN-ILS>
   </coupling-scheme:serial-implicit>
 </precice-configuration>
