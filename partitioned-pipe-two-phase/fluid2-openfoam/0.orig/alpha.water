@@ -15,21 +15,7 @@ boundaryField
     inlet
     {
         type            fixedValue;
-        value           nonuniform List<scalar>
-10
-(
-0
-0
-0
-0
-0
-1
-1
-1
-1
-1
-);
-
+        value           uniform 0;
     }
 
     outlet
