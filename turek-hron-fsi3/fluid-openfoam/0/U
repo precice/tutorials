@@ -53,7 +53,7 @@ boundaryField
                 forAll(Cf,faceI)
                 {
                     const scalar y=Cf[faceI][1];
-                    field[faceI]=vector((1.5*Umean*4.0/0.1681)*y*(0.41-y)*((1-cos(pi/2 *t))/2),0,0);//((1-cos(pi/2 *t)/2))
+                    field[faceI]=vector((1.5*Umean*4.0/0.1681)*y*(0.41-y)*((1-cos(pi/2 *t))/2),0,0);
                 }
             }else
             {

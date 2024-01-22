@@ -21,11 +21,23 @@ boundaryField
 
     DirichletBoundary
     {
-        type            groovyBC;
-        variables       "val=1+pow(pos().x,2)+(3*pow(pos().y,2))+1.3*time();";
-        valueExpression "val";
-        value           uniform 0;
-        evaluateDuringConstruction 1;
+        type            codedFixedValue;
+        value           uniform 1;
+        name            DirichletBoundary;
+        code
+        #{
+            const       vectorField& Cf = patch().Cf();
+            scalarField&    field = *this;
+            const scalar t = this->db().time().value();
+            forAll(Cf,faceI)
+            {
+                const scalar x=Cf[faceI][0];
+                const scalar y=Cf[faceI][1];
+                field[faceI]=1+pow(x,2)+(3*pow(y,2))+1.3*t;
+            }
+           
+        #};
+
     }
 
     defaultFaces
