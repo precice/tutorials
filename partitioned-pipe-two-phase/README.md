@@ -34,7 +34,7 @@ FF
 ```
 
 {% note %}
-This is a very basic example case demonstrating the coupling of a two-phase flow. To keep it as simple as possible, gravity is set to $0$ to avoid any kind of turbulences/vortices.
+This is a very basic example case demonstrating the coupling of a two-phase flow. To keep it as simple as possible, gravity is set to $0$ to avoid any kind of turbulences/vortices. Read more in the accompanying conference paper [1].
 {% endnote %}
 
 ## Available solvers
@@ -67,3 +67,7 @@ You can see the water-air interface crossing the coupling interface at around $t
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
 {% enddisclaimer %}
+
+## References
+
+[1] M. Mühlhäußer, G. Chourdakis and B. Uekermann, Partitioned Flow Simulations with preCICE and OpenFOAM, in: COUPLED 2023. DOI: [10.23967/c.coupled.2023.014](https://doi.org/10.23967/c.coupled.2023.014)
