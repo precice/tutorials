@@ -1,6 +1,5 @@
 #ifndef FLUID_NL_H_
 #define FLUID_NL_H_
-#include <vector>
 
 void write_vtk(double      t,
                int         iteration,

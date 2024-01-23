@@ -26,15 +26,13 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
-    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, MeshFunction, MPI
+    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, FacetNormal, MeshFunction, MPI
 from fenicsprecice import Adapter
 from errorcomputation import compute_errors
 from my_enums import ProblemType, DomainPart
 import argparse
 import numpy as np
 from problem_setup import get_geometry, get_problem_setup
-import dolfin
-from dolfin import FacetNormal, dot
 import sympy as sp
 
 
@@ -136,16 +134,16 @@ if problem is ProblemType.NEUMANN:
             # this term has to be added to weak form to add a Neumann BC (see e.g. p.
             # 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python
             # The FEniCS Tutorial Volume I." (2016).)
-            F += v * coupling_expression * dolfin.ds
+            F += v * coupling_expression * ds
         elif coupling_expression.is_vector_valued():
             normal = FacetNormal(mesh)
-            F += -v * dot(normal, coupling_expression) * dolfin.ds
+            F += -v * dot(normal, coupling_expression) * ds
         else:
             raise Exception("invalid!")
     else:  # For multiple Neumann BCs integration should only be performed over the respective domain.
         # TODO: fix the problem here
         raise Exception("Boundary markers are not implemented yet")
-        # return dot(coupling_bc_expression, v) * dolfin.dss(boundary_marker)
+        # return dot(coupling_bc_expression, v) * dss(boundary_marker)
 
 a, L = lhs(F), rhs(F)
 

@@ -65,11 +65,7 @@
     <time-window-size value="1" />
     <max-time-windows value="100" />
     <participants first="Solid" second="Fluid" />
-    <exchange
-      data="Sink-Temperature-Solid"
-      mesh="Solid-Interface-Nodes"
-      from="Solid"
-      to="Fluid" />
+    <exchange data="Sink-Temperature-Solid" mesh="Solid-Interface-Nodes" from="Solid" to="Fluid" />
     <exchange
       data="Heat-Transfer-Coefficient-Solid"
       mesh="Solid-Interface-Nodes"

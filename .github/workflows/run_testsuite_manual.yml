@@ -26,6 +26,14 @@ on:
             - 'WARNING'
             - 'ERROR'
             - 'CRITICAL'
+      upload_artifacts:
+        description: 'Upload artifacts also on success (not only on failure)'
+        default: 'FALSE'
+        type: choice
+        options:
+            - 'FALSE'
+            - 'TRUE'
+
 jobs:
   run_testsuite_manual:
     uses: ./.github/workflows/run_testsuite_workflow.yml
@@ -34,3 +42,4 @@ jobs:
       build_args: ${{ inputs.build_args }}
       systests_branch: ${{ inputs.systests_branch }}
       loglevel: ${{ inputs.loglevel }}
+      upload_artifacts: ${{ inputs.upload_artifacts }}
