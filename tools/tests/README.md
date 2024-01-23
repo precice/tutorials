@@ -10,8 +10,6 @@ The tutorials repository hosts cases that need multiple components from the preC
 
 ## Running the system tests
 
-**! Warning: still under development !**
-
 The main workflow for the user is executing the `systemtests.py` script. Depending on the options given to the script, it reads in the respective metadata files and generates `docker-compose.yaml` files that can start a fully-defined coupled simulation.
 
 ### Running specific test suites
@@ -19,10 +17,11 @@ The main workflow for the user is executing the `systemtests.py` script. Dependi
 To test a certain test-suite defined in `tests.yaml`, use:
 
 ```bash
-python3 systemtests.py --suites=openfoam-adapter-release,<someothersuite>
+python3 systemtests.py --suites=release_test,<someothersuite>
 ```
 
-To discover all tests, use `python print_test_suites.py`.
+To discover all tests, use `python print_test_suites.py`. The `release_test` is meant to cover all tests that need to be executed before a preCICE distribution release. Smaller test suites focus on testing specific components (e.g., only running tutorials involving specific adapters).
+
 To be able to fill in the right case tuple into the `tests.yaml`, you can use the `python3 print_case_combinations.py` script.
 
 ## Running the system tests on GitHub Actions
