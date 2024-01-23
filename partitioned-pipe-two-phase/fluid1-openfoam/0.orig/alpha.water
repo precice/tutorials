@@ -18,7 +18,7 @@ boundaryField
         value           uniform 1;
     
         // Name of generated boundary condition
-        redirectType    halvedFixedValue;
+        name    halvedFixedValue;
 
         // Split the inlet in half water / half air across the y-axis.
         code
