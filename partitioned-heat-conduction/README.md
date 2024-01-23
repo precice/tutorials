@@ -1,7 +1,7 @@
 ---
 title: Partitioned heat conduction
 permalink: tutorials-partitioned-heat-conduction.html
-keywords: FEniCS, Nutils, Heat conduction
+keywords: FEniCSx, FEniCS, Nutils, Heat conduction
 summary: We solve a simple heat equation. The domain is partitioned and the coupling is established in a Dirichlet-Neumann fashion.
 ---
 
@@ -25,15 +25,17 @@ This simple case allows us to compare the solution for the partitioned case to a
 
 You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE and the python bindings installed on your system.
 
+* FEniCSx. Install [FEniCSx](https://fenicsproject.org/download/) and the [FEniCSx-adapter](https://github.com/precice/fenicsx-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1] and has been adapted to FEniCSx.
+
 * FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
 
-* Nutils. Install [Nutils](http://www.nutils.org/en/latest/).
+* Nutils. Install [Nutils](https://nutils.org/install-nutils.html).
 
 * OpenFOAM. This case also requires [funkySetFields](https://openfoamwiki.net/index.php/Contrib/funkySetFields) (part of [swak4Foam](https://openfoamwiki.net/index.php/Contrib/swak4Foam)) and uses the custom [heatTransfer](https://github.com/precice/tutorials/blob/master/partitioned-heat-conduction/openfoam-solver/heatTransfer.C) solver (find it in `openfoam-solver` and build with `wmake`). Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
 
 ## Running the simulation
 
-This tutorial is for FEniCS and Nutils. You can find the corresponding `run.sh` script in the folders `fenics` and `nutils`.
+You can find the corresponding `run.sh` script for running the case in the folders corresponding to the solver you want to use.
 
 For choosing whether you want to run the Dirichlet-kind and a Neumann-kind participant, please provide the following commandline input:
 
@@ -43,18 +45,18 @@ For choosing whether you want to run the Dirichlet-kind and a Neumann-kind parti
 For running the case, open two terminals run:
 
 ```bash
-cd fenics
+cd fenicsx
 ./run.sh -d
 ```
 
 and
 
 ```bash
-cd fenics
+cd fenicsx
 ./run.sh -n
 ```
 
-If you want to use Nutils for one or both sides of the setup, just `cd nutils`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
+If you want to use FEniCS or Nutils, use `cd fenics`/ `cd nutils` instead of `cd fenicsx`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
 
 ```bash
 mpirun -n <N_PROC> heat.py -d
@@ -66,7 +68,9 @@ You can mix the Nutils and FEniCS solver, if you like. Note that the error for a
 
 ## Visualization
 
-Output is written into the folders `fenics/out` and `nutils`.
+Output is written into the folders `fenicsx/out`, `fenics/out` and `nutils`.
+
+For FEniCSx you can visualize the content with paraview by opening the `*.xdmf` files. The files `Dirichlet.xdmf` and `Neumann.xdmf` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution.
 
 For FEniCS you can visualize the content with paraview by opening the `*.pvd` files. The files `Dirichlet.pvd` and `Neumann.pvd` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution, the files with `error` show the error and the files with `ranks` the ranks of the solvers (if executed in parallel).
 

@@ -5,10 +5,25 @@
 \definecolor{color1}{HTML}{008b8b}
 \definecolor{color2}{HTML}{808000}
 \begin{document}
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=1]
 		% left wall
+		\coordinate (wall1) at (0.2,1.5);
 		\fill [pattern = north west lines] (0,0) rectangle ++(.2,3);
-		\draw[thick] (.2,0) -- ++(0,3);
+		\draw[thick] (0.2,0) -- (wall1) -- ++(0,1.5);
+		% right wall
+		\coordinate (wall2) at (8.2,1.5);
+		\fill [pattern = north west lines] (8.2,0) rectangle ++(.2,3);
+		\draw[thick] (8.2,0) -- (wall2) -- ++ (0,1.5);
+		% Mass 1
+		\node[draw,
+		minimum width=1cm,
+		minimum height=0.75cm,
+		anchor=mid] (mass1) at (2.7,1.5) {$m_1$};
+		% Mass 2
+		\node[draw,
+		minimum width=1cm,
+		minimum height=0.75cm,
+		anchor=mid](mass2) at (5.7,1.5) {$m_2$};
 		% spring 1
 		\draw
 		[
@@ -20,13 +35,8 @@
 			pre length=3mm,
 			post length=3mm},
 		decorate
-		] (0.2,1.5) -- ++(2,0)
+		] (0.2,1.5) -- (mass1.west)
 		node[midway,below=0.25cm,black]{$k_1$};
-		% Mass 1
-		\node[draw,
-		minimum width=1cm,
-		minimum height=0.75cm,
-		anchor=mid] at (2.7,1.5) {$m_1$};
 		% spring 12
 		\draw
 		[
@@ -38,13 +48,8 @@
 			pre length=3mm,
 			post length=3mm},
 		decorate
-		] (3.2,1.5) -- ++(2,0)
-		node[midway,below=0.25cm,black]{$k_{12}$};
-		% Mass 2
-		\node[draw,
-		minimum width=1cm,
-		minimum height=0.75cm,
-		anchor=mid] at (5.7,1.5) {$m_2$};
+		] (mass1.east) -- (mass2.west)
+		node[midway,below=0.25cm,black,xshift=0.35cm]{$k_{12}$};
 		% spring 2
 		\draw
 		[
@@ -56,24 +61,20 @@
 			pre length=3mm,
 			post length=3mm},
 		decorate
-		] (6.2,1.5) -- ++(2,0)
-		node[midway,below=0.25cm,black]{$k_{2}$};
-		% right wall
-		\fill [pattern = north west lines] (8.2,0) rectangle ++(.2,3);
-		\draw[thick] (8.2,0) -- ++(0,3);
+		] (mass2.east) -- (wall2) node[midway,below=0.25cm,black]{$k_{2}$};
 
 		% u1 arrow
 		\draw [very thick,
 		color1,
 		-latex
-		] (2.7,1.85) -- ++(0,.5) ++(0,-0.25) -- ++ (1,0)
+		] (mass1.north) -- ++(0,.5) ++(0,-0.25) -- ++ (1,0)
 		node[midway,above]{\small $u_1$};
 
 		% u2 arrow
 		\draw [very thick,
 		color2,
 		-latex
-		] (5.7,1.85) -- ++(0,.5) ++(0,-0.25) -- ++ (1,0)
+		] (mass2.north) -- ++(0,.5) ++(0,-0.25) -- ++ (1,0)
 		node[midway,above]{\small $u_2$};
 \end{tikzpicture}
 \end{document}

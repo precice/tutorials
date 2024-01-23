@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     Info<< "\nCalculating temperature distribution\n" << endl;
 
     const double alpha = 3;
-    const double beta  = 1.3;
+    const double beta  = 1.2;
     const double rhs   = beta - 2 - 2 * alpha;
 
     volScalarField f

@@ -33,7 +33,7 @@ class StraightBoundary(SubDomain):
 
 
 def get_geometry(domain_part):
-    nx = ny = 9
+    nx = ny = 11
 
     if domain_part is DomainPart.LEFT:
         p0 = Point(x_left, y_bottom)

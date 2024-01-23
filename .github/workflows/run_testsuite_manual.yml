@@ -1,0 +1,45 @@
+name: Run Testsuite (manual) # Unfortunately, we cannot modify the name: https://github.community/t/github-actions-dynamic-name-of-the-workflow-with-workflow-dispatch/150327
+on:
+  workflow_dispatch:
+    inputs:
+      suites:
+        description: 'Comma seperated testsuites to execute'
+        required: true
+        type: string
+      build_args:
+        description: 'Build arguments, if not specified defaults will be taken'
+        required: false
+        type: string
+      systests_branch:
+        description: 'Branch to take the systest from'
+        default: 'develop'
+        required: true
+        type: string
+      loglevel:
+        description: 'loglevel used for the systemtests'
+        default: 'INFO'
+        required: true
+        type: choice
+        options:
+            - 'DEBUG'
+            - 'INFO'
+            - 'WARNING'
+            - 'ERROR'
+            - 'CRITICAL'
+      upload_artifacts:
+        description: 'Upload artifacts also on success (not only on failure)'
+        default: 'FALSE'
+        type: choice
+        options:
+            - 'FALSE'
+            - 'TRUE'
+
+jobs:
+  run_testsuite_manual:
+    uses: ./.github/workflows/run_testsuite_workflow.yml
+    with: 
+      suites: ${{ inputs.suites }}
+      build_args: ${{ inputs.build_args }}
+      systests_branch: ${{ inputs.systests_branch }}
+      loglevel: ${{ inputs.loglevel }}
+      upload_artifacts: ${{ inputs.upload_artifacts }}

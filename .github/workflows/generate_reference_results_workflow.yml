@@ -1,0 +1,71 @@
+name: Generate reference results workflow
+on:
+  workflow_call:
+    inputs:
+      from_ref:
+        description: 'Use the systemtests + tutorial metadata + reference_version from this ref'
+        required: true
+        type: string
+      commit_msg:
+        description: 'Commit msg for commit that adds the reference results'
+        default: "Adding reference results"
+        type: string
+      loglevel:
+        description: 'loglevel used for the systemtests'
+        default: 'INFO'
+        required: true
+        type: string
+jobs:
+  generate_reference_results:
+    runs-on: [self-hosted, linux, x64, precice-tests-vm]
+    steps:
+    - name: Display a quick job summary
+      run: |
+        echo "Initiated by: ${{ github.actor }}"
+        echo "Running generate_reference_results.py --log-level ${{inputs.loglevel}}"
+        echo "Using Ref: ${{ inputs.from_ref }}"
+        echo "Commit message on success:  ${{ inputs.commit_msg }}"
+    - name: Move LFS URL to local LFS server
+      run: |
+        /home/precice/runners_root/scripts/make_lfs_local.sh
+    - name: 'Cleanup the folder'
+      # The first rf -rf ./* removes all non hidden files
+      # The second rf -rf ./.??* removes all hidden files (but not . and ..)
+      run: |
+        ls -la ./
+        rm -rf ./*
+        rm -rf ./.??*
+        ls -la ./
+    - name: Check out Tutorials for systest
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.from_ref }}
+        lfs: true
+        fetch-depth: 0
+    - name: Install Python dependencies
+      run: |
+        pip install --user -r tools/tests/requirements.txt
+    - name: Run tests
+      run: |
+        cd tools/tests
+        test -f generate_reference_results.py && export GENERATE_REF_RESULTS=generate_reference_results.py
+        test -f generate_reference_data.py && export GENERATE_REF_RESULTS=generate_reference_data.py
+        echo "Selected $GENERATE_REF_RESULTS to run"
+        python $GENERATE_REF_RESULTS --log-level=${{inputs.loglevel}}
+        cd ../../
+    - name: Create commit
+      if: success()
+      run: |
+        git checkout ${{ inputs.from_ref }}
+        git add ./*/*/*.tar.gz
+        git add ./*/*.tar.gz
+        git add ./*/*.metadata
+        git commit -m "${{inputs.commit_msg}}"
+        git push
+    - name: Upload artifacts for debugging
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: runs
+        path: |
+          runs/*

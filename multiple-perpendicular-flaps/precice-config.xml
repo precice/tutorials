@@ -7,117 +7,142 @@
       enabled="true" />
   </log>
 
-  <solver-interface dimensions="2">
-    <data:vector name="Stress-Upstream" />
-    <data:vector name="Displacement-Upstream" />
-    <data:vector name="Stress-Downstream" />
-    <data:vector name="Displacement-Downstream" />
+  <data:vector name="Stress-Upstream" />
+  <data:vector name="Displacement-Upstream" />
+  <data:vector name="Stress-Downstream" />
+  <data:vector name="Displacement-Downstream" />
 
-    <mesh name="Fluid-Upstream-Mesh-Centers">
-      <use-data name="Stress-Upstream" />
-    </mesh>
+  <mesh name="Fluid-Upstream-Mesh-Centers" dimensions="2">
+    <use-data name="Stress-Upstream" />
+  </mesh>
 
-    <mesh name="Fluid-Upstream-Mesh-Nodes">
-      <use-data name="Displacement-Upstream" />
-    </mesh>
+  <mesh name="Fluid-Upstream-Mesh-Nodes" dimensions="2">
+    <use-data name="Displacement-Upstream" />
+  </mesh>
 
-    <mesh name="Fluid-Downstream-Mesh-Centers">
-      <use-data name="Stress-Downstream" />
-    </mesh>
+  <mesh name="Fluid-Downstream-Mesh-Centers" dimensions="2">
+    <use-data name="Stress-Downstream" />
+  </mesh>
 
-    <mesh name="Fluid-Downstream-Mesh-Nodes">
-      <use-data name="Displacement-Downstream" />
-    </mesh>
+  <mesh name="Fluid-Downstream-Mesh-Nodes" dimensions="2">
+    <use-data name="Displacement-Downstream" />
+  </mesh>
 
-    <mesh name="Solid-Upstream-Mesh">
-      <use-data name="Displacement-Upstream" />
-      <use-data name="Stress-Upstream" />
-    </mesh>
+  <mesh name="Solid-Upstream-Mesh" dimensions="2">
+    <use-data name="Displacement-Upstream" />
+    <use-data name="Stress-Upstream" />
+  </mesh>
 
-    <mesh name="Solid-Downstream-Mesh">
-      <use-data name="Displacement-Downstream" />
-      <use-data name="Stress-Downstream" />
-    </mesh>
+  <mesh name="Solid-Downstream-Mesh" dimensions="2">
+    <use-data name="Displacement-Downstream" />
+    <use-data name="Stress-Downstream" />
+  </mesh>
 
-    <participant name="Fluid">
-      <use-mesh name="Fluid-Upstream-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Fluid-Upstream-Mesh-Centers" provide="yes" />
-      <use-mesh name="Solid-Upstream-Mesh" from="Solid-Upstream" />
-      <use-mesh name="Fluid-Downstream-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Fluid-Downstream-Mesh-Centers" provide="yes" />
-      <use-mesh name="Solid-Downstream-Mesh" from="Solid-Downstream" />
-      <read-data name="Displacement-Upstream" mesh="Fluid-Upstream-Mesh-Nodes" />
-      <write-data name="Stress-Upstream" mesh="Fluid-Upstream-Mesh-Centers" />
-      <read-data name="Displacement-Downstream" mesh="Fluid-Downstream-Mesh-Nodes" />
-      <write-data name="Stress-Downstream" mesh="Fluid-Downstream-Mesh-Centers" />
-      <mapping:nearest-neighbor
-        direction="read"
-        from="Solid-Upstream-Mesh"
-        to="Fluid-Upstream-Mesh-Nodes"
-        constraint="consistent" />
-      <mapping:nearest-neighbor
-        direction="read"
-        from="Solid-Downstream-Mesh"
-        to="Fluid-Downstream-Mesh-Nodes"
-        constraint="consistent" />
-    </participant>
+  <participant name="Fluid">
+    <provide-mesh name="Fluid-Upstream-Mesh-Nodes" />
+    <provide-mesh name="Fluid-Upstream-Mesh-Centers" />
+    <receive-mesh name="Solid-Upstream-Mesh" from="Solid-Upstream" />
+    <provide-mesh name="Fluid-Downstream-Mesh-Nodes" />
+    <provide-mesh name="Fluid-Downstream-Mesh-Centers" />
+    <receive-mesh name="Solid-Downstream-Mesh" from="Solid-Downstream" />
+    <read-data name="Displacement-Upstream" mesh="Fluid-Upstream-Mesh-Nodes" />
+    <write-data name="Stress-Upstream" mesh="Fluid-Upstream-Mesh-Centers" />
+    <read-data name="Displacement-Downstream" mesh="Fluid-Downstream-Mesh-Nodes" />
+    <write-data name="Stress-Downstream" mesh="Fluid-Downstream-Mesh-Centers" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Solid-Upstream-Mesh"
+      to="Fluid-Upstream-Mesh-Nodes"
+      constraint="consistent" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Solid-Downstream-Mesh"
+      to="Fluid-Downstream-Mesh-Nodes"
+      constraint="consistent" />
+  </participant>
 
-    <participant name="Solid-Upstream">
-      <use-mesh name="Solid-Upstream-Mesh" provide="yes" />
-      <use-mesh name="Fluid-Upstream-Mesh-Centers" from="Fluid" />
-      <read-data name="Stress-Upstream" mesh="Solid-Upstream-Mesh" />
-      <write-data name="Displacement-Upstream" mesh="Solid-Upstream-Mesh" />
-      <watch-point mesh="Solid-Upstream-Mesh" name="Flap-Tip" coordinate="-1.05;1" />
-      <mapping:nearest-neighbor
-        direction="read"
-        from="Fluid-Upstream-Mesh-Centers"
-        to="Solid-Upstream-Mesh"
-        constraint="consistent" />
-    </participant>
+  <participant name="Solid-Upstream">
+    <provide-mesh name="Solid-Upstream-Mesh" />
+    <receive-mesh name="Fluid-Upstream-Mesh-Centers" from="Fluid" />
+    <read-data name="Stress-Upstream" mesh="Solid-Upstream-Mesh" />
+    <write-data name="Displacement-Upstream" mesh="Solid-Upstream-Mesh" />
+    <watch-point mesh="Solid-Upstream-Mesh" name="Flap-Tip" coordinate="-1.05;1" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Fluid-Upstream-Mesh-Centers"
+      to="Solid-Upstream-Mesh"
+      constraint="consistent" />
+  </participant>
 
-    <participant name="Solid-Downstream">
-      <use-mesh name="Solid-Downstream-Mesh" provide="yes" />
-      <use-mesh name="Fluid-Downstream-Mesh-Centers" from="Fluid" />
-      <read-data name="Stress-Downstream" mesh="Solid-Downstream-Mesh" />
-      <write-data name="Displacement-Downstream" mesh="Solid-Downstream-Mesh" />
-      <watch-point mesh="Solid-Downstream-Mesh" name="Flap-Tip" coordinate="0.95;1" />
-      <mapping:nearest-neighbor
-        direction="read"
-        from="Fluid-Downstream-Mesh-Centers"
-        to="Solid-Downstream-Mesh"
-        constraint="consistent" />
-    </participant>
+  <participant name="Solid-Downstream">
+    <provide-mesh name="Solid-Downstream-Mesh" />
+    <receive-mesh name="Fluid-Downstream-Mesh-Centers" from="Fluid" />
+    <read-data name="Stress-Downstream" mesh="Solid-Downstream-Mesh" />
+    <write-data name="Displacement-Downstream" mesh="Solid-Downstream-Mesh" />
+    <watch-point mesh="Solid-Downstream-Mesh" name="Flap-Tip" coordinate="0.95;1" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Fluid-Downstream-Mesh-Centers"
+      to="Solid-Downstream-Mesh"
+      constraint="consistent" />
+  </participant>
 
-    <m2n:sockets from="Fluid" to="Solid-Upstream" exchange-directory=".." />
-    <m2n:sockets from="Fluid" to="Solid-Downstream" exchange-directory=".." />
+  <m2n:sockets acceptor="Fluid" connector="Solid-Upstream" exchange-directory=".." />
+  <m2n:sockets acceptor="Fluid" connector="Solid-Downstream" exchange-directory=".." />
 
-    <coupling-scheme:multi>
-      <time-window-size value="0.01" />
-      <max-time value="5" />
-      <participant name="Fluid" control="yes" />
-      <participant name="Solid-Upstream" />
-      <participant name="Solid-Downstream" />
-      <exchange data="Stress-Upstream" mesh="Fluid-Upstream-Mesh-Centers" from="Fluid" to="Solid-Upstream" />
-      <exchange data="Stress-Downstream" mesh="Fluid-Downstream-Mesh-Centers" from="Fluid" to="Solid-Downstream" />
-      <exchange data="Displacement-Upstream" mesh="Solid-Upstream-Mesh" from="Solid-Upstream" to="Fluid" />
-      <exchange data="Displacement-Downstream" mesh="Solid-Downstream-Mesh" from="Solid-Downstream" to="Fluid" />
-      <max-iterations value="50" />
-      <relative-convergence-measure limit="1e-4" data="Stress-Upstream" mesh="Fluid-Upstream-Mesh-Centers" />
-      <relative-convergence-measure limit="1e-4" data="Displacement-Upstream" mesh="Solid-Upstream-Mesh" />
-      <relative-convergence-measure limit="1e-4" data="Stress-Downstream" mesh="Fluid-Downstream-Mesh-Centers" />
-      <relative-convergence-measure limit="1e-4" data="Displacement-Downstream" mesh="Solid-Downstream-Mesh" />
-      <extrapolation-order value="2" />
-      <acceleration:IQN-ILS>
-        <data name="Displacement-Upstream" mesh="Solid-Upstream-Mesh" />
-        <data name="Displacement-Downstream" mesh="Solid-Downstream-Mesh" />
-        <data name="Stress-Upstream" mesh="Fluid-Upstream-Mesh-Centers" />
-        <data name="Stress-Downstream" mesh="Fluid-Downstream-Mesh-Centers" />
-        <preconditioner type="residual-sum" />
-        <filter type="QR1" limit="1e-6" />
-        <initial-relaxation value="0.1" />
-        <max-used-iterations value="50" />
-        <time-windows-reused value="10" />
-      </acceleration:IQN-ILS>
-    </coupling-scheme:multi>
-  </solver-interface>
+  <coupling-scheme:multi>
+    <time-window-size value="0.01" />
+    <max-time value="5" />
+    <participant name="Fluid" control="yes" />
+    <participant name="Solid-Upstream" />
+    <participant name="Solid-Downstream" />
+    <exchange
+      data="Stress-Upstream"
+      mesh="Fluid-Upstream-Mesh-Centers"
+      from="Fluid"
+      to="Solid-Upstream" />
+    <exchange
+      data="Stress-Downstream"
+      mesh="Fluid-Downstream-Mesh-Centers"
+      from="Fluid"
+      to="Solid-Downstream" />
+    <exchange
+      data="Displacement-Upstream"
+      mesh="Solid-Upstream-Mesh"
+      from="Solid-Upstream"
+      to="Fluid" />
+    <exchange
+      data="Displacement-Downstream"
+      mesh="Solid-Downstream-Mesh"
+      from="Solid-Downstream"
+      to="Fluid" />
+    <max-iterations value="50" />
+    <relative-convergence-measure
+      limit="1e-4"
+      data="Stress-Upstream"
+      mesh="Fluid-Upstream-Mesh-Centers" />
+    <relative-convergence-measure
+      limit="1e-4"
+      data="Displacement-Upstream"
+      mesh="Solid-Upstream-Mesh" />
+    <relative-convergence-measure
+      limit="1e-4"
+      data="Stress-Downstream"
+      mesh="Fluid-Downstream-Mesh-Centers" />
+    <relative-convergence-measure
+      limit="1e-4"
+      data="Displacement-Downstream"
+      mesh="Solid-Downstream-Mesh" />
+    <acceleration:IQN-ILS>
+      <data name="Displacement-Upstream" mesh="Solid-Upstream-Mesh" />
+      <data name="Displacement-Downstream" mesh="Solid-Downstream-Mesh" />
+      <data name="Stress-Upstream" mesh="Fluid-Upstream-Mesh-Centers" />
+      <data name="Stress-Downstream" mesh="Fluid-Downstream-Mesh-Centers" />
+      <preconditioner type="residual-sum" />
+      <filter type="QR1" limit="1e-6" />
+      <initial-relaxation value="0.1" />
+      <max-used-iterations value="50" />
+      <time-windows-reused value="10" />
+    </acceleration:IQN-ILS>
+  </coupling-scheme:multi>
 </precice-configuration>

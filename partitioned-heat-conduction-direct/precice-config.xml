@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<precice-configuration>
+<precice-configuration experimental="yes">
   <log>
     <sink
       filter="%Severity% > debug and %Rank% = 0"
@@ -7,54 +7,52 @@
       enabled="true" />
   </log>
 
-  <solver-interface dimensions="2" experimental="yes">
-    <data:scalar name="Temperature" />
-    <data:scalar name="Heat-Flux" />
+  <data:scalar name="Temperature" />
+  <data:scalar name="Heat-Flux" />
 
-    <mesh name="Dirichlet-Mesh">
-      <use-data name="Temperature" />
-      <use-data name="Heat-Flux" />
-    </mesh>
+  <mesh name="Dirichlet-Mesh" dimensions="2">
+    <use-data name="Temperature" />
+    <use-data name="Heat-Flux" />
+  </mesh>
 
-    <mesh name="Neumann-Mesh">
-      <use-data name="Temperature" />
-      <use-data name="Heat-Flux" />
-    </mesh>
+  <mesh name="Neumann-Mesh" dimensions="2">
+    <use-data name="Temperature" />
+    <use-data name="Heat-Flux" />
+  </mesh>
 
-    <participant name="Dirichlet">
-      <use-mesh name="Dirichlet-Mesh" provide="yes" />
-      <use-mesh name="Neumann-Mesh" from="Neumann" direct-access="true" />
-      <write-data name="Heat-Flux" mesh="Neumann-Mesh" />
-      <read-data name="Temperature" mesh="Dirichlet-Mesh" />
-    </participant>
+  <participant name="Dirichlet">
+    <provide-mesh name="Dirichlet-Mesh" />
+    <receive-mesh name="Neumann-Mesh" from="Neumann" direct-access="true" />
+    <write-data name="Heat-Flux" mesh="Neumann-Mesh" />
+    <read-data name="Temperature" mesh="Dirichlet-Mesh" />
+  </participant>
 
-    <participant name="Neumann">
-      <use-mesh name="Neumann-Mesh" provide="yes" />
-      <use-mesh name="Dirichlet-Mesh" from="Dirichlet" direct-access="true" />
-      <write-data name="Temperature" mesh="Dirichlet-Mesh" />
-      <read-data name="Heat-Flux" mesh="Neumann-Mesh" />
-    </participant>
+  <participant name="Neumann">
+    <provide-mesh name="Neumann-Mesh" />
+    <receive-mesh name="Dirichlet-Mesh" from="Dirichlet" direct-access="true" />
+    <write-data name="Temperature" mesh="Dirichlet-Mesh" />
+    <read-data name="Heat-Flux" mesh="Neumann-Mesh" />
+  </participant>
 
-    <m2n:sockets from="Dirichlet" to="Neumann" exchange-directory=".." />
+  <m2n:sockets acceptor="Dirichlet" connector="Neumann" exchange-directory=".." />
 
-    <coupling-scheme:parallel-implicit>
-      <participants first="Dirichlet" second="Neumann" />
-      <max-time value="1.0" />
-      <time-window-size value="0.1" />
-      <max-iterations value="100" />
-      <exchange data="Heat-Flux" mesh="Neumann-Mesh" from="Dirichlet" to="Neumann" />
-      <exchange data="Temperature" mesh="Dirichlet-Mesh" from="Neumann" to="Dirichlet" />
-      <relative-convergence-measure data="Heat-Flux" mesh="Neumann-Mesh" limit="1e-5" />
-      <relative-convergence-measure data="Temperature" mesh="Dirichlet-Mesh" limit="1e-5" />
-      <acceleration:IQN-ILS>
-        <data name="Temperature" mesh="Dirichlet-Mesh" />
-        <data name="Heat-Flux" mesh="Neumann-Mesh" />
-        <initial-relaxation value="0.1" />
-        <max-used-iterations value="10" />
-        <time-windows-reused value="5" />
-        <preconditioner type="residual-sum" />
-        <filter type="QR2" limit="1e-3" />
-      </acceleration:IQN-ILS>
-    </coupling-scheme:parallel-implicit>
-  </solver-interface>
+  <coupling-scheme:parallel-implicit>
+    <participants first="Dirichlet" second="Neumann" />
+    <max-time value="1.0" />
+    <time-window-size value="0.1" />
+    <max-iterations value="100" />
+    <exchange data="Heat-Flux" mesh="Neumann-Mesh" from="Dirichlet" to="Neumann" />
+    <exchange data="Temperature" mesh="Dirichlet-Mesh" from="Neumann" to="Dirichlet" />
+    <relative-convergence-measure data="Heat-Flux" mesh="Neumann-Mesh" limit="1e-5" />
+    <relative-convergence-measure data="Temperature" mesh="Dirichlet-Mesh" limit="1e-5" />
+    <acceleration:IQN-ILS>
+      <data name="Temperature" mesh="Dirichlet-Mesh" />
+      <data name="Heat-Flux" mesh="Neumann-Mesh" />
+      <initial-relaxation value="0.1" />
+      <max-used-iterations value="10" />
+      <time-windows-reused value="5" />
+      <preconditioner type="residual-sum" />
+      <filter type="QR2" limit="1e-3" />
+    </acceleration:IQN-ILS>
+  </coupling-scheme:parallel-implicit>
 </precice-configuration>

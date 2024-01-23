@@ -1,0 +1,73 @@
+name: Run Testsuite reusable workflow 
+on:
+  workflow_call:
+    inputs:
+      suites:
+        description: 'Comma seperated testsuites to execute'
+        required: true
+        type: string
+      build_args:
+        description: 'Build arguments'
+        required: false
+        type: string
+      systests_branch:
+        description: 'Branch to take the systest from'
+        default: 'develop'
+        required: true
+        type: string
+      loglevel:
+        description: 'loglevel used for the systemtests'
+        default: 'INFO'
+        required: false
+        type: string
+      upload_artifacts:
+          description: 'TRUE or FALSE (Default: FALSE -> Upload only when the workflow fails)'
+          default: 'FALSE'
+          type: string
+jobs:
+  run_testsuite:
+    runs-on: [self-hosted, linux, x64, precice-tests-vm]
+    steps:
+    - name: Display a quick job summary
+      run: |
+        echo "Initiated by: ${{ github.actor }}"
+        echo "Running systemtests --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}"
+        echo "Systemtests branch: ${{ inputs.systests_branch }}"
+        echo "Uploading the runs folder on success: ${{ inputs.upload_artifacts }}"
+    - name: Move LFS URL to local LFS server
+      run: |
+        /home/precice/runners_root/scripts/make_lfs_local.sh
+    - name: 'Cleanup the folder'
+      run: |
+        ls -la ./
+        rm -rf ./*
+        rm -rf ./.??*
+        ls -la ./
+    - name: Check out Tutorials for systest
+      uses: actions/checkout@v4
+      with:
+        repository: precice/tutorials
+        ref: ${{ inputs.systests_branch }}
+        lfs: true
+        fetch-depth: 0
+    - name: Map remote branches to local ones
+      run: |
+        /home/precice/runners_root/scripts/map_origin_to_local.sh ./
+    - name: Install Python dependencies
+      run: |
+        pip install --user -r tools/tests/requirements.txt
+    - name: Run tests
+      run: |
+        cd tools/tests
+        python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log-level=${{ inputs.loglevel}}
+        cd ../../
+    - name: Archive run files
+      if: ${{  failure() || inputs.upload_artifacts == 'TRUE' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: runs
+        path: |
+          runs/*
+    - name: tidy up the docker
+      run: |
+        docker network prune -f

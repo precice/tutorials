@@ -11,8 +11,9 @@ from fenics import *
 from mshr import *
 import fenicsprecice
 import numpy as np
+from pathlib import Path
 
-outfolder = 'output'
+outfolder = Path(__file__).parent / 'output'
 
 # time step size (preCICE handles the main loop; if this is smaller than
 # preCICE dt, we subcycle)
@@ -117,11 +118,9 @@ class CouplingDomain(SubDomain):
         return True
 
 
-precice = fenicsprecice.Adapter(adapter_config_filename="fluid-config.json")
-precice_dt = precice.initialize(
-    coupling_subdomain=CouplingDomain(),
-    write_object=u_)
-
+precice = fenicsprecice.Adapter(adapter_config_filename=Path(__file__).parent / "fluid-config.json")
+precice.initialize(coupling_subdomain=CouplingDomain(), write_object=u_)
+precice_dt = precice.get_max_time_step_size()
 
 dt = np.min([default_dt, precice_dt])
 k.assign(dt)
@@ -129,7 +128,7 @@ k.assign(dt)
 # No implicit coupling supported, as this is uni-directional coupling
 # If needed, implement checkpointing
 t = 0
-vtkfile = File(outfolder + '/chemical_fluid_write.pvd')
+vtkfile = File(str(outfolder / 'chemical_fluid_write.pvd'))
 
 while precice.is_coupling_ongoing():
 
@@ -155,7 +154,8 @@ while precice.is_coupling_ongoing():
 
     vtkfile << u_
 
-    precice_dt = precice.advance(dt)
+    precice.advance(dt)
+    precice_dt = precice.get_max_time_step_size()
     dt = np.min([default_dt, precice_dt])
     k.assign(dt)
 

@@ -33,8 +33,7 @@ from my_enums import ProblemType, DomainPart
 import argparse
 import numpy as np
 from problem_setup import get_geometry
-import dolfin
-from dolfin import FacetNormal, dot
+import sympy as sp
 
 
 def determine_gradient(V_g, u, flux):
@@ -58,11 +57,11 @@ command_group = parser.add_mutually_exclusive_group(required=True)
 command_group.add_argument("-d", "--dirichlet", help="create a dirichlet problem", dest="dirichlet",
                            action="store_true")
 command_group.add_argument("-n", "--neumann", help="create a neumann problem", dest="neumann", action="store_true")
-parser.add_argument("-e", "--error-tol", help="set error tolerance", type=float, default=10**-6,)
+parser.add_argument("-e", "--error-tol", help="set error tolerance", type=float, default=10**-8,)
 
 args = parser.parse_args()
 
-fenics_dt = .1  # time step size
+fenics_dt = .01  # time step size
 # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
 error_tol = args.error_tol
 
@@ -84,12 +83,15 @@ V_g = VectorFunctionSpace(mesh, 'P', 1)
 W = V_g.sub(0).collapse()
 
 # Define boundary conditions
-u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, t=0)
+# create sympy expression of manufactured solution
+x_sp, y_sp, t_sp = sp.symbols(['x[0]', 'x[1]', 't'])
+u_D_sp = 1 + x_sp * x_sp + alpha * y_sp * y_sp + beta * t_sp
+u_D = Expression(sp.ccode(u_D_sp), degree=2, alpha=alpha, beta=beta, t=0)
 u_D_function = interpolate(u_D, V)
 
 if problem is ProblemType.DIRICHLET:
     # Define flux in x direction
-    f_N = Expression("2 * x[0]", degree=1, alpha=alpha, t=0)
+    f_N = Expression(sp.ccode(u_D_sp.diff(x_sp)), degree=1, alpha=alpha, t=0)
     f_N_function = interpolate(f_N, W)
 
 # Define initial value
@@ -101,10 +103,12 @@ precice, precice_dt, initial_data = None, 0.0, None
 # Initialize the adapter according to the specific participant
 if problem is ProblemType.DIRICHLET:
     precice = Adapter(adapter_config_filename="precice-adapter-config-D.json")
-    precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=f_N_function)
+    precice.initialize(coupling_boundary, read_function_space=V, write_object=f_N_function)
+    precice_dt = precice.get_max_time_step_size()
 elif problem is ProblemType.NEUMANN:
     precice = Adapter(adapter_config_filename="precice-adapter-config-N.json")
-    precice_dt = precice.initialize(coupling_boundary, read_function_space=W, write_object=u_D_function)
+    precice.initialize(coupling_boundary, read_function_space=W, write_object=u_D_function)
+    precice_dt = precice.get_max_time_step_size()
 
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
@@ -112,7 +116,9 @@ dt.assign(np.min([fenics_dt, precice_dt]))
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-f = Expression('beta - 2 - 2*alpha', degree=2, alpha=alpha, beta=beta, t=0)
+# du_dt-Laplace(u) = f
+f_sp = u_D_sp.diff(t_sp) - u_D_sp.diff(x_sp).diff(x_sp) - u_D_sp.diff(y_sp).diff(y_sp)
+f = Expression(sp.ccode(f_sp), degree=2, alpha=alpha, beta=beta, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
@@ -126,7 +132,7 @@ if problem is ProblemType.DIRICHLET:
 if problem is ProblemType.NEUMANN:
     # modify Neumann boundary condition on coupling interface, modify weak
     # form correspondingly
-    F += v * coupling_expression * dolfin.ds
+    F += v * coupling_expression * ds
 
 a, L = lhs(F), rhs(F)
 
@@ -155,13 +161,27 @@ ranks = File("output/ranks%s.pvd" % precice.get_participant_name())
 
 # output solution and reference solution at t=0, n=0
 n = 0
-print('output u^%d and u_ref^%d' % (n, n))
-temperature_out << u_n
-ref_out << u_ref
+print("output u^%d and u_ref^%d" % (n, n))
 ranks << mesh_rank
 
 error_total, error_pointwise = compute_errors(u_n, u_ref, V)
-error_out << error_pointwise
+
+# create buffer for output. We need this buffer, because we only want to
+# write the converged output at the end of the window, but we also want to
+# write the samples that are resulting from substeps inside the window
+u_write = []
+ref_write = []
+error_write = []
+# copy data to buffer and rename
+uu = u_n.copy()
+uu.rename("u", "")
+u_write.append((uu, t))
+uu_ref = u_ref.copy()
+uu_ref.rename("u_ref", "")
+ref_write.append(uu_ref)
+err = error_pointwise.copy()
+err.rename("err", "")
+error_write.append(err)
 
 # set t_1 = t_0 + dt, this gives u_D^1
 # call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
@@ -175,15 +195,32 @@ if problem is ProblemType.DIRICHLET:
 while precice.is_coupling_ongoing():
 
     # write checkpoint
-    if precice.is_action_required(precice.action_write_iteration_checkpoint()):
+    if precice.requires_writing_checkpoint():
         precice.store_checkpoint(u_n, t, n)
 
-    read_data = precice.read_data()
+        # output solution and reference solution at t_n+1 and substeps (read from buffer)
+        print('output u^%d and u_ref^%d' % (n, n))
+        for sample in u_write:
+            temperature_out << sample
+
+        for sample in ref_write:
+            ref_out << sample
+
+        for sample in error_write:
+            error_out << error_pointwise
+
+    precice_dt = precice.get_max_time_step_size()
+    dt.assign(np.min([fenics_dt, precice_dt]))
+
+    # Dirichlet BC and RHS need to point to end of current timestep
+    u_D.t = t + float(dt)
+    f.t = t + float(dt)
+
+    # Coupling BC needs to point to end of current timestep
+    read_data = precice.read_data(dt)
 
     # Update the coupling expression with the new read data
     precice.update_coupling_expression(coupling_expression, read_data)
-
-    dt.assign(np.min([fenics_dt, precice_dt]))
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
@@ -198,33 +235,54 @@ while precice.is_coupling_ongoing():
         # Neumann problem reads flux and writes temperature on boundary to Dirichlet problem
         precice.write_data(u_np1)
 
-    precice_dt = precice.advance(dt(0))
+    precice.advance(dt)
+    precice_dt = precice.get_max_time_step_size()
 
     # roll back to checkpoint
-    if precice.is_action_required(precice.action_read_iteration_checkpoint()):
+    if precice.requires_reading_checkpoint():
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
         u_n.assign(u_cp)
         t = t_cp
         n = n_cp
+        # empty buffer if window has not converged
+        u_write = []
+        ref_write = []
+        error_write = []
     else:  # update solution
         u_n.assign(u_np1)
         t += float(dt)
         n += 1
+        # copy data to buffer and rename
+        uu = u_n.copy()
+        uu.rename("u", "")
+        u_write.append((uu, t))
+        uu_ref = u_ref.copy()
+        uu_ref.rename("u_ref", "")
+        ref_write.append(uu_ref)
+        err = error_pointwise.copy()
+        err.rename("err", "")
+        error_write.append(err)
 
     if precice.is_time_window_complete():
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
-        print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
-        # output solution and reference solution at t_n+1
-        print('output u^%d and u_ref^%d' % (n, n))
-        temperature_out << u_n
-        ref_out << u_ref
-        error_out << error_pointwise
+        print("n = %d, t = %.2f: L2 error on domain = %.3g" % (n, t, error))
 
     # Update Dirichlet BC
     u_D.t = t + float(dt)
     f.t = t + float(dt)
+
+# output solution and reference solution at t_n+1 and substeps (read from buffer)
+print("output u^%d and u_ref^%d" % (n, n))
+for sample in u_write:
+    temperature_out << sample
+
+for sample in ref_write:
+    ref_out << sample
+
+for sample in error_write:
+    error_out << error_pointwise
 
 # Hold plot
 precice.finalize()
