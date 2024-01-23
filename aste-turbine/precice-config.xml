@@ -7,6 +7,8 @@
       enabled="true" />
   </log>
 
+  <profiling flush-every="50" directory="." mode="all" synchronize="true" />
+
   <data:scalar name="Data" />
 
   <mesh name="A-Mesh" dimensions="3">
