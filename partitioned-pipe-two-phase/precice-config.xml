@@ -12,7 +12,6 @@
   <data:vector name="VelocityGradient" />
   <data:scalar name="Alpha" />
   <data:scalar name="AlphaGradient" />
-  <!-- <data:scalar name="Phi" /> -->
 
   <mesh name="Fluid1-Mesh" dimensions="3">
     <use-data name="Pressure" />
@@ -20,7 +19,6 @@
     <use-data name="VelocityGradient" />
     <use-data name="Alpha" />
     <use-data name="AlphaGradient" />
-    <!-- <use-data name="Phi" /> -->
   </mesh>
 
   <mesh name="Fluid2-Mesh" dimensions= "3">
@@ -29,7 +27,6 @@
     <use-data name="VelocityGradient" />
     <use-data name="Alpha" />
     <use-data name="AlphaGradient" />
-    <!-- <use-data name="Phi" /> -->
   </mesh>
 
   <participant name="Fluid1">
@@ -40,7 +37,6 @@
     <read-data name="VelocityGradient" mesh="Fluid1-Mesh" />
     <write-data name="Alpha" mesh="Fluid1-Mesh" />
     <read-data name="AlphaGradient" mesh="Fluid1-Mesh" />
-    <!-- <write-data name="Phi" mesh="Fluid1-Mesh" /> -->
 
     <mapping:nearest-neighbor
       direction="read"
@@ -57,7 +53,6 @@
     <write-data name="VelocityGradient" mesh="Fluid2-Mesh" />
     <read-data name="Alpha" mesh="Fluid2-Mesh" />
     <write-data name="AlphaGradient" mesh="Fluid2-Mesh" />
-    <!-- <read-data name="Phi" mesh="Fluid2-Mesh" /> -->
 
     <mapping:nearest-neighbor
       direction="read"
@@ -77,14 +72,12 @@
     <exchange data="Pressure" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" />
     <exchange data="Alpha" mesh="Fluid1-Mesh" from="Fluid1" to="Fluid2" />
     <exchange data="AlphaGradient" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" />
-    <!-- <exchange data="Phi" mesh="Fluid1-Mesh" from="Fluid1" to="Fluid2" /> -->
     <max-iterations value="100" />
     <relative-convergence-measure limit="1.0e-5" data="Pressure" mesh="Fluid2-Mesh" />
     <relative-convergence-measure limit="1.0e-5" data="Velocity" mesh="Fluid1-Mesh" />
     <relative-convergence-measure limit="1.0e-5" data="VelocityGradient" mesh="Fluid2-Mesh" />
     <absolute-convergence-measure limit="1.0e-5" data="Alpha" mesh="Fluid1-Mesh" />
     <absolute-convergence-measure limit="1.0e-5" data="AlphaGradient" mesh="Fluid2-Mesh" />
-    <!-- <relative-convergence-measure limit="1.0e-5" data="Phi" mesh="Fluid1-Mesh" /> -->
     
     <acceleration:IQN-ILS>
       <data mesh="Fluid2-Mesh" name="VelocityGradient" />
