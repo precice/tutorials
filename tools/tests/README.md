@@ -10,19 +10,42 @@ The tutorials repository hosts cases that need multiple components from the preC
 
 ## Running the system tests
 
-**! Warning: still under development !**
-
 The main workflow for the user is executing the `systemtests.py` script. Depending on the options given to the script, it reads in the respective metadata files and generates `docker-compose.yaml` files that can start a fully-defined coupled simulation.
+
+### Running the tests for a preCICE release
+
+Workflow for the preCICE v3 release testing:
+
+1. Collect the Git commits/tags of all components you want to test. The caching mechanism cannot detect changes based on branch names. The same effect might be encountered when rebasing and force-pushing the release branch.
+2. In your terminal, navigate to the tutorials repository
+3. Trigger the GitHub Actions Workflow. Until we merge the workflow to develop, this can only happen via the [GitHub CLI](https://cli.github.com/):
+
+    ```bash
+    gh workflow run run_testsuite_manual.yml -f suites=release_test -f build_args="PRECICE_REF:150d4ee,OPENFOAM_ADAPTER_REF:a0e5263,PYTHON_BINDINGS_REF:49c2af0,FENICS_ADAPTER_REF:6f99859,TUTORIALS_REF:a1d46c4" --ref=develop
+    ```
+
+4. Go to the tutorials [Actions](https://github.com/precice/tutorials/actions) page and find the running workflow
+5. Check the status and the runtimes of each tutorial:
+
+    - Very small build times mean that the test is using cached container layers
+    - Most commonly, you will see tests failing with `Fieldcompare returned non zero exit code`. You will need to check the logs, but if the fieldcompare time is significant, this typically means that the numerical results differ above the tolerance (the test works!).
+
+6. Download the build artifacts from Summary > runs.
+
+    - In there, you may want to check the `stdout.log` and `stderr.log` files.
+    - The produced results are in `precice-exports/`, the reference results in `reference-results-unpacked`.
+    - Compare using, e.g., ParaView or [fieldcompare](https://gitlab.com/dglaeser/fieldcompare): `fieldcompare dir precice-exports/ reference/`. The `--diff` option will give you `precice-exports/diff_*.vtu` files, while you can also try different tolerances with `-rtol` and `-atol`.
 
 ### Running specific test suites
 
 To test a certain test-suite defined in `tests.yaml`, use:
 
 ```bash
-python3 systemtests.py --suites=openfoam-adapter-release,<someothersuite>
+python3 systemtests.py --suites=fenics_test,<someothersuite>
 ```
 
 To discover all tests, use `python print_test_suites.py`.
+
 To be able to fill in the right case tuple into the `tests.yaml`, you can use the `python3 print_case_combinations.py` script.
 
 ## Running the system tests on GitHub Actions
@@ -35,7 +58,7 @@ After bringing these changes to `master`, the manual triggering option should be
 gh workflow run run_testsuite_manual.yml -f suites=fenics_test --ref=develop
 ```
 
-Another example, to use the latest develop branches and enable debug information of the tests:
+Another example, to use the latest releases and enable debug information of the tests:
 
 ```shell
 gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v2.5.0,OPENFOAM_ADAPTER_REF:v1.2.3,PYTHON_BINDINGS_REF:v2.5.0.4,FENICS_ADAPTER_REF:v1.4.0" -f loglevel=DEBUG --ref=develop

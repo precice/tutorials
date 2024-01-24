@@ -63,7 +63,7 @@ jobs:
         cd ../../
     - name: Archive run files
       if: ${{  failure() || inputs.upload_artifacts == 'TRUE' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: runs
         path: |
