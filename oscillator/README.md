@@ -64,4 +64,4 @@ For details, refer to [1].
 
 [1] V. Schüller, B. Rodenberg, B. Uekermann and H. Bungartz, A Simple Test Case for Convergence Order in Time and Energy Conservation of Black-Box Coupling Schemes, in: WCCM-APCOM2022. [URL](https://www.scipedia.com/public/Rodenberg_2022a)
 
-[2] L. Willeke, A preCICE-FMI Runner to couple controller models to PDEs, Master Thesis, University of Stuttgart, 2023 (Publication pending)
+[2] L. Willeke, [A preCICE-FMI Runner to couple controller models to PDEs](http://dx.doi.org/10.18419/opus-13130), Master Thesis, University of Stuttgart, 2023
