@@ -74,7 +74,7 @@ fenics_dt = .01  # time step size
 error_tol = args.error_tol
 
 alpha = 3  # parameter alpha
-beta = 1.3  # parameter beta
+beta = 1.2  # parameter beta
 
 if args.dirichlet and not args.neumann:
     problem = ProblemType.DIRICHLET
