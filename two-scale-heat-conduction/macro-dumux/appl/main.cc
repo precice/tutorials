@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
   // - Name of solver
   // - What rank of how many ranks this instance is
   // Configure preCICE. For now the config file is hardcoded.
-  std::string preciceConfigFilename = "../../../precice-config-dumux.xml";
+  std::string preciceConfigFilename = "../precice-config.xml";
   const std::string meshName = "macro-mesh";
   if (argc > 2)
     preciceConfigFilename = argv[argc - 1];
