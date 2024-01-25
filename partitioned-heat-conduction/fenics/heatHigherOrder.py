@@ -92,8 +92,9 @@ W = V_g.sub(0).collapse()
 
 # Define boundary conditions
 # create sympy expression of manufactured solution
+g_degree = 0  # degree of time dependent term g(t). Determines how difficult it is to solve the problem
 x_sp, y_sp, t_sp = sp.symbols(['x[0]', 'x[1]', 't'])
-u_D_sp = 1 + x_sp * x_sp + alpha * y_sp * y_sp + beta * t_sp * t_sp
+u_D_sp = 1 + x_sp * x_sp * (1 + t_sp)**g_degree  + alpha * y_sp * y_sp + beta * t_sp
 u_D = Expression(sp.ccode(u_D_sp), degree=2, alpha=alpha, beta=beta, t=0)
 u_D_function = interpolate(u_D, V)
 
@@ -108,7 +109,7 @@ u_n.rename("Temperature", "")
 
 # time stepping setup
 # scheme
-tsm = LobattoIIIC(2)
+tsm = GaussLegendre(2)
 # depending on tsm, we define the trial and test function space
 if tsm.num_stages == 1:
     Vbig = V
