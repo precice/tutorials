@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
   <log>
     <sink
@@ -40,11 +40,7 @@
     <read-data name="Stress" mesh="Solid-Mesh" />
     <write-data name="Displacement" mesh="Solid-Mesh" />
     <watch-point mesh="Solid-Mesh" name="Flap-Tip" coordinate="0.6;0.2" />
-    <mapping:rbf
-      direction="read"
-      from="Fluid-Mesh-Centers"
-      to="Solid-Mesh"
-      constraint="consistent">
+    <mapping:rbf direction="read" from="Fluid-Mesh-Centers" to="Solid-Mesh" constraint="consistent">
       <basis-function:compact-polynomial-c6 support-radius="0.35" />
     </mapping:rbf>
   </participant>
@@ -60,7 +56,6 @@
     <max-iterations value="100" />
     <relative-convergence-measure limit="1e-4" data="Stress" mesh="Fluid-Mesh-Centers" />
     <relative-convergence-measure limit="1e-4" data="Displacement" mesh="Solid-Mesh" />
-    <extrapolation-order value="2" />
     <acceleration:IQN-ILS>
       <data name="Displacement" mesh="Solid-Mesh" />
       <data name="Stress" mesh="Fluid-Mesh-Centers" />

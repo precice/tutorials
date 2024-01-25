@@ -5,10 +5,6 @@ build:
       - {{key}}={{value}}
     {% endfor %}
   target: fenics_adapter
-  cache_from:
-  - type=gha
-  cache_to:
-  - type=gha,mode=min,scope=fenics_adapter
 depends_on:    
   prepare:
     condition: service_completed_successfully

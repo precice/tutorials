@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
   <log>
     <sink
@@ -45,14 +45,14 @@
     <provide-mesh name="Fluid1-Solid-Mesh" />
     <receive-mesh name="Solid-Mesh" from="Solid" />
     <provide-mesh name="Fluid1-Fluid-Mesh" />
-    <receive-mesh name="Fluid2-Mesh" from="Fluid2" />      
+    <receive-mesh name="Fluid2-Mesh" from="Fluid2" />
     <read-data name="Heat-Flux" mesh="Fluid1-Solid-Mesh" />
     <write-data name="Temperature-Solid" mesh="Fluid1-Solid-Mesh" />
     <write-data name="Velocity" mesh="Fluid1-Fluid-Mesh" />
     <read-data name="Pressure" mesh="Fluid1-Fluid-Mesh" />
     <read-data name="VelocityGradient" mesh="Fluid1-Fluid-Mesh" />
     <write-data name="FlowTemperature-Fluid" mesh="Fluid1-Fluid-Mesh" />
-    <read-data name="FlowTemperatureGradient" mesh="Fluid1-Fluid-Mesh" /> 
+    <read-data name="FlowTemperatureGradient" mesh="Fluid1-Fluid-Mesh" />
     <mapping:nearest-neighbor
       direction="read"
       from="Solid-Mesh"
@@ -110,14 +110,20 @@
     <participants first="Fluid1" second="Fluid2" />
     <exchange data="Velocity" mesh="Fluid1-Fluid-Mesh" from="Fluid1" to="Fluid2" />
     <exchange data="VelocityGradient" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" />
-    <exchange data="Pressure" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" initialize="true"/>
+    <exchange data="Pressure" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" initialize="true" />
     <exchange data="FlowTemperature-Fluid" mesh="Fluid1-Fluid-Mesh" from="Fluid1" to="Fluid2" />
     <exchange data="FlowTemperatureGradient" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" />
     <relative-convergence-measure limit="1.0e-5" data="Pressure" mesh="Fluid2-Mesh" />
     <relative-convergence-measure limit="1.0e-5" data="Velocity" mesh="Fluid1-Fluid-Mesh" />
     <relative-convergence-measure limit="1.0e-5" data="VelocityGradient" mesh="Fluid2-Mesh" />
-    <relative-convergence-measure limit="1.0e-5" data="FlowTemperature-Fluid" mesh="Fluid1-Fluid-Mesh" />
-    <relative-convergence-measure limit="1.0e-5" data="FlowTemperatureGradient" mesh="Fluid2-Mesh" />
+    <relative-convergence-measure
+      limit="1.0e-5"
+      data="FlowTemperature-Fluid"
+      mesh="Fluid1-Fluid-Mesh" />
+    <relative-convergence-measure
+      limit="1.0e-5"
+      data="FlowTemperatureGradient"
+      mesh="Fluid2-Mesh" />
     <acceleration:IQN-ILS>
       <data mesh="Fluid2-Mesh" name="Pressure" />
       <data mesh="Fluid2-Mesh" name="VelocityGradient" />

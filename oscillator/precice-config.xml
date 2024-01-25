@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
-<!-- Use this to activate waveforms
+  <!-- Use this to activate waveforms
 <precice-configuration experimental="true">
 -->
   <log enabled="1">
@@ -23,16 +23,24 @@
   <participant name="Mass-Left">
     <provide-mesh name="Mass-Left-Mesh" />
     <write-data name="Force-Left" mesh="Mass-Left-Mesh" />
-    <read-data  name="Force-Right" mesh="Mass-Left-Mesh" />
+    <read-data name="Force-Right" mesh="Mass-Left-Mesh" />
   </participant>
 
   <participant name="Mass-Right">
-    <receive-mesh name="Mass-Left-Mesh" from="Mass-Left"/>
+    <receive-mesh name="Mass-Left-Mesh" from="Mass-Left" />
     <provide-mesh name="Mass-Right-Mesh" />
     <write-data name="Force-Right" mesh="Mass-Right-Mesh" />
-    <read-data  name="Force-Left" mesh="Mass-Right-Mesh" />
-    <mapping:nearest-neighbor direction="write" from="Mass-Right-Mesh" to="Mass-Left-Mesh" constraint="consistent" />
-    <mapping:nearest-neighbor direction="read"  from="Mass-Left-Mesh" to="Mass-Right-Mesh" constraint="consistent" />
+    <read-data name="Force-Left" mesh="Mass-Right-Mesh" />
+    <mapping:nearest-neighbor
+      direction="write"
+      from="Mass-Right-Mesh"
+      to="Mass-Left-Mesh"
+      constraint="consistent" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Mass-Left-Mesh"
+      to="Mass-Right-Mesh"
+      constraint="consistent" />
   </participant>
 
   <m2n:sockets acceptor="Mass-Left" connector="Mass-Right" exchange-directory=".." />

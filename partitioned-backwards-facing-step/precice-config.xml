@@ -41,7 +41,6 @@
     <read-data name="Pressure" mesh="Fluid1-Mesh" />
     <read-data name="VelocityBack" mesh="Fluid1-Mesh" />
     <read-data name="VelocityGradient" mesh="Fluid1-Mesh" />
-
     <mapping:nearest-neighbor
       direction="read"
       from="Fluid2-Mesh"
@@ -58,7 +57,6 @@
     <write-data name="Pressure" mesh="Fluid2-Mesh" />
     <write-data name="VelocityBack" mesh="Fluid2-Mesh" />
     <write-data name="VelocityGradient" mesh="Fluid2-Mesh" />
-
     <mapping:nearest-neighbor
       direction="read"
       from="Fluid1-Mesh"

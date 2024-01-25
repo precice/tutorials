@@ -96,16 +96,43 @@
     <participant name="Fluid" control="yes" />
     <participant name="Solid-Upstream" />
     <participant name="Solid-Downstream" />
-    <exchange data="Stress-Upstream" mesh="Fluid-Upstream-Mesh-Centers" from="Fluid" to="Solid-Upstream" />
-    <exchange data="Stress-Downstream" mesh="Fluid-Downstream-Mesh-Centers" from="Fluid" to="Solid-Downstream" />
-    <exchange data="Displacement-Upstream" mesh="Solid-Upstream-Mesh" from="Solid-Upstream" to="Fluid" />
-    <exchange data="Displacement-Downstream" mesh="Solid-Downstream-Mesh" from="Solid-Downstream" to="Fluid" />
+    <exchange
+      data="Stress-Upstream"
+      mesh="Fluid-Upstream-Mesh-Centers"
+      from="Fluid"
+      to="Solid-Upstream" />
+    <exchange
+      data="Stress-Downstream"
+      mesh="Fluid-Downstream-Mesh-Centers"
+      from="Fluid"
+      to="Solid-Downstream" />
+    <exchange
+      data="Displacement-Upstream"
+      mesh="Solid-Upstream-Mesh"
+      from="Solid-Upstream"
+      to="Fluid" />
+    <exchange
+      data="Displacement-Downstream"
+      mesh="Solid-Downstream-Mesh"
+      from="Solid-Downstream"
+      to="Fluid" />
     <max-iterations value="50" />
-    <relative-convergence-measure limit="1e-4" data="Stress-Upstream" mesh="Fluid-Upstream-Mesh-Centers" />
-    <relative-convergence-measure limit="1e-4" data="Displacement-Upstream" mesh="Solid-Upstream-Mesh" />
-    <relative-convergence-measure limit="1e-4" data="Stress-Downstream" mesh="Fluid-Downstream-Mesh-Centers" />
-    <relative-convergence-measure limit="1e-4" data="Displacement-Downstream" mesh="Solid-Downstream-Mesh" />
-    <extrapolation-order value="2" />
+    <relative-convergence-measure
+      limit="1e-4"
+      data="Stress-Upstream"
+      mesh="Fluid-Upstream-Mesh-Centers" />
+    <relative-convergence-measure
+      limit="1e-4"
+      data="Displacement-Upstream"
+      mesh="Solid-Upstream-Mesh" />
+    <relative-convergence-measure
+      limit="1e-4"
+      data="Stress-Downstream"
+      mesh="Fluid-Downstream-Mesh-Centers" />
+    <relative-convergence-measure
+      limit="1e-4"
+      data="Displacement-Downstream"
+      mesh="Solid-Downstream-Mesh" />
     <acceleration:IQN-ILS>
       <data name="Displacement-Upstream" mesh="Solid-Upstream-Mesh" />
       <data name="Displacement-Downstream" mesh="Solid-Downstream-Mesh" />
