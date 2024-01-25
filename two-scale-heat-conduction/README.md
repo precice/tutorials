@@ -1,7 +1,7 @@
 ---
 title: Two-scale heat conduction
 permalink: tutorials-two-scale-heat-conduction.html
-keywords: Macro-micro, Micro Manager, Nutils, DuMu<sup>x</sup>, Heat conduction
+keywords: Macro-micro, Micro Manager, Nutils, DuMuX, Heat conduction
 summary: We solve a two-scale heat conduction problem with a predefined micro structure of two materials. One macro simulation is coupled to several micro simulations using the Micro Manager.
 ---
 
