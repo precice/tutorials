@@ -5,8 +5,8 @@ class ProblemType(Enum):
     """
     Enum defines problem type. Details see above.
     """
-    DIRICHLET = 1  # Dirichlet problem
-    NEUMANN = 2  # Neumann problem
+    DIRICHLET = "Dirichlet"  # Dirichlet problem
+    NEUMANN = "Neumann"  # Neumann problem
 
 
 class DomainPart(Enum):
@@ -17,3 +17,8 @@ class DomainPart(Enum):
     RIGHT = 2  # right part of domain in simple interface case
     CIRCULAR = 3  # circular part of domain in complex interface case
     RECTANGLE = 4  # domain excluding circular part of complex interface case
+
+
+class TimeDependence(Enum):
+    POLYNOMIAL = "polynomial"
+    TRIGONOMETRIC = "trigonometric"
