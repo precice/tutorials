@@ -61,7 +61,7 @@ def do_run(precice_config_params=default_precice_config_params, experiment_param
     for participant in participants:
         with open(fenics / participant['logfile'], "w") as outfile:
             cmd = ["python3",
-                   fenics / "heat.py",
+                   fenics / "heatHigherOrder.py",
                    participant["cmd"]] + [f"{opt}={value}" for opt, value in experiment_params.items()]
             p = subprocess.Popen(cmd,
                                  cwd=fenics,
@@ -147,7 +147,7 @@ if __name__ == "__main__":
     summary_file = Path("convergence-studies") / f"{uuid.uuid4()}.csv"
 
     for dt in [args.base_time_window_size * 0.5**i for i in range(args.time_window_refinements)]:
-        for n in [2**i for i in range(args.time_step_refinements)]:
+        for n in [5]:
             precice_config_params['time_window_size'] = dt
             experiment_params['--n-substeps'] = n
             summary = do_run(

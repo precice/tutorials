@@ -7,8 +7,8 @@
       enabled="true" />
   </log>
 
-  <data:scalar name="Temperature" waveform-degree="1" />
-  <data:scalar name="Heat-Flux" waveform-degree="1" />
+  <data:scalar name="Temperature" waveform-degree="5" />
+  <data:scalar name="Heat-Flux" waveform-degree="5" />
 
   <mesh name="Dirichlet-Mesh" dimensions="2">
     <use-data name="Temperature" />
@@ -49,7 +49,7 @@
   <coupling-scheme:serial-implicit>
     <participants first="Dirichlet" second="Neumann" />
     <max-time value="1.0" />
-    <time-window-size value="0.1" />
+    <time-window-size value="0.25" />
     <max-iterations value="100" />
     <exchange
       data="Heat-Flux"
@@ -65,8 +65,8 @@
       to="Dirichlet"
       initialize="true"
       substeps="true" />
-    <relative-convergence-measure data="Heat-Flux" mesh="Dirichlet-Mesh" limit="1e-3" />
-    <relative-convergence-measure data="Temperature" mesh="Neumann-Mesh" limit="1e-3" />
+    <relative-convergence-measure data="Heat-Flux" mesh="Dirichlet-Mesh" limit="1e-9" />
+    <relative-convergence-measure data="Temperature" mesh="Neumann-Mesh" limit="1e-9" />
     <!-- <acceleration:IQN-ILS>
       <data name="Temperature" mesh="Neumann-Mesh" />
       <initial-relaxation value="0.1" />
