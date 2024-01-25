@@ -1,0 +1,2 @@
+nutils==8
+pyprecice==3.0.0.0dev2

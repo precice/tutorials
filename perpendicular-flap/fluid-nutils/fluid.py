@@ -162,6 +162,9 @@ def main(inflow: 'inflow velocity' = 10,
 
     while participant.is_coupling_ongoing():
 
+        precice_dt = participant.get_max_time_step_size()
+        dt = min(precice_dt, timestepsize)
+
         # read displacements from participant
         readdata = participant.read_data(meshName, readDataName, dataIndices, dt)
         coupledata = couplingsample.asfunction(readdata)
@@ -197,8 +200,6 @@ def main(inflow: 'inflow velocity' = 10,
 
         # do the coupling
         participant.advance(dt)
-        precice_dt = participant.get_max_time_step_size()
-        dt = min(precice_dt, timestepsize)
 
         # advance variables
         timestep += 1
