@@ -4,7 +4,7 @@ import numpy as np
 
 
 def vtk_to_dict(case):
-    vtkFileName = "solid-{}/preCICE-output/Fluid-Mesh-Solid.final.vtk".format(case)
+    vtkFileName = "solid-{}/preCICE-output/Fluid-Mesh-Solid.dt100.vtk".format(case)
     # read the vtk file as an unstructured grid
     reader = vtk.vtkUnstructuredGridReader()
     reader.SetFileName(vtkFileName)

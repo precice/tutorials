@@ -26,15 +26,14 @@ Heat equation with mixed boundary conditions. (Neumann problem)
 
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
-    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, MeshFunction, MPI
+    File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, VectorFunctionSpace, FacetNormal, MeshFunction, MPI
 from fenicsprecice import Adapter
 from errorcomputation import compute_errors
 from my_enums import ProblemType, DomainPart
 import argparse
 import numpy as np
 from problem_setup import get_geometry, get_problem_setup
-import dolfin
-from dolfin import FacetNormal, dot
+import sympy as sp
 
 
 def determine_gradient(V_g, u, flux):
@@ -72,7 +71,7 @@ fenics_dt = .1
 # Error is bounded by coupling accuracy. In theory we can obtain the analytical solution.
 error_tol = 10 ** -6
 alpha = 3  # parameter alpha
-beta = 1.3  # parameter beta
+beta = 1.2  # parameter beta
 gamma = args.gamma  # parameter gamma, dependence of heat flux on time
 
 # Create mesh and separate mesh components for grid, boundary and coupling interface
@@ -84,11 +83,13 @@ V = FunctionSpace(mesh, 'P', 2)
 V_g = VectorFunctionSpace(mesh, 'P', 1)
 
 # Define boundary conditions
-u_D = Expression('1 + gamma*t*x[0]*x[0] + (1-gamma)*x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha,
-                 beta=beta, gamma=gamma, t=0)
+# create sympy expression of manufactured solution
+x_sp, y_sp, t_sp = sp.symbols(['x[0]', 'x[1]', 't'])
+u_D_sp = 1 + gamma * t_sp * x_sp * x_sp + (1 - gamma) * x_sp * x_sp + alpha * y_sp * y_sp + beta * t_sp
+u_D = Expression(sp.ccode(u_D_sp), degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 u_D_function = interpolate(u_D, V)
 # Define flux in x direction on coupling interface (grad(u_D) in normal direction)
-f_N = Expression(("2 * gamma*t*x[0] + 2 * (1-gamma)*x[0]", "2 * alpha*x[1]"), degree=1, gamma=gamma, alpha=alpha, t=0)
+f_N = Expression((sp.ccode(u_D_sp.diff(x_sp)), sp.ccode(u_D_sp.diff(y_sp))), degree=1, gamma=gamma, alpha=alpha, t=0)
 f_N_function = interpolate(f_N, V_g)
 
 # Define initial value
@@ -114,8 +115,9 @@ dt.assign(np.min([fenics_dt, precice_dt]))
 # Define variational problem
 u = TrialFunction(V)
 v = TestFunction(V)
-f = Expression('beta + gamma*x[0]*x[0] - 2*gamma*t - 2*(1-gamma) - 2*alpha',
-               degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
+# du_dt-Laplace(u) = f
+f_sp = u_D_sp.diff(t_sp) - u_D_sp.diff(x_sp).diff(x_sp) - u_D_sp.diff(y_sp).diff(y_sp)
+f = Expression(sp.ccode(f_sp), degree=2, alpha=alpha, beta=beta, gamma=gamma, t=0)
 F = u * v / dt * dx + dot(grad(u), grad(v)) * dx - (u_n / dt + f) * v * dx
 
 bcs = [DirichletBC(V, u_D, remaining_boundary)]
@@ -132,16 +134,16 @@ if problem is ProblemType.NEUMANN:
             # this term has to be added to weak form to add a Neumann BC (see e.g. p.
             # 83ff Langtangen, Hans Petter, and Anders Logg. "Solving PDEs in Python
             # The FEniCS Tutorial Volume I." (2016).)
-            F += v * coupling_expression * dolfin.ds
+            F += v * coupling_expression * ds
         elif coupling_expression.is_vector_valued():
             normal = FacetNormal(mesh)
-            F += -v * dot(normal, coupling_expression) * dolfin.ds
+            F += -v * dot(normal, coupling_expression) * ds
         else:
             raise Exception("invalid!")
     else:  # For multiple Neumann BCs integration should only be performed over the respective domain.
         # TODO: fix the problem here
         raise Exception("Boundary markers are not implemented yet")
-        # return dot(coupling_bc_expression, v) * dolfin.dss(boundary_marker)
+        # return dot(coupling_bc_expression, v) * dss(boundary_marker)
 
 a, L = lhs(F), rhs(F)
 
@@ -178,11 +180,6 @@ ranks << mesh_rank
 error_total, error_pointwise = compute_errors(u_n, u_ref, V)
 error_out << error_pointwise
 
-# set t_1 = t_0 + dt, this gives u_D^1
-# call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
-u_D.t = t + dt(0)
-f.t = t + dt(0)
-
 flux = Function(V_g)
 flux.rename("Flux", "")
 
@@ -194,7 +191,14 @@ while precice.is_coupling_ongoing():
 
     precice_dt = precice.get_max_time_step_size()
     dt.assign(np.min([fenics_dt, precice_dt]))
+
+    # Dirichlet BC and RHS need to point to end of current timestep
+    u_D.t = t + float(dt)
+    f.t = t + float(dt)
+
+    # Coupling BC needs to point to end of current timestep
     read_data = precice.read_data(dt)
+
     if problem is ProblemType.DIRICHLET and (domain_part is DomainPart.CIRCULAR or domain_part is DomainPart.RECTANGLE):
         # We have to data for an arbitrary point that is not on the circle, to obtain exact solution.
         # See https://github.com/precice/fenics-adapter/issues/113 for details.
@@ -238,10 +242,6 @@ while precice.is_coupling_ongoing():
         temperature_out << (u_n, t)
         ref_out << u_ref
         error_out << error_pointwise
-
-    # Update Dirichlet BC
-    u_D.t = t + float(dt)
-    f.t = t + float(dt)
 
 # Hold plot
 precice.finalize()
