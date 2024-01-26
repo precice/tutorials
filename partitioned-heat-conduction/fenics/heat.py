@@ -33,8 +33,6 @@ from my_enums import ProblemType, DomainPart
 import argparse
 import numpy as np
 from problem_setup import get_geometry
-import dolfin
-from dolfin import FacetNormal, dot
 import sympy as sp
 
 
@@ -63,12 +61,12 @@ parser.add_argument("-e", "--error-tol", help="set error tolerance", type=float,
 
 args = parser.parse_args()
 
-fenics_dt = .1  # time step size
+fenics_dt = .01  # time step size
 # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
 error_tol = args.error_tol
 
 alpha = 3  # parameter alpha
-beta = 1.3  # parameter beta
+beta = 1.2  # parameter beta
 
 if args.dirichlet and not args.neumann:
     problem = ProblemType.DIRICHLET
@@ -112,7 +110,6 @@ elif problem is ProblemType.NEUMANN:
     precice.initialize(coupling_boundary, read_function_space=W, write_object=u_D_function)
     precice_dt = precice.get_max_time_step_size()
 
-
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
 
@@ -135,7 +132,7 @@ if problem is ProblemType.DIRICHLET:
 if problem is ProblemType.NEUMANN:
     # modify Neumann boundary condition on coupling interface, modify weak
     # form correspondingly
-    F += v * coupling_expression * dolfin.ds
+    F += v * coupling_expression * ds
 
 a, L = lhs(F), rhs(F)
 
@@ -164,13 +161,32 @@ ranks = File("output/ranks%s.pvd" % precice.get_participant_name())
 
 # output solution and reference solution at t=0, n=0
 n = 0
-print('output u^%d and u_ref^%d' % (n, n))
-temperature_out << (u_n, t)
-ref_out << u_ref
+print("output u^%d and u_ref^%d" % (n, n))
 ranks << mesh_rank
 
 error_total, error_pointwise = compute_errors(u_n, u_ref, V)
-error_out << error_pointwise
+
+# create buffer for output. We need this buffer, because we only want to
+# write the converged output at the end of the window, but we also want to
+# write the samples that are resulting from substeps inside the window
+u_write = []
+ref_write = []
+error_write = []
+# copy data to buffer and rename
+uu = u_n.copy()
+uu.rename("u", "")
+u_write.append((uu, t))
+uu_ref = u_ref.copy()
+uu_ref.rename("u_ref", "")
+ref_write.append(uu_ref)
+err = error_pointwise.copy()
+err.rename("err", "")
+error_write.append(err)
+
+# set t_1 = t_0 + dt, this gives u_D^1
+# call dt(0) to evaluate FEniCS Constant. Todo: is there a better way?
+u_D.t = t + dt(0)
+f.t = t + dt(0)
 
 if problem is ProblemType.DIRICHLET:
     flux = Function(V_g)
@@ -181,6 +197,17 @@ while precice.is_coupling_ongoing():
     # write checkpoint
     if precice.requires_writing_checkpoint():
         precice.store_checkpoint(u_n, t, n)
+
+        # output solution and reference solution at t_n+1 and substeps (read from buffer)
+        print('output u^%d and u_ref^%d' % (n, n))
+        for sample in u_write:
+            temperature_out << sample
+
+        for sample in ref_write:
+            ref_out << sample
+
+        for sample in error_write:
+            error_out << error_pointwise
 
     precice_dt = precice.get_max_time_step_size()
     dt.assign(np.min([fenics_dt, precice_dt]))
@@ -217,21 +244,45 @@ while precice.is_coupling_ongoing():
         u_n.assign(u_cp)
         t = t_cp
         n = n_cp
+        # empty buffer if window has not converged
+        u_write = []
+        ref_write = []
+        error_write = []
     else:  # update solution
         u_n.assign(u_np1)
         t += float(dt)
         n += 1
+        # copy data to buffer and rename
+        uu = u_n.copy()
+        uu.rename("u", "")
+        u_write.append((uu, t))
+        uu_ref = u_ref.copy()
+        uu_ref.rename("u_ref", "")
+        ref_write.append(uu_ref)
+        err = error_pointwise.copy()
+        err.rename("err", "")
+        error_write.append(err)
 
     if precice.is_time_window_complete():
         u_ref = interpolate(u_D, V)
         u_ref.rename("reference", " ")
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
-        print('n = %d, t = %.2f: L2 error on domain = %.3g' % (n, t, error))
-        # output solution and reference solution at t_n+1
-        print('output u^%d and u_ref^%d' % (n, n))
-        temperature_out << (u_n, t)
-        ref_out << u_ref
-        error_out << error_pointwise
+        print("n = %d, t = %.2f: L2 error on domain = %.3g" % (n, t, error))
+
+    # Update Dirichlet BC
+    u_D.t = t + float(dt)
+    f.t = t + float(dt)
+
+# output solution and reference solution at t_n+1 and substeps (read from buffer)
+print("output u^%d and u_ref^%d" % (n, n))
+for sample in u_write:
+    temperature_out << sample
+
+for sample in ref_write:
+    ref_out << sample
+
+for sample in error_write:
+    error_out << error_pointwise
 
 # Hold plot
 precice.finalize()

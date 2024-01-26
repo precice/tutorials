@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
   <log>
     <sink
@@ -26,7 +26,6 @@
   <participant name="Fluid">
     <provide-mesh name="Fluid-Mesh" />
     <receive-mesh name="Solid-Mesh" from="Solid" />
-    <receive-mesh name="Solid-Mesh-nodes" from="Solid" />
     <read-data name="Heat-Flux" mesh="Fluid-Mesh" />
     <write-data name="Temperature" mesh="Fluid-Mesh" />
     <mapping:nearest-neighbor
@@ -47,7 +46,7 @@
       constraint="consistent" />
     <read-data name="Temperature" mesh="Solid-Mesh-nodes" />
     <write-data name="Heat-Flux" mesh="Solid-Mesh" />
-  <watch-point mesh="Solid-Mesh" name="MyWatchPoint" coordinate="0.5; 0.0"/>
+    <watch-point mesh="Solid-Mesh" name="MyWatchPoint" coordinate="0.5; 0.0" />
   </participant>
 
   <m2n:sockets acceptor="Fluid" connector="Solid" exchange-directory=".." />

@@ -30,8 +30,8 @@ args = parser.parse_args()
 participant_name = args.participantName
 
 if participant_name == Participant.MASS_LEFT.value:
-    write_data_name = 'Displacement-Left'
-    read_data_name = 'Displacement-Right'
+    write_data_name = 'Force-Left'
+    read_data_name = 'Force-Right'
     mesh_name = 'Mass-Left-Mesh'
 
     this_mass = problemDefinition.MassLeft
@@ -40,8 +40,8 @@ if participant_name == Participant.MASS_LEFT.value:
     other_mass = problemDefinition.MassRight
 
 elif participant_name == Participant.MASS_RIGHT.value:
-    read_data_name = 'Displacement-Left'
-    write_data_name = 'Displacement-Right'
+    read_data_name = 'Force-Left'
+    write_data_name = 'Force-Right'
     mesh_name = 'Mass-Right-Mesh'
 
     this_mass = problemDefinition.MassRight
@@ -122,7 +122,7 @@ while participant.is_coupling_ongoing():
     dt = np.min([precice_dt, my_dt])
     read_time = (1 - alpha_f) * dt
     read_data = participant.read_data(mesh_name, read_data_name, vertex_ids, read_time)
-    f = connecting_spring.k * read_data[0]
+    f = read_data[0]
 
     # do generalized alpha step
     m[0] = (1 - alpha_m) / (beta * dt**2)
@@ -134,7 +134,7 @@ while participant.is_coupling_ongoing():
     v_new = v + dt * ((1 - gamma) * a + gamma * a_new)
     t_new = t + dt
 
-    write_data = [u_new]
+    write_data = [connecting_spring.k * u_new]
 
     participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
 

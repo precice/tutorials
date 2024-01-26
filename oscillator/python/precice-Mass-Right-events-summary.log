@@ -1,0 +1,67 @@
+Run finished at Mon Apr  3 17:12:46 2023
+Global runtime       = 5574ms / 5.574s
+Number of processors = 1
+# Rank: 0
+
+                                                                Event |      Count |  Total[ms] |    Max[ms] |    Min[ms] |    Avg[ms] | Time Ratio |
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+                                                              _GLOBAL |          1 |       5574 |       5574 |       5574 |       5574 |          1 |
+                                                              advance |        109 |       5340 |         62 |          4 |         48 |      0.958 |
+                                              advance/m2n.receiveData |        216 |       4847 |         53 |          0 |         22 |       0.87 |
+                                                 advance/m2n.sendData |        109 |         45 |          5 |          0 |          0 |    0.00807 |
+           advance/map.nn.mapData.FromMass-Left-MeshToMass-Right-Mesh |        216 |         24 |          0 |          0 |          0 |    0.00431 |
+           advance/map.nn.mapData.FromMass-Right-MeshToMass-Left-Mesh |        327 |         33 |          2 |          0 |          0 |    0.00592 |
+                                                            configure |          1 |          0 |          0 |          0 |          0 |          0 |
+                                                             finalize |          1 |          1 |          1 |          1 |          1 |   0.000179 |
+                                                           initialize |          1 |        141 |        141 |        141 |        141 |     0.0253 |
+                           initialize/m2n.acceptPrimaryRankConnection |          1 |          2 |          2 |          2 |          2 |   0.000359 |
+                        initialize/m2n.acceptSecondaryRanksConnection |          1 |         47 |         47 |         47 |         47 |    0.00843 |
+                          initialize/m2n.broadcastVertexDistributions |          1 |          0 |          0 |          0 |          0 |          0 |
+                                 initialize/m2n.buildCommunicationMap |          1 |          0 |          0 |          0 |          0 |          0 |
+                                  initialize/m2n.createCommunications |          1 |          3 |          3 |          3 |          3 |   0.000538 |
+                            initialize/m2n.exchangeVertexDistribution |          1 |         44 |         44 |         44 |         44 |    0.00789 |
+                                           initialize/m2n.receiveData |          2 |         43 |         41 |          2 |         21 |    0.00771 |
+                                              initialize/m2n.sendData |          1 |          0 |          0 |          0 |          0 |          0 |
+ initialize/map.nn.computeMapping.FromMass-Left-MeshToMass-Right-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+ initialize/map.nn.computeMapping.FromMass-Right-MeshToMass-Left-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+        initialize/map.nn.mapData.FromMass-Left-MeshToMass-Right-Mesh |          2 |          0 |          0 |          0 |          0 |          0 |
+        initialize/map.nn.mapData.FromMass-Right-MeshToMass-Left-Mesh |          3 |          0 |          0 |          0 |          0 |          0 |
+                     initialize/partition.prepareMesh.Mass-Right-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+                initialize/partition.receiveGlobalMesh.Mass-Left-Mesh |          1 |         39 |         39 |         39 |         39 |      0.007 |
+                                initialize/preprocess.Mass-Right-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+             initialize/query.index.getVertexIndexTree.Mass-Left-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+            initialize/query.index.getVertexIndexTree.Mass-Right-Mesh |          1 |          0 |          0 |          0 |          0 |          0 |
+                                                       solver.advance |        109 |         81 |          3 |          0 |          0 |     0.0145 |
+                                                    solver.initialize |          1 |          3 |          3 |          3 |          3 |   0.000538 |
+
+
+                                                                 Name |        Max |  MaxOnRank |        Min |  MinOnRank |    Min/Max |
+----------------------------------------------------------------------------------------------------------------------------------------
+                                                              _GLOBAL |       5574 |          0 |       5574 |          0 |          1 |
+                                                              advance |         62 |          0 |          4 |          0 |  0.0645161 |
+                                              advance/m2n.receiveData |         53 |          0 |          0 |          0 |          0 |
+                                                 advance/m2n.sendData |          5 |          0 |          0 |          0 |          0 |
+           advance/map.nn.mapData.FromMass-Left-MeshToMass-Right-Mesh |          0 |          0 |          0 |          0 |          0 |
+           advance/map.nn.mapData.FromMass-Right-MeshToMass-Left-Mesh |          2 |          0 |          0 |          0 |          0 |
+                                                            configure |          0 |          0 |          0 |          0 |          0 |
+                                                             finalize |          1 |          0 |          1 |          0 |          1 |
+                                                           initialize |        141 |          0 |        141 |          0 |          1 |
+                           initialize/m2n.acceptPrimaryRankConnection |          2 |          0 |          2 |          0 |          1 |
+                        initialize/m2n.acceptSecondaryRanksConnection |         47 |          0 |         47 |          0 |          1 |
+                          initialize/m2n.broadcastVertexDistributions |          0 |          0 |          0 |          0 |          0 |
+                                 initialize/m2n.buildCommunicationMap |          0 |          0 |          0 |          0 |          0 |
+                                  initialize/m2n.createCommunications |          3 |          0 |          3 |          0 |          1 |
+                            initialize/m2n.exchangeVertexDistribution |         44 |          0 |         44 |          0 |          1 |
+                                           initialize/m2n.receiveData |         41 |          0 |          2 |          0 |  0.0487805 |
+                                              initialize/m2n.sendData |          0 |          0 |          0 |          0 |          0 |
+ initialize/map.nn.computeMapping.FromMass-Left-MeshToMass-Right-Mesh |          0 |          0 |          0 |          0 |          0 |
+ initialize/map.nn.computeMapping.FromMass-Right-MeshToMass-Left-Mesh |          0 |          0 |          0 |          0 |          0 |
+        initialize/map.nn.mapData.FromMass-Left-MeshToMass-Right-Mesh |          0 |          0 |          0 |          0 |          0 |
+        initialize/map.nn.mapData.FromMass-Right-MeshToMass-Left-Mesh |          0 |          0 |          0 |          0 |          0 |
+                     initialize/partition.prepareMesh.Mass-Right-Mesh |          0 |          0 |          0 |          0 |          0 |
+                initialize/partition.receiveGlobalMesh.Mass-Left-Mesh |         39 |          0 |         39 |          0 |          1 |
+                                initialize/preprocess.Mass-Right-Mesh |          0 |          0 |          0 |          0 |          0 |
+             initialize/query.index.getVertexIndexTree.Mass-Left-Mesh |          0 |          0 |          0 |          0 |          0 |
+            initialize/query.index.getVertexIndexTree.Mass-Right-Mesh |          0 |          0 |          0 |          0 |          0 |
+                                                       solver.advance |          3 |          0 |          0 |          0 |          0 |
+                                                    solver.initialize |          3 |          0 |          3 |          0 |          1 |

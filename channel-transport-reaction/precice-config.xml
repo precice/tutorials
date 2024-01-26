@@ -41,6 +41,5 @@
     <max-time value="5.0" />
     <time-window-size value="0.05" />
     <exchange data="Velocity" mesh="Flow-Mesh" from="Flow" to="Chemical" />
-
   </coupling-scheme:serial-explicit>
 </precice-configuration>
