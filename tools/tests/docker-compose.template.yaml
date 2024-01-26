@@ -4,10 +4,6 @@ services:
     build: 
       context: {{ dockerfile_context }}
       target: base_image
-      cache_from:
-      - type=gha
-      cache_to:
-      - type=gha,mode=min,scope=prepare
       args:
         {% for key, value in build_arguments.items() %}
           - {{key}}={{value}}
@@ -18,7 +14,7 @@ services:
       /bin/bash -c "id &&
       cd '/runs/{{ tutorial_folder }}' && 
       sed -i 's%</participant>%<export:vtk directory=\"../{{precice_output_folder}}\" /> </participant>%g' precice-config.xml &&
-      sed -i 's|m2n:sockets from|m2n:sockets network=\"eth0\" from|g' precice-config.xml &&
+      sed -i 's|m2n:sockets |m2n:sockets network=\"eth0\" |g' precice-config.xml &&
       cat precice-config.xml"
 
 

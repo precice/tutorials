@@ -1,5 +1,13 @@
 name: Check scripts
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
 jobs:
   check_scripts:
     runs-on: ubuntu-latest

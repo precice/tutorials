@@ -1,7 +1,7 @@
 #include "SolidSolver.h"
 #include <iostream>
 #include <stdlib.h>
-#include "precice/SolverInterface.hpp"
+#include "precice/precice.hpp"
 
 int main(int argc, char **argv)
 {
@@ -16,51 +16,52 @@ int main(int argc, char **argv)
   }
 
   std::string configFileName(argv[1]);
-  int         domainSize  = 100; // N
-  int         chunkLength = domainSize + 1;
+  const int         domainSize  = 100; // N
+  const int         chunkLength = domainSize + 1;
+  const double      tubeLength = 10;
 
   std::cout << "N: " << domainSize << std::endl;
   std::cout << "inputs: " << argc << std::endl;
 
   const std::string solverName = "Solid";
 
-  SolverInterface interface(solverName, configFileName, 0, 1);
+  precice::Participant interface(solverName, configFileName, 0, 1);
   std::cout << "preCICE configured..." << std::endl;
 
-  int dimensions           = interface.getDimensions();
   auto meshName               = "Solid-Nodes-Mesh";
   auto crossSectionLengthName = "CrossSectionLength";
   auto pressureName           = "Pressure";
+  const int dimensions        = interface.getMeshDimensions(meshName);
 
   std::vector<double> pressure(chunkLength, 0.0);
   std::vector<double> crossSectionLength(chunkLength, 1.0);
-  std::vector<double> grid(dimensions * chunkLength);
 
-  for (int i = 0; i < chunkLength; i++) {
-    for (int j = 0; j < dimensions; j++) {
-      grid[i * dimensions + j] = i * (1 - j);
-    }
+  std::vector<double> grid(dimensions * chunkLength, 0.0);
+  const double dx = tubeLength/domainSize;
+  for (int i = 0; i < chunkLength; ++i) {
+    grid[i * dimensions] = dx*i;
   }
 
   std::vector<int> vertexIDs(chunkLength);
-  interface.setMeshVertices(meshName, chunkLength, grid.data(), vertexIDs.data());
+  interface.setMeshVertices(meshName, grid, vertexIDs);
 
   if (interface.requiresInitialData()) {
-    interface.writeBlockScalarData(meshName, crossSectionLengthName, chunkLength, vertexIDs.data(), crossSectionLength.data());
+    interface.writeData(meshName, crossSectionLengthName, vertexIDs, crossSectionLength);
   }
 
   std::cout << "Initialize preCICE..." << std::endl;
-  double dt = interface.initialize();
+  interface.initialize();
 
   while (interface.isCouplingOngoing()) {
     if (interface.requiresWritingCheckpoint()) {
     }
+    double dt = interface.getMaxTimeStepSize();
 
-    interface.readBlockScalarData(meshName, pressureName, chunkLength, vertexIDs.data(), pressure.data());
+    interface.readData(meshName, pressureName, vertexIDs, dt, pressure);
 
     SolidComputeSolution(chunkLength, pressure.data(), crossSectionLength.data()); // Call Solver
 
-    interface.writeBlockScalarData(meshName, crossSectionLengthName, chunkLength, vertexIDs.data(), crossSectionLength.data());
+    interface.writeData(meshName, crossSectionLengthName, vertexIDs, crossSectionLength);
 
     interface.advance(dt);
 
@@ -69,6 +70,5 @@ int main(int argc, char **argv)
   }
 
   std::cout << "Exiting SolidSolver" << std::endl;
-  interface.finalize();
   return 0;
 }

@@ -1,0 +1,31 @@
+name: Generate reference results (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      from_ref:
+        description: 'Use the systemtests + tutorial metadata + reference_version from this ref'
+        required: true
+        type: string
+      commit_msg:
+        description: 'Commit msg for commit that adds the reference results'
+        default: "Adding reference results"
+        type: string
+      loglevel:
+        description: 'loglevel used for the systemtests'
+        default: 'INFO'
+        required: true
+        type: choice
+        options:
+            - 'DEBUG'
+            - 'INFO'
+            - 'WARNING'
+            - 'ERROR'
+            - 'CRITICAL'
+
+jobs:
+  generate_reference_results_manual:
+    uses: ./.github/workflows/generate_reference_results_workflow.yml
+    with: 
+      from_ref: ${{ inputs.from_ref }}
+      commit_msg: ${{ inputs.commit_msg }}
+      loglevel: ${{ inputs.loglevel }}
