@@ -3,14 +3,14 @@
 
 # The basic example is taken from *Langtangen, Hans Petter, and Anders Logg. Solving PDEs in Python: The FEniCS
 # Tutorial I. Springer International Publishing, 2016.*
-# 
+#
 # The example code has been extended with preCICE API calls and mixed boundary conditions to allow for a Dirichlet-Neumann
 # coupling of two separate heat equations.
-# 
+#
 # The original source code can be found on https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py.
-# 
+#
 # Heat equation with Dirichlet conditions. (Dirichlet problem, $f_N = \mathcal{D}\left(u_C\right)$)
-# 
+#
 # \begin{align*}
 # \frac{\partial u}{\partial t} &= \Delta u + f && \text{on the unit square $\Omega = \left[0,1\right] \times \left[0,1\right]$}\\
 # u &= u_C             && \text{on the coupling boundary $\Gamma_C$ at $x = 1$}\\
@@ -19,9 +19,9 @@
 # u &= 1 + x^2 + \alpha y^2 + \beta t \\
 # f &= \beta - 2 - 2\alpha \\
 # \end{align*}
-# 
+#
 # Heat equation with mixed boundary conditions. (Neumann problem, $u_C = \mathcal{N}\left(f_N\right)$)
-# 
+#
 # \begin{align*}
 # \frac{\partial u}{\partial t} &= \Delta u + f && \text{on the shifted unit square $\Omega = \left[1,2\right] \times \left[0,1\right]$}\\
 # \frac{\text{d}u}{\text{d}\vec{n}} &= f_N             && \text{on the coupling boundary $\Gamma_C$ at $x = 1$}\\
@@ -45,6 +45,7 @@ from dolfin import FacetNormal, dot
 from enum import Enum
 import sys
 
+
 class DomainPart(Enum):
     """
     Enum defines which part of the domain [x_left, x_right] x [y_bottom, y_top] we compute.
@@ -67,7 +68,8 @@ if sys.argv[1] == 'right':
 
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
-x_coupling = 1.0  # x coordinate of coupling interface; for Schwarz Domain Decomposition coupling interface sits between The DoFs.
+# x coordinate of coupling interface; for Schwarz Domain Decomposition coupling interface sits between The DoFs.
+x_coupling = 1.0
 
 overlap_cells = 1
 
@@ -78,14 +80,17 @@ hx = (x_right - x_left) / (2 * nx - overlap_cells)
 
 if domain_part is DomainPart.LEFT:
     p0 = Point(x_left, y_bottom)
-    x_schwarz_read = x_coupling + hx * (overlap_cells * 0.5)  # rightmost point is the DoF hx/2 right of the coupling interface that belongs to the Right participant
+    # rightmost point is the DoF hx/2 right of the coupling interface that belongs to the Right participant
+    x_schwarz_read = x_coupling + hx * (overlap_cells * 0.5)
     x_schwarz_write = x_coupling - hx * (overlap_cells * 0.5)
     p1 = Point(x_schwarz_read, y_top)
 elif domain_part is DomainPart.RIGHT:
-    x_schwarz_read = x_coupling - hx * (overlap_cells * 0.5) # leftmost point is the DoF hx/2 left of the coupling interface that belongs to the Left participant
+    # leftmost point is the DoF hx/2 left of the coupling interface that belongs to the Left participant
+    x_schwarz_read = x_coupling - hx * (overlap_cells * 0.5)
     x_schwarz_write = x_coupling + hx * (overlap_cells * 0.5)
     p0 = Point(x_schwarz_read, y_bottom)
     p1 = Point(x_right, y_top)
+
 
 class ExcludeStraightBoundary(SubDomain):
     def get_user_input_args(self, args):
@@ -97,16 +102,17 @@ class ExcludeStraightBoundary(SubDomain):
             return True
         else:
             return False
-        
-            
+
+
 class OverlapDomain(SubDomain):
     def inside(self, x, on_boundary):
         tol = 1E-14
-        if (x[0] <= x_coupling + hx * (overlap_cells * 0.5) + tol) and (x[0] >= x_coupling - hx * (overlap_cells - 0.5) - tol):  # Point lies inside of overlapping domain
+        if (x[0] <= x_coupling + hx * (overlap_cells * 0.5) + tol) and (x[0] >= x_coupling -
+                                                                        hx * (overlap_cells - 0.5) - tol):  # Point lies inside of overlapping domain
             return True
         else:
             return False
-                    
+
 
 class ReadBoundary(SubDomain):
     def inside(self, x, on_boundary):
@@ -115,7 +121,8 @@ class ReadBoundary(SubDomain):
             return True
         else:
             return False
-            
+
+
 class WriteBoundary(SubDomain):
     def inside(self, x, on_boundary):
         tol = 1E-14
@@ -123,6 +130,7 @@ class WriteBoundary(SubDomain):
             return True
         else:
             return False
+
 
 mesh = RectangleMesh(p0, p1, nx, ny, diagonal="left")
 read_boundary = ReadBoundary()
@@ -136,7 +144,7 @@ V = FunctionSpace(mesh, 'P', 2)
 # Define boundary conditions
 u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t', degree=2, alpha=alpha, beta=beta, t=0)
 u_D_function = interpolate(u_D, V)
- 
+
 # Define initial value
 u_n = interpolate(u_D, V)
 u_n.rename("Temperature", "")
@@ -244,4 +252,3 @@ while precice.is_coupling_ongoing():
 
 # Hold plot
 precice.finalize()
-
