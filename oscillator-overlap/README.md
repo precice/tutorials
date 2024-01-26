@@ -1,19 +1,19 @@
 ---
-title: Oscillator
-permalink: tutorials-oscillator.html
+title: Oscillator (overlapping domain decomposition)
+permalink: tutorials-oscillator-overlap.html
 keywords: Python, ODE
-summary: We solve an oscillator with two masses in a partitioned fashion. Each mass is solved by an independent ODE.
+summary: We solve an oscillator with two masses in a partitioned fashion with overlapping domain decomposition. Each mass is solved by an independent ODE.
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/oscillator). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/oscillator-overlap). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
 
-This tutorial solves a simple mass-spring oscillator with two masses and three springs. The system is cut at the middle spring and solved in a partitioned fashion:
+This tutorial solves the same problem as `oscillator`, but applies a different domain decomposition strategy. See the `oscillator` case for details on the general setup. The partitioning of the mass-spring system is shown here:
 
-![Schematic drawing of oscillator example](images/tutorials-oscillator-schematic-drawing.png)
+![Schematic drawing of oscillator example with overlapping domain decomposition](images/tutorials-oscillator-overlap-dd.png)
 
 Note that this case applies an overlapping Schwarz-type coupling method and not (like most other tutorials in this repository) a Dirichlet-Neumann coupling. This results in a symmetric setup of the solvers. We will refer to the solver computing the trajectory of $m_1$ as `Mass-Left` and to the solver computing the trajectory of $m_2$ as `Mass-Right`. For more information, please refer to [1].
 
@@ -40,25 +40,3 @@ and
 cd python
 ./run.sh -r
 ```
-
-## Post-processing
-
-Each simulation run creates two files containing position and velocity of the two masses over time. These files are called `trajectory-Mass-Left.csv` and `trajectory-Mass-Right.csv`. You can use the script `plot-trajectory.py` for post-processing. Type `python3 plot-trajectory --help` to see available options. You can, for example plot the trajectory by running
-
-```bash
-python3 plot-trajectory.py python/output/trajectory-Mass-Left.csv TRAJECTORY
-```
-
-This allows you to study the effect of different time stepping schemes on energy conservation. Newmark beta conserves energy:
-
-![Trajectory for Newmark beta scheme](images/tutorials-oscillator-trajectory-newmark-beta.png)
-
-Generalized alpha does not conserve energy:
-
-![Trajectory for generalized alpha scheme](images/tutorials-oscillator-trajectory-generalized-alpha.png)
-
-For details, refer to [1].
-
-## References
-
-[1] V. Schüller, B. Rodenberg, B. Uekermann and H. Bungartz, A Simple Test Case for Convergence Order in Time and Energy Conservation of Black-Box Coupling Schemes, in: WCCM-APCOM2022. [URL](https://www.scipedia.com/public/Rodenberg_2022a)
