@@ -17,6 +17,8 @@ This tutorial solves a simple mass-spring oscillator with two masses and three s
 
 Note that this case applies a Schwarz-type coupling method and not (like most other tutorials in this repository) a Dirichlet-Neumann coupling. This results in a symmetric setup of the solvers. We will refer to the solver computing the trajectory of $m_1$ as `Mass-Left` and to the solver computing the trajectory of $m_2$ as `Mass-Right`. For more information, please refer to [1].
 
+This tutorial is useful to study different time stepping and coupling schemes. It uses subcycling and time interpolation: Each solver performs 4 time steps in each time window. The data of these 4 substeps is used to create a third order B-spline interpolation (`waveform-degree="3"` in `precice-config.xml`).
+
 ## Available solvers
 
 This tutorial is only available in Python. You need to have preCICE and the Python bindings installed on your system.
