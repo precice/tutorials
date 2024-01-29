@@ -44,14 +44,16 @@ cd micro-nutils
 ./run.sh -s
 ```
 
-Run it in parallel:
+If you want to use DuMu<sup>x</sup>, use `cd macro-dumux` instead of `cd macro-nutils` and/or `cd micro-dumux` instead of `cd micro-nutils`.
+
+## Running the simulation in parallel
+
+Only the `micro-nutils` participant can be run in parallel. To run it in parallel, run:
 
 ```bash
 cd micro-nutils
 ./run.sh -p <num_procs>
 ```
-
-If you want to use DuMu<sup>x</sup>, use `cd macro-dumux` instead of `cd macro-nutils` and/or `cd micro-dumux` instead of `cd micro-nutils`.
 
 The `num_procs` needs to fit the decomposition specified in the `micro-manager-config.json` (default: two ranks).
 
