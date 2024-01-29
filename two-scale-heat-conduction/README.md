@@ -37,7 +37,7 @@ cd macro-nutils
 ./run.sh
 ```
 
-Check the Micro Manager [configuration](https://precice.org/tooling-micro-manager-configuration.html) and [running](https://precice.org/tooling-micro-manager-running.html) documentation to understand how to set it up and launch it. There is a Python script `run-micro-problems.py` in the tutorial directory to directly run the Micro Manager. This script imports the Micro Manager, and calls its `initialize()` and `solve()` methods. The Micro Manager can be run via this script in serial or parallel. Run it in serial:
+Check the Micro Manager [configuration](https://precice.org/tooling-micro-manager-configuration.html) and [running](https://precice.org/tooling-micro-manager-running.html) documentation to understand how to set it up and launch it. There is a Python script `run-micro-problems.py` in the tutorial directory to directly run the Micro Manager. This script imports the Micro Manager, and calls its `solve()` method. The Micro Manager can be run via this script in serial or parallel. Run it in serial:
 
 ```bash
 cd micro-nutils

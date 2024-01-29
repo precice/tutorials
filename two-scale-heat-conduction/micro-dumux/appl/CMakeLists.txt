@@ -5,10 +5,8 @@ execute_process(COMMAND pip show pybind11
                 OUTPUT_STRIP_TRAILING_WHITESPACE)
 set(pybind11_DIR "${SITE_PACKAGES_DIR}/pybind11/share/cmake/pybind11/")
 
-# message(STATUS "pybind11_DIR: ${pybind11_DIR}")
 find_package(pybind11 CONFIG REQUIRED)
 pybind11_add_module(micro_sim micro_sim.cpp)
-target_link_libraries(micro_sim PRIVATE dumux-precice)
 
 #copy all source code to build directory to make available to pybind
 add_custom_target(copy_micro_heat_all ALL
