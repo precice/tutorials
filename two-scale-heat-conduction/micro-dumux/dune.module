@@ -5,7 +5,7 @@
 # Name of the module
 Module: micro_sim
 Version: 1.0
-Maintainer: mathis.kelm@iws.uni-stuttgart.de
+Maintainer: jun.chen@ipvs.uni-stuttgart.de 
 # Required build dependencies
 Depends: dumux-phasefield
 # Optional build dependencies
