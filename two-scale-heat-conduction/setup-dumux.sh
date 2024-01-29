@@ -29,6 +29,5 @@ python3 dumux/bin/installexternal.py spgrid
 ./dune-common/bin/dunecontrol bexec rm -r CMakeFiles CMakeCache.txt
 ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts all
 
-# Move macro-dumux and micro-dumux executables to the participant folder level
-mv macro-dumux/build-cmake/appl/macro_dumux macro-dumux/
-mv micro-dumux/build-cmake/appl/micro_sim.cpython-310-x86_64-linux-gnu.so micro-dumux/
+# Compile and move macro-dumux and micro-dumux executables to the participant folder level
+./compile-dumux-cases.sh
