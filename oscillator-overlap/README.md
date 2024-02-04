@@ -11,7 +11,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-This tutorial solves the same problem as `oscillator`, but applies a different domain decomposition strategy. See the `oscillator` case for details on the general setup. The partitioning of the mass-spring system is shown here:
+This tutorial solves the same problem as the [oscillator tutorial](https://precice.org/tutorials-oscillator.html), but applies a different domain decomposition strategy. See the oscillator tutorial for details on the general setup. The partitioning of the mass-spring system is shown here:
 
 ![Schematic drawing of oscillator example with overlapping domain decomposition](images/tutorials-oscillator-overlap-dd.png)
 
