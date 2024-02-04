@@ -1,0 +1,6 @@
+dumux/
+dumux-phasefield/
+dumux-adapter/
+dune-*
+*/build-cmake/
+install*

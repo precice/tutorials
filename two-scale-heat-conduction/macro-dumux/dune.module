@@ -1,0 +1,12 @@
+################################
+# Dune module information file #
+################################
+
+# Name of the module
+Module: macro-dumux
+Version: 1.0
+Maintainer: mathis.kelm@iws.uni-stuttgart.de
+# Required build dependencies
+Depends: dumux-precice
+# Optional build dependencies
+#Suggests:
