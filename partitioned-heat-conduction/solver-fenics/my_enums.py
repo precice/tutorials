@@ -5,8 +5,8 @@ class ProblemType(Enum):
     """
     Enum defines problem type. Details see above.
     """
-    DIRICHLET = 1  # Dirichlet problem
-    NEUMANN = 2  # Neumann problem
+    DIRICHLET = "Dirichlet"  # Dirichlet problem
+    NEUMANN = "Neumann"  # Neumann problem
 
 
 class DomainPart(Enum):

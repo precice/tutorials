@@ -30,7 +30,7 @@ def b_splines(precice, degree, dt):
     for node in nodes:
         val = precice.read_data(node)
         # check if every key set is equal
-        assert(key_ref == val.keys())
+        assert (key_ref == val.keys())
         weights[i] = val
         i += 1
 
