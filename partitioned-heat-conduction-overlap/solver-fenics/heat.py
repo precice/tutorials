@@ -4,32 +4,23 @@
 # The basic example is taken from *Langtangen, Hans Petter, and Anders Logg. Solving PDEs in Python: The FEniCS
 # Tutorial I. Springer International Publishing, 2016.*
 #
-# The example code has been extended with preCICE API calls and mixed boundary conditions to allow for a Dirichlet-Neumann
-# coupling of two separate heat equations.
+# The example code has been extended with preCICE API calls to allow for an alternating Schwarz  overlapping coupling of two separate heat equations.
 #
 # The original source code can be found on https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py.
 #
 # Heat equation with Dirichlet conditions. (Dirichlet problem, $f_N = \mathcal{D}\left(u_C\right)$)
 #
 # \begin{align*}
-# \frac{\partial u}{\partial t} &= \Delta u + f && \text{on the unit square $\Omega = \left[0,1\right] \times \left[0,1\right]$}\\
-# u &= u_C             && \text{on the coupling boundary $\Gamma_C$ at $x = 1$}\\
+# \frac{\partial u}{\partial t} &= \Delta u + f && \text{on the domain $\Omega = \left[0,1+\delta\right] \times \left[0,1\right]$}\\
+# u &= u_C             && \text{on the coupling boundary $\Gamma_C$ at $x = 1+\delta$}\\
 # u &= u_D             && \text{on the remaining boundary $\Gamma = \partial \Omega \setminus \Gamma_C$}\\
 # u &= u_0             && \text{on $\Omega$ at t = 0}\\
 # u &= 1 + x^2 + \alpha y^2 + \beta t \\
 # f &= \beta - 2 - 2\alpha \\
 # \end{align*}
 #
-# Heat equation with mixed boundary conditions. (Neumann problem, $u_C = \mathcal{N}\left(f_N\right)$)
-#
-# \begin{align*}
-# \frac{\partial u}{\partial t} &= \Delta u + f && \text{on the shifted unit square $\Omega = \left[1,2\right] \times \left[0,1\right]$}\\
-# \frac{\text{d}u}{\text{d}\vec{n}} &= f_N             && \text{on the coupling boundary $\Gamma_C$ at $x = 1$}\\
-# u &= u_D             && \text{on the remaining boundary $\Gamma = \partial \Omega \setminus \Gamma_C$}\\
-# u &= u_0             && \text{on $\Omega$ at t = 0}\\
-# u &= 1 + x^2 + \alpha y^2 + \beta t \\
-# f &= \beta - 2 - 2\alpha \\
-# \end{align*}
+# Similarly a second heat equation is defined on $\Omega = \left[1-\delta,2\right]$ with dirichlet boundary conditions applied at $1-\delta$.
+# The alternating Schwarz method is applied in the overlap domain where $x \in \left[1-\delta, 1+\delta\right]$.
 
 from __future__ import print_function, division
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate
