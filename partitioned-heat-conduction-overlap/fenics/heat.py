@@ -31,28 +31,29 @@
 # f &= \beta - 2 - 2\alpha \\
 # \end{align*}
 
-# In[1]:
-
-
 from __future__ import print_function, division
-from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate, MeshFunction, MPI
+from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate
 from fenics import SubDomain, Point, RectangleMesh, near, Function, Expression
 from fenicsprecice import Adapter
 from errorcomputation import compute_errors
+import argparse
 import numpy as np
-import dolfin
-from dolfin import FacetNormal, dot
+from dolfin import dot
 from enum import Enum
 import sys
 
 
-class DomainPart(Enum):
+class Participant(Enum):
     """
     Enum defines which part of the domain [x_left, x_right] x [y_bottom, y_top] we compute.
     """
-    LEFT = 1  # left part of domain in simple interface case
-    RIGHT = 2  # right part of domain in simple interface case
+    LEFT = "Left"  # left part of domain in simple interface case
+    RIGHT = "Right"  # right part of domain in simple interface case
 
+
+parser = argparse.ArgumentParser(description="Solving heat equation with Schwarz type domain decomposition")
+parser.add_argument("participantName", help="Name of the solver.", type=str, choices=[p.value for p in Participant])
+args = parser.parse_args()
 
 fenics_dt = .1  # time step size
 # Error is bounded by coupling accuracy. In theory we would obtain the analytical solution.
@@ -60,11 +61,7 @@ error_tol = 10**-6
 alpha = 3  # parameter alpha
 beta = 1.3  # parameter beta
 
-
-if sys.argv[1] == 'left':
-    domain_part = DomainPart.LEFT
-if sys.argv[1] == 'right':
-    domain_part = DomainPart.RIGHT
+participant_name = args.participantName
 
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2
@@ -78,13 +75,13 @@ ny = 9
 hx = (x_right - x_left) / (2 * nx - overlap_cells)
 
 
-if domain_part is DomainPart.LEFT:
+if participant_name == Participant.LEFT.value:
     p0 = Point(x_left, y_bottom)
     # rightmost point is the DoF hx/2 right of the coupling interface that belongs to the Right participant
     x_schwarz_read = x_coupling + hx * (overlap_cells * 0.5)
     x_schwarz_write = x_coupling - hx * (overlap_cells * 0.5)
     p1 = Point(x_schwarz_read, y_top)
-elif domain_part is DomainPart.RIGHT:
+elif participant_name == Participant.RIGHT.value:
     # leftmost point is the DoF hx/2 left of the coupling interface that belongs to the Left participant
     x_schwarz_read = x_coupling - hx * (overlap_cells * 0.5)
     x_schwarz_write = x_coupling + hx * (overlap_cells * 0.5)
@@ -153,13 +150,14 @@ u_n.rename("Temperature", "")
 precice, precice_dt, initial_data = None, 0.0, None
 
 # Initialize the adapter according to the specific participant
-if domain_part is DomainPart.LEFT:
+if participant_name == Participant.LEFT.value:
     precice = Adapter(adapter_config_filename="precice-adapter-config-L.json")
-elif domain_part is DomainPart.RIGHT:
+elif participant_name == Participant.RIGHT.value:
     precice = Adapter(adapter_config_filename="precice-adapter-config-R.json")
 
-precice_dt = precice.initialize(OverlapDomain(), read_function_space=V, write_object=u_D_function)
+precice.initialize(OverlapDomain(), read_function_space=V, write_object=u_D_function)
 
+precice_dt = precice.get_max_time_step_size()
 dt = Constant(0)
 dt.assign(np.min([fenics_dt, precice_dt]))
 
@@ -206,15 +204,16 @@ f.t = t + dt(0)
 while precice.is_coupling_ongoing():
 
     # write checkpoint
-    if precice.is_action_required(precice.action_write_iteration_checkpoint()):
+    if precice.requires_writing_checkpoint():
         precice.store_checkpoint(u_n, t, n)
 
-    read_data = precice.read_data()
+    precice_dt = precice.get_max_time_step_size()
+    dt.assign(np.min([fenics_dt, precice_dt]))
+
+    read_data = precice.read_data(dt)
 
     # Update the coupling expression with the new read data
     precice.update_coupling_expression(coupling_expression, read_data)
-
-    dt.assign(np.min([fenics_dt, precice_dt]))
 
     # Compute solution u^n+1, use bcs u_D^n+1, u^n and coupling bcs
     solve(a == L, u_np1, bcs)
@@ -224,7 +223,7 @@ while precice.is_coupling_ongoing():
     precice_dt = precice.advance(dt(0))
 
     # roll back to checkpoint
-    if precice.is_action_required(precice.action_read_iteration_checkpoint()):
+    if precice.requires_reading_checkpoint():
         u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
         u_n.assign(u_cp)
         t = t_cp
