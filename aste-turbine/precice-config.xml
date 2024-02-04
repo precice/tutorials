@@ -32,10 +32,10 @@
     <read-data name="Data" mesh="B-Mesh" />
     <mapping:nearest-neighbor constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" />
     <!-- <mapping:nearest-projection constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" /> -->
-    <!-- <mapping:rbf-pum-direct constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" />
+    <!-- <mapping:rbf-pum-direct constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" >
           <basis-function:compact-polynomial-c6 support-radius="0.1" />
           </mapping:rbf-pum-direct> -->
-    <!-- <mapping:rbf-global-direct constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" />
+    <!-- <mapping:rbf-global-direct constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" >
           <basis-function:compact-polynomial-c6 support-radius="0.1" />
           </mapping:rbf-global-direct> -->
   </participant>

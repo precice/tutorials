@@ -141,3 +141,15 @@ clean_dune() {
         clean_precice_logs .
     )
 }
+
+clean_dumux() {
+   (
+        set -e -u
+	cd "$1"
+	echo "--- Cleaning up DuMuX case in $(pwd)"
+	rm -fv ./*.vtu
+	rm -fv ./*.pvd
+	clean_precice_logs .
+   )
+
+}
