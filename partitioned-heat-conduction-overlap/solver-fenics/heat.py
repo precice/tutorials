@@ -150,10 +150,7 @@ u_n.rename("Temperature", "")
 precice, precice_dt, initial_data = None, 0.0, None
 
 # Initialize the adapter according to the specific participant
-if participant_name == Participant.LEFT.value:
-    precice = Adapter(adapter_config_filename="precice-adapter-config-L.json")
-elif participant_name == Participant.RIGHT.value:
-    precice = Adapter(adapter_config_filename="precice-adapter-config-R.json")
+precice = Adapter(adapter_config_filename="precice-adapter-config.json")
 
 precice.initialize(OverlapDomain(), read_function_space=V, write_object=u_D_function)
 
