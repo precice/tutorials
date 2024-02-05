@@ -15,6 +15,8 @@ We solve a partitioned heat equation, but apply an overlapping Schwarz-type doma
 
 ![Case setup of partitioned-heat-conduction case with overlapping Schwarz-type domain decomposition](images/tutorials-partitioned-heat-conduction-overlap-setup.png)
 
+Note that this case applies an overlapping Schwarz-type coupling method and not (like most other tutorials in this repository) a Dirichlet-Neumann coupling. This results in a symmetric setup of the solvers.
+
 ## Running the simulation
 
 This tutorial is for FEniCS.
