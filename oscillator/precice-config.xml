@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
-  <!-- Use this to activate waveforms
-<precice-configuration experimental="true">
--->
   <log enabled="1">
     <sink filter="%Severity% > debug" />
   </log>
