@@ -1,0 +1,9 @@
+{
+  "participant_name": "Right",
+  "config_file_name": "../precice-config.xml",
+  "interface": {
+      "coupling_mesh_name": "Right-Mesh",
+      "write_data_name": "Temperature-Right",
+      "read_data_name": "Temperature-Left"
+    }
+}
