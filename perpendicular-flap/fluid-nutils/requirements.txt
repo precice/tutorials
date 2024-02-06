@@ -1,2 +1,2 @@
 nutils==6
-pyprecice==3.0.0.0dev2
+pyprecice==3.0.0.0

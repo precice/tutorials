@@ -1,2 +1,2 @@
-nutils==8
-pyprecice==3.0.0.0dev2
+nutils==8.1
+pyprecice==3.0.0.0
