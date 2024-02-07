@@ -10,16 +10,16 @@ pip install -r requirements.txt
 # Check if no input argument was provided
 if [ -z "$*" ] ; then
         echo "No input argument provided. Micro Manager is launched in serial"
-	python3 run-micro-problems.py
+	python3 run_micro_manager.py
 fi
 
 while getopts ":sp" opt; do
   case ${opt} in
   s)
-    python3 run-micro-problems.py
+    python3 run_micro_manager.py
     ;;
   p)
-    mpiexec -n "$2" python3 run-micro-problems.py
+    mpiexec -n "$2" python3 run_micro_manager.py
     ;;
   *)
     usage
