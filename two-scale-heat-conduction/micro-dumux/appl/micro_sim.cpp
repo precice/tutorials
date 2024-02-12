@@ -65,8 +65,8 @@ class MicroSimulation
     using SolutionVector = Dumux::GetPropType<CellProblemTypeTag, Dumux::Properties::SolutionVector>;
 
 public:
-    MicroSimulation();
-    void initialize();
+    MicroSimulation(int simulationID);
+    py::dict initialize();
 
     // solve takes python dict for macro_write data, dt, and returns python dict for macro_read data
     py::dict solve(py::dict macro_write_data, double dt);
@@ -106,13 +106,13 @@ private:
 };
 
 // Constructor
-MicroSimulation::MicroSimulation() {
+MicroSimulation::MicroSimulation(int simulationID) {
     using namespace Dumux;
 
     std::cout << "Initialize micro problem \n";
 
     // parse the input file
-    Parameters::init("params.input"); 
+    Parameters::init("params.input");
 
     // try to create a grid (from the given grid file or the input file)
     _gridManager.init();
@@ -181,15 +181,39 @@ MicroSimulation::MicroSimulation() {
     _timeLoop->start();
 };
 
-// Initialize
-void MicroSimulation::initialize()
-{   
-    
+// Initialize micro-data to be used in initial adaptivity
+py::dict MicroSimulation::initialize()
+{
+    //update Phi in the cell problem
+    _cpProblem->spatialParams().updatePhi(_phi);
+
+    // solve the cell problems
+    _cpLinearPDESolver->solve(_psi);
+
+    // calculate porosity
+    _porosity = _acProblem->calculatePorosity(_phi);
+
+    //compute the psi derivatives (required for conductivity tensor)
+    _cpProblem->computePsiDerivatives(*_cpProblem, *_cpAssembler, *_cpGridVariables, _psi);
+
+    //calculate the conductivity tensor
+    _k_00 = _cpProblem->calculateConductivityTensorComponent(0,0);
+    _k_11 = _cpProblem->calculateConductivityTensorComponent(1,1);
+
+    // create python dict for micro_write_data
+    py::dict micro_write_data;
+
+    // add micro_scalar_data and micro_vector_data to micro_write_data
+    micro_write_data["k_00"] = _k_00;
+    micro_write_data["k_11"] = _k_11;
+    micro_write_data["porosity"] = _porosity;
+
+    return micro_write_data;
 }
 
 // Solve
 py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
-{   
+{
     // call leafgridView and point gridGeometry to it
     const auto& leafGridView = _gridManager.grid().leafGridView();
     _gridGeometry->update(leafGridView);
@@ -202,7 +226,7 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
         std::cout << "dt is zero\n";
         exit(1);
     }
-    
+
     _timeLoop->setTimeStepSize(dt);
 
     // read concentration from preCICE
@@ -217,23 +241,23 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
     //u pdate Phi in the cell problem
     _cpProblem->spatialParams().updatePhi(_phi);
 
-    // solve the cell problems 
+    // solve the cell problems
     _cpLinearPDESolver->solve(_psi);
-    
+
     std::cout << "Compute upscaled quantities \n";
 
-    // calculate porosity 
+    // calculate porosity
     _porosity = _acProblem->calculatePorosity(_phi);
 
     //compute the psi derivatives (required for conductivity tensor)
     _cpProblem->computePsiDerivatives(*_cpProblem, *_cpAssembler, *_cpGridVariables, _psi);
 
-    //calculate the conductivity tensor 
+    //calculate the conductivity tensor
     _k_00 = _cpProblem->calculateConductivityTensorComponent(0,0);
     _k_10 = _cpProblem->calculateConductivityTensorComponent(1,0);
     _k_01 = _cpProblem->calculateConductivityTensorComponent(0,1);
     _k_11 = _cpProblem->calculateConductivityTensorComponent(1,1);
-    
+
     // create python dict for micro_write_data
     py::dict micro_write_data;
 
@@ -244,7 +268,7 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
     micro_write_data["k_11"] = _k_11;
     micro_write_data["porosity"] = _porosity;
     micro_write_data["grain_size"] = std::sqrt((1-_porosity)/pi_);
-    
+
 
     // write current primary variables to previous primary variables
     _acGridVariables->advanceTimeStep();
@@ -290,7 +314,7 @@ PYBIND11_MODULE(micro_sim, m) {
     m.doc() = "pybind11 example plugin"; // optional module docstring
 
     py::class_<MicroSimulation>(m, "MicroSimulation")
-        .def(py::init())
+        .def(py::init<int>())
         .def("initialize", &MicroSimulation::initialize)
         .def("solve", &MicroSimulation::solve)
         //.def("save_checkpoint", &MicroSimulation::save_checkpoint)
@@ -307,7 +331,7 @@ PYBIND11_MODULE(micro_sim, m) {
                     throw std::runtime_error("Invalid state!");
                 
                 /* Create a new C++ instance */
-                MicroSimulation ms;
+                MicroSimulation ms(0);
                 ms.initialize();
                 ms.setState(t);
 
