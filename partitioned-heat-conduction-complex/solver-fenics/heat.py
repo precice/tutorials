@@ -99,11 +99,11 @@ u_n.rename("Temperature", "")
 precice, precice_dt, initial_data = None, 0.0, None
 
 # Initialize the adapter according to the specific participant
+precice = Adapter(adapter_config_filename="precice-adapter-config.json")
+
 if problem is ProblemType.DIRICHLET:
-    precice = Adapter(adapter_config_filename="precice-adapter-config-D.json")
     precice.initialize(coupling_boundary, read_function_space=V, write_object=f_N_function)
 elif problem is ProblemType.NEUMANN:
-    precice = Adapter(adapter_config_filename="precice-adapter-config-N.json")
     precice.initialize(coupling_boundary, read_function_space=V_g, write_object=u_D_function)
 
 boundary_marker = False
