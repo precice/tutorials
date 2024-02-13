@@ -92,8 +92,6 @@ class MicroSimulation:
 
         output_data = dict()
         output_data["k_00"] = k[0][0]
-        output_data["k_01"] = k[0][1]
-        output_data["k_10"] = k[1][0]
         output_data["k_11"] = k[1][1]
         output_data["porosity"] = psi
 
