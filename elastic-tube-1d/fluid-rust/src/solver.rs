@@ -13,7 +13,7 @@ pub fn fluid_compute_solution(
     pressure: &mut [f64],
 ) {
     // Initial guess
-    pressure.copy_from_slice(&pressure_old[..]);
+    pressure.copy_from_slice(pressure_old);
 
     const E: f64 = 10000_f64;
     //const C_MK2 : f64 = E / std::f64::consts::FRAC_2_SQRT_PI;

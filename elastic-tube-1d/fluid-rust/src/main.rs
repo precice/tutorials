@@ -1,4 +1,3 @@
-use precice;
 use std::env;
 use std::process::ExitCode;
 
@@ -20,7 +19,7 @@ fn main() -> ExitCode {
     const DOMAIN_SIZE: usize = 100;
     const CHUNK_SIZE: usize = DOMAIN_SIZE + 1;
 
-    let mut participant = precice::Participant::new("Fluid", &config, 0, 1);
+    let mut participant = precice::Participant::new("Fluid", config, 0, 1);
 
     println!("preCICE configured...");
 
@@ -42,9 +41,9 @@ fn main() -> ExitCode {
     const P0: f64 = 0.0;
     let vel_in0: f64 = U0 + AMPL * (FREQUENCY * T_SHIFT * std::f64::consts::PI).sin();
 
-    let mut pressure: Vec<f64> = vec![P0; CHUNK_SIZE as usize];
-    let mut cross_section_length: Vec<f64> = vec![A0; CHUNK_SIZE as usize];
-    let mut velocity: Vec<f64> = vec![vel_in0; CHUNK_SIZE as usize];
+    let mut pressure: Vec<f64> = vec![P0; CHUNK_SIZE];
+    let mut cross_section_length: Vec<f64> = vec![A0; CHUNK_SIZE];
+    let mut velocity: Vec<f64> = vec![vel_in0; CHUNK_SIZE];
 
     let mut pressure_old = pressure.clone();
 
@@ -54,7 +53,7 @@ fn main() -> ExitCode {
         let mut v: Vec<f64> = vec![0_f64; grid_size];
         for i in 0..CHUNK_SIZE {
             let idx = i * dimensions as usize;
-            v[idx] = i as f64 * CELLWIDTH as f64;
+            v[idx] = i as f64 * CELLWIDTH;
         }
         v
     };
@@ -156,5 +155,5 @@ fn main() -> ExitCode {
     println!("Exiting FluidSolver at t={}", t);
     participant.finalize();
 
-    return ExitCode::SUCCESS;
+    ExitCode::SUCCESS
 }

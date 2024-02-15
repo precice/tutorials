@@ -1,4 +1,3 @@
-use precice;
 use std::env;
 use std::process::ExitCode;
 
@@ -20,7 +19,7 @@ fn main() -> ExitCode {
     const CHUNK_SIZE: usize = DOMAIN_SIZE + 1;
     const TUBE_LENGTH: f64 = 10.0;
 
-    let mut participant = precice::Participant::new("Solid", &config, 0, 1);
+    let mut participant = precice::Participant::new("Solid", config, 0, 1);
 
     println!("preCICE configured...");
 
@@ -29,8 +28,8 @@ fn main() -> ExitCode {
     assert!(participant.get_data_dimensions(mesh_name, "CrossSectionLength") == 1);
     assert!(participant.get_data_dimensions(mesh_name, "Pressure") == 1);
 
-    let mut pressure: Vec<f64> = vec![0.0; CHUNK_SIZE as usize];
-    let mut cross_section_length: Vec<f64> = vec![1.0; CHUNK_SIZE as usize];
+    let mut pressure: Vec<f64> = vec![0.0; CHUNK_SIZE];
+    let mut cross_section_length: Vec<f64> = vec![1.0; CHUNK_SIZE];
 
     let grid_size = CHUNK_SIZE * dimensions as usize;
     let grid: Vec<f64> = {
@@ -99,5 +98,5 @@ fn main() -> ExitCode {
     println!("Exiting SolidSolver at t={}", t);
     participant.finalize();
 
-    return ExitCode::SUCCESS;
+    ExitCode::SUCCESS
 }

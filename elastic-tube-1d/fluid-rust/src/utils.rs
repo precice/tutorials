@@ -25,9 +25,9 @@ pub fn write_vtk(
     write!(f, "DATASET UNSTRUCTURED_GRID\n\n")?;
     write!(f, "POINTS {n_points} float\n\n")?;
     for i in 0..n_points {
-        write!(
+        writeln!(
             f,
-            "{:.16e} 0.0000000000000000e+00 0.0000000000000000e+00\n",
+            "{:.16e} 0.0000000000000000e+00 0.0000000000000000e+00",
             i as f64 * dx
         )?;
     }
@@ -35,27 +35,27 @@ pub fn write_vtk(
 
     write!(f, "POINT_DATA {n_points}\n\n")?;
 
-    write!(f, "VECTORS velocity float\n")?;
+    writeln!(f, "VECTORS velocity float")?;
     for v in velocity {
-        write!(
+        writeln!(
             f,
-            "{:.16e} 0.0000000000000000e+00 0.0000000000000000e+00\n",
+            "{:.16e} 0.0000000000000000e+00 0.0000000000000000e+00",
             v
         )?;
     }
     writeln!(f)?;
 
-    write!(f, "SCALARS pressure float\n")?;
-    write!(f, "LOOKUP_TABLE default\n")?;
+    writeln!(f, "SCALARS pressure float")?;
+    writeln!(f, "LOOKUP_TABLE default")?;
     for v in pressure {
-        write!(f, "{:.16e}\n", v)?;
+        writeln!(f, "{:.16e}", v)?;
     }
     writeln!(f)?;
 
-    write!(f, "SCALARS diameter float\n")?;
-    write!(f, "LOOKUP_TABLE default\n")?;
+    writeln!(f, "SCALARS diameter float")?;
+    writeln!(f, "LOOKUP_TABLE default")?;
     for v in cross_section_length {
-        write!(f, "{:.16e}\n", v)?;
+        writeln!(f, "{:.16e}", v)?;
     }
     writeln!(f)?;
     Ok(())
