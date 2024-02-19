@@ -3,7 +3,7 @@
 gnuplot -p << EOF
   set grid
   set term pngcairo enhanced size 900,654
-  set output "images/elastic-tube-1d-all.png"
+  set output "images/tutorials-elastic-tube-1d-all.png"
 
   set multiplot layout 2, 1
   set title 'Diameter of elastic-tube at x=5'
