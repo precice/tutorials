@@ -129,7 +129,6 @@ To compare the results of the various Fluid participants, you can run them all a
 
 ![Plot comparing pressure and diameter of all Fluid participants](images/tutorials-elastic-tube-1d-all.png)
 
-
 ## References
 
 [1] B. Gatzhammer. Efficient and Flexible Partitioned Simulation of Fluid-Structure Interactions. Technische Universitaet Muenchen, Fakultaet fuer Informatik, 2014.
