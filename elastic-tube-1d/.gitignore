@@ -3,6 +3,8 @@
 *-rust/Cargo.lock
 fluid-*/output/*.vtk
 
+elastic-tube-1d-plot.png
+
 *.o
 *.log
 *.json
