@@ -21,7 +21,7 @@
     <use-data name="AlphaGradient" />
   </mesh>
 
-  <mesh name="Fluid2-Mesh" dimensions= "3">
+  <mesh name="Fluid2-Mesh" dimensions="3">
     <use-data name="Pressure" />
     <use-data name="Velocity" />
     <use-data name="VelocityGradient" />
@@ -37,7 +37,6 @@
     <read-data name="VelocityGradient" mesh="Fluid1-Mesh" />
     <write-data name="Alpha" mesh="Fluid1-Mesh" />
     <read-data name="AlphaGradient" mesh="Fluid1-Mesh" />
-
     <mapping:nearest-neighbor
       direction="read"
       from="Fluid2-Mesh"
@@ -53,7 +52,6 @@
     <write-data name="VelocityGradient" mesh="Fluid2-Mesh" />
     <read-data name="Alpha" mesh="Fluid2-Mesh" />
     <write-data name="AlphaGradient" mesh="Fluid2-Mesh" />
-
     <mapping:nearest-neighbor
       direction="read"
       from="Fluid1-Mesh"
@@ -78,7 +76,6 @@
     <relative-convergence-measure limit="1.0e-5" data="VelocityGradient" mesh="Fluid2-Mesh" />
     <absolute-convergence-measure limit="1.0e-5" data="Alpha" mesh="Fluid1-Mesh" />
     <absolute-convergence-measure limit="1.0e-5" data="AlphaGradient" mesh="Fluid2-Mesh" />
-    
     <acceleration:IQN-ILS>
       <data mesh="Fluid2-Mesh" name="VelocityGradient" />
       <data mesh="Fluid2-Mesh" name="Pressure" />
