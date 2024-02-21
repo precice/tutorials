@@ -11,7 +11,8 @@ import os
 import problemDefinition
 import timeSteppers
 
-class Solver(Enum):
+
+class Participant(Enum):
     MASS_LEFT = "Mass-Left"
     MASS_RIGHT = "Mass-Right"
 
@@ -28,7 +29,7 @@ parser.add_argument(
     default=timeSteppers.TimeSteppingSchemes.NEWMARK_BETA.value)
 args = parser.parse_args()
 
-solver_name = args.solverName
+participant_name = args.participantName
 
 if participant_name == Participant.MASS_LEFT.value:
     write_data_name = 'Force-Left'
@@ -40,7 +41,7 @@ if participant_name == Participant.MASS_LEFT.value:
     connecting_spring = problemDefinition.SpringMiddle
     other_mass = problemDefinition.MassRight
 
-elif solver_name == Solver.MASS_RIGHT.value:
+elif participant_name == Participant.MASS_RIGHT.value:
     read_data_name = 'Force-Left'
     write_data_name = 'Force-Right'
     mesh_name = 'Mass-Right-Mesh'
@@ -51,7 +52,7 @@ elif solver_name == Solver.MASS_RIGHT.value:
     other_mass = problemDefinition.MassLeft
 
 else:
-    raise Exception(f"wrong solver name: {solver_name}")
+    raise Exception(f"wrong participant name: {participant_name}")
 
 mass = this_mass.m
 stiffness = this_spring.k + connecting_spring.k
@@ -68,7 +69,7 @@ participant = precice.Participant(participant_name, configuration_file_name, sol
 
 dimensions = participant.get_mesh_dimensions(mesh_name)
 
-vertex = np.zeros((num_vertices, dimensions))
+vertex = np.zeros(dimensions)
 read_data = np.zeros(num_vertices)
 write_data = connecting_spring.k * u0 * np.ones(num_vertices)
 
@@ -166,16 +167,16 @@ while participant.is_coupling_ongoing():
         t = t_new
 
         # write data to buffers
-        u_write.append(u[0])
-        v_write.append(v[0])
+        u_write.append(u)
+        v_write.append(v)
         t_write.append(t)
 
 # store final result
 u = u_new
 v = v_new
 a = a_new
-u_write.append(u[0])
-v_write.append(v[0])
+u_write.append(u)
+v_write.append(v)
 t_write.append(t)
 positions += u_write
 velocities += v_write
@@ -192,7 +193,7 @@ print(f"{my_dt},{error}")
 if not os.path.exists("output"):
     os.makedirs("output")
 
-with open(f'output/trajectory-{solver_name}.csv', 'w') as file:
+with open(f'output/trajectory-{participant_name}.csv', 'w') as file:
     csv_write = csv.writer(file, delimiter=';')
     csv_write.writerow(['time', 'position', 'velocity'])
     for t, u, v in zip(times, positions, velocities):
