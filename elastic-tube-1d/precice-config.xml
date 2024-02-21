@@ -27,6 +27,7 @@
       from="Solid-Nodes-Mesh"
       to="Fluid-Nodes-Mesh"
       constraint="consistent" />
+    <watch-point mesh="Fluid-Nodes-Mesh" name="Middle" coordinate="5; 0" />
   </participant>
 
   <participant name="Solid">
