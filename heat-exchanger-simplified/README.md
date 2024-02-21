@@ -55,6 +55,8 @@ to run the solid participant (which is also controlling the coupling).
 
 Similarly to the [flow over heated plate: Two meshes](https://precice.org/tutorials-flow-over-heated-plate-two-meshes.html) tutorial.
 
+![Results of the simplified heat exchanger tutorial](images/tutorials-heat-exchanger-simplified-overview.png)
+
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
 {% enddisclaimer %}

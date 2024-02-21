@@ -12,6 +12,11 @@ clean_tutorial() {
         echo "-- Cleaning up all cases in $(pwd)..."
         rm -rfv ./precice-run/
 
+        # Run clean.sh if it exists in the base tutorial directory
+        if test -f "clean.sh"; then
+            ./clean.sh
+        fi
+
         for case in */; do
             if [ "${case}" = images/ ]; then
                 continue
@@ -28,12 +33,11 @@ clean_precice_logs() {
         echo "---- Cleaning up preCICE logs in $(pwd)"
         rm -fv ./precice-*-iterations.log \
             ./precice-*-convergence.log \
-            ./precice-*-events.json \
-            ./precice-*-events-summary.log \
-            ./precice-postProcessingInfo.log \
             ./precice-*-watchpoint-*.log \
             ./precice-*-watchintegral-*.log \
             ./core
+        rm -rfv ./precice-profiling/ profiling.json trace.json
+        rm -rfv ./preCICE-output/
     )
 }
 
@@ -76,7 +80,6 @@ clean_fenics() {
         cd "$1"
         echo "--- Cleaning up FEniCS case in $(pwd)"
         rm -rfv ./output/
-        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }
@@ -87,7 +90,6 @@ clean_nutils() {
         cd "$1"
         echo "--- Cleaning up Nutils case in $(pwd)"
         rm -fv ./*.vtk
-        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }
@@ -103,7 +105,6 @@ clean_openfoam() {
             cleanCase
             rm -rfv 0/uniform/functionObjects/functionObjectProperties history
         fi
-        rm -rfv ./preCICE-output/
         clean_precice_logs .
     )
 }
@@ -121,7 +122,8 @@ clean_su2() {
 clean_aste() {
     (
         set -e -u
-        echo "--- Cleaning up ASTE results"
+        cd "$1"
+        echo "--- Cleaning up ASTE results in $(pwd)"
         rm -fv result.vtk result.stats.json
         rm -fvr fine_mesh coarse_mesh mapped
     )
@@ -135,8 +137,19 @@ clean_dune() {
         rm -fv ./dgfparser.log
         rm -fv ./*.pvd
         rm -fv ./*.vtu
-        rm -rfv ./preCICE-output/
         rm -rfv ./output/
         clean_precice_logs .
     )
+}
+
+clean_dumux() {
+   (
+        set -e -u
+	cd "$1"
+	echo "--- Cleaning up DuMuX case in $(pwd)"
+	rm -fv ./*.vtu
+	rm -fv ./*.pvd
+	clean_precice_logs .
+   )
+
 }

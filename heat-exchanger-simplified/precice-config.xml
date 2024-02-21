@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
   <log>
     <sink
@@ -7,117 +7,122 @@
       enabled="true" />
   </log>
 
-  <solver-interface dimensions="2">
-    <data:scalar name="Temperature-Top" />
-    <data:scalar name="Heat-Flux-Top" />
-    <data:scalar name="Temperature-Bottom" />
-    <data:scalar name="Heat-Flux-Bottom" />
+  <data:scalar name="Temperature-Top" />
+  <data:scalar name="Heat-Flux-Top" />
+  <data:scalar name="Temperature-Bottom" />
+  <data:scalar name="Heat-Flux-Bottom" />
 
-    <mesh name="Fluid-Top-Mesh">
-      <use-data name="Temperature-Top" />
-      <use-data name="Heat-Flux-Top" />
-    </mesh>
+  <mesh name="Fluid-Top-Mesh" dimensions="2">
+    <use-data name="Temperature-Top" />
+    <use-data name="Heat-Flux-Top" />
+  </mesh>
 
-    <mesh name="Fluid-Bottom-Mesh">
-      <use-data name="Temperature-Bottom" />
-      <use-data name="Heat-Flux-Bottom" />
-    </mesh>
+  <mesh name="Fluid-Bottom-Mesh" dimensions="2">
+    <use-data name="Temperature-Bottom" />
+    <use-data name="Heat-Flux-Bottom" />
+  </mesh>
 
-    <mesh name="Solid-Top-Mesh-Faces">
-      <use-data name="Heat-Flux-Top" />
-    </mesh>
+  <mesh name="Solid-Top-Mesh-Faces" dimensions="2">
+    <use-data name="Heat-Flux-Top" />
+  </mesh>
 
-    <mesh name="Solid-Top-Mesh-Nodes">
-      <use-data name="Temperature-Top" />
-    </mesh>
+  <mesh name="Solid-Top-Mesh-Nodes" dimensions="2">
+    <use-data name="Temperature-Top" />
+  </mesh>
 
-    <mesh name="Solid-Bottom-Mesh-Faces">
-      <use-data name="Heat-Flux-Bottom" />
-    </mesh>
+  <mesh name="Solid-Bottom-Mesh-Faces" dimensions="2">
+    <use-data name="Heat-Flux-Bottom" />
+  </mesh>
 
-    <mesh name="Solid-Bottom-Mesh-Nodes">
-      <use-data name="Temperature-Bottom" />
-    </mesh>
+  <mesh name="Solid-Bottom-Mesh-Nodes" dimensions="2">
+    <use-data name="Temperature-Bottom" />
+  </mesh>
 
-    <participant name="Fluid-Top">
-      <use-mesh name="Fluid-Top-Mesh" provide="yes" />
-      <use-mesh name="Solid-Top-Mesh-Faces" from="Solid" />
-      <read-data name="Heat-Flux-Top" mesh="Fluid-Top-Mesh" />
-      <write-data name="Temperature-Top" mesh="Fluid-Top-Mesh" />
-      <mapping:nearest-neighbor
-        direction="read"
-        from="Solid-Top-Mesh-Faces"
-        to="Fluid-Top-Mesh"
-        constraint="consistent" />
-    </participant>
+  <participant name="Fluid-Top">
+    <provide-mesh name="Fluid-Top-Mesh" />
+    <receive-mesh name="Solid-Top-Mesh-Faces" from="Solid" />
+    <read-data name="Heat-Flux-Top" mesh="Fluid-Top-Mesh" />
+    <write-data name="Temperature-Top" mesh="Fluid-Top-Mesh" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Solid-Top-Mesh-Faces"
+      to="Fluid-Top-Mesh"
+      constraint="consistent" />
+  </participant>
 
-    <participant name="Solid">
-      <use-mesh name="Fluid-Top-Mesh" from="Fluid-Top" />
-      <use-mesh name="Solid-Top-Mesh-Faces" provide="yes" />
-      <use-mesh name="Solid-Top-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Solid-Bottom-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Solid-Bottom-Mesh-Faces" provide="yes" />
-      <use-mesh name="Fluid-Bottom-Mesh" from="Fluid-Bottom" />
-      <mapping:nearest-neighbor
-        direction="read"
-        from="Fluid-Top-Mesh"
-        to="Solid-Top-Mesh-Nodes"
-        constraint="consistent" />
-      <mapping:nearest-neighbor
-        direction="read"
-        from="Fluid-Bottom-Mesh"
-        to="Solid-Bottom-Mesh-Nodes"
-        constraint="consistent" />
-      <read-data name="Temperature-Top" mesh="Solid-Top-Mesh-Nodes" />
-      <write-data name="Heat-Flux-Top" mesh="Solid-Top-Mesh-Faces" />
-      <write-data name="Heat-Flux-Bottom" mesh="Solid-Bottom-Mesh-Faces" />
-      <read-data name="Temperature-Bottom" mesh="Solid-Bottom-Mesh-Nodes" />
-    </participant>
+  <participant name="Solid">
+    <receive-mesh name="Fluid-Top-Mesh" from="Fluid-Top" />
+    <provide-mesh name="Solid-Top-Mesh-Faces" />
+    <provide-mesh name="Solid-Top-Mesh-Nodes" />
+    <provide-mesh name="Solid-Bottom-Mesh-Nodes" />
+    <provide-mesh name="Solid-Bottom-Mesh-Faces" />
+    <receive-mesh name="Fluid-Bottom-Mesh" from="Fluid-Bottom" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Fluid-Top-Mesh"
+      to="Solid-Top-Mesh-Nodes"
+      constraint="consistent" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Fluid-Bottom-Mesh"
+      to="Solid-Bottom-Mesh-Nodes"
+      constraint="consistent" />
+    <read-data name="Temperature-Top" mesh="Solid-Top-Mesh-Nodes" />
+    <write-data name="Heat-Flux-Top" mesh="Solid-Top-Mesh-Faces" />
+    <write-data name="Heat-Flux-Bottom" mesh="Solid-Bottom-Mesh-Faces" />
+    <read-data name="Temperature-Bottom" mesh="Solid-Bottom-Mesh-Nodes" />
+  </participant>
 
-    <participant name="Fluid-Bottom">
-      <use-mesh name="Fluid-Bottom-Mesh" provide="yes" />
-      <use-mesh name="Solid-Bottom-Mesh-Faces" from="Solid" />
-      <read-data name="Heat-Flux-Bottom" mesh="Fluid-Bottom-Mesh" />
-      <write-data name="Temperature-Bottom" mesh="Fluid-Bottom-Mesh" />
-      <mapping:nearest-neighbor
-        direction="read"
-        from="Solid-Bottom-Mesh-Faces"
-        to="Fluid-Bottom-Mesh"
-        constraint="consistent" />
-    </participant>
+  <participant name="Fluid-Bottom">
+    <provide-mesh name="Fluid-Bottom-Mesh" />
+    <receive-mesh name="Solid-Bottom-Mesh-Faces" from="Solid" />
+    <read-data name="Heat-Flux-Bottom" mesh="Fluid-Bottom-Mesh" />
+    <write-data name="Temperature-Bottom" mesh="Fluid-Bottom-Mesh" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Solid-Bottom-Mesh-Faces"
+      to="Fluid-Bottom-Mesh"
+      constraint="consistent" />
+  </participant>
 
-    <m2n:sockets from="Fluid-Top" to="Solid" exchange-directory=".." />
-    <m2n:sockets from="Fluid-Bottom" to="Solid" exchange-directory=".." />
+  <m2n:sockets acceptor="Fluid-Top" connector="Solid" exchange-directory=".." />
+  <m2n:sockets acceptor="Fluid-Bottom" connector="Solid" exchange-directory=".." />
 
-    <coupling-scheme:multi>
-      <time-window-size value="0.01" />
-      <max-time value="5" />
-      <max-iterations value="30" />
-      <participant name="Fluid-Top" />
-      <participant name="Fluid-Bottom" />
-      <participant name="Solid" control="yes" />
-      <exchange data="Temperature-Top" mesh="Fluid-Top-Mesh" from="Fluid-Top" to="Solid" />
-      <exchange data="Heat-Flux-Top" mesh="Solid-Top-Mesh-Faces" from="Solid" to="Fluid-Top" />
-      <exchange data="Temperature-Bottom" mesh="Fluid-Bottom-Mesh" from="Fluid-Bottom" to="Solid" />
-      <exchange data="Heat-Flux-Bottom" mesh="Solid-Bottom-Mesh-Faces" from="Solid" to="Fluid-Bottom" />
-
-      <relative-convergence-measure limit="1.0e-5" data="Temperature-Top" mesh="Fluid-Top-Mesh" />
-      <relative-convergence-measure limit="1.0e-5" data="Heat-Flux-Top" mesh="Solid-Top-Mesh-Faces" />
-      <relative-convergence-measure limit="1.0e-5" data="Heat-Flux-Bottom" mesh="Solid-Bottom-Mesh-Faces" />
-      <relative-convergence-measure limit="1.0e-5" data="Temperature-Bottom" mesh="Fluid-Bottom-Mesh" />
-
-      <acceleration:IQN-ILS>
-        <data name="Temperature-Top" mesh="Fluid-Top-Mesh" />
-        <data name="Heat-Flux-Top" mesh="Solid-Top-Mesh-Faces" />
-        <data name="Heat-Flux-Bottom" mesh="Solid-Bottom-Mesh-Faces" />
-        <data name="Temperature-Bottom" mesh="Fluid-Bottom-Mesh" />
-        <initial-relaxation value="0.5" />
-
-        <preconditioner type="residual-sum" />
-        <filter type="QR1" limit="1e-6" />
-        <max-used-iterations value="50" />
-        <time-windows-reused value="10" />
-      </acceleration:IQN-ILS>
-    </coupling-scheme:multi>
-  </solver-interface>
+  <coupling-scheme:multi>
+    <time-window-size value="0.01" />
+    <max-time value="5" />
+    <max-iterations value="30" />
+    <participant name="Fluid-Top" />
+    <participant name="Fluid-Bottom" />
+    <participant name="Solid" control="yes" />
+    <exchange data="Temperature-Top" mesh="Fluid-Top-Mesh" from="Fluid-Top" to="Solid" />
+    <exchange data="Heat-Flux-Top" mesh="Solid-Top-Mesh-Faces" from="Solid" to="Fluid-Top" />
+    <exchange data="Temperature-Bottom" mesh="Fluid-Bottom-Mesh" from="Fluid-Bottom" to="Solid" />
+    <exchange
+      data="Heat-Flux-Bottom"
+      mesh="Solid-Bottom-Mesh-Faces"
+      from="Solid"
+      to="Fluid-Bottom" />
+    <relative-convergence-measure limit="1.0e-5" data="Temperature-Top" mesh="Fluid-Top-Mesh" />
+    <relative-convergence-measure limit="1.0e-5" data="Heat-Flux-Top" mesh="Solid-Top-Mesh-Faces" />
+    <relative-convergence-measure
+      limit="1.0e-5"
+      data="Heat-Flux-Bottom"
+      mesh="Solid-Bottom-Mesh-Faces" />
+    <relative-convergence-measure
+      limit="1.0e-5"
+      data="Temperature-Bottom"
+      mesh="Fluid-Bottom-Mesh" />
+    <acceleration:IQN-ILS>
+      <data name="Temperature-Top" mesh="Fluid-Top-Mesh" />
+      <data name="Heat-Flux-Top" mesh="Solid-Top-Mesh-Faces" />
+      <data name="Heat-Flux-Bottom" mesh="Solid-Bottom-Mesh-Faces" />
+      <data name="Temperature-Bottom" mesh="Fluid-Bottom-Mesh" />
+      <initial-relaxation value="0.5" />
+      <preconditioner type="residual-sum" />
+      <filter type="QR1" limit="1e-6" />
+      <max-used-iterations value="50" />
+      <time-windows-reused value="10" />
+    </acceleration:IQN-ILS>
+  </coupling-scheme:multi>
 </precice-configuration>

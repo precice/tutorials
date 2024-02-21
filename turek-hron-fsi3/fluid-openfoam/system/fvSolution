@@ -85,13 +85,32 @@ PIMPLE
 	}
     }
 
-    // OpenFOAM 6 (.org) or newer
+    // OpenFOAM 6, 7, 8 (.org)
     // see also https://bugs.openfoam.org/view.php?id=3336
     /*
     outerResidualControl
     {
         U 1e-5;
         p 1e-5;
+    }
+    */
+    
+    // OpenFOAM 9 (.org) or newer
+    // see also https://github.com/OpenFOAM/OpenFOAM-dev/commit/4c8122783aedaa7dadf0486163a98350e625db32
+    /*
+    outerCorrectorResidualControl
+    {
+	U
+	{
+		tolerance 1e-5;
+		relTol	  0;
+	}
+
+	p
+	{
+		tolerance 1e-5;
+		relTol	  0;
+	}
     }
     */
 

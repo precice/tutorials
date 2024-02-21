@@ -16,3 +16,10 @@ if [ -n "$(ls -A ./fluid-python/output/*.vtk 2>/dev/null)" ]; then
 else
     echo "No results to plot from fluid-python."
 fi
+
+# Plot diameter from fluid-rust
+if [ -n "$(ls -A ./fluid-rust/output/*.vtk 2>/dev/null)" ]; then
+    python3 plot-vtk.py diameter fluid-rust/output/out_fluid_ &
+else
+    echo "No results to plot from fluid-python."
+fi

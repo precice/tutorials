@@ -8,10 +8,8 @@ from enum import Enum
 import csv
 import os
 
-
-class Scheme(Enum):
-    NEWMARK_BETA = "Newmark_beta"
-    GENERALIZED_ALPHA = "generalized_alpha"
+import problemDefinition
+import timeSteppers
 
 class Solver(Enum):
     MASS_LEFT = "Mass-Left"
@@ -19,64 +17,45 @@ class Solver(Enum):
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("solverName", help="Name of the solver.", type=str, choices=[p.value for p in Solver])
-parser.add_argument("-ts", "--time-stepping", help="Time stepping scheme being used.", type=str,
-                    choices=[s.value for s in Scheme], default=Scheme.NEWMARK_BETA.value)
+parser.add_argument("participantName", help="Name of the solver.", type=str, choices=[p.value for p in Participant])
+parser.add_argument(
+    "-ts",
+    "--time-stepping",
+    help="Time stepping scheme being used.",
+    type=str,
+    choices=[
+        s.value for s in timeSteppers.TimeSteppingSchemes],
+    default=timeSteppers.TimeSteppingSchemes.NEWMARK_BETA.value)
 args = parser.parse_args()
 
 solver_name = args.solverName
 
-m_1, m_2 = 1, 1
-k_1, k_2, k_12 = 4 * np.pi**2, 4 * np.pi**2, 16 * (np.pi**2)
-
-M = np.array([[m_1, 0], [0, m_2]])
-K = np.array([[k_1 + k_12, -k_12], [-k_12, k_2 + k_12]])
-
-# system:
-# m ddu + k u = f
-# compute analytical solution from eigenvalue ansatz
-
-eigenvalues, eigenvectors = eig(K)
-omega = np.sqrt(eigenvalues)
-A, B = eigenvectors
-
-# can change initial displacement
-u0_1 = 1
-u0_2 = 0
-
-# cannot change initial velocities!
-v0_1 = 0
-v0_2 = 0
-
-c = np.linalg.solve(eigenvectors, [u0_1, u0_2])
-
-if solver_name == Solver.MASS_LEFT.value:
+if participant_name == Participant.MASS_LEFT.value:
     write_data_name = 'Force-Left'
     read_data_name = 'Force-Right'
     mesh_name = 'Mass-Left-Mesh'
 
-    mass = m_1
-    stiffness = k_1 + k_12
-    u0, v0, f0, d_dt_f0 = u0_1, v0_1, k_12 * u0_2, k_12 * v0_2
-    def u_analytical(t): return c[0] * A[0] * np.cos(omega[0] * t) + c[1] * A[1] * np.cos(omega[1] * t)
-    def v_analytical(t): return -c[0] * A[0] * omega[0] * np.sin(omega[0] * t) - \
-        c[1] * A[1] * omega[1] * np.sin(omega[1] * t)
+    this_mass = problemDefinition.MassLeft
+    this_spring = problemDefinition.SpringLeft
+    connecting_spring = problemDefinition.SpringMiddle
+    other_mass = problemDefinition.MassRight
 
 elif solver_name == Solver.MASS_RIGHT.value:
     read_data_name = 'Force-Left'
     write_data_name = 'Force-Right'
     mesh_name = 'Mass-Right-Mesh'
 
-    mass = m_2
-    stiffness = k_2 + k_12
-    u0, v0, f0, d_dt_f0 = u0_2, v0_2, k_12 * u0_1, k_12 * v0_1
-    def u_analytical(t): return c[0] * B[0] * np.cos(omega[0] * t) + c[1] * B[1] * np.cos(omega[1] * t)
-    
-    def v_analytical(t): return -c[0] * B[0] * omega[0] * np.sin(omega[0] * t) - \
-        c[1] * B[1] * omega[1] * np.sin(omega[1] * t)
+    this_mass = problemDefinition.MassRight
+    this_spring = problemDefinition.SpringRight
+    connecting_spring = problemDefinition.SpringMiddle
+    other_mass = problemDefinition.MassLeft
 
 else:
     raise Exception(f"wrong solver name: {solver_name}")
+
+mass = this_mass.m
+stiffness = this_spring.k + connecting_spring.k
+u0, v0, f0, d_dt_f0 = this_mass.u0, this_mass.v0, connecting_spring.k * other_mass.u0, connecting_spring.k * other_mass.v0
 
 num_vertices = 1  # Number of vertices
 
@@ -85,24 +64,22 @@ solver_process_size = 1
 
 configuration_file_name = "../precice-config.xml"
 
-participant = precice.Participant(solver_name, configuration_file_name, solver_process_index, solver_process_size)
+participant = precice.Participant(participant_name, configuration_file_name, solver_process_index, solver_process_size)
 
 dimensions = participant.get_mesh_dimensions(mesh_name)
 
 vertex = np.zeros((num_vertices, dimensions))
 read_data = np.zeros(num_vertices)
-write_data = k_12 * u0 * np.ones(num_vertices)
+write_data = connecting_spring.k * u0 * np.ones(num_vertices)
 
-vertex_id = participant.set_mesh_vertices(mesh_name, vertex)
-
+vertex_ids = [participant.set_mesh_vertex(mesh_name, vertex)]
 
 if participant.requires_initial_data():
-    participant.write_data(mesh_name, write_data_name, vertex_id, write_data)
+    participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
 
 participant.initialize()
-
 precice_dt = participant.get_max_time_step_size()
-my_dt = precice_dt  # use my_dt < precice_dt for subcycling
+my_dt = precice_dt / 4  # use my_dt < precice_dt for subcycling
 
 # Initial Conditions
 a0 = (f0 - stiffness * u0) / mass
@@ -111,16 +88,26 @@ v = v0
 a = a0
 t = 0
 
-# Generalized Alpha Parameters
-if args.time_stepping == Scheme.GENERALIZED_ALPHA.value:
-    alpha_f = 0.4
-    alpha_m = 0.2
-elif args.time_stepping == Scheme.NEWMARK_BETA.value:
-    alpha_f = 0.0
-    alpha_m = 0.0
-m = 3 * [None]  # will be computed for each timestep depending on dt
-gamma = 0.5 - alpha_m + alpha_f
-beta = 0.25 * (gamma + 0.5)
+if args.time_stepping == timeSteppers.TimeSteppingSchemes.GENERALIZED_ALPHA.value:
+    time_stepper = timeSteppers.GeneralizedAlpha(stiffness=stiffness, mass=mass, alpha_f=0.4, alpha_m=0.2)
+elif args.time_stepping == timeSteppers.TimeSteppingSchemes.NEWMARK_BETA.value:
+    time_stepper = timeSteppers.GeneralizedAlpha(stiffness=stiffness, mass=mass, alpha_f=0.0, alpha_m=0.0)
+elif args.time_stepping == timeSteppers.TimeSteppingSchemes.RUNGE_KUTTA_4.value:
+    ode_system = np.array([
+        [0, 1],  # du
+        [-stiffness / mass, 0],  # dv
+    ])
+    time_stepper = timeSteppers.RungeKutta4(ode_system=ode_system)
+elif args.time_stepping == timeSteppers.TimeSteppingSchemes.Radau_IIA.value:
+    ode_system = np.array([
+        [0, 1],  # du
+        [-stiffness / mass, 0],  # dv
+    ])
+    time_stepper = timeSteppers.RadauIIA(ode_system=ode_system)
+else:
+    raise Exception(
+        f"Invalid time stepping scheme {args.time_stepping}. Please use one of {[ts.value for ts in timeSteppers.TimeSteppingSchemes]}")
+
 
 positions = []
 velocities = []
@@ -136,44 +123,37 @@ while participant.is_coupling_ongoing():
         v_cp = v
         a_cp = a
         t_cp = t
-
         # store data for plotting and postprocessing
         positions += u_write
         velocities += v_write
         times += t_write
 
     # compute time step size for this time step
+    precice_dt = participant.get_max_time_step_size()
     dt = np.min([precice_dt, my_dt])
-    # # use this with waveform relaxation
-    # read_time = (1-alpha_f) * dt
-    # read_data = participant.read_data(read_data_id, vertex_id, read_time)
-    read_data = participant.read_data(mesh_name, read_data_name, vertex_id, precice_dt)
-    f = read_data
+
+    read_times = time_stepper.rhs_eval_points(dt)
+    f = len(read_times) * [None]
+
+    for i in range(len(read_times)):
+        read_data = participant.read_data(mesh_name, read_data_name, vertex_ids, read_times[i])
+        f[i] = read_data[0]
 
     # do generalized alpha step
-    m[0] = (1 - alpha_m) / (beta * dt**2)
-    m[1] = (1 - alpha_m) / (beta * dt)
-    m[2] = (1 - alpha_m - 2 * beta) / (2 * beta)
-    k_bar = stiffness * (1 - alpha_f) + m[0] * mass
-    u_new = (f - alpha_f * stiffness * u + mass * (m[0] * u + m[1] * v + m[2] * a)) / k_bar
-    a_new = 1.0 / (beta * dt**2) * (u_new - u - dt * v) - (1 - 2 * beta) / (2 * beta) * a
-    v_new = v + dt * ((1 - gamma) * a + gamma * a_new)
+    u_new, v_new, a_new = time_stepper.do_step(u, v, a, f, dt)
     t_new = t + dt
 
-    write_data = k_12 * u_new
+    write_data = [connecting_spring.k * u_new]
 
-    participant.write_data(mesh_name, write_data_name, vertex_id, write_data)
+    participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
 
     participant.advance(dt)
-    
-    precice_dt = participant.get_max_time_step_size()
 
     if participant.requires_reading_checkpoint():
         u = u_cp
         v = v_cp
         a = a_cp
         t = t_cp
-
         # empty buffers for next window
         u_write = []
         v_write = []
@@ -204,7 +184,7 @@ times += t_write
 participant.finalize()
 
 # print errors
-error = np.max(abs(u_analytical(np.array(times)) - np.array(positions)))
+error = np.max(abs(this_mass.u_analytical(np.array(times)) - np.array(positions)))
 print("Error w.r.t analytical solution:")
 print(f"{my_dt},{error}")
 

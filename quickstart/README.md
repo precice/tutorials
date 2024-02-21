@@ -14,15 +14,15 @@ toc: false
 
 This is the first step you may want to try if you are new to preCICE: install preCICE and some solvers, and run a simple coupled case.
 
-To get a feeling what preCICE does, watch a [short presentation](https://www.youtube.com/watch?v=FCv2FNUvKA8), a [longer talk on the fundamentals](https://www.youtube.com/watch?v=9EDFlgfpGBs), or [click through a tutorial in your browser](http://run.precice.org/).
+To get a feeling what preCICE does, watch a [short presentation](https://www.youtube.com/watch?v=FCv2FNUvKA8) or a [longer talk on the fundamentals](https://www.youtube.com/watch?v=9EDFlgfpGBs).
 
 ## Installation
 
-1. Get and install preCICE. For Ubuntu 20.04 (Focal Fossa), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
+1. Get and install preCICE. For Ubuntu 22.04 (Jammy Jellyfish), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v2.5.0/libprecice2_2.5.0_focal.deb
-    sudo apt install ./libprecice2_2.5.0_focal.deb
+    wget https://github.com/precice/precice/releases/download/v2.5.0/libprecice2_2.5.0_jammy.deb
+    sudo apt install ./libprecice2_2.5.0_jammy.deb
     ```
 
     - Are you using something else? Just pick what suits you best on [this overview page](https://precice.org/installation-overview.html).
@@ -32,10 +32,10 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     ```bash
     # Add the signing key, add the repository, update (check this):
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash
-    # Install OpenFOAM v2206:
-    sudo apt install openfoam2206-dev
+    # Install OpenFOAM v2306:
+    sudo apt install openfoam2306-dev
     # Enable OpenFOAM by default in your system and apply now:
-    echo "source /usr/lib/openfoam/openfoam2206/etc/bashrc" >> ~/.bashrc
+    echo "source /usr/lib/openfoam/openfoam2306/etc/bashrc" >> ~/.bashrc
     source ~/.bashrc
     ```
 

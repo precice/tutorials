@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<precice-configuration>
+  <log>
+    <sink
+      filter="%Severity% > debug and %Rank% = 0"
+      format="---[precice] %ColorizedSeverity% %Message%"
+      enabled="true" />
+  </log>
+
+  <data:scalar name="Pressure" />
+  <data:vector name="Velocity" />
+  <data:scalar name="PressureBack" />
+  <data:vector name="VelocityBack" />
+  <data:vector name="VelocityGradient" />
+  <data:vector name="VelocityGradientBack" />
+
+  <mesh name="Fluid1-Mesh" dimensions="3">
+    <use-data name="Pressure" />
+    <use-data name="Velocity" />
+    <use-data name="PressureBack" />
+    <use-data name="VelocityBack" />
+    <use-data name="VelocityGradient" />
+    <use-data name="VelocityGradientBack" />
+  </mesh>
+
+  <mesh name="Fluid2-Mesh" dimensions="3">
+    <use-data name="Pressure" />
+    <use-data name="Velocity" />
+    <use-data name="PressureBack" />
+    <use-data name="VelocityBack" />
+    <use-data name="VelocityGradient" />
+    <use-data name="VelocityGradientBack" />
+  </mesh>
+
+  <participant name="Fluid1">
+    <provide-mesh name="Fluid1-Mesh" />
+    <receive-mesh name="Fluid2-Mesh" from="Fluid2" />
+    <write-data name="Velocity" mesh="Fluid1-Mesh" />
+    <write-data name="PressureBack" mesh="Fluid1-Mesh" />
+    <write-data name="VelocityGradientBack" mesh="Fluid1-Mesh" />
+    <read-data name="Pressure" mesh="Fluid1-Mesh" />
+    <read-data name="VelocityBack" mesh="Fluid1-Mesh" />
+    <read-data name="VelocityGradient" mesh="Fluid1-Mesh" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Fluid2-Mesh"
+      to="Fluid1-Mesh"
+      constraint="consistent" />
+  </participant>
+
+  <participant name="Fluid2">
+    <provide-mesh name="Fluid2-Mesh" />
+    <receive-mesh name="Fluid1-Mesh" from="Fluid1" />
+    <read-data name="Velocity" mesh="Fluid2-Mesh" />
+    <read-data name="PressureBack" mesh="Fluid2-Mesh" />
+    <read-data name="VelocityGradientBack" mesh="Fluid2-Mesh" />
+    <write-data name="Pressure" mesh="Fluid2-Mesh" />
+    <write-data name="VelocityBack" mesh="Fluid2-Mesh" />
+    <write-data name="VelocityGradient" mesh="Fluid2-Mesh" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Fluid1-Mesh"
+      to="Fluid2-Mesh"
+      constraint="consistent" />
+  </participant>
+
+  <m2n:sockets acceptor="Fluid1" connector="Fluid2" exchange-directory=".." />
+
+  <coupling-scheme:serial-implicit>
+    <time-window-size value="0.01" />
+    <max-time value="2.5" />
+    <participants first="Fluid1" second="Fluid2" />
+    <exchange data="Velocity" mesh="Fluid1-Mesh" from="Fluid1" to="Fluid2" />
+    <exchange data="VelocityBack" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" />
+    <exchange data="VelocityGradient" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" />
+    <exchange data="VelocityGradientBack" mesh="Fluid1-Mesh" from="Fluid1" to="Fluid2" />
+    <exchange data="Pressure" mesh="Fluid2-Mesh" from="Fluid2" to="Fluid1" />
+    <exchange data="PressureBack" mesh="Fluid1-Mesh" from="Fluid1" to="Fluid2" />
+    <max-iterations value="100" />
+    <relative-convergence-measure limit="1.0e-5" data="Pressure" mesh="Fluid2-Mesh" />
+    <relative-convergence-measure limit="1.0e-5" data="PressureBack" mesh="Fluid1-Mesh" />
+    <relative-convergence-measure limit="1.0e-5" data="Velocity" mesh="Fluid1-Mesh" />
+    <relative-convergence-measure limit="1.0e-5" data="VelocityBack" mesh="Fluid2-Mesh" />
+    <relative-convergence-measure limit="1.0e-5" data="VelocityGradient" mesh="Fluid2-Mesh" />
+    <relative-convergence-measure limit="1.0e-5" data="VelocityGradientBack" mesh="Fluid1-Mesh" />
+    <acceleration:IQN-ILS>
+      <data mesh="Fluid2-Mesh" name="VelocityGradient" />
+      <data mesh="Fluid2-Mesh" name="VelocityBack" />
+      <initial-relaxation value="0.01" />
+      <max-used-iterations value="10" />
+      <time-windows-reused value="4" />
+      <filter type="QR1" limit="1e-7" />
+    </acceleration:IQN-ILS>
+  </coupling-scheme:serial-implicit>
+</precice-configuration>

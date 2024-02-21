@@ -4,10 +4,9 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include "precice/SolverInterface.hpp"
+#include "precice/precice.hpp"
 
 using namespace precice;
-using namespace precice::constants;
 
 int main(int argc, char **argv)
 {
@@ -30,13 +29,13 @@ int main(int argc, char **argv)
 
   std::string outputFilePrefix = "./output/out_fluid"; //extra
 
-  SolverInterface interface(solverName, configFileName, 0, 1);
+  precice::Participant interface(solverName, configFileName, 0, 1);
   std::cout << "preCICE configured..." << std::endl;
 
-  const int dimensions           = interface.getDimensions();
-  const int meshID               = interface.getMeshID("Fluid-Nodes-Mesh");
-  const int pressureID           = interface.getDataID("Pressure", meshID);
-  const int crossSectionLengthID = interface.getDataID("CrossSectionLength", meshID);
+  auto meshName               = "Fluid-Nodes-Mesh";
+  auto pressureName           = "Pressure";
+  auto crossSectionLengthName = "CrossSectionLength";
+  const int dimensions        = interface.getMeshDimensions(meshName);
 
   std::vector<int>    vertexIDs(chunkLength);
 
@@ -70,22 +69,17 @@ int main(int argc, char **argv)
     }
   }
 
-  interface.setMeshVertices(meshID, chunkLength, grid.data(), vertexIDs.data());
+  interface.setMeshVertices(meshName, grid, vertexIDs);
+
+  if (interface.requiresInitialData()) {
+    interface.writeData(meshName, pressureName, vertexIDs, pressure);
+  }
 
   double t  = 0.0;
   std::cout << "Initialize preCICE..." << std::endl;
-  double dt = interface.initialize();
+  interface.initialize();
 
-  if (interface.isActionRequired(actionWriteInitialData())) {
-    interface.writeBlockScalarData(pressureID, chunkLength, vertexIDs.data(), pressure.data());
-    interface.markActionFulfilled(actionWriteInitialData());
-  }
-
-  interface.initializeData();
-
-  if (interface.isReadDataAvailable()) {
-    interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
-  }
+  interface.readData(meshName, crossSectionLengthName, vertexIDs, 0, crossSectionLength);
 
   std::copy(crossSectionLength.begin(), crossSectionLength.end(), crossSectionLength_old.begin());
 
@@ -97,9 +91,10 @@ int main(int argc, char **argv)
   int out_counter = 0;
 
   while (interface.isCouplingOngoing()) {
-    if (interface.isActionRequired(actionWriteIterationCheckpoint())) {
-      interface.markActionFulfilled(actionWriteIterationCheckpoint());
+    if (interface.requiresWritingCheckpoint()) {
     }
+
+    auto dt = interface.getMaxTimeStepSize();
     
     fluidComputeSolutionSerial(
         // values from last time window
@@ -114,19 +109,13 @@ int main(int argc, char **argv)
         velocity.data(),
         pressure.data());
     
-    if (interface.isWriteDataRequired(dt)) {
-      interface.writeBlockScalarData(pressureID, chunkLength, vertexIDs.data(), pressure.data());
-    }
+    interface.writeData(meshName, pressureName, vertexIDs, pressure);
     
     interface.advance(dt);
 
-    //interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
-    if (interface.isReadDataAvailable()) {
-      interface.readBlockScalarData(crossSectionLengthID, chunkLength, vertexIDs.data(), crossSectionLength.data());
-    }
+    interface.readData(meshName,crossSectionLengthName, vertexIDs, interface.getMaxTimeStepSize(),  crossSectionLength);
 
-    if (interface.isActionRequired(actionReadIterationCheckpoint())) { // i.e. not yet converged
-      interface.markActionFulfilled(actionReadIterationCheckpoint());
+    if (interface.requiresReadingCheckpoint()) {
     } else {
       t += dt;
       write_vtk(t, out_counter, outputFilePrefix.c_str(), chunkLength, grid.data(), velocity.data(), pressure.data(), crossSectionLength.data());
@@ -140,6 +129,5 @@ int main(int argc, char **argv)
   }
 
   std::cout << "Exiting FluidSolver" << std::endl;
-  interface.finalize();
   return 0;
 }

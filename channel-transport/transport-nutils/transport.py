@@ -13,7 +13,7 @@ from mpi4py import MPI
 
 def main():
 
-    print("Running utils")
+    print("Running Nutils")
 
     # define the Nutils mesh
     nx = 120
@@ -51,21 +51,22 @@ def main():
     cons = solver.optimize("lhs", sqr, droptol=1e-15)
 
     # preCICE setup
-    interface = precice.Interface("Transport", "../precice-config.xml", 0, 1)
+    participant = precice.Participant("Transport", "../precice-config.xml", 0, 1)
 
     # define coupling mesh
     mesh_name = "Transport-Mesh"
-    mesh_id = interface.get_mesh_id(mesh_name)
     vertices = gauss.eval(ns.x)
-    vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)
+    vertex_ids = participant.set_mesh_vertices(mesh_name, vertices)
 
     # coupling data
-    velocity_id = interface.get_data_id("Velocity", mesh_id)
+    data_name = "Velocity"
 
-    precice_dt = interface.initialize()
+    participant.initialize()
 
     timestep = 0
-    dt = 0.005
+    solver_dt = 0.005
+    precice_dt = participant.get_max_time_step_size()
+    dt = min(precice_dt, solver_dt)
 
     # set blob as initial condition
     sqr = domain.integral("(u - uinit)^2" @ ns, degree=2)
@@ -74,7 +75,7 @@ def main():
     # initialize the velocity values
     velocity_values = np.zeros_like(vertices)
 
-    while interface.is_coupling_ongoing():
+    while participant.is_coupling_ongoing():
 
         if timestep % 1 == 0:  # visualize
             bezier = domain.sample("bezier", 2)
@@ -82,12 +83,13 @@ def main():
             with log.add(log.DataLog()):
                 export.vtk("Transport_" + str(timestep), bezier.tri, x, T=u)
 
-        # read velocity values from interface
-        if interface.is_read_data_available():
-            velocity_values = interface.read_block_vector_data(velocity_id, vertex_ids)
+        precice_dt = participant.get_max_time_step_size()
 
         # potentially adjust non-matching timestep sizes
-        dt = min(dt, precice_dt)
+        dt = min(solver_dt, precice_dt)
+
+        # read velocity values from participant
+        velocity_values = participant.read_data(mesh_name, data_name, vertex_ids, dt)
 
         # solve nutils timestep
         lhs = solver.solve_linear(
@@ -95,13 +97,13 @@ def main():
         )
 
         # do the coupling
-        precice_dt = interface.advance(dt)
+        participant.advance(dt)
 
         # advance variables
         timestep += 1
         lhs0 = lhs
 
-    interface.finalize()
+    participant.finalize()
 
 
 if __name__ == "__main__":

@@ -17,12 +17,14 @@ This tutorial solves a simple mass-spring oscillator with two masses and three s
 
 Note that this case applies a Schwarz-type coupling method and not (like most other tutorials in this repository) a Dirichlet-Neumann coupling. This results in a symmetric setup of the solvers. We will refer to the solver computing the trajectory of $m_1$ as `Mass-Left` and to the solver computing the trajectory of $m_2$ as `Mass-Right`. For more information, please refer to [1].
 
+This tutorial is useful to study different time stepping and coupling schemes. It uses subcycling and time interpolation: Each solver performs 4 time steps in each time window. The data of these 4 substeps is used to create a third order B-spline interpolation (`waveform-degree="3"` in `precice-config.xml`).
+
 ## Available solvers
 
 There are two different implementations:
 
-- *Python*: An example solver using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy`, which you can get from your system package manager or with `pip3 install --user <package>`.
-- *FMI*: An example solver using the [preCICE-FMI Runner](https://github.com/precice/fmi-runner). The Runner executes the FMU model `Oscillator.fmu` for computation. The compiled FMU model for Linux is part of this repository. For other systems, please recompile the model from the provided [C-files](https://github.com/precice/tutorials/tree/master/oscillator/fmi/fmu). If you want to change the model parameters or the initial conditions of the simulation, have a look inside the setting files for [MassLeft](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassLeft) and [MassRight](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassRight). For more information, please refer to [2]
+- *Python*: An example solver using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy`, which you can get from your system package manager or with `pip3 install --user <package>`. Using the option `-ts` allows you to pick the time stepping scheme being used. Available choices are Newmark beta, generalized alpha, explicit Runge Kutta 4, and implicit RadauIIA.
+- *FMI*: An example solver using the [preCICE-FMI Runner](https://github.com/precice/fmi-runner). The Runner executes the FMU model `Oscillator.fmu` for computation. The compiled FMU model for Linux is part of this repository. For other systems, please recompile the model from the provided [C-files](https://github.com/precice/tutorials/tree/master/oscillator/fmi/fmu). If you want to change the model parameters or the initial conditions of the simulation, have a look inside the setting files for [MassLeft](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassLeft) and [MassRight](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassRight). For more information, please refer to [2].
 
 ## Running the Simulation
 
