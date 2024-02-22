@@ -5,7 +5,7 @@ repos:
   hooks:
   - id: format-precice-config
 - repo: https://github.com/igorshubovych/markdownlint-cli
-  rev: v0.39.0
+  rev: v0.30.0
   hooks:
     - id: markdownlint
       files: "^(.*/)?README.md"
