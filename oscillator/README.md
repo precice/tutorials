@@ -17,14 +17,12 @@ This tutorial solves a simple mass-spring oscillator with two masses and three s
 
 Note that this case applies a Schwarz-type coupling method and not (like most other tutorials in this repository) a Dirichlet-Neumann coupling. This results in a symmetric setup of the solvers. We will refer to the solver computing the trajectory of $m_1$ as `Mass-Left` and to the solver computing the trajectory of $m_2$ as `Mass-Right`. For more information, please refer to [1].
 
-This tutorial is useful to study different time stepping and coupling schemes. It uses subcycling and time interpolation: Each solver performs 4 time steps in each time window. The data of these 4 substeps is used to create a third order B-spline interpolation (`waveform-degree="3"` in `precice-config.xml`).
-
 ## Available solvers
 
 There are two different implementations:
 
-- *Python*: An example solver using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy`, which you can get from your system package manager or with `pip3 install --user <package>`. Using the option `-ts` allows you to pick the time stepping scheme being used. Available choices are Newmark beta, generalized alpha, explicit Runge Kutta 4, and implicit RadauIIA.
-- *FMI*: An example solver using the [preCICE-FMI Runner](https://github.com/precice/fmi-runner). The Runner executes the FMU model `Oscillator.fmu` for computation. The compiled FMU model for Linux is part of this repository. For other systems, please recompile the model from the provided [C-files](https://github.com/precice/tutorials/tree/master/oscillator/fmi/fmu). If you want to change the model parameters or the initial conditions of the simulation, have a look inside the setting files for [MassLeft](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassLeft) and [MassRight](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassRight). For more information, please refer to [2].
+- *Python*: A solver using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy`, which you can get from your system package manager or with `pip3 install --user <package>`. Using the option `-ts` allows you to pick the time stepping scheme being used. Available choices are Newmark beta, generalized alpha, explicit Runge Kutta 4, and implicit RadauIIA. The solver uses subcycling: Each participant performs 4 time steps in each time window. The data of these 4 substeps is then used by preCICE to create a third order B-spline interpolation (`waveform-degree="3"` in `precice-config.xml`).
+- *FMI*: A solver using the [preCICE-FMI runner](https://github.com/precice/fmi-runner) (requires at least v0.2). The Runner executes the FMU model `Oscillator.fmu` for computation. The compiled FMU model for Linux is part of this repository. For other systems, please recompile the model from the provided [C-files](https://github.com/precice/tutorials/tree/master/oscillator/fmi/fmu). If you want to change the model parameters or the initial conditions of the simulation, have a look inside the setting files for [MassLeft](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassLeft) and [MassRight](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassRight). For more information, please refer to [2].
 
 ## Running the Simulation
 
@@ -66,4 +64,4 @@ For details, refer to [1].
 
 [1] V. Schüller, B. Rodenberg, B. Uekermann and H. Bungartz, A Simple Test Case for Convergence Order in Time and Energy Conservation of Black-Box Coupling Schemes, in: WCCM-APCOM2022. [URL](https://www.scipedia.com/public/Rodenberg_2022a)
 
-[2] L. Willeke, [A preCICE-FMI Runner to couple controller models to PDEs](http://dx.doi.org/10.18419/opus-13130), Master Thesis, University of Stuttgart, 2023
+[2] L. Willeke, D. Schneider and B. Uekermann, A preCICE-FMI Runner to Couple FMUs to PDE-Based Simulations, Proceedings 15th Intern. Modelica Conference, 2023. [DOI](https://doi.org/10.3384/ecp204)
