@@ -11,3 +11,8 @@ repos:
       files: "^(.*/)?README.md"
     - id: markdownlint-fix
       files: "^(.*/)?README.md"
+- repo: https://github.com/hhatto/autopep8
+  rev: v2.0.4
+  hooks:
+    - id: autopep8
+      args: [ --in-place, --exit-code, --aggressive, --ignore=E402, --max-line-length=120 ]
