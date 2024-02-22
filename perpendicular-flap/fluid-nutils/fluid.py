@@ -153,8 +153,8 @@ def main(inflow: 'inflow velocity' = 10,
     meshsqr = domain.integral('d_i,x0_j d_i,x0_j d:x0' @ ns, degree=2)
 
     # better initial guess: start from Stokes solution, comment out for comparison with other solvers
-    #res_stokes = domain.integral('(ubasis_ni,j ((u_i,j + u_j,i) rho nu - p δ_ij) + pbasis_n u_k,k) d:x' @ ns, degree=4)
-    #lhs0 = solver.solve_linear('lhs', res_stokes, constrain=cons, arguments=dict(meshdofs=meshdofs, oldmeshdofs=oldmeshdofs, oldoldmeshdofs=oldoldmeshdofs, oldoldoldmeshdofs=oldoldoldmeshdofs, dt=dt))
+    # res_stokes = domain.integral('(ubasis_ni,j ((u_i,j + u_j,i) rho nu - p δ_ij) + pbasis_n u_k,k) d:x' @ ns, degree=4)
+    # lhs0 = solver.solve_linear('lhs', res_stokes, constrain=cons, arguments=dict(meshdofs=meshdofs, oldmeshdofs=oldmeshdofs, oldoldmeshdofs=oldoldmeshdofs, oldoldoldmeshdofs=oldoldoldmeshdofs, dt=dt))
     lhs00 = lhs0
 
     timestep = 0
