@@ -18,7 +18,7 @@ def set_tool_version(filename, git_executable='git'):
 
     if not version:
         version = subprocess.check_output([git_executable, 'rev-parse', '--short',
-                                          'HEAD'], cwd=cwd).decode('ascii').strip()
+                                           'HEAD'], cwd=cwd).decode('ascii').strip()
 
     if not version:
         return
