@@ -7,8 +7,9 @@ def set_tool_version(filename, git_executable='git'):
     """ Set the Git tag or hash in the generationTool attribute if the repo is clean """
 
     cwd = os.path.dirname(__file__)
-    
-    changed_files = subprocess.check_output([git_executable, 'status', '--porcelain', '--untracked=no'], cwd=cwd).decode('ascii').strip()
+
+    changed_files = subprocess.check_output(
+        [git_executable, 'status', '--porcelain', '--untracked=no'], cwd=cwd).decode('ascii').strip()
 
     if changed_files:
         return
@@ -16,7 +17,8 @@ def set_tool_version(filename, git_executable='git'):
     version = subprocess.check_output([git_executable, 'tag', '--contains'], cwd=cwd).decode('ascii').strip()
 
     if not version:
-        version = subprocess.check_output([git_executable, 'rev-parse', '--short', 'HEAD'], cwd=cwd).decode('ascii').strip()
+        version = subprocess.check_output([git_executable, 'rev-parse', '--short',
+                                          'HEAD'], cwd=cwd).decode('ascii').strip()
 
     if not version:
         return

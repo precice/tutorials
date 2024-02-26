@@ -33,7 +33,7 @@ if solver == 'python':
         plt.scatter([df['position'].iloc[-1]], [df['velocity'].iloc[-1]],
                     label=f"(u,v) at t={df['time'].iloc[-1]}", marker="*")
         plt.title(PlotType.TRAJECTORY.value)
-        plt.legend()  
+        plt.legend()
 elif solver == 'fmi':
     df = pd.read_csv(filename, delimiter=',')
     if args.plotType == PlotType.U_OVER_T.name:
