@@ -41,7 +41,7 @@ We can set this in our `precice-config.xml`:
 
 The participant that has the control is the one that it is connected to all other participants. This is why we have chosen the muscle participant for this task.
 
-## About the Solvers
+## About the Solvers TODO
 
 For the fluid participant we use OpenFOAM. In particular, we use the application `pimpleFoam`. The geometry of the Fluid participant is defined in the file `Fluid/system/blockMeshDict`. Besides, we must specify where are we exchanging data with the other participants. The interfaces are set in the file `Fluid/system/preciceDict`. In this file, we set to exchange stress and displacement on the surface of each flap.
 
@@ -67,7 +67,7 @@ set Flap location     = 1.0
 
 The scenario settings are implemented similarly for the nonlinear case.
 
-## Running the Simulation
+## Running the Simulation TODO
 
 1. Preparation:
    To run the coupled simulation, copy the deal.II executable `elasticity` into the main folder. To learn how to obtain the deal.II executable take a look at the description on the  [deal.II-adapter page](https://www.precice.org/adapter-dealii-overview.html).
@@ -104,13 +104,13 @@ The scenario settings are implemented similarly for the nonlinear case.
    ./run.sh
    ```
 
-## Postprocessing
+## Postprocessing TODO
 
 After the simulation has finished, you can visualize your results using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `fluid-openfoam.foam` file. Looking at the fluid results is enough to obtain information about the behaviour of the flaps. You can also visualize the solid participants' vtks though.
 
 ![Example visualization](images/tutorials-multiple-perpendicular-flaps-results.png)
 
-## References
+## References TODO
 
 <!-- markdownlint-configure-file {"MD034": false } -->
 [1] H. Bungartz, F. Linder, M. Mehl, B. Uekermann. A plug-and-play coupling approach for parallel multi-field simulations. _Comput Mech_ **55**, 1119-1129 (2015). https://doi.org/10.1007/s00466-014-1113-2
