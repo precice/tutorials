@@ -1,7 +1,7 @@
 ---
 title: Muscle-tendon complex
 permalink: tutorials-muscle-tendon-complex.html
-keywords: multi-coupling, OpenDiHu, deal.II, skeletal muscle
+keywords: multi-coupling, OpenDiHu, skeletal muscle
 summary: In this case, an skeletal muscle (biceps) and three tendons are coupled together using a fully-implicit multi-coupling scheme.
 ---
 
@@ -19,14 +19,11 @@ The muscle participant (in red), is connected to three tendons. The muscle sends
 
 The muscle and tendon meshes are obtained from patient imaging. The interfaces of the tendons and the muscle do not perfectly match, which is a quite common issue due to the limitations of imaging methods and postprocessing tools. Nonetheless, preCICE coupling methods are robust and can handle meshes that do not match perfectly. 
 
-
-TODO: how is the muscle activated!
-
-TODO: Add related case? multiple-perpendicular flap?
+TODO: Explain how is the muscle activated!
 
 ## Why multi-coupling?
 
-This is a case with four participants: the muscle and each tendon. In preCICE, there are two options to [couple more than two participants](https://www.precice.org/configuration-coupling-multi.html). The first option is a composition of bi-coupling schemes, in which we must specify the exchange of data in a participant to participant manner. However, such a composition is not suited for combining multiple strong fluid-structure interactions [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling.
+This is a case with four participants: the muscle and each tendon. In preCICE, there are two options to [couple more than two participants](https://www.precice.org/configuration-coupling-multi.html). The first option is a composition of bi-coupling schemes, in which we must specify the exchange of data in a participant to participant manner. However, such a composition is not suited for combining multiple strong fluid-structure interactions [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling. For another multi-coupling tutorial, you can refer to the [multiple perpendicular flaps tutorial](http://precice.org/tutorials-multiple-perpendicular-flaps.html).
 
 We can set this in our `precice-config.xml`:
 
@@ -41,74 +38,59 @@ We can set this in our `precice-config.xml`:
 
 The participant that has the control is the one that it is connected to all other participants. This is why we have chosen the muscle participant for this task.
 
-## About the Solvers TODO
+## About the solvers
 
-For the fluid participant we use OpenFOAM. In particular, we use the application `pimpleFoam`. The geometry of the Fluid participant is defined in the file `Fluid/system/blockMeshDict`. Besides, we must specify where are we exchanging data with the other participants. The interfaces are set in the file `Fluid/system/preciceDict`. In this file, we set to exchange stress and displacement on the surface of each flap.
+OpenDiHu is used for the muscle and each tendon participants. 
+The muscle solver consists of a ... TODO
+The tendon solver consists of a ... TODO
 
-Most of the coupling details are specified in the file `precice-config.xml`. Here we estipulate the order in which we read/write data from one participant to another or how we map from the fluid to the solid's mesh. In particular, we have chosen the nearest-neighbor mapping scheme.
+## Running the Simulation 
 
-For the simulation of the solid participants we use the deal.II adapter. In deal.II, the geometry of the domain is specified directly on the solver. The two flaps in our case are essentially the same but for the x-coordinate. The flap geometry is given to the solver when we select the scenario in the '.prm' file.
+1. Preparation: ... TODO
+   - Install OpenDiHu
+   - Download input files for OpenDiHu 
+   - Setup `$OPENDIHU_HOME` to your `.bashrc` file
+   - Compile muscle and tendon solvers
 
-```text
-set Scenario            = PF
-```
+   ```bash
+   cd opendihu-solver
+   ./build.sh
+   ```
+   - Move executables to participants directory
 
-But to specify the position of the flap along the x-axis, we must specify it in the `solid-upstream-dealii/parameters.prm` file as follows:
-
-```text
-set Flap location     = -1.0
-```
-
-While in case of `solid-downstream-dealii/parameters.prm` we write:
-
-```text
-set Flap location     = 1.0
-```
-
-The scenario settings are implemented similarly for the nonlinear case.
-
-## Running the Simulation TODO
-
-1. Preparation:
-   To run the coupled simulation, copy the deal.II executable `elasticity` into the main folder. To learn how to obtain the deal.II executable take a look at the description on the  [deal.II-adapter page](https://www.precice.org/adapter-dealii-overview.html).
 2. Starting:
 
    We are going to run each solver in a different terminal. It is important that first we navigate to the simulation directory so that all solvers start in the same directory.
-   To start the `Fluid` participant, run:
+   To start the `Muscle` participant, run:
 
    ```bash
-   cd fluid-openfoam
+   cd muscle-opendihu
+   ./run.sh
+   ```
+   To start the `Tendon-Bottom` participant, run:
+
+   ```bash
+   cd tendon-bottom-opendihu
    ./run.sh
    ```
 
-   to start OpenFOAM in serial or
+   To start the `Tendon-Top-A` participant, run:
 
    ```bash
-   cd fluid-openfoam
-   ./run.sh -parallel
-   ```
-
-   for a parallel run.
-
-   The solid participants are only designed for serial runs. To run the `Solid-Upstream` participant, execute the corresponding deal.II binary file e.g. by:
-
-   ```bash
-   cd solid-upstream-dealii
+   cd tendon-top-A-opendihu
    ./run.sh
    ```
 
-   Finally, in the third terminal we will run the solver for the `Solid-Downstream` participant by:
+   Finally, to start the `Tendon-Top-B` participant, run:
 
-   ```bash
-   cd solid-downstream-dealii
+      ```bash
+   cd tendon-top-B-opendihu
    ./run.sh
    ```
 
-## Postprocessing TODO
+## Postprocessing... TODO
 
-After the simulation has finished, you can visualize your results using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `fluid-openfoam.foam` file. Looking at the fluid results is enough to obtain information about the behaviour of the flaps. You can also visualize the solid participants' vtks though.
-
-![Example visualization](images/tutorials-multiple-perpendicular-flaps-results.png)
+After the simulation has finished, you can visualize your results using e.g. ParaView.
 
 ## References TODO
 
