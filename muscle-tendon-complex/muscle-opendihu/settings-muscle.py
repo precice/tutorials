@@ -208,50 +208,50 @@ config = {
     "outputOnlyConvergedTimeSteps": True,                   # if the output writers should be called only after a time window of precice is complete, this means the timestep has converged
     "preciceMeshes": [                                      # the precice meshes get created as the top or bottom surface of the main geometry mesh of the nested solver
       {
-        "meshName":      "MuscleMeshBottom",         # precice name of the 2D coupling mesh
+        "meshName":      "Muscle-Bottom-Mesh",         # precice name of the 2D coupling mesh
         "face":                 "2-",                       # face of the 3D mesh where the 2D mesh is located, "2-" = bottom, "2+" = top
       },
       {
-        "meshName":      "MuscleMeshTopA",           # precice name of the 2D coupling mesh
+        "meshName":      "Muscle-Top-A-Mesh",           # precice name of the 2D coupling mesh
         "face":                 "2+",                       # face of the 3D mesh where the 2D mesh is located, "2-" = bottom, "2+" = top
       },
       {
-        "meshName":      "MuscleMeshTopB",           # precice name of the 2D coupling mesh
+        "meshName":      "Muscle-Top-B-Mesh",           # precice name of the 2D coupling mesh
         "face":                 "2+",                       # face of the 3D mesh where the 2D mesh is located, "2-" = bottom, "2+" = top
       },
     ],
     "preciceData": [
       {
         "mode":                 "read-displacements-velocities",    # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "MuscleMeshBottom",                 # name of the precice coupling surface mesh, as given in the precice xml settings file
+        "meshName":      "Muscle-Bottom-Mesh",                 # name of the precice coupling surface mesh, as given in the precice xml settings file
         "displacementsName":    "Displacement",                     # name of the displacements "data", i.e. field variable, as given in the precice xml settings file
         "velocitiesName":       "Velocity",                         # name of the velocity "data", i.e. field variable, as given in the precice xml settings file
       },
       {
         "mode":                 "read-displacements-velocities",    # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "MuscleMeshTopA",                   # name of the precice coupling surface mesh, as given in the precice xml settings file
+        "meshName":      "Muscle-Top-A-Mesh",                   # name of the precice coupling surface mesh, as given in the precice xml settings file
         "displacementsName":    "Displacement",                     # name of the displacements "data", i.e. field variable, as given in the precice xml settings file
         "velocitiesName":       "Velocity",                         # name of the velocity "data", i.e. field variable, as given in the precice xml settings file
       },
       {
         "mode":                 "read-displacements-velocities",    # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "MuscleMeshTopB",                   # name of the precice coupling surface mesh, as given in the precice xml settings file
+        "meshName":      "Muscle-Top-B-Mesh",                   # name of the precice coupling surface mesh, as given in the precice xml settings file
         "displacementsName":    "Displacement",                     # name of the displacements "data", i.e. field variable, as given in the precice xml settings file
         "velocitiesName":       "Velocity",                         # name of the velocity "data", i.e. field variable, as given in the precice xml settings file
       },
       {
         "mode":                 "write-traction",                   # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "MuscleMeshBottom",                 # name of the precice coupling surface mesh, as given in the precice xml settings 
+        "meshName":      "Muscle-Bottom-Mesh",                 # name of the precice coupling surface mesh, as given in the precice xml settings 
         "tractionName":         "Traction",                         # name of the traction "data", i.e. field variable, as given in the precice xml settings file
       },
       {
         "mode":                 "write-traction",                   # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "MuscleMeshTopA",                   # name of the precice coupling surface mesh, as given in the precice xml settings 
+        "meshName":      "Muscle-Top-A-Mesh",                   # name of the precice coupling surface mesh, as given in the precice xml settings 
         "tractionName":         "Traction",                         # name of the traction "data", i.e. field variable, as given in the precice xml settings file
       },
       {
         "mode":                 "write-traction",                   # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "MuscleMeshTopB",                   # name of the precice coupling surface mesh, as given in the precice xml settings 
+        "meshName":      "Muscle-Top-B-Mesh",                   # name of the precice coupling surface mesh, as given in the precice xml settings 
         "tractionName":         "Traction",                         # name of the traction "data", i.e. field variable, as given in the precice xml settings file
       },
     ],
