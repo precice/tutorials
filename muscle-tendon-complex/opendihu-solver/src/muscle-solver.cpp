@@ -8,30 +8,22 @@
 #include "opendihu.h"
 
 int main(int argc, char *argv[]) {
-  // multiple fibers in arbitrary partitioning, coupled to dynamic nonlinear
-  // elasticity
-
-  // initialize everything, handle arguments and parse settings from input file
+ 
   DihuContext settings(argc, argv);
 
-  // define problem
   Control::PreciceAdapter<Control::Coupling<
-      FastMonodomainSolver<           // a wrapper that improves performance of
-                                      // multidomain
-          Control::MultipleInstances< // fibers
+      FastMonodomainSolver<           
+          Control::MultipleInstances< 
               OperatorSplitting::Strang<
                   Control::MultipleInstances<
-                      TimeSteppingScheme::Heun< // fiber
-                                                // reaction
-                                                // term
+                      TimeSteppingScheme::Heun< 
                           CellmlAdapter<
-                              44, 19, // nStates,nAlgebraics: 57,71 = Shorten,
-                                      // 4,9 = Hodgkin Huxley
+                              44, 19, 
                               FunctionSpace::FunctionSpace<
                                   Mesh::StructuredDeformableOfDimension<1>,
                                   BasisFunction::LagrangeOfOrder<1>>>>>,
                   Control::MultipleInstances<
-                      TimeSteppingScheme::CrankNicolson< // fiber diffusion
+                      TimeSteppingScheme::CrankNicolson< 
                           SpatialDiscretization::FiniteElementMethod<
                               Mesh::StructuredDeformableOfDimension<1>,
                               BasisFunction::LagrangeOfOrder<1>,
@@ -40,7 +32,6 @@ int main(int argc, char *argv[]) {
       MuscleContractionSolver<>>>
       problem(settings);
 
-  // run problem
   problem.run();
 
   return EXIT_SUCCESS;
