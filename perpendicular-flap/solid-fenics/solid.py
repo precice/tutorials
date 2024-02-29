@@ -95,8 +95,8 @@ Check requirements for alpha_m and alpha_f from
     Chung, J., and Hulbert, G. M. (June 1, 1993). "A Time Integration Algorithm for Structural Dynamics With Improved Numerical Dissipation:
     The Generalized-α Method." ASME. J. Appl. Mech. June 1993; 60(2): 371–375. https://doi.org/10.1115/1.2900803
 """
-assert (alpha_m <= alpha_f)
-assert (alpha_f <= 0.5)
+assert (float(alpha_m) <= float(alpha_f))
+assert (float(alpha_f) <= 0.5)
 
 gamma = Constant(0.5 + alpha_f - alpha_m)
 beta = Constant((gamma + 0.5)**2 / 4.)
@@ -223,7 +223,7 @@ while precice.is_coupling_ongoing():
     precice.write_data(u_np1)
 
     # Call to advance coupling, also returns the optimum time step value
-    precice.advance(dt(0))
+    precice.advance(float(dt))
 
     # Either revert to old step if timestep has not converged or move to next timestep
     if precice.requires_reading_checkpoint():  # roll back to checkpoint
