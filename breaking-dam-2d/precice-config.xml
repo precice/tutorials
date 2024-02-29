@@ -10,15 +10,15 @@
   <data:vector name="Force" />
   <data:vector name="Displacement" />
 
-  <mesh name="Fluid-Mesh-Faces" dimensions="3">
+  <mesh name="Fluid-Mesh-Faces" dimensions="2">
     <use-data name="Force" />
   </mesh>
 
-  <mesh name="Fluid-Mesh-Nodes" dimensions="3">
+  <mesh name="Fluid-Mesh-Nodes" dimensions="2">
     <use-data name="Displacement" />
   </mesh>
 
-  <mesh name="Solid-Mesh" dimensions="3">
+  <mesh name="Solid-Mesh" dimensions="2">
     <use-data name="Force" />
     <use-data name="Displacement" />
   </mesh>
@@ -29,6 +29,7 @@
     <receive-mesh name="Solid-Mesh" from="Solid" />
     <write-data name="Force" mesh="Fluid-Mesh-Faces" />
     <read-data name="Displacement" mesh="Fluid-Mesh-Nodes" />
+    <!--
     <mapping:nearest-neighbor
       direction="write"
       from="Fluid-Mesh-Faces"
@@ -39,21 +40,36 @@
       from="Solid-Mesh"
       to="Fluid-Mesh-Nodes"
       constraint="consistent" />
-    <!--
-    <mapping:rbf-global-direct direction="write" from="Fluid-Mesh-Faces" to="Solid-Mesh" constraint="conservative" y-dead="true">
-      <basis-function:thin-plate-splines />
-    </mapping:rbf-global-direct>
-    <mapping:rbf-global-direct direction="read" from="Solid-Mesh" to="Fluid-Mesh-Nodes" constraint="consistent">
-      <basis-function:thin-plate-splines />
-    </mapping:rbf-global-direct>
     -->
+    <!--
+    <mapping:rbf direction="write" from="Fluid-Mesh-Faces" to="Solid-Mesh" constraint="conservative">
+      <basis-function:compact-polynomial-c6 support-radius="1." />
+    </mapping:rbf>
+    <mapping:rbf direction="read" from="Solid-Mesh" to="Fluid-Mesh-Nodes" constraint="consistent">
+      <basis-function:compact-polynomial-c6 support-radius="1." />
+    </mapping:rbf>
+    -->
+    <mapping:rbf-global-direct
+      direction="write"
+      from="Fluid-Mesh-Faces"
+      to="Solid-Mesh"
+      constraint="conservative">
+      <basis-function:thin-plate-splines />
+    </mapping:rbf-global-direct>
+    <mapping:rbf-global-direct
+      direction="read"
+      from="Solid-Mesh"
+      to="Fluid-Mesh-Nodes"
+      constraint="consistent">
+      <basis-function:thin-plate-splines />
+    </mapping:rbf-global-direct>
   </participant>
 
   <participant name="Solid">
     <provide-mesh name="Solid-Mesh" />
     <read-data name="Force" mesh="Solid-Mesh" />
     <write-data name="Displacement" mesh="Solid-Mesh" />
-    <watch-point mesh="Solid-Mesh" name="point1" coordinate="0.008;0.009;0.08" />
+    <watch-point mesh="Solid-Mesh" name="point1" coordinate="0.0;1.0" />
     <export:vtk directory="preCICE-output" />
   </participant>
 

@@ -6,5 +6,5 @@ participants:
           patch: surface
           read-data: [Force]
           write-data: [Displacement]
-
+          
 precice-config-file: ../precice-config.xml
