@@ -2,7 +2,7 @@
 title: Breaking dam with flexible pillar: 2D variant
 permalink: tutorials-breaking-dam-2d.html
 keywords: FSI, OpenFOAM, CalculiX, nearest-projection, IQN-ILS
-summary: Tutorial for an FSI simulation of a two-dimensional water column striking a flexible wall
+summary: FSI simulation of a two-dimensional water column striking a flexible wall
 ---
 
 {% note %}
@@ -11,8 +11,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-The two-dimensional breaking dam case is a free surface problem. A large column of water comes into contact with a flexible wall, causing the wall to bend and the water to flow over and around the wall. A no slip boundary condition is applied at the bottom, the left, and the right boundary, and a
-zero pressure condition at the top boundary. The test case runs for 1s with a time step size of dt = 0.005s, for a total of 200 time steps.
+The two-dimensional breaking dam case is a free surface problem. A large column of water comes into contact with a flexible wall, causing the wall to bend and the water to flow over and around the wall. A no-slip boundary condition is applied at the bottom, the left, and the right boundary, and a zero pressure condition at the top boundary.
 
 ![domain](images/breaking-dam-2d.png)
 

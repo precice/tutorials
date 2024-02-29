@@ -2,6 +2,6 @@
 set -e -u
 
 . ../../tools/cleaning-tools.sh
-rm -r preCICE-CCX-output
+rm -r preCICE-output
 
 clean_calculix .
