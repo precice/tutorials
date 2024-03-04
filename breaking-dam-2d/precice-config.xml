@@ -29,26 +29,6 @@
     <receive-mesh name="Solid-Mesh" from="Solid" />
     <write-data name="Force" mesh="Fluid-Mesh-Faces" />
     <read-data name="Displacement" mesh="Fluid-Mesh-Nodes" />
-    <!--
-    <mapping:nearest-neighbor
-      direction="write"
-      from="Fluid-Mesh-Faces"
-      to="Solid-Mesh"
-      constraint="conservative" />
-    <mapping:nearest-neighbor
-      direction="read"
-      from="Solid-Mesh"
-      to="Fluid-Mesh-Nodes"
-      constraint="consistent" />
-    -->
-    <!--
-    <mapping:rbf direction="write" from="Fluid-Mesh-Faces" to="Solid-Mesh" constraint="conservative">
-      <basis-function:compact-polynomial-c6 support-radius="1." />
-    </mapping:rbf>
-    <mapping:rbf direction="read" from="Solid-Mesh" to="Fluid-Mesh-Nodes" constraint="consistent">
-      <basis-function:compact-polynomial-c6 support-radius="1." />
-    </mapping:rbf>
-    -->
     <mapping:rbf-global-direct
       direction="write"
       from="Fluid-Mesh-Faces"
@@ -69,8 +49,6 @@
     <provide-mesh name="Solid-Mesh" />
     <read-data name="Force" mesh="Solid-Mesh" />
     <write-data name="Displacement" mesh="Solid-Mesh" />
-    <watch-point mesh="Solid-Mesh" name="point1" coordinate="0.0;1.0" />
-    <export:vtk directory="preCICE-output" />
   </participant>
 
   <m2n:sockets acceptor="Fluid" connector="Solid" exchange-directory=".." />
