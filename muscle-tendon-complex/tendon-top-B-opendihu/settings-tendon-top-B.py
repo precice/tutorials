@@ -140,7 +140,7 @@ config_hyperelasticity = {    # for both "HyperelasticitySolver" and "DynamicHyp
   # if useAnalyticJacobian,useNumericJacobian and dumpDenseMatlabVariables all all three true, the analytic and numeric jacobian matrices will get compared to see if there are programming errors for the analytic jacobian
   
   # mesh
-  "meshName":                   "3Dmesh_quadratic",           # mesh with quadratic Lagrange ansatz functions
+  "preciceMeshName":                   "3Dmesh_quadratic",           # mesh with quadratic Lagrange ansatz functions
   "inputMeshIsGlobal":          True,                         # boundary conditions are specified in global numberings, whereas the mesh is given in local numberings
   
   "fiberMeshNames":             [],                           # fiber meshes that will be used to determine the fiber direction
@@ -236,20 +236,20 @@ config = {
     "outputOnlyConvergedTimeSteps": True,                   # if the output writers should be called only after a time window of precice is complete, this means the timestep has converged
     "preciceMeshes": [                                      # the precice meshes get created as the top or bottom surface of the main geometry mesh of the nested solver
       {
-        "meshName":      "Tendon-Top-B-Mesh",        # precice name of the 2D coupling mesh
+        "preciceMeshName":      "Tendon-Top-B-Mesh",        # precice name of the 2D coupling mesh
         "face":                 "2-",                       # face of the 3D mesh where the 2D mesh is located, "2-" = bottom, "2+" = top
       }
     ],
     "preciceData": [
       {
         "mode":                 "write-displacements-velocities",   # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "Tendon-Top-B-Mesh",                 # name of the precice coupling surface mesh, as given in the precice xml settings file
+        "preciceMeshName":      "Tendon-Top-B-Mesh",                 # name of the precice coupling surface mesh, as given in the precice xml settings file
         "displacementsName":    "Displacement",                     # name of the displacements "data", i.e. field variable, as given in the precice xml settings file
         "velocitiesName":       "Velocity",                         # name of the velocity "data", i.e. field variable, as given in the precice xml settings file
       },
       {
         "mode":                 "read-traction",                    # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "Tendon-Top-B-Mesh",                 # name of the precice coupling surface mesh, as given in the precice xml settings 
+        "preciceMeshName":      "Tendon-Top-B-Mesh",                 # name of the precice coupling surface mesh, as given in the precice xml settings 
         "tractionName":         "Traction",                         # name of the traction "data", i.e. field variable, as given in the precice xml settings file
       }
     ],

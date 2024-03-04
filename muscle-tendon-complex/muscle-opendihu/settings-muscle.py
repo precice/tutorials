@@ -203,50 +203,50 @@ config = {
     "outputOnlyConvergedTimeSteps": True,                   # if the output writers should be called only after a time window of precice is complete, this means the timestep has converged
     "preciceMeshes": [                                      # the precice meshes get created as the top or bottom surface of the main geometry mesh of the nested solver
       {
-        "meshName":      "Muscle-Bottom-Mesh",         # precice name of the 2D coupling mesh
+        "preciceMeshName":      "Muscle-Bottom-Mesh",         # precice name of the 2D coupling mesh
         "face":                 "2-",                       # face of the 3D mesh where the 2D mesh is located, "2-" = bottom, "2+" = top
       },
       {
-        "meshName":      "Muscle-Top-A-Mesh",           # precice name of the 2D coupling mesh
+        "preciceMeshName":      "Muscle-Top-A-Mesh",           # precice name of the 2D coupling mesh
         "face":                 "2+",                       # face of the 3D mesh where the 2D mesh is located, "2-" = bottom, "2+" = top
       },
       {
-        "meshName":      "Muscle-Top-B-Mesh",           # precice name of the 2D coupling mesh
+        "preciceMeshName":      "Muscle-Top-B-Mesh",           # precice name of the 2D coupling mesh
         "face":                 "2+",                       # face of the 3D mesh where the 2D mesh is located, "2-" = bottom, "2+" = top
       },
     ],
     "preciceData": [
       {
         "mode":                 "read-displacements-velocities",    # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "Muscle-Bottom-Mesh",                 # name of the precice coupling surface mesh, as given in the precice xml settings file
+        "preciceMeshName":      "Muscle-Bottom-Mesh",                 # name of the precice coupling surface mesh, as given in the precice xml settings file
         "displacementsName":    "Displacement",                     # name of the displacements "data", i.e. field variable, as given in the precice xml settings file
         "velocitiesName":       "Velocity",                         # name of the velocity "data", i.e. field variable, as given in the precice xml settings file
       },
       {
         "mode":                 "read-displacements-velocities",    # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "Muscle-Top-A-Mesh",                   # name of the precice coupling surface mesh, as given in the precice xml settings file
+        "preciceMeshName":      "Muscle-Top-A-Mesh",                   # name of the precice coupling surface mesh, as given in the precice xml settings file
         "displacementsName":    "Displacement",                     # name of the displacements "data", i.e. field variable, as given in the precice xml settings file
         "velocitiesName":       "Velocity",                         # name of the velocity "data", i.e. field variable, as given in the precice xml settings file
       },
       {
         "mode":                 "read-displacements-velocities",    # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "Muscle-Top-B-Mesh",                   # name of the precice coupling surface mesh, as given in the precice xml settings file
+        "preciceMeshName":      "Muscle-Top-B-Mesh",                   # name of the precice coupling surface mesh, as given in the precice xml settings file
         "displacementsName":    "Displacement",                     # name of the displacements "data", i.e. field variable, as given in the precice xml settings file
         "velocitiesName":       "Velocity",                         # name of the velocity "data", i.e. field variable, as given in the precice xml settings file
       },
       {
         "mode":                 "write-traction",                   # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "Muscle-Bottom-Mesh",                 # name of the precice coupling surface mesh, as given in the precice xml settings 
+        "preciceMeshName":      "Muscle-Bottom-Mesh",                 # name of the precice coupling surface mesh, as given in the precice xml settings 
         "tractionName":         "Traction",                         # name of the traction "data", i.e. field variable, as given in the precice xml settings file
       },
       {
         "mode":                 "write-traction",                   # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "Muscle-Top-A-Mesh",                   # name of the precice coupling surface mesh, as given in the precice xml settings 
+        "preciceMeshName":      "Muscle-Top-A-Mesh",                   # name of the precice coupling surface mesh, as given in the precice xml settings 
         "tractionName":         "Traction",                         # name of the traction "data", i.e. field variable, as given in the precice xml settings file
       },
       {
         "mode":                 "write-traction",                   # mode is one of "read-displacements-velocities", "read-traction", "write-displacements-velocities", "write-traction"
-        "meshName":      "Muscle-Top-B-Mesh",                   # name of the precice coupling surface mesh, as given in the precice xml settings 
+        "preciceMeshName":      "Muscle-Top-B-Mesh",                   # name of the precice coupling surface mesh, as given in the precice xml settings 
         "tractionName":         "Traction",                         # name of the traction "data", i.e. field variable, as given in the precice xml settings file
       },
     ],
@@ -329,7 +329,7 @@ config = {
                         "mappings":                               variables.mappings,                             # mappings between parameters and algebraics/constants and between outputConnectorSlots and states, algebraics or parameters, they are defined in helper.py
                         "parametersInitialValues":                variables.parameters_initial_values,            #[0.0, 1.0],      # initial values for the parameters: I_Stim, l_hs
                         
-                        "meshName":                               "MeshFiber_{}".format(fiber_no),                # reference to the fiber mesh
+                        "preciceMeshName":                               "MeshFiber_{}".format(fiber_no),                # reference to the fiber mesh
                         "stimulationLogFilename":                 "out/stimulation.log",                          # a file that will contain the times of stimulations
                       },      
                       "OutputWriter" : [
@@ -367,7 +367,7 @@ config = {
                       
                       "FiniteElementMethod" : {
                         "inputMeshIsGlobal":         True,
-                        "meshName":                  "MeshFiber_{}".format(fiber_no),
+                        "preciceMeshName":                  "MeshFiber_{}".format(fiber_no),
                         "solverName":                "diffusionTermSolver",
                         "prefactor":                 get_diffusion_prefactor(fiber_no, motor_unit_no),  # resolves to Conductivity / (Am * Cm)
                         "slotName":                  None,
@@ -408,7 +408,7 @@ config = {
                   [{
                     "ranks":                          list(range(variables.n_subdomains_z)),   # these rank nos are local nos to the outer instance of MultipleInstances, i.e. from 0 to number of ranks in z direction
                     "PrescribedValues": {
-                      "meshName":               "MeshFiber_{}".format(fiber_no),               # reference to the fiber mesh
+                      "preciceMeshName":               "MeshFiber_{}".format(fiber_no),               # reference to the fiber mesh
                       "numberTimeSteps":        1,             # number of timesteps to call the callback functions subsequently, this is usually 1 for prescribed values, because it is enough to set the reaction term only once per time step
                       "timeStepOutputInterval": 20,            # if the time step should be written to console, a value > 10 produces no output
                       "slotNames":              [],            # names of the data connector slots
@@ -484,7 +484,7 @@ config = {
             
             # mesh
             "inputMeshIsGlobal":          True,                     # the mesh is given locally
-            "meshName":                   "3Dmesh_quadratic",        # name of the 3D mesh, it is defined under "Meshes" at the beginning of this config
+            "preciceMeshName":                   "3Dmesh_quadratic",        # name of the 3D mesh, it is defined under "Meshes" at the beginning of this config
             "fiberMeshNames":             variables.fiber_mesh_names,  # fiber meshes that will be used to determine the fiber direction, for multidomain there are no fibers so this would be empty list
             #"fiberDirection":             [0,0,1],                  # if fiberMeshNames is empty, directly set the constant fiber direction, in element coordinate system
       
