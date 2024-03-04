@@ -43,7 +43,7 @@ if __name__ == '__main__':
     vertex_ids = participant.set_mesh_vertices(mesh_name, vertices)
 
     domain = cartesianDomain([x_left, y_bottom], [x_right, y_top], [nx, ny])
-    mesh = aluGrid(domain, 2, 2, elementType="simplex")
+    mesh = aluGrid(domain, 2, 2, elementType="simplex") # create a simple mesh with dimGrid=2 and dimWorld=2
     space = solutionSpace(mesh, order=1)
     u = ufl.TrialFunction(space)
     v = ufl.TestFunction(space)
