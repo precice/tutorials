@@ -1,29 +1,29 @@
 ---
-title: Breaking dam with flexible pillar: 2D variant
+title: Breaking dam with flexible pillar 2D
 permalink: tutorials-breaking-dam-2d.html
-keywords: FSI, OpenFOAM, CalculiX, nearest-projection, IQN-ILS
+keywords: FSI, OpenFOAM, CalculiX, IQN-ILS, two-phase flow, interFoam
 summary: FSI simulation of a two-dimensional water column striking a flexible wall
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/breaking-dam-2d/breaking-dam-2d). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/breaking-dam-2d). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
 
-The two-dimensional breaking dam case is a free surface problem. A large column of water comes into contact with a flexible wall, causing the wall to bend and the water to flow over and around the wall. A no-slip boundary condition is applied at the bottom, the left, and the right boundary, and a zero pressure condition at the top boundary.
+The two-dimensional breaking dam case is a free surface problem. A large column of water comes into contact with a flexible wall, causing the wall to bend and the water to flow over the wall. A no-slip boundary condition is applied at the bottom, the left, and the right boundary, and a zero pressure condition at the top boundary.
 
-![domain](images/breaking-dam-2d.png)
+![Breaking dam 2D physics](images/tutorials-breaking-dam-2d-physics.png)
 
 ## Available solvers
 
 Fluid participant:
 
-* OpenFOAM (interFoam). In case you are using a very old OpenFOAM version, you will need to adjust the solver to `interDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* OpenFOAM (interFoam). In case you are using a very old OpenFOAM version, you need to adjust the solver to `interDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
 Solid participant:
 
-* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html).
+* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html).
 
 ## Running the simulation
 
@@ -31,8 +31,8 @@ You can start the simulation by running the script `./run.sh` located in each pa
 
 ## Post-processing
 
-You can visualize the results using ParaView or `cgx`(for native CalculiX resul files), as usual.
+You can visualize the results using ParaView or `cgx`(for native CalculiX results files), as usual.
 
 {% disclaimer %}
-This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
+This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM® and OpenCFD® trade marks.
 {% enddisclaimer %}
