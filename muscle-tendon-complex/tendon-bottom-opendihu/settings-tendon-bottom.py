@@ -2,54 +2,48 @@
 # Note, this is not possible to be run in parallel because the fibers cannot be initialized without MultipleInstances class.
 import sys, os
 import numpy as np
-import pickle
 import argparse
 import sys
-sys.path.insert(0, '.')
-import variables              # file variables.py, defines default values for all parameters, you can set the parameters there
-from create_partitioned_meshes_for_settings import *   # file create_partitioned_meshes_for_settings with helper functions about own subdomain
-import stl
 from stl import mesh
 import json
 
 # set title of terminal
-title = "tendon_bottom"
+title = "tendon-bottom"
 print('\33]0;{}\a'.format(title), end='', flush=True)
 
-# material parameters
-# --------------------
-# quantities in mechanics unit system
-variables.rho = 10          # [1e-4 kg/cm^3] 10 = density of the muscle (density of water)
+#add variables subfolder to python path where the variables script is located
+script_path = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, script_path)
+sys.path.insert(0, os.path.join(script_path,'variables'))
 
-# material parameters for Saint Venant-Kirchhoff material
-# https://www.researchgate.net/publication/230248067_Bulk_Modulus
+import variables       
+from create_partitioned_meshes_for_settings import *
 
-youngs_modulus = 7e4        # [N/cm^2 = 10kPa]  
-shear_modulus = 3e4
+# update material parameters
+if (variables.tendon_material == "nonLinear"):
+    c = 9.98                    # [N/cm^2=kPa]
+    ca = 14.92                  # [-]
+    ct = 14.7                   # [-]
+    cat = 9.64                  # [-]
+    ctt = 11.24                 # [-]
+    mu = 3.76                   # [N/cm^2=kPa]
+    k1 = 42.217e3               # [N/cm^2=kPa]
+    k2 = 411.360e3              # [N/cm^2=kPa]
 
-#youngs_modulus*=1e-3
-#shear_modulus*=1e-3
+    variables.material_parameters = [c, ca, ct, cat, ctt, mu, k1, k2]
 
-lambd = shear_modulus*(youngs_modulus - 2*shear_modulus) / (3*shear_modulus - youngs_modulus)  # Lamé parameter lambda
-mu = shear_modulus       # Lamé parameter mu or G (shear modulus)
+if (variables.tendon_material == "SaintVenantKirchoff"):
+    # material parameters for Saint Venant-Kirchhoff material
+    # https://www.researchgate.net/publication/230248067_Bulk_Modulus
 
-variables.material_parameters = [lambd, mu]
+    youngs_modulus = 7e4        # [N/cm^2 = 10kPa]  
+    shear_modulus = 3e4
 
-variables.constant_body_force = (0,0,-9.81e-4)   # [cm/ms^2], gravity constant for the body force
-variables.force = 100.0           # [N] pulling force to the bottom 
+    lambd = shear_modulus*(youngs_modulus - 2*shear_modulus) / (3*shear_modulus - youngs_modulus)  # Lamé parameter lambda
+    mu = shear_modulus       # Lamé parameter mu or G (shear modulus)
 
-variables.dt_elasticity = 1      # [ms] time step width for elasticity
-variables.end_time      = 20000   # [ms] simulation time
-variables.scenario_name = "tendon_bottom"
-variables.is_bottom_tendon = True        # whether the tendon is at the bottom (negative z-direction), this is important for the boundary conditions
-variables.output_timestep_3D = 50  # [ms] output timestep
+    variables.material_parameters = [lambd, mu]
 
-# input mesh file
-fiber_file = "../../../../input/left_biceps_brachii_tendon1.bin"        # bottom tendon
-#fiber_file = "../../../../input/left_biceps_brachii_tendon2a.bin"
-#fiber_file = "../../../../input/left_biceps_brachii_tendon2b.bin"
-#fiber_file = "../../../../input/left_biceps_brachii_7x7fibers.bin"
-#fiber_file = "../../../../input/left_biceps_brachii_7x7fibers.bin"
 
 load_fiber_data = False             # If the fiber geometry data should be loaded completely in the python script. If True, this reads the binary file and assigns the node positions in the config. If False, the C++ code will read the binary file and only extract the local node positions. This is more performant for highly parallel runs.
 
@@ -94,7 +88,7 @@ sampling_stride_z = 2
 # create the partitioning using the script in create_partitioned_meshes_for_settings.py
 result = create_partitioned_meshes_for_settings(
     variables.n_subdomains_x, variables.n_subdomains_y, variables.n_subdomains_z, 
-    fiber_file, load_fiber_data,
+    variables.fiber_file, load_fiber_data,
     sampling_stride_x, sampling_stride_y, sampling_stride_z, True, True)
 
 [variables.meshes, variables.own_subdomain_coordinate_x, variables.own_subdomain_coordinate_y, variables.own_subdomain_coordinate_z, variables.n_fibers_x, variables.n_fibers_y, variables.n_points_whole_fiber] = result
@@ -148,206 +142,6 @@ def update_neumann_bc(t):
   print("prescribed pulling force to bottom: {}".format(variables.force*factor))
   return config
 
-# update dirichlet boundary conditions to account for movement of humerus
-
-current_ulna_force = 0
-current_ulna_angle = 0
-
-# global coordinates of tendon bottom
-# global coordinates of elbow hinge
-elbow_hinge_point = np.array([3.54436, 11.4571, -58.5607])
-bottom_tendon_insertion_point = np.array([4.30, 14.81, -63.41])
-
-vec = -elbow_hinge_point + bottom_tendon_insertion_point
-angle_offset = np.arctan((bottom_tendon_insertion_point[2] - elbow_hinge_point[2]) / np.linalg.norm(vec))
-rotation_axis = np.array([-1.5, 1, 0])
-rotation_axis = rotation_axis / np.linalg.norm(rotation_axis)   # normalize rotation axis
-  
-def rotation_matrix(angle):
-  axis_x = rotation_axis[0]
-  axis_y = rotation_axis[1]
-  axis_z = rotation_axis[2]
-  
-  # compute rotation matrix
-  rotation_matrix = np.array([
-    [np.cos(angle) + axis_x**2*(1 - np.cos(angle)), 
-     axis_x*axis_y*(1 - np.cos(angle)) - axis_z*np.sin(angle), 
-     axis_x*axis_z*(1 - np.cos(angle)) + axis_y*np.sin(angle)],
-    [axis_y*axis_x*(1 - np.cos(angle)) + axis_z*np.sin(angle),
-     np.cos(angle) + axis_y**2*(1 - np.cos(angle)),
-     axis_y*axis_z*(1 - np.cos(angle)) - axis_x*np.sin(angle)],
-    [axis_z*axis_x*(1 - np.cos(angle)) - axis_y*np.sin(angle),
-     axis_z*axis_y*(1 - np.cos(angle)) + axis_x*np.sin(angle),
-     np.cos(angle) + axis_z**2*(1 - np.cos(angle))]])
-
-  return rotation_matrix
-
-call_count = 0
-ulna_series_files = []
-ulna_stl_filename = os.path.join(os.getcwd(),"cm_left_ulna.stl")
-stl_mesh = None
-try:
-  stl_mesh = mesh.Mesh.from_file(ulna_stl_filename)
-except: 
-  print("Could not open file {} in directory {}".format(ulna_stl_filename, os.getcwd()))
-  sys.exit(0)
-
-# Function to update dirichlet boundary conditions over time, t.
-# Only those entries can be updated that were also initially set.
-def update_dirichlet_bc(t):
-  global current_ulna_angle
-
-  # determine parameter for the rotation of the tendon insertion point
-  angle = current_ulna_angle
-  rotation_point = elbow_hinge_point
-  rotation_mat = rotation_matrix(angle)
-  vertex = bottom_tendon_insertion_point
-  
-  # rotation vertex about rotation_axis by angle
-  vertex = vertex - rotation_point
-  vertex = rotation_mat.dot(vertex)
-  vertex = vertex + rotation_point
-
-  new_insertion_point = vertex
-  offset = -bottom_tendon_insertion_point + new_insertion_point
-  print("angle: {} deg, rot matrix: {}".format(angle*180/np.pi,rotation_matrix(angle)))
-  print("old insertion point: {}, new insertion point: {}, offset: {}".format(bottom_tendon_insertion_point,new_insertion_point,offset))
-  #offset[0] = 0
-  #offset[1] = 0
-  #offset[2] = 0
-
-  # update dirichlet boundary conditions, set prescribed value to offset, do not constrain velocity
-  for key in variables.elasticity_dirichlet_bc.keys():
-    variables.elasticity_dirichlet_bc[key] = [offset[0],offset[1],offset[2],None,None,None]
-  return variables.elasticity_dirichlet_bc
- 
-def store_rotated_ulna(t): 
-  global current_ulna_angle, call_count, stl_mesh, ulna_series_files
-
-  if np.isnan(current_ulna_angle):
-    return
-
-  # store rotated ulna
-  call_count += 1
-  output_interval = 50    # [ms] (because coupling timestep is 1ms)
-  if call_count % output_interval == 0:
-    out_triangles = []
-
-    rotation_point = elbow_hinge_point
-    rotation_mat = rotation_matrix(current_ulna_angle)
-
-    for p in stl_mesh.points:
-      # p contains the 9 entries [p1x p1y p1z p2x p2y p2z p3x p3y p3z] of the triangle with corner points (p1,p2,p3)
-
-      # transform vertices
-      vertex_list = []
-      
-      # apply rotation
-      for vertex in [np.array(p[0:3]), np.array(p[3:6]), np.array(p[6:9])]:
-        vertex = vertex - rotation_point
-        vertex = rotation_mat.dot(vertex)
-        vertex = vertex + rotation_point
-        vertex_list.append(vertex)
-      
-      out_triangles += [vertex_list]
-
-    # Create the mesh
-    out_mesh = mesh.Mesh(np.zeros(len(out_triangles), dtype=mesh.Mesh.dtype))
-    for i, f in enumerate(out_triangles):
-      out_mesh.vectors[i] = f
-        
-    out_mesh.update_normals()
-    ulna_output_filename = "ulna_{:04d}.stl".format((int)(call_count/output_interval))
-    ulna_output_path = os.path.join("out",ulna_output_filename)
-    out_mesh.save(ulna_output_path)
-    print("Saved file {}".format(ulna_output_path))
-    ulna_series_files.append({"name": ulna_output_filename, "time": t})
-
-    # save json series file
-    ulna_series_filename = "out/ulna.stl.series"
-    with open(ulna_series_filename, "w") as f:  
-      data = {"file-series-version" : "1.0", "files" : ulna_series_files}
-      json.dump(data, f, indent='\t')
-
-forces = []
-def callback_total_force(t, bearing_force_bottom, bearing_moment_bottom, bearing_force_top, bearing_moment_top):
-  global current_ulna_angle
-  # this callback functions gets the current total forces that are exerted by the muscle  
-
-  current_ulna_force = bearing_force_bottom[2]
-
-  # compute average of last 10 values
-  forces.append(current_ulna_force)
-
-  if len(forces) > 10:
-    forces.pop(0)
-  current_ulna_force = np.mean(forces)
-  print("callback_total_force, t: {}, force: {}".format(t, current_ulna_force))
-  
-  # compute relation between force and angle of ulna
-  if False:
-    # positive angle = elbow flexion (ulna move downwards)
-    min_ulna_angle = 0  # [deg]
-    max_ulna_angle = -45   # [deg]
-    force_factor = -current_ulna_force / 500
-    force_factor = min(1.5, max(-0.5, force_factor))
-
-    current_ulna_angle = min_ulna_angle + force_factor * (max_ulna_angle-min_ulna_angle)
-    print("callback_total_force, t: {}, force: {}, factor: {}, angle: {}".format(t, current_ulna_force, force_factor,current_ulna_angle))
-    current_ulna_angle *= np.pi/180   # convert from deg to rad
-
-
-
-# Function to postprocess the output
-# This function gets periodically called by the running simulation. 
-# It provides all current variables for each node: geometry (position), u, v, stress, etc.
-def postprocess(result):
-  global current_ulna_angle
-
-  result = result[0]
-  # print result for debugging
-  #print(result)
-  
-  # get current time
-  current_time = result["currentTime"]
-  timestep_no = result["timeStepNo"]
-
-  # get number of nodes
-  nx = result["nElementsLocal"][0]		# number of elements
-  ny = result["nElementsLocal"][1]    # number of elements
-  nz = result["nElementsLocal"][2]    # number of elements
-  mx = 2*nx + 1  # number of nodes for quadratic elements
-  my = 2*ny + 1
-  mz = 2*nz + 1
-  
-  # parse variables
-  field_variables = result["data"]
-  
-  #for f in field_variables:
-  #  print(f["name"])
-  
-  # field_variables[0] is the geometry
-  # field_variables[1] is the displacements u
-  # etc., uncomment the above to see all field variables
-  
-  displacement_components = field_variables[1]["components"]
-  
-  # traction values contains the traction vector in reference configuration
-  u1_values = displacement_components[0]["values"]   # displacement in x-direction
-  u2_values = displacement_components[1]["values"]   # displacement in y-direction
-  u3_values = displacement_components[2]["values"]   # displacement in z-direction
-  u3_values_bottom = [u3_values[j*mx+i] for j in range(my) for i in range(mx)]
-  z_displacement = np.mean(u3_values)
-
-  #print("nx,ny: {},{}, mx,my: {},{}, {}={}".format(nx,ny,mx,my,mx*my*mz,len(u3_values)))
-
-  # compute elbow angle from displacement of muscle in z direction
-  vec = -elbow_hinge_point + bottom_tendon_insertion_point
-  current_ulna_angle = -np.arcsin(z_displacement / np.linalg.norm(vec))
- 
-  print("z displacement: {} ({}), current_ulna_angle: {} deg".format(z_displacement, np.linalg.norm(vec), current_ulna_angle*180/np.pi))
-
-  store_rotated_ulna(current_time)
 
 config_hyperelasticity = {    # for both "HyperelasticitySolver" and "DynamicHyperelasticitySolver"
   "timeStepWidth":              variables.dt_elasticity,      # time step width 
@@ -424,10 +218,7 @@ config_hyperelasticity = {    # for both "HyperelasticitySolver" and "DynamicHyp
     
     # Paraview files
     {"format": "Paraview", "outputInterval": int(1./variables.dt_elasticity*variables.output_timestep_3D), "filename": "out/tendon_bottom", "binary": True, "fixedFormat": False, "onlyNodalValues":True, "combineFiles":True, "fileNumbering": "incremental"},
-    
-    # Python callback function "postprocess"
-    {"format": "PythonCallback", "outputInterval": 1, "callback": postprocess, "onlyNodalValues":True, "filename": "", "fileNumbering": "incremental"},
-  ],
+    ],
   # 2. additional output writer that writes also the hydrostatic pressure
   "pressure": {   # output files for pressure function space (linear elements), contains pressure values, as well as displacements and velocities
     "OutputWriter" : [
@@ -460,8 +251,8 @@ config = {
     "timeStepOutputInterval":   100,                        # interval in which to display current timestep and time in console
     "timestepWidth":            1,                          # coupling time step width, must match the value in the precice config
     "couplingEnabled":          True,                       # if the precice coupling is enabled, if not, it simply calls the nested solver, for debugging
-    "preciceConfigFilename":    "precice_config_muscle_dirichlet_tendon_neumann_implicit_coupling_multiple_tendons.xml",    # the preCICE configuration file
-    "preciceParticipantName":   "TendonSolverBottom",       # name of the own precice participant, has to match the name given in the precice xml config file
+    "preciceConfigFilename":    variables.precice_config_file,
+    "preciceParticipantName":   "Tendon-Bottom",       # name of the own precice participant, has to match the name given in the precice xml config file
     "scalingFactor":            1,                          # a factor to scale the exchanged data, prior to communication
     "outputOnlyConvergedTimeSteps": True,                   # if the output writers should be called only after a time window of precice is complete, this means the timestep has converged
     "preciceMeshes": [                                      # the precice meshes get created as the top or bottom surface of the main geometry mesh of the nested solver

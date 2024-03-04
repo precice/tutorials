@@ -2,51 +2,44 @@
 # Note, this is not possible to be run in parallel because the fibers cannot be initialized without MultipleInstances class.
 import sys, os
 import numpy as np
-import pickle
-import argparse
 import sys
-sys.path.insert(0, '.')
-import variables              # file variables.py, defines default values for all parameters, you can set the parameters there
-from create_partitioned_meshes_for_settings import *   # file create_partitioned_meshes_for_settings with helper functions about own subdomain
 
 # set title of terminal
-title = "tendon_top_b"
+title = "tendon-top-b"
 print('\33]0;{}\a'.format(title), end='', flush=True)
 
-# material parameters
-# --------------------
-# quantities in mechanics unit system
-variables.rho = 10          # [1e-4 kg/cm^3] 10 = density of the muscle (density of water)
+#add variables subfolder to python path where the variables script is located
+script_path = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, script_path)
+sys.path.insert(0, os.path.join(script_path,'variables'))
 
-# material parameters for Saint Venant-Kirchhoff material
-# https://www.researchgate.net/publication/230248067_Bulk_Modulus
+import variables       
+from create_partitioned_meshes_for_settings import *
 
-youngs_modulus = 7e4        # [N/cm^2 = 10kPa]  
-shear_modulus = 3e4
+# update material parameters
+if (variables.tendon_material == "nonLinear"):
+    c = 9.98                    # [N/cm^2=kPa]
+    ca = 14.92                  # [-]
+    ct = 14.7                   # [-]
+    cat = 9.64                  # [-]
+    ctt = 11.24                 # [-]
+    mu = 3.76                   # [N/cm^2=kPa]
+    k1 = 42.217e3               # [N/cm^2=kPa]
+    k2 = 411.360e3              # [N/cm^2=kPa]
 
-#youngs_modulus*=1e-3
-#shear_modulus*=1e-3
+    variables.material_parameters = [c, ca, ct, cat, ctt, mu, k1, k2]
 
-lambd = shear_modulus*(youngs_modulus - 2*shear_modulus) / (3*shear_modulus - youngs_modulus)  # Lamé parameter lambda
-mu = shear_modulus       # Lamé parameter mu or G (shear modulus)
+if (variables.tendon_material == "SaintVenantKirchoff"):
+    # material parameters for Saint Venant-Kirchhoff material
+    # https://www.researchgate.net/publication/230248067_Bulk_Modulus
 
-variables.material_parameters = [lambd, mu]
+    youngs_modulus = 7e4        # [N/cm^2 = 10kPa]  
+    shear_modulus = 3e4
 
-variables.constant_body_force = (0,0,-9.81e-4)   # [cm/ms^2], gravity constant for the body force
-variables.force = 1.0       # [N]
+    lambd = shear_modulus*(youngs_modulus - 2*shear_modulus) / (3*shear_modulus - youngs_modulus)  # Lamé parameter lambda
+    mu = shear_modulus       # Lamé parameter mu or G (shear modulus)
 
-variables.dt_elasticity = 1      # [ms] time step width for elasticity
-variables.end_time      = 20000     # [ms] simulation time
-variables.scenario_name = "tendon_top_b"
-variables.is_bottom_tendon = False        # whether the tendon is at the bottom (negative z-direction), this is important for the boundary conditions
-variables.output_timestep_3D = 50  # [ms] output timestep
-
-# input mesh file
-#fiber_file = "../../../../input/left_biceps_brachii_tendon1.bin"        # bottom tendon
-#fiber_file = "../../../../input/left_biceps_brachii_tendon2a.bin"        # top tendon
-fiber_file = "../../../../input/left_biceps_brachii_tendon2b.bin"
-#fiber_file = "../../../../input/left_biceps_brachii_7x7fibers.bin"
-#fiber_file = "../../../../input/left_biceps_brachii_7x7fibers.bin"
+    variables.material_parameters = [lambd, mu]
 
 load_fiber_data = False             # If the fiber geometry data should be loaded completely in the python script. If True, this reads the binary file and assigns the node positions in the config. If False, the C++ code will read the binary file and only extract the local node positions. This is more performant for highly parallel runs.
 
@@ -54,27 +47,8 @@ load_fiber_data = False             # If the fiber geometry data should be loade
 rank_no = (int)(sys.argv[-2])
 n_ranks = (int)(sys.argv[-1])
 
-# define command line arguments
-parser = argparse.ArgumentParser(description='tendon')
-parser.add_argument('--n_subdomains', nargs=3,               help='Number of subdomains in x,y,z direction.',    type=int)
-parser.add_argument('--n_subdomains_x', '-x',                help='Number of subdomains in x direction.',        type=int, default=variables.n_subdomains_x)
-parser.add_argument('--n_subdomains_y', '-y',                help='Number of subdomains in y direction.',        type=int, default=variables.n_subdomains_y)
-parser.add_argument('--n_subdomains_z', '-z',                help='Number of subdomains in z direction.',        type=int, default=variables.n_subdomains_z)
-parser.add_argument('--fiber_file',                          help='The filename of the file that contains the fiber data.', default=variables.fiber_file)
-parser.add_argument('-vmodule', help='ignore')
-
-# parse command line arguments and assign values to variables module
-args, other_args = parser.parse_known_args(args=sys.argv[:-2], namespace=variables)
-if len(other_args) != 0 and rank_no == 0:
-    print("Warning: These arguments were not parsed by the settings python file\n  " + "\n  ".join(other_args), file=sys.stderr)
-
 # partitioning
 # ------------
-# this has to match the total number of processes
-if variables.n_subdomains is not None:
-  variables.n_subdomains_x = variables.n_subdomains[0]
-  variables.n_subdomains_y = variables.n_subdomains[1]
-  variables.n_subdomains_z = variables.n_subdomains[2]
 
 # compute partitioning
 if rank_no == 0:
@@ -91,7 +65,7 @@ sampling_stride_z = 2
 # create the partitioning using the script in create_partitioned_meshes_for_settings.py
 result = create_partitioned_meshes_for_settings(
     variables.n_subdomains_x, variables.n_subdomains_y, variables.n_subdomains_z, 
-    fiber_file, load_fiber_data,
+    variables.fiber_file, load_fiber_data,
     sampling_stride_x, sampling_stride_y, sampling_stride_z, True, True)
 
 [variables.meshes, variables.own_subdomain_coordinate_x, variables.own_subdomain_coordinate_y, variables.own_subdomain_coordinate_z, variables.n_fibers_x, variables.n_fibers_y, variables.n_points_whole_fiber] = result
@@ -230,8 +204,8 @@ config = {
     "timeStepOutputInterval":   100,                        # interval in which to display current timestep and time in console
     "timestepWidth":            1,                          # coupling time step width, must match the value in the precice config
     "couplingEnabled":          True,                       # if the precice coupling is enabled, if not, it simply calls the nested solver, for debugging
-    "preciceConfigFilename":    "precice_config_muscle_dirichlet_tendon_neumann_implicit_coupling_multiple_tendons.xml",    # the preCICE configuration file
-    "preciceParticipantName":   "TendonSolverTopB",         # name of the own precice participant, has to match the name given in the precice xml config file
+    "preciceConfigFilename":    variables.precice_config_file,    # the preCICE configuration file
+    "preciceParticipantName":   "Tendon-Top-B",         # name of the own precice participant, has to match the name given in the precice xml config file
     "scalingFactor":            1,                          # a factor to scale the exchanged data, prior to communication
     "outputOnlyConvergedTimeSteps": True,                   # if the output writers should be called only after a time window of precice is complete, this means the timestep has converged
     "preciceMeshes": [                                      # the precice meshes get created as the top or bottom surface of the main geometry mesh of the nested solver
