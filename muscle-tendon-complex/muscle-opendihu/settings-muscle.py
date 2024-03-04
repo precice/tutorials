@@ -329,7 +329,7 @@ config = {
                         "mappings":                               variables.mappings,                             # mappings between parameters and algebraics/constants and between outputConnectorSlots and states, algebraics or parameters, they are defined in helper.py
                         "parametersInitialValues":                variables.parameters_initial_values,            #[0.0, 1.0],      # initial values for the parameters: I_Stim, l_hs
                         
-                        "preciceMeshName":                               "MeshFiber_{}".format(fiber_no),                # reference to the fiber mesh
+                        "meshName":                               "MeshFiber_{}".format(fiber_no),                # reference to the fiber mesh
                         "stimulationLogFilename":                 "out/stimulation.log",                          # a file that will contain the times of stimulations
                       },      
                       "OutputWriter" : [
@@ -367,7 +367,7 @@ config = {
                       
                       "FiniteElementMethod" : {
                         "inputMeshIsGlobal":         True,
-                        "preciceMeshName":                  "MeshFiber_{}".format(fiber_no),
+                        "meshName":                  "MeshFiber_{}".format(fiber_no),
                         "solverName":                "diffusionTermSolver",
                         "prefactor":                 get_diffusion_prefactor(fiber_no, motor_unit_no),  # resolves to Conductivity / (Am * Cm)
                         "slotName":                  None,
@@ -408,7 +408,7 @@ config = {
                   [{
                     "ranks":                          list(range(variables.n_subdomains_z)),   # these rank nos are local nos to the outer instance of MultipleInstances, i.e. from 0 to number of ranks in z direction
                     "PrescribedValues": {
-                      "preciceMeshName":               "MeshFiber_{}".format(fiber_no),               # reference to the fiber mesh
+                      "meshName":               "MeshFiber_{}".format(fiber_no),               # reference to the fiber mesh
                       "numberTimeSteps":        1,             # number of timesteps to call the callback functions subsequently, this is usually 1 for prescribed values, because it is enough to set the reaction term only once per time step
                       "timeStepOutputInterval": 20,            # if the time step should be written to console, a value > 10 produces no output
                       "slotNames":              [],            # names of the data connector slots
@@ -484,7 +484,7 @@ config = {
             
             # mesh
             "inputMeshIsGlobal":          True,                     # the mesh is given locally
-            "preciceMeshName":                   "3Dmesh_quadratic",        # name of the 3D mesh, it is defined under "Meshes" at the beginning of this config
+            "meshName":                   "3Dmesh_quadratic",        # name of the 3D mesh, it is defined under "Meshes" at the beginning of this config
             "fiberMeshNames":             variables.fiber_mesh_names,  # fiber meshes that will be used to determine the fiber direction, for multidomain there are no fibers so this would be empty list
             #"fiberDirection":             [0,0,1],                  # if fiberMeshNames is empty, directly set the constant fiber direction, in element coordinate system
       
