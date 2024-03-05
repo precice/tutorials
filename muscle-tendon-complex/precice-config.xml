@@ -1,19 +1,14 @@
 <?xml version="1.0"?>
 
 <precice-configuration>
-  <!-- format for console output of precice -->
   <log>
     <sink type="stream" output="stdout"  filter='(%Severity% >= debug) and (%Rank% = 0) and (not (%Function% = "advance"))' format="\033[0;33m%Rank% [precice]\033[0m %ColorizedSeverity%\033[0;33m%Message%\033[0m" enabled="true" />
-    <!--<sink type="stream" output="stdout"  filter='%Severity% >= debug' format="\033[0;33m%Rank% [precice]\033[0m %ColorizedSeverity%\033[0;33m%Message%\033[0m" enabled="true" />-->
-    <!--<sink type="file" output="debug.log" filter= "(%Severity% >= debug)" format="%Message%" enabled="true" />	-->
   </log>
   
-  <!-- Data fields that are exchanged between the solvers -->
   <data:vector name="Displacement"/>
   <data:vector name="Velocity"/>
   <data:vector name="Traction"/>
 
-  <!-- A common mesh that uses these data fields -->
   <mesh name="Tendon-Bottom-Mesh" dimensions="3">
     <use-data name="Displacement"/>
     <use-data name="Velocity"/>
@@ -49,15 +44,8 @@
     <use-data name="Velocity"/>
     <use-data name="Traction"/>
   </mesh>
-
-  <!-- analogous to FSI: muscle=fluid (Dirichlet BC), tendon=structure (Neumann BC) -->
-
-  <!-- Represents each solver using preCICE. In a coupled simulation, two participants have to be
-        defined. The name of the participant has to match the name given on construction of the
-        precice::Participant object used by the participant. -->
   
   <participant name="Muscle">
-    <!-- Makes the named mesh available to the participant. Mesh is provided by the solver directly. -->
     <provide-mesh name="Muscle-Bottom-Mesh" />
     <provide-mesh name="Muscle-Top-A-Mesh"   />
     <provide-mesh name="Muscle-Top-B-Mesh"   />
@@ -65,7 +53,6 @@
     <receive-mesh name="Tendon-Top-A-Mesh" from="Tendon-Top-A"/>
     <receive-mesh name="Tendon-Top-B-Mesh" from="Tendon-Top-B"/>
     
-    <!-- Define input/output of the solver, the mesh should be the own one. -->
     <read-data  name="Displacement"  mesh="Muscle-Bottom-Mesh"/>
     <read-data  name="Velocity"      mesh="Muscle-Bottom-Mesh"/>
     <write-data name="Traction"      mesh="Muscle-Bottom-Mesh"/>
@@ -76,36 +63,8 @@
     
     <read-data  name="Displacement"  mesh="Muscle-Top-B-Mesh"/>
     <read-data  name="Velocity"      mesh="Muscle-Top-B-Mesh"/>
-    <write-data name="Traction"      mesh="Muscle-Top-B-Mesh"/>
-    
-    <!--<export:vtk directory="precice-output" />-->
-    
-    <!-- map from Tendon-Bottom-Mesh to Muscle-Bottom-Mesh -->
-    <!-- shape-parameter: 
-    ./rbfShape.py 0.01 3
-    Using values:
-      h     = 0.01
-      m     = 3
-      decay = 1e-09
-    Result:
-      s = 151.74271293851464
-    -->
-    <!-- <mapping:rbf-gaussian 
-      direction="read" 
-      from="Tendon-Bottom-Mesh" 
-      to="Muscle-Bottom-Mesh" 
-      constraint="consistent" 
-      timing="initial" 
-      shape-parameter="151.74"
-    />-->
-    <!-- <mapping:rbf-compact-polynomial-c6
-      direction="read" 
-      from="Tendon-Bottom-Mesh" 
-      to="Muscle-Bottom-Mesh" 
-      constraint="consistent" 
-      timing="initial" 
-      support-radius="0.1"  
-    />  --><!-- spacing between nodes is 0.01 -->
+    <write-data name="Traction"      mesh="Muscle-Top-B-Mesh"/>    
+ 
     <mapping:rbf 
       direction="read" 
       from="Tendon-Bottom-Mesh" 
@@ -134,17 +93,13 @@
 
   <participant name="Tendon-Bottom">
     
-    <!-- Makes the named mesh available to the participant. Mesh is provided by the solver directly. -->
     <provide-mesh name="Tendon-Bottom-Mesh"/>
     <receive-mesh name="Muscle-Bottom-Mesh" from="Muscle"/>
-    <!--<export:vtk directory="precice-output" />-->
     
-    <!-- Define input/output of the solver, the mesh should be the own one.  -->
     <write-data name="Displacement"  mesh="Tendon-Bottom-Mesh"/>
     <write-data name="Velocity"      mesh="Tendon-Bottom-Mesh"/>
     <read-data  name="Traction"      mesh="Tendon-Bottom-Mesh"/>
 
-    <!-- rbf to map from Muscle-Bottom-Mesh to Tendon-Bottom-Mesh -->
     <mapping:rbf 
       direction="read" 
       from="Muscle-Bottom-Mesh" 
@@ -156,17 +111,13 @@
   
   <participant name="Tendon-Top-A">
     
-    <!-- Makes the named mesh available to the participant. Mesh is provided by the solver directly. -->
     <provide-mesh name="Tendon-Top-A-Mesh"/>
     <receive-mesh name="Muscle-Top-A-Mesh" from="Muscle"/>
-    <!--<export:vtk directory="precice-output" />-->
     
-    <!-- Define input/output of the solver, the mesh should be the own one.  -->
     <write-data name="Displacement"  mesh="Tendon-Top-A-Mesh"/>
     <write-data name="Velocity"      mesh="Tendon-Top-A-Mesh"/>
     <read-data  name="Traction"      mesh="Tendon-Top-A-Mesh"/>
 
-    <!-- rbf to map from MuscleMeshTop to Tendon-Top-A-Mesh -->
     <mapping:rbf 
       direction="read" 
       from="Muscle-Top-A-Mesh" 
@@ -178,17 +129,13 @@
   
   <participant name="Tendon-Top-B">
     
-    <!-- Makes the named mesh available to the participant. Mesh is provided by the solver directly. -->
     <provide-mesh name="Tendon-Top-B-Mesh"/>
     <receive-mesh name="Muscle-Top-B-Mesh" from="Muscle"/>
-    <!--<export:vtk directory="precice-output" />-->
     
-    <!-- Define input/output of the solver, the mesh should be the own one.  -->
     <write-data name="Displacement"  mesh="Tendon-Top-B-Mesh"/>
     <write-data name="Velocity"      mesh="Tendon-Top-B-Mesh"/>
     <read-data  name="Traction"      mesh="Tendon-Top-B-Mesh"/>
 
-    <!-- rbf to map from Muscle-Top-B-Mesh to Tendon-Top-B-Mesh -->
       <mapping:rbf 
       direction="read" 
       from="Muscle-Top-B-Mesh" 
@@ -198,22 +145,18 @@
     </mapping:rbf> 
   </participant>
   
-  <!-- Communication method, use TCP sockets, Change network to "ib0" on SuperMUC -->
-  <m2n:sockets acceptor="Muscle" connector="Tendon-Bottom" network="lo" />
-  <m2n:sockets acceptor="Muscle" connector="Tendon-Top-A" network="lo" />
-  <m2n:sockets acceptor="Muscle" connector="Tendon-Top-B" network="lo" />
+  <m2n:sockets acceptor="Muscle" connector="Tendon-Bottom" exchange-directory=".."/>
+  <m2n:sockets acceptor="Muscle" connector="Tendon-Top-A" exchange-directory=".."/>
+  <m2n:sockets acceptor="Muscle" connector="Tendon-Top-B" exchange-directory=".."/>
 
-  <!-- serial-implicit coupling scales only the displacements, which are transferred from muscle to tendon -->
-  <!-- parallel-implicit coupling scales displacements and tractions -->
-  <!-- see https://github.com/precice/precice/wiki/Acceleration-Configuration -->
   <coupling-scheme:multi>
     <participant name="Muscle" control="yes"/>
     <participant name="Tendon-Bottom"/>
     <participant name="Tendon-Top-A"/>
     <participant name="Tendon-Top-B"/>
     
-    <max-time value="20000.0"/>           <!-- end time of the whole simulation -->
-    <time-window-size value="1.0"/>   <!-- timestep width for coupling -->
+    <max-time value="20000.0"/>           
+    <time-window-size value="1.0"/>  
     <max-iterations value="100" />
     
     <relative-convergence-measure limit="0.01" data="Displacement" mesh="Tendon-Bottom-Mesh" />
@@ -225,10 +168,6 @@
     <relative-convergence-measure limit="0.1" data="Traction" mesh="Muscle-Bottom-Mesh" />
     <relative-convergence-measure limit="0.1" data="Traction" mesh="Muscle-Top-A-Mesh" />
     <relative-convergence-measure limit="0.1" data="Traction" mesh="Muscle-Top-B-Mesh" />
-    <!--<relative-convergence-measure limit="0.1" data="Displacement" mesh="Tendon-Bottom-Mesh" />-->
-    <!--<relative-convergence-measure limit="0.1" data="Displacement" mesh="Tendon-Top-A-Mesh" />-->
-    <!--<relative-convergence-measure limit="0.1" data="Displacement" mesh="Tendon-Top-B-Mesh" />-->
-    <!--<min-iteration-convergence-measure min-iterations="{integer}" data="{string}" mesh="{string}" strict="0" suffices="0"/>-->
     
     <acceleration:IQN-ILS>
       <data name="Displacement" mesh="Tendon-Bottom-Mesh"/>
@@ -246,10 +185,6 @@
       <max-used-iterations value="40"/>
       <time-windows-reused value="15"/>
     </acceleration:IQN-ILS>
-
-    <!-- <acceleration:constant>
-      <relaxation value="0.7" />
-    </acceleration:constant> -->
 
     <exchange data="Displacement"    mesh="Tendon-Bottom-Mesh"      from="Tendon-Bottom" to="Muscle"/>
     <exchange data="Velocity"        mesh="Tendon-Bottom-Mesh"      from="Tendon-Bottom" to="Muscle"/>
