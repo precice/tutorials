@@ -112,7 +112,7 @@ config_hyperelasticity = {    # for both "HyperelasticitySolver" and "DynamicHyp
   # if useAnalyticJacobian,useNumericJacobian and dumpDenseMatlabVariables all all three true, the analytic and numeric jacobian matrices will get compared to see if there are programming errors for the analytic jacobian
   
   # mesh
-  "preciceMeshName":                   "3Dmesh_quadratic",           # mesh with quadratic Lagrange ansatz functions
+  "meshName":                   "3Dmesh_quadratic",           # mesh with quadratic Lagrange ansatz functions
   "inputMeshIsGlobal":          True,                         # boundary conditions are specified in global numberings, whereas the mesh is given in local numberings
   
   "fiberMeshNames":             [],                           # fiber meshes that will be used to determine the fiber direction
