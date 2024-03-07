@@ -13,7 +13,7 @@ try:
     print(args)
 except SystemExit:
     print("")
-    print("Usage: python3 ./solverdummy.py precice-config")
+    print("Usage: python3 ./solverdummy.py precice-config.xml")
     quit()
 
 # mass-spring-damper system parameters
@@ -45,46 +45,38 @@ num_vertices = 1  # Number of vertices
 solver_process_index = 0
 solver_process_size = 1
 
-interface = precice.Interface(participant_name, configuration_file_name,
-                              solver_process_index, solver_process_size)
+participant = precice.Participant(participant_name, configuration_file_name,
+                                  solver_process_index, solver_process_size)
 
-mesh_id = interface.get_mesh_id(mesh_name)
+assert (not participant.requires_mesh_connectivity_for(mesh_name))
 
-assert (interface.is_mesh_connectivity_required(mesh_id) is False)
-
-dimensions = interface.get_dimensions()
+dimensions = participant.get_mesh_dimensions(mesh_name)
 
 vertices = np.zeros((num_vertices, dimensions))
 read_data_force = np.zeros((num_vertices, dimensions))
 read_data_displacement = np.zeros((num_vertices, dimensions))
 write_data = np.zeros((num_vertices, dimensions))
 
-vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)
-read_data_id_force = interface.get_data_id(read_data_name_force, mesh_id)
-read_data_id_displacement = interface.get_data_id(read_data_name_displacement, mesh_id)
-write_data_id = interface.get_data_id(write_data_name, mesh_id)
-
-dt = interface.initialize()
-t = 0
+vertex_ids = participant.set_mesh_vertices(mesh_name, vertices)
 
 # initialize data
-if interface.is_action_required(precice.action_write_initial_data()):
-    interface.write_block_vector_data(write_data_id, vertex_ids, write_data)
-    interface.mark_action_fulfilled(precice.action_write_initial_data())
-interface.initialize_data()
+if participant.requires_initial_data():
+    participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
 
-while interface.is_coupling_ongoing():
-    if interface.is_action_required(precice.action_write_iteration_checkpoint()):
+participant.initialize()
+t = 0
 
+while participant.is_coupling_ongoing():
+    if participant.requires_writing_checkpoint():
         print("Writing checkpoint")
         state_old_cp = state_old
         state_cp = state
 
-        interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
+    dt = participant.get_max_time_step_size()
 
-    read_data_force = interface.read_block_vector_data(read_data_id_force, vertex_ids)
+    read_data_force = participant.read_data(mesh_name, read_data_name_force, vertex_ids, dt)
     force = read_data_force[0, 1]
-    read_data_displacement = interface.read_block_vector_data(read_data_id_displacement, vertex_ids)
+    read_data_displacement = participant.read_data(mesh_name, read_data_name_displacement, vertex_ids, dt)
     displacement_spring = read_data_displacement[0, 1]
 
     # compute next time step
@@ -96,20 +88,18 @@ while interface.is_coupling_ongoing():
     # cylinder moves in y-direction according to spring-damper-mass-equation
     write_data[0, 1] = state[0]
 
-    interface.write_block_vector_data(write_data_id, vertex_ids, write_data)
+    participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
 
     print("Solid: Advancing in time")
-    dt = interface.advance(dt)
+    participant.advance(dt)
 
-    if interface.is_action_required(precice.action_read_iteration_checkpoint()):
-
+    if participant.requires_reading_checkpoint():
         print("Reading checkpoint")
         state_old = state_old_cp
         state = state_cp
 
-        interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
     else:
         state_old = state
         t = t + dt
 
-interface.finalize()
+participant.finalize()
