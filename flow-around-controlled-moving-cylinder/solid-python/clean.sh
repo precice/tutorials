@@ -1,5 +1,4 @@
 #!/bin/sh
 
-rm -fv ./*.json
-rm -fv ./*.log
-rm -fv ../precice-run
+. ../../tools/cleaning-tools.sh
+clean_precice_logs .
