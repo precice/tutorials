@@ -20,6 +20,7 @@ core
 
 # C++
 *.o
+*.so
 build/
 
 # Python
@@ -92,3 +93,14 @@ install*
 
 # System tests
 runs/
+
+# General editor and OS files
+.vscode
+*.DS_STORE
+.idea
+*.bak
+*~
+.cproject
+.project
+.settings/
+*.swp
