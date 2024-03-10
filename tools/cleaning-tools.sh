@@ -33,7 +33,7 @@ clean_precice_logs() {
     (
         set -e -u
         cd "$1"
-        echo "  Cleaning up preCICE logs in $(pwd)"
+        echo "- Cleaning up preCICE logs in $(pwd)"
         rm -fv ./precice-*-iterations.log \
             ./precice-*-convergence.log \
             ./precice-*-watchpoint-*.log \
