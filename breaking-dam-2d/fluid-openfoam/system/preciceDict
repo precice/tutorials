@@ -17,25 +17,9 @@ interfaces
 {
   Interface1
   {
-    mesh              Fluid-Mesh-Faces;
+    mesh              Fluid-Mesh;
     patches           (flap);
     locations         faceCenters;
-    
-    readData
-    (
-    );
-    
-    writeData
-    (
-      Force
-    );
-  };
-  
-  Interface2
-  {
-    mesh              Fluid-Mesh-Nodes;
-    patches           (flap);
-    locations         faceNodes;
     
     readData
     (
@@ -44,6 +28,7 @@ interfaces
     
     writeData
     (
+      Force
     );
   };
 };

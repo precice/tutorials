@@ -10,11 +10,8 @@
   <data:vector name="Force" />
   <data:vector name="Displacement" />
 
-  <mesh name="Fluid-Mesh-Faces" dimensions="2">
+  <mesh name="Fluid-Mesh" dimensions="2">
     <use-data name="Force" />
-  </mesh>
-
-  <mesh name="Fluid-Mesh-Nodes" dimensions="2">
     <use-data name="Displacement" />
   </mesh>
 
@@ -24,14 +21,13 @@
   </mesh>
 
   <participant name="Fluid">
-    <provide-mesh name="Fluid-Mesh-Faces" />
-    <provide-mesh name="Fluid-Mesh-Nodes" />
+    <provide-mesh name="Fluid-Mesh" />
     <receive-mesh name="Solid-Mesh" from="Solid" />
-    <write-data name="Force" mesh="Fluid-Mesh-Faces" />
-    <read-data name="Displacement" mesh="Fluid-Mesh-Nodes" />
+    <write-data name="Force" mesh="Fluid-Mesh" />
+    <read-data name="Displacement" mesh="Fluid-Mesh" />
     <mapping:rbf-global-direct
       direction="write"
-      from="Fluid-Mesh-Faces"
+      from="Fluid-Mesh"
       to="Solid-Mesh"
       constraint="conservative">
       <basis-function:thin-plate-splines />
@@ -39,7 +35,7 @@
     <mapping:rbf-global-direct
       direction="read"
       from="Solid-Mesh"
-      to="Fluid-Mesh-Nodes"
+      to="Fluid-Mesh"
       constraint="consistent">
       <basis-function:thin-plate-splines />
     </mapping:rbf-global-direct>
