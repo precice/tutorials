@@ -7,6 +7,7 @@
 
 # General log files
 *.log
+out
 
 # Common result files
 *.vtk
@@ -22,6 +23,7 @@ precice-*-events.json
 # C++
 *.o
 *.so
+.out
 build/
 
 # Python
