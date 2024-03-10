@@ -76,3 +76,6 @@ mapped
 # Nutils covered by .vtk
 # DUNE covered by .vtu / .pvd
 # DuMuX covered by .vtu / .pvd
+
+# System tests
+runs/
