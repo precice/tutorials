@@ -1,0 +1,67 @@
+# Check which files are ignored with: git status --ignored .
+# or, to also see which pattern matches: git check-ignore -v **/*
+# To deep-clean: git clean -idx .
+
+# In case there are tutorial-specific rules, add a separate .gitignore in the corresponding directory, 
+# but prefer adding general rules here, if possible.
+
+# Python
+.venv
+__pycache__
+
+# General log files
+*.log
+
+# Common result files
+*.vtk
+*.vtu
+*.pvd
+
+# preCICE
+precice-profiling/
+precice-run/
+core
+
+# OpenFOAM
+0.*/
+[1-9]*/
+!0/
+0/uniform/functionObjects/functionObjectProperties
+history
+**/constant/polyMesh/
+postProcessing/
+*.foam
+*.OpenFOAM
+
+# CalculiX
+spooles.out
+dummy
+*.12d
+*.cvg
+*.dat
+*.frd
+*.sta
+*.eig
+
+# code_aster
+*.mess
+*.resu
+*.rmed
+REPE_OUT/
+
+# SU2
+restart_flow_*.dat
+forces_breakdown.dat
+surface_flow_*.csv
+
+# ASTE
+result.stats.json
+fine_mesh
+coarse_mesh
+mapped
+
+# deal.II covered by .vtk
+# FEniCS covered by .vtk
+# Nutils covered by .vtk
+# DUNE covered by .vtu / .pvd
+# DuMuX covered by .vtu / .pvd
