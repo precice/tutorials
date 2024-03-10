@@ -32,7 +32,6 @@
 //        T     | Scalar field which is solved for, e.g. temperature
 //    \endplaintable
 
-
 #include "fvCFD.H"
 #include "fvOptions.H"
 #include "simpleControl.H"
@@ -41,74 +40,64 @@
 
 int main(int argc, char *argv[])
 {
-    argList::addNote
-    (
-        "Laplace equation solver for a scalar quantity."
-    );
+  argList::addNote(
+      "Laplace equation solver for a scalar quantity.");
 
-    #include "postProcess.H"
+#include "postProcess.H"
 
-    #include "addCheckCaseOptions.H"
-    #include "setRootCaseLists.H"
-    #include "createTime.H"
-    #include "createMesh.H"
+#include "addCheckCaseOptions.H"
+#include "createMesh.H"
+#include "createTime.H"
+#include "setRootCaseLists.H"
 
-    simpleControl simple(mesh);
+  simpleControl simple(mesh);
 
-    #include "createFields.H"
+#include "createFields.H"
 
-    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+  // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    Info<< "\nCalculating temperature distribution\n" << endl;
+  Info << "\nCalculating temperature distribution\n"
+       << endl;
 
-    const double alpha = 3;
-    const double beta  = 1.2;
-    const double rhs   = beta - 2 - 2 * alpha;
+  const double alpha = 3;
+  const double beta  = 1.2;
+  const double rhs   = beta - 2 - 2 * alpha;
 
-    volScalarField f
-     (
-         IOobject
-         (
-             "RHS",
-             runTime.timeName(),
-             mesh,
-             IOobject::NO_READ,
-             IOobject::NO_WRITE
-         ),
-         mesh,
-         dimensionedScalar(
-         "Tdim",
-         dimensionSet(0, 0, -1, 1, 0, 0, 0),
-         Foam::scalar(rhs))
-     );
+  volScalarField f(
+      IOobject(
+          "RHS",
+          runTime.timeName(),
+          mesh,
+          IOobject::NO_READ,
+          IOobject::NO_WRITE),
+      mesh,
+      dimensionedScalar(
+          "Tdim",
+          dimensionSet(0, 0, -1, 1, 0, 0, 0),
+          Foam::scalar(rhs)));
 
-    while (simple.loop())
-    {
-        Info<< "Time = " << runTime.timeName() << nl << endl;
+  while (simple.loop()) {
+    Info << "Time = " << runTime.timeName() << nl << endl;
 
-        while (simple.correctNonOrthogonal())
-        {
-            fvScalarMatrix TEqn
-            (
-                fvm::ddt(T) - fvm::laplacian(DT, T) - fvm::Su(f,T)
-             ==
-                fvOptions(T)
-            );
+    while (simple.correctNonOrthogonal()) {
+      fvScalarMatrix TEqn(
+          fvm::ddt(T) - fvm::laplacian(DT, T) - fvm::Su(f, T) ==
+          fvOptions(T));
 
-            fvOptions.constrain(TEqn);
-            TEqn.solve();
-            fvOptions.correct(T);
-        }
-
-        #include "write.H"
-
-        runTime.printExecutionTime(Info);
+      fvOptions.constrain(TEqn);
+      TEqn.solve();
+      fvOptions.correct(T);
     }
 
-    Info<< "End\n" << endl;
+#include "write.H"
 
-    return 0;
+    runTime.printExecutionTime(Info);
+  }
+
+  Info << "End\n"
+       << endl;
+
+  return 0;
 }
-
 
 // ************************************************************************* //
