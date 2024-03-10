@@ -23,7 +23,7 @@ Fluid participant:
 
 Solid participant:
 
-* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html).
+* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html). This is a modified setup of the one used in the `perpendicular-flap` tutorial.
 
 ## Running the simulation
 
