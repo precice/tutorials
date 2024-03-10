@@ -76,6 +76,9 @@ mapped
 linear_elasticity
 nonlinear_elasticity
 
+# DUNE
+dune-env/
+
 # DuMuX
 dumux/
 dumux-phasefield/
@@ -86,7 +89,6 @@ install*
 
 # FEniCS covered by .vtk
 # Nutils covered by .vtk
-# DUNE covered by .vtu / .pvd
 
 # System tests
 runs/
