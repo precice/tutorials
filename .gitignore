@@ -71,7 +71,10 @@ fine_mesh
 coarse_mesh
 mapped
 
-# deal.II covered by .vtk
+# deal.II
+linear_elasticity
+nonlinear_elasticity
+
 # FEniCS covered by .vtk
 # Nutils covered by .vtk
 # DUNE covered by .vtu / .pvd
