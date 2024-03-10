@@ -43,16 +43,19 @@ struct OnePNIConductionCCTpfa {
 } // end namespace TTag
 
 // Set the grid type
-template <class TypeTag> struct Grid<TypeTag, TTag::OnePNIConduction> {
+template <class TypeTag>
+struct Grid<TypeTag, TTag::OnePNIConduction> {
   using type = Dune::YaspGrid<2>;
 }; // structured parallel 2D grid
 // Set the problem property
-template <class TypeTag> struct Problem<TypeTag, TTag::OnePNIConduction> {
+template <class TypeTag>
+struct Problem<TypeTag, TTag::OnePNIConduction> {
   using type = OnePNIConductionProblem<TypeTag>;
 };
 
 // Set the fluid system
-template <class TypeTag> struct FluidSystem<TypeTag, TTag::OnePNIConduction> {
+template <class TypeTag>
+struct FluidSystem<TypeTag, TTag::OnePNIConduction> {
   using type = FluidSystems::OnePLiquid<
       GetPropType<TypeTag, Properties::Scalar>,
       Components::MySimpleLiquid<GetPropType<TypeTag, Properties::Scalar>>>;
@@ -62,14 +65,14 @@ template <class TypeTag> struct FluidSystem<TypeTag, TTag::OnePNIConduction> {
 template <class TypeTag>
 struct VolumeVariables<TypeTag, TTag::OnePNIConduction> {
 private:
-  using PV = GetPropType<TypeTag, Properties::PrimaryVariables>;
+  using PV  = GetPropType<TypeTag, Properties::PrimaryVariables>;
   using FSY = GetPropType<TypeTag, Properties::FluidSystem>;
   using FST = GetPropType<TypeTag, Properties::FluidState>;
   using SSY = GetPropType<TypeTag, Properties::SolidSystem>;
   using SST = GetPropType<TypeTag, Properties::SolidState>;
-  using PT = typename GetPropType<TypeTag,
+  using PT  = typename GetPropType<TypeTag,
                                   Properties::SpatialParams>::PermeabilityType;
-  using MT = GetPropType<TypeTag, Properties::ModelTraits>;
+  using MT  = GetPropType<TypeTag, Properties::ModelTraits>;
 
   using Traits = OnePVolumeVariablesTraits<PV, FSY, FST, SSY, SST, PT, MT>;
 
@@ -78,10 +81,11 @@ public:
 };
 
 // Set the spatial parameters
-template <class TypeTag> struct SpatialParams<TypeTag, TTag::OnePNIConduction> {
+template <class TypeTag>
+struct SpatialParams<TypeTag, TTag::OnePNIConduction> {
   using GridGeometry = GetPropType<TypeTag, Properties::GridGeometry>;
-  using Scalar = GetPropType<TypeTag, Properties::Scalar>;
-  using type = OnePNISpatialParams<GridGeometry, Scalar>;
+  using Scalar       = GetPropType<TypeTag, Properties::Scalar>;
+  using type         = OnePNISpatialParams<GridGeometry, Scalar>;
 };
 
 } // namespace Dumux::Properties
