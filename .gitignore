@@ -5,10 +5,6 @@
 # In case there are tutorial-specific rules, add a separate .gitignore in the corresponding directory, 
 # but prefer adding general rules here, if possible.
 
-# Python
-.venv
-__pycache__
-
 # General log files
 *.log
 
@@ -21,6 +17,18 @@ __pycache__
 precice-profiling/
 precice-run/
 core
+
+# C++
+*.o
+build/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Rust
+Cargo.lock
 
 # OpenFOAM
 0.*/
