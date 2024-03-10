@@ -29,6 +29,7 @@ __pycache__/
 
 # Rust
 Cargo.lock
+target/
 
 # OpenFOAM
 0.*/
