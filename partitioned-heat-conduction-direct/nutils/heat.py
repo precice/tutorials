@@ -60,7 +60,8 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
 
     participant.initialize()
     precice_dt = participant.get_max_time_step_size()
-    dt = min(timestep, precice_dt)
+    solver_dt = timestep
+    dt = min(precice_dt, solver_dt)
 
     vertex_ids_write, coords = participant.get_mesh_vertex_ids_and_coordinates(mesh_name_write)
     write_sample = domain.locate(ns.x, coords, eps=1e-10, tol=1e-10)
@@ -106,14 +107,15 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
         if participant.requires_writing_checkpoint():
             checkpoint = lhs, t, istep
 
-        # read data from participant
-        read_data = precice_read(dt)
-
         # prepare next timestep
+        precice_dt = participant.get_max_time_step_size()
+        dt = min(precice_dt, solver_dt)
         lhs0 = lhs
         istep += 1
-        dt = min(timestep, precice_dt)
         t += dt
+
+        # read data from participant
+        read_data = precice_read(dt)
 
         # update (time-dependent) boundary condition
         cons = solver.optimize('lhs', sqr, droptol=1e-15, arguments=dict(t=t, readdata=read_data))
@@ -133,8 +135,6 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
 
         # do the coupling
         participant.advance(dt)
-        precice_dt = participant.get_max_time_step_size()
-        dt = min(timestep, precice_dt)
 
         # read checkpoint if required
         if participant.requires_reading_checkpoint():

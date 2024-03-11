@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
-  <!-- Use this to activate waveforms
-<precice-configuration experimental="true">
--->
   <log enabled="1">
     <sink filter="%Severity% > debug" />
   </log>
 
-  <data:scalar name="Force-Left" />
-  <data:scalar name="Force-Right" />
+  <data:scalar name="Force-Left" waveform-degree="3" />
+  <data:scalar name="Force-Right" waveform-degree="3" />
 
   <mesh name="Mass-Left-Mesh" dimensions="2">
     <use-data name="Force-Left" />
@@ -57,12 +54,14 @@
       mesh="Mass-Left-Mesh"
       from="Mass-Left"
       to="Mass-Right"
-      initialize="true" />
+      initialize="true"
+      substeps="true" />
     <exchange
       data="Force-Right"
       mesh="Mass-Left-Mesh"
       from="Mass-Right"
       to="Mass-Left"
-      initialize="true" />
+      initialize="true"
+      substeps="true" />
   </coupling-scheme:serial-implicit>
 </precice-configuration>

@@ -37,7 +37,7 @@ You can visualize the results using paraView or `cgx`(for native CalculiX result
 
 ![result tube](images/tutorials-elastic-tube-3d-tube-result.png)
 
-You can also plot the displacement of the midpoint of the tube by running `sh plot-displacement.sh <filename>`. The displacement plot for each solver combination looks like:
+You can also plot the displacement of the midpoint of the tube for each participant individually by running `sh plot-displacements.sh <filename>`. If you have run all the solver combinations and want to compare the plots, you can run `sh plot-all-displacements.sh` which looks like:
 
 ![plot tube](images/tutorials-elastic-tube-3d-plot.png)
 

@@ -1,4 +1,7 @@
 #!/bin/sh
 set -e -u
 
-NUTILS_RICHOUTPUT=no python3 macro.py
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+python3 macro.py richoutput=no

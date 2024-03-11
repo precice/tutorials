@@ -122,6 +122,14 @@ python3 plot-vtk.py diameter fluid-python/output/out_fluid_
 
 ![FSI3 setup](images/tutorials-elastic-tube-1d-diameter.png)
 
+## Comparing different Fluid results
+
+The Fluid participant defines a watchpoint at `x=5`, which records `pressure` and `diameter` for every timestep.
+To compare the results of the various Fluid participants, you can run them all and plot the watchpoints using `plot-all.sh`.
+The following is an example of running all Fluid solvers against the `solid-cpp` solver:
+
+![Plot comparing pressure and diameter of all Fluid participants](images/tutorials-elastic-tube-1d-all.png)
+
 ## References
 
 [1] B. Gatzhammer. Efficient and Flexible Partitioned Simulation of Fluid-Structure Interactions. Technische Universitaet Muenchen, Fakultaet fuer Informatik, 2014.

@@ -62,10 +62,11 @@ def main():
     data_name = "Velocity"
 
     participant.initialize()
-    precice_dt = participant.get_max_time_step_size()
 
     timestep = 0
-    dt = 0.005
+    solver_dt = 0.005
+    precice_dt = participant.get_max_time_step_size()
+    dt = min(precice_dt, solver_dt)
 
     # set blob as initial condition
     sqr = domain.integral("(u - uinit)^2" @ ns, degree=2)
@@ -85,7 +86,7 @@ def main():
         precice_dt = participant.get_max_time_step_size()
 
         # potentially adjust non-matching timestep sizes
-        dt = min(dt, precice_dt)
+        dt = min(solver_dt, precice_dt)
 
         # read velocity values from participant
         velocity_values = participant.read_data(mesh_name, data_name, vertex_ids, dt)

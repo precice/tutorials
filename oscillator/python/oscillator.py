@@ -9,11 +9,7 @@ import csv
 import os
 
 import problemDefinition
-
-
-class Scheme(Enum):
-    NEWMARK_BETA = "Newmark_beta"
-    GENERALIZED_ALPHA = "generalized_alpha"
+import timeSteppers
 
 
 class Participant(Enum):
@@ -23,8 +19,14 @@ class Participant(Enum):
 
 parser = argparse.ArgumentParser()
 parser.add_argument("participantName", help="Name of the solver.", type=str, choices=[p.value for p in Participant])
-parser.add_argument("-ts", "--time-stepping", help="Time stepping scheme being used.", type=str,
-                    choices=[s.value for s in Scheme], default=Scheme.NEWMARK_BETA.value)
+parser.add_argument(
+    "-ts",
+    "--time-stepping",
+    help="Time stepping scheme being used.",
+    type=str,
+    choices=[
+        s.value for s in timeSteppers.TimeSteppingSchemes],
+    default=timeSteppers.TimeSteppingSchemes.NEWMARK_BETA.value)
 args = parser.parse_args()
 
 participant_name = args.participantName
@@ -78,7 +80,7 @@ if participant.requires_initial_data():
 
 participant.initialize()
 precice_dt = participant.get_max_time_step_size()
-my_dt = precice_dt  # use my_dt < precice_dt for subcycling
+my_dt = precice_dt / 4  # use my_dt < precice_dt for subcycling
 
 # Initial Conditions
 a0 = (f0 - stiffness * u0) / mass
@@ -87,16 +89,26 @@ v = v0
 a = a0
 t = 0
 
-# Generalized Alpha Parameters
-if args.time_stepping == Scheme.GENERALIZED_ALPHA.value:
-    alpha_f = 0.4
-    alpha_m = 0.2
-elif args.time_stepping == Scheme.NEWMARK_BETA.value:
-    alpha_f = 0.0
-    alpha_m = 0.0
-m = 3 * [None]  # will be computed for each timestep depending on dt
-gamma = 0.5 - alpha_m + alpha_f
-beta = 0.25 * (gamma + 0.5)
+if args.time_stepping == timeSteppers.TimeSteppingSchemes.GENERALIZED_ALPHA.value:
+    time_stepper = timeSteppers.GeneralizedAlpha(stiffness=stiffness, mass=mass, alpha_f=0.4, alpha_m=0.2)
+elif args.time_stepping == timeSteppers.TimeSteppingSchemes.NEWMARK_BETA.value:
+    time_stepper = timeSteppers.GeneralizedAlpha(stiffness=stiffness, mass=mass, alpha_f=0.0, alpha_m=0.0)
+elif args.time_stepping == timeSteppers.TimeSteppingSchemes.RUNGE_KUTTA_4.value:
+    ode_system = np.array([
+        [0, 1],  # du
+        [-stiffness / mass, 0],  # dv
+    ])
+    time_stepper = timeSteppers.RungeKutta4(ode_system=ode_system)
+elif args.time_stepping == timeSteppers.TimeSteppingSchemes.Radau_IIA.value:
+    ode_system = np.array([
+        [0, 1],  # du
+        [-stiffness / mass, 0],  # dv
+    ])
+    time_stepper = timeSteppers.RadauIIA(ode_system=ode_system)
+else:
+    raise Exception(
+        f"Invalid time stepping scheme {args.time_stepping}. Please use one of {[ts.value for ts in timeSteppers.TimeSteppingSchemes]}")
+
 
 positions = []
 velocities = []
@@ -120,18 +132,16 @@ while participant.is_coupling_ongoing():
     # compute time step size for this time step
     precice_dt = participant.get_max_time_step_size()
     dt = np.min([precice_dt, my_dt])
-    read_time = (1 - alpha_f) * dt
-    read_data = participant.read_data(mesh_name, read_data_name, vertex_ids, read_time)
-    f = read_data[0]
+
+    read_times = time_stepper.rhs_eval_points(dt)
+    f = len(read_times) * [None]
+
+    for i in range(len(read_times)):
+        read_data = participant.read_data(mesh_name, read_data_name, vertex_ids, read_times[i])
+        f[i] = read_data[0]
 
     # do generalized alpha step
-    m[0] = (1 - alpha_m) / (beta * dt**2)
-    m[1] = (1 - alpha_m) / (beta * dt)
-    m[2] = (1 - alpha_m - 2 * beta) / (2 * beta)
-    k_bar = stiffness * (1 - alpha_f) + m[0] * mass
-    u_new = (f - alpha_f * stiffness * u + mass * (m[0] * u + m[1] * v + m[2] * a)) / k_bar
-    a_new = 1.0 / (beta * dt**2) * (u_new - u - dt * v) - (1 - 2 * beta) / (2 * beta) * a
-    v_new = v + dt * ((1 - gamma) * a + gamma * a_new)
+    u_new, v_new, a_new = time_stepper.do_step(u, v, a, f, dt)
     t_new = t + dt
 
     write_data = [connecting_spring.k * u_new]
