@@ -3,14 +3,13 @@ scenario_name = "tendon-top-B"
 # time parameters
 # ---------------
 dt_elasticity = 1      # [ms] time step width for elasticity
-end_time      = 20000   # [ms] simulation time
+end_time = 20000   # [ms] simulation time
 output_timestep_3D = 50  # [ms] output timestep
 
 # setup
 # -----
-constant_body_force = (0,0,-9.81e-4)   # [cm/ms^2], gravity constant for the body force
-force = 100.0           # [N] pulling force to the bottom 
-
+constant_body_force = (0, 0, -9.81e-4)   # [cm/ms^2], gravity constant for the body force
+force = 100.0           # [N] pulling force to the bottom
 
 
 # input files
@@ -19,9 +18,14 @@ force = 100.0           # [N] pulling force to the bottom
 import os
 opendihu_home = os.environ.get('OPENDIHU_HOME')
 fiber_file = opendihu_home + "/examples/electrophysiology/input/left_biceps_brachii_tendon2b.bin"
-cellml_file             = opendihu_home + "/examples/electrophysiology/input/2020_06_03_hodgkin-huxley_shorten_ocallaghan_davidson_soboleva_2007.cellml"
+cellml_file = opendihu_home + "/examples/electrophysiology/input/2020_06_03_hodgkin-huxley_shorten_ocallaghan_davidson_soboleva_2007.cellml"
 precice_config_file = "../precice-config.xml"
-load_fiber_data = False             # If the fiber geometry data should be loaded completely in the python script. If True, this reads the binary file and assigns the node positions in the config. If False, the C++ code will read the binary file and only extract the local node positions. This is more performant for highly parallel runs.
+# If the fiber geometry data should be loaded completely in the python
+# script. If True, this reads the binary file and assigns the node
+# positions in the config. If False, the C++ code will read the binary
+# file and only extract the local node positions. This is more performant
+# for highly parallel runs.
+load_fiber_data = False
 debug_output = False                # verbose output in this python script, for debugging the domain decomposition
 disable_firing_output = True        # Disables the initial list of fiber firings on the console to save some console space
 paraview_output = False             # If the paraview output writer should be enabled
@@ -38,11 +42,13 @@ rho = 10
 # -------
 diffusion_solver_type = "cg"        # solver and preconditioner for the diffusion part of the Monodomain equation
 diffusion_preconditioner_type = "none"      # preconditioner
-potential_flow_solver_type = "gmres"        # solver and preconditioner for an initial Laplace flow on the domain, from which fiber directions are determined
-potential_flow_preconditioner_type = "none" # preconditioner
-emg_solver_type = "cg"              # solver and preconditioner for the 3D static Bidomain equation that solves the intra-muscular EMG signal
+# solver and preconditioner for an initial Laplace flow on the domain, from which fiber directions are determined
+potential_flow_solver_type = "gmres"
+potential_flow_preconditioner_type = "none"  # preconditioner
+# solver and preconditioner for the 3D static Bidomain equation that solves the intra-muscular EMG signal
+emg_solver_type = "cg"
 emg_preconditioner_type = "none"    # preconditioner
-emg_initial_guess_nonzero = False   #< If the initial guess for the emg linear system should be set to the previous solution
+emg_initial_guess_nonzero = False  # < If the initial guess for the emg linear system should be set to the previous solution
 
 # partitioning
 # ------------
