@@ -51,8 +51,7 @@
 
   <coupling-scheme:parallel-implicit>
     <time-window-size value="5e-3" />
-    <max-time value="5" />
-    <max-time-windows value="200" />
+    <max-time value="1" />
     <participants first="Fluid" second="Solid" />
     <exchange data="Force" mesh="Solid-Mesh" from="Fluid" to="Solid" />
     <exchange data="Displacement" mesh="Solid-Mesh" from="Solid" to="Fluid" />
