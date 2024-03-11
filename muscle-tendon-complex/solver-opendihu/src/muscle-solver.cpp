@@ -1,11 +1,8 @@
 #include <Python.h>
 #include <cstdlib>
 #include <iostream>
-
-#include <iostream>
-#include "easylogging++.h"
-
-#include "opendihu.h"
+#include <easylogging++.h>
+#include <opendihu.h>
 
 int main(int argc, char *argv[])
 {
