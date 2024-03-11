@@ -17,11 +17,11 @@ stopAt          endTime;
 
 endTime         1;
 
-deltaT          5e-03;
+deltaT          2e-03;
 
 writeControl    adjustableRunTime;
 
-writeInterval   5e-03;
+writeInterval   2e-03;
 
 purgeWrite      0;
 
