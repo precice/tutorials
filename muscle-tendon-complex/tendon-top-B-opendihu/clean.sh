@@ -1,4 +1,6 @@
 #!/bin/sh
-rm -r precice-*
-rm -r __pycache__
-rm -r lib logs out 
+set -e -u
+
+. ../../tools/cleaning-tools.sh
+
+clean_opendihu .
