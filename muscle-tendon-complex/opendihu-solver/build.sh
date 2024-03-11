@@ -1,10 +1,8 @@
 #!/bin/bash
 
-if [ -n $OPENDIHU_HOME ]
+if [ -n "$OPENDIHU_HOME" ]
 then 
-    alias sr='$OPENDIHU_HOME/scripts/shortcuts/sr.sh'
-    alias mkorn='$OPENDIHU_HOME/scripts/shortcuts/mkorn.sh'
-    mkorn && sr
+    "$OPENDIHU_HOME/scripts/shortcuts/sr.sh" && "$OPENDIHU_HOME/scripts/shortcuts/mkorn.sh"
     # copy executables to partipant folders
     cp build_release/muscle-solver ../muscle-opendihu/
     cp build_release/tendon-solver ../tendon-bottom-opendihu/
