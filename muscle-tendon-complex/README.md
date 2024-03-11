@@ -23,7 +23,7 @@ TODO: Explain how is the muscle activated!
 
 ## Why multi-coupling?
 
-This is a case with four participants: the muscle and each tendon. In preCICE, there are two options to [couple more than two participants](https://www.precice.org/configuration-coupling-multi.html). The first option is a composition of bi-coupling schemes, in which we must specify the exchange of data in a participant-to-participant manner. However, such a composition is not suited for combining multiple strong fluid-structure interactions [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling. For another multi-coupling tutorial, you can refer to the [multiple perpendicular flaps tutorial](http://precice.org/tutorials-multiple-perpendicular-flaps.html).
+This is a case with four participants: the muscle and each tendon. In preCICE, there are two options to [couple more than two participants](https://www.precice.org/configuration-coupling-multi.html). The first option is a composition of bi-coupling schemes, in which we must specify the exchange of data in a participant-to-participant manner, limited to primarily explicit coupling schemes. However, such a composition is not suited for combining multiple strong interactions [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling. For another multi-coupling tutorial, you can refer to the [multiple perpendicular flaps tutorial](http://precice.org/tutorials-multiple-perpendicular-flaps.html).
 
 We can set this in our `precice-config.xml`:
 
