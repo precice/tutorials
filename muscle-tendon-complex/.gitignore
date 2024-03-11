@@ -1,0 +1,12 @@
+**/__pycache__
+**/lib
+**/logs
+**/out
+**/*.log
+**/*.txt
+**/precice-profiling
+**/build_release
+**/muscle-solver
+**/tendon-solver
+**/.sconf_temp
+**/.scons*

@@ -1,0 +1,10 @@
+import os
+
+# get the directory where opendihu is installed (the top level directory of opendihu)
+opendihu_home = os.environ.get('OPENDIHU_HOME') 
+# set path where the "SConscript" file is located (set to current path)
+path_where_to_call_sconscript = Dir('.').srcnode().abspath
+
+# call general SConstruct that will configure everything and then call SConscript at the given path
+SConscript(os.path.join(opendihu_home,'SConstructGeneral'), 
+           exports={"path": path_where_to_call_sconscript})

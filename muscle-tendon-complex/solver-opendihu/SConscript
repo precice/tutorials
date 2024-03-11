@@ -1,0 +1,8 @@
+# This script declares to SCons how to compile the example.
+# It has to be called from a SConstruct file.
+# The 'env' object is passed from there and contains further specification like directory and debug/release flags.
+
+Import('env')     
+
+env.Program(target = 'muscle-solver', source = "src/muscle-solver.cpp")
+env.Program(target = 'tendon-solver', source = "src/tendon-solver.cpp")

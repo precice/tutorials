@@ -153,3 +153,13 @@ clean_dumux() {
    )
 
 }
+
+clean_opendihu() {
+    (
+        set -e -u
+        cd "$1"
+        echo "- Cleaning up OpenDiHu case in $(pwd)"
+        rm -rfv ./logs/ ./out/
+        clean_precice_logs .
+    )
+}

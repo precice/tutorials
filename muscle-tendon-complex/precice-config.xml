@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<precice-configuration>
+  <log>
+    <sink
+      filter="%Severity% > debug and %Rank% = 0"
+      format="---[precice] %ColorizedSeverity% %Message%"
+      enabled="true" />
+  </log>
+
+  <data:vector name="Displacement" />
+  <data:vector name="Velocity" />
+  <data:vector name="Traction" />
+
+  <mesh name="Tendon-Bottom-Mesh" dimensions="3">
+    <use-data name="Displacement" />
+    <use-data name="Velocity" />
+    <use-data name="Traction" />
+  </mesh>
+
+  <mesh name="Tendon-Top-A-Mesh" dimensions="3">
+    <use-data name="Displacement" />
+    <use-data name="Velocity" />
+    <use-data name="Traction" />
+  </mesh>
+
+  <mesh name="Tendon-Top-B-Mesh" dimensions="3">
+    <use-data name="Displacement" />
+    <use-data name="Velocity" />
+    <use-data name="Traction" />
+  </mesh>
+
+  <mesh name="Muscle-Bottom-Mesh" dimensions="3">
+    <use-data name="Displacement" />
+    <use-data name="Velocity" />
+    <use-data name="Traction" />
+  </mesh>
+
+  <mesh name="Muscle-Top-A-Mesh" dimensions="3">
+    <use-data name="Displacement" />
+    <use-data name="Velocity" />
+    <use-data name="Traction" />
+  </mesh>
+
+  <mesh name="Muscle-Top-B-Mesh" dimensions="3">
+    <use-data name="Displacement" />
+    <use-data name="Velocity" />
+    <use-data name="Traction" />
+  </mesh>
+
+  <participant name="Muscle">
+    <provide-mesh name="Muscle-Bottom-Mesh" />
+    <provide-mesh name="Muscle-Top-A-Mesh" />
+    <provide-mesh name="Muscle-Top-B-Mesh" />
+    <receive-mesh name="Tendon-Bottom-Mesh" from="Tendon-Bottom" />
+    <receive-mesh name="Tendon-Top-A-Mesh" from="Tendon-Top-A" />
+    <receive-mesh name="Tendon-Top-B-Mesh" from="Tendon-Top-B" />
+    <read-data name="Displacement" mesh="Muscle-Bottom-Mesh" />
+    <read-data name="Velocity" mesh="Muscle-Bottom-Mesh" />
+    <write-data name="Traction" mesh="Muscle-Bottom-Mesh" />
+    <read-data name="Displacement" mesh="Muscle-Top-A-Mesh" />
+    <read-data name="Velocity" mesh="Muscle-Top-A-Mesh" />
+    <write-data name="Traction" mesh="Muscle-Top-A-Mesh" />
+    <read-data name="Displacement" mesh="Muscle-Top-B-Mesh" />
+    <read-data name="Velocity" mesh="Muscle-Top-B-Mesh" />
+    <write-data name="Traction" mesh="Muscle-Top-B-Mesh" />
+    <mapping:rbf
+      direction="read"
+      from="Tendon-Bottom-Mesh"
+      to="Muscle-Bottom-Mesh"
+      constraint="consistent">
+      <basis-function:gaussian shape-parameter="91.05" />
+    </mapping:rbf>
+    <mapping:rbf
+      direction="read"
+      from="Tendon-Top-A-Mesh"
+      to="Muscle-Top-A-Mesh"
+      constraint="consistent">
+      <basis-function:gaussian shape-parameter="91.05" />
+    </mapping:rbf>
+    <mapping:rbf
+      direction="read"
+      from="Tendon-Top-B-Mesh"
+      to="Muscle-Top-B-Mesh"
+      constraint="consistent">
+      <basis-function:gaussian shape-parameter="91.05" />
+    </mapping:rbf>
+  </participant>
+
+  <participant name="Tendon-Bottom">
+    <provide-mesh name="Tendon-Bottom-Mesh" />
+    <receive-mesh name="Muscle-Bottom-Mesh" from="Muscle" />
+    <write-data name="Displacement" mesh="Tendon-Bottom-Mesh" />
+    <write-data name="Velocity" mesh="Tendon-Bottom-Mesh" />
+    <read-data name="Traction" mesh="Tendon-Bottom-Mesh" />
+    <mapping:rbf
+      direction="read"
+      from="Muscle-Bottom-Mesh"
+      to="Tendon-Bottom-Mesh"
+      constraint="consistent">
+      <basis-function:gaussian shape-parameter="50" />
+    </mapping:rbf>
+  </participant>
+
+  <participant name="Tendon-Top-A">
+    <provide-mesh name="Tendon-Top-A-Mesh" />
+    <receive-mesh name="Muscle-Top-A-Mesh" from="Muscle" />
+    <write-data name="Displacement" mesh="Tendon-Top-A-Mesh" />
+    <write-data name="Velocity" mesh="Tendon-Top-A-Mesh" />
+    <read-data name="Traction" mesh="Tendon-Top-A-Mesh" />
+    <mapping:rbf
+      direction="read"
+      from="Muscle-Top-A-Mesh"
+      to="Tendon-Top-A-Mesh"
+      constraint="consistent">
+      <basis-function:gaussian shape-parameter="50" />
+    </mapping:rbf>
+  </participant>
+
+  <participant name="Tendon-Top-B">
+    <provide-mesh name="Tendon-Top-B-Mesh" />
+    <receive-mesh name="Muscle-Top-B-Mesh" from="Muscle" />
+    <write-data name="Displacement" mesh="Tendon-Top-B-Mesh" />
+    <write-data name="Velocity" mesh="Tendon-Top-B-Mesh" />
+    <read-data name="Traction" mesh="Tendon-Top-B-Mesh" />
+    <mapping:rbf
+      direction="read"
+      from="Muscle-Top-B-Mesh"
+      to="Tendon-Top-B-Mesh"
+      constraint="consistent">
+      <basis-function:gaussian shape-parameter="50" />
+    </mapping:rbf>
+  </participant>
+
+  <m2n:sockets acceptor="Muscle" connector="Tendon-Bottom" exchange-directory=".." />
+  <m2n:sockets acceptor="Muscle" connector="Tendon-Top-A" exchange-directory=".." />
+  <m2n:sockets acceptor="Muscle" connector="Tendon-Top-B" exchange-directory=".." />
+
+  <coupling-scheme:multi>
+    <participant name="Muscle" control="yes" />
+    <participant name="Tendon-Bottom" />
+    <participant name="Tendon-Top-A" />
+    <participant name="Tendon-Top-B" />
+    <max-time value="20000.0" />
+    <time-window-size value="1.0" />
+    <max-iterations value="100" />
+    <relative-convergence-measure limit="0.01" data="Displacement" mesh="Tendon-Bottom-Mesh" />
+    <relative-convergence-measure limit="0.01" data="Displacement" mesh="Tendon-Top-A-Mesh" />
+    <relative-convergence-measure limit="0.01" data="Displacement" mesh="Tendon-Top-B-Mesh" />
+    <relative-convergence-measure limit="0.01" data="Velocity" mesh="Tendon-Bottom-Mesh" />
+    <relative-convergence-measure limit="0.01" data="Velocity" mesh="Tendon-Top-A-Mesh" />
+    <relative-convergence-measure limit="0.01" data="Velocity" mesh="Tendon-Top-B-Mesh" />
+    <relative-convergence-measure limit="0.1" data="Traction" mesh="Muscle-Bottom-Mesh" />
+    <relative-convergence-measure limit="0.1" data="Traction" mesh="Muscle-Top-A-Mesh" />
+    <relative-convergence-measure limit="0.1" data="Traction" mesh="Muscle-Top-B-Mesh" />
+    <acceleration:IQN-ILS>
+      <data name="Displacement" mesh="Tendon-Bottom-Mesh" />
+      <data name="Displacement" mesh="Tendon-Top-A-Mesh" />
+      <data name="Displacement" mesh="Tendon-Top-B-Mesh" />
+      <data name="Velocity" mesh="Tendon-Bottom-Mesh" />
+      <data name="Velocity" mesh="Tendon-Top-A-Mesh" />
+      <data name="Velocity" mesh="Tendon-Top-B-Mesh" />
+      <data name="Traction" mesh="Muscle-Bottom-Mesh" />
+      <data name="Traction" mesh="Muscle-Top-A-Mesh" />
+      <data name="Traction" mesh="Muscle-Top-B-Mesh" />
+      <preconditioner type="residual-sum" />
+      <filter type="QR2" limit="1e-3" />
+      <initial-relaxation value="0.4" />
+      <max-used-iterations value="40" />
+      <time-windows-reused value="15" />
+    </acceleration:IQN-ILS>
+    <exchange data="Displacement" mesh="Tendon-Bottom-Mesh" from="Tendon-Bottom" to="Muscle" />
+    <exchange data="Velocity" mesh="Tendon-Bottom-Mesh" from="Tendon-Bottom" to="Muscle" />
+    <exchange data="Traction" mesh="Muscle-Bottom-Mesh" from="Muscle" to="Tendon-Bottom" />
+    <exchange data="Displacement" mesh="Tendon-Top-A-Mesh" from="Tendon-Top-A" to="Muscle" />
+    <exchange data="Velocity" mesh="Tendon-Top-A-Mesh" from="Tendon-Top-A" to="Muscle" />
+    <exchange data="Traction" mesh="Muscle-Top-A-Mesh" from="Muscle" to="Tendon-Top-A" />
+    <exchange data="Displacement" mesh="Tendon-Top-B-Mesh" from="Tendon-Top-B" to="Muscle" />
+    <exchange data="Velocity" mesh="Tendon-Top-B-Mesh" from="Tendon-Top-B" to="Muscle" />
+    <exchange data="Traction" mesh="Muscle-Top-B-Mesh" from="Muscle" to="Tendon-Top-B" />
+  </coupling-scheme:multi>
+</precice-configuration>
