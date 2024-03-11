@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e -u
 
 if [ -n "$OPENDIHU_HOME" ]
 then 

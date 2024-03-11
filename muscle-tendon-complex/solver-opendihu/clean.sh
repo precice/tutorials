@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e -u
 
 rm -r .* ./*.log
 rm -r build_release
