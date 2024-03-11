@@ -160,6 +160,6 @@ clean_opendihu() {
         cd "$1"
         echo "- Cleaning up OpenDiHu case in $(pwd)"
         rm -rfv ./logs/ ./out/
-        clean_precice_logs
+        clean_precice_logs .
     )
 }
