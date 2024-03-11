@@ -1,19 +1,19 @@
 #include <Python.h>
-#include <iostream>
 #include <cstdlib>
+#include <iostream>
 
 #include <iostream>
 #include "easylogging++.h"
 
 #include "opendihu.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
   DihuContext settings(argc, argv);
 
   Control::PreciceAdapter<TimeSteppingScheme::DynamicHyperelasticitySolver<
-      Equation::SolidMechanics::HyperelasticTendon
-      >>
+      Equation::SolidMechanics::HyperelasticTendon>>
       problem(settings);
 
   problem.run();

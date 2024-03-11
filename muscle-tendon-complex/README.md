@@ -74,7 +74,7 @@ We use solvers based on [OpenDiHu](https://github.com/opendihu/opendihu) for all
    - Compile muscle and tendon solvers
 
       ```bash
-      cd opendihu-solver
+      cd solver-opendihu
       ./build.sh
       ```
 
