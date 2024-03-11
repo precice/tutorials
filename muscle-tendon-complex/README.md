@@ -115,7 +115,7 @@ After the simulation has finished, you can visualize your results using e.g. Par
 ## References TODO
 
 <!-- markdownlint-configure-file {"MD034": false } -->
-[1] H. Bungartz, F. Linder, M. Mehl, B. Uekermann. A plug-and-play coupling approach for parallel multi-field simulations. _Comput Mech_ **55**, 1119-1129 (2015). https://doi.org/10.1007/s00466-014-1113-2
+[1] H. Bungartz, F. Linder, M. Mehl, B. Uekermann. A plug-and-play coupling approach for parallel multi-field simulations. *Comput Mech* **55**, 1119-1129 (2015). https://doi.org/10.1007/s00466-014-1113-2
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
