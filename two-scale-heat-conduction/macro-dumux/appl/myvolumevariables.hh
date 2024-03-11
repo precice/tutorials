@@ -24,11 +24,11 @@
 #ifndef DUMUX_MY_1P_VOLUME_VARIABLES_HH
 #define DUMUX_MY_1P_VOLUME_VARIABLES_HH
 
-#include "myenergyvolumevariables.hh"
 #include <dumux/material/fluidstates/immiscible.hh>
 #include <dumux/material/solidstates/updatesolidvolumefractions.hh>
 #include <dumux/porousmediumflow/nonisothermal/volumevariables.hh>
 #include <dumux/porousmediumflow/volumevariables.hh>
+#include "myenergyvolumevariables.hh"
 
 namespace Dumux {
 
@@ -43,16 +43,16 @@ template <class Traits>
 class MyOnePVolumeVariables
     : public PorousMediumFlowVolumeVariables<Traits>,
       public MyEnergyVolumeVariables<Traits, MyOnePVolumeVariables<Traits>> {
-  using ThisType = MyOnePVolumeVariables<Traits>;
+  using ThisType   = MyOnePVolumeVariables<Traits>;
   using ParentType = PorousMediumFlowVolumeVariables<Traits>;
   using EnergyVolVars =
       MyEnergyVolumeVariables<Traits, MyOnePVolumeVariables<Traits>>;
 
-  using Scalar = typename Traits::PrimaryVariables::value_type;
-  using PermeabilityType = typename Traits::PermeabilityType;
+  using Scalar                       = typename Traits::PrimaryVariables::value_type;
+  using PermeabilityType             = typename Traits::PermeabilityType;
   static constexpr int numFluidComps = ParentType::numFluidComponents();
-  static constexpr int dimWorld = 2; // hardcoded for now
-  using DimWorldMatrix = Dune::FieldMatrix<Scalar, dimWorld, dimWorld>;
+  static constexpr int dimWorld      = 2; // hardcoded for now
+  using DimWorldMatrix               = Dune::FieldMatrix<Scalar, dimWorld, dimWorld>;
 
 public:
   //! Export the underlying fluid system
@@ -76,7 +76,8 @@ public:
    */
   template <class ElemSol, class Problem, class Element, class Scv>
   void update(const ElemSol &elemSol, const Problem &problem,
-              const Element &element, const Scv &scv) {
+              const Element &element, const Scv &scv)
+  {
     ParentType::update(elemSol, problem, element, scv);
 
     // porosity
@@ -106,7 +107,8 @@ public:
   template <class ElemSol, class Problem, class Element, class Scv>
   void completeFluidState(const ElemSol &elemSol, const Problem &problem,
                           const Element &element, const Scv &scv,
-                          FluidState &fluidState, SolidState &solidState) {
+                          FluidState &fluidState, SolidState &solidState)
+  {
     EnergyVolVars::updateTemperature(elemSol, problem, element, scv, fluidState,
                                      solidState);
     fluidState.setSaturation(/*phaseIdx=*/0, 1.);
@@ -141,31 +143,42 @@ public:
    * temperatures of the rock matrix and of all fluid phases are
    * identical.
    */
-  Scalar temperature() const { return fluidState_.temperature(); }
+  Scalar temperature() const
+  {
+    return fluidState_.temperature();
+  }
 
   /*!
    * \brief Returns the phase state for the control volume.
    */
-  const SolidState &solidState() const { return solidState_; }
+  const SolidState &solidState() const
+  {
+    return solidState_;
+  }
 
   /*!
    * \brief Returns the effective pressure \f$\mathrm{[Pa]}\f$ of a given phase
    * within the control volume.
    */
-  Scalar pressure(int phaseIdx = 0) const {
+  Scalar pressure(int phaseIdx = 0) const
+  {
     return fluidState_.pressure(phaseIdx);
   }
 
   /*!
    * \brief Returns the saturation.
    */
-  Scalar saturation(int phaseIdx = 0) const { return 1.0; }
+  Scalar saturation(int phaseIdx = 0) const
+  {
+    return 1.0;
+  }
 
   /*!
    * \brief Returns the mass density \f$\mathrm{[kg/m^3]}\f$ of a given phase
    * within the control volume.
    */
-  Scalar density(int phaseIdx = 0) const {
+  Scalar density(int phaseIdx = 0) const
+  {
     return fluidState_.density(phaseIdx);
   }
 
@@ -173,7 +186,8 @@ public:
    * \brief Returns the dynamic viscosity \f$\mathrm{[Pa s]}\f$ of the fluid
    * within the control volume.
    */
-  Scalar viscosity(int phaseIdx = 0) const {
+  Scalar viscosity(int phaseIdx = 0) const
+  {
     return fluidState_.viscosity(phaseIdx);
   }
 
@@ -186,7 +200,8 @@ public:
    *
    * \param phaseIdx The phase index
    */
-  Scalar mobility(int phaseIdx = 0) const {
+  Scalar mobility(int phaseIdx = 0) const
+  {
     return 1.0 / fluidState_.viscosity(phaseIdx);
   }
 
@@ -194,25 +209,35 @@ public:
    * \brief Returns the average porosity \f$\mathrm{[-]}\f$ within the control
    * volume.
    */
-  Scalar porosity() const { return solidState_.porosity(); }
+  Scalar porosity() const
+  {
+    return solidState_.porosity();
+  }
 
   /*!
    * \brief Returns the permeability within the control volume in \f$[m^2]\f$.
    */
-  const PermeabilityType &permeability() const { return permeability_; }
+  const PermeabilityType &permeability() const
+  {
+    return permeability_;
+  }
 
   /*!
    * \brief Returns the fluid state of the control volume.
    */
-  const FluidState &fluidState() const { return fluidState_; }
+  const FluidState &fluidState() const
+  {
+    return fluidState_;
+  }
 
-  DimWorldMatrix effectiveThermalConductivity() const {
+  DimWorldMatrix effectiveThermalConductivity() const
+  {
     return EnergyVolVars::effectiveThermalConductivity();
   }
 
 protected:
-  FluidState fluidState_;
-  SolidState solidState_;
+  FluidState       fluidState_;
+  SolidState       solidState_;
   PermeabilityType permeability_;
 };
 
