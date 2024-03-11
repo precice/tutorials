@@ -1,7 +1,7 @@
 #include <Python.h>
 #include <cstdlib>
-#include <iostream>
 #include <easylogging++.h>
+#include <iostream>
 #include <opendihu.h>
 
 int main(int argc, char *argv[])
