@@ -11,9 +11,11 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-The two-dimensional breaking dam case is a free surface problem. A large column of water comes into contact with a flexible wall, causing the wall to bend and the water to flow over the wall. A no-slip boundary condition is applied at the bottom, the left, and the right boundary, and a zero pressure condition at the top boundary. The image below shows the alpha value (0 is air, 1 is water) and velocity vectors at t=0.595.
+The two-dimensional breaking dam case is a free surface problem. A large column of water comes into contact with a flexible wall, causing the wall to bend and the water to flow over the wall. A no-slip boundary condition is applied at the bottom, the left, and the right boundary, and a zero pressure condition at the top boundary. The image below shows the alpha value (0 is air, 1 is water) and velocity vectors at t=0.6.
 
 ![Breaking dam 2D physics at t=0.595](images/tutorials-breaking-dam-2d-physics.png)
+
+A similar, but not identical, setup is used in [1].
 
 ## Available solvers
 
@@ -36,3 +38,7 @@ You can visualize the results using ParaView or `cgx` (for native CalculiX resul
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM® and OpenCFD® trade marks.
 {% enddisclaimer %}
+
+## References
+
+[1] K. Davis, M. Schulte, B. Uekermann. [Enhancing Quasi-Newton Acceleration for Fluid-Structure Interaction](https://doi.org/10.3390/mca27030040). Mathematical and Computational Applications. 2022; 27(3):40
