@@ -19,7 +19,7 @@ boundaryField
     }
     outlet
     {
-         type            noSlip;
+         type           noSlip;
     }
     flap
     {
