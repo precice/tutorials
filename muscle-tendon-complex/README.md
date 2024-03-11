@@ -13,11 +13,11 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 In the following tutorial we model the contraction of a muscle, in particular, the biceps. The biceps is attached to the bones by three tendons (one at the bottom and two at the top). We enforce an activation in the muscle which results in its contraction. The tendons move as a result of the muscle contraction. In this case, a muscle and three tendons are coupled together using a fully-implicit multi-coupling scheme. The case setup is shown here:
 
-![Setup](images/tutorials-muscle-tendon-complex-setup.png) 
+![Setup](images/tutorials-muscle-tendon-complex-setup.png)
 
 The muscle participant (in red), is connected to three tendons. The muscle sends traction values to the tendons, which send displacement and velocity values back to the muscle. The end of each tendon which is not attached to the muscle is fixed by a dirichlet boundary condition (in reality, it would be fixed to the bones).
 
-The muscle and tendon meshes are obtained from patient imaging. The interfaces of the tendons and the muscle do not perfectly match, which is a quite common issue due to the limitations of imaging methods and postprocessing tools. Nonetheless, preCICE coupling methods are robust and can handle meshes that do not match perfectly. 
+The muscle and tendon meshes are obtained from patient imaging. The interfaces of the tendons and the muscle do not perfectly match, which is a quite common issue due to the limitations of imaging methods and postprocessing tools. Nonetheless, preCICE coupling methods are robust and can handle meshes that do not match perfectly.
 
 TODO: Explain how is the muscle activated!
 
@@ -42,34 +42,34 @@ The participant that has the control is the one that it is connected to all othe
 
 OpenDiHu is used for the muscle and each tendon participants.
 
-**The muscle solver** consists of a multi-physcis multi-scale solver itself. It combines two OpenDiHu solvers in one: the *FastMonodomainSolver* and the *MuscleContractionSolver*. The two solvers are coupled using the OpenDiHu coupling tool for weak coupling. 
+**The muscle solver** consists of a multi-physcis multi-scale solver itself. It combines two OpenDiHu solvers in one: the *FastMonodomainSolver* and the *MuscleContractionSolver*. The two solvers are coupled using the OpenDiHu coupling tool for weak coupling.
 
-   - The [*FastMonodomainSolver*](https://opendihu.readthedocs.io/en/latest/settings/fast_monodomain_solver.html) models the electrochemical processes that take place in the muscle fibers, i.e, how an electrical signal propagates from the center to the extremes of the muscle fibers. The electrical signal triggers chemical reactions which lead to the contraction of sarcomeres, the smallest contraction unit in the muscle. The solver solves the so called "monodomain equation" independently for each fiber. The equation has a reaction term (small time scale) and a diffusion term (large time scale) and is solved using Strang splitting. The sarcomeres, i.e. the reaction term, are modelled using a variant of the Shorten model, specified by the CellML file `opendihu/examples/electrophysiology/input/2020_06_03_hodgkin-huxley_shorten_ocallaghan_davidson_soboleva_2007.cellm`.
+- The [FastMonodomainSolver](https://opendihu.readthedocs.io/en/latest/settings/fast_monodomain_solver.html) models the electrochemical processes that take place in the muscle fibers, i.e, how an electrical signal propagates from the center to the extremes of the muscle fibers. The electrical signal triggers chemical reactions which lead to the contraction of sarcomeres, the smallest contraction unit in the muscle. The solver solves the so called "monodomain equation" independently for each fiber. The equation has a reaction term (small time scale) and a diffusion term (large time scale) and is solved using Strang splitting. The sarcomeres, i.e. the reaction term, are modelled using a variant of the Shorten model, specified by the CellML file `opendihu/examples/electrophysiology/input/2020_06_03_hodgkin-huxley_shorten_ocallaghan_davidson_soboleva_2007.cellm`.
 
-   - The [*MuscleContractionSolver*](https://opendihu.readthedocs.io/en/latest/settings/muscle_contraction_solver.html) models the mechanics of the muscle. It consists of a dynamic FEM solver that models an hyperelastic active material. The active component is calculated from the active paramter $\gamma$, which ranges from 0 (no activation) to 1 (maximum activation) and is calculated in the *FastMonodomainSolver*. The material parameters are chosen as in [Heidlauf et al.](https://link.springer.com/article/10.1007/s10237-016-0772-7)
+- The [MuscleContractionSolver](https://opendihu.readthedocs.io/en/latest/settings/muscle_contraction_solver.html) models the mechanics of the muscle. It consists of a dynamic FEM solver that models an hyperelastic active material. The active component is calculated from the active paramter $\gamma$, which ranges from 0 (no activation) to 1 (maximum activation) and is calculated in the *FastMonodomainSolver*. The material parameters are chosen as in [Heidlauf et al.](https://link.springer.com/article/10.1007/s10237-016-0772-7)
 
 **The tendon solver** is a dynamic FEM mechanical solver. It models an hyperelastic passive material. The material parameters are chosen as in [Carniel et al.](https://pubmed.ncbi.nlm.nih.gov/28238424/)
 
-## Running the Simulation 
+## Running the Simulation
 
 1. Preparation:
    - Install OpenDiHu
 
-      In the OpenDiHu website you can find detailed [installation instructions](https://opendihu.readthedocs.io/en/latest/user/installation.html). 
-      
-      We recommend to download the code from the [GitHub repository](https://github.com/opendihu/opendihu) and to run `make release_without_tests` in the parent directory. 
+      In the OpenDiHu website you can find detailed [installation instructions](https://opendihu.readthedocs.io/en/latest/user/installation.html).
+      We recommend to download the code from the [GitHub repository](https://github.com/opendihu/opendihu) and to run `make release_without_tests` in the parent directory.
 
       > **Note:** OpenDiHu automatically downloads dependencies and installs them in the `opendihu/dependencies/` folder. You can avoid that by setting e.g., `PRECICE_DOWNLOAD = False` in the [user-variables.scons.py](https://github.com/opendihu/opendihu/blob/develop/user-variables.scons.py) before building OpenDiHu.
-   
-   - Download input files for OpenDiHu 
 
-      OpenDiHu requires of input files hosted in [Zenodo](https://zenodo.org/records/4705982) which include CellML files (containing model equations) and mesh files. Downloading this files is necessary to simulate muscles and/or tendons with OpenDiHu. You can [click here](https://zenodo.org/record/4705982/files/input.tgz?download=1) to download the necessary files. Please extract the files and place them on `opendihu/examples/electrophysiology/` directory. 
-      
+   - Download input files for OpenDiHu
+
+      OpenDiHu requires of input files hosted in [Zenodo](https://zenodo.org/records/4705982) which include CellML files (containing model equations) and mesh files. Downloading this files is necessary to simulate muscles and/or tendons with OpenDiHu. You can [click here](https://zenodo.org/record/4705982/files/input.tgz?download=1) to download the necessary files. Please extract the files and place them on `opendihu/examples/electrophysiology/` directory.
+
    - Setup `$OPENDIHU_HOME` to your `.bashrc` file
-      ```
-      export OPENDIHU_HOME=/path/to/opendihu
 
+      ```bash
+      export OPENDIHU_HOME=/path/to/opendihu
       ```
+
    - Compile muscle and tendon solvers
 
       ```bash
@@ -86,6 +86,7 @@ OpenDiHu is used for the muscle and each tendon participants.
    cd muscle-opendihu
    ./run.sh
    ```
+
    To start the `Tendon-Bottom` participant, run:
 
    ```bash
