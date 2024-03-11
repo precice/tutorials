@@ -16,9 +16,9 @@ force = 100.0           # [N] pulling force to the bottom
 # -----------
 
 import os
-opendihu_home = os.environ.get('OPENDIHU_HOME')
-fiber_file = opendihu_home + "/examples/electrophysiology/input/left_biceps_brachii_tendon2a.bin"
-cellml_file = opendihu_home + "/examples/electrophysiology/input/2020_06_03_hodgkin-huxley_shorten_ocallaghan_davidson_soboleva_2007.cellml"
+input_dir = os.environ.get('OPENDIHU_INPUT_DIR')
+fiber_file = input_dir + "/left_biceps_brachii_tendon2a.bin"
+cellml_file = input_dir + "/2020_06_03_hodgkin-huxley_shorten_ocallaghan_davidson_soboleva_2007.cellml"
 precice_config_file = "../precice-config.xml"
 # If the fiber geometry data should be loaded completely in the python
 # script. If True, this reads the binary file and assigns the node

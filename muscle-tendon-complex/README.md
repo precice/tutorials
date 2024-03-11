@@ -41,8 +41,8 @@ We use solvers based on [OpenDiHu](https://github.com/opendihu/opendihu) for all
 
 **The muscle solver** consists of a multi-physcis multi-scale solver itself. It combines two OpenDiHu solvers in one: the *FastMonodomainSolver* and the *MuscleContractionSolver*. The two solvers are coupled using the OpenDiHu coupling tool for weak coupling.
 
-- The [FastMonodomainSolver](https://opendihu.readthedocs.io/en/latest/settings/fast_monodomain_solver.html) models the electrochemical processes that take place in the muscle fibers. Motor neurons fire electrical signals that propagate from the neuromuscular junctions. i.e. the center of the muscle fibers, to the extremes of the muscle fibers. The propagation of the electrical signal triggers chemical reactions which lead to the contraction of sarcomeres, the smallest contraction unit in the muscle. 
-The solver solves the so called "monodomain equation" independently for each fiber [2]. The modonomain equation has a reaction term (small time scale) and a diffusion term (large time scale) and is solved using Strang splitting. The sarcomeres, i.e., the reaction term, are modelled using a variant of the Shorten model, specified by the CellML file `opendihu/examples/electrophysiology/input/2020_06_03_hodgkin-huxley_shorten_ocallaghan_davidson_soboleva_2007.cellml`. The firing of the motor neurons is modelled by the `opendihu/examples/electrophysiology/input/MU_firing_times_always.txt` file. 
+- The [FastMonodomainSolver](https://opendihu.readthedocs.io/en/latest/settings/fast_monodomain_solver.html) models the electrochemical processes that take place in the muscle fibers. Motor neurons fire electrical signals that propagate from the neuromuscular junctions. i.e. the center of the muscle fibers, to the extremes of the muscle fibers. The propagation of the electrical signal triggers chemical reactions which lead to the contraction of sarcomeres, the smallest contraction unit in the muscle.
+The solver solves the so called "monodomain equation" independently for each fiber [2]. The modonomain equation has a reaction term (small time scale) and a diffusion term (large time scale) and is solved using Strang splitting. The sarcomeres, i.e., the reaction term, are modelled using a variant of the Shorten model, specified by the CellML file `opendihu/examples/electrophysiology/input/2020_06_03_hodgkin-huxley_shorten_ocallaghan_davidson_soboleva_2007.cellml`. The firing of the motor neurons is modelled by the `opendihu/examples/electrophysiology/input/MU_firing_times_always.txt` file.
 
 - The [MuscleContractionSolver](https://opendihu.readthedocs.io/en/latest/settings/muscle_contraction_solver.html) models the mechanics of the muscle. It consists of a dynamic FEM solver that models an hyperelastic active material. The active component is calculated from the activation parameter $\gamma$, which ranges from 0 (no activation) to 1 (maximum activation) and is calculated in the *FastMonodomainSolver*. The material parameters are chosen as in [Heidlauf et al.](https://link.springer.com/article/10.1007/s10237-016-0772-7)
 
@@ -62,12 +62,13 @@ The solver solves the so called "monodomain equation" independently for each fib
 
    - Download input files for OpenDiHu
 
-      OpenDiHu requires input files hosted in [Zenodo](https://zenodo.org/records/4705982) which include CellML files (containing model equations) and mesh files. Downloading these files is necessary to simulate muscles and/or tendons with OpenDiHu. You can [directly download the necessary files](https://zenodo.org/record/4705982/files/input.tgz?download=1). Extract the files and place them in the `opendihu/examples/electrophysiology/` directory.
+      OpenDiHu requires input files hosted in [Zenodo](https://zenodo.org/records/4705982) which include CellML files (containing model equations) and mesh files. Downloading these files is necessary to simulate muscles and/or tendons with OpenDiHu. You can [directly download the necessary files](https://zenodo.org/record/4705982/files/input.tgz?download=1).
 
-   - Setup `$OPENDIHU_HOME` to your `.bashrc` file
+   - Setup `$OPENDIHU_HOME` and `$OPENDIHU_INPUT_DIR` in your `.bashrc` file
 
       ```bash
       export OPENDIHU_HOME=/path/to/opendihu
+      export OPENDIHU_INPUT_DIR=/path/to/input
       ```
 
    - Compile muscle and tendon solvers
@@ -117,7 +118,7 @@ After the simulation has finished, you can visualize your results using e.g. Par
 <!-- markdownlint-configure-file {"MD034": false } -->
 [1] H. Bungartz, F. Linder, M. Mehl, B. Uekermann. A plug-and-play coupling approach for parallel multi-field simulations. *Comput Mech* **55**, 1119-1129 (2015). https://doi.org/10.1007/s00466-014-1113-2
 
-[2] T. Heidlauf, O. Röhrle. A multiscale chemo-electro-mechanical skeletal muscle model to analyze muscle contraction and force generation for different muscle fiber arrangements. *Front. Physiology* **5** (2014).  https://doi.org/10.3389/fphys.2014.00498 
+[2] T. Heidlauf, O. Röhrle. A multiscale chemo-electro-mechanical skeletal muscle model to analyze muscle contraction and force generation for different muscle fiber arrangements. *Front. Physiology* **5** (2014).  https://doi.org/10.3389/fphys.2014.00498
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.

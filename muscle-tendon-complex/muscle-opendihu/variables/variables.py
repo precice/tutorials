@@ -13,6 +13,7 @@ Cm = 0.58                           # membrane capacitance [uF/cm^2]
 # not used [cm], this will later be used to specify a variance of positions of the innervation point at the fibers
 innervation_zone_width = 0.
 rho = 10
+
 # solvers
 # -------
 diffusion_solver_type = "cg"        # solver and preconditioner for the diffusion part of the Monodomain equation
@@ -45,14 +46,14 @@ activation_start_time = 0           # [ms] time when to start checking for stimu
 # -----------
 
 import os
-opendihu_home = os.environ.get('OPENDIHU_HOME')
-fiber_file = opendihu_home + "/examples/electrophysiology/input/left_biceps_brachii_9x9fibers.bin"
+input_dir = os.environ.get('OPENDIHU_INPUT_DIR')
+fiber_file = input_dir + "/left_biceps_brachii_9x9fibers.bin"
 fat_mesh_file = fiber_file + "_fat.bin"
 # use setSpecificStatesCallEnableBegin and setSpecificStatesCallFrequency
-firing_times_file = opendihu_home + "/examples/electrophysiology/input/MU_firing_times_always.txt"
-fiber_distribution_file = opendihu_home + "/examples/electrophysiology/input/MU_fibre_distribution_10MUs.txt"
-cellml_file = opendihu_home + "/examples/electrophysiology/input/2020_06_03_hodgkin-huxley_shorten_ocallaghan_davidson_soboleva_2007.cellml"
-firing_times_file = opendihu_home + "/examples/electrophysiology/input/MU_firing_times_real.txt"
+firing_times_file = input_dir + "/MU_firing_times_always.txt"
+fiber_distribution_file = input_dir + "/MU_fibre_distribution_10MUs.txt"
+cellml_file = input_dir + "/2020_06_03_hodgkin-huxley_shorten_ocallaghan_davidson_soboleva_2007.cellml"
+firing_times_file = input_dir + "/MU_firing_times_real.txt"
 precice_config_file = "../precice-config.xml"
 # If the fiber geometry data should be loaded completely in the python
 # script. If True, this reads the binary file and assigns the node
