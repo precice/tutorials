@@ -265,21 +265,29 @@ if False:
     for subdomain_coordinate_y in range(variables.n_subdomains_y):
         for subdomain_coordinate_x in range(variables.n_subdomains_x):
 
-            print("subdomain (x{},y{}) ranks: {} n fibers in subdomain: x{},y{}".format(subdomain_coordinate_x, subdomain_coordinate_y,
-                                                                                        list(
-                                                                                            range(
-                                                                                                subdomain_coordinate_y *
-                                                                                                variables.n_subdomains_x +
-                                                                                                subdomain_coordinate_x,
-                                                                                                n_ranks,
-                                                                                                variables.n_subdomains_x *
-                                                                                                variables.n_subdomains_y)),
-                                                                                        n_fibers_in_subdomain_x(subdomain_coordinate_x), n_fibers_in_subdomain_y(subdomain_coordinate_y)))
+            print(
+                "subdomain (x{},y{}) ranks: {} n fibers in subdomain: x{},y{}".format(
+                    subdomain_coordinate_x,
+                    subdomain_coordinate_y,
+                    list(
+                        range(
+                            subdomain_coordinate_y *
+                            variables.n_subdomains_x +
+                            subdomain_coordinate_x,
+                            n_ranks,
+                            variables.n_subdomains_x *
+                            variables.n_subdomains_y)),
+                    n_fibers_in_subdomain_x(subdomain_coordinate_x),
+                    n_fibers_in_subdomain_y(subdomain_coordinate_y)))
 
             for fiber_in_subdomain_coordinate_y in range(n_fibers_in_subdomain_y(subdomain_coordinate_y)):
                 for fiber_in_subdomain_coordinate_x in range(n_fibers_in_subdomain_x(subdomain_coordinate_x)):
-                    print("({},{}) n instances: {}".format(fiber_in_subdomain_coordinate_x, fiber_in_subdomain_coordinate_y,
-                                                           n_fibers_in_subdomain_x(subdomain_coordinate_x) * n_fibers_in_subdomain_y(subdomain_coordinate_y)))
+                    print(
+                        "({},{}) n instances: {}".format(
+                            fiber_in_subdomain_coordinate_x,
+                            fiber_in_subdomain_coordinate_y,
+                            n_fibers_in_subdomain_x(subdomain_coordinate_x) *
+                            n_fibers_in_subdomain_y(subdomain_coordinate_y)))
 
 
 # define the config dict
