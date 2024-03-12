@@ -90,6 +90,8 @@ cd fluid-openfoam
 paraFoam
 ```
 
+The displacements of the cylinder are very small, however, and, thus, not directly visible. With a `WarpByVector` filter based on the `cellDisplacement` data, try scaling them up by a factor of 100.
+
 ## Acknowledgements
 
 Many thanks to [Mosayeb Shams](https://github.com/mosayebshams) from Herriot Watt University, UK, who helped to set up this simulation case.
