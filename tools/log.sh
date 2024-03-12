@@ -3,3 +3,9 @@ set -e -u
 
 CASENAME="$(readlink -f "$0" | xargs dirname | xargs basename)"
 export CASENAME
+
+date > "$CASENAME.log"
+
+log() {
+    "$@" | tee --append "$CASENAME.log" 2>&1
+}
