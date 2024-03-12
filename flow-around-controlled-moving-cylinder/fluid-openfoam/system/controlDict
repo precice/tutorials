@@ -44,5 +44,9 @@ maxCo           0.75;
 functions
 {
    #includeFunc forces
-   #includeFunc preCICE_Adapter 
+   preCICE_Adapter
+    {
+        type preciceAdapterFunctionObject;
+        libs ("libpreciceAdapterFunctionObject.so");
+    }
 }
