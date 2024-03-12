@@ -8,6 +8,17 @@ if [ -z "$*" ] ; then
 	usage
 fi
 
+if [ ! -f Oscillator.fmu ]; then
+  cd fmu
+  rm -rf build
+  mkdir build
+  cd build
+  cmake -DFMI_TYPE=CS -DFMI_VERSION=3 ..
+  make
+  cp ./Oscillator.fmu ../..
+  cd ../../
+fi
+
 # Select appropriate case
 while getopts ":lr" opt; do
   case ${opt} in
