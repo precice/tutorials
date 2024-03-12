@@ -6,25 +6,11 @@ FoamFile
     object      decomposeParDict;
 }
 
-numberOfSubdomains 6;
-
-method          scotch;
-// method          ptscotch;
+numberOfSubdomains 4;
+method             simple;
 
 simpleCoeffs
 {
-    n               (4 1 1);
-    delta           0.001;
-}
-
-hierarchicalCoeffs
-{
-    n               (3 2 1);
-    delta           0.001;
-    order           xyz;
-}
-
-manualCoeffs
-{
-    dataFile        "cellDecomposition";
+    n              (2 2 1);
+    delta          0.001;
 }
