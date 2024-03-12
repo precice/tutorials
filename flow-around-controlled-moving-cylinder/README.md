@@ -79,7 +79,7 @@ Upon completion of the scenario, the preCICE-FMI Runner stores some of the inter
 python3 plot-timeseries.py ./controller-fmi/output/controller-output.csv E_OVER_T
 ```
 
-To get a full list of the plot options, run `python3 plot-timeseries.py -h`.
+To get a full list of the plot options, run `python3 plot-timeseries.py -h`. Please note: This script requires a few standard python libraries (pandas, matplotlib, argparse, enum).
 
 ### View the simulation results in ParaView
 
