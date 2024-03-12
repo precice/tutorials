@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e -u
 
-CASENAME="$(readlink -f "$0" | xargs dirname | xargs basename)"
+. ../../tools/get-case-name.sh
 
 blockMesh | tee "$CASENAME.log" 2>&1
 touch "$CASENAME.foam"
