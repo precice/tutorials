@@ -44,6 +44,16 @@ clean_precice_logs() {
     )
 }
 
+clean_case_logs() {
+    (
+        set -e -u
+        cd "$1"
+        echo "- Cleaning up general case logs in $(pwd)"
+        CASENAME="$(readlink -f "$0" | xargs dirname | xargs basename)"
+        rm -fv "./$CASENAME.log"
+    )
+}
+
 clean_calculix() {
     (
         set -e -u
@@ -54,6 +64,7 @@ clean_calculix() {
         rm -fv ./*.eig
         rm -fv ./*.vtk
         clean_precice_logs .
+        clean_case_logs .
     )
 }
 
@@ -65,6 +76,7 @@ clean_codeaster() {
         rm -fv ./*.mess ./*.resu ./*.rmed
         rm -rfv ./REPE_OUT/*
         clean_precice_logs .
+        clean_case_logs .
     )
 }
 
@@ -75,6 +87,7 @@ clean_dealii() {
         echo "- Cleaning up deal.II case in $(pwd)"
         rm -rfv ./dealii-output/
         clean_precice_logs .
+        clean_case_logs .
     )
 }
 
@@ -85,6 +98,7 @@ clean_fenics() {
         echo "- Cleaning up FEniCS case in $(pwd)"
         rm -rfv ./output/
         clean_precice_logs .
+        clean_case_logs .
     )
 }
 
@@ -95,6 +109,7 @@ clean_nutils() {
         echo "- Cleaning up Nutils case in $(pwd)"
         rm -fv ./*.vtk
         clean_precice_logs .
+        clean_case_logs .
     )
 }
 
@@ -110,6 +125,7 @@ clean_openfoam() {
             rm -rfv 0/uniform/functionObjects/functionObjectProperties history
         fi
         clean_precice_logs .
+        clean_case_logs .
     )
 }
 
@@ -120,6 +136,7 @@ clean_su2() {
         echo "- Cleaning up SU2 case in $(pwd)"
         rm -fv ./restart_flow_*.dat forces_breakdown.dat ./surface_flow_*.csv ./flow_*.vtk ./history_*.vtk
         clean_precice_logs .
+        clean_case_logs .
     )
 }
 
@@ -143,6 +160,7 @@ clean_dune() {
         rm -fv ./*.vtu
         rm -rfv ./output/
         clean_precice_logs .
+        clean_case_logs .
     )
 }
 
