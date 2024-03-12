@@ -15,19 +15,19 @@ boundaryField
 {
     topAndBottom
     {
-        type            fixedValue;
+        type     fixedValue;
         value    $internalField;
     }
 
     inlet
     {
-        type            fixedValue;
+        type  fixedValue;
         value $internalField;
     }
 
     outlet
     {
-        type            fixedValue;
+        type  fixedValue;
         value $internalField;
     }
 
