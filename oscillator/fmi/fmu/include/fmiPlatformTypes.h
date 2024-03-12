@@ -56,15 +56,15 @@
    fmiString        : 32 bit pointer
 
 */
-   typedef void*        fmiComponent;
-   typedef unsigned int fmiValueReference;
-   typedef double       fmiReal   ;
-   typedef int          fmiInteger;
-   typedef char         fmiBoolean;
-   typedef const char*  fmiString ;
+typedef void *       fmiComponent;
+typedef unsigned int fmiValueReference;
+typedef double       fmiReal;
+typedef int          fmiInteger;
+typedef char         fmiBoolean;
+typedef const char * fmiString;
 
 /* Values for fmiBoolean  */
-#define fmiTrue  1
+#define fmiTrue 1
 #define fmiFalse 0
 
 /* Undefined value for fmiValueReference (largest unsigned int value) */

@@ -38,56 +38,55 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /* Include the integer and boolean type definitions */
-#include <stdint.h>
 #include <stdbool.h>
-
+#include <stdint.h>
 
 /* tag::Component[] */
-typedef           void* fmi3Instance;             /* Pointer to the FMU instance */
+typedef void *fmi3Instance; /* Pointer to the FMU instance */
 /* end::Component[] */
 
 /* tag::ComponentEnvironment[] */
-typedef           void* fmi3InstanceEnvironment;  /* Pointer to the FMU environment */
+typedef void *fmi3InstanceEnvironment; /* Pointer to the FMU environment */
 /* end::ComponentEnvironment[] */
 
 /* tag::FMUState[] */
-typedef           void* fmi3FMUState;             /* Pointer to the internal FMU state */
+typedef void *fmi3FMUState; /* Pointer to the internal FMU state */
 /* end::FMUState[] */
 
 /* tag::ValueReference[] */
-typedef        uint32_t fmi3ValueReference;       /* Handle to the value of a variable */
+typedef uint32_t fmi3ValueReference; /* Handle to the value of a variable */
 /* end::ValueReference[] */
 
 /* tag::VariableTypes[] */
-typedef           float fmi3Float32;  /* Single precision floating point (32-bit) */
+typedef float fmi3Float32; /* Single precision floating point (32-bit) */
 /* tag::fmi3Float64[] */
-typedef          double fmi3Float64;  /* Double precision floating point (64-bit) */
+typedef double fmi3Float64; /* Double precision floating point (64-bit) */
 /* end::fmi3Float64[] */
-typedef          int8_t fmi3Int8;     /* 8-bit signed integer */
-typedef         uint8_t fmi3UInt8;    /* 8-bit unsigned integer */
-typedef         int16_t fmi3Int16;    /* 16-bit signed integer */
-typedef        uint16_t fmi3UInt16;   /* 16-bit unsigned integer */
-typedef         int32_t fmi3Int32;    /* 32-bit signed integer */
-typedef        uint32_t fmi3UInt32;   /* 32-bit unsigned integer */
-typedef         int64_t fmi3Int64;    /* 64-bit signed integer */
-typedef        uint64_t fmi3UInt64;   /* 64-bit unsigned integer */
-typedef            bool fmi3Boolean;  /* Data type to be used with fmi3True and fmi3False */
-typedef            char fmi3Char;     /* Data type for one character */
-typedef const fmi3Char* fmi3String;   /* Data type for character strings
+typedef int8_t          fmi3Int8;    /* 8-bit signed integer */
+typedef uint8_t         fmi3UInt8;   /* 8-bit unsigned integer */
+typedef int16_t         fmi3Int16;   /* 16-bit signed integer */
+typedef uint16_t        fmi3UInt16;  /* 16-bit unsigned integer */
+typedef int32_t         fmi3Int32;   /* 32-bit signed integer */
+typedef uint32_t        fmi3UInt32;  /* 32-bit unsigned integer */
+typedef int64_t         fmi3Int64;   /* 64-bit signed integer */
+typedef uint64_t        fmi3UInt64;  /* 64-bit unsigned integer */
+typedef bool            fmi3Boolean; /* Data type to be used with fmi3True and fmi3False */
+typedef char            fmi3Char;    /* Data type for one character */
+typedef const fmi3Char *fmi3String;  /* Data type for character strings
                                          ('\0' terminated, UTF-8 encoded) */
-typedef         uint8_t fmi3Byte;     /* Smallest addressable unit of the machine
+typedef uint8_t         fmi3Byte;    /* Smallest addressable unit of the machine
                                          (typically one byte) */
-typedef const fmi3Byte* fmi3Binary;   /* Data type for binary data
+typedef const fmi3Byte *fmi3Binary;  /* Data type for binary data
                                          (out-of-band length terminated) */
-typedef            bool fmi3Clock;    /* Data type to be used with fmi3ClockActive and
+typedef bool            fmi3Clock;   /* Data type to be used with fmi3ClockActive and
                                          fmi3ClockInactive */
 
 /* Values for fmi3Boolean */
-#define fmi3True  true
+#define fmi3True true
 #define fmi3False false
 
 /* Values for fmi3Clock */
-#define fmi3ClockActive   true
+#define fmi3ClockActive true
 #define fmi3ClockInactive false
 /* end::VariableTypes[] */
 

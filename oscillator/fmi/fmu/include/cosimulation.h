@@ -4,5 +4,5 @@
 
 #define EPSILON (FIXED_SOLVER_STEP * 1e-6)
 
-void doFixedStep(ModelInstance *comp, bool* stateEvent, bool* timeEvent);
-void doAlphaStep(ModelInstance *comp, bool* stateEvent, bool* timeEvent);
+void doFixedStep(ModelInstance *comp, bool *stateEvent, bool *timeEvent);
+void doAlphaStep(ModelInstance *comp, bool *stateEvent, bool *timeEvent);
