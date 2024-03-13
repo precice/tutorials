@@ -1,9 +1,0 @@
-*-cpp/build/
-*-python/__pycache__/
-*-rust/Cargo.lock
-fluid-*/output/*.vtk
-
-*.o
-*.log
-*.json
-*.pyc
