@@ -79,7 +79,8 @@ precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fix
 
 precice_dt = precice.get_max_time_step_size()
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
-# fenics_dt = precice_dt / 5  # if fenics_dt < precice_dt, subcycling is applied
+# n_substeps = 5  # number of substeps per window
+# fenics_dt = precice_dt / n_substeps  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
 # clamp the beam at the bottom
