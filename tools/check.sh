@@ -9,7 +9,7 @@ tutorials=$(find . -maxdepth 1 -type d -not -name ".*" | grep -vE $IGNORE | sed 
 
 for tutorial in $tutorials; do
   # Check permalinks
-  docs=$(find "./$tutorial" -maxdepth 1 -type f -name "*.md" -print0 | xargs grep -l "permalink:" | sed "s/^.\///")
+  docs=$(find "./$tutorial" -maxdepth 1 -type f -name "*.md" -print0 | xargs -0 grep -l "permalink:" | sed "s/^.\///")
   for doc in $docs; do
     link=$(grep "permalink:" "$doc" | sed "s/permalink: \+//")
     prefix="tutorials-$tutorial"
@@ -40,7 +40,7 @@ for tutorial in $tutorials; do
 done
 
 # Check quickstart
-docs=$(find ./quickstart -maxdepth 1 -type f -name "*.md" -print0 | xargs grep -l "permalink:" | sed "s/^.\///")
+docs=$(find ./quickstart -maxdepth 1 -type f -name "*.md" -print0 | xargs -0 grep -l "permalink:" | sed "s/^.\///")
 for doc in $docs; do
   link=$(grep "permalink:" "$doc" | sed "s/permalink: \+//")
   prefix="quickstart"
