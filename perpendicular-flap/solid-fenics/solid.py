@@ -204,7 +204,8 @@ while precice.is_coupling_ongoing():
     dt = Constant(np.min([precice_dt, fenics_dt]))
 
     # read data from preCICE and get a new coupling expression
-    read_data = precice.read_data((1-float(alpha_f)) * dt)  # sample force F at $F(t_{n+1-\alpha_f})$ (see generalized alpha paper)
+    # sample force F at $F(t_{n+1-\alpha_f})$ (see generalized alpha paper)
+    read_data = precice.read_data((1 - float(alpha_f)) * dt)
 
     # Update the point sources on the coupling boundary with the new read data
     Forces_x, Forces_y = precice.get_point_sources(read_data)
