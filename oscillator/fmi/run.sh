@@ -13,7 +13,8 @@ if [ ! -f Oscillator.fmu ]; then
   rm -rf build
   mkdir build
   cd build
-  cmake -DFMI_TYPE=CS -DFMI_VERSION=3 ..
+  # Both FMI_VERSION=3 and FMI_VERSION=2 are supported
+  cmake -DFMI_TYPE=CS -DFMI_VERSION=2 ..
   make
   cp ./Oscillator.fmu ../..
   cd ../../

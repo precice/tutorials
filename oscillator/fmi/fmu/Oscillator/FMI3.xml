@@ -12,8 +12,8 @@
 
   <CoSimulation
     modelIdentifier="Oscillator"
-    canGetAndSetFMUstate="true"
-    canSerializeFMUstate="false"
+    canGetAndSetFMUState="true"
+    canSerializeFMUState="false"
     canHandleVariableCommunicationStepSize="true"
     providesIntermediateUpdate="false"
     canReturnEarlyAfterIntermediateUpdate="false"
