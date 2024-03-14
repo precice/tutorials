@@ -94,7 +94,7 @@
     <ScalarVariable
       name="mass.a"
       valueReference="4"
-      causality="parameter"
+      causality="local"
       variability="tunable"
       initial="calculated"
       description="Acceleration of the body">

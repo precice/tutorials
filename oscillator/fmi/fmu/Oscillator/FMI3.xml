@@ -97,7 +97,7 @@
     <Float64
       name="mass.a"
       valueReference="4"
-      causality="parameter"
+      causality="local"
       variability="tunable"
       initial="calculated"
       unit="m/s2"
