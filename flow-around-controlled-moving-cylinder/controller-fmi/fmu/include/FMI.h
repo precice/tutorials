@@ -94,8 +94,6 @@ typedef unsigned int FMIValueReference;
 
 typedef struct FMIInstance_ FMIInstance;
 
-typedef struct FMI1Functions_ FMI1Functions;
-
 typedef struct FMI2Functions_ FMI2Functions;
 
 typedef struct FMI3Functions_ FMI3Functions;
@@ -106,7 +104,6 @@ typedef void FMILogMessage(FMIInstance *instance, FMIStatus status, const char *
 
 struct FMIInstance_ {
 
-  FMI1Functions *fmi1Functions;
   FMI2Functions *fmi2Functions;
   FMI3Functions *fmi3Functions;
 

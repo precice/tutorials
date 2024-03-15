@@ -97,7 +97,6 @@ void FMIFreeInstance(FMIInstance *instance)
   free(instance->buf2);
   free((void *) instance->name);
 
-  free(instance->fmi1Functions);
   free(instance->fmi2Functions);
   free(instance->fmi3Functions);
 
