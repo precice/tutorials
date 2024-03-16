@@ -1,10 +1,14 @@
 #!/bin/sh
 set -e -u
 
+. ../../tools/log.sh
+
 if [ ! -d build ]; then
-  mkdir build
-  cmake -S . -B build
-  cmake --build build
+  log mkdir build
+  log cmake -S . -B build
+  log cmake --build build
 fi
 
-./build/FluidSolver ../precice-config.xml
+log ./build/FluidSolver ../precice-config.xml
+
+close_log

@@ -1,4 +1,8 @@
 #!/bin/sh
 set -e -u
 
-cargo run --release ../precice-config.xml 
+. ../../tools/log.sh
+
+log cargo run --release ../precice-config.xml 
+
+close_log

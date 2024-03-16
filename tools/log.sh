@@ -17,5 +17,5 @@ close_log() {
     ENDDATE="$(date --rfc-email)"
     ENDTIME="$(date +%s)"
     echo "Finished on: $ENDDATE" | tee --append "$CASENAME.log" 2>&1
-    echo "Duration:    $((ENDTIME-STARTTIME)) seconds" | tee --append "$CASENAME.log" 2>&1
+    echo "Duration:    $((ENDTIME-STARTTIME)) seconds (wall-clock time, including time waiting for participants)" | tee --append "$CASENAME.log" 2>&1
 }

@@ -1,4 +1,8 @@
 #!/bin/sh
 set -e -u
 
-python3 fluid.py
+. ../../tools/log.sh
+
+log python3 fluid.py
+
+close_log

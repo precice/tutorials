@@ -1,4 +1,8 @@
 #!/bin/sh
 set -e -u
 
-ccx_preCICE -i flap -precice-participant Solid
+. ../../tools/log.sh
+
+log ccx_preCICE -i flap -precice-participant Solid
+
+close_log
