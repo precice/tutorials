@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e -u
 
-CASENAME="$(readlink -f "$0" | xargs dirname | xargs basename)"
+CASENAME="$(pwd | xargs basename)"
 export CASENAME
 
 STARTDATE="$(date --rfc-email)"
