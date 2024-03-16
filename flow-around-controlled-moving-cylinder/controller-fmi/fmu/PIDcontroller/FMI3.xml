@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<fmiModelDescription
+  fmiVersion="3.0"
+  modelName="PIDcontroller"
+  description="This model implements a simple PID controller. It takes two input variables, y_1 and y_2. One of these can be used for the PID calculation. It has two output variables, u_1 and u_2. One is calculated, the other is set to 0 as default. The calculation can be set with the respective flag compute_u_1. By this, the model can be used for 1D and 2D problems."
+  generationTool="Reference FMUs (development build)"
+  instantiationToken="{1AE5E10D-9521-4DE3-80B9-D0EAAA7D5AF1}">
+  <ModelExchange
+    modelIdentifier="PIDcontroller"
+    canGetAndSetFMUstate="true"
+    canSerializeFMUstate="false" />
+
+  <CoSimulation
+    modelIdentifier="PIDcontroller"
+    canGetAndSetFMUstate="true"
+    canSerializeFMUstate="false"
+    canHandleVariableCommunicationStepSize="true"
+    providesIntermediateUpdate="false"
+    canReturnEarlyAfterIntermediateUpdate="false"
+    fixedInternalStepSize="1e-3"
+    hasEventMode="false" />
+
+  <UnitDefinitions>
+    <Unit name="m">
+      <BaseUnit m="1" />
+    </Unit>
+  </UnitDefinitions>
+
+  <TypeDefinitions>
+    <Float64Type name="ControlVariable" quantity="ControlVariable" />
+    <Float64Type name="ControlParameter" quantity="ControlParameter" />
+  </TypeDefinitions>
+
+  <LogCategories>
+    <Category name="logEvents" description="Log events" />
+    <Category name="logStatusError" description="Log error messages" />
+  </LogCategories>
+
+  <DefaultExperiment startTime="0" stopTime="3" stepSize="1e-2" />
+
+  <ModelVariables>
+    <Float64
+      name="time"
+      valueReference="0"
+      causality="independent"
+      variability="continuous"
+      description="Simulation time" />
+    <Float64
+      name="r"
+      valueReference="1"
+      causality="parameter"
+      variability="tunable"
+      initial="exact"
+      declaredType="ControlVariable"
+      start="0"
+      description="Control reference value" />
+    <Float64
+      name="e"
+      valueReference="2"
+      causality="local"
+      variability="continuous"
+      initial="calculated"
+      declaredType="ControlVariable"
+      description="Error between input and reference value" />
+    <Float64
+      name="e_ls"
+      valueReference="3"
+      causality="local"
+      variability="continuous"
+      initial="exact"
+      declaredType="ControlVariable"
+      start="0"
+      description="Error between input and reference value from last time step" />
+    <Float64
+      name="kp"
+      valueReference="4"
+      causality="parameter"
+      variability="tunable"
+      initial="exact"
+      declaredType="ControlParameter"
+      start="0"
+      description="Proportional gain" />
+    <Float64
+      name="ki"
+      valueReference="5"
+      causality="parameter"
+      variability="tunable"
+      initial="exact"
+      declaredType="ControlParameter"
+      start="0"
+      description="Integral gain" />
+    <Float64
+      name="kd"
+      valueReference="6"
+      causality="parameter"
+      variability="tunable"
+      initial="exact"
+      declaredType="ControlParameter"
+      start="0"
+      description="Derivative gain" />
+    <Float64
+      name="P"
+      valueReference="7"
+      causality="local"
+      variability="continuous"
+      initial="exact"
+      declaredType="ControlVariable"
+      start="0"
+      description="Proportional term" />
+    <Float64
+      name="I"
+      valueReference="8"
+      causality="local"
+      variability="continuous"
+      initial="exact"
+      declaredType="ControlVariable"
+      start="0"
+      description="Integral term" />
+    <Float64
+      name="D"
+      valueReference="9"
+      causality="local"
+      variability="continuous"
+      initial="exact"
+      declaredType="ControlVariable"
+      start="0"
+      description="Derivative term" />
+    <Float64
+      name="y_1"
+      valueReference="10"
+      causality="input"
+      variability="continuous"
+      declaredType="ControlVariable"
+      start="0"
+      description="Control input value 1, e.g. x from a vector (x,y)" />
+    <Float64
+      name="y_2"
+      valueReference="11"
+      causality="input"
+      variability="continuous"
+      declaredType="ControlVariable"
+      start="0"
+      description="Control input value 2, e.g. y from a vector (x,y)" />
+    <Float64
+      name="u_1"
+      valueReference="12"
+      causality="output"
+      variability="continuous"
+      initial="exact"
+      declaredType="ControlVariable"
+      start="0"
+      description="Control output value 1, e.g. x from a vector (x,y)" />
+    <Float64
+      name="u_2"
+      valueReference="13"
+      causality="output"
+      variability="continuous"
+      initial="exact"
+      declaredType="ControlVariable"
+      start="0"
+      description="Control output value 2, e.g. y from a vector (x,y)" />
+    <Float64
+      name="I_max"
+      valueReference="14"
+      causality="parameter"
+      variability="fixed"
+      initial="exact"
+      declaredType="ControlVariable"
+      start="100"
+      description="Maximum integral term. The integral term is limited to I_max >= I to avoid integrator windup. The best value for I_max will depend on the system you are controlling." />
+    <Boolean
+      name="use_implicit_method"
+      valueReference="15"
+      causality="parameter"
+      variability="fixed"
+      start="false"
+      description="Boolean flag to choose the integration method: false = explicit-euler, true = implicit-trapezoid" />
+    <Boolean
+      name="compute_u_1"
+      valueReference="16"
+      causality="parameter"
+      variability="fixed"
+      start="true"
+      description="Boolean flag to choose which output is calculated. The other output is set to a default value of 0. false = { u_1 = 0, u_2 is calculated with PID algorithm with y = y_2}  true ==> { u_1 is calculated with PID algorithm with y = y_1, u_2 = 0}" />
+  </ModelVariables>
+
+  <ModelStructure>
+    <Output valueReference="12" />
+    <Output valueReference="13" />
+    <InitialUnknown valueReference="2" dependencies="10" dependenciesKind="constant" />
+    <InitialUnknown valueReference="2" dependencies="11" dependenciesKind="constant" />
+    <InitialUnknown valueReference="2" dependencies="1" dependenciesKind="constant" />
+  </ModelStructure>
+</fmiModelDescription>
