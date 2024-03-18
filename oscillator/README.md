@@ -64,4 +64,4 @@ For details, refer to [1].
 
 [1] V. Schüller, B. Rodenberg, B. Uekermann and H. Bungartz, A Simple Test Case for Convergence Order in Time and Energy Conservation of Black-Box Coupling Schemes, in: WCCM-APCOM2022. [URL](https://www.scipedia.com/public/Rodenberg_2022a)
 
-[2] L. Willeke, D. Schneider and B. Uekermann, A preCICE-FMI Runner to Couple FMUs to PDE-Based Simulations, Proceedings 15th Intern. Modelica Conference, 2023. [DOI](https://doi.org/10.3384/ecp204)
+[2] L. Willeke, D. Schneider and B. Uekermann, A preCICE-FMI Runner to Couple FMUs to PDE-Based Simulations, Proceedings 15th Intern. Modelica Conference, 2023. [DOI](https://doi.org/10.3384/ecp204479)
