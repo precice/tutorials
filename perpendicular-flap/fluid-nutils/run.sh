@@ -1,11 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
 
 . ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
-log python3 -m venv .venv
-log . .venv/bin/activate
-log pip install -r requirements.txt
-log python3 fluid.py
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+python3 fluid.py
 
 close_log

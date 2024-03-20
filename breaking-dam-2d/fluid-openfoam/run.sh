@@ -1,13 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
 
 . ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
 cp 0/alpha.water_orig 0/alpha.water
-log blockMesh
-log setFields
+blockMesh
+setFields
 
-log ../../tools/run-openfoam.sh "$@"
-. ../../tools/openfoam-remove-empty-dirs.sh && log openfoam_remove_empty_dirs
+../../tools/run-openfoam.sh "$@"
+. ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
 
 close_log

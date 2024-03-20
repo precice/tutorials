@@ -1,8 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
 
 . ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
-log python3 chemical-reaction-advection-diffusion.py
+python3 chemical-reaction-advection-diffusion.py
 
 close_log

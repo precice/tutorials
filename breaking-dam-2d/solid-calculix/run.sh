@@ -1,8 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
 
 . ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
-log ccx_preCICE -i flap -precice-participant Solid
+ccx_preCICE -i flap -precice-participant Solid
 
 close_log

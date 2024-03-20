@@ -1,8 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
 
 . ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
-log python3 fluid.py
+python3 fluid.py
 
 close_log

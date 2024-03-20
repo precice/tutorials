@@ -1,13 +1,14 @@
 #!/bin/bash
 
 . ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
-log blockMesh
+blockMesh
 
 # Compile boundary condition
-(cd solidDisplacementFoamForce && log wmake libso)
+(cd solidDisplacementFoamForce && wmake libso)
 
-log ../../tools/run-openfoam.sh "$@"
-. ../../tools/openfoam-remove-empty-dirs.sh && log openfoam_remove_empty_dirs
+../../tools/run-openfoam.sh "$@"
+. ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
 
 close_log

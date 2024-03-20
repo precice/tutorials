@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
 
 . ../../tools/log.sh
@@ -13,14 +13,14 @@ do
 done
 
 if [ "$use_skewed" = true ]; then
-    log blockMesh -dict system/blockMeshDictSkewed
+    blockMesh -dict system/blockMeshDictSkewed
 else
-    log blockMesh
+    blockMesh
 fi
 
-log ../../tools/run-openfoam.sh "$@"
-. ../../tools/openfoam-remove-empty-dirs.sh && log openfoam_remove_empty_dirs
+../../tools/run-openfoam.sh "$@"
+. ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
 
-log postProcess -func "flowRatePatch(name=inlet)" -latestTime -noZero
+postProcess -func "flowRatePatch(name=inlet)" -latestTime -noZero
 
 close_log

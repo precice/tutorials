@@ -1,8 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
 
 . ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
-log ./macro_dumux params.input
+./macro_dumux params.input
 
 close_log

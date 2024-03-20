@@ -1,8 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
 
 . ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
-log python3 ../solver-python/oscillator.py Mass-Left
+python3 ../solver-python/oscillator.py Mass-Left
 
 close_log

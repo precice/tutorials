@@ -1,13 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
 
 . ../../tools/log.sh
 
 
-log blockMesh
-log ./setInitialField.sh
+blockMesh
+./setInitialField.sh
 
-log ../../tools/run-openfoam.sh "$@"
-. ../../tools/openfoam-remove-empty-dirs.sh && log openfoam_remove_empty_dirs
+../../tools/run-openfoam.sh "$@"
+. ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
 
 close_log
