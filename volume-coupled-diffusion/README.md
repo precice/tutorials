@@ -23,14 +23,14 @@ Both participants (Source and Drain):
 
 FEniCS is used to run the simulation. Open two separate terminals and start the source and drain participant by calling the respective run script `run.sh` located in the participant directory. For example:
 
-```
+```bash
 cd source-fenics
 ./run.sh
 ```
 
 and
 
-```
+```bash
 cd drain-fenics
 ./run.sh
 ```
