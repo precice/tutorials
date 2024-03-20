@@ -7,8 +7,4 @@ As a general rule, you can start each participant from inside their `<tutorial>/
 
 Contributions to this repository are very welcome. Please refer to the page [Contribute to preCICE](https://precice.org/community-contribute-to-precice.html) for a few guidelines and hints to help you in this direction.
 
-## LFS usage
-
-Since we rely on LFS to version systemtest artifacts like reference solutions, we host our own LFS server.
-Please note, that during a small phase of initial setup, this server might not be reachable from your machine.
-Therefore your git lfs fetch might fail.
+Note that we use [Git LFS](https://git-lfs.com/) to version reference results. These will appear as seemingly empty files containing URLs if you don't have Git LFS installed (optional, mainly useful for our system tests).
