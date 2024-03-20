@@ -1,0 +1,9 @@
+{
+    "coupling_params": {
+        "participant_name": "Controller",
+        "config_file_name": "../precice-config.xml",
+        "mesh_name": "Mesh-Controller",
+        "write_data_name": "Displacement-Spring", 
+        "read_data_name": "Displacement-Cylinder"
+    }
+}

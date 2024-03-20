@@ -1,0 +1,44 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       pointVectorField;
+    location    "0.01";
+    object      pointDisplacement;
+}
+
+dimensions      [0 1 0 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    topAndBottom
+    {
+        type     fixedValue;
+        value    $internalField;
+    }
+
+    inlet
+    {
+        type  fixedValue;
+        value $internalField;
+    }
+
+    outlet
+    {
+        type  fixedValue;
+        value $internalField;
+    }
+
+    cylinder
+    {
+        type            fixedValue;
+        value           $internalField;
+ }
+
+    frontAndBack
+    {
+        type            empty;
+    }
+}

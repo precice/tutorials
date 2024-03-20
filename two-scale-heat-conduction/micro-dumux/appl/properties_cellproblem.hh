@@ -35,11 +35,13 @@ struct CellProblem {
 };
 } // namespace TTag
 
-template <class TypeTag> struct Grid<TypeTag, TTag::CellProblem> {
+template <class TypeTag>
+struct Grid<TypeTag, TTag::CellProblem> {
   using type = Dune::SPGrid<double, 2>;
 };
 
-template <class TypeTag> struct Problem<TypeTag, TTag::CellProblem> {
+template <class TypeTag>
+struct Problem<TypeTag, TTag::CellProblem> {
   using type = CellProblemProblem<TypeTag>;
 };
 

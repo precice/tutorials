@@ -33,11 +33,13 @@ struct AllenCahn {
 };
 } // namespace TTag
 
-template <class TypeTag> struct Grid<TypeTag, TTag::AllenCahn> {
+template <class TypeTag>
+struct Grid<TypeTag, TTag::AllenCahn> {
   using type = Dune::SPGrid<double, 2>;
 };
 
-template <class TypeTag> struct Problem<TypeTag, TTag::AllenCahn> {
+template <class TypeTag>
+struct Problem<TypeTag, TTag::AllenCahn> {
   using type = AllenCahnProblem<TypeTag>;
 };
 
