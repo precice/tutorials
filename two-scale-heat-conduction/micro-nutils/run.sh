@@ -12,7 +12,7 @@ log pip install -r requirements.txt
 # Check if no input argument was provided
 if [ -z "$*" ] ; then
   log echo "No input argument provided. Micro Manager is launched in serial"
-	log python3 run-micro-problems.py
+  log python3 run-micro-problems.py
 fi
 
 while getopts ":sp" opt; do
