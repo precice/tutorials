@@ -2,6 +2,7 @@
 set -e -u
 
 . ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
 if [ ! -f PIDcontroller.fmu ]; then
   cd fmu

@@ -2,6 +2,7 @@
 set -e -u
 
 . ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
 usage() { echo "Usage: run.sh [-modal]" 1>&2; exit 1; }
 

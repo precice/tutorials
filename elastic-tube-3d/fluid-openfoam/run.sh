@@ -2,6 +2,7 @@
 set -e -u
 
 . ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
 cp -r constant/polyMesh.orig constant/polyMesh
 

@@ -2,6 +2,7 @@
 set -e -u
 
 . ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
 while getopts ":dn" opt; do
   case ${opt} in
