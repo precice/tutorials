@@ -1,7 +1,7 @@
 clear; close all; clc;
 
 % Initialize and configure preCICE
-interface = precice.Participant("ParticipantU", "precice-config.xml", 0, 1);
+interface = precice.Participant("ParticipantU", "../precice-config.xml", 0, 1);
 
 % Geometry IDs. As it is a 0-D simulation, only one vertex is necessary.
 meshName ="MeshU";

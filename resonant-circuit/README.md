@@ -2,7 +2,7 @@
 
 The purpose of this tutorial is to illustrate the usage of preCICE to couple MATLAB code. Two different MATLAB solvers will be coupled to simulate a two-element LC circuit. This type of circuit consists on a very simple system with one inductor and one capacitor:
 
-![LC circuit diagram [1]](ref_images/diagram.svg)
+![LC circuit diagram [1]](images/diagram.svg)
 
 The circuit is described by the following system of ODEs:
 
@@ -25,9 +25,9 @@ After installing both preCICE and MATLAB, you need to [build the MATLAB bindings
 
 ## Running
 
-There are two different versions available, one with explicit coupling and one with implicit coupling, located in the `explicit` and `implicit` folders respectively.
-
-For running the case, first get into the desired folder (e.g. `explicit/`) and open two MATLAB instances. After adding the MATLAB bindings to the MATLAB path, run the following commands:
+For running this example, first get into one of folders with the solvers and open a MATLAB instance.
+Afterward, do the same for the second solver. 
+After adding the MATLAB bindings to the MATLAB path (in both instances), run the following commands:
 
 In the first MATLAB instance one can run the solver for the current:
 ```
@@ -43,33 +43,11 @@ The preCICE configuration file is available as `precice-config.xml`, and it is c
 
 ### Running from terminal
 
-If you prefer to not open the MATLAB GUIs, one can alternatively open two shells and:
+If you prefer to not open the MATLAB GUIs, one can alternatively use two shells instead.
+For that, modify the path in the file `matlab-bindings-path.sh` found in the base directory of this tutorial to the path to your MATLAB bindings.
 
-Run solver for current in first shell:
-```
-# cd into desired folder (explicit or implicit)
-cd explicit
+By doing that, you can now open two shells and switch into the directories `capacitor-matlab` and `coil-matlab` and execute the `run.sh` scripts.
 
-# Add bindings to MATLAB path
-export MATLABPATH=<PATH OF MATLAB BINDINGS>
-
-# Run matlab code without GUI
-LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 matlab -nodisplay -nosplash -nodesktop -r "Solver_I;exit;"
-
-```
-
-Run solver for voltage in second shell:
-```
-# cd into desired folder (explicit or implicit)
-cd explicit
-
-# Add bindings to MATLAB path
-export MATLABPATH=<PATH OF MATLAB BINDINGS>
-
-# Run matlab code without GUI
-LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 matlab -nodisplay -nosplash -nodesktop -r "Solver_U;exit;"
-
-```
 
 ## Visualization
 

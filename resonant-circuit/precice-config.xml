@@ -37,7 +37,7 @@
       direction="read" from="MeshI" to="MeshU" constraint="consistent"/>
   </participant>
 
-  <m2n:sockets acceptor="ParticipantI" connector="ParticipantU"/>
+  <m2n:sockets acceptor="ParticipantI" connector="ParticipantU" exchange-directory=".." />
   
   <coupling-scheme:serial-implicit> 
     <participants first="ParticipantI" second="ParticipantU" /> 
