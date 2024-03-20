@@ -1,5 +1,8 @@
 # preCICE tutorials
 
+> [!IMPORTANT]  
+> This repository is aimed for development purposes and the default branch is `develop`. If you want to use the tutorials, switch to the [`master` branch](https://github.com/precice/tutorials/tree/master) or download the latest [release](https://github.com/precice/tutorials/releases).
+
 This repository contains ready-to-run tutorial cases for the coupling library [preCICE](https://precice.org/).
 The purpose of these cases is not to teach you how to use preCICE from scratch, but to serve as starting points for setting up similar simulation cases, as well as test cases. Read more on our [preCICE tutorials](https://precice.org/tutorials.html) documentation section.
 
