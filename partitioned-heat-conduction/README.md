@@ -1,7 +1,7 @@
 ---
 title: Partitioned heat conduction
 permalink: tutorials-partitioned-heat-conduction.html
-keywords: FEniCSx, FEniCS, Nutils, Heat conduction
+keywords: FEniCS, Nutils, Heat conduction
 summary: We solve a simple heat equation. The domain is partitioned and the coupling is established in a Dirichlet-Neumann fashion.
 ---
 
@@ -25,8 +25,6 @@ This simple case allows us to compare the solution for the partitioned case to a
 
 You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE and the python bindings installed on your system.
 
-* FEniCSx. Install [FEniCSx](https://fenicsproject.org/download/) and the [FEniCSx-adapter](https://github.com/precice/fenicsx-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1] and has been adapted to FEniCSx.
-
 * FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
 
 * Nutils. Install [Nutils](https://nutils.org/install-nutils.html).
@@ -45,18 +43,18 @@ For choosing whether you want to run the Dirichlet-kind and a Neumann-kind parti
 For running the case, open two terminals run:
 
 ```bash
-cd fenicsx
+cd fenics
 ./run.sh -d
 ```
 
 and
 
 ```bash
-cd fenicsx
+cd fenics
 ./run.sh -n
 ```
 
-If you want to use FEniCS or Nutils, use `cd fenics`/ `cd nutils` instead of `cd fenicsx`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
+If you want to use Nutils, use `cd nutils` instead of `cd fenics`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
 
 ```bash
 mpirun -n <N_PROC> heat.py -d
@@ -68,9 +66,7 @@ You can mix the Nutils and FEniCS solver, if you like. Note that the error for a
 
 ## Visualization
 
-Output is written into the folders `fenicsx/out`, `fenics/out` and `nutils`.
-
-For FEniCSx you can visualize the content with paraview by opening the `*.xdmf` files. The files `Dirichlet.xdmf` and `Neumann.xdmf` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution.
+Output is written into the folders `fenics/out` and `nutils`.
 
 For FEniCS you can visualize the content with paraview by opening the `*.pvd` files. The files `Dirichlet.pvd` and `Neumann.pvd` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution, the files with `error` show the error and the files with `ranks` the ranks of the solvers (if executed in parallel).
 
