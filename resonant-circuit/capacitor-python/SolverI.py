@@ -70,6 +70,10 @@ while participant.is_coupling_ongoing():
 # Stop coupling
 participant.finalize()
 
-I_analytical = lambda t: Io*np.cos(t*w0)
-error = I0 - I_ana(10)
+import math
+
+T_max = t
+assert(math.isclose(T_max, 10))
+I_analytical = lambda t: Io*np.cos(t*w0 + phi)
+error = I0 - I_analytical(T_max)
 print(f"error: {error}")
