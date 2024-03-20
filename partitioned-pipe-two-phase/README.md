@@ -9,10 +9,6 @@ summary: This tutorial describes how to run a partitioned two-phse fluid simulat
 Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-pipe-two-phase). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
 {% endnote %}
 
-{% note %}
-This tutorial relies on yet unreleased features of the OpenFOAM adapter. You need [preCICE v2](https://github.com/precice/precice/releases)) and [the ff-develop branch of the OpenFOAM adapter](https://github.com/precice/openfoam-adapter/tree/ff-develop) to run this tutorial.
-{% endnote %}
-
 ## Setup
 
 This scenario consists of two pipes connected in series, both simulated with OpenFOAM's interFoam solver. Fluids can enter from the left (here $$ z=0 $$) boundary of the Fluid1 participant with a uniform velocity profile ($$ u_{in} = 1 m/s $$) and fixed flux pressure boundary coundition.
