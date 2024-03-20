@@ -167,11 +167,22 @@ clean_dune() {
 clean_dumux() {
    (
         set -e -u
-	cd "$1"
-	echo "- Cleaning up DuMuX case in $(pwd)"
-	rm -fv ./*.vtu
-	rm -fv ./*.pvd
-	clean_precice_logs .
+        cd "$1"
+        echo "- Cleaning up DuMuX case in $(pwd)"
+        rm -fv ./*.vtu
+        rm -fv ./*.pvd
+        clean_precice_logs .
+        clean_case_logs .
    )
+}
 
+clean_fmi() {
+    (
+        set -e -u
+        cd "$1"
+        echo "- Cleaning up FMI case in $(pwd)"
+        rm -rfv ./output/
+        clean_precice_logs .
+        clean_case_logs .
+    )
 }
