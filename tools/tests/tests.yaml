@@ -40,24 +40,24 @@ test_suites:
         case_combination:
           - fluid-cpp
           - solid-cpp
-        reference_result: ./elastic-tube-1d/reference-data/fluid-cpp_solid-cpp.tar.gz
+        reference_result: ./elastic-tube-1d/reference-results/fluid-cpp_solid-cpp.tar.gz
       - path: elastic-tube-1d
         case_combination:
           - fluid-python
           - solid-python
-        reference_result: ./elastic-tube-1d/reference-data/fluid-python_solid-python.tar.gz
+        reference_result: ./elastic-tube-1d/reference-results/fluid-python_solid-python.tar.gz
       - path: elastic-tube-1d
         case_combination:
           - fluid-cpp
           - solid-python
-        reference_result: ./elastic-tube-1d/reference-data/fluid-cpp_solid-python.tar.gz
+        reference_result: ./elastic-tube-1d/reference-results/fluid-cpp_solid-python.tar.gz
   release_test:
     tutorials:
       - path: elastic-tube-1d
         case_combination:
           - fluid-cpp
           - solid-python
-        reference_result: ./elastic-tube-1d/reference-data/fluid-cpp_solid-python.tar.gz
+        reference_result: ./elastic-tube-1d/reference-results/fluid-cpp_solid-python.tar.gz
       - path: flow-over-heated-plate
         case_combination:
           - fluid-openfoam
