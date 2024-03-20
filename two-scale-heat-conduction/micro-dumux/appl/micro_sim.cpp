@@ -63,8 +63,8 @@ class MicroSimulation {
   using SolutionVector    = Dumux::GetPropType<CellProblemTypeTag, Dumux::Properties::SolutionVector>;
 
 public:
-    MicroSimulation(int simulationID);
-    py::dict initialize();
+  MicroSimulation(int simulationID);
+  py::dict initialize();
 
   // solve takes python dict for macro_write data, dt, and returns python dict for macro_read data
   py::dict solve(py::dict macro_write_data, double dt);
@@ -183,31 +183,31 @@ MicroSimulation::MicroSimulation(int simulationID)
 // Initialize micro-data to be used in initial adaptivity
 py::dict MicroSimulation::initialize()
 {
-    //update Phi in the cell problem
-    _cpProblem->spatialParams().updatePhi(_phi);
+  //update Phi in the cell problem
+  _cpProblem->spatialParams().updatePhi(_phi);
 
-    // solve the cell problems
-    _cpLinearPDESolver->solve(_psi);
+  // solve the cell problems
+  _cpLinearPDESolver->solve(_psi);
 
-    // calculate porosity
-    _porosity = _acProblem->calculatePorosity(_phi);
+  // calculate porosity
+  _porosity = _acProblem->calculatePorosity(_phi);
 
-    //compute the psi derivatives (required for conductivity tensor)
-    _cpProblem->computePsiDerivatives(*_cpProblem, *_cpAssembler, *_cpGridVariables, _psi);
+  //compute the psi derivatives (required for conductivity tensor)
+  _cpProblem->computePsiDerivatives(*_cpProblem, *_cpAssembler, *_cpGridVariables, _psi);
 
-    //calculate the conductivity tensor
-    _k_00 = _cpProblem->calculateConductivityTensorComponent(0,0);
-    _k_11 = _cpProblem->calculateConductivityTensorComponent(1,1);
+  //calculate the conductivity tensor
+  _k_00 = _cpProblem->calculateConductivityTensorComponent(0, 0);
+  _k_11 = _cpProblem->calculateConductivityTensorComponent(1, 1);
 
-    // create python dict for micro_write_data
-    py::dict micro_write_data;
+  // create python dict for micro_write_data
+  py::dict micro_write_data;
 
-    // add micro_scalar_data and micro_vector_data to micro_write_data
-    micro_write_data["k_00"] = _k_00;
-    micro_write_data["k_11"] = _k_11;
-    micro_write_data["porosity"] = _porosity;
+  // add micro_scalar_data and micro_vector_data to micro_write_data
+  micro_write_data["k_00"]     = _k_00;
+  micro_write_data["k_11"]     = _k_11;
+  micro_write_data["porosity"] = _porosity;
 
-    return micro_write_data;
+  return micro_write_data;
 }
 
 // Solve
