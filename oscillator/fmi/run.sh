@@ -11,15 +11,15 @@ if [ -z "$*" ] ; then
 fi
 
 if [ ! -f Oscillator.fmu ]; then
-  log cd fmu
-  log rm -rf build
-  log mkdir build
-  log cd build
-  log # Both FMI_VERSION=3 and FMI_VERSION=2 are supported
+  cd fmu
+  rm -rf build
+  mkdir build
+  cd build
+  # Both FMI_VERSION=3 and FMI_VERSION=2 are supported
   log cmake -DFMI_TYPE=CS -DFMI_VERSION=3 ..
   log make
-  log cp ./Oscillator.fmu ../..
-  log cd ../../
+  cp ./Oscillator.fmu ../..
+  cd ../../
 fi
 
 # Select appropriate case
