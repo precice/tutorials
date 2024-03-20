@@ -1,7 +1,11 @@
 #!/bin/bash
 set -e -u
 
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -r requirements.txt
-python3 solid.py
+. ../../tools/log.sh
+
+log python3 -m venv .venv
+log . .venv/bin/activate
+log pip install -r requirements.txt
+log python3 solid.py
+
+close_log

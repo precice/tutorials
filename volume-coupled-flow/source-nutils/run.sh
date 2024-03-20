@@ -1,4 +1,8 @@
 #!/bin/sh
 set -e -u
 
-python3 source.py
+. ../../tools/log.sh
+
+log python3 source.py
+
+close_log

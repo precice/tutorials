@@ -1,4 +1,8 @@
 #!/bin/sh
 set -e -u
 
-./dune-perpendicular-flap
+. ../../tools/log.sh
+
+log ./dune-perpendicular-flap
+
+close_log

@@ -1,4 +1,8 @@
 #!/bin/sh
 set -e -u
 
-python3 ../solver-fenics/heat.py Right
+. ../../tools/log.sh
+
+log python3 ../solver-fenics/heat.py Right
+
+close_log

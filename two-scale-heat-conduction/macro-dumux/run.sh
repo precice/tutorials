@@ -1,4 +1,8 @@
 #!/bin/sh
 set -e -u
 
-./macro_dumux params.input
+. ../../tools/log.sh
+
+log ./macro_dumux params.input
+
+close_log

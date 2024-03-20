@@ -1,8 +1,11 @@
 #!/bin/sh
 set -e -u
 
-blockMesh
-touch fluid2-openfoam.foam
+. ../../tools/log.sh
 
-../../tools/run-openfoam.sh "$@"
-. ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
+log blockMesh
+
+log ../../tools/run-openfoam.sh "$@"
+. ../../tools/openfoam-remove-empty-dirs.sh && log openfoam_remove_empty_dirs
+
+close_log

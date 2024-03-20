@@ -1,9 +1,12 @@
 #!/bin/sh
 set -e -u
 
-blockMesh
-topoSet
-touch fluid-openfoam.foam
+. ../../tools/log.sh
 
-../../tools/run-openfoam.sh "$@"
-. ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
+log blockMesh
+log topoSet
+
+log ../../tools/run-openfoam.sh "$@"
+. ../../tools/openfoam-remove-empty-dirs.sh && log openfoam_remove_empty_dirs
+
+close_log

@@ -1,4 +1,8 @@
 #!/bin/sh
 set -e -u
 
-python3 ../solver-fenics/heat.py Dirichlet
+. ../../tools/log.sh
+
+log python3 ../solver-fenics/heat.py Dirichlet
+
+close_log

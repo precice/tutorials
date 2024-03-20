@@ -1,14 +1,16 @@
 #!/bin/sh
 set -e -u
 
-blockMesh
-transformPoints -scale '(0.0016  0.0016 1)'
-transformPoints -translate '(0.0  0.0 -0.05)'
+. ../../tools/log.sh
 
-rm -rf 0
-cp -r 0.orig 0
+log blockMesh
+log transformPoints -scale '(0.0016  0.0016 1)'
+log transformPoints -translate '(0.0  0.0 -0.05)'
 
-touch fluid-openfoam.foam
+log rm -rf 0
+log cp -r 0.orig 0
 
-../../tools/run-openfoam.sh "$@"
-. ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
+log ../../tools/run-openfoam.sh "$@"
+. ../../tools/openfoam-remove-empty-dirs.sh && log openfoam_remove_empty_dirs
+
+close_log

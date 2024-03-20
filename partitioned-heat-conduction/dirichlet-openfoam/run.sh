@@ -1,9 +1,13 @@
 #!/bin/sh
 set -e -u
 
-blockMesh
-touch openfoam-dirichlet.foam
-./setInitialField.sh
+. ../../tools/log.sh
 
-../../tools/run-openfoam.sh "$@"
-. ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
+
+log blockMesh
+log ./setInitialField.sh
+
+log ../../tools/run-openfoam.sh "$@"
+. ../../tools/openfoam-remove-empty-dirs.sh && log openfoam_remove_empty_dirs
+
+close_log

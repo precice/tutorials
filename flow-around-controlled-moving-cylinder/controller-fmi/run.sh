@@ -1,15 +1,19 @@
 #!/bin/sh
 set -e -u
 
+. ../../tools/log.sh
+
 if [ ! -f PIDcontroller.fmu ]; then
-  cd fmu
-  rm -rf build
-  mkdir build
-  cd build
-  cmake -DFMI_TYPE=CS -DFMI_VERSION=3 ..
-  make
-  cp ./PIDcontroller.fmu ../..
-  cd ../../
+  log cd fmu
+  log rm -rf build
+  log mkdir build
+  log cd build
+  log cmake -DFMI_TYPE=CS -DFMI_VERSION=3 ..
+  log make
+  log cp ./PIDcontroller.fmu ../..
+  log cd ../../
 fi
 
-fmiprecice ./fmi-settings.json ./precice-settings.json
+log fmiprecice ./fmi-settings.json ./precice-settings.json
+
+close_log

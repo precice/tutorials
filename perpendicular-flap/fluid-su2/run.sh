@@ -1,8 +1,12 @@
 #!/bin/sh
 set -e -u
 
+. ../../tools/log.sh
+
 if [ "${1:-}" = "-parallel" ]; then
-    mpirun -n 2 SU2_CFD euler_config_coupled.cfg
+    log mpirun -n 2 SU2_CFD euler_config_coupled.cfg
 else
-    SU2_CFD euler_config_coupled.cfg
+    log SU2_CFD euler_config_coupled.cfg
 fi
+
+close_log

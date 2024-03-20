@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e -u
 
+. ../../tools/log.sh
 
-python3 solid.py ../precice-config.xml
+log python3 solid.py ../precice-config.xml
 
+close_log

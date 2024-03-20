@@ -1,5 +1,8 @@
 #!/bin/bash
 set -e -u
 
-python3 solid.py
+. ../../tools/log.sh
 
+log python3 solid.py
+
+close_log
