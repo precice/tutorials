@@ -3,7 +3,7 @@ set -e -u
 
 . ../../tools/log.sh
 
-log cp 0/alpha.water_orig 0/alpha.water
+cp 0/alpha.water_orig 0/alpha.water
 log blockMesh
 log setFields
 

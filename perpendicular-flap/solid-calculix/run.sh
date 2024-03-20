@@ -16,7 +16,7 @@ if [ $# -eq 0 ]; then
     log ccx_preCICE -i flap -precice-participant Solid
 else
     log ccx_preCICE -i frequency
-    log mv frequency.eig flap_modal.eig
+    mv frequency.eig flap_modal.eig
     log ccx_preCICE -i flap_modal -precice-participant Solid
 fi
 

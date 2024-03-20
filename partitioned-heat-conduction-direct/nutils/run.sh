@@ -17,11 +17,11 @@ log pip install -r requirements.txt
 while getopts ":dn" opt; do
   case ${opt} in
   d)
-    log rm -rf Dirichlet-*.vtk
+    rm -rf Dirichlet-*.vtk
     log NUTILS_RICHOUTPUT=no python3 heat.py --side=Dirichlet
     ;;
   n)
-    log rm -rf Neumann-*.vtk
+    rm -rf Neumann-*.vtk
     log NUTILS_RICHOUTPUT=no python3 heat.py --side=Neumann
     ;;
   *)
