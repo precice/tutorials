@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-calculix.tar.gz | 2024-03-21 00:05:25 | 21816c2bf599aa80fb1426edfac7515fb10974027666bc329c3c91fc995e4574 |
+| fluid-openfoam_solid-calculix.tar.gz | 2024-03-21 00:25:06 | 3e0cb06684c8566eac94a9b673d3f2addfaca08e3335f2412b3572fe3b1640cf |
 
 ## List of arguments used to generate the files
 
