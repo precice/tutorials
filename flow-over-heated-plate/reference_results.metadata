@@ -11,9 +11,9 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-fenics.tar.gz | 2024-01-11 20:52:11 | ec027fafb234e7e6277a781c96d0b2a6d5048f912bb106d174b6d8817b3a49fd |
-| fluid-openfoam_solid-nutils.tar.gz | 2024-01-11 20:52:11 | 6bd5abefb23c900951768dec0ae38cc0be14f0344422560888ebe52481575869 |
-| fluid-openfoam_solid-openfoam.tar.gz | 2024-01-11 20:52:11 | 844a54543a5c81ca03c1f7ffb0739cf5125357237bcdb79b60ab957b919e425d |
+| fluid-openfoam_solid-nutils.tar.gz | 2024-03-21 00:05:25 | be9607d1959a3586034627f7f778a01cb20b56364725b92781d8ddd796cffe73 |
+| fluid-openfoam_solid-openfoam.tar.gz | 2024-03-21 00:05:25 | d7b5a8bb4330b2986c6371ef60f934c7dd59f504f3ff17b54c75b5a0002b3eb3 |
+| fluid-openfoam_solid-fenics.tar.gz | 2024-03-21 00:05:25 | 2092a6e4102a3f3662ca455eb787ffc8ccd7fed7294932bb4e52bd40073f91bc |
 
 ## List of arguments used to generate the files
 
