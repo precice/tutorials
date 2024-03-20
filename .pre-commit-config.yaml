@@ -42,3 +42,8 @@ repos:
       language: script
       entry: tools/check.sh
       pass_filenames: false
+    - id: check-links-to-precice
+      name: check links to precice.org
+      language: script
+      entry: tools/check-links-to-precice.sh
+      types_or: ["markdown", "html"]
