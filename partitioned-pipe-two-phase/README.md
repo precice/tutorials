@@ -12,7 +12,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 ## Setup
 
 This scenario consists of two pipes connected in series, both simulated with OpenFOAM's interFoam solver. Fluids can enter from the left (here $$ z=0 $$) boundary of the Fluid1 participant with a uniform velocity profile ($$ u_{in} = 1 m/s $$) and fixed flux pressure boundary coundition.
-The simulation begins with some water being present at the bottom left of the pipe. The volume fraction variable alpha is set to be 1 (water) at the bottom half of the inlet and 0 (air) at the top half. The water stream will approach the coupling interface at around $t=5s$ in the simulation.
+The simulation begins with some water being present at the bottom left of the pipe. The volume fraction variable alpha is set to be 1 (water) at the bottom half of the inlet and 0 (air) at the top half. The water stream will approach the coupling interface at around $$ t=5s $$ in the simulation.
 At the right boundary of Fluid2 there is a zero gradient boundary condition for velocity and alpha as well as a total pressure set to zero.
 
 ![two-phase-setup](images/tutorials-partitioned-pipe-two-phase-setup.png)
