@@ -83,7 +83,7 @@ From https://github.com/precice/tutorials
 DEBUG: Building docker image for Flow over heated plate (fluid-openfoam, solid-fenics)
 DEBUG: Running tutorial Flow over heated plate (fluid-openfoam, solid-fenics)
 DEBUG: Running fieldcompare for Flow over heated plate (fluid-openfoam, solid-fenics)
-DEBUG: extracting /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/flow-over-heated-plate/reference-data/fluid-openfoam_solid-fenics.tar.gz into /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs/flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723/reference_results
+DEBUG: extracting /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz into /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs/flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723/reference_results
 Using log-level: DEBUG
 +---------------------------------------------------------+---------+-------------------+-----------------+-----------------------+
 | systemtest                                              | success | building time [s] | solver time [s] | fieldcompare time [s] |
@@ -308,19 +308,19 @@ test_suites:
         case_combination:
           - fluid-openfoam
           - solid-openfoam
-        reference_result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
   openfoam_adapter_release:
     tutorials:
       - path: flow-over-heated-plate
         case_combination:
           - fluid-openfoam
           - solid-openfoam
-        reference_result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-openfoam.tar.gz
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
       - path: flow-over-heated-plate
         case_combination:
           - fluid-openfoam
           - solid-fenics
-        reference_result: ./flow-over-heated-plate/reference-data/fluid-openfoam_solid-fenics.tar.gz
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz
 ```
 
 This defines two test suites, namely `openfoam_adapter_pr` and `openfoam_adapter_release`. Each of them defines which case combinations of which tutorials to run.

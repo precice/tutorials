@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
 
 usage() { echo "Usage: cmd [-d] [-n]" 1>&2; exit 1; }

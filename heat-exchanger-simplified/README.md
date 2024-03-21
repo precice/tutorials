@@ -24,7 +24,7 @@ Fluid participants:
 
 Solid participant:
 
-* CalculiX. For more information, have a look at the [CalculiX adapter documentation](http://precice.org/adapter-calculix-overview.html). Be sure to use at least version 2.19.1 of the adapter.
+* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html). Be sure to use at least version 2.19.1 of the adapter.
 
 ## Running the Simulation
 
