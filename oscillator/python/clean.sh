@@ -6,3 +6,4 @@ set -e -u
 rm -rfv ./output/
 
 clean_precice_logs .
+clean_case_logs .

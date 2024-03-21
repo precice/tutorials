@@ -5,7 +5,7 @@ output_file_name = "out.msh"
 
 x_begin, x_end = 0, 1
 y_begin, y_end = -0.25, 0
-z_begin, z_end = 0, 1
+z_begin, z_end = 0, 0.4
 
 # Number of elements. Add one for number of nodes!
 n_x, n_y, n_z = 400, 50, 1

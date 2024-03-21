@@ -1,5 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
+
+. ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
 usage() { echo "Usage: cmd [-d] [-n]" 1>&2; exit 1; }
 
@@ -27,3 +30,5 @@ while getopts ":dn" opt; do
     ;;
   esac
 done
+
+close_log
