@@ -6,6 +6,11 @@ test_suites:
           - fluid-openfoam
           - solid-openfoam
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz
   openfoam_adapter_release:
     tutorials:
       - path: flow-over-heated-plate
