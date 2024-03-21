@@ -1,5 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
+
+. ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
 if [ ! -f PIDcontroller.fmu ]; then
   cd fmu
@@ -13,3 +16,5 @@ if [ ! -f PIDcontroller.fmu ]; then
 fi
 
 fmiprecice ./fmi-settings.json ./precice-settings.json
+
+close_log

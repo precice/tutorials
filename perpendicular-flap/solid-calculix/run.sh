@@ -1,5 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
+
+. ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
 usage() { echo "Usage: run.sh [-modal]" 1>&2; exit 1; }
 
@@ -17,3 +20,5 @@ else
     mv frequency.eig flap_modal.eig
     ccx_preCICE -i flap_modal -precice-participant Solid
 fi
+
+close_log
