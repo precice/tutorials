@@ -27,11 +27,9 @@ phi = 0                    # Phase of the signal
 w0 = 1/np.sqrt(L*C)           # Resonant frequency
 U0 = -w0*L*Io*np.sin(phi)     # Initial condition for U
 
-def f_U(t_span, t):
-    if t < t_span[1]:
-        dt = t - t_span[0]
-    else:
-        dt = t_span[1] - t_span[0]
+def f_U(dt, max_allowed_dt):
+    if dt > max_allowed_dt:  # read_data will fail, if dt is outside of window
+        return np.nan
 
     I = participant.read_data(mesh_name, read_data_name, vertex_ids, dt)
     return -I/C      # Time derivative of U
@@ -41,6 +39,8 @@ if participant.requires_initial_data():
     participant.write_data(mesh_name, write_data_name, vertex_ids, U0)
 
 participant.initialize()
+
+solver_dt = participant.get_max_time_step_size()
 
 # Start simulation
 t = t0
@@ -52,10 +52,10 @@ while participant.is_coupling_ongoing():
         t_checkpoint = t
 
     # Make Simulation Step
-    dt = participant.get_max_time_step_size()
+    precice_dt = participant.get_max_time_step_size()
+    dt = min([precice_dt, solver_dt])
     t_span = [t, t+dt]
-    print(f"solving time {t_span}")
-    sol = solve_ivp(lambda t, y: f_U(t_span, t), t_span, U0, dense_output=True,r_tol=1e-6, a_tol=1e-9)
+    sol = solve_ivp(lambda t, y: f_U(t-t_span[0], dt), t_span, U0, dense_output=True,r_tol=1e-12, a_tol=1e-12)
 
     # Exchange data
     evals = 10

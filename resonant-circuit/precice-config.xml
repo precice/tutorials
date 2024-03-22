@@ -2,8 +2,8 @@
 
 <precice-configuration>
 
-  <data:scalar name="I" waveform-degree="5" />
-  <data:scalar name="U" waveform-degree="5" />
+  <data:scalar name="I" waveform-degree="3" />
+  <data:scalar name="U" waveform-degree="3" />
 
   <mesh name="MeshI" dimensions="2">
     <use-data name="I" />
@@ -42,7 +42,7 @@
 
   <coupling-scheme:serial-implicit>
     <participants first="ParticipantI" second="ParticipantU" />
-    <max-time value="10" />
+    <max-time value="1" />
     <time-window-size value=".1" />
     <max-iterations value="20" />
     <exchange data="I" mesh="MeshI" from="ParticipantI" to="ParticipantU" substeps="true" />
