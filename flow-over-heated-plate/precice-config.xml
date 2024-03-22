@@ -46,7 +46,7 @@
       <write-data name="Heat-Flux" mesh="Solid-Mesh" />
     </participant>
 
-    <m2n:sockets from="Fluid" to="Solid" network="ib0" exchange-directory=".." />
+    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
 
     <coupling-scheme:serial-implicit>
       <time-window-size value="0.01" />
