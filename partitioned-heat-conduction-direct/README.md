@@ -26,15 +26,15 @@ Currently only `nutils` is provided as a solver. The data mapping is computed by
 Open two terminals and run:
 
 ```bash
-cd nutils
-./run.sh -d
+cd neumann-nutils
+./run.sh
 ```
 
 and
 
 ```bash
-cd nutils
-./run.sh -n
+cd dirichlet-nutils
+./run.sh
 ```
 
 See the [partitioned heat conduction tutorial](tutorials-partitioned-heat-conduction.html).
