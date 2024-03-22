@@ -11,21 +11,21 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-calculix.tar.gz | 2024-01-11 20:52:11 | 5ea071efe0147a4cfe13d612bd1fc1d2e5efcee7cdbcaf1e5b086895dc30af66 |
+| fluid-openfoam_solid-calculix.tar.gz | 2024-03-21 09:41:34 | b974131b50bfb199f695d066f74100a75f633fba472020e78c3fc0d52b8ad36b |
 
 ## List of arguments used to generate the files
 
 | name | value |
 |------|------|
-| PRECICE_REF | v2.5.0 |
+| PRECICE_REF | v3.0.0 |
 | OPENFOAM_EXECUTABLE | openfoam2306 |
-| OPENFOAM_ADAPTER_REF | v1.2.3 |
-| PYTHON_BINDINGS_REF | v2.5.0.4 |
-| FENICS_ADAPTER_REF | v1.4.0 |
-| TUTORIALS_REF | v202211.0 |
+| OPENFOAM_ADAPTER_REF | v1.3.0 |
+| PYTHON_BINDINGS_REF | v3.0.0.0 |
+| FENICS_ADAPTER_REF | v2.1.0 |
+| TUTORIALS_REF | 3f139d36f1708fb3ebfde2c48f14b1df94c9d70a |
 | PLATFORM | ubuntu_2204 |
 | CALULIX_VERSION | 2.20 |
-| CALULIX_ADAPTER_REF | v2.20.0 |
+| CALULIX_ADAPTER_REF | v2.20.1 |
 ## Information about the machine
 
 ### uname -a

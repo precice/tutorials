@@ -26,10 +26,7 @@ command_group.add_argument("-s", "--source", help="create a source", dest="sourc
 command_group.add_argument("-d", "--drain", help="create a drain", dest="drain", action="store_true")
 args = parser.parse_args()
 
-if args.source:
-    precice = Adapter(adapter_config_filename="precice-adapter-config-source.json")
-elif args.drain:
-    precice = Adapter(adapter_config_filename="precice-adapter-config-drain.json")
+precice = Adapter(adapter_config_filename="precice-adapter-config.json")
 
 mesh = UnitSquareMesh(10, 10)
 V = FunctionSpace(mesh, "P", 1)
