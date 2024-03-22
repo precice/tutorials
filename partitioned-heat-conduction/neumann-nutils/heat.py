@@ -7,20 +7,14 @@ import numpy as np
 import precice
 
 
-def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
+def main(n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
 
-    if side == 'Dirichlet':
-        x_grid = np.linspace(0, 1, n)
-    elif side == 'Neumann':
-        x_grid = np.linspace(1, 2, n)
-    else:
-        raise Exception('invalid side {!r}'.format(side))
+    x_grid = np.linspace(1, 2, n)
     y_grid = np.linspace(0, 1, n)
 
     # define the Nutils mesh
     domain, geom = mesh.rectilinear([x_grid, y_grid])
-    coupling_boundary = domain.boundary['right' if side ==
-                                        'Dirichlet' else 'left']
+    coupling_boundary = domain.boundary['left']
     coupling_sample = coupling_boundary.sample('gauss', degree=degree * 2)
 
     # Nutils namespace
@@ -44,56 +38,25 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
 
     # set boundary conditions at non-coupling boundaries
     # top and bottom boundary are non-coupling for both sides
-    sqr = domain.boundary['top,bottom,left' if side == 'Dirichlet' else 'top,bottom,right'].integral(
-        '(u - uexact)^2 d:x' @ ns, degree=degree * 2)
+    sqr = domain.boundary['top,bottom,right'].integral('(u - uexact)^2 d:x' @ ns, degree=degree * 2)
 
-    if side == 'Dirichlet':
-        sqr += coupling_sample.integral('(u - readfunc)^2 d:x' @ ns)
-    else:
-        res += coupling_sample.integral('basis_n readfunc d:x' @ ns)
+    res += coupling_sample.integral('basis_n readfunc d:x' @ ns)
 
     # preCICE setup
-    participant = precice.Participant(side, "../precice-config.xml", 0, 1)
-    mesh_name = side + "-Mesh"
+    participant = precice.Participant("Neumann", "../precice-config.xml", 0, 1)
+    mesh_name = "Neumann-Mesh"
     vertex_ids = participant.set_mesh_vertices(
         mesh_name, coupling_sample.eval(ns.x))
     precice_write = functools.partial(
         participant.write_data,
         mesh_name,
-        "Temperature" if side == "Neumann" else "Heat-Flux",
+        "Temperature",
         vertex_ids)
     precice_read = functools.partial(
         participant.read_data,
         mesh_name,
-        "Heat-Flux" if side == "Neumann" else "Temperature",
+        "Heat-Flux",
         vertex_ids)
-
-    # helper functions to project heat flux to coupling boundary
-    if side == 'Dirichlet':
-        # To communicate the flux to the Neumann side we should not simply
-        # evaluate u_,i n_i as this is an unbounded term leading to suboptimal
-        # convergence. Instead we project ∀ v: ∫_Γ v flux = ∫_Γ v u_,i n_i and
-        # evaluate flux. While the right-hand-side contains the same unbounded
-        # term, we can use the strong identity du/dt - u_,ii = f to rewrite it
-        # to ∫_Ω [v (du/dt - f) + v_,i u_,i] - ∫_∂Ω\Γ v u_,k n_k, in which we
-        # recognize the residual and an integral over the exterior boundary.
-        # While the latter still contains the problematic unbounded term, we
-        # can use the fact that the flux is a known value at the top and bottom
-        # via the Dirichlet boundary condition, and impose it as constraints.
-        rightsqr = domain.boundary['right'].integral(
-            'flux^2 d:x' @ ns, degree=degree * 2)
-        rightcons = solver.optimize('fluxdofs', rightsqr, droptol=1e-10)
-        # rightcons is NaN in dofs that are NOT supported on the right boundary
-        fluxsqr = domain.boundary['right'].boundary['top,bottom'].integral(
-            '(flux - uexact_,0)^2 d:x' @ ns, degree=degree * 2)
-        fluxcons = solver.optimize('fluxdofs',
-                                   fluxsqr,
-                                   droptol=1e-10,
-                                   constrain=np.choose(np.isnan(rightcons),
-                                                       [np.nan,
-                                                        0.]))
-        # fluxcons is NaN in dofs that are supported on ONLY the right boundary
-        fluxres = coupling_sample.integral('basis_n flux d:x' @ ns) - res
 
     # write initial data
     if participant.requires_initial_data():
@@ -118,8 +81,7 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
         x, u, uexact = bezier.eval(['x_i', 'u', 'uexact'] @ ns, lhs=lhs, t=t)
         with treelog.add(treelog.DataLog()):
             export.vtk(
-                side +
-                "-" +
+                "Neumann-" +
                 str(istep),
                 bezier.tri,
                 x,
@@ -157,14 +119,7 @@ def main(side='Dirichlet', n=10, degree=1, timestep=.1, alpha=3., beta=1.2):
                 lhs0=lhs0, dt=dt, t=t, readdata=readdata))
 
         # write data to participant
-        if side == 'Dirichlet':
-            fluxdofs = solver.solve_linear(
-                'fluxdofs', fluxres, arguments=dict(
-                    lhs0=lhs0, lhs=lhs, dt=dt, t=t), constrain=fluxcons)
-            write_data = coupling_sample.eval(
-                'flux' @ ns, fluxdofs=fluxdofs)
-        else:
-            write_data = coupling_sample.eval('u' @ ns, lhs=lhs)
+        write_data = coupling_sample.eval('u' @ ns, lhs=lhs)
         precice_write(write_data)
 
         # do the coupling
