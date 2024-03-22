@@ -10,7 +10,7 @@
         "mass.a": -197.392088022
     },
     "simulation_params": {
-        "fmu_file_name": "./Oscillator.fmu",
+        "fmu_file_name": "../solver-fmi/Oscillator.fmu",
         "output_file_name": "./output/trajectory-Mass-Left.csv",
         "output": ["mass.u", "mass.v"],
         "fmu_read_data_names": ["force_in"],

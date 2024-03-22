@@ -16,8 +16,10 @@ parser.add_argument("plotType", help="Plot type.", type=str, choices=[pt.name fo
 args = parser.parse_args()
 
 filename = args.csvFile
-split_filename = filename.split('/')
-solver = split_filename[0]
+split_foldername = filename.split('/')
+casename = split_foldername[0]
+split_casename = casename.split('-')
+solver = split_casename[-1]
 
 if solver == 'python':
     df = pd.read_csv(filename, delimiter=';')
