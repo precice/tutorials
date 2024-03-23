@@ -21,6 +21,7 @@ By default, the fluid participant reads heat-flux values and the solid participa
 Fluid participant:
 
 * OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* SU2 (copy the `fluid-su2` directory from the `flow-over-heated-plate` tutorial as-is). For more information, have a look at the [SU2 adapter docmentation](https://www.precice.org/adapter-su2.html).
 
 Solid participant:
 
