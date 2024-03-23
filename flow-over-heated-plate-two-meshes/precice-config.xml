@@ -37,7 +37,6 @@
     </participant>
 
     <participant name="Solid">
-      <export:csv directory="preCICE-output" every-n-time-windows="50" />
       <use-mesh name="Fluid-Mesh" from="Fluid" />
       <use-mesh name="Solid-Mesh" provide="yes" />
       <use-mesh name="Solid-Mesh-nodes" provide="yes" />
