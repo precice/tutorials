@@ -24,7 +24,7 @@ Fluid participants:
 
 Solid participant:
 
-* CalculiX. For more information, have a look at the [CalculiX adapter documentation](http://precice.org/adapter-calculix-overview.html). Be sure to use at least version 2.19.1 of the adapter.
+* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html). Be sure to use at least version 2.19.1 of the adapter.
 
 ## Running the Simulation
 
@@ -54,6 +54,8 @@ to run the solid participant (which is also controlling the coupling).
 ## Post-processing
 
 Similarly to the [flow over heated plate: Two meshes](https://precice.org/tutorials-flow-over-heated-plate-two-meshes.html) tutorial.
+
+![Results of the simplified heat exchanger tutorial](images/tutorials-heat-exchanger-simplified-overview.png)
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.

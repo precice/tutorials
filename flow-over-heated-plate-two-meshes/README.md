@@ -12,7 +12,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-The scenario is exactly the same as the one described in the [flow over heated plate tutorial](http://precice.org/tutorials-flow-over-heated-plate.html). However, this tutorial is specialized for the case when heat fluxes and temperatures live on different meshes. This is the case with CalculiX: heat fluxes are written on face centers, while temperatures are read on nodes. This requires updating the `precice-config.xml` file to take this into account. On the fluid side, a single mesh can still be used.
+The scenario is exactly the same as the one described in the [flow over heated plate tutorial](https://precice.org/tutorials-flow-over-heated-plate.html). However, this tutorial is specialized for the case when heat fluxes and temperatures live on different meshes. This is the case with CalculiX: heat fluxes are written on face centers, while temperatures are read on nodes. This requires updating the `precice-config.xml` file to take this into account. On the fluid side, a single mesh can still be used.
 
 ## Available solvers
 
@@ -25,7 +25,7 @@ Fluid participant:
 
 Solid participant:
 
-* CalculiX. For more information, have a look at the [CalculiX adapter documentation](http://precice.org/adapter-calculix-overview.html). Be sure to use at least version 2.19.1 of the adapter.
+* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html). Be sure to use at least version 2.19.1 of the adapter.
 
 ## Running the Simulation
 

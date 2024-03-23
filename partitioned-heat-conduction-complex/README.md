@@ -26,4 +26,4 @@ See `partitioned-heat-conduction`, only `fenics` is provided as a solver.
 
 ## Running the simulation
 
-See `partitioned-heat-conduction`. The additional featured mentioned above can be activated via command line arguments. Please run `python3 fenics/heat.py --help` for a full list of provided arguments.
+See `partitioned-heat-conduction`. The additional featured mentioned above can be activated via command line arguments. Please run `python3 solver-fenics/heat.py --help` for a full list of provided arguments.
