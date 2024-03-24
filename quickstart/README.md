@@ -21,21 +21,29 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 1. Get and install preCICE. For Ubuntu 22.04 (Jammy Jellyfish), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v2.5.0/libprecice2_2.5.0_jammy.deb
-    sudo apt install ./libprecice2_2.5.0_jammy.deb
+    wget https://github.com/precice/precice/releases/download/v3.0.0/libprecice3_3.0.0_jammy.deb
+    sudo apt install ./libprecice3_3.0.0_jammy.deb
     ```
 
-    - Are you using something else? Just pick what suits you best on [this overview page](https://precice.org/installation-overview.html).
+    | OS                            | Package |
+    | ---                           | ---     |
+    | Ubuntu 20.04 Focal Fossa      | [`libprecice3_3.0.0_focal.deb`](https://github.com/precice/precice/releases/download/v3.0.0/libprecice3_3.0.0_focal.deb) |
+    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.0.0_jammy.deb`](https://github.com/precice/precice/releases/download/v3.0.0/libprecice3_3.0.0_jammy.deb) |
+    | Ubuntu 24.04 Noble Numbat     | [`libprecice3_3.0.0_noble.deb`](https://github.com/precice/precice/releases/download/v3.0.0/libprecice3_3.0.0_noble.deb) |
+    | Debian 11 "bullseye"          | [`libprecice3_3.0.0_bullseye.deb`](https://github.com/precice/precice/releases/download/v3.0.0/libprecice3_3.0.0_bullseye.deb) |
+    | Debian 12 "bookworm"          | [`libprecice3_3.0.0_bookworm.deb`](https://github.com/precice/precice/releases/download/v3.0.0/libprecice3_3.0.0_bookworm.deb) |
+    | Something else                | See an [overview of options](https://precice.org/installation-overview.html) |
+
     - Facing any problems? [Ask for help](https://precice.org/community-channels.html).
 2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](https://precice.org/adapter-openfoam-support.html):
 
     ```bash
     # Add the signing key, add the repository, update (check this):
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash
-    # Install OpenFOAM v2306:
-    sudo apt install openfoam2306-dev
+    # Install OpenFOAM v2312:
+    sudo apt install openfoam2312-dev
     # Enable OpenFOAM by default in your system and apply now:
-    echo "source /usr/lib/openfoam/openfoam2306/etc/bashrc" >> ~/.bashrc
+    echo "source /usr/lib/openfoam/openfoam2312/etc/bashrc" >> ~/.bashrc
     source ~/.bashrc
     ```
 
