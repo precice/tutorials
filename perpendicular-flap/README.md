@@ -77,6 +77,8 @@ You should get results similar to this one:
 
 ![All flap watchpoints](images/tutorials-perpendicular-flap-displacement-all-watchpoints.png)
 
+This plot has been generated with the `plot-all-displacements.sh` script, which requires executing and pre-processing the individual combinations manually.
+
 Reasons for the differences:
 
 * The CalculiX adapter only supports linear finite elements (deal.II uses 4th order, FEniCS 2nd order).
