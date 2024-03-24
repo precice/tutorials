@@ -1,5 +1,19 @@
 #!/bin/sh
- 
+
+# This script cannot be used as-is and is meant to generate the picture
+# images/tutorials-perpendicular-flap-displacement-all-watchpoints.png
+# rendered on https://precice.org/tutorials-perpendicular-flap.html.
+#
+# It plots watchpoints of specific combinations of Fluid and Solid participants,
+# stored in `images/`. To use this script:
+# 1. For each combination you want to plot: 
+#    1. Run the tutorial with that combination
+#    2. Copy the respective watchpoint file to watchpoints/, with names <fluid>-<solid>.log
+#    3. Clean the tutorial
+# 2. Edit the script to plot the files you want, with the corresponding titles,
+#    adding one line per combination.
+# 3. Call the script with ./plot-all-displacements.sh, from this directory.
+
 gnuplot -p << EOF                                                               
 	set grid                                                                        
 	set title 'x-displacement of the flap tip'                                        
