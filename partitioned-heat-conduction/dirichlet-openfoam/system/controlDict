@@ -7,7 +7,7 @@ FoamFile
 }
 
 // Make sure you build the solver located
-// in ../../openfoam-solver/ before running
+// in ../../solver-openfoam/ before running
 // the case
 application     heatTransfer;
 
