@@ -22,32 +22,32 @@ Note that this case applies a Schwarz-type coupling method and not (like most ot
 There are two different implementations:
 
 - *Python*: A solver using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy`, which you can get from your system package manager or with `pip3 install --user <package>`. Using the option `-ts` allows you to pick the time stepping scheme being used. Available choices are Newmark beta, generalized alpha, explicit Runge Kutta 4, and implicit RadauIIA. The solver uses subcycling: Each participant performs 4 time steps in each time window. The data of these 4 substeps is then used by preCICE to create a third order B-spline interpolation (`waveform-degree="3"` in `precice-config.xml`).
-- *FMI*: A solver using the [preCICE-FMI runner](https://github.com/precice/fmi-runner) (requires at least v0.2). The Runner executes the FMU model `Oscillator.fmu` for computation. The provided run script (see below) builds this model if not already there. If you want to change the model parameters or the initial conditions of the simulation, have a look inside the setting files for [MassLeft](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassLeft) and [MassRight](https://github.com/precice/tutorials/tree/master/oscillator/fmi/MassRight). For more information, please refer to [2].
+- *FMI*: A solver using the [preCICE-FMI runner](https://github.com/precice/fmi-runner) (requires at least v0.2). The Runner executes the FMU model `Oscillator.fmu` for computation. The provided run scripts (see below) build this model if not already there. For more information, please refer to [2].
 
 ## Running the simulation
 
 Open two separate terminals and start both participants. For example, you can run a simulation where the left participant is computed in Python and the right participant is computed with FMI with these commands:
 
 ```bash
-cd python
-./run.sh -l
+cd mass-left-python
+./run.sh
 ```
 
 and
 
 ```bash
-cd fmi
-./run.sh -r
+cd mass-right-fmi
+./run.sh
 ```
 
 Of course, you can also use the same solver for both sides.
 
 ## Post-processing
 
-Each simulation run creates two files containing position and velocity of the two masses over time. These files are called `trajectory-Mass-Left.csv` and `trajectory-Mass-Right.csv`. You can use the script `plot-trajectory.py` for post-processing. Type `python3 plot-trajectory --help` to see available options. You can, for example, plot the trajectory of the Python solver by running
+Each simulation run creates two files containing position and velocity of the two masses over time. These files are called `trajectory-Mass-Left.csv` and `trajectory-Mass-Right.csv`. You can use the script `plot-trajectory.py` for post-processing. Type `python3 plot-trajectory --help` to see available options. You can, for example, plot the trajectory of the left mass of the Python solver by running
 
 ```bash
-python3 plot-trajectory.py python/output/trajectory-Mass-Left.csv TRAJECTORY
+python3 plot-trajectory.py mass-left-python/output/trajectory-Mass-Left.csv TRAJECTORY
 ```
 
 The solvers allow you to study the effect of different time stepping schemes on energy conservation. Newmark beta conserves energy:

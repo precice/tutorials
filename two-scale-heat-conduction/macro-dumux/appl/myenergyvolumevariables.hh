@@ -88,7 +88,7 @@ public:
   //! The phase enthalpy is zero for isothermal models
   //! This is needed for completing the fluid state
   template <class FluidState, class ParameterCache>
-  static Scalar enthalpy(const FluidState &    fluidState,
+  static Scalar enthalpy(const FluidState     &fluidState,
                          const ParameterCache &paramCache, const int phaseIdx)
   {
     return 0;
@@ -99,8 +99,8 @@ public:
   void updateEffectiveThermalConductivity(const ElemSol &elemSol,
                                           const Problem &problem,
                                           const Element &element,
-                                          const Scv &    scv,
-                                          SolidState &   solidState) {}
+                                          const Scv     &scv,
+                                          SolidState    &solidState) {}
 };
 
 //! The non-isothermal implicit volume variables base class
@@ -187,8 +187,8 @@ public:
   void updateEffectiveThermalConductivity(const ElemSol &elemSol,
                                           const Problem &problem,
                                           const Element &element,
-                                          const Scv &    scv,
-                                          SolidState &   solidState)
+                                          const Scv     &scv,
+                                          SolidState    &solidState)
   {
     lambdaEff_ =
         solidThermalConductivity_(elemSol, problem, element, scv, solidState);
@@ -268,7 +268,7 @@ public:
   //! The phase enthalpy is zero for isothermal models
   //! This is needed for completing the fluid state
   template <class ParameterCache>
-  static Scalar enthalpy(const FluidState &    fluidState,
+  static Scalar enthalpy(const FluidState     &fluidState,
                          const ParameterCache &paramCache, const int phaseIdx)
   {
     return FluidSystem::enthalpy(fluidState, paramCache, phaseIdx);

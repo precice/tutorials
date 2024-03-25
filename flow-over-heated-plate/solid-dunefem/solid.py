@@ -12,7 +12,7 @@ from dune.fem.scheme import galerkin as solutionScheme
 from dune.fem.operator import galerkin
 from dune.fem.utility import Sampler
 from dune.grid import cartesianDomain
-from dune.alugrid import aluSimplexGrid
+from dune.alugrid import aluGrid
 from dune.fem.function import uflFunction, gridFunction
 from dune.ufl import expression2GF
 
@@ -32,19 +32,18 @@ if __name__ == '__main__':
     x_right = x_left + 1
 
     # preCICE setup
-    interface = precice.Interface("Solid", "../precice-config.xml", 0, 1)
+    participant = precice.Participant("Solid", "../precice-config.xml", 0, 1)
 
     # define coupling mesh
     mesh_name = "Solid-Mesh"
-    mesh_id = interface.get_mesh_id(mesh_name)
-    interface_x_coordinates = np.linspace(0, 1, nx + 1)  # meshpoints for interface values
+    interface_x_coordinates = np.linspace(
+        0, 1, nx + 1)  # meshpoints for interface values
     vertices = [[x0, 0] for x0 in interface_x_coordinates]
-    vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)
-    temperature_id = interface.get_data_id("Temperature", mesh_id)
-    flux_id = interface.get_data_id("Heat-Flux", mesh_id)
+
+    vertex_ids = participant.set_mesh_vertices(mesh_name, vertices)
 
     domain = cartesianDomain([x_left, y_bottom], [x_right, y_top], [nx, ny])
-    mesh = aluSimplexGrid(domain, serial=True)
+    mesh = aluGrid(domain, 2, 2, elementType="simplex")  # create a simple mesh with dimGrid=2 and dimWorld=2
     space = solutionSpace(mesh, order=1)
     u = ufl.TrialFunction(space)
     v = ufl.TestFunction(space)
@@ -80,32 +79,36 @@ if __name__ == '__main__':
     scheme = solutionScheme([A == b, *bcs], solver='cg')
 
     # Weak form of the flux
-    flux_expr = -(u - uold) * v / dt * ufl.dx - k * ufl.dot(ufl.grad(u), ufl.grad(v)) * ufl.dx
+    flux_expr = -(u - uold) * v / dt * ufl.dx - k * \
+        ufl.dot(ufl.grad(u), ufl.grad(v)) * ufl.dx
     flux_expr_operator = galerkin(flux_expr)
     flux_sol = space.interpolate(u0, name='flux_sol')
 
     # Sample the flux on the top edge
-    flux_sol_expr = expression2GF(flux_sol.space.grid, flux_sol, flux_sol.space.order)
+    flux_sol_expr = expression2GF(
+        flux_sol.space.grid, flux_sol, flux_sol.space.order)
     sampler_weak_flux = Sampler(flux_sol_expr)
-    def flux_f_weak(): return sampler_weak_flux.lineSample([0., 0.], [1., 0.], nx + 1)[1] * nx
+
+    def flux_f_weak(): return sampler_weak_flux.lineSample(
+        [0., 0.], [1., 0.], nx + 1)[1] * nx
 
     if not os.path.exists("output"):
         os.makedirs("output")
     vtk = mesh.sequencedVTK("output/heat", pointdata=[unew])
 
-    precice_dt = interface.initialize()
+    participant.initialize()
+    precice_dt = participant.get_max_time_step_size()
     dt.assign(min(float(dt), precice_dt))
 
     t = float(dt)
 
-    while interface.is_coupling_ongoing():
+    while participant.is_coupling_ongoing():
 
-        if interface.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
+        # write checkpoint
+        if participant.requires_writing_checkpoint():
             t_check = t
             ucheckpoint.assign(uold)
-            interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
-
-        ug = interface.read_block_scalar_data(temperature_id, vertex_ids)
+        ug = participant.read_data(mesh_name, "Temperature", vertex_ids, dt)
         ug_interp.y = ug
 
         scheme.model.dt = dt
@@ -115,25 +118,27 @@ if __name__ == '__main__':
         flux_expr_operator(unew, flux_sol)
         flux_values = flux_f_weak()  # sample the flux function
 
-        interface.write_block_scalar_data(flux_id, vertex_ids, flux_values)
+        participant.write_data(mesh_name, "Heat-Flux", vertex_ids, flux_values)
 
-        precice_dt = interface.advance(dt)
+        participant.advance(dt)
+        precice_dt = participant.get_max_time_step_size()
         dt.assign(min(float(dt), precice_dt))
 
-        if interface.is_action_required(precice.action_read_iteration_checkpoint()):  # roll back to checkpoint
+        # roll back to checkpoint
+        if participant.requires_reading_checkpoint():
             t = t_check
             uold.assign(ucheckpoint)
-            interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
 
         else:  # update solution
 
             uold.assign(unew)
             t += float(dt)
 
-        if interface.is_time_window_complete():
-            tol = 10e-5  # we need some tolerance, since otherwise output might be skipped.
+        if participant.is_time_window_complete():
+            # we need some tolerance, since otherwise output might be skipped.
+            tol = 10e-5
             if abs((t + tol) % dt_out) < 2 * tol:  # output if t is a multiple of dt_out
                 print("output vtk for time = {}".format(float(t)))
                 vtk()
 
-    interface.finalize()
+    participant.finalize()

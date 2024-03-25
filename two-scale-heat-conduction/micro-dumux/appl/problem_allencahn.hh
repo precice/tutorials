@@ -94,10 +94,10 @@ public:
    * \brief The source term is calculated as \f$ -\omega *P'(Phi) - 4*xi_ * Phi
    * * (1-Phi)*F(T)\f$.
    */
-  NumEqVector source(const Element &               element,
-                     const FVElementGeometry &     fvGeometry,
+  NumEqVector source(const Element                &element,
+                     const FVElementGeometry      &fvGeometry,
                      const ElementVolumeVariables &elemVolVars,
-                     const SubControlVolume &      scv) const
+                     const SubControlVolume       &scv) const
   {
     NumEqVector source;
 
