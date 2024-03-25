@@ -35,10 +35,7 @@ internalField   #codeStream
         const fvMesh& mesh = refCast<const fvMesh>(d.db());
         const vectorField& CC = mesh.C(); // cell center
 
-
         // assign values
-
-
         scalarField T(mesh.nCells());
         forAll(CC, cellI)
         {
@@ -68,15 +65,15 @@ boundaryField
         #{
             const vectorField& Cf = patch().Cf();
             const scalar t = this->db().time().value();
+
             scalarField& field = *this;
             forAll(Cf, faceI)
             {
-            const scalar x = Cf[faceI].x();
-            const scalar y = Cf[faceI].y();
+                const scalar x = Cf[faceI].x();
+                const scalar y = Cf[faceI].y();
 
-            field[faceI] = 1 + pow(x, 2) + (3 * pow(y, 2)) + 1.2 * t;
+                field[faceI] = 1 + pow(x, 2) + (3 * pow(y, 2)) + 1.2 * t;
             }
-
         #};
     }
 
