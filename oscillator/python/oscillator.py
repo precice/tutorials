@@ -80,7 +80,7 @@ if participant.requires_initial_data():
 
 participant.initialize()
 precice_dt = participant.get_max_time_step_size()
-my_dt = precice_dt # / 4  # use my_dt < precice_dt for subcycling
+my_dt = precice_dt / 4  # use my_dt < precice_dt for subcycling
 
 # Initial Conditions
 a0 = (f0 - stiffness * u0) / mass
@@ -118,18 +118,12 @@ u_write = [u]
 v_write = [v]
 t_write = [t]
 
-import pandas as pd
-
-stats = {}
-
 while participant.is_coupling_ongoing():
     if participant.requires_writing_checkpoint():
         u_cp = u
         v_cp = v
         a_cp = a
         t_cp = t
-        stats[t] = {}
-        k = 0
         # store data for plotting and postprocessing
         positions += u_write
         velocities += v_write
@@ -139,26 +133,22 @@ while participant.is_coupling_ongoing():
     precice_dt = participant.get_max_time_step_size()
     dt = np.min([precice_dt, my_dt])
 
-    f = lambda t: participant.read_data(mesh_name, read_data_name, vertex_ids, t)[0]
+    read_times = time_stepper.rhs_eval_points(dt)
+    f = len(read_times) * [None]
+
+    for i in range(len(read_times)):
+        read_data = participant.read_data(mesh_name, read_data_name, vertex_ids, read_times[i])
+        f[i] = read_data[0]
 
     # do generalized alpha step
-    u_new, v_new, a_new, sol = time_stepper.do_step(u, v, a, f, dt)
-    stats[t][k] = sol.ts
+    u_new, v_new, a_new = time_stepper.do_step(u, v, a, f, dt)
     t_new = t + dt
-    k += 1
 
-    print(sol.ts)
+    write_data = [connecting_spring.k * u_new]
 
-    n_pseudo = 10*len(sol.ts)  # 5 times no. substeps should be on the safe side.
-    t_pseudo = 0
-    print(n_pseudo)
-    for i in range(n_pseudo):
-        # perform n_pseudo pseudosteps
-        dt_pseudo = dt / n_pseudo
-        t_pseudo += dt_pseudo
-        write_data = [connecting_spring.k * sol(t_pseudo)[0]]
-        participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
-        participant.advance(dt_pseudo)
+    participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
+
+    participant.advance(dt)
 
     if participant.requires_reading_checkpoint():
         u = u_cp
@@ -208,14 +198,3 @@ with open(f'output/trajectory-{participant_name}.csv', 'w') as file:
     csv_write.writerow(['time', 'position', 'velocity'])
     for t, u, v in zip(times, positions, velocities):
         csv_write.writerow([t, u, v])
-
-from matplotlib import pyplot as plt
-
-print(stats)
-
-for t in stats:
-    plt.title(f"{participant_name} at {t}")
-    for k in stats[t]:
-        plt.plot(stats[t][k], k*np.ones_like(stats[t][k]),'*')
-    plt.show()
-
