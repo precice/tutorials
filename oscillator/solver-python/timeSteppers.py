@@ -74,10 +74,10 @@ class RungeKutta4():
 
         if isinstance(u, np.ndarray):
             x = np.concatenate([u, v])
-            f = lambda t: np.concatenate([np.array([0, 0]), rhs(t)])
+            def f(t): return np.concatenate([np.array([0, 0]), rhs(t)])
         elif isinstance(u, numbers.Number):
             x = np.array([u, v])
-            f = lambda t: np.array([0, rhs(t)])
+            def f(t): return np.array([0, rhs(t)])
         else:
             raise Exception(f"Cannot handle input type {type(u)} of u and v")
 
@@ -139,6 +139,5 @@ class RadauIIA():
             u_new, v_new = ret.y[0:2, -1], ret.y[2:4, -1]
         elif isinstance(u, numbers.Number):
             u_new, v_new = ret.y[:, -1]
-
 
         return u_new, v_new, a_new, ret.sol

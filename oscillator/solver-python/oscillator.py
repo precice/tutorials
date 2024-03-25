@@ -133,7 +133,7 @@ while participant.is_coupling_ongoing():
     precice_dt = participant.get_max_time_step_size()
     dt = np.min([precice_dt, my_dt])
 
-    f = lambda t: participant.read_data(mesh_name, read_data_name, vertex_ids, t)[0]
+    def f(t): return participant.read_data(mesh_name, read_data_name, vertex_ids, t)[0]
 
     # do generalized alpha step
     u_new, v_new, a_new, sol = time_stepper.do_step(u, v, a, f, dt)
