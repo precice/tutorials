@@ -133,22 +133,22 @@ while participant.is_coupling_ongoing():
     precice_dt = participant.get_max_time_step_size()
     dt = np.min([precice_dt, my_dt])
 
-    read_times = time_stepper.rhs_eval_points(dt)
-    f = len(read_times) * [None]
-
-    for i in range(len(read_times)):
-        read_data = participant.read_data(mesh_name, read_data_name, vertex_ids, read_times[i])
-        f[i] = read_data[0]
+    f = lambda t: participant.read_data(mesh_name, read_data_name, vertex_ids, t)[0]
 
     # do generalized alpha step
-    u_new, v_new, a_new = time_stepper.do_step(u, v, a, f, dt)
+    u_new, v_new, a_new, sol = time_stepper.do_step(u, v, a, f, dt)
     t_new = t + dt
 
-    write_data = [connecting_spring.k * u_new]
-
-    participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
-
-    participant.advance(dt)
+    n_pseudo = 5 * len(sol.ts)  # 5 times no. substeps should be on the safe side.
+    t_pseudo = 0
+    print(n_pseudo)
+    for i in range(n_pseudo):
+        # perform n_pseudo pseudosteps
+        dt_pseudo = dt / n_pseudo
+        t_pseudo += dt_pseudo
+        write_data = [connecting_spring.k * sol(t_pseudo)[0]]
+        participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
+        participant.advance(dt_pseudo)
 
     if participant.requires_reading_checkpoint():
         u = u_cp
