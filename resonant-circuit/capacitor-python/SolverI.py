@@ -6,7 +6,7 @@ from scipy.integrate import solve_ivp
 participant = precice.Participant("ParticipantI", "../precice-config.xml", 0, 1)
 
 # Geometry IDs. As it is a 0-D simulation, only one vertex is necessary.
-mesh_name ="MeshI"
+mesh_name = "MeshI"
 
 dimensions = participant.get_mesh_dimensions(mesh_name)
 
@@ -24,12 +24,13 @@ t_max = 1                  # End simulation time
 Io = np.array([1])         # Initial current
 phi = 0                    # Phase of the signal
 
-w0 = 1/np.sqrt(L*C)           # Resonant frequency
-I0 = Io*np.cos(phi)           # Initial condition for I
+w0 = 1 / np.sqrt(L * C)           # Resonant frequency
+I0 = Io * np.cos(phi)           # Initial condition for I
 
 # to estimate cost
 global f_evals
 f_evals = 0
+
 
 def f_I(dt, max_allowed_dt):
     global f_evals
@@ -38,7 +39,8 @@ def f_I(dt, max_allowed_dt):
         return np.nan
 
     U = participant.read_data(mesh_name, read_data_name, vertex_ids, dt)
-    return U/L;       # Time derivative of I; ODE determining capacitor
+    return U / L       # Time derivative of I; ODE determining capacitor
+
 
 # Initialize simulation
 if participant.requires_initial_data():
@@ -60,15 +62,15 @@ while participant.is_coupling_ongoing():
     # Make Simulation Step
     precice_dt = participant.get_max_time_step_size()
     dt = min([precice_dt, solver_dt])
-    t_span = [t, t+dt]
-    sol = solve_ivp(lambda t, y: f_I(t-t_span[0], dt), t_span, I0, dense_output=True,r_tol=1e-12, a_tol=1e-12)
+    t_span = [t, t + dt]
+    sol = solve_ivp(lambda t, y: f_I(t - t_span[0], dt), t_span, I0, dense_output=True, r_tol=1e-12, a_tol=1e-12)
 
     # Exchange data
     evals = 10
     for i in range(evals):
-        I0 = sol.sol(t_span[0] + (i+1)*dt/evals)
+        I0 = sol.sol(t_span[0] + (i + 1) * dt / evals)
         participant.write_data(mesh_name, write_data_name, vertex_ids, np.array(I0))
-        participant.advance(dt/evals)
+        participant.advance(dt / evals)
 
     t = t + dt
 
@@ -82,8 +84,10 @@ participant.finalize()
 
 import math
 
-assert(math.isclose(t, t_max))
-I_analytical = lambda t: Io*np.cos(t*w0 + phi)
+assert (math.isclose(t, t_max))
+def I_analytical(t): return Io * np.cos(t * w0 + phi)
+
+
 error = I0 - I_analytical(t_max)
 print(f"{error=}")
 print(f"{f_evals=}")
