@@ -5,3 +5,4 @@ set -e -u
 
 rm -rvf ./output/*.vtk
 clean_precice_logs .
+clean_case_logs .

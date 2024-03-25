@@ -9,10 +9,6 @@ summary: This tutorial describes how to run a partitioned fluid simulation using
 Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-backwards-facing-step). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
 {% endnote %}
 
-{% note %}
-This tutorial relies on yet unreleased features of the OpenFOAM adapter. You need [preCICE v2](https://github.com/precice/precice/releases)) and [the ff-develop branch of the OpenFOAM adapter](https://github.com/precice/openfoam-adapter/tree/ff-develop) to run this tutorial.
-{% endnote %}
-
 ## Setup
 
 This scenario consists of two incompressible fluid solvers in series. The case is a two-dimensional flow over a backwards facing step. Fluid1 consists of an incoming channel that opens into a bigger one over a sudden step. Fluid2 is the remaining part of the bigger channel, where the flow develops behind the step. The fluid will develop a recirculation region behind the step which will also expand across the coupling interface

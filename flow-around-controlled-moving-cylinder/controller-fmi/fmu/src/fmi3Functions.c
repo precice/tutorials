@@ -860,7 +860,7 @@ fmi3Status fmi3SetClock(fmi3Instance             instance,
 
 fmi3Status fmi3GetNumberOfVariableDependencies(fmi3Instance       instance,
                                                fmi3ValueReference valueReference,
-                                               size_t *           nDependencies)
+                                               size_t            *nDependencies)
 {
   UNUSED(valueReference);
   UNUSED(nDependencies);
@@ -925,7 +925,7 @@ fmi3Status fmi3FreeFMUState(fmi3Instance instance, fmi3FMUState *FMUState)
 
 fmi3Status fmi3SerializedFMUStateSize(fmi3Instance instance,
                                       fmi3FMUState FMUState,
-                                      size_t *     size)
+                                      size_t      *size)
 {
 
   UNUSED(instance);
@@ -962,7 +962,7 @@ fmi3Status fmi3SerializeFMUState(fmi3Instance instance,
 fmi3Status fmi3DeserializeFMUState(fmi3Instance   instance,
                                    const fmi3Byte serializedState[],
                                    size_t         size,
-                                   fmi3FMUState * FMUState)
+                                   fmi3FMUState  *FMUState)
 {
 
   ASSERT_STATE(DeserializeFMUState);
@@ -1391,7 +1391,7 @@ fmi3Status fmi3GetNominalsOfContinuousStates(fmi3Instance instance,
 }
 
 fmi3Status fmi3GetNumberOfEventIndicators(fmi3Instance instance,
-                                          size_t *     nEventIndicators)
+                                          size_t      *nEventIndicators)
 {
 
   ASSERT_STATE(GetNumberOfEventIndicators);
@@ -1404,7 +1404,7 @@ fmi3Status fmi3GetNumberOfEventIndicators(fmi3Instance instance,
 }
 
 fmi3Status fmi3GetNumberOfContinuousStates(fmi3Instance instance,
-                                           size_t *     nContinuousStates)
+                                           size_t      *nContinuousStates)
 {
 
   ASSERT_STATE(GetNumberOfContinuousStates);

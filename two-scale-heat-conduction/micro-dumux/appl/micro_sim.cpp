@@ -63,14 +63,14 @@ class MicroSimulation {
   using SolutionVector    = Dumux::GetPropType<CellProblemTypeTag, Dumux::Properties::SolutionVector>;
 
 public:
-  MicroSimulation();
-  void initialize();
+  MicroSimulation(int simulationID);
+  py::dict initialize();
 
   // solve takes python dict for macro_write data, dt, and returns python dict for macro_read data
   py::dict solve(py::dict macro_write_data, double dt);
 
-  //void save_checkpoint();
-  //void reload_checkpoint();
+  // void save_checkpoint();
+  // void reload_checkpoint();
 
   void      setState(py::tuple phi);
   py::tuple getState() const;
@@ -83,11 +83,11 @@ private:
   double       _k_11;
   double       _porosity;
 
-  ACSolutionVector _phi;    //Solution of Allen Cahn Problem
-  ACSolutionVector _phiOld; //for checkpointing
-  CPSolutionVector _psi;    //Solutions(s) of Cell Problem
+  ACSolutionVector _phi;    // Solution of Allen Cahn Problem
+  ACSolutionVector _phiOld; // for checkpointing
+  CPSolutionVector _psi;    // Solutions(s) of Cell Problem
 
-  //shared pointers are necessary due to partitioned nature of micro simulation
+  // shared pointers are necessary due to partitioned nature of micro simulation
   std::shared_ptr<ACNewtonSolver>                    _acNonLinearSolver;
   std::shared_ptr<LinearSolver>                      _acLinearSolver;
   std::shared_ptr<CPLinearSolver>                    _cpLinearSolver;
@@ -104,7 +104,7 @@ private:
 };
 
 // Constructor
-MicroSimulation::MicroSimulation()
+MicroSimulation::MicroSimulation(int simulationID)
 {
   using namespace Dumux;
 
@@ -180,9 +180,34 @@ MicroSimulation::MicroSimulation()
   _timeLoop->start();
 };
 
-// Initialize
-void MicroSimulation::initialize()
+// Initialize micro-data to be used in initial adaptivity
+py::dict MicroSimulation::initialize()
 {
+  // update Phi in the cell problem
+  _cpProblem->spatialParams().updatePhi(_phi);
+
+  // solve the cell problems
+  _cpLinearPDESolver->solve(_psi);
+
+  // calculate porosity
+  _porosity = _acProblem->calculatePorosity(_phi);
+
+  // compute the psi derivatives (required for conductivity tensor)
+  _cpProblem->computePsiDerivatives(*_cpProblem, *_cpAssembler, *_cpGridVariables, _psi);
+
+  // calculate the conductivity tensor
+  _k_00 = _cpProblem->calculateConductivityTensorComponent(0, 0);
+  _k_11 = _cpProblem->calculateConductivityTensorComponent(1, 1);
+
+  // create python dict for micro_write_data
+  py::dict micro_write_data;
+
+  // add micro_scalar_data and micro_vector_data to micro_write_data
+  micro_write_data["k_00"]     = _k_00;
+  micro_write_data["k_11"]     = _k_11;
+  micro_write_data["porosity"] = _porosity;
+
+  return micro_write_data;
 }
 
 // Solve
@@ -211,7 +236,7 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
   // linearize & solve the allen cahn problem
   _acNonLinearSolver->solve(_phi, *_timeLoop);
 
-  //u pdate Phi in the cell problem
+  // u pdate Phi in the cell problem
   _cpProblem->spatialParams().updatePhi(_phi);
 
   // solve the cell problems
@@ -222,10 +247,10 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
   // calculate porosity
   _porosity = _acProblem->calculatePorosity(_phi);
 
-  //compute the psi derivatives (required for conductivity tensor)
+  // compute the psi derivatives (required for conductivity tensor)
   _cpProblem->computePsiDerivatives(*_cpProblem, *_cpAssembler, *_cpGridVariables, _psi);
 
-  //calculate the conductivity tensor
+  // calculate the conductivity tensor
   _k_00 = _cpProblem->calculateConductivityTensorComponent(0, 0);
   _k_10 = _cpProblem->calculateConductivityTensorComponent(1, 0);
   _k_01 = _cpProblem->calculateConductivityTensorComponent(0, 1);
