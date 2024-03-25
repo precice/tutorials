@@ -110,8 +110,6 @@ class RadauIIA():
         pass
 
     def do_step(self, u, v, a, rhs, dt) -> Tuple[float, float, float]:
-        from brot.interpolation import do_lagrange_interpolation
-
         t0 = 0
 
         assert (isinstance(u, type(v)))
