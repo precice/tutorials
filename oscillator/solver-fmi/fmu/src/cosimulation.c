@@ -18,10 +18,10 @@
 ModelInstance *createModelInstance(
     loggerType             cbLogger,
     intermediateUpdateType intermediateUpdate,
-    void *                 componentEnvironment,
-    const char *           instanceName,
-    const char *           instantiationToken,
-    const char *           resourceLocation,
+    void                  *componentEnvironment,
+    const char            *instanceName,
+    const char            *instantiationToken,
+    const char            *resourceLocation,
     bool                   loggingOn,
     InterfaceType          interfaceType)
 {
@@ -203,7 +203,7 @@ static void logMessage(ModelInstance *comp, int status, const char *category, co
 
   va_list args1;
   size_t  len = 0;
-  char *  buf = "";
+  char   *buf = "";
 
   va_copy(args1, args);
   len = vsnprintf(buf, len, message, args1);

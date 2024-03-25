@@ -92,7 +92,7 @@ public:
    * \param scv The sub-control volume
    */
   std::bitset<numEq>
-  hasInternalDirichletConstraint(const Element &         element,
+  hasInternalDirichletConstraint(const Element          &element,
                                  const SubControlVolume &scv) const
   {
     // the pure Neumann problem is only defined up to a constant
@@ -112,7 +112,7 @@ public:
    * freedom. \param element The finite element \param scv The sub-control
    * volume
    */
-  PrimaryVariables internalDirichlet(const Element &         element,
+  PrimaryVariables internalDirichlet(const Element          &element,
                                      const SubControlVolume &scv) const
   {
     return PrimaryVariables(1.0);
@@ -178,7 +178,7 @@ public:
   template <class Problem, class Assembler, class GridVariables,
             class SolutionVector>
   void computePsiDerivatives(const Problem &problem, const Assembler &assembler,
-                             const GridVariables & gridVars,
+                             const GridVariables  &gridVars,
                              const SolutionVector &psi)
   {
     const auto &gridGeometry = this->gridGeometry();

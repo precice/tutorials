@@ -22,20 +22,20 @@ public:
   }
 
 private:
-  T * first;
+  T  *first;
   int stride;
 };
 
 extern "C" {
 void dgesv_(
-    int *   n,
-    int *   nrhs,
+    int    *n,
+    int    *nrhs,
     double *A,
-    int *   lda,
-    int *   ipiv,
+    int    *lda,
+    int    *ipiv,
     double *b,
-    int *   ldb,
-    int *   info);
+    int    *ldb,
+    int    *info);
 }
 
 /* Function for fluid_nl i.e. non-linear */
@@ -48,8 +48,8 @@ int fluidComputeSolutionSerial(
     int                 N,
     double              kappa,
     double              tau,
-    double *            velocity,
-    double *            pressure)
+    double             *velocity,
+    double             *pressure)
 {
   const double PI = 3.141592653589793;
 

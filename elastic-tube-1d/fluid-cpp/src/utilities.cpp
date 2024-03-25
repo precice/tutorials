@@ -8,22 +8,22 @@
 #include <string>
 #include <vector>
 
-/* 
-   Function for solving the linear system 
+/*
+   Function for solving the linear system
    LAPACK is used DGESV computes the solution to a real system of linear equations
    A * x = b,
    where A is an N-by-N matrix and x and b are N-by-NRHS matrices.
 */
 extern "C" {
 void dgesv_(
-    int *   n,
-    int *   nrhs,
+    int    *n,
+    int    *nrhs,
     double *A,
-    int *   lda,
-    int *   ipiv,
+    int    *lda,
+    int    *ipiv,
     double *b,
-    int *   ldb,
-    int *   info);
+    int    *ldb,
+    int    *info);
 }
 
 void initializeWriting(std::ofstream &filestream)

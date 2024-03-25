@@ -71,9 +71,9 @@ public:
    * \param scv The sub control volume
    * \param volVars The current or previous volVars
    */
-  NumEqVector computeStorage(const Problem &         problem,
+  NumEqVector computeStorage(const Problem          &problem,
                              const SubControlVolume &scv,
-                             const VolumeVariables & volVars) const
+                             const VolumeVariables  &volVars) const
   {
     NumEqVector storage(0.0);
     return storage;
@@ -97,10 +97,10 @@ public:
   template <class Problem, class ElementVolumeVariables,
             class ElementFluxVarsCache>
   NumEqVector computeFlux(const Problem &problem, const Element &element,
-                          const FVElementGeometry &     fvGeometry,
+                          const FVElementGeometry      &fvGeometry,
                           const ElementVolumeVariables &elemVolVars,
-                          const SubControlVolumeFace &  scvf,
-                          const ElementFluxVarsCache &  elemFluxVarsCache) const
+                          const SubControlVolumeFace   &scvf,
+                          const ElementFluxVarsCache   &elemFluxVarsCache) const
   {
     NumEqVector flux;
 
@@ -158,9 +158,9 @@ public:
   template <class Problem, class ElementVolumeVariables>
   static Scalar
   calculateTransmissibility(const Problem &problem, const Element &element,
-                            const FVElementGeometry &     fvGeometry,
+                            const FVElementGeometry      &fvGeometry,
                             const ElementVolumeVariables &elemVolVars,
-                            const SubControlVolumeFace &  scvf)
+                            const SubControlVolumeFace   &scvf)
   {
     Scalar tij;
 
@@ -182,8 +182,8 @@ public:
       const auto outsideScvIdx = scvf.outsideScvIdx();
       // as we assemble fluxes from the neighbor to our element
       // the outside index refers to the scv of our element
-      const auto & outsideScv     = fvGeometry.scv(outsideScvIdx);
-      const auto & outsideVolVars = elemVolVars[outsideScvIdx];
+      const auto  &outsideScv     = fvGeometry.scv(outsideScvIdx);
+      const auto  &outsideVolVars = elemVolVars[outsideScvIdx];
       const Scalar tj =
           fvGeometry.gridGeometry().isPeriodic()
               ? computeTpfaTransmissibility(

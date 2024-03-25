@@ -81,7 +81,7 @@ public:
    * \brief Defines the conductivity tensor \f$ K \f$.
    */
 
-  DimWorldMatrix solidThermalConductivity(const Element &         element,
+  DimWorldMatrix solidThermalConductivity(const Element          &element,
                                           const SubControlVolume &scv) const
   {
     DimWorldMatrix K;

@@ -5,9 +5,9 @@ void write_vtk(double      t,
                int         iteration,
                const char *filename_prefix,
                int         N_slices,
-               double *    grid,
-               double *    velocity,
-               double *    pressure,
-               double *    diameter);
+               double     *grid,
+               double     *velocity,
+               double     *pressure,
+               double     *diameter);
 
 #endif

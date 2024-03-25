@@ -240,38 +240,38 @@ Common Functions
 
 /* Inquire version numbers of header files */
 FMI2_Export fmi2GetTypesPlatformTYPE fmi2GetTypesPlatform;
-FMI2_Export fmi2GetVersionTYPE fmi2GetVersion;
-FMI2_Export fmi2SetDebugLoggingTYPE fmi2SetDebugLogging;
+FMI2_Export fmi2GetVersionTYPE       fmi2GetVersion;
+FMI2_Export fmi2SetDebugLoggingTYPE  fmi2SetDebugLogging;
 
 /* Creation and destruction of FMU instances */
-FMI2_Export fmi2InstantiateTYPE fmi2Instantiate;
+FMI2_Export fmi2InstantiateTYPE  fmi2Instantiate;
 FMI2_Export fmi2FreeInstanceTYPE fmi2FreeInstance;
 
 /* Enter and exit initialization mode, terminate and reset */
-FMI2_Export fmi2SetupExperimentTYPE fmi2SetupExperiment;
+FMI2_Export fmi2SetupExperimentTYPE         fmi2SetupExperiment;
 FMI2_Export fmi2EnterInitializationModeTYPE fmi2EnterInitializationMode;
-FMI2_Export fmi2ExitInitializationModeTYPE fmi2ExitInitializationMode;
-FMI2_Export fmi2TerminateTYPE fmi2Terminate;
-FMI2_Export fmi2ResetTYPE fmi2Reset;
+FMI2_Export fmi2ExitInitializationModeTYPE  fmi2ExitInitializationMode;
+FMI2_Export fmi2TerminateTYPE               fmi2Terminate;
+FMI2_Export fmi2ResetTYPE                   fmi2Reset;
 
 /* Getting and setting variables values */
-FMI2_Export fmi2GetRealTYPE fmi2GetReal;
+FMI2_Export fmi2GetRealTYPE    fmi2GetReal;
 FMI2_Export fmi2GetIntegerTYPE fmi2GetInteger;
 FMI2_Export fmi2GetBooleanTYPE fmi2GetBoolean;
-FMI2_Export fmi2GetStringTYPE fmi2GetString;
+FMI2_Export fmi2GetStringTYPE  fmi2GetString;
 
-FMI2_Export fmi2SetRealTYPE fmi2SetReal;
+FMI2_Export fmi2SetRealTYPE    fmi2SetReal;
 FMI2_Export fmi2SetIntegerTYPE fmi2SetInteger;
 FMI2_Export fmi2SetBooleanTYPE fmi2SetBoolean;
-FMI2_Export fmi2SetStringTYPE fmi2SetString;
+FMI2_Export fmi2SetStringTYPE  fmi2SetString;
 
 /* Getting and setting the internal FMU state */
-FMI2_Export fmi2GetFMUstateTYPE fmi2GetFMUstate;
-FMI2_Export fmi2SetFMUstateTYPE fmi2SetFMUstate;
-FMI2_Export fmi2FreeFMUstateTYPE fmi2FreeFMUstate;
+FMI2_Export fmi2GetFMUstateTYPE            fmi2GetFMUstate;
+FMI2_Export fmi2SetFMUstateTYPE            fmi2SetFMUstate;
+FMI2_Export fmi2FreeFMUstateTYPE           fmi2FreeFMUstate;
 FMI2_Export fmi2SerializedFMUstateSizeTYPE fmi2SerializedFMUstateSize;
-FMI2_Export fmi2SerializeFMUstateTYPE fmi2SerializeFMUstate;
-FMI2_Export fmi2DeSerializeFMUstateTYPE fmi2DeSerializeFMUstate;
+FMI2_Export fmi2SerializeFMUstateTYPE      fmi2SerializeFMUstate;
+FMI2_Export fmi2DeSerializeFMUstateTYPE    fmi2DeSerializeFMUstate;
 
 /* Getting partial derivatives */
 FMI2_Export fmi2GetDirectionalDerivativeTYPE fmi2GetDirectionalDerivative;
@@ -281,19 +281,19 @@ Functions for FMI2 for Model Exchange
 ****************************************************/
 
 /* Enter and exit the different modes */
-FMI2_Export fmi2EnterEventModeTYPE fmi2EnterEventMode;
-FMI2_Export fmi2NewDiscreteStatesTYPE fmi2NewDiscreteStates;
+FMI2_Export fmi2EnterEventModeTYPE          fmi2EnterEventMode;
+FMI2_Export fmi2NewDiscreteStatesTYPE       fmi2NewDiscreteStates;
 FMI2_Export fmi2EnterContinuousTimeModeTYPE fmi2EnterContinuousTimeMode;
 FMI2_Export fmi2CompletedIntegratorStepTYPE fmi2CompletedIntegratorStep;
 
 /* Providing independent variables and re-initialization of caching */
-FMI2_Export fmi2SetTimeTYPE fmi2SetTime;
+FMI2_Export fmi2SetTimeTYPE             fmi2SetTime;
 FMI2_Export fmi2SetContinuousStatesTYPE fmi2SetContinuousStates;
 
 /* Evaluation of the model equations */
-FMI2_Export fmi2GetDerivativesTYPE fmi2GetDerivatives;
-FMI2_Export fmi2GetEventIndicatorsTYPE fmi2GetEventIndicators;
-FMI2_Export fmi2GetContinuousStatesTYPE fmi2GetContinuousStates;
+FMI2_Export fmi2GetDerivativesTYPE                fmi2GetDerivatives;
+FMI2_Export fmi2GetEventIndicatorsTYPE            fmi2GetEventIndicators;
+FMI2_Export fmi2GetContinuousStatesTYPE           fmi2GetContinuousStates;
 FMI2_Export fmi2GetNominalsOfContinuousStatesTYPE fmi2GetNominalsOfContinuousStates;
 
 /***************************************************
@@ -301,18 +301,18 @@ Functions for FMI2 for Co-Simulation
 ****************************************************/
 
 /* Simulating the slave */
-FMI2_Export fmi2SetRealInputDerivativesTYPE fmi2SetRealInputDerivatives;
+FMI2_Export fmi2SetRealInputDerivativesTYPE  fmi2SetRealInputDerivatives;
 FMI2_Export fmi2GetRealOutputDerivativesTYPE fmi2GetRealOutputDerivatives;
 
-FMI2_Export fmi2DoStepTYPE fmi2DoStep;
+FMI2_Export fmi2DoStepTYPE     fmi2DoStep;
 FMI2_Export fmi2CancelStepTYPE fmi2CancelStep;
 
 /* Inquire slave status */
-FMI2_Export fmi2GetStatusTYPE fmi2GetStatus;
-FMI2_Export fmi2GetRealStatusTYPE fmi2GetRealStatus;
+FMI2_Export fmi2GetStatusTYPE        fmi2GetStatus;
+FMI2_Export fmi2GetRealStatusTYPE    fmi2GetRealStatus;
 FMI2_Export fmi2GetIntegerStatusTYPE fmi2GetIntegerStatus;
 FMI2_Export fmi2GetBooleanStatusTYPE fmi2GetBooleanStatus;
-FMI2_Export fmi2GetStringStatusTYPE fmi2GetStringStatus;
+FMI2_Export fmi2GetStringStatusTYPE  fmi2GetStringStatus;
 
 #ifdef __cplusplus
 } /* end of extern "C" { */

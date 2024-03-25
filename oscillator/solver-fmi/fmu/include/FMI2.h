@@ -17,62 +17,62 @@ struct FMI2Functions_ {
     ****************************************************/
 
   /* required functions */
-  fmi2GetTypesPlatformTYPE *       fmi2GetTypesPlatform;
-  fmi2GetVersionTYPE *             fmi2GetVersion;
-  fmi2SetDebugLoggingTYPE *        fmi2SetDebugLogging;
-  fmi2InstantiateTYPE *            fmi2Instantiate;
-  fmi2FreeInstanceTYPE *           fmi2FreeInstance;
-  fmi2SetupExperimentTYPE *        fmi2SetupExperiment;
+  fmi2GetTypesPlatformTYPE        *fmi2GetTypesPlatform;
+  fmi2GetVersionTYPE              *fmi2GetVersion;
+  fmi2SetDebugLoggingTYPE         *fmi2SetDebugLogging;
+  fmi2InstantiateTYPE             *fmi2Instantiate;
+  fmi2FreeInstanceTYPE            *fmi2FreeInstance;
+  fmi2SetupExperimentTYPE         *fmi2SetupExperiment;
   fmi2EnterInitializationModeTYPE *fmi2EnterInitializationMode;
-  fmi2ExitInitializationModeTYPE * fmi2ExitInitializationMode;
-  fmi2TerminateTYPE *              fmi2Terminate;
-  fmi2ResetTYPE *                  fmi2Reset;
-  fmi2GetRealTYPE *                fmi2GetReal;
-  fmi2GetIntegerTYPE *             fmi2GetInteger;
-  fmi2GetBooleanTYPE *             fmi2GetBoolean;
-  fmi2GetStringTYPE *              fmi2GetString;
-  fmi2SetRealTYPE *                fmi2SetReal;
-  fmi2SetIntegerTYPE *             fmi2SetInteger;
-  fmi2SetBooleanTYPE *             fmi2SetBoolean;
-  fmi2SetStringTYPE *              fmi2SetString;
+  fmi2ExitInitializationModeTYPE  *fmi2ExitInitializationMode;
+  fmi2TerminateTYPE               *fmi2Terminate;
+  fmi2ResetTYPE                   *fmi2Reset;
+  fmi2GetRealTYPE                 *fmi2GetReal;
+  fmi2GetIntegerTYPE              *fmi2GetInteger;
+  fmi2GetBooleanTYPE              *fmi2GetBoolean;
+  fmi2GetStringTYPE               *fmi2GetString;
+  fmi2SetRealTYPE                 *fmi2SetReal;
+  fmi2SetIntegerTYPE              *fmi2SetInteger;
+  fmi2SetBooleanTYPE              *fmi2SetBoolean;
+  fmi2SetStringTYPE               *fmi2SetString;
 
   /* optional functions */
-  fmi2GetFMUstateTYPE *             fmi2GetFMUstate;
-  fmi2SetFMUstateTYPE *             fmi2SetFMUstate;
-  fmi2FreeFMUstateTYPE *            fmi2FreeFMUstate;
-  fmi2SerializedFMUstateSizeTYPE *  fmi2SerializedFMUstateSize;
-  fmi2SerializeFMUstateTYPE *       fmi2SerializeFMUstate;
-  fmi2DeSerializeFMUstateTYPE *     fmi2DeSerializeFMUstate;
+  fmi2GetFMUstateTYPE              *fmi2GetFMUstate;
+  fmi2SetFMUstateTYPE              *fmi2SetFMUstate;
+  fmi2FreeFMUstateTYPE             *fmi2FreeFMUstate;
+  fmi2SerializedFMUstateSizeTYPE   *fmi2SerializedFMUstateSize;
+  fmi2SerializeFMUstateTYPE        *fmi2SerializeFMUstate;
+  fmi2DeSerializeFMUstateTYPE      *fmi2DeSerializeFMUstate;
   fmi2GetDirectionalDerivativeTYPE *fmi2GetDirectionalDerivative;
 
   /***************************************************
     Functions for FMI 2.0 for Model Exchange
     ****************************************************/
 
-  fmi2EnterEventModeTYPE *               fmi2EnterEventMode;
-  fmi2NewDiscreteStatesTYPE *            fmi2NewDiscreteStates;
-  fmi2EnterContinuousTimeModeTYPE *      fmi2EnterContinuousTimeMode;
-  fmi2CompletedIntegratorStepTYPE *      fmi2CompletedIntegratorStep;
-  fmi2SetTimeTYPE *                      fmi2SetTime;
-  fmi2SetContinuousStatesTYPE *          fmi2SetContinuousStates;
-  fmi2GetDerivativesTYPE *               fmi2GetDerivatives;
-  fmi2GetEventIndicatorsTYPE *           fmi2GetEventIndicators;
-  fmi2GetContinuousStatesTYPE *          fmi2GetContinuousStates;
+  fmi2EnterEventModeTYPE                *fmi2EnterEventMode;
+  fmi2NewDiscreteStatesTYPE             *fmi2NewDiscreteStates;
+  fmi2EnterContinuousTimeModeTYPE       *fmi2EnterContinuousTimeMode;
+  fmi2CompletedIntegratorStepTYPE       *fmi2CompletedIntegratorStep;
+  fmi2SetTimeTYPE                       *fmi2SetTime;
+  fmi2SetContinuousStatesTYPE           *fmi2SetContinuousStates;
+  fmi2GetDerivativesTYPE                *fmi2GetDerivatives;
+  fmi2GetEventIndicatorsTYPE            *fmi2GetEventIndicators;
+  fmi2GetContinuousStatesTYPE           *fmi2GetContinuousStates;
   fmi2GetNominalsOfContinuousStatesTYPE *fmi2GetNominalsOfContinuousStates;
 
   /***************************************************
     Functions for FMI 2.0 for Co-Simulation
     ****************************************************/
 
-  fmi2SetRealInputDerivativesTYPE * fmi2SetRealInputDerivatives;
+  fmi2SetRealInputDerivativesTYPE  *fmi2SetRealInputDerivatives;
   fmi2GetRealOutputDerivativesTYPE *fmi2GetRealOutputDerivatives;
-  fmi2DoStepTYPE *                  fmi2DoStep;
-  fmi2CancelStepTYPE *              fmi2CancelStep;
-  fmi2GetStatusTYPE *               fmi2GetStatus;
-  fmi2GetRealStatusTYPE *           fmi2GetRealStatus;
-  fmi2GetIntegerStatusTYPE *        fmi2GetIntegerStatus;
-  fmi2GetBooleanStatusTYPE *        fmi2GetBooleanStatus;
-  fmi2GetStringStatusTYPE *         fmi2GetStringStatus;
+  fmi2DoStepTYPE                   *fmi2DoStep;
+  fmi2CancelStepTYPE               *fmi2CancelStep;
+  fmi2GetStatusTYPE                *fmi2GetStatus;
+  fmi2GetRealStatusTYPE            *fmi2GetRealStatus;
+  fmi2GetIntegerStatusTYPE         *fmi2GetIntegerStatus;
+  fmi2GetBooleanStatusTYPE         *fmi2GetBooleanStatus;
+  fmi2GetStringStatusTYPE          *fmi2GetStringStatus;
 };
 
 /***************************************************
@@ -145,7 +145,7 @@ FMI_STATIC FMIStatus FMI2SerializeFMUstate(FMIInstance *instance, fmi2FMUstate F
 FMI_STATIC FMIStatus FMI2DeSerializeFMUstate(FMIInstance *instance, const fmi2Byte serializedState[], size_t size, fmi2FMUstate *FMUstate);
 
 /* Getting partial derivatives */
-FMI_STATIC FMIStatus FMI2GetDirectionalDerivative(FMIInstance *            instance,
+FMI_STATIC FMIStatus FMI2GetDirectionalDerivative(FMIInstance             *instance,
                                                   const fmi2ValueReference vUnknown_ref[], size_t nUnknown,
                                                   const fmi2ValueReference vKnown_ref[], size_t nKnown,
                                                   const fmi2Real dvKnown[],
@@ -186,12 +186,12 @@ Types for Functions for FMI2 for Co-Simulation
 ****************************************************/
 
 /* Simulating the slave */
-FMI_STATIC FMIStatus FMI2SetRealInputDerivatives(FMIInstance *            instance,
+FMI_STATIC FMIStatus FMI2SetRealInputDerivatives(FMIInstance             *instance,
                                                  const fmi2ValueReference vr[], size_t nvr,
                                                  const fmi2Integer order[],
                                                  const fmi2Real    value[]);
 
-FMI_STATIC FMIStatus FMI2GetRealOutputDerivatives(FMIInstance *            instance,
+FMI_STATIC FMIStatus FMI2GetRealOutputDerivatives(FMIInstance             *instance,
                                                   const fmi2ValueReference vr[], size_t nvr,
                                                   const fmi2Integer order[],
                                                   fmi2Real          value[]);
