@@ -13,40 +13,41 @@ internalField   #codeStream
 {
     codeInclude
     #{
-	#include "fvCFD.H"
+        #include "fvCFD.H"
     #};
 
     codeOptions
     #{
-	-I$(LIB_SRC)/finiteVolume/lnInclude \
-	-I$(LIB_SRC)/meshTools/lnInclude
+        -I$(LIB_SRC)/finiteVolume/lnInclude \
+        -I$(LIB_SRC)/meshTools/lnInclude
     #};
 
     codeLibs
     #{
-	-lmeshTools \
-	-lfiniteVolume
+        -lmeshTools \
+        -lfiniteVolume
     #};
 
     code
 
     #{
-	const IOdictionary& d = static_cast<const IOdictionary&>(dict);
-	const fvMesh& mesh = refCast<const fvMesh>(d.db());
-
-	scalarField T(mesh.nCells());
-
-	const vectorField& CC = mesh.C(); //cell center
+        const IOdictionary& d = static_cast<const IOdictionary&>(dict);
+        const fvMesh& mesh = refCast<const fvMesh>(d.db());
+        const vectorField& CC = mesh.C(); // cell center
 
 
-	forAll(CC,cellI)
-	{
-	    	scalar x = CC[cellI].x();
-	    	scalar y = CC[cellI].y();
+        // assign values
 
-	    	T[cellI] = 1+pow(x,2)+(3*pow(y,2));//t is zero for initial conditions
-	}
-	T.writeEntry("", os);
+
+        scalarField T(mesh.nCells());
+        forAll(CC, cellI)
+        {
+            scalar x = CC[cellI].x();
+            scalar y = CC[cellI].y();
+
+            T[cellI] = 1 + pow(x, 2) + (3 * pow(y, 2)); // t is zero for initial conditions
+        }
+        T.writeEntry("", os);
     #};
 };
 
@@ -65,14 +66,15 @@ boundaryField
         name            DirichletBoundary;
         code
         #{
-            const       vectorField& Cf = patch().Cf();
-            scalarField&    field = *this;
+            const vectorField& Cf = patch().Cf();
             const scalar t = this->db().time().value();
-            forAll(Cf,faceI)
+            scalarField& field = *this;
+            forAll(Cf, faceI)
             {
-                const scalar x=Cf[faceI][0];
-                const scalar y=Cf[faceI][1];
-                field[faceI]=1+pow(x,2)+(3*pow(y,2))+1.2*t;
+            const scalar x = Cf[faceI].x();
+            const scalar y = Cf[faceI].y();
+
+            field[faceI] = 1 + pow(x, 2) + (3 * pow(y, 2)) + 1.2 * t;
             }
 
         #};
