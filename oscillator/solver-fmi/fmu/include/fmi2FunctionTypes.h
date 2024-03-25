@@ -220,8 +220,8 @@ typedef fmi2Status fmi2NewDiscreteStatesTYPE(fmi2Component c, fmi2EventInfo *fmi
 typedef fmi2Status fmi2EnterContinuousTimeModeTYPE(fmi2Component c);
 typedef fmi2Status fmi2CompletedIntegratorStepTYPE(fmi2Component c,
                                                    fmi2Boolean   noSetFMUStatePriorToCurrentPoint,
-                                                   fmi2Boolean * enterEventMode,
-                                                   fmi2Boolean * terminateSimulation);
+                                                   fmi2Boolean  *enterEventMode,
+                                                   fmi2Boolean  *terminateSimulation);
 
 /* Providing independent variables and re-initialization of caching */
 typedef fmi2Status fmi2SetTimeTYPE(fmi2Component c, fmi2Real time);

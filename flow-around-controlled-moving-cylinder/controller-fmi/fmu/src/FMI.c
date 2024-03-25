@@ -139,7 +139,7 @@ const char *FMIValuesToString(FMIInstance *instance, size_t vValues, const size_
 
     for (size_t i = 0; i < vValues; i++) {
 
-      char * s = &instance->buf2[pos];
+      char  *s = &instance->buf2[pos];
       size_t n = instance->bufsize2 - pos;
 
       switch (variableType) {

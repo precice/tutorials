@@ -97,8 +97,8 @@ typedef void (*fmi3IntermediateUpdateCallback)(
     fmi3Boolean             intermediateVariableGetAllowed,
     fmi3Boolean             intermediateStepFinished,
     fmi3Boolean             canReturnEarly,
-    fmi3Boolean *           earlyReturnRequested,
-    fmi3Float64 *           earlyReturnTime);
+    fmi3Boolean            *earlyReturnRequested,
+    fmi3Float64            *earlyReturnTime);
 /* end::CallbackIntermediateUpdate[] */
 
 /* tag::CallbackPreemptionLock[] */
@@ -372,7 +372,7 @@ typedef fmi3Status fmi3SetClockTYPE(fmi3Instance             instance,
 /* tag::GetNumberOfVariableDependencies[] */
 typedef fmi3Status fmi3GetNumberOfVariableDependenciesTYPE(fmi3Instance       instance,
                                                            fmi3ValueReference valueReference,
-                                                           size_t *           nDependencies);
+                                                           size_t            *nDependencies);
 /* end::GetNumberOfVariableDependencies[] */
 
 /* tag::GetVariableDependencies[] */
@@ -401,7 +401,7 @@ typedef fmi3Status fmi3FreeFMUStateTYPE(fmi3Instance instance, fmi3FMUState *FMU
 /* tag::SerializedFMUStateSize[] */
 typedef fmi3Status fmi3SerializedFMUStateSizeTYPE(fmi3Instance instance,
                                                   fmi3FMUState FMUState,
-                                                  size_t *     size);
+                                                  size_t      *size);
 /* end::SerializedFMUStateSize[] */
 
 /* tag::SerializeFMUState[] */
@@ -415,7 +415,7 @@ typedef fmi3Status fmi3SerializeFMUStateTYPE(fmi3Instance instance,
 typedef fmi3Status fmi3DeserializeFMUStateTYPE(fmi3Instance   instance,
                                                const fmi3Byte serializedState[],
                                                size_t         size,
-                                               fmi3FMUState * FMUState);
+                                               fmi3FMUState  *FMUState);
 /* end::DeserializeFMUState[] */
 
 /* Getting partial derivatives */
@@ -582,12 +582,12 @@ typedef fmi3Status fmi3GetNominalsOfContinuousStatesTYPE(fmi3Instance instance,
 
 /* tag::GetNumberOfEventIndicators[] */
 typedef fmi3Status fmi3GetNumberOfEventIndicatorsTYPE(fmi3Instance instance,
-                                                      size_t *     nEventIndicators);
+                                                      size_t      *nEventIndicators);
 /* end::GetNumberOfEventIndicators[] */
 
 /* tag::GetNumberOfContinuousStates[] */
 typedef fmi3Status fmi3GetNumberOfContinuousStatesTYPE(fmi3Instance instance,
-                                                       size_t *     nContinuousStates);
+                                                       size_t      *nContinuousStates);
 /* end::GetNumberOfContinuousStates[] */
 
 /***************************************************

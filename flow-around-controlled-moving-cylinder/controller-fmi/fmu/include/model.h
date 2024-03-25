@@ -90,13 +90,13 @@ typedef void (*loggerType)(void *componentEnvironment, int status, const char *c
 typedef void (*lockPreemptionType)();
 typedef void (*unlockPreemptionType)();
 
-typedef void (*intermediateUpdateType)(void *  instanceEnvironment,
+typedef void (*intermediateUpdateType)(void   *instanceEnvironment,
                                        double  intermediateUpdateTime,
                                        bool    intermediateVariableSetRequested,
                                        bool    intermediateVariableGetAllowed,
                                        bool    intermediateStepFinished,
                                        bool    canReturnEarly,
-                                       bool *  earlyReturnRequested,
+                                       bool   *earlyReturnRequested,
                                        double *earlyReturnTime);
 
 typedef void (*clockUpdateType)(void *instanceEnvironment);
@@ -106,9 +106,9 @@ typedef struct {
   double        startTime;
   double        time;
   double        solverStepSize;
-  const char *  instanceName;
+  const char   *instanceName;
   InterfaceType type;
-  const char *  resourceLocation;
+  const char   *resourceLocation;
 
   Status status;
 
@@ -123,7 +123,7 @@ typedef struct {
   bool logEvents;
   bool logErrors;
 
-  void *     componentEnvironment;
+  void      *componentEnvironment;
   ModelState state;
 
   // event info
@@ -156,10 +156,10 @@ typedef struct {
 ModelInstance *createModelInstance(
     loggerType             logger,
     intermediateUpdateType intermediateUpdate,
-    void *                 componentEnvironment,
-    const char *           instanceName,
-    const char *           instantiationToken,
-    const char *           resourceLocation,
+    void                  *componentEnvironment,
+    const char            *instanceName,
+    const char            *instantiationToken,
+    const char            *resourceLocation,
     bool                   loggingOn,
     InterfaceType          interfaceType);
 
@@ -214,7 +214,7 @@ Status getOutputDerivative(ModelInstance *comp, ValueReference valueReference, i
 Status getPartialDerivative(ModelInstance *comp, ValueReference unknown, ValueReference known, double *partialDerivative);
 void   getEventIndicators(ModelInstance *comp, double z[], size_t nz);
 void   eventUpdate(ModelInstance *comp);
-//void updateEventTime(ModelInstance *comp);
+// void updateEventTime(ModelInstance *comp);
 
 bool   invalidNumber(ModelInstance *comp, const char *f, const char *arg, size_t actual, size_t expected);
 bool   invalidState(ModelInstance *comp, const char *f, int statesExpected);

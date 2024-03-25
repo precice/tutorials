@@ -11,5 +11,5 @@ int fluidComputeSolutionSerial(
     int                 N,
     double              kappa,
     double              tau,
-    double *            velocity,
-    double *            pressure);
+    double             *velocity,
+    double             *pressure);

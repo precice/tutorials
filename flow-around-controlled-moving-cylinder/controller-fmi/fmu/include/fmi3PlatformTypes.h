@@ -74,11 +74,11 @@ typedef bool            fmi3Boolean; /* Data type to be used with fmi3True and f
 typedef char            fmi3Char;    /* Data type for one character */
 typedef const fmi3Char *fmi3String;  /* Data type for character strings
                                          ('\0' terminated, UTF-8 encoded) */
-typedef uint8_t         fmi3Byte;    /* Smallest addressable unit of the machine
+typedef uint8_t fmi3Byte;            /* Smallest addressable unit of the machine
                                          (typically one byte) */
 typedef const fmi3Byte *fmi3Binary;  /* Data type for binary data
                                          (out-of-band length terminated) */
-typedef bool            fmi3Clock;   /* Data type to be used with fmi3ClockActive and
+typedef bool fmi3Clock;              /* Data type to be used with fmi3ClockActive and
                                          fmi3ClockInactive */
 
 /* Values for fmi3Boolean */

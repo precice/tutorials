@@ -115,7 +115,7 @@ struct FMIInstance_ {
 
   void *userData;
 
-  FMILogMessage *     logMessage;
+  FMILogMessage      *logMessage;
   FMILogFunctionCall *logFunctionCall;
 
   double time;
