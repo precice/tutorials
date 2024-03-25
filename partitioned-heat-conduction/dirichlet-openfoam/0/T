@@ -21,13 +21,13 @@ internalField   #codeStream
 	-I$(LIB_SRC)/finiteVolume/lnInclude \
 	-I$(LIB_SRC)/meshTools/lnInclude
     #};
-	
+
     codeLibs
     #{
 	-lmeshTools \
 	-lfiniteVolume
     #};
-	
+
     code
 
     #{
@@ -36,14 +36,14 @@ internalField   #codeStream
 
 	scalarField T(mesh.nCells());
 
-	const vectorField& CC = mesh.C(); //cell center 
+	const vectorField& CC = mesh.C(); //cell center
 
 
 	forAll(CC,cellI)
 	{
 	    	scalar x = CC[cellI].x();
 	    	scalar y = CC[cellI].y();
-		
+
 	    	T[cellI] = 1+pow(x,2)+(3*pow(y,2));//t is zero for initial conditions
 	}
 	T.writeEntry("", os);
@@ -74,7 +74,7 @@ boundaryField
                 const scalar y=Cf[faceI][1];
                 field[faceI]=1+pow(x,2)+(3*pow(y,2))+1.2*t;
             }
-           
+
         #};
     }
 
