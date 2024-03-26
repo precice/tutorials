@@ -48,6 +48,7 @@ history
 postProcessing/
 *.foam
 *.OpenFOAM
+dynamicCode
 
 # CalculiX
 spooles.out
