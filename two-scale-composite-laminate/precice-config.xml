@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<precice-configuration experimental="true">
+
+    <log>
+	<sink type="stream" output="stdout"  filter= "%Severity% > debug" enabled="true" />
+    </log>  
+    
+    <data:vector name="stresses1to3"/>
+    <data:vector name="stresses4to6"/>
+    <data:vector name="strains1to3"/>
+    <data:vector name="strains4to6"/>
+
+    <mesh name="laminate-meso-mesh" dimensions="3">
+       <use-data name="stresses1to3"/>
+       <use-data name="stresses4to6"/>
+       <use-data name="strains1to3"/>
+       <use-data name="strains4to6"/>
+    </mesh>
+
+    <participant name="Laminate-3D-ply">
+      <provide-mesh name="laminate-meso-mesh"/>
+      <read-data name="stresses1to3" mesh="laminate-meso-mesh"/>
+      <read-data name="stresses4to6" mesh="laminate-meso-mesh"/>
+      <write-data name="strains1to3" mesh="laminate-meso-mesh"/>
+      <write-data name="strains4to6" mesh="laminate-meso-mesh"/>
+    </participant>
+
+    <participant name="Micro-Manager">
+      <receive-mesh name="laminate-meso-mesh" from="Laminate-3D-ply" direct-access="true" safety-factor="0.0"/>
+      <read-data name="strains1to3" mesh="laminate-meso-mesh"/>
+      <read-data name="strains4to6" mesh="laminate-meso-mesh"/>
+      <write-data name="stresses1to3" mesh="laminate-meso-mesh"/>
+      <write-data name="stresses4to6" mesh="laminate-meso-mesh"/>
+      <intra-comm:sockets port="0" exchange-directory="/home/desaii/tutorials/two-scale-composite-laminate/micro-ruc-abaqus" network="lo"/>
+    </participant>
+
+    <m2n:sockets acceptor="Micro-Manager" connector="Laminate-3D-ply" network="ib0" exchange-directory="/home/desaii/tutorials/two-scale-composite-laminate"/>
+
+    <coupling-scheme:serial-explicit>
+       <participants first="Laminate-3D-ply" second="Micro-Manager"/>
+       <max-time value="1"/>
+       <time-window-size method="first-participant" value="-1"/>
+       <exchange data="stresses1to3" mesh="laminate-meso-mesh" from="Micro-Manager" to="Laminate-3D-ply"/>
+       <exchange data="stresses4to6" mesh="laminate-meso-mesh" from="Micro-Manager" to="Laminate-3D-ply"/>
+       <exchange data="strains1to3" mesh="laminate-meso-mesh" from="Laminate-3D-ply" to="Micro-Manager"/>
+       <exchange data="strains4to6" mesh="laminate-meso-mesh" from="Laminate-3D-ply" to="Micro-Manager"/>
+    </coupling-scheme:serial-explicit>
+
+</precice-configuration>
