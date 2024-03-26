@@ -70,6 +70,7 @@ REPE_OUT/
 restart_flow_*.dat
 forces_breakdown.dat
 surface_flow_*.csv
+history_*.csv
 
 # ASTE
 result.stats.json
