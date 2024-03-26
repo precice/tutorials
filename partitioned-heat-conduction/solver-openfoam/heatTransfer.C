@@ -147,6 +147,8 @@ int main(int argc, char* argv[])
     {
         Info << "Time = " << runTime.timeName() << nl << endl;
 
+        // We need to update the coded boundary conditions before solving to account for its time dependency properly
+        T.correctBoundaryConditions();
         while (simple.correctNonOrthogonal())
         {
             fvScalarMatrix TEqn(
