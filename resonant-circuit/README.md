@@ -2,7 +2,7 @@
 
 The purpose of this tutorial is to illustrate the usage of preCICE to couple MATLAB code. Two different MATLAB solvers will be coupled to simulate a two-element LC circuit. This type of circuit consists on a very simple system with one inductor and one capacitor:
 
-![LC circuit diagram [1]](images/diagram.svg)
+![LC circuit diagram [1]](images/tutorials-resonant-circuit-diagram.svg)
 
 The circuit is described by the following system of ODEs:
 
@@ -30,11 +30,13 @@ Afterward, do the same for the second solver.
 After adding the MATLAB bindings to the MATLAB path (in both instances), run the following commands:
 
 In the first MATLAB instance one can run the solver for the current:
+
 ```MATLAB
 Solver_Coil
 ```
 
 And in the second MATLAB instance the solver for the voltage:
+
 ```MATLAB
 Solver_Capacitor
 ```
