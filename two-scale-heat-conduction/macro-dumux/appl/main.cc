@@ -296,8 +296,8 @@ int main(int argc, char **argv)
       couplingParticipant.advance(dt);
       preciceDt = couplingParticipant.getMaxTimeStepSize();
       dt        = std::min(preciceDt, std::min(nonLinearSolver.suggestTimeStepSize(
-                                            timeLoop->timeStepSize()),
-                                        getParam<Scalar>("TimeLoop.MaxDt")));
+                                                   timeLoop->timeStepSize()),
+                                               getParam<Scalar>("TimeLoop.MaxDt")));
       if (preciceDt != dt) {
         std::cout << "preciceDt too large. We currently assume fixed timestep "
                      "size but timesteps no longer correspond: preciceDt = "

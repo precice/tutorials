@@ -46,9 +46,9 @@ public:
   void
   solve(const Vector &forces,
         const Vector &initial_vertices,
-        Vector &      vertices,
-        double &      theta,
-        double &      theta_dot,
+        Vector       &vertices,
+        double       &theta,
+        double       &theta_dot,
         const double  spring_constant,
         const double  delta_t) const
   {

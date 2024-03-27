@@ -105,7 +105,7 @@ Many thanks to [Mosayeb Shams](https://github.com/mosayebshams) from Herriot Wat
   
 ## References
 
-[1] L. Willeke, D. Schneider, B. Uekermann, [A preCICE-FMI Runner to Couple FMUs to PDE-Based Simulations](https://doi.org/10.3384/ecp204), Proceedings 15th Intern. Modelica Conference, 2023
+[1] L. Willeke, D. Schneider, B. Uekermann, [A preCICE-FMI Runner to Couple FMUs to PDE-Based Simulations](https://doi.org/10.3384/ecp204479), Proceedings 15th Intern. Modelica Conference, 2023
 
 [2] Placzek, A. and Sigrist, J.F. and Hamdouni, A. [Numerical Simulation of an oscillating cylinder in a cross-flow at low Reynolds number: Forced and free oscillations](https://dx.doi.org/10.1016/j.compfluid.2008.01.007), Computers and Fluids, 2009, 38 (1), pp.80-100
 

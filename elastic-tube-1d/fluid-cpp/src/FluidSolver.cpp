@@ -20,14 +20,14 @@ int main(int argc, char **argv)
   }
 
   std::string  configFileName(argv[1]);
-  int          domainSize  = 100; //N
+  int          domainSize  = 100; // N
   int          chunkLength = domainSize + 1;
   const double kappa       = 100;
   const double L           = 10.0; // tube length
 
   const std::string solverName = "Fluid";
 
-  std::string outputFilePrefix = "./output/out_fluid"; //extra
+  std::string outputFilePrefix = "./output/out_fluid"; // extra
 
   precice::Participant interface(solverName, configFileName, 0, 1);
   std::cout << "preCICE configured..." << std::endl;

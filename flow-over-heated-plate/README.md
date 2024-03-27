@@ -17,7 +17,7 @@ This scenario consists of one fluid and one solid participant and it is inspired
 
 The test case is two-dimensional and a serial-implicit coupling with Aitken underrelaxation is used for the coupling.
 
-The inlet velocity is $$ u_{\infty} = 0.1 m/s $$, the inlet temperature is $$ T_{\infty} = 300K $$. The fluid and solid have the same thermal conductivities $$ k_S = k_F = 100 W/m/K $$. Further material properties of the fluid are its viscosity $$ mu = 0.0002 kg/m/s $$ and specific heat capacity $$ c_p = 5000 J/kg/K $$. The Prandtl number $$ Pr = 0.01 $$ follows from thermal conductivity, viscosity and specific heat capacity. The solid has the thermal diffusivity $$ \alpha = 1 m^2/s $$. The gravitational acceleration is $$ g = 9.81 m/s^2 $$.
+The inlet velocity is $$ u_{\infty} = 0.1 m/s $$, the inlet temperature is $$ T_{\infty} = 300K $$. The fluid and solid have the same thermal conductivities $$ k_S = k_F = 100 W/m/K $$. Further material properties of the fluid are its viscosity $$ \mu = 0.0002 kg/m/s $$ and specific heat capacity $$ c_p = 5000 J/kg/K $$. The Prandtl number $$ Pr = 0.01 $$ follows from thermal conductivity, viscosity and specific heat capacity. The solid has the thermal diffusivity $$ \alpha = 1 m^2/s $$. The gravitational acceleration is $$ g = 9.81 m/s^2 $$.
 
 ## Available solvers
 
@@ -35,7 +35,7 @@ Solid participant:
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
-* Dune-Fem. For more information, have a look at the [official documentation of Dune-Fem](https://www.dune-project.org/sphinx/dune-fem/). The solver can be installed through [PyPI](https://pypi.org/project/dune-fem/). Make sure that you are in a Python virtual environment first, which you can create inside the `solid-dune` directory and load again before running (you may need to install some tools again in this environment). Please note that Dune-Fem uses just-in-time compilation: The first time you run the solver script, it will take some time.
+* Dune-Fem. For more information, have a look at the [official documentation of Dune-Fem](https://www.dune-project.org/sphinx/dune-fem/). The `run.sh` script installs the solver from [PyPI](https://pypi.org/project/dune-fem/) into a Python virtual environment. Please note that Dune-Fem uses just-in-time compilation: The first time you run the solver script, it will take some time.
 
 It is also possible to use CalculiX as solid solver. In that case, two coupling meshes are needed: CalculiX read/writes temperatures on nodes, but read/writes heat-fluxes on face centers. This requires some adaptation of the `precice-config.xml` file, and [a separate tutorial](tutorials-flow-over-heated-plate-two-meshes.html) has been designed for it.
 
