@@ -56,8 +56,6 @@ The solver for the current also records the current and voltage through time and
 
 After successfully running the coupling, one can find the curves in the folder `capacitor-matlab` as `Curves.png`.
 
-![Example of visualization of the simulation results](ref_images/Sample_Curves.png)
-
 ## References
 
 [1] By First Harmonic - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=21991221
