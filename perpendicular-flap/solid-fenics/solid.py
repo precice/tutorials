@@ -131,26 +131,18 @@ def Wext(u_):
 # Update functions
 
 # Update acceleration
-def update_a(u, u_old, v_old, a_old, ufl=True):
-    if ufl:
-        dt_ = dt
-        beta_ = beta
-    else:
-        dt_ = float(dt)
-        beta_ = float(beta)
+def update_a(u, u_old, v_old, a_old):
+    dt_ = float(dt)
+    beta_ = float(beta)
 
     return ((u - u_old - dt_ * v_old) / beta / dt_ ** 2
             - (1 - 2 * beta_) / 2 / beta_ * a_old)
 
 
 # Update velocity
-def update_v(a, u_old, v_old, a_old, ufl=True):
-    if ufl:
-        dt_ = dt
-        gamma_ = gamma
-    else:
-        dt_ = float(dt)
-        gamma_ = float(gamma)
+def update_v(a, u_old, v_old, a_old):
+    dt_ = float(dt)
+    gamma_ = float(gamma)
 
     return v_old + dt_ * ((1 - gamma_) * a_old + gamma_ * a)
 
@@ -162,8 +154,8 @@ def update_fields(u, u_old, v_old, a_old):
     v0_vec, a0_vec = v_old.vector(), a_old.vector()
 
     # call update functions
-    a_vec = update_a(u_vec, u0_vec, v0_vec, a0_vec, ufl=False)
-    v_vec = update_v(a_vec, u0_vec, v0_vec, a0_vec, ufl=False)
+    a_vec = update_a(u_vec, u0_vec, v0_vec, a0_vec)
+    v_vec = update_v(a_vec, u0_vec, v0_vec, a0_vec)
 
     # assign u->u_old
     v_old.vector()[:], a_old.vector()[:] = v_vec, a_vec
@@ -175,8 +167,8 @@ def avg(x_old, x_new, alpha):
 
 
 # residual
-a_np1 = update_a(du, u_n, v_n, a_n, ufl=True)
-v_np1 = update_v(a_np1, u_n, v_n, a_n, ufl=True)
+a_np1 = update_a(du, u_n, v_n, a_n)
+v_np1 = update_v(a_np1, u_n, v_n, a_n)
 
 res = m(avg(a_n, a_np1, alpha_m), v) + k(avg(u_n, du, alpha_f), v)
 
