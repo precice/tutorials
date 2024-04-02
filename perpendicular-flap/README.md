@@ -27,6 +27,8 @@ Fluid participant:
 
 * SU2. As opposed to the other two fluid codes, SU2 is in particular specialized for compressible flow. Therefore the default simulation parameters haven been adjusted in order to pull the setup into the compressible flow regime. For more information, have a look at the [SU2 adapter documentation](https://www.precice.org/adapter-su2-overview.html).
 
+* Fake. A simple python script that acts as a fake solver and provides a time-dependent force. This solver can be used for debugging of the solid participant and its adapter. Note that [ASTE's replay mode](https://precice.org/tooling-aste.html#replay-mode) has a similar use case.
+
 Solid participant:
 
 * FEniCS. The structural model is currently limited to linear elasticity. For more information, have a look at the [FEniCS adapter documentation](https://www.precice.org/adapter-fenics.html).
@@ -84,4 +86,6 @@ Reasons for the differences:
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
+
+## Use `fake-fluid' 
 {% enddisclaimer %}
