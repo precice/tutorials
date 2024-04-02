@@ -27,7 +27,7 @@ Fluid participant:
 
 * SU2. As opposed to the other two fluid codes, SU2 is in particular specialized for compressible flow. Therefore the default simulation parameters haven been adjusted in order to pull the setup into the compressible flow regime. For more information, have a look at the [SU2 adapter documentation](https://www.precice.org/adapter-su2-overview.html).
 
-* Fake. A simple python script that acts as a fake solver and provides a time-dependent force. This solver can be used for debugging of the solid participant and its adapter. It also works with implicit coupling, thus no changes to the preCICE configuration are necessary. Note that [ASTE's replay mode](https://precice.org/tooling-aste.html#replay-mode) has a similar use case.
+* Fake. A simple python script that acts as a fake solver and provides an arbitrary force, linearly-increasing per length of the flap. This solver can be used for debugging of the solid participant and its adapter. It also technically works with implicit coupling, thus no changes to the preCICE configuration are necessary. Note that [ASTE's replay mode](https://precice.org/tooling-aste.html#replay-mode) has a similar use case and could also feed artificial or previously recorded real data, replacing an actual solver.
 
 Solid participant:
 
