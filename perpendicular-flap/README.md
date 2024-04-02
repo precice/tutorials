@@ -86,6 +86,4 @@ Reasons for the differences:
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
-
-## Use `fake-fluid' 
 {% enddisclaimer %}
