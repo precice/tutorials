@@ -15,6 +15,7 @@ solver_process_size = 1
 
 interface = precice.Participant(participant_name, configuration_file_name, solver_process_index, solver_process_size)
 dimensions = interface.get_mesh_dimensions(mesh_name)
+assert(dimensions == 2)
 
 # infomation about beam geometry and position
 W = 0.1  # width of the beam
