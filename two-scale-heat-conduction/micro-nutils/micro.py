@@ -13,12 +13,13 @@ from copy import deepcopy
 
 class MicroSimulation:
 
-    def __init__(self):
+    def __init__(self, sim_id):
         """
         Constructor of MicroSimulation class.
         """
-        # Initial parameters
+        self._sim_id = sim_id
 
+        # Initial parameters
         # self._nelems = 10  # Elements in one direction (original case from Bastidas et al.)
         self._nelems = 6  # Elements in one direction
 
@@ -43,6 +44,7 @@ class MicroSimulation:
         self._initial_condition_is_set = False
         self._k_nm1 = None  # Average effective conductivity of last time step
 
+    def initialize(self):
         # Define initial namespace
         self._ns = function.Namespace()
         self._ns.x = self._geom
@@ -85,6 +87,19 @@ class MicroSimulation:
         self._solphi = solphi  # Save solution of phi
         self._psi_nm1 = psi  # Average porosity value of last time step
 
+        # Solve the heat cell problem
+        solu = self._solve_heat_cell_problem(self._topo, solphi)
+        k = self._get_eff_conductivity(self._topo, solu, solphi)
+
+        self._solu = solu  # Save solution for output
+
+        output_data = dict()
+        output_data["k_00"] = k[0][0]
+        output_data["k_11"] = k[1][1]
+        output_data["porosity"] = psi
+
+        return output_data
+
     def _reinitialize_namespace(self, topo):
         self._ns = None  # Clear old namespace
         self._ns = function.Namespace()
@@ -112,7 +127,7 @@ class MicroSimulation:
 
     @staticmethod
     def _analytical_phasefield(x, y, r, lam):
-        return 1. / (1. + function.exp(-4. / lam * (function.sqrt(x ** 2 + y ** 2) - r + 0.001)))
+        return 1. / (1. + np.exp(-4. / lam * (np.sqrt(x ** 2 + y ** 2) - r + 0.001)))
 
     @staticmethod
     def _get_analytical_phasefield(topo, ns, degree_phi, lam, r):
@@ -123,10 +138,10 @@ class MicroSimulation:
         return solphi
 
     # def output(self):
-    #    bezier = self._topo.sample('bezier', 2)
-    #    x, u, phi = bezier.eval(['x_i', 'u_i', 'phi'] @ self._ns, solu=self._solu, solphi=self._solphi)
-    #    with treelog.add(treelog.DataLog()):
-    #        export.vtk("micro-heat", bezier.tri, x, T=u, phi=phi)
+    #  bezier = self._topo.sample('bezier', 2)
+    #  x, u, phi = bezier.eval(['x_i', 'u_i', 'phi'] @ self._ns, solu=self._solu, solphi=self._solphi)
+    #  with treelog.add(treelog.DataLog()):
+    #      export.vtk("micro-heat-{}".format(self._sim_id), bezier.tri, x, T=u, phi=phi)
 
     def get_state(self):
         return [self._solphi.copy(), deepcopy(self._topo)]
@@ -263,7 +278,7 @@ class MicroSimulation:
 
 
 def main():
-    micro_problem = MicroSimulation()
+    micro_problem = MicroSimulation(0)
     dt = 1e-3
     micro_problem.initialize()
     concentrations = [0.5, 0.4]

@@ -37,11 +37,11 @@ class OnePNISpatialParams
   using ParentType =
       FVPorousMediumFlowSpatialParamsOneP<GridGeometry, Scalar, ThisType>;
   static const int dimWorld = GridView::dimensionworld;
-  using DimWorldMatrix = Dune::FieldMatrix<Scalar, dimWorld, dimWorld>;
-  using Element = typename GridView::template Codim<0>::Entity;
-  using GlobalPosition = typename Element::Geometry::GlobalCoordinate;
-  using FVElementGeometry = typename GridGeometry::LocalView;
-  using SubControlVolume = typename FVElementGeometry::SubControlVolume;
+  using DimWorldMatrix      = Dune::FieldMatrix<Scalar, dimWorld, dimWorld>;
+  using Element             = typename GridView::template Codim<0>::Entity;
+  using GlobalPosition      = typename Element::Geometry::GlobalCoordinate;
+  using FVElementGeometry   = typename GridGeometry::LocalView;
+  using SubControlVolume    = typename FVElementGeometry::SubControlVolume;
 
 public:
   // export permeability type
@@ -56,7 +56,8 @@ public:
    *
    * \param globalPos The global position
    */
-  PermeabilityType permeabilityAtPos(const GlobalPosition &globalPos) const {
+  PermeabilityType permeabilityAtPos(const GlobalPosition &globalPos) const
+  {
     return getParam<Scalar>("Problem.Permeability");
   }
 
@@ -67,7 +68,8 @@ public:
    */
   template <class ElementSolution>
   Scalar porosity(const Element &element, const SubControlVolume &scv,
-                  const ElementSolution &elemSol) const {
+                  const ElementSolution &elemSol) const
+  {
     if (getParam<bool>("Precice.RunWithCoupling") == true)
       return couplingParticipant_.getScalarQuantityOnFace(
           "macro-mesh", "porosity", scv.elementIndex());
@@ -79,8 +81,9 @@ public:
    * \brief Defines the conductivity tensor \f$ K \f$.
    */
 
-  DimWorldMatrix solidThermalConductivity(const Element &element,
-                                          const SubControlVolume &scv) const {
+  DimWorldMatrix solidThermalConductivity(const Element          &element,
+                                          const SubControlVolume &scv) const
+  {
     DimWorldMatrix K;
 
     if (getParam<bool>("Precice.RunWithCoupling") == true) {

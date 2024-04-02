@@ -21,7 +21,7 @@ Description
     Obviously, for a uniform force field, the total force applied to the patch
     as the mesh is refined as the force per face stays constant.
 
-    The primary motivation for this condition is for FSI cases using 
+    The primary motivation for this condition is for FSI cases using
     solidDisplacementFoam and the preCICE coupling library.
 
     The force field can be directly specified or specified via a "force"
@@ -42,127 +42,99 @@ SourceFiles
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
+namespace Foam {
 
 /*---------------------------------------------------------------------------*\
              Class solidDisplacementFoamForceFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
 class solidDisplacementFoamForceFvPatchVectorField
-:
-    public fixedGradientFvPatchVectorField
-{
+    : public fixedGradientFvPatchVectorField {
 
-    // Private Data
+  // Private Data
 
-        //- Force
-        vectorField force_;
+  //- Force
+  vectorField force_;
 
-        //- Force field given as a vol field
-        autoPtr<volVectorField> forceFieldPtr_;
+  //- Force field given as a vol field
+  autoPtr<volVectorField> forceFieldPtr_;
 
-        //- Current time index
-        label curTimeIndex_;
+  //- Current time index
+  label curTimeIndex_;
 
 public:
+  //- Runtime type information
+  TypeName("solidDisplacementFoamForce");
 
-    //- Runtime type information
-    TypeName("solidDisplacementFoamForce");
+  // Constructors
 
+  //- Construct from patch and internal field
+  solidDisplacementFoamForceFvPatchVectorField(
+      const fvPatch &,
+      const DimensionedField<vector, volMesh> &);
 
-    // Constructors
+  //- Construct from patch, internal field and dictionary
+  solidDisplacementFoamForceFvPatchVectorField(
+      const fvPatch &,
+      const DimensionedField<vector, volMesh> &,
+      const dictionary &);
 
-        //- Construct from patch and internal field
-        solidDisplacementFoamForceFvPatchVectorField
-        (
-            const fvPatch&,
-            const DimensionedField<vector, volMesh>&
-        );
+  //- Construct by mapping given
+  //  solidDisplacementFoamForceFvPatchVectorField onto a new patch
+  solidDisplacementFoamForceFvPatchVectorField(
+      const solidDisplacementFoamForceFvPatchVectorField &,
+      const fvPatch &,
+      const DimensionedField<vector, volMesh> &,
+      const fvPatchFieldMapper &);
 
-        //- Construct from patch, internal field and dictionary
-        solidDisplacementFoamForceFvPatchVectorField
-        (
-            const fvPatch&,
-            const DimensionedField<vector, volMesh>&,
-            const dictionary&
-        );
-
-        //- Construct by mapping given
-        //  solidDisplacementFoamForceFvPatchVectorField onto a new patch
-        solidDisplacementFoamForceFvPatchVectorField
-        (
-            const solidDisplacementFoamForceFvPatchVectorField&,
-            const fvPatch&,
-            const DimensionedField<vector, volMesh>&,
-            const fvPatchFieldMapper&
-        );
-
-        //- Construct as copy
-        solidDisplacementFoamForceFvPatchVectorField
-        (
-            const solidDisplacementFoamForceFvPatchVectorField&
+  //- Construct as copy
+  solidDisplacementFoamForceFvPatchVectorField(
+      const solidDisplacementFoamForceFvPatchVectorField &
 #ifdef OPENFOAMFOUNDATION
-        ) = delete;
+      ) = delete;
 #else
-        );
+  );
 
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new solidDisplacementFoamForceFvPatchVectorField(*this)
-            );
-        }
+  //- Construct and return a clone
+  virtual tmp<fvPatchVectorField> clone() const
+  {
+    return tmp<fvPatchVectorField>(
+        new solidDisplacementFoamForceFvPatchVectorField(*this));
+  }
 #endif
 
-        //- Construct as copy setting internal field reference
-        solidDisplacementFoamForceFvPatchVectorField
-        (
-            const solidDisplacementFoamForceFvPatchVectorField&,
-            const DimensionedField<vector, volMesh>&
-        );
+  //- Construct as copy setting internal field reference
+  solidDisplacementFoamForceFvPatchVectorField(
+      const solidDisplacementFoamForceFvPatchVectorField &,
+      const DimensionedField<vector, volMesh> &);
 
-        //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchVectorField> clone
-        (
-            const DimensionedField<vector, volMesh>& iF
-        ) const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new solidDisplacementFoamForceFvPatchVectorField(*this, iF)
-            );
-        }
+  //- Construct and return a clone setting internal field reference
+  virtual tmp<fvPatchVectorField> clone(
+      const DimensionedField<vector, volMesh> &iF) const
+  {
+    return tmp<fvPatchVectorField>(
+        new solidDisplacementFoamForceFvPatchVectorField(*this, iF));
+  }
 
+  // Member functions
 
+  // Mapping functions
 
-    // Member functions
+  //- Map (and resize as needed) from self given a mapping object
+  virtual void autoMap(
+      const fvPatchFieldMapper &);
 
-        // Mapping functions
+  //- Reverse map the given fvPatchField onto this fvPatchField
+  virtual void rmap(
+      const fvPatchVectorField &,
+      const labelList &);
 
-            //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+  //- Update the coefficients associated with the patch field
+  virtual void updateCoeffs();
 
-            //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchVectorField&,
-                const labelList&
-            );
-
-
-        //- Update the coefficients associated with the patch field
-        virtual void updateCoeffs();
-
-        //- Write
-        virtual void write(Ostream&) const;
+  //- Write
+  virtual void write(Ostream &) const;
 };
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

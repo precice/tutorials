@@ -31,28 +31,29 @@ class CellProblemProblem : public FVProblemWithSpatialParams<TypeTag> {
   using ParentType = FVProblemWithSpatialParams<TypeTag>;
   using GridView =
       typename GetPropType<TypeTag, Properties::GridGeometry>::GridView;
-  using Element = typename GridView::template Codim<0>::Entity;
+  using Element        = typename GridView::template Codim<0>::Entity;
   using GlobalPosition = typename Element::Geometry::GlobalCoordinate;
 
-  using Scalar = GetPropType<TypeTag, Properties::Scalar>;
+  using Scalar           = GetPropType<TypeTag, Properties::Scalar>;
   using PrimaryVariables = GetPropType<TypeTag, Properties::PrimaryVariables>;
   using FVElementGeometry =
       typename GetPropType<TypeTag, Properties::GridGeometry>::LocalView;
-  using SubControlVolume = typename FVElementGeometry::SubControlVolume;
+  using SubControlVolume     = typename FVElementGeometry::SubControlVolume;
   using SubControlVolumeFace = typename FVElementGeometry::SubControlVolumeFace;
-  using GridGeometry = GetPropType<TypeTag, Properties::GridGeometry>;
-  using BoundaryTypes = Dumux::BoundaryTypes<PrimaryVariables::size()>;
-  using SolutionVector = GetPropType<TypeTag, Properties::SolutionVector>;
-  using DimWorldVector = Dune::FieldVector<Scalar, GridView::dimensionworld>;
-  using Extrusion = Extrusion_t<GridGeometry>;
-  using ModelTraits = GetPropType<TypeTag, Properties::ModelTraits>;
+  using GridGeometry         = GetPropType<TypeTag, Properties::GridGeometry>;
+  using BoundaryTypes        = Dumux::BoundaryTypes<PrimaryVariables::size()>;
+  using SolutionVector       = GetPropType<TypeTag, Properties::SolutionVector>;
+  using DimWorldVector       = Dune::FieldVector<Scalar, GridView::dimensionworld>;
+  using Extrusion            = Extrusion_t<GridGeometry>;
+  using ModelTraits          = GetPropType<TypeTag, Properties::ModelTraits>;
   using Indices =
       typename GetPropType<TypeTag, Properties::ModelTraits>::Indices;
   static constexpr auto numEq = ModelTraits::numEq();
 
 public:
   CellProblemProblem(std::shared_ptr<const GridGeometry> gridGeometry)
-      : ParentType(gridGeometry) {
+      : ParentType(gridGeometry)
+  {
     // the partial derivatives of Psi
     d0psi1_.resize(gridGeometry->numDofs());
     d1psi1_.resize(gridGeometry->numDofs());
@@ -65,7 +66,8 @@ public:
     delta_ij_.resize(gridGeometry->numDofs());
   }
 
-  BoundaryTypes boundaryTypesAtPos(const GlobalPosition &globalPos) const {
+  BoundaryTypes boundaryTypesAtPos(const GlobalPosition &globalPos) const
+  {
     BoundaryTypes bcTypes;
 
     bcTypes.setAllNeumann();
@@ -74,7 +76,10 @@ public:
   }
 
   //! Enable internal Dirichlet constraints
-  static constexpr bool enableInternalDirichletConstraints() { return true; }
+  static constexpr bool enableInternalDirichletConstraints()
+  {
+    return true;
+  }
 
   /*!
    * \brief Tag a degree of freedom to carry internal Dirichlet constraints.
@@ -87,8 +92,9 @@ public:
    * \param scv The sub-control volume
    */
   std::bitset<numEq>
-  hasInternalDirichletConstraint(const Element &element,
-                                 const SubControlVolume &scv) const {
+  hasInternalDirichletConstraint(const Element          &element,
+                                 const SubControlVolume &scv) const
+  {
     // the pure Neumann problem is only defined up to a constant
     // we create a well-posed problem by fixing the pressure at one dof in the
     // middle of the domain
@@ -106,8 +112,9 @@ public:
    * freedom. \param element The finite element \param scv The sub-control
    * volume
    */
-  PrimaryVariables internalDirichlet(const Element &element,
-                                     const SubControlVolume &scv) const {
+  PrimaryVariables internalDirichlet(const Element          &element,
+                                     const SubControlVolume &scv) const
+  {
     return PrimaryVariables(1.0);
   }
 
@@ -117,7 +124,8 @@ public:
    * index/dimension of the cell problem (0 or 1) \param derivIdx The
    * index/dimension of the partial derivative (0 or 1)
    */
-  Scalar calculateConductivityTensorComponent(int psiIdx, int derivIdx) {
+  Scalar calculateConductivityTensorComponent(int psiIdx, int derivIdx)
+  {
     std::size_t order = 4;
     return integrateGridFunction(this->gridGeometry(),
                                  effectiveConductivityField(psiIdx, derivIdx),
@@ -130,7 +138,8 @@ public:
    * \f$. \param psiIdx The index/dimension of the cell problem (0 or 1) = j
    * \param derivIdx The index/dimension of the partial derivative (0 or 1) = i
    */
-  std::vector<Scalar> &effectiveConductivityField(int psiIdx, int derivIdx) {
+  std::vector<Scalar> &effectiveConductivityField(int psiIdx, int derivIdx)
+  {
 
     if (psiIdx == derivIdx)
       std::fill(delta_ij_.begin(), delta_ij_.end(), 1.0);
@@ -149,7 +158,8 @@ public:
   /*!
    * \brief Returns the previously calculated partial derivative
    */
-  std::vector<Scalar> &partialDerivativePsi(int psiIdx, int derivIdx) {
+  std::vector<Scalar> &partialDerivativePsi(int psiIdx, int derivIdx)
+  {
     assert((psiIdx == 0) || (psiIdx == 1));
     assert((derivIdx == 0) || (derivIdx == 1));
     if ((psiIdx == 0) && (derivIdx == 0))
@@ -168,13 +178,14 @@ public:
   template <class Problem, class Assembler, class GridVariables,
             class SolutionVector>
   void computePsiDerivatives(const Problem &problem, const Assembler &assembler,
-                             const GridVariables &gridVars,
-                             const SolutionVector &psi) {
+                             const GridVariables  &gridVars,
+                             const SolutionVector &psi)
+  {
     const auto &gridGeometry = this->gridGeometry();
-    auto fvGeometry = localView(gridGeometry);
+    auto        fvGeometry   = localView(gridGeometry);
 
     const auto gridVolVars = assembler.gridVariables().curGridVolVars();
-    auto elemVolVars = localView(gridVolVars);
+    auto       elemVolVars = localView(gridVolVars);
 
     for (const auto &element : elements(gridGeometry.gridView())) {
 
@@ -184,16 +195,16 @@ public:
       for (int k = 0; k < Indices::numIdx; k++) {
 
         DimWorldVector cellDeriv(0.0);
-        Scalar scvVolume(0.0);
+        Scalar         scvVolume(0.0);
 
         for (const auto &scvf : scvfs(fvGeometry)) {
           if (!scvf.boundary()) {
             // Get the inside and outside volume variables
-            const auto &insideScv = fvGeometry.scv(scvf.insideScvIdx());
+            const auto &insideScv  = fvGeometry.scv(scvf.insideScvIdx());
             const auto &outsideScv = fvGeometry.scv(scvf.outsideScvIdx());
 
             const auto &insideVolVars = elemVolVars[scvf.insideScvIdx()];
-            const auto valInside = insideVolVars.priVar(k);
+            const auto  valInside     = insideVolVars.priVar(k);
 
             const Scalar ti =
                 computeTpfaTransmissibility(fvGeometry, scvf, insideScv, 1.0,
@@ -201,7 +212,7 @@ public:
 
             // faces might lie on the periodic boundary, requiring the matching
             // scvf of the scv on the other side of the periodic boundary.
-            auto outsideFvGeometry = localView(gridGeometry);
+            auto        outsideFvGeometry = localView(gridGeometry);
             const auto &periodicElement =
                 gridGeometry.element(outsideScv.elementIndex());
             outsideFvGeometry.bind(periodicElement);
@@ -209,7 +220,7 @@ public:
             outsideElemVolVars.bindElement(periodicElement, outsideFvGeometry,
                                            psi);
 
-            Scalar tij = 0.0;
+            Scalar tij        = 0.0;
             Scalar valOutside = 0.0;
             for (const auto &outsideScvf : scvfs(outsideFvGeometry)) {
               if (outsideScvf.unitOuterNormal() * scvf.unitOuterNormal() <
@@ -217,7 +228,7 @@ public:
                 const auto &outsideVolVars =
                     outsideElemVolVars[outsideScvf.insideScvIdx()];
 
-                valOutside = outsideVolVars.priVar(k);
+                valOutside      = outsideVolVars.priVar(k);
                 const Scalar tj = computeTpfaTransmissibility(
                     fvGeometry, outsideScvf, outsideScv, 1.0,
                     outsideVolVars.extrusionFactor());

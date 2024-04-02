@@ -34,13 +34,20 @@ namespace Dumux {
 
 struct CellProblemModelTraits {
   using Indices = CellProblemIndices<>;
-  static constexpr int numEq() { return 2; }
-  static constexpr int numComponents() { return 1; }
+  static constexpr int numEq()
+  {
+    return 2;
+  }
+  static constexpr int numComponents()
+  {
+    return 1;
+  }
 };
 
-template <class PV, class MT> struct CellProblemVolumeVariablesTraits {
+template <class PV, class MT>
+struct CellProblemVolumeVariablesTraits {
   using PrimaryVariables = PV;
-  using ModelTraits = MT;
+  using ModelTraits      = MT;
 };
 
 namespace Properties {
@@ -50,24 +57,28 @@ struct CellModel {
 };
 } // namespace TTag
 
-template <class TypeTag> struct SpatialParams<TypeTag, TTag::CellModel> {
+template <class TypeTag>
+struct SpatialParams<TypeTag, TTag::CellModel> {
 private:
   using GridGeometry = GetPropType<TypeTag, Properties::GridGeometry>;
-  using Scalar = GetPropType<TypeTag, Properties::Scalar>;
+  using Scalar       = GetPropType<TypeTag, Properties::Scalar>;
 
 public:
   using type = CellProblemSpatialParams<GridGeometry, Scalar>;
 };
 
-template <class TypeTag> struct LocalResidual<TypeTag, TTag::CellModel> {
+template <class TypeTag>
+struct LocalResidual<TypeTag, TTag::CellModel> {
   using type = CellProblemLocalResidual<TypeTag>;
 };
 
-template <class TypeTag> struct ModelTraits<TypeTag, TTag::CellModel> {
+template <class TypeTag>
+struct ModelTraits<TypeTag, TTag::CellModel> {
   using type = CellProblemModelTraits;
 };
 
-template <class TypeTag> struct VolumeVariables<TypeTag, TTag::CellModel> {
+template <class TypeTag>
+struct VolumeVariables<TypeTag, TTag::CellModel> {
 private:
   using PV = GetPropType<TypeTag, Properties::PrimaryVariables>;
   using MT = GetPropType<TypeTag, Properties::ModelTraits>;
@@ -78,7 +89,8 @@ public:
   using type = CellProblemVolumeVariables<Traits>;
 };
 
-template <class TypeTag> struct FluxVariablesCache<TypeTag, TTag::CellModel> {
+template <class TypeTag>
+struct FluxVariablesCache<TypeTag, TTag::CellModel> {
   using type = FluxVariablesCaching::EmptyCache<
       GetPropType<TypeTag, Properties::Scalar>>;
 };

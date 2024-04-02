@@ -48,7 +48,8 @@
 #include <list>
 #include <map>
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
   using namespace Dumux;
 
   // define the type tag for this problem
@@ -77,11 +78,11 @@ int main(int argc, char **argv) {
 
   // create the finite volume grid geometry
   using GridGeometry = GetPropType<TypeTag, Properties::GridGeometry>;
-  auto gridGeometry = std::make_shared<GridGeometry>(leafGridView);
+  auto gridGeometry  = std::make_shared<GridGeometry>(leafGridView);
 
   // the problem (initial and boundary conditions)
   using Problem = GetPropType<TypeTag, Properties::Problem>;
-  auto problem = std::make_shared<Problem>(gridGeometry);
+  auto problem  = std::make_shared<Problem>(gridGeometry);
 
   ////////////////////////
   // Initialize preCICE //
@@ -91,8 +92,8 @@ int main(int argc, char **argv) {
   // - Name of solver
   // - What rank of how many ranks this instance is
   // Configure preCICE. For now the config file is hardcoded.
-  std::string preciceConfigFilename = "../precice-config.xml";
-  const std::string meshName = "macro-mesh";
+  std::string       preciceConfigFilename = "../precice-config.xml";
+  const std::string meshName              = "macro-mesh";
   if (argc > 2)
     preciceConfigFilename = argv[argc - 1];
 
@@ -103,7 +104,7 @@ int main(int argc, char **argv) {
                                        mpiHelper.rank(), mpiHelper.size());
     // verify that dimensions match
     const int preciceDim = couplingParticipant.getMeshDimensions(meshName);
-    const int dim = int(leafGridView.dimension);
+    const int dim        = int(leafGridView.dimension);
     std::cout << "coupling Dims = " << dim << " , leafgrid dims = " << dim
               << std::endl;
     if (preciceDim != dim)
@@ -112,7 +113,7 @@ int main(int argc, char **argv) {
 
   // get mesh coordinates
   std::vector<double> coords;
-  std::vector<int> coupledElementIdxs;
+  std::vector<int>    coupledElementIdxs;
 
   // coordinate loop (created vectors are 1D)
   // these positions of cell centers are later communicated to precice
@@ -144,11 +145,11 @@ int main(int argc, char **argv) {
   }
 
   // initialize the coupling data
-  const std::string readDatak00 = "k_00";
-  const std::string readDatak01 = "k_01";
-  const std::string readDatak10 = "k_10";
-  const std::string readDatak11 = "k_11";
-  const std::string readDataPorosity = "porosity";
+  const std::string readDatak00            = "k_00";
+  const std::string readDatak01            = "k_01";
+  const std::string readDatak10            = "k_10";
+  const std::string readDatak11            = "k_11";
+  const std::string readDataPorosity       = "porosity";
   const std::string writeDataConcentration = "concentration";
   // const std::string writeDataTemperature = "temperature";
 
@@ -169,16 +170,15 @@ int main(int argc, char **argv) {
   problem->applyInitialSolution(x);
   auto xOld = x;
 
-   // initialize the coupling data
-   std::vector<double> temperatures;
-   for (int solIdx=0; solIdx< numberOfElements; ++solIdx)
-  {
-      temperatures.push_back(x[solIdx][problem->returnTemperatureIdx()]);
+  // initialize the coupling data
+  std::vector<double> temperatures;
+  for (int solIdx = 0; solIdx < numberOfElements; ++solIdx) {
+    temperatures.push_back(x[solIdx][problem->returnTemperatureIdx()]);
   };
 
   if (getParam<bool>("Precice.RunWithCoupling") == true) {
-     couplingParticipant.writeQuantityVector(meshName,writeDataConcentration,
-     temperatures);
+    couplingParticipant.writeQuantityVector(meshName, writeDataConcentration,
+                                            temperatures);
     if (couplingParticipant
             .requiresToWriteInitialData()) { // not called in our example
       //    couplingParticipant.writeQuantityToOtherSolver(meshName,
@@ -199,7 +199,7 @@ int main(int argc, char **argv) {
 
   // the grid variables
   using GridVariables = GetPropType<TypeTag, Properties::GridVariables>;
-  auto gridVariables = std::make_shared<GridVariables>(problem, gridGeometry);
+  auto gridVariables  = std::make_shared<GridVariables>(problem, gridGeometry);
   gridVariables->init(x);
 
   // intialize the vtk output module
@@ -223,9 +223,9 @@ int main(int argc, char **argv) {
   couplingParticipant.initialize();
 
   // get some time loop parameters
-  const auto tEnd = getParam<Scalar>("TimeLoop.TEnd");
-  double preciceDt = couplingParticipant.getMaxTimeStepSize();
-  double dt;
+  const auto tEnd      = getParam<Scalar>("TimeLoop.TEnd");
+  double     preciceDt = couplingParticipant.getMaxTimeStepSize();
+  double     dt;
   if (getParam<bool>("Precice.RunWithCoupling") == true)
     dt = preciceDt;
   else
@@ -236,7 +236,7 @@ int main(int argc, char **argv) {
 
   // the assembler with time loop for instationary problem
   using Assembler = FVAssembler<TypeTag, DiffMethod::numeric>;
-  auto assembler = std::make_shared<Assembler>(problem, gridGeometry,
+  auto assembler  = std::make_shared<Assembler>(problem, gridGeometry,
                                                gridVariables, timeLoop, xOld);
 
   // the linear solver
@@ -281,23 +281,23 @@ int main(int argc, char **argv) {
     // linearize & solve
     nonLinearSolver.solve(x, *timeLoop);
 
-    for (int solIdx=0; solIdx< numberOfElements; ++solIdx)
-        temperatures[solIdx] = x[solIdx][problem->returnTemperatureIdx()];
+    for (int solIdx = 0; solIdx < numberOfElements; ++solIdx)
+      temperatures[solIdx] = x[solIdx][problem->returnTemperatureIdx()];
 
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
-          couplingParticipant.writeQuantityVector(meshName,
-          writeDataConcentration, temperatures);
-         couplingParticipant.writeQuantityToOtherSolver(meshName,
-          writeDataConcentration);
+      couplingParticipant.writeQuantityVector(meshName,
+                                              writeDataConcentration, temperatures);
+      couplingParticipant.writeQuantityToOtherSolver(meshName,
+                                                     writeDataConcentration);
     }
 
     // advance precice
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
       couplingParticipant.advance(dt);
       preciceDt = couplingParticipant.getMaxTimeStepSize();
-      dt = std::min(preciceDt, std::min(nonLinearSolver.suggestTimeStepSize(
-                                            timeLoop->timeStepSize()),
-                                        getParam<Scalar>("TimeLoop.MaxDt")));
+      dt        = std::min(preciceDt, std::min(nonLinearSolver.suggestTimeStepSize(
+                                                   timeLoop->timeStepSize()),
+                                               getParam<Scalar>("TimeLoop.MaxDt")));
       if (preciceDt != dt) {
         std::cout << "preciceDt too large. We currently assume fixed timestep "
                      "size but timesteps no longer correspond: preciceDt = "

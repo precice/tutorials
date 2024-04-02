@@ -1,0 +1,3 @@
+controller-fmi/PIDcontroller.fmu
+controller-fmi/output/
+fluid-openfoam/0/ # Since we start from 0.orig

@@ -32,45 +32,61 @@ class MySimpleLiquid
       public Components::Gas<Scalar, MySimpleLiquid<Scalar>> {
 
 public:
-  static std::string name() { return "MySimpleLiquid"; }
+  static std::string name()
+  {
+    return "MySimpleLiquid";
+  }
 
-  static const Scalar liquidEnthalpy(Scalar temperature, Scalar pressure) {
+  static const Scalar liquidEnthalpy(Scalar temperature, Scalar pressure)
+  {
     static const Scalar tRef =
         getParam<Scalar>("Component.LiquidReferenceTemperature");
     return liquidHeatCapacity(temperature, pressure) * (temperature - tRef) +
            pressure / liquidDensity(temperature, pressure);
   }
-  static constexpr bool liquidIsCompressible() { return false; }
+  static constexpr bool liquidIsCompressible()
+  {
+    return false;
+  }
 
-  static constexpr bool liquidViscosityIsConstant() { return true; }
+  static constexpr bool liquidViscosityIsConstant()
+  {
+    return true;
+  }
 
-  static Scalar liquidDensity(Scalar temperature, Scalar pressure) {
+  static Scalar liquidDensity(Scalar temperature, Scalar pressure)
+  {
     return getParam<Scalar>("Component.LiquidDensity");
   }
 
-  static Scalar liquidPressure(Scalar temperature, Scalar density) {
+  static Scalar liquidPressure(Scalar temperature, Scalar density)
+  {
     DUNE_THROW(Dune::InvalidStateException,
                "The liquid pressure is undefined for incompressible fluids");
   }
 
-  static Scalar liquidViscosity(Scalar temperature, Scalar pressure) {
+  static Scalar liquidViscosity(Scalar temperature, Scalar pressure)
+  {
     return getParam<Scalar>("Component.LiquidViscosity");
   }
 
-  static Scalar liquidHeatCapacity(Scalar temperature, Scalar pressure) {
+  static Scalar liquidHeatCapacity(Scalar temperature, Scalar pressure)
+  {
     return getParam<Scalar>("Component.LiquidHeatCapacity");
   }
 
   static Scalar
   liquidThermalConductivity(Scalar temperature,
-                            Scalar pressure) { // never called, our conductivity
-                                               // tensor is used instead
+                            Scalar pressure)
+  { // never called, our conductivity
+    // tensor is used instead
     return getParam<Scalar>("Component.LiquidThermalConductivity");
   }
 };
 
 template <class Scalar>
-struct IsAqueous<MySimpleLiquid<Scalar>> : public std::true_type {};
+struct IsAqueous<MySimpleLiquid<Scalar>> : public std::true_type {
+};
 
 } // end namespace Dumux::Components
 

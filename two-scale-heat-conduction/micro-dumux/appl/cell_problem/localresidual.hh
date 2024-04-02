@@ -34,8 +34,8 @@ namespace Dumux {
 template <class TypeTag>
 class CellProblemLocalResidual : public CCLocalResidual<TypeTag> {
   using ParentType = CCLocalResidual<TypeTag>;
-  using Scalar = GetPropType<TypeTag, Properties::Scalar>;
-  using Problem = GetPropType<TypeTag, Properties::Problem>;
+  using Scalar     = GetPropType<TypeTag, Properties::Scalar>;
+  using Problem    = GetPropType<TypeTag, Properties::Problem>;
   using NumEqVector =
       Dumux::NumEqVector<GetPropType<TypeTag, Properties::PrimaryVariables>>;
   using VolumeVariables = GetPropType<TypeTag, Properties::VolumeVariables>;
@@ -46,16 +46,16 @@ class CellProblemLocalResidual : public CCLocalResidual<TypeTag> {
                            Properties::GridFluxVariablesCache>::LocalView;
   using FVElementGeometry =
       typename GetPropType<TypeTag, Properties::GridGeometry>::LocalView;
-  using SubControlVolume = typename FVElementGeometry::SubControlVolume;
+  using SubControlVolume     = typename FVElementGeometry::SubControlVolume;
   using SubControlVolumeFace = typename FVElementGeometry::SubControlVolumeFace;
   using GridView =
       typename GetPropType<TypeTag, Properties::GridGeometry>::GridView;
-  using Element = typename GridView::template Codim<0>::Entity;
+  using Element      = typename GridView::template Codim<0>::Entity;
   using GridGeometry = GetPropType<TypeTag, Properties::GridGeometry>;
-  using Extrusion = Extrusion_t<GridGeometry>;
+  using Extrusion    = Extrusion_t<GridGeometry>;
 
   using ModelTraits = GetPropType<TypeTag, Properties::ModelTraits>;
-  using Indices = typename ModelTraits::Indices;
+  using Indices     = typename ModelTraits::Indices;
 
   using DimWorldVector = Dune::FieldVector<Scalar, GridView::dimensionworld>;
 
@@ -71,9 +71,10 @@ public:
    * \param scv The sub control volume
    * \param volVars The current or previous volVars
    */
-  NumEqVector computeStorage(const Problem &problem,
+  NumEqVector computeStorage(const Problem          &problem,
                              const SubControlVolume &scv,
-                             const VolumeVariables &volVars) const {
+                             const VolumeVariables  &volVars) const
+  {
     NumEqVector storage(0.0);
     return storage;
   }
@@ -96,21 +97,22 @@ public:
   template <class Problem, class ElementVolumeVariables,
             class ElementFluxVarsCache>
   NumEqVector computeFlux(const Problem &problem, const Element &element,
-                          const FVElementGeometry &fvGeometry,
+                          const FVElementGeometry      &fvGeometry,
                           const ElementVolumeVariables &elemVolVars,
-                          const SubControlVolumeFace &scvf,
-                          const ElementFluxVarsCache &elemFluxVarsCache) const {
+                          const SubControlVolumeFace   &scvf,
+                          const ElementFluxVarsCache   &elemFluxVarsCache) const
+  {
     NumEqVector flux;
 
     for (int k = 0; k < Indices::numIdx; k++) {
       //! Get the inside and outside volume variables
-      const auto &insideScv = fvGeometry.scv(scvf.insideScvIdx());
-      const auto &outsideScv = fvGeometry.scv(scvf.outsideScvIdx());
-      const auto &insideVolVars = elemVolVars[scvf.insideScvIdx()];
+      const auto &insideScv      = fvGeometry.scv(scvf.insideScvIdx());
+      const auto &outsideScv     = fvGeometry.scv(scvf.outsideScvIdx());
+      const auto &insideVolVars  = elemVolVars[scvf.insideScvIdx()];
       const auto &outsideVolVars = elemVolVars[scvf.outsideScvIdx()];
 
       //! Obtain inside and outside primary variables (psis)
-      const auto valInside = insideVolVars.priVar(k);
+      const auto valInside  = insideVolVars.priVar(k);
       const auto valOutside = outsideVolVars.priVar(k);
 
       const auto &tij = calculateTransmissibility(problem, element, fvGeometry,
@@ -156,13 +158,14 @@ public:
   template <class Problem, class ElementVolumeVariables>
   static Scalar
   calculateTransmissibility(const Problem &problem, const Element &element,
-                            const FVElementGeometry &fvGeometry,
+                            const FVElementGeometry      &fvGeometry,
                             const ElementVolumeVariables &elemVolVars,
-                            const SubControlVolumeFace &scvf) {
+                            const SubControlVolumeFace   &scvf)
+  {
     Scalar tij;
 
-    const auto insideScvIdx = scvf.insideScvIdx();
-    const auto &insideScv = fvGeometry.scv(insideScvIdx);
+    const auto  insideScvIdx  = scvf.insideScvIdx();
+    const auto &insideScv     = fvGeometry.scv(insideScvIdx);
     const auto &insideVolVars = elemVolVars[insideScvIdx];
 
     const Scalar ti =
@@ -179,8 +182,8 @@ public:
       const auto outsideScvIdx = scvf.outsideScvIdx();
       // as we assemble fluxes from the neighbor to our element
       // the outside index refers to the scv of our element
-      const auto &outsideScv = fvGeometry.scv(outsideScvIdx);
-      const auto &outsideVolVars = elemVolVars[outsideScvIdx];
+      const auto  &outsideScv     = fvGeometry.scv(outsideScvIdx);
+      const auto  &outsideVolVars = elemVolVars[outsideScvIdx];
       const Scalar tj =
           fvGeometry.gridGeometry().isPeriodic()
               ? computeTpfaTransmissibility(

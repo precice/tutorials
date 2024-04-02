@@ -55,13 +55,13 @@ using MyEnergyVolumeVariables = MyEnergyVolumeVariablesImplementation<
  */
 template <class IsothermalTraits, class Impl>
 class MyEnergyVolumeVariablesImplementation<IsothermalTraits, Impl, false> {
-  using Scalar = typename IsothermalTraits::PrimaryVariables::value_type;
+  using Scalar                  = typename IsothermalTraits::PrimaryVariables::value_type;
   static constexpr int dimWorld = 2; // hardcoded for now
-  using DimWorldMatrix = Dune::FieldMatrix<Scalar, dimWorld, dimWorld>;
+  using DimWorldMatrix          = Dune::FieldMatrix<Scalar, dimWorld, dimWorld>;
 
 public:
-  using FluidState = typename IsothermalTraits::FluidState;
-  using SolidState = typename IsothermalTraits::SolidState;
+  using FluidState  = typename IsothermalTraits::FluidState;
+  using SolidState  = typename IsothermalTraits::SolidState;
   using FluidSystem = typename IsothermalTraits::FluidSystem;
 
   //! The temperature is obtained from the problem as a constant for isothermal
@@ -70,8 +70,9 @@ public:
   void updateTemperature(
       const ElemSol &elemSol, const Problem &problem, const Element &element,
       const Scv &scv, FluidState &fluidState,
-      SolidState &solidState) { // retrieve temperature from solution vector,
-                                // all phases have the same temperature
+      SolidState &solidState)
+  { // retrieve temperature from solution vector,
+    // all phases have the same temperature
     Scalar T = problem.spatialParams().temperature(element, scv, elemSol);
     for (int phaseIdx = 0; phaseIdx < FluidSystem::numPhases; ++phaseIdx) {
       fluidState.setTemperature(phaseIdx, T);
@@ -87,8 +88,9 @@ public:
   //! The phase enthalpy is zero for isothermal models
   //! This is needed for completing the fluid state
   template <class FluidState, class ParameterCache>
-  static Scalar enthalpy(const FluidState &fluidState,
-                         const ParameterCache &paramCache, const int phaseIdx) {
+  static Scalar enthalpy(const FluidState     &fluidState,
+                         const ParameterCache &paramCache, const int phaseIdx)
+  {
     return 0;
   }
 
@@ -97,23 +99,23 @@ public:
   void updateEffectiveThermalConductivity(const ElemSol &elemSol,
                                           const Problem &problem,
                                           const Element &element,
-                                          const Scv &scv,
-                                          SolidState &solidState) {}
+                                          const Scv     &scv,
+                                          SolidState    &solidState) {}
 };
 
 //! The non-isothermal implicit volume variables base class
 template <class Traits, class Impl>
 class MyEnergyVolumeVariablesImplementation<Traits, Impl, true> {
-  using Scalar = typename Traits::PrimaryVariables::value_type;
+  using Scalar                  = typename Traits::PrimaryVariables::value_type;
   static constexpr int dimWorld = 2; // hardcoded for now
-  using DimWorldMatrix = Dune::FieldMatrix<Scalar, dimWorld, dimWorld>;
-  using Idx = typename Traits::ModelTraits::Indices;
-  using ParentType = PorousMediumFlowVolumeVariables<Traits>;
+  using DimWorldMatrix          = Dune::FieldMatrix<Scalar, dimWorld, dimWorld>;
+  using Idx                     = typename Traits::ModelTraits::Indices;
+  using ParentType              = PorousMediumFlowVolumeVariables<Traits>;
 
   static constexpr int temperatureIdx = Idx::temperatureIdx;
-  static constexpr int numEnergyEq = Traits::ModelTraits::numEnergyEq();
+  static constexpr int numEnergyEq    = Traits::ModelTraits::numEnergyEq();
 
-  static constexpr bool fullThermalEquilibrium = (numEnergyEq == 1);
+  static constexpr bool fullThermalEquilibrium  = (numEnergyEq == 1);
   static constexpr bool fluidThermalEquilibrium = (numEnergyEq == 2);
 
 public:
@@ -133,7 +135,8 @@ public:
   template <class ElemSol, class Problem, class Element, class Scv>
   void updateTemperature(const ElemSol &elemSol, const Problem &problem,
                          const Element &element, const Scv &scv,
-                         FluidState &fluidState, SolidState &solidState) {
+                         FluidState &fluidState, SolidState &solidState)
+  {
     if constexpr (fullThermalEquilibrium) {
       // retrieve temperature from solution vector, all phases have the same
       // temperature
@@ -171,7 +174,8 @@ public:
   template <class ElemSol, class Problem, class Element, class Scv>
   void updateSolidEnergyParams(const ElemSol &elemSol, const Problem &problem,
                                const Element &element, const Scv &scv,
-                               SolidState &solidState) {
+                               SolidState &solidState)
+  {
     Scalar cs = solidHeatCapacity_(elemSol, problem, element, scv, solidState);
     solidState.setHeatCapacity(cs);
 
@@ -183,8 +187,9 @@ public:
   void updateEffectiveThermalConductivity(const ElemSol &elemSol,
                                           const Problem &problem,
                                           const Element &element,
-                                          const Scv &scv,
-                                          SolidState &solidState) {
+                                          const Scv     &scv,
+                                          SolidState    &solidState)
+  {
     lambdaEff_ =
         solidThermalConductivity_(elemSol, problem, element, scv, solidState);
   }
@@ -195,7 +200,8 @@ public:
    *
    * \param phaseIdx The phase index
    */
-  Scalar internalEnergy(const int phaseIdx) const {
+  Scalar internalEnergy(const int phaseIdx) const
+  {
     return asImp_().fluidState().internalEnergy(phaseIdx);
   }
 
@@ -205,7 +211,8 @@ public:
    *
    * \param phaseIdx The phase index
    */
-  Scalar enthalpy(const int phaseIdx) const {
+  Scalar enthalpy(const int phaseIdx) const
+  {
     return asImp_().fluidState().enthalpy(phaseIdx);
   }
 
@@ -213,7 +220,8 @@ public:
    * \brief Returns the temperature in fluid / solid phase(s)
    *        the sub-control volume.
    */
-  Scalar temperatureSolid() const {
+  Scalar temperatureSolid() const
+  {
     return asImp_().solidState().temperature();
   }
 
@@ -222,7 +230,8 @@ public:
    * nonequilibrium the sub-control volume. \param phaseIdx The local index of
    * the phases
    */
-  Scalar temperatureFluid(const int phaseIdx) const {
+  Scalar temperatureFluid(const int phaseIdx) const
+  {
     return asImp_().fluidState().temperature(phaseIdx);
   }
 
@@ -230,7 +239,8 @@ public:
    * \brief Returns the total heat capacity \f$\mathrm{[J/(kg K)]}\f$ of the
    * rock matrix in the sub-control volume.
    */
-  Scalar solidHeatCapacity() const {
+  Scalar solidHeatCapacity() const
+  {
     return asImp_().solidState().heatCapacity();
   }
 
@@ -238,30 +248,41 @@ public:
    * \brief Returns the mass density \f$\mathrm{[kg/m^3]}\f$ of the rock matrix
    * in the sub-control volume.
    */
-  Scalar solidDensity() const { return asImp_().solidState().density(); }
+  Scalar solidDensity() const
+  {
+    return asImp_().solidState().density();
+  }
 
   /*!
    * \brief Returns the effective thermal conductivity \f$\mathrm{[W/(m*K)]}\f$
    * in the sub-control volume. Specific to equilibirum models (case
    * fullThermalEquilibrium).
    */
-  template <bool enable = fullThermalEquilibrium,
+  template <bool enable                   = fullThermalEquilibrium,
             std::enable_if_t<enable, int> = 0>
-  DimWorldMatrix effectiveThermalConductivity() const {
+  DimWorldMatrix effectiveThermalConductivity() const
+  {
     return lambdaEff_;
   }
 
   //! The phase enthalpy is zero for isothermal models
   //! This is needed for completing the fluid state
   template <class ParameterCache>
-  static Scalar enthalpy(const FluidState &fluidState,
-                         const ParameterCache &paramCache, const int phaseIdx) {
+  static Scalar enthalpy(const FluidState     &fluidState,
+                         const ParameterCache &paramCache, const int phaseIdx)
+  {
     return FluidSystem::enthalpy(fluidState, paramCache, phaseIdx);
   }
 
 protected:
-  const Impl &asImp_() const { return *static_cast<const Impl *>(this); }
-  Impl &asImp_() { return *static_cast<Impl *>(this); }
+  const Impl &asImp_() const
+  {
+    return *static_cast<const Impl *>(this);
+  }
+  Impl &asImp_()
+  {
+    return *static_cast<Impl *>(this);
+  }
 
 private:
   /*!
@@ -302,7 +323,8 @@ private:
                              int> = 0>
   Scalar solidHeatCapacity_(const ElemSol &elemSol, const Problem &problem,
                             const Element &element, const Scv &scv,
-                            const SolidState &solidState) {
+                            const SolidState &solidState)
+  {
     return SolidSystem::heatCapacity(solidState);
   }
 
@@ -324,7 +346,8 @@ private:
                 int> = 0>
   Scalar solidDensity_(const ElemSol &elemSol, const Problem &problem,
                        const Element &element, const Scv &scv,
-                       const SolidState &solidState) {
+                       const SolidState &solidState)
+  {
     return SolidSystem::density(solidState);
   }
 
@@ -354,7 +377,8 @@ private:
                              int> = 0>
   Scalar solidHeatCapacity_(const ElemSol &elemSol, const Problem &problem,
                             const Element &element, const Scv &scv,
-                            const SolidState &solidState) {
+                            const SolidState &solidState)
+  {
     static_assert(Detail::isInertSolidPhase<SolidSystem>::value,
                   "solidHeatCapacity can only be overwritten in the spatial "
                   "params when the solid system is a simple InertSolidPhase\n"
@@ -383,7 +407,8 @@ private:
                 int> = 0>
   Scalar solidDensity_(const ElemSol &elemSol, const Problem &problem,
                        const Element &element, const Scv &scv,
-                       const SolidState &solidState) {
+                       const SolidState &solidState)
+  {
     static_assert(Detail::isInertSolidPhase<SolidSystem>::value,
                   "solidDensity can only be overwritten in the spatial params "
                   "when the solid system is a simple InertSolidPhase\n"
@@ -412,7 +437,8 @@ private:
   DimWorldMatrix
   solidThermalConductivity_(const ElemSol &elemSol, const Problem &problem,
                             const Element &element, const Scv &scv,
-                            const SolidState &solidState) {
+                            const SolidState &solidState)
+  {
     static_assert(
         Detail::isInertSolidPhase<SolidSystem>::value,
         "solidThermalConductivity can only be overwritten in the spatial "

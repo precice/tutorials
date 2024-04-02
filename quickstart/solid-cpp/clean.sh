@@ -5,3 +5,4 @@ set -e -u
 
 rm -rfv coupling-meshes
 clean_precice_logs .
+clean_case_logs .
