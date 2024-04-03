@@ -1,9 +1,8 @@
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, VectorFunctionSpace, interpolate, \
-    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, \
-    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, assemble_system
+    TrialFunction, TestFunction, Point, Expression, DirichletBC, \
+    Identity, inner, dx, ds, sym, grad, div, lhs, rhs, dot, File, solve, assemble_system
 from mshr import Cylinder, generate_mesh
-from ufl import nabla_div
 import numpy as np
 from fenicsprecice import Adapter
 import math
@@ -83,12 +82,12 @@ beta = Constant((gamma + 0.5) ** 2 / 4.)
 
 # Define strain
 def epsilon(u):
-    return 0.5 * (nabla_grad(u) + nabla_grad(u).T)
+    return 0.5 * (grad(u) + grad(u).T)
 
 
 # Define Stress tensor
 def sigma(u):
-    return lambda_ * nabla_div(u) * Identity(dim) + 2 * mu * epsilon(u)
+    return lambda_ * div(u) * Identity(dim) + 2 * mu * epsilon(u)
 
 
 # Define Mass form
@@ -109,26 +108,18 @@ def Wext(u_):
 # Functions for updating system state
 
 # Update acceleration
-def update_a(u, u_old, v_old, a_old, ufl=True):
-    if ufl:
-        dt_ = dt
-        beta_ = beta
-    else:
-        dt_ = float(dt)
-        beta_ = float(beta)
+def update_a(u, u_old, v_old, a_old):
+    dt_ = float(dt)
+    beta_ = float(beta)
 
     return ((u - u_old - dt_ * v_old) / beta / dt_ ** 2
             - (1 - 2 * beta_) / 2 / beta_ * a_old)
 
 
 # Update velocity
-def update_v(a, u_old, v_old, a_old, ufl=True):
-    if ufl:
-        dt_ = dt
-        gamma_ = gamma
-    else:
-        dt_ = float(dt)
-        gamma_ = float(gamma)
+def update_v(a, u_old, v_old, a_old):
+    dt_ = float(dt)
+    gamma_ = float(gamma)
 
     return v_old + dt_ * ((1 - gamma_) * a_old + gamma_ * a)
 
@@ -140,8 +131,8 @@ def update_fields(u, u_old, v_old, a_old):
     v0_vec, a0_vec = v_old.vector(), a_old.vector()
 
     # call update functions
-    a_vec = update_a(u_vec, u0_vec, v0_vec, a0_vec, ufl=False)
-    v_vec = update_v(a_vec, u0_vec, v0_vec, a0_vec, ufl=False)
+    a_vec = update_a(u_vec, u0_vec, v0_vec, a0_vec)
+    v_vec = update_v(a_vec, u0_vec, v0_vec, a0_vec)
 
     # assign u->u_old
     v_old.vector()[:], a_old.vector()[:] = v_vec, a_vec
@@ -152,8 +143,8 @@ def avg(x_old, x_new, alpha):
     return alpha * x_old + (1 - alpha) * x_new
 
 
-a_np1 = update_a(du, u_n, v_n, a_n, ufl=True)
-v_np1 = update_v(a_np1, u_n, v_n, a_n, ufl=True)
+a_np1 = update_a(du, u_n, v_n, a_n)
+v_np1 = update_v(a_np1, u_n, v_n, a_n)
 
 res = m(avg(a_n, a_np1, alpha_m), v) + k(avg(u_n, du, alpha_f), v)
 
