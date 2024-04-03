@@ -16,6 +16,8 @@
 #
 # If you are only interested in a subset of combinations, remove the respective lines.
 
+WATCHPOINTS_DIR="./reference-results/watchpoints/"
+
 gnuplot -p << EOF
     set grid
     set title 'x-displacement of the flap tip'
@@ -23,23 +25,23 @@ gnuplot -p << EOF
     set ylabel 'x-displacement [m]'
     set term pngcairo enhanced size 900,654
     set output "images/tutorials-perpendicular-flap-displacement-all-watchpoints.png"
-    plot "watchpoints/openfoam-calculix-v3.1.0.log" using 1:4 with lines title "OpenFOAM-CalculiX", \
-         "watchpoints/openfoam-dealii-v3.1.0.log" using 1:4 with lines title "OpenFOAM-deal.II", \
-         "watchpoints/openfoam-dune-v3.1.0.log" using 1:4 with lines title "OpenFOAM-DUNE", \
-         "watchpoints/openfoam-fenics-v3.1.0.log" using 1:4 with lines title "OpenFOAM-FEniCS", \
-         "watchpoints/openfoam-nutils-v3.1.0.log" using 1:4 with lines title "OpenFOAM-Nutils", \
-         "watchpoints/openfoam-openfoam-v3.1.0.log" using 1:4 with lines title "OpenFOAM-OpenFOAM", \
-         "watchpoints/openfoam-solids4foam-v3.1.0.log" using 1:4 with lines title "OpenFOAM-solids4Foam", \
-         "watchpoints/su2-calculix-v3.1.0.log" using 1:4 with lines title "SU2-CalculiX", \
-         "watchpoints/su2-dealii-v3.1.0.log" using 1:4 with lines title "SU2-deal.II", \
-         "watchpoints/su2-dune-v3.1.0.log" using 1:4 with lines title "SU2-DUNE", \
-         "watchpoints/su2-fenics-v3.1.0.log" using 1:4 with lines title "SU2-FEniCS", \
-         "watchpoints/su2-nutils-v3.1.0.log" using 1:4 with lines title "SU2-nutils", \
-         "watchpoints/su2-openfoam-v3.1.0.log" using 1:4 with lines title "SU2-OpenFOAM", \
-         "watchpoints/su2-solids4foam-v3.1.0.log" using 1:4 with lines title "SU2-solids4Foam", \
-         "watchpoints/nutils-calculix-v3.0.0.log" using 1:4 with lines title "Nutils-CalculiX", \
-         "watchpoints/nutils-dealii-v3.1.0.log" using 1:4 with lines title "Nutils-deal.II", \
-         "watchpoints/nutils-nutils-v3.0.0.log" using 1:4 with lines title "Nutils-Nutils"
+    plot "${WATCHPOINTS_DIR}/openfoam-calculix-v2404.log" using 1:4 with lines title "OpenFOAM-CalculiX", \
+         "${WATCHPOINTS_DIR}/openfoam-dealii-v2404.log" using 1:4 with lines title "OpenFOAM-deal.II", \
+         "${WATCHPOINTS_DIR}/openfoam-dune-v2404.log" using 1:4 with lines title "OpenFOAM-DUNE", \
+         "${WATCHPOINTS_DIR}/openfoam-fenics-v2404.log" using 1:4 with lines title "OpenFOAM-FEniCS", \
+         "${WATCHPOINTS_DIR}/openfoam-nutils-v2404.log" using 1:4 with lines title "OpenFOAM-Nutils", \
+         "${WATCHPOINTS_DIR}/openfoam-openfoam-v2404.log" using 1:4 with lines title "OpenFOAM-OpenFOAM", \
+         "${WATCHPOINTS_DIR}/openfoam-solids4foam-v2404.log" using 1:4 with lines title "OpenFOAM-solids4Foam", \
+         "${WATCHPOINTS_DIR}/su2-calculix-v2404.log" using 1:4 with lines title "SU2-CalculiX", \
+         "${WATCHPOINTS_DIR}/su2-dealii-v2404.log" using 1:4 with lines title "SU2-deal.II", \
+         "${WATCHPOINTS_DIR}/su2-dune-v2404.log" using 1:4 with lines title "SU2-DUNE", \
+         "${WATCHPOINTS_DIR}/su2-fenics-v2404.log" using 1:4 with lines title "SU2-FEniCS", \
+         "${WATCHPOINTS_DIR}/su2-nutils-v2404.log" using 1:4 with lines title "SU2-nutils", \
+         "${WATCHPOINTS_DIR}/su2-openfoam-v2404.log" using 1:4 with lines title "SU2-OpenFOAM", \
+         "${WATCHPOINTS_DIR}/su2-solids4foam-v2404.log" using 1:4 with lines title "SU2-solids4Foam", \
+         "${WATCHPOINTS_DIR}/nutils-calculix-v3.0.0.log" using 1:4 with lines title "Nutils-CalculiX", \
+         "${WATCHPOINTS_DIR}/nutils-dealii-v2404.log" using 1:4 with lines title "Nutils-deal.II", \
+         "${WATCHPOINTS_DIR}/nutils-nutils-v3.0.0.log" using 1:4 with lines title "Nutils-Nutils"
 EOF
 
 
@@ -50,14 +52,14 @@ gnuplot -p << EOF
     set ylabel 'x-displacement [m]'
     set term pngcairo enhanced size 900,654
     set output "images/tutorials-perpendicular-flap-displacement-selected-watchpoints.png"
-    plot "watchpoints/openfoam-calculix-v3.1.0.log" using 1:4 with lines title "OpenFOAM-CalculiX", \
-         "watchpoints/openfoam-dealii-v3.1.0.log" using 1:4 with lines title "OpenFOAM-deal.II", \
-         "watchpoints/openfoam-fenics-v3.1.0.log" using 1:4 with lines title "OpenFOAM-FEniCS", \
-         "watchpoints/su2-calculix-v3.1.0.log" using 1:4 with lines title "SU2-CalculiX", \
-         "watchpoints/su2-dealii-v3.1.0.log" using 1:4 with lines title "SU2-deal.II", \
-         "watchpoints/su2-fenics-v3.1.0.log" using 1:4 with lines title "SU2-FEniCS", \
-         "watchpoints/nutils-calculix-v3.0.0.log" using 1:4 with lines title "Nutils-CalculiX", \
-         "watchpoints/nutils-dealii-v3.1.0.log" using 1:4 with lines title "Nutils-deal.II"
+    plot "${WATCHPOINTS_DIR}/openfoam-calculix-v2404.log" using 1:4 with lines title "OpenFOAM-CalculiX", \
+         "${WATCHPOINTS_DIR}/openfoam-dealii-v2404.log" using 1:4 with lines title "OpenFOAM-deal.II", \
+         "${WATCHPOINTS_DIR}/openfoam-fenics-v2404.log" using 1:4 with lines title "OpenFOAM-FEniCS", \
+         "${WATCHPOINTS_DIR}/su2-calculix-v2404.log" using 1:4 with lines title "SU2-CalculiX", \
+         "${WATCHPOINTS_DIR}/su2-dealii-v2404.log" using 1:4 with lines title "SU2-deal.II", \
+         "${WATCHPOINTS_DIR}/su2-fenics-v2404.log" using 1:4 with lines title "SU2-FEniCS", \
+         "${WATCHPOINTS_DIR}/nutils-calculix-v3.0.0.log" using 1:4 with lines title "Nutils-CalculiX", \
+         "${WATCHPOINTS_DIR}/nutils-dealii-v2404.log" using 1:4 with lines title "Nutils-deal.II"
 EOF
 
 gnuplot -p << EOF
@@ -67,10 +69,10 @@ gnuplot -p << EOF
     set ylabel 'x-displacement [m]'
     set term pngcairo enhanced size 900,654
     set output "images/tutorials-perpendicular-flap-displacement-flow-comparison-watchpoints.png"
-    plot "watchpoints/openfoam-calculix-v3.1.0.log" using 1:4 with lines title "OpenFOAM-CalculiX", \
-         "watchpoints/su2-calculix-v3.1.0.log" using 1:4 with lines title "SU2-CalculiX", \
-         "watchpoints/nutils-calculix-v3.0.0.log" using 1:4 with lines title "Nutils-CalculiX", \
-         "watchpoints/fake-calculix-v3.1.0.log" using 1:4 with lines title "fake-CalculiX"
+    plot "${WATCHPOINTS_DIR}/openfoam-calculix-v2404.log" using 1:4 with lines title "OpenFOAM-CalculiX", \
+         "${WATCHPOINTS_DIR}/su2-calculix-v2404.log" using 1:4 with lines title "SU2-CalculiX", \
+         "${WATCHPOINTS_DIR}/nutils-calculix-v3.0.0.log" using 1:4 with lines title "Nutils-CalculiX", \
+         "${WATCHPOINTS_DIR}/fake-calculix-v2404.log" using 1:4 with lines title "fake-CalculiX"
 EOF
 
 gnuplot -p << EOF
@@ -80,12 +82,12 @@ gnuplot -p << EOF
     set ylabel 'x-displacement [m]'
     set term pngcairo enhanced size 900,654
     set output "images/tutorials-perpendicular-flap-displacement-openfoam-watchpoints.png"
-    plot "watchpoints/openfoam-calculix-v3.1.0.log" using 1:4 with lines title "OpenFOAM-CalculiX", \
-         "watchpoints/openfoam-dealii-v3.1.0.log" using 1:4 with lines title "OpenFOAM-deal.II", \
-         "watchpoints/openfoam-dune-v3.1.0.log" using 1:4 with lines title "OpenFOAM-DUNE", \
-         "watchpoints/openfoam-fenics-v3.1.0.log" using 1:4 with lines title "OpenFOAM-FEniCS", \
-         "watchpoints/openfoam-nutils-v3.1.0.log" using 1:4 with lines title "OpenFOAM-Nutils", \
-         "watchpoints/openfoam-solids4foam-v3.1.0.log" using 1:4 with lines title "OpenFOAM-solids4Foam"
+    plot "${WATCHPOINTS_DIR}/openfoam-calculix-v2404.log" using 1:4 with lines title "OpenFOAM-CalculiX", \
+         "${WATCHPOINTS_DIR}/openfoam-dealii-v2404.log" using 1:4 with lines title "OpenFOAM-deal.II", \
+         "${WATCHPOINTS_DIR}/openfoam-dune-v2404.log" using 1:4 with lines title "OpenFOAM-DUNE", \
+         "${WATCHPOINTS_DIR}/openfoam-fenics-v2404.log" using 1:4 with lines title "OpenFOAM-FEniCS", \
+         "${WATCHPOINTS_DIR}/openfoam-nutils-v2404.log" using 1:4 with lines title "OpenFOAM-Nutils", \
+         "${WATCHPOINTS_DIR}/openfoam-solids4foam-v2404.log" using 1:4 with lines title "OpenFOAM-solids4Foam"
 EOF
 
 gnuplot -p << EOF
@@ -95,12 +97,12 @@ gnuplot -p << EOF
     set ylabel 'x-displacement [m]'
     set term pngcairo enhanced size 900,654
     set output "images/tutorials-perpendicular-flap-displacement-su2-watchpoints.png"
-    plot "watchpoints/su2-calculix-v3.1.0.log" using 1:4 with lines title "SU2-CalculiX", \
-         "watchpoints/su2-dealii-v3.1.0.log" using 1:4 with lines title "SU2-deal.II", \
-         "watchpoints/su2-dune-v3.1.0.log" using 1:4 with lines title "SU2-DUNE", \
-         "watchpoints/su2-fenics-v3.1.0.log" using 1:4 with lines title "SU2-FEniCS", \
-         "watchpoints/su2-nutils-v3.1.0.log" using 1:4 with lines title "SU2-nutils", \
-         "watchpoints/su2-solids4foam-v3.1.0.log" using 1:4 with lines title "SU2-solids4Foam"
+    plot "${WATCHPOINTS_DIR}/su2-calculix-v2404.log" using 1:4 with lines title "SU2-CalculiX", \
+         "${WATCHPOINTS_DIR}/su2-dealii-v2404.log" using 1:4 with lines title "SU2-deal.II", \
+         "${WATCHPOINTS_DIR}/su2-dune-v2404.log" using 1:4 with lines title "SU2-DUNE", \
+         "${WATCHPOINTS_DIR}/su2-fenics-v2404.log" using 1:4 with lines title "SU2-FEniCS", \
+         "${WATCHPOINTS_DIR}/su2-nutils-v2404.log" using 1:4 with lines title "SU2-nutils", \
+         "${WATCHPOINTS_DIR}/su2-solids4foam-v2404.log" using 1:4 with lines title "SU2-solids4Foam"
 EOF
 
 gnuplot -p << EOF
@@ -110,16 +112,16 @@ gnuplot -p << EOF
     set ylabel 'x-displacement [m]'
     set term pngcairo enhanced size 900,654
     set output "images/tutorials-perpendicular-flap-displacement-nutils-watchpoints.png"
-    plot "watchpoints/nutils-calculix-v3.0.0.log" using 1:4 with lines title "Nutils-CalculiX", \
-         "watchpoints/nutils-dealii-v3.1.0.log" using 1:4 with lines title "Nutils-deal.II", \
-         "watchpoints/nutils-nutils-v3.0.0.log" using 1:4 with lines title "Nutils-Nutils"
+    plot "${WATCHPOINTS_DIR}/nutils-calculix-v3.0.0.log" using 1:4 with lines title "Nutils-CalculiX", \
+         "${WATCHPOINTS_DIR}/nutils-dealii-v2404.log" using 1:4 with lines title "Nutils-deal.II", \
+         "${WATCHPOINTS_DIR}/nutils-nutils-v3.0.0.log" using 1:4 with lines title "Nutils-Nutils"
 EOF
 
 # Not currently included in the Nutils plots due to long simulation time:
-    #      "watchpoints/nutils-fenics.log" using 1:4 with lines title "Nutils-FEniCS", \
-    #      "watchpoints/nutils-dune.log" using 1:4 with lines title "Nutils-DUNE", \
-    #      "watchpoints/nutils-openfoam.log" using 1:4 with lines title "Nutils-OpenFOAM", \
-    #      "watchpoints/nutils-solids4foam.log" using 1:4 with lines title "Nutils-solids4Foam", \
+    #      "${WATCHPOINTS_DIR}/nutils-fenics.log" using 1:4 with lines title "Nutils-FEniCS", \
+    #      "${WATCHPOINTS_DIR}/nutils-dune.log" using 1:4 with lines title "Nutils-DUNE", \
+    #      "${WATCHPOINTS_DIR}/nutils-openfoam.log" using 1:4 with lines title "Nutils-OpenFOAM", \
+    #      "${WATCHPOINTS_DIR}/nutils-solids4foam.log" using 1:4 with lines title "Nutils-solids4Foam", \
 
 gnuplot -p << EOF
     set grid
@@ -128,10 +130,10 @@ gnuplot -p << EOF
     set ylabel 'x-displacement [m]'
     set term pngcairo enhanced size 900,654
     set output "images/tutorials-perpendicular-flap-displacement-fake-watchpoints.png"
-    plot "watchpoints/fake-calculix-v3.1.0.log" using 1:4 with lines title "fake-CalculiX", \
-         "watchpoints/fake-dealii-v3.1.0.log" using 1:4 with lines title "fake-deal.II", \
-         "watchpoints/fake-dune-v3.1.0.log" using 1:4 with lines title "fake-DUNE", \
-         "watchpoints/fake-fenics-v3.1.0.log" using 1:4 with lines title "fake-FEniCS", \
-         "watchpoints/fake-nutils-v3.1.0.log" using 1:4 with lines title "fake-Nutils", \
-         "watchpoints/fake-solids4foam-v3.1.0.log" using 1:4 with lines title "fake-solids4Foam"
+    plot "${WATCHPOINTS_DIR}/fake-calculix-v2404.log" using 1:4 with lines title "fake-CalculiX", \
+         "${WATCHPOINTS_DIR}/fake-dealii-v2404.log" using 1:4 with lines title "fake-deal.II", \
+         "${WATCHPOINTS_DIR}/fake-dune-v2404.log" using 1:4 with lines title "fake-DUNE", \
+         "${WATCHPOINTS_DIR}/fake-fenics-v2404.log" using 1:4 with lines title "fake-FEniCS", \
+         "${WATCHPOINTS_DIR}/fake-nutils-v2404.log" using 1:4 with lines title "fake-Nutils", \
+         "${WATCHPOINTS_DIR}/fake-solids4foam-v2404.log" using 1:4 with lines title "fake-solids4Foam"
 EOF
