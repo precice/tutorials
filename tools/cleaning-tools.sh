@@ -40,7 +40,7 @@ clean_precice_logs() {
             ./precice-*-watchintegral-*.log \
             ./core
         rm -rfv ./precice-profiling/ profiling.json trace.json
-        rm -rfv ./preCICE-output/
+        rm -rfv ./precice-exports/
     )
 }
 

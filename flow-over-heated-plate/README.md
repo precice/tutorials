@@ -80,14 +80,14 @@ First generate the output for each run by adding export to the participant `Soli
 
 ```xml
 <participant name="Solid">
-  <export:vtk directory="preCICE-output" />
+  <export:vtk directory="precice-exports" />
   <receive-mesh name="Fluid-Mesh" from="Fluid" />
   <provide-mesh name="Solid-Mesh" />
   ...
 </participant>
 ```
 
-After that running a case from this tutorial will export data into `solid-*/preCICE-output`. To visualize and compare these results run `python3 plot-final-interface-temperature.py` (You can install the required python packages by running `pip3 install -r plot-final-interface-temperature-requirements.txt`). This will plot the dimensionless temperature `theta = (T-300)/(310-300)` (with `T` being the temperature) across the coupling interface, i.e. where the solid and the fluid meet and exchange heat. The x-axis shows the x coordinate and the y-axis the dimensionless temperature `theta` at the interface. If you want to exclude certain cases, simply comment out the corresponding lines in the script. For reference see below:
+After that running a case from this tutorial will export data into `solid-*/precice-exports`. To visualize and compare these results run `python3 plot-final-interface-temperature.py` (You can install the required python packages by running `pip3 install -r plot-final-interface-temperature-requirements.txt`). This will plot the dimensionless temperature `theta = (T-300)/(310-300)` (with `T` being the temperature) across the coupling interface, i.e. where the solid and the fluid meet and exchange heat. The x-axis shows the x coordinate and the y-axis the dimensionless temperature `theta` at the interface. If you want to exclude certain cases, simply comment out the corresponding lines in the script. For reference see below:
 
 ![Comparison of the results with different solvers](images/tutorials-flow-over-heated-plate-results-comparison.png)
 
