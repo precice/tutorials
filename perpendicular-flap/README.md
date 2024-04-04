@@ -94,7 +94,7 @@ Comparison of the different flow solvers (incompressible `fluid-openfoam` and `f
 
 Combinations using the incompressible `fluid-openfoam` case:
 
-![Flap watchpoints using fluid-su2](images/tutorials-perpendicular-flap-displacement-openfoam-watchpoints.png)
+![Flap watchpoints using fluid-openfoam](images/tutorials-perpendicular-flap-displacement-openfoam-watchpoints.png)
 
 Combinations (excerpt) using the incompressible `fluid-nutils` case:
 
