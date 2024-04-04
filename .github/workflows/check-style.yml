@@ -25,7 +25,13 @@ jobs:
         run: pre-commit run -a -v
       - name: Git status
         if: always()
-        run: git status
+        run: |
+          echo '### Status\n```text' >> $GITHUB_STEP_SUMMARY
+          git status | tee -a $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
       - name: Full diff
         if: always()
-        run: git diff
+        run: |
+          echo '### Diff\n```diff' >> $GITHUB_STEP_SUMMARY
+          git status | tee -a $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
