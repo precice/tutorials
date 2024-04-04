@@ -26,12 +26,12 @@ jobs:
       - name: Git status
         if: always()
         run: |
-          echo '### Status\n```text' >> $GITHUB_STEP_SUMMARY
+          echo -e '### Status\n```text' >> $GITHUB_STEP_SUMMARY
           git status | tee -a $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
       - name: Full diff
         if: always()
         run: |
-          echo '### Diff\n```diff' >> $GITHUB_STEP_SUMMARY
-          git status | tee -a $GITHUB_STEP_SUMMARY
+          echo -e '### Diff\n```diff' >> $GITHUB_STEP_SUMMARY
+          git diff | tee -a $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
