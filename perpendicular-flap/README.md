@@ -90,7 +90,7 @@ Excluding the `solid-openfoam` (outlier, provided mainly for technical testing),
 
 Comparison of the different flow solvers (incompressible `fluid-openfoam` and `fluid-nutils`, compressible `fluid-su2`, dummy `fluid-fake`):
 
-![Flap watchpoints using fluid-openfoam](images/tutorials-perpendicular-flap-displacement-flow-comparison-watchpoints.png)
+![Flap watchpoints using solid-calculix](images/tutorials-perpendicular-flap-displacement-flow-comparison-watchpoints.png)
 
 Combinations using the incompressible `fluid-openfoam` case:
 
