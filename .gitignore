@@ -59,6 +59,7 @@ dummy
 *.frd
 *.sta
 *.eig
+*.rout
 
 # code_aster
 *.mess
