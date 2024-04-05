@@ -100,6 +100,10 @@ Combinations (excerpt) using the incompressible `fluid-nutils` case:
 
 ![Flap watchpoints using fluid-nutils](images/tutorials-perpendicular-flap-displacement-nutils-watchpoints.png)
 
+Combinations (excerpt) using the compressible `fluid-su2` case:
+
+![Flap watchpoints using fluid-su2](images/tutorials-perpendicular-flap-displacement-su2-watchpoints.png)
+
 Combinations (excerpt) using the dummy `fluid-fake` case:
 
 ![Flap watchpoints using fluid-fake](images/tutorials-perpendicular-flap-displacement-fake-watchpoints.png)
