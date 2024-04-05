@@ -114,12 +114,12 @@ gnuplot -p << EOF
     set output "images/tutorials-perpendicular-flap-displacement-nutils-watchpoints.png"
     plot "${WATCHPOINTS_DIR}/nutils-calculix-v3.0.0.log" using 1:4 with lines title "Nutils-CalculiX", \
          "${WATCHPOINTS_DIR}/nutils-dealii-v2404.log" using 1:4 with lines title "Nutils-deal.II", \
-         "${WATCHPOINTS_DIR}/nutils-nutils-v3.0.0.log" using 1:4 with lines title "Nutils-Nutils"
+         "${WATCHPOINTS_DIR}/nutils-dune-v2404.log" using 1:4 with lines title "Nutils-DUNE", \
+         "${WATCHPOINTS_DIR}/nutils-fenics-v2404.log" using 1:4 with lines title "Nutils-FEniCS", \
+         "${WATCHPOINTS_DIR}/nutils-nutils-v2404.log" using 1:4 with lines title "Nutils-Nutils"
 EOF
 
 # Not currently included in the Nutils plots due to long simulation time:
-    #      "${WATCHPOINTS_DIR}/nutils-fenics.log" using 1:4 with lines title "Nutils-FEniCS", \
-    #      "${WATCHPOINTS_DIR}/nutils-dune.log" using 1:4 with lines title "Nutils-DUNE", \
     #      "${WATCHPOINTS_DIR}/nutils-openfoam.log" using 1:4 with lines title "Nutils-OpenFOAM", \
     #      "${WATCHPOINTS_DIR}/nutils-solids4foam.log" using 1:4 with lines title "Nutils-solids4Foam", \
 
