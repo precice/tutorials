@@ -10,8 +10,6 @@ summary: This tutorial describes how to run a conjugate heat transfer simulation
 Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/heat-exchanger-simplified). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
 {% endnote %}
 
-![Animation of the simplified heat exchanger tutorial](images/tutorials-heat-exchanger-simplified-animation.webp)
-
 ## Setup
 
 This tutorial extends the [flow over heated plate: Two meshes](https://precice.org/tutorials-flow-over-heated-plate-two-meshes.html) tutorial, adding another channel flow below the plate. The plate is not heated in this scenario, but is acting as a conducting material for the two fluids, serving as a simplified heat exchanger example.
@@ -54,6 +52,8 @@ cd solid-calculix
 to run the solid participant (which is also controlling the coupling).
 
 ## Post-processing
+
+![Animation of the simplified heat exchanger tutorial](images/tutorials-heat-exchanger-simplified-animation.webp)
 
 Similarly to the [flow over heated plate: Two meshes](https://precice.org/tutorials-flow-over-heated-plate-two-meshes.html) tutorial.
 
