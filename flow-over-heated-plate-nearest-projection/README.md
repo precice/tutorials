@@ -69,7 +69,7 @@ From the preCICE point of view, the simulation here is in 3D, as opposed to the 
 ## Post-processing
 
 Have a look at the [flow-over heated-plate](https://www.precice.org/tutorials-flow-over-heated-plate.html) tutorial for the general aspects of post-processing.
-Since we now defined mesh connectivity on our interface, we can export the coupling interface with the tag `<export:vtk directory="preCICE-output" />` in our `precice-config.xml`.
+Since we now defined mesh connectivity on our interface, we can export the coupling interface with the tag `<export:vtk directory="precice-exports" />` in our `precice-config.xml`.
 Visualizing these files (e.g. using ParaView) will show a triangular mesh, even though you use hexahedral meshes. This has nothing to do with your mesh and is just caused by the way the connectivity is defined in preCICE. As described above, the function `setMeshTriangles` is used to define the connectivity. Hence, every interface cell/face is represented by two triangles. The following image should give you an impression of a possible triangulated coupling mesh, which consists purely of hexahedral cells:
 
 ![triangulated](https://user-images.githubusercontent.com/33414590/55974257-96b07d80-5c87-11e9-9965-972b922c483d.png)

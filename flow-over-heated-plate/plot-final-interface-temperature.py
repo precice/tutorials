@@ -4,7 +4,7 @@ import numpy as np
 
 
 def vtk_to_dict(case):
-    vtkFileName = "solid-{}/preCICE-output/Fluid-Mesh-Solid.dt100.vtk".format(case)
+    vtkFileName = "solid-{}/precice-exports/Fluid-Mesh-Solid.dt100.vtk".format(case)
     # read the vtk file as an unstructured grid
     reader = vtk.vtkUnstructuredGridReader()
     reader.SetFileName(vtkFileName)
@@ -44,8 +44,13 @@ cases = []
 cases.append('fenics')
 cases.append('openfoam')
 cases.append('nutils')
+cases.append('dunefem')
 
-case_labels = {'fenics': 'OpenFOAM-FEniCS', 'openfoam': 'OpenFOAM-OpenFOAM', 'nutils': 'OpenFOAM-Nutils', }
+case_labels = {
+    'fenics': 'OpenFOAM-FEniCS',
+    'openfoam': 'OpenFOAM-OpenFOAM',
+    'nutils': 'OpenFOAM-Nutils',
+    'dunefem': 'OpenFOAM-DuneFem'}
 styles = [':', '-', '--']
 colors = ['r', 'b', 'g', 'k']
 i = 0
