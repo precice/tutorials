@@ -8,7 +8,7 @@ as testing overlaps with the release process:
 - preCICE v3.1.0 release candidate from March 28 (commit `3a1e77e`, preceded by `5ec2286`)
 - Python 3.10.12 and pyprecice v3.0.0.0
 - OpenFOAM v2312 and OpenFOAM-preCICE v1.3.0
-- SU2 v7.5.1 and SU2-preCICE from commit `ac01cac` (effectively `91c3505`)
+- SU2 v7.5.1 and SU2-preCICE from commit `64d4aff`
 - CalculiX v2.20 and CalculiX-preCICE v2.20.1
 - deal.II 9.4.0 and deal.II-preCICE from commit `2ab217d`
 - FEniCS 2019.2.0.13.dev0 and fenicsprecice v2.1.0
