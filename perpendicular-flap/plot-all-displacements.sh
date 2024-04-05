@@ -20,33 +20,6 @@ WATCHPOINTS_DIR="./reference-results/watchpoints/"
 
 gnuplot -p << EOF
     set grid
-    set title 'x-displacement of the flap tip'
-    set xlabel 'time [s]'
-    set ylabel 'x-displacement [m]'
-    set term pngcairo enhanced size 900,654
-    set output "images/tutorials-perpendicular-flap-displacement-all-watchpoints.png"
-    plot "${WATCHPOINTS_DIR}/openfoam-calculix-v2404.log" using 1:4 with lines title "OpenFOAM-CalculiX", \
-         "${WATCHPOINTS_DIR}/openfoam-dealii-v2404.log" using 1:4 with lines title "OpenFOAM-deal.II", \
-         "${WATCHPOINTS_DIR}/openfoam-dune-v2404.log" using 1:4 with lines title "OpenFOAM-DUNE", \
-         "${WATCHPOINTS_DIR}/openfoam-fenics-v2404.log" using 1:4 with lines title "OpenFOAM-FEniCS", \
-         "${WATCHPOINTS_DIR}/openfoam-nutils-v2404.log" using 1:4 with lines title "OpenFOAM-Nutils", \
-         "${WATCHPOINTS_DIR}/openfoam-openfoam-v2404.log" using 1:4 with lines title "OpenFOAM-OpenFOAM", \
-         "${WATCHPOINTS_DIR}/openfoam-solids4foam-v2404.log" using 1:4 with lines title "OpenFOAM-solids4Foam", \
-         "${WATCHPOINTS_DIR}/su2-calculix-v2404.log" using 1:4 with lines title "SU2-CalculiX", \
-         "${WATCHPOINTS_DIR}/su2-dealii-v2404.log" using 1:4 with lines title "SU2-deal.II", \
-         "${WATCHPOINTS_DIR}/su2-dune-v2404.log" using 1:4 with lines title "SU2-DUNE", \
-         "${WATCHPOINTS_DIR}/su2-fenics-v2404.log" using 1:4 with lines title "SU2-FEniCS", \
-         "${WATCHPOINTS_DIR}/su2-nutils-v2404.log" using 1:4 with lines title "SU2-nutils", \
-         "${WATCHPOINTS_DIR}/su2-openfoam-v2404.log" using 1:4 with lines title "SU2-OpenFOAM", \
-         "${WATCHPOINTS_DIR}/su2-solids4foam-v2404.log" using 1:4 with lines title "SU2-solids4Foam", \
-         "${WATCHPOINTS_DIR}/nutils-calculix-v3.0.0.log" using 1:4 with lines title "Nutils-CalculiX", \
-         "${WATCHPOINTS_DIR}/nutils-dealii-v2404.log" using 1:4 with lines title "Nutils-deal.II", \
-         "${WATCHPOINTS_DIR}/nutils-nutils-v3.0.0.log" using 1:4 with lines title "Nutils-Nutils"
-EOF
-
-
-gnuplot -p << EOF
-    set grid
     set title 'x-displacement of the flap tip (selected combinations)'
     set xlabel 'time [s]'
     set ylabel 'x-displacement [m]'
