@@ -31,7 +31,7 @@ gnuplot -p << EOF
          "${WATCHPOINTS_DIR}/su2-calculix-v2404.log" using 1:4 with lines title "SU2-CalculiX", \
          "${WATCHPOINTS_DIR}/su2-dealii-v2404.log" using 1:4 with lines title "SU2-deal.II", \
          "${WATCHPOINTS_DIR}/su2-fenics-v2404.log" using 1:4 with lines title "SU2-FEniCS", \
-         "${WATCHPOINTS_DIR}/nutils-calculix-v3.0.0.log" using 1:4 with lines title "Nutils-CalculiX", \
+         "${WATCHPOINTS_DIR}/nutils-calculix-v2404.log" using 1:4 with lines title "Nutils-CalculiX", \
          "${WATCHPOINTS_DIR}/nutils-dealii-v2404.log" using 1:4 with lines title "Nutils-deal.II"
 EOF
 
@@ -44,7 +44,7 @@ gnuplot -p << EOF
     set output "images/tutorials-perpendicular-flap-displacement-flow-comparison-watchpoints.png"
     plot "${WATCHPOINTS_DIR}/openfoam-calculix-v2404.log" using 1:4 with lines title "OpenFOAM-CalculiX", \
          "${WATCHPOINTS_DIR}/su2-calculix-v2404.log" using 1:4 with lines title "SU2-CalculiX", \
-         "${WATCHPOINTS_DIR}/nutils-calculix-v3.0.0.log" using 1:4 with lines title "Nutils-CalculiX", \
+         "${WATCHPOINTS_DIR}/nutils-calculix-v2404.log" using 1:4 with lines title "Nutils-CalculiX", \
          "${WATCHPOINTS_DIR}/fake-calculix-v2404.log" using 1:4 with lines title "fake-CalculiX"
 EOF
 
@@ -85,7 +85,7 @@ gnuplot -p << EOF
     set ylabel 'x-displacement [m]'
     set term pngcairo enhanced size 900,654
     set output "images/tutorials-perpendicular-flap-displacement-nutils-watchpoints.png"
-    plot "${WATCHPOINTS_DIR}/nutils-calculix-v3.0.0.log" using 1:4 with lines title "Nutils-CalculiX", \
+    plot "${WATCHPOINTS_DIR}/nutils-calculix-v2404.log" using 1:4 with lines title "Nutils-CalculiX", \
          "${WATCHPOINTS_DIR}/nutils-dealii-v2404.log" using 1:4 with lines title "Nutils-deal.II", \
          "${WATCHPOINTS_DIR}/nutils-dune-v2404.log" using 1:4 with lines title "Nutils-DUNE", \
          "${WATCHPOINTS_DIR}/nutils-fenics-v2404.log" using 1:4 with lines title "Nutils-FEniCS", \
@@ -93,7 +93,6 @@ gnuplot -p << EOF
 EOF
 
 # Not currently included in the Nutils plots due to long simulation time:
-    #      "${WATCHPOINTS_DIR}/nutils-openfoam.log" using 1:4 with lines title "Nutils-OpenFOAM", \
     #      "${WATCHPOINTS_DIR}/nutils-solids4foam.log" using 1:4 with lines title "Nutils-solids4Foam", \
 
 gnuplot -p << EOF
