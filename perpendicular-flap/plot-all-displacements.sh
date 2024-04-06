@@ -89,11 +89,9 @@ gnuplot -p << EOF
          "${WATCHPOINTS_DIR}/nutils-dealii-v2404.log" using 1:4 with lines title "Nutils-deal.II", \
          "${WATCHPOINTS_DIR}/nutils-dune-v2404.log" using 1:4 with lines title "Nutils-DUNE", \
          "${WATCHPOINTS_DIR}/nutils-fenics-v2404.log" using 1:4 with lines title "Nutils-FEniCS", \
-         "${WATCHPOINTS_DIR}/nutils-nutils-v2404.log" using 1:4 with lines title "Nutils-Nutils"
+         "${WATCHPOINTS_DIR}/nutils-nutils-v2404.log" using 1:4 with lines title "Nutils-Nutils", \
+         "${WATCHPOINTS_DIR}/nutils-solids4foam-v2404.log" using 1:4 with lines title "Nutils-solids4Foam"
 EOF
-
-# Not currently included in the Nutils plots due to long simulation time:
-    #      "${WATCHPOINTS_DIR}/nutils-solids4foam.log" using 1:4 with lines title "Nutils-solids4Foam", \
 
 gnuplot -p << EOF
     set grid
