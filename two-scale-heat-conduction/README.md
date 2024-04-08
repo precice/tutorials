@@ -57,7 +57,7 @@ cd micro-nutils
 
 The `num_procs` needs to fit the decomposition specified in the `micro-manager-config.json` (default: two ranks).
 
-**NOTE**: When running `micro-nutils`, even though the case setup and involved physics is simple, each micro simulation is an instance of Nutils, which usually has a moderately high computation time. If the Micro Manager is run on 2 processors, the total runtime is approximately 25-30 minutes. Do not run the Micro Manager in serial, because the runtime will be several hours.
+**NOTE**: When running `micro-nutils`, even though the case setup and involved physics is simple, each micro simulation is an instance of Nutils, which usually has a moderately high computation time. If the Micro Manager is run on 2 processors, the total runtime is approximately 10-15 minutes depending on the compute machine. Do not run the Micro Manager in serial, because the runtime will be several hours.
 
 Running `micro-dumux` is much faster. A serial simulation takes approximately 2 minutes to finish.
 
