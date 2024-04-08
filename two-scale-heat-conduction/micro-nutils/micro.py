@@ -85,7 +85,8 @@ class MicroSimulation:
         #    psi = self._get_avg_porosity(self._topo, solphi)
 
         self._solphi = solphi  # Save solution of phi
-        #self._psi_nm1 = psi  # Average porosity value of last time step
+        psi = self._get_avg_porosity(self._topo, solphi)
+        self._psi_nm1 = psi  # Average porosity value of last time step
 
         # Solve the heat cell problem
         solu = self._solve_heat_cell_problem(self._topo, solphi)
@@ -96,8 +97,7 @@ class MicroSimulation:
         output_data = dict()
         output_data["k_00"] = k[0][0]
         output_data["k_11"] = k[1][1]
-        #output_data["porosity"] = psi
-        output_data["porosity"] = self._get_avg_porosity(self._topo, solphi)
+        output_data["porosity"] = psi
 
         return output_data
 
