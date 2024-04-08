@@ -1,9 +1,7 @@
-<?xml version="1.0"?>
-
+<?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
-
-  <data:scalar name="Current"  />
-  <data:scalar name="Voltage"  />
+  <data:scalar name="Current" />
+  <data:scalar name="Voltage" />
 
   <mesh name="MeshCoil" dimensions="2">
     <use-data name="Current" />
@@ -18,28 +16,34 @@
   <participant name="Coil">
     <provide-mesh name="MeshCoil" />
     <write-data name="Current" mesh="MeshCoil" />
-    <read-data  name="Voltage" mesh="MeshCoil" />
+    <read-data name="Voltage" mesh="MeshCoil" />
   </participant>
 
   <participant name="Capacitor">
     <provide-mesh name="MeshCapacitor" />
-    <receive-mesh name="MeshCoil" from="Coil"/>
-    <write-data name="Voltage"     mesh="MeshCapacitor" />
-    <read-data  name="Current" mesh="MeshCapacitor" />
+    <receive-mesh name="MeshCoil" from="Coil" />
+    <write-data name="Voltage" mesh="MeshCapacitor" />
+    <read-data name="Current" mesh="MeshCapacitor" />
     <mapping:nearest-neighbor
-      direction="write" from="MeshCapacitor" to="MeshCoil" constraint="consistent"/>
+      direction="write"
+      from="MeshCapacitor"
+      to="MeshCoil"
+      constraint="consistent" />
     <mapping:nearest-neighbor
-      direction="read" from="MeshCoil" to="MeshCapacitor" constraint="consistent"/>
+      direction="read"
+      from="MeshCoil"
+      to="MeshCapacitor"
+      constraint="consistent" />
   </participant>
 
   <m2n:sockets acceptor="Coil" connector="Capacitor" exchange-directory=".." />
-  
-  <coupling-scheme:serial-implicit> 
-    <participants first="Coil" second="Capacitor" /> 
+
+  <coupling-scheme:serial-implicit>
+    <participants first="Coil" second="Capacitor" />
     <max-time value="10" />
     <time-window-size value="0.01" />
     <max-iterations value="3" />
-    <exchange data="Current" mesh="MeshCoil" from="Coil" to="Capacitor"/>
-    <exchange data="Voltage" mesh="MeshCoil" from="Capacitor" to="Coil"/>
-  </coupling-scheme:serial-implicit>     
+    <exchange data="Current" mesh="MeshCoil" from="Coil" to="Capacitor" />
+    <exchange data="Voltage" mesh="MeshCoil" from="Capacitor" to="Coil" />
+  </coupling-scheme:serial-implicit>
 </precice-configuration>

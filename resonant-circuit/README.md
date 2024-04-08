@@ -1,4 +1,11 @@
-## Background
+---
+title: Resonant Circuit
+keywords: MATLAB
+summary: We simulate a two-element LC circuit (one inductor and one capacitor).
+---
+
+
+## Setup
 
 The purpose of this tutorial is to illustrate the usage of preCICE to couple MATLAB code. Two different MATLAB solvers will be coupled to simulate a two-element LC circuit. This type of circuit consists on a very simple system with one inductor and one capacitor:
 
@@ -14,16 +21,14 @@ where I is the current and V the voltage of the cirucit.
 
 Each of these equations is going to be solved by a different MATLAB solver. Note that as only one scalar is solved per equation, this is a 0+1 dimensional problem.
 
-## Dependencies
+## Available solvers
 
-For running this tutorial, you have to install
+* <em>MATLAB</em> A solver using the [MATLAB bindings](https://github.com/precice/matlab-bindings).
+ Before running this tutorial, follow the [instructions](https://github.com/precice/matlab-bindings?tab=readme-ov-file#matlab-bindings) to correctly install the MATLAB bindings.
 
-* **preCICE**, see [preCICE wiki](https://github.com/precice/precice/wiki/Building).
-* **MATLAB**, see [mathworks.com](https://de.mathworks.com/products.get-matlab.html).
+## Running the simulation
 
-After installing both preCICE and MATLAB, you need to [build the MATLAB bindings](https://github.com/gilbertolem/precice/tree/develop/src/precice/bindings/matlab#compilation).
-
-## Running
+### MATLAB
 
 For running this example, first get into one of folders with the solvers and open a MATLAB instance.
 Afterward, do the same for the second solver.
@@ -43,7 +48,7 @@ Solver_Capacitor
 
 The preCICE configuration file is available as `precice-config.xml`, and it is called directly in the solvers.
 
-### Running from terminal
+#### Running from terminal
 
 If you prefer to not open the MATLAB GUIs, one can alternatively use two shells instead.
 For that, modify the path in the file `matlab-bindings-path.sh` found in the base directory of this tutorial to the path to your MATLAB bindings.
