@@ -127,7 +127,7 @@ class MicroSimulation:
 
     @staticmethod
     def _analytical_phasefield(x, y, r, lam):
-        return 1. / (1. + np.exp(-4. / lam * (np.sqrt(x ** 2 + y ** 2) - r + 0.001)))
+        return 1. / (1. + np.exp(-4. / lam * (np.sqrt(x ** 2 + y ** 2) - r)))
 
     @staticmethod
     def _get_analytical_phasefield(topo, ns, degree_phi, lam, r):
