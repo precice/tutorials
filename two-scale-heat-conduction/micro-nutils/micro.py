@@ -75,16 +75,16 @@ class MicroSimulation:
         target_porosity = 1 - math.pi * self._r_initial ** 2
         print("Target amount of void space = {}".format(target_porosity))
 
-        dt_initial = 1E-3
-
         # Solve Allen-Cahn equation till we reach target porosity value
-        psi = 0
-        while psi < target_porosity:
-            print("Solving Allen-Cahn equation to achieve initial target grain structure")
-            solphi = self._solve_allen_cahn(self._topo, solphi, 0.5, dt_initial)
-            psi = self._get_avg_porosity(self._topo, solphi)
+        # dt_initial = 1E-3
+        # psi = 0
+        # while psi < target_porosity:
+        #     print("Solving Allen-Cahn equation to achieve initial target grain structure")
+        #     solphi = self._solve_allen_cahn(self._topo, solphi, 0.5, dt_initial)
+        #     psi = self._get_avg_porosity(self._topo, solphi)
 
         self._solphi = solphi  # Save solution of phi
+        psi = self._get_avg_porosity(self._topo, solphi)
         self._psi_nm1 = psi  # Average porosity value of last time step
 
         # Solve the heat cell problem
@@ -127,7 +127,7 @@ class MicroSimulation:
 
     @staticmethod
     def _analytical_phasefield(x, y, r, lam):
-        return 1. / (1. + np.exp(-4. / lam * (np.sqrt(x ** 2 + y ** 2) - r + 0.001)))
+        return 1. / (1. + np.exp(-4. / lam * (np.sqrt(x ** 2 + y ** 2) - r)))
 
     @staticmethod
     def _get_analytical_phasefield(topo, ns, degree_phi, lam, r):
