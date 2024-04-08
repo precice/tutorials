@@ -29,9 +29,9 @@ Fluid participant:
 
 * OpenFOAM (pimpleFoam). In case you are using a very old OpenFOAM version, you will need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://www.precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v6.0.
-
 * SU2. As opposed to the other two fluid codes, SU2 is in particular specialized for compressible flow. Therefore the default simulation parameters haven been adjusted in order to pull the setup into the compressible flow regime. For more information, have a look at the [SU2 adapter documentation](https://www.precice.org/adapter-su2-overview.html).
+
+* Nutils. For more information, have a look at the [Nutils adapter documentation](https://www.precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v6.0. This case currently takes orders of magnitude longer than the OpenFOAM and SU2 cases, see [related issue](https://github.com/precice/tutorials/issues/506).
 
 * Fake. A simple python script that acts as a fake solver and provides an arbitrary force, linearly-increasing per length of the flap. This solver can be used for debugging of the solid participant and its adapter. It also technically works with implicit coupling, thus no changes to the preCICE configuration are necessary. Note that [ASTE's replay mode](https://precice.org/tooling-aste.html#replay-mode) has a similar use case and could also feed artificial or previously recorded real data, replacing an actual solver.
 
@@ -47,9 +47,9 @@ Solid participant:
 
 * Nutils. The structural model is currently limited to linear elasticity. For more information, have a look at the [Nutils adapter documentation](https://www.precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v8.0.
 
-* OpenFOAM (solidDisplacementFoam). For more information, have a look at the [OpenFOAM plateHole tutorial](https://www.openfoam.com/documentation/tutorial-guide/5-stress-analysis/5.1-stress-analysis-of-a-plate-with-a-hole). The solidDisplacementFoam solver only supports linear geometry. For general solid mechanics procedures in OpenFOAM, see solids4foam.
-
 * solids4foam. Like for CalculiX, the geometrically non-linear solver is used by default. For more information, see the [solids4foam documentation](https://solids4foam.github.io/documentation/overview.html) and a [related tutorial](https://solids4foam.github.io/tutorials/more-tutorials/flexibleOversetCylinder.html). This case works with solids4foam v2.0, which is compatible with up to OpenFOAM v2012 and OpenFOAM 9 (as well as foam-extend, with which the OpenFOAM-preCICE adapter is not compatible), as well as the OpenFOAM-preCICE adapter v1.2.0 or later.
+
+* OpenFOAM (solidDisplacementFoam). For more information, have a look at the [OpenFOAM plateHole tutorial](https://www.openfoam.com/documentation/tutorial-guide/5-stress-analysis/5.1-stress-analysis-of-a-plate-with-a-hole). The solidDisplacementFoam solver only supports linear geometry and this case is only provided for quick testing purposes, leading to outlier results. For general solid mechanics procedures in OpenFOAM, see solids4foam.
 
 ## Running the Simulation
 
@@ -79,16 +79,40 @@ As we defined a watchpoint on the 'Solid' participant at the flap tip (see `prec
 
 ![Flap watchpoint](images/tutorials-perpendicular-flap-displacement-watchpoint.png)
 
-There is moreover a script `plot-all-displacements.sh` to plot and compare all possible variants. This script expects all watchpoint logs to be available in a subfolder `watchpoints` in the format `openfoam-dealii.log` or similar. If you want to use this script, you need to copy the files over accordingly.
+There is moreover a script `plot-all-displacements.sh` to plot and compare all possible variants. This script expects all watchpoint logs to be available in a subfolder `watchpoints` in the format `openfoam-dealii-version.log` or similar. If you want to use this script, you need to edit it to exclude combinations you want to exclude and copy the files over accordingly.
 
 You should get results similar to this one:
 
-![All flap watchpoints](images/tutorials-perpendicular-flap-displacement-all-watchpoints.png)
+![Selected flap watchpoints](images/tutorials-perpendicular-flap-displacement-selected-watchpoints.png)
 
 Reasons for the differences:
 
 * The CalculiX adapter only supports linear finite elements (deal.II uses 4th order, FEniCS 2nd order).
 * SU2 models a compressible fluid, OpenFOAM and Nutils an incompressible one.  
+
+### Looking closer
+
+Excluding the `solid-openfoam` (outlier, provided mainly for technical testing), let's look at an overview of different combinations.
+
+Comparison of the different flow solvers (incompressible `fluid-openfoam` and `fluid-nutils`, compressible `fluid-su2`, dummy `fluid-fake`):
+
+![Flap watchpoints using solid-calculix](images/tutorials-perpendicular-flap-displacement-flow-comparison-watchpoints.png)
+
+Combinations using the incompressible `fluid-openfoam` case:
+
+![Flap watchpoints using fluid-openfoam](images/tutorials-perpendicular-flap-displacement-openfoam-watchpoints.png)
+
+Combinations (excerpt) using the incompressible `fluid-nutils` case:
+
+![Flap watchpoints using fluid-nutils](images/tutorials-perpendicular-flap-displacement-nutils-watchpoints.png)
+
+Combinations (excerpt) using the compressible `fluid-su2` case:
+
+![Flap watchpoints using fluid-su2](images/tutorials-perpendicular-flap-displacement-su2-watchpoints.png)
+
+Combinations (excerpt) using the dummy `fluid-fake` case:
+
+![Flap watchpoints using fluid-fake](images/tutorials-perpendicular-flap-displacement-fake-watchpoints.png)
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
