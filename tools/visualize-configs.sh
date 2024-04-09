@@ -6,10 +6,16 @@ set -e -u
 visualize_config(){
   echo "Visualizing the configuration in $1"
   (
+    if [[ "$1" == quickstart ]]; then
+      outfile="images/quickstart-precice-config"
+    else
+      outfile="images/tutorials-$1-precice-config"
+    fi
+    
     cd "$1"
     if [ -f precice-config.xml ]; then
       mkdir -p images
-      precice-config-visualizer precice-config.xml | dot -Tpng > "images/tutorials-$1-precice-config.png"
+      precice-config-visualizer precice-config.xml | dot -Tpng > "$outfile.png"
     fi
   )
 }
