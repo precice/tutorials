@@ -16,6 +16,12 @@ This scenario consists of two incompressible fluid solvers in series. The case i
 The key point of this tutorial is the demonstration of custom inlet-outlet OpenFOAM boundary conditions for velocity and pressure. These can dynamically switch their behavior according to the underlying flow direction.
 The boundary conditions `coupledVelocity` and `coupledPressure` come with the preCICE OpenFOAM adapter and can be set in the corresponding start time dictionaries for velocity and pressure.
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-partitioned-backwards-facing-step-precice-config.png)
+
 ## Available solvers
 
 * OpenFOAM (pimpleFoam) for both participants. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).

@@ -25,6 +25,12 @@ Solid participant:
 
 The solvers are currently only OpenFOAM related. For information regarding the nearest-projection mapping, have a look in the [OpenFOAM configuration section](https://www.precice.org/adapter-openfoam-config.html).
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-nearest-projection-precice-config.png)
+
 ## Running the Simulation
 
 Open two separate terminals and start each participant by calling the respective run script.

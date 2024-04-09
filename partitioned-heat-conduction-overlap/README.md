@@ -17,6 +17,12 @@ We solve a partitioned heat equation, but apply an overlapping Schwarz-type doma
 
 Note that this case applies an overlapping Schwarz-type coupling method and not (like most other tutorials in this repository) a Dirichlet-Neumann coupling. This results in a symmetric setup of the solvers.
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-overlap-precice-config.png)
+
 ## Running the simulation
 
 This tutorial is for FEniCS.

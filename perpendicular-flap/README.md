@@ -19,9 +19,9 @@ The simulated flow domain is 6 units long (x) and 4 units tall (y). The flap is 
 
 ## Configuration
 
-preCICE configuration (visualized with the [cofig visualizer](https://precice.org/tooling-config-visualization.html)):
+preCICE configuration (image generated with the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/precice-config.svg)
+![preCICE configuration visualization](images/tutorials-perpendicular-flap-precice-config.png)
 
 ## Available solvers
 

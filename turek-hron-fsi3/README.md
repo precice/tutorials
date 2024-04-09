@@ -17,6 +17,12 @@ The setup is shown schematically here:
 
 For more information please refer to the original publication of the benchmark [1].
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-turek-hron-fsi3-precice-config.png)
+
 ## Available solvers
 
 Fluid participant:
