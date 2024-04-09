@@ -19,4 +19,4 @@ export -f visualize_config
 IGNORE="partitioned-heat-conduction-direct"
 tutorials=$(find . -maxdepth 1 -type d -not -name ".*" | grep -vE $IGNORE | sed "s/^.\///")
 
-parallel visualize_config ::: $tutorials
+parallel visualize_config ::: "$tutorials"
