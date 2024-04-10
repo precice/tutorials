@@ -1,0 +1,46 @@
+digraph G {
+compound=True;
+layout=dot;
+margin=0;
+overlap=scale;
+rankdir=LR;
+splines=true;
+subgraph cluster_m2n {
+label="Communicators";
+"m2n-Calculix1-Calculix2" [label="sockets", shape=component];
+}
+
+subgraph cluster_cpl {
+label="Coupling Schemes";
+"cpl-Calculix1-Calculix2" [label="parallel-implicit", shape=component];
+}
+
+subgraph cluster_Calculix1 {
+label="Calculix1";
+style=bold;
+"Calculix1" [color="#0173B2", shape=doubleoctagon];
+"Calculix1-Calculix-Mesh1" [color="#0173B2", label=<Calculix-Mesh1<SUP><I>3D</I></SUP>>, shape=cylinder];
+"Calculix1-Calculix-Mesh2" [color="#DE8F05", label="Calculix-Mesh2
+from Calculix2", shape=cylinder, style=dashed];
+"Calculix1-Calculix-Mesh1" -> "Calculix1"  [color="#0173B2", label="Displacement0", tooltip=vector];
+"Calculix1" -> "Calculix1-Calculix-Mesh1"  [color="#0173B2", label="Force0", tooltip=vector];
+"Calculix1-Calculix-Mesh1" -> "Calculix1-Calculix-Mesh2"  [color="#0173B2", label="nearest-neighbor"];
+"Calculix1-Calculix-Mesh2" -> "Calculix1-Calculix-Mesh1"  [color="#0173B2", label="nearest-neighbor"];
+}
+
+subgraph cluster_Calculix2 {
+label="Calculix2";
+style=bold;
+"Calculix2" [color="#DE8F05", shape=doubleoctagon];
+"Calculix2-Calculix-Mesh2" [color="#DE8F05", label=<Calculix-Mesh2<SUP><I>3D</I></SUP>>, shape=cylinder];
+"Calculix2-Calculix-Mesh2" -> "Calculix2"  [color="#DE8F05", label="Force0", tooltip=vector];
+"Calculix2" -> "Calculix2-Calculix-Mesh2"  [color="#DE8F05", label="Displacement0", tooltip=vector];
+}
+
+"m2n-Calculix1-Calculix2" -> "Calculix1"  [color="#0173B2", dir=both, lhead=cluster_Calculix1];
+"m2n-Calculix1-Calculix2" -> "Calculix2"  [color="#DE8F05", dir=both, lhead=cluster_Calculix2];
+"cpl-Calculix1-Calculix2" -> "Calculix1"  [color="#0173B2", lhead=cluster_Calculix1, taillabel="first"];
+"cpl-Calculix1-Calculix2" -> "Calculix2"  [color="#DE8F05", lhead=cluster_Calculix2, taillabel="second"];
+"Calculix2-Calculix-Mesh2" -> "Calculix1-Calculix-Mesh2"  [color="#DE8F05", label="Displacement0", style="", tooltip=vector];
+"Calculix1-Calculix-Mesh2" -> "Calculix2-Calculix-Mesh2"  [color="#0173B2", label="Force0", style="", tooltip=vector];
+}

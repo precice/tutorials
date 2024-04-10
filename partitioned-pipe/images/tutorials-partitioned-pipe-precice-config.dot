@@ -1,0 +1,48 @@
+digraph G {
+compound=True;
+layout=dot;
+margin=0;
+overlap=scale;
+rankdir=LR;
+splines=true;
+subgraph cluster_m2n {
+label="Communicators";
+"m2n-Fluid1-Fluid2" [label="sockets", shape=component];
+}
+
+subgraph cluster_cpl {
+label="Coupling Schemes";
+"cpl-Fluid1-Fluid2" [label="serial-implicit", shape=component];
+}
+
+subgraph cluster_Fluid1 {
+label="Fluid1";
+style=bold;
+"Fluid1" [color="#0173B2", shape=doubleoctagon];
+"Fluid1-Fluid1-Mesh" [color="#0173B2", label=<Fluid1-Mesh<SUP><I>3D</I></SUP>>, shape=cylinder];
+"Fluid1-Fluid2-Mesh" [color="#DE8F05", label="Fluid2-Mesh
+from Fluid2", shape=cylinder, style=dashed];
+"Fluid1-Fluid1-Mesh" -> "Fluid1"  [color="#0173B2", label="Pressure", tooltip=scalar];
+"Fluid1" -> "Fluid1-Fluid1-Mesh"  [color="#0173B2", label="Velocity", tooltip=vector];
+"Fluid1-Fluid2-Mesh" -> "Fluid1-Fluid1-Mesh"  [color="#0173B2", label="nearest-neighbor"];
+}
+
+subgraph cluster_Fluid2 {
+label="Fluid2";
+style=bold;
+"Fluid2" [color="#DE8F05", shape=doubleoctagon];
+"Fluid2-Fluid2-Mesh" [color="#DE8F05", label=<Fluid2-Mesh<SUP><I>3D</I></SUP>>, shape=cylinder];
+"Fluid2-Fluid1-Mesh" [color="#0173B2", label="Fluid1-Mesh
+from Fluid1", shape=cylinder, style=dashed];
+"Fluid2-Fluid2-Mesh" -> "Fluid2"  [color="#DE8F05", label="Velocity", tooltip=vector];
+"Fluid2" -> "Fluid2-Fluid2-Mesh"  [color="#DE8F05", label="Pressure", tooltip=scalar];
+"Fluid2-Fluid1-Mesh" -> "Fluid2-Fluid2-Mesh"  [color="#DE8F05", label="nearest-neighbor"];
+}
+
+"m2n-Fluid1-Fluid2" -> "Fluid1"  [color="#0173B2", dir=both, lhead=cluster_Fluid1];
+"m2n-Fluid1-Fluid2" -> "Fluid2"  [color="#DE8F05", dir=both, lhead=cluster_Fluid2];
+"cpl-Fluid1-Fluid2" -> "Fluid1"  [color="#0173B2", lhead=cluster_Fluid1, taillabel="first"];
+"cpl-Fluid1-Fluid2" -> "Fluid2"  [color="#DE8F05", lhead=cluster_Fluid2, taillabel="second"];
+"Fluid1-Fluid1-Mesh" -> "Fluid2-Fluid1-Mesh"  [color="#0173B2", label="Velocity", style="", tooltip=vector];
+"Fluid2-Fluid2-Mesh" -> "Fluid1-Fluid2-Mesh"  [color="#DE8F05", label="Pressure", style="", tooltip=scalar];
+}

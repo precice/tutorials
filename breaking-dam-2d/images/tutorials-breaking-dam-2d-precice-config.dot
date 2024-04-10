@@ -1,0 +1,46 @@
+digraph G {
+compound=True;
+layout=dot;
+margin=0;
+overlap=scale;
+rankdir=LR;
+splines=true;
+subgraph cluster_m2n {
+label="Communicators";
+"m2n-Fluid-Solid" [label="sockets", shape=component];
+}
+
+subgraph cluster_cpl {
+label="Coupling Schemes";
+"cpl-Fluid-Solid" [label="parallel-implicit", shape=component];
+}
+
+subgraph cluster_Fluid {
+label="Fluid";
+style=bold;
+"Fluid" [color="#0173B2", shape=doubleoctagon];
+"Fluid-Fluid-Mesh" [color="#0173B2", label=<Fluid-Mesh<SUP><I>2D</I></SUP>>, shape=cylinder];
+"Fluid-Solid-Mesh" [color="#DE8F05", label="Solid-Mesh
+from Solid", shape=cylinder, style=dashed];
+"Fluid-Fluid-Mesh" -> "Fluid"  [color="#0173B2", label="Displacement", tooltip=vector];
+"Fluid" -> "Fluid-Fluid-Mesh"  [color="#0173B2", label="Force", tooltip=vector];
+"Fluid-Fluid-Mesh" -> "Fluid-Solid-Mesh"  [color="#0173B2", label="rbf-global-direct"];
+"Fluid-Solid-Mesh" -> "Fluid-Fluid-Mesh"  [color="#0173B2", label="rbf-global-direct"];
+}
+
+subgraph cluster_Solid {
+label="Solid";
+style=bold;
+"Solid" [color="#DE8F05", shape=doubleoctagon];
+"Solid-Solid-Mesh" [color="#DE8F05", label=<Solid-Mesh<SUP><I>2D</I></SUP>>, shape=cylinder];
+"Solid-Solid-Mesh" -> "Solid"  [color="#DE8F05", label="Force", tooltip=vector];
+"Solid" -> "Solid-Solid-Mesh"  [color="#DE8F05", label="Displacement", tooltip=vector];
+}
+
+"m2n-Fluid-Solid" -> "Fluid"  [color="#0173B2", dir=both, lhead=cluster_Fluid];
+"m2n-Fluid-Solid" -> "Solid"  [color="#DE8F05", dir=both, lhead=cluster_Solid];
+"cpl-Fluid-Solid" -> "Fluid"  [color="#0173B2", lhead=cluster_Fluid, taillabel="first"];
+"cpl-Fluid-Solid" -> "Solid"  [color="#DE8F05", lhead=cluster_Solid, taillabel="second"];
+"Fluid-Solid-Mesh" -> "Solid-Solid-Mesh"  [color="#0173B2", label="Force", style="", tooltip=vector];
+"Solid-Solid-Mesh" -> "Fluid-Solid-Mesh"  [color="#DE8F05", label="Displacement", style="", tooltip=vector];
+}

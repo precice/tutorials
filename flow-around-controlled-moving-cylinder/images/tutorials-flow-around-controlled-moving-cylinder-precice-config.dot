@@ -1,0 +1,73 @@
+digraph G {
+compound=True;
+layout=dot;
+margin=0;
+overlap=scale;
+rankdir=LR;
+splines=true;
+subgraph cluster_m2n {
+label="Communicators";
+"m2n-Controller-Solid" [label="sockets", shape=component];
+"m2n-Fluid-Solid" [label="sockets", shape=component];
+}
+
+subgraph cluster_cpl {
+label="Coupling Schemes";
+"cpl-Fluid-Solid" [label="serial-explicit", shape=component];
+"cpl-Solid-Controller" [label="serial-explicit", shape=component];
+}
+
+subgraph cluster_Controller {
+label="Controller";
+style=bold;
+"Controller" [color="#0173B2", shape=doubleoctagon];
+"Controller-Mesh-Controller" [color="#0173B2", label=<Mesh-Controller<SUP><I>2D</I></SUP>>, shape=cylinder];
+"Controller-Mesh-Solid" [color="#029E73", label="Mesh-Solid
+from Solid", shape=cylinder, style=dashed];
+"Controller-Mesh-Controller" -> "Controller"  [color="#0173B2", label="Displacement-Cylinder", tooltip=vector];
+"Controller" -> "Controller-Mesh-Controller"  [color="#0173B2", label="Displacement-Spring", tooltip=vector];
+"Controller-Mesh-Solid" -> "Controller-Mesh-Controller"  [color="#0173B2", label="nearest-neighbor"];
+}
+
+subgraph cluster_Fluid {
+label="Fluid";
+style=bold;
+"Fluid" [color="#DE8F05", shape=doubleoctagon];
+"Fluid-Mesh-Fluid" [color="#DE8F05", label=<Mesh-Fluid<SUP><I>2D</I></SUP>>, shape=cylinder];
+"Fluid-Mesh-Solid" [color="#029E73", label="Mesh-Solid
+from Solid", shape=cylinder, style=dashed];
+"Fluid-Mesh-Fluid" -> "Fluid"  [color="#DE8F05", label="Displacement-Cylinder", tooltip=vector];
+"Fluid" -> "Fluid-Mesh-Fluid"  [color="#DE8F05", label="Force", tooltip=vector];
+"Fluid-Mesh-Solid" -> "Fluid-Mesh-Fluid"  [color="#DE8F05", label="nearest-neighbor"];
+"Fluid-Mesh-Fluid" -> "Fluid-Mesh-Solid"  [color="#DE8F05", label="nearest-neighbor"];
+}
+
+subgraph cluster_Solid {
+label="Solid";
+style=bold;
+"Solid" [color="#029E73", shape=doubleoctagon];
+"Solid-Mesh-Solid" [color="#029E73", label=<Mesh-Solid<SUP><I>2D</I></SUP>>, shape=cylinder];
+"Solid-Mesh-Controller" [color="#0173B2", label="Mesh-Controller
+from Controller", shape=cylinder, style=dashed];
+"Solid-Mesh-Solid" -> "Solid"  [color="#029E73", label="Force", tooltip=vector];
+"Solid-Mesh-Solid" -> "Solid"  [color="#029E73", label="Displacement-Spring", tooltip=vector];
+"Solid" -> "Solid-Mesh-Solid"  [color="#029E73", label="Displacement-Cylinder", tooltip=vector];
+"Solid-WP-Spring" [color="#029E73", label="Spring
+at (0.0;0.0)", shape=note];
+"Solid-WP-Spring" -> "Solid"  [color="#029E73"];
+"Solid-Mesh-Controller" -> "Solid-Mesh-Solid"  [color="#029E73", label="nearest-neighbor"];
+}
+
+"m2n-Controller-Solid" -> "Controller"  [color="#0173B2", dir=both, lhead=cluster_Controller];
+"m2n-Controller-Solid" -> "Solid"  [color="#029E73", dir=both, lhead=cluster_Solid];
+"m2n-Fluid-Solid" -> "Fluid"  [color="#DE8F05", dir=both, lhead=cluster_Fluid];
+"m2n-Fluid-Solid" -> "Solid"  [color="#029E73", dir=both, lhead=cluster_Solid];
+"cpl-Fluid-Solid" -> "Fluid"  [color="#DE8F05", lhead=cluster_Fluid, taillabel="first"];
+"cpl-Fluid-Solid" -> "Solid"  [color="#029E73", lhead=cluster_Solid, taillabel="second"];
+"Fluid-Mesh-Solid" -> "Solid-Mesh-Solid"  [color="#DE8F05", label="Force", style="", tooltip=vector];
+"Solid-Mesh-Solid" -> "Fluid-Mesh-Solid"  [color="#029E73", label="Displacement-Cylinder", style=bold, tooltip="vector initialized"];
+"cpl-Solid-Controller" -> "Solid"  [color="#029E73", lhead=cluster_Solid, taillabel="first"];
+"cpl-Solid-Controller" -> "Controller"  [color="#0173B2", lhead=cluster_Controller, taillabel="second"];
+"Controller-Mesh-Controller" -> "Solid-Mesh-Controller"  [color="#0173B2", label="Displacement-Spring", style=bold, tooltip="vector initialized"];
+"Solid-Mesh-Solid" -> "Controller-Mesh-Solid"  [color="#029E73", label="Displacement-Cylinder", style="", tooltip=vector];
+}

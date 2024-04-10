@@ -1,0 +1,44 @@
+digraph G {
+compound=True;
+layout=dot;
+margin=0;
+overlap=scale;
+rankdir=LR;
+splines=true;
+subgraph cluster_m2n {
+label="Communicators";
+"m2n-Flow-Chemical" [label="sockets", shape=component];
+}
+
+subgraph cluster_cpl {
+label="Coupling Schemes";
+"cpl-Flow-Chemical" [label="serial-explicit", shape=component];
+}
+
+subgraph cluster_Flow {
+label="Flow";
+style=bold;
+"Flow" [color="#0173B2", shape=doubleoctagon];
+"Flow-Flow-Mesh" [color="#0173B2", label=<Flow-Mesh<SUP><I>2D</I></SUP>>, shape=cylinder];
+"Flow-Chemical-Mesh" [color="#DE8F05", label="Chemical-Mesh
+from Chemical", shape=cylinder, style=dashed];
+"Flow" -> "Flow-Flow-Mesh"  [color="#0173B2", label="Velocity", tooltip=vector];
+}
+
+subgraph cluster_Chemical {
+label="Chemical";
+style=bold;
+"Chemical" [color="#DE8F05", shape=doubleoctagon];
+"Chemical-Chemical-Mesh" [color="#DE8F05", label=<Chemical-Mesh<SUP><I>2D</I></SUP>>, shape=cylinder];
+"Chemical-Flow-Mesh" [color="#0173B2", label="Flow-Mesh
+from Flow", shape=cylinder, style=dashed];
+"Chemical-Chemical-Mesh" -> "Chemical"  [color="#DE8F05", label="Velocity", tooltip=vector];
+"Chemical-Flow-Mesh" -> "Chemical-Chemical-Mesh"  [color="#DE8F05", label="linear-cell-interpolation"];
+}
+
+"m2n-Flow-Chemical" -> "Flow"  [color="#0173B2", dir=both, lhead=cluster_Flow];
+"m2n-Flow-Chemical" -> "Chemical"  [color="#DE8F05", dir=both, lhead=cluster_Chemical];
+"cpl-Flow-Chemical" -> "Flow"  [color="#0173B2", lhead=cluster_Flow, taillabel="first"];
+"cpl-Flow-Chemical" -> "Chemical"  [color="#DE8F05", lhead=cluster_Chemical, taillabel="second"];
+"Flow-Flow-Mesh" -> "Chemical-Flow-Mesh"  [color="#0173B2", label="Velocity", style="", tooltip=vector];
+}

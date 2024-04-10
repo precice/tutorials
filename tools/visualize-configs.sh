@@ -15,7 +15,8 @@ visualize_config(){
     cd "$1"
     if [ -f precice-config.xml ]; then
       mkdir -p images
-      precice-config-visualizer precice-config.xml | dot -Tsvg > "$outfile.svg"
+      precice-config-visualizer -o "$outfile.dot" precice-config.xml
+      dot -Tsvg "$outfile.dot" > "$outfile.svg"
     fi
   )
 }

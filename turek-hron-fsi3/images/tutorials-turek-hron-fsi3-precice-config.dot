@@ -1,0 +1,52 @@
+digraph G {
+compound=True;
+layout=dot;
+margin=0;
+overlap=scale;
+rankdir=LR;
+splines=true;
+subgraph cluster_m2n {
+label="Communicators";
+"m2n-Fluid-Solid" [label="sockets", shape=component];
+}
+
+subgraph cluster_cpl {
+label="Coupling Schemes";
+"cpl-Fluid-Solid" [label="parallel-implicit", shape=component];
+}
+
+subgraph cluster_Fluid {
+label="Fluid";
+style=bold;
+"Fluid" [color="#0173B2", shape=doubleoctagon];
+"Fluid-Fluid-Mesh-Nodes" [color="#0173B2", label=<Fluid-Mesh-Nodes<SUP><I>2D</I></SUP>>, shape=cylinder];
+"Fluid-Fluid-Mesh-Centers" [color="#0173B2", label=<Fluid-Mesh-Centers<SUP><I>2D</I></SUP>>, shape=cylinder];
+"Fluid-Solid-Mesh" [color="#DE8F05", label="Solid-Mesh
+from Solid", shape=cylinder, style=dashed];
+"Fluid-Fluid-Mesh-Nodes" -> "Fluid"  [color="#0173B2", label="Displacement", tooltip=vector];
+"Fluid" -> "Fluid-Fluid-Mesh-Centers"  [color="#0173B2", label="Stress", tooltip=vector];
+"Fluid-Solid-Mesh" -> "Fluid-Fluid-Mesh-Nodes"  [color="#0173B2", label="rbf"];
+}
+
+subgraph cluster_Solid {
+label="Solid";
+style=bold;
+"Solid" [color="#DE8F05", shape=doubleoctagon];
+"Solid-Solid-Mesh" [color="#DE8F05", label=<Solid-Mesh<SUP><I>2D</I></SUP>>, shape=cylinder];
+"Solid-Fluid-Mesh-Centers" [color="#0173B2", label="Fluid-Mesh-Centers
+from Fluid", shape=cylinder, style=dashed];
+"Solid-Solid-Mesh" -> "Solid"  [color="#DE8F05", label="Stress", tooltip=vector];
+"Solid" -> "Solid-Solid-Mesh"  [color="#DE8F05", label="Displacement", tooltip=vector];
+"Solid-WP-Flap-Tip" [color="#DE8F05", label="Flap-Tip
+at (0.6;0.2)", shape=note];
+"Solid-WP-Flap-Tip" -> "Solid"  [color="#DE8F05"];
+"Solid-Fluid-Mesh-Centers" -> "Solid-Solid-Mesh"  [color="#DE8F05", label="rbf"];
+}
+
+"m2n-Fluid-Solid" -> "Fluid"  [color="#0173B2", dir=both, lhead=cluster_Fluid];
+"m2n-Fluid-Solid" -> "Solid"  [color="#DE8F05", dir=both, lhead=cluster_Solid];
+"cpl-Fluid-Solid" -> "Fluid"  [color="#0173B2", lhead=cluster_Fluid, taillabel="first"];
+"cpl-Fluid-Solid" -> "Solid"  [color="#DE8F05", lhead=cluster_Solid, taillabel="second"];
+"Fluid-Fluid-Mesh-Centers" -> "Solid-Fluid-Mesh-Centers"  [color="#0173B2", label="Stress", style="", tooltip=vector];
+"Solid-Solid-Mesh" -> "Fluid-Solid-Mesh"  [color="#DE8F05", label="Displacement", style="", tooltip=vector];
+}

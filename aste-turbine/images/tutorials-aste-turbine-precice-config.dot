@@ -1,0 +1,42 @@
+digraph G {
+compound=True;
+layout=dot;
+margin=0;
+overlap=scale;
+rankdir=LR;
+splines=true;
+subgraph cluster_m2n {
+label="Communicators";
+"m2n-A-B" [label="sockets", shape=component];
+}
+
+subgraph cluster_cpl {
+label="Coupling Schemes";
+"cpl-A-B" [label="parallel-explicit", shape=component];
+}
+
+subgraph cluster_A {
+label="A";
+style=bold;
+"A" [color="#0173B2", shape=doubleoctagon];
+"A-A-Mesh" [color="#0173B2", label=<A-Mesh<SUP><I>3D</I></SUP>>, shape=cylinder];
+"A" -> "A-A-Mesh"  [color="#0173B2", label="Data", tooltip=scalar];
+}
+
+subgraph cluster_B {
+label="B";
+style=bold;
+"B" [color="#DE8F05", shape=doubleoctagon];
+"B-B-Mesh" [color="#DE8F05", label=<B-Mesh<SUP><I>3D</I></SUP>>, shape=cylinder];
+"B-A-Mesh" [color="#0173B2", label="A-Mesh
+from A", shape=cylinder, style=dashed];
+"B-B-Mesh" -> "B"  [color="#DE8F05", label="Data", tooltip=scalar];
+"B-A-Mesh" -> "B-B-Mesh"  [color="#DE8F05", label="nearest-neighbor"];
+}
+
+"m2n-A-B" -> "A"  [color="#0173B2", dir=both, lhead=cluster_A];
+"m2n-A-B" -> "B"  [color="#DE8F05", dir=both, lhead=cluster_B];
+"cpl-A-B" -> "A"  [color="#0173B2", lhead=cluster_A, taillabel="first"];
+"cpl-A-B" -> "B"  [color="#DE8F05", lhead=cluster_B, taillabel="second"];
+"A-A-Mesh" -> "B-A-Mesh"  [color="#0173B2", label="Data", style="", tooltip=scalar];
+}

@@ -7,7 +7,7 @@ set -e -u
 
 echo "Checking for any config visualizations that need to be updated..."
 
-if git status | grep precice-config.svg; then
+if git status | grep precice-config.dot; then
   echo "There have been changes. Run ./tools/visualize-configs.sh to update the config visualizations."
   exit 1
 else
