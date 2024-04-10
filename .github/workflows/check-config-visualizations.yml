@@ -1,0 +1,23 @@
+name: Check config visualizations
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+jobs:
+  check_style:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: sudo apt-get install -y libcairo2-dev libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-4.0 parallel
+      - name: Generate the visualized configs
+        run: ./tools/visualize-configs.sh
+      - name: Check if any visualizations were updated compared to what is in the repository
+        run: ./tools/check-visualized-config-updates.sh
+
