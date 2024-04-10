@@ -24,10 +24,10 @@ jobs:
         if: always()
         run: git status --porcelain | awk 'match($1, "M"){print $2}' | tar -czf modified-files.tar.gz -T -
       - name: Upload any updated files
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: modified-files
-          if: always()
           path: modified-files.tar.gz
           if-no-files-found: ignore
 
