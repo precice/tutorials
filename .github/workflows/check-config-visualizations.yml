@@ -15,7 +15,7 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v4
       - name: Install dependencies
-        run: sudo apt-get install -y libcairo2-dev libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-4.0 parallel
+        run: sudo apt-get install -y libcairo2-dev libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-4.0 graphviz parallel
       - name: Generate the visualized configs
         run: ./tools/visualize-configs.sh
       - name: Check if any visualizations were updated compared to what is in the repository
