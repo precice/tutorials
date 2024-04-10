@@ -30,7 +30,7 @@ The solvers are currently only OpenFOAM related. For information regarding the n
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-nearest-projection-precice-config.png)
+![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-nearest-projection-precice-config.svg)
 -->
 
 ## Running the Simulation

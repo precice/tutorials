@@ -37,7 +37,7 @@ This is a very basic example case demonstrating the coupling of a two-phase flow
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-partitioned-pipe-two-phase-precice-config.png)
+![preCICE configuration visualization](images/tutorials-partitioned-pipe-two-phase-precice-config.svg)
 
 ## Available solvers
 

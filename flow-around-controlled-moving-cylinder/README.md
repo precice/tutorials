@@ -21,7 +21,7 @@ This case was contributed by Leonard Willeke et al. [1]. To reduce the overall r
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-flow-around-controlled-moving-cylinder-precice-config.png)
+![preCICE configuration visualization](images/tutorials-flow-around-controlled-moving-cylinder-precice-config.svg)
 
 ## Available solvers
 

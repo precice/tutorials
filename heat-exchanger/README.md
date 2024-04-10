@@ -27,7 +27,7 @@ We define the participants `Inner-Fluid`, `Solid`, and `Outer-Fluid` and two int
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-heat-exchanger-precice-config.png)
+![preCICE configuration visualization](images/tutorials-heat-exchanger-precice-config.svg)
 
 ## Available solvers
 

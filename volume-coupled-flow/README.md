@@ -23,7 +23,7 @@ This case is a convenient starting point for volume coupling where OpenFOAM is a
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-volume-coupled-flow-precice-config.png)
+![preCICE configuration visualization](images/tutorials-volume-coupled-flow-precice-config.svg)
 
 ## Available solvers
 

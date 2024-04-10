@@ -21,7 +21,7 @@ Further minor modifications:
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-direct-precice-config.png)
+![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-direct-precice-config.svg)
 
 ## Available solvers
 

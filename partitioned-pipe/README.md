@@ -19,7 +19,7 @@ On the coupling interface, Fluid1 sends velocity to Fluid2 and receives pressure
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-partitioned-pipe-precice-config.png)
+![preCICE configuration visualization](images/tutorials-partitioned-pipe-precice-config.svg)
 
 ## Available solvers
 

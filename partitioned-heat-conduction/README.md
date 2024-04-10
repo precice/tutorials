@@ -25,7 +25,7 @@ This simple case allows us to compare the solution for the partitioned case to a
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-precice-config.png)
+![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-precice-config.svg)
 
 ## Available solvers and dependencies
 

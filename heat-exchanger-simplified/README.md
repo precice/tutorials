@@ -20,7 +20,7 @@ Contrary to the [heat exchanger](https://precice.org/tutorials-heat-exchanger.ht
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-heat-exchanger-simplified-precice-config.png)
+![preCICE configuration visualization](images/tutorials-heat-exchanger-simplified-precice-config.svg)
 
 ## Available solvers
 

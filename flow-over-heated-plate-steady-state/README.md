@@ -21,7 +21,7 @@ This is a pseudo-2D case, but we still set a 3D `solver-interface` in `precice-c
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-steady-state-precice-config.png)
+![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-steady-state-precice-config.svg)
 
 ## Available solvers
 
