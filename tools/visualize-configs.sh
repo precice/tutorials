@@ -22,7 +22,7 @@ visualize_config(){
          sed 's/compound=True;//' --in-place "$outfile.dot"
       fi
       
-      dot -Tsvg "$outfile.dot" > "$outfile.png"
+      dot -Tpng "$outfile.dot" > "$outfile.png"
     fi
   )
 }
