@@ -20,8 +20,6 @@ label="Flow";
 style=bold;
 "Flow" [color="#0173B2", shape=doubleoctagon];
 "Flow-Flow-Mesh" [color="#0173B2", label=<Flow-Mesh<SUP><I>2D</I></SUP>>, shape=cylinder];
-"Flow-Chemical-Mesh" [color="#DE8F05", label="Chemical-Mesh
-from Chemical", shape=cylinder, style=dashed];
 "Flow" -> "Flow-Flow-Mesh"  [color="#0173B2", label="Velocity", tooltip=vector];
 }
 
