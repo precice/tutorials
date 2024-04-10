@@ -9,7 +9,7 @@ rm -rfv dune-*/
 rm -rfv install*
 
 # Get the DuMuX install script and install it
-wget https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/-/raw/master/bin/installdumux.py
+wget https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/-/raw/releases/3.7/bin/installdumux.py
 python3 installdumux.py
 
 # Take out all the module folders from the dumux/ folder and remove the dumux/ folder
