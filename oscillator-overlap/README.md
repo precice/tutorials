@@ -21,7 +21,7 @@ Note that this case applies an overlapping Schwarz-type coupling method and not 
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-oscillator-overlap-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-oscillator-overlap-precice-config.png)
 
 ## Available solvers
 

@@ -23,7 +23,7 @@ At each Gauss point of the macro domain there exists a micro simulation. The mac
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-two-scale-heat-conduction-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-two-scale-heat-conduction-precice-config.png)
 
 ## Available solvers and dependencies
 

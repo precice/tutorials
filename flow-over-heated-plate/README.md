@@ -23,7 +23,7 @@ The inlet velocity is $$ u_{\infty} = 0.1 m/s $$, the inlet temperature is $$ T_
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-precice-config.png)
 
 ## Available solvers
 

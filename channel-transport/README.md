@@ -26,7 +26,7 @@ The behavior of the blob over the full 200 timesteps looks as follows:
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-channel-transport-precice-config.svg
+![preCICE configuration visualization](images/tutorials-channel-transport-precice-config.png
 )
 
 ## Available solvers

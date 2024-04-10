@@ -33,7 +33,7 @@ Additionally the solvers use the parameters `N = 100` (number of cells), `tau = 
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-elastic-tube-1d-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-elastic-tube-1d-precice-config.png)
 
 ## Available solvers
 

@@ -29,7 +29,7 @@ For a case showing fluid-structure interaction only (no multi-coupling), take a 
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-multiple-perpendicular-flaps-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-multiple-perpendicular-flaps-precice-config.png)
 
 ## Why multi-coupling?
 

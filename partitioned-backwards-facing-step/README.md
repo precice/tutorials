@@ -20,7 +20,7 @@ The boundary conditions `coupledVelocity` and `coupledPressure` come with the pr
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-partitioned-backwards-facing-step-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-partitioned-backwards-facing-step-precice-config.png)
 
 ## Available solvers
 

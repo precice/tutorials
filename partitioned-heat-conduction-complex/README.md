@@ -24,7 +24,7 @@ This case is an advanced version of `partitioned-heat-conduction`. Some advanced
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-complex-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-complex-precice-config.png)
 
 ## Available solvers and dependencies
 

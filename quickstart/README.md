@@ -75,7 +75,7 @@ In order to gain more control over the rigid body oscillation, a rotational spri
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/quickstart-precice-config.svg)
+![preCICE configuration visualization](images/quickstart-precice-config.png)
 
 ## Building the rigid body solver
 

@@ -22,7 +22,7 @@ The flow partitioning is done with the fluid-fluid module of the [preCICE OpenFO
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-partitioned-flow-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-partitioned-flow-precice-config.png)
 
 ## Available solvers
 

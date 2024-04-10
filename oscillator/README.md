@@ -21,7 +21,7 @@ Note that this case applies a Schwarz-type coupling method and not (like most ot
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-oscillator-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-oscillator-precice-config.png)
 
 ## Available solvers
 

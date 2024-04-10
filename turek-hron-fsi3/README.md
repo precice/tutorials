@@ -21,7 +21,7 @@ For more information please refer to the original publication of the benchmark [
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-turek-hron-fsi3-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-turek-hron-fsi3-precice-config.png)
 
 ## Available solvers
 

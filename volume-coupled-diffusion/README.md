@@ -17,7 +17,7 @@ This case illustrates how to implement volume coupling in a simple toy problem. 
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-volume-coupled-diffusion-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-volume-coupled-diffusion-precice-config.png)
 
 ## Available solvers and dependencies
 

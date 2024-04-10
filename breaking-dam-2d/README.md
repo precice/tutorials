@@ -21,7 +21,7 @@ A similar, but not identical, setup is used in [1].
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-breaking-dam-2d-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-breaking-dam-2d-precice-config.png)
 
 ## Available solvers
 

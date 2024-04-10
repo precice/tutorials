@@ -19,7 +19,7 @@ The expanding tube test case comes with the interface surface mesh connectivity 
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-elastic-tube-3d-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-elastic-tube-3d-precice-config.png)
 
 ## Available solvers
 

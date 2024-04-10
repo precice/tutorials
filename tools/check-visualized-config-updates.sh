@@ -1,6 +1,6 @@
 #!/bin/bash
-# Run this script at the root of the repository to check if any precice-config.svg needs to be updated.
-# Requires that precice-config.svg files have already been checked into the repository and that
+# Run this script at the root of the repository to check if any precice-config.dot needs to be updated.
+# Requires that precice-config.dot files have already been checked into the repository and that
 # visualize-configs.sh has been executed, e.g., in a CI job.
 
 set -e -u

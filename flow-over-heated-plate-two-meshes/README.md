@@ -18,7 +18,7 @@ The scenario is exactly the same as the one described in the [flow over heated p
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-two-meshes-precice-config.svg)
+![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-two-meshes-precice-config.png)
 
 ## Available solvers
 
