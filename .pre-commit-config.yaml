@@ -48,13 +48,3 @@ repos:
       language: script
       entry: tools/check-links-to-precice.sh
       types_or: ["markdown", "html"]
-    - id: visualize-configs
-      name: generate preCICE configuration visualization files
-      language: script
-      entry: tools/visualize-configs.sh
-      pass_filenames: false
-    - id: check-visualized-config-updates
-      name: check if preCICE configuration visualization files need to be updated
-      language: script
-      entry: tools/visualize-configs.sh && tools/check-visualized-config-updates.sh
-      pass_filenames: false
