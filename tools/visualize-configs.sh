@@ -11,7 +11,7 @@ visualize_config(){
     else
       outfile="images/tutorials-$1-precice-config"
     fi
-    
+
     cd "$1"
     if [ -f precice-config.xml ]; then
       mkdir -p images
@@ -22,7 +22,15 @@ visualize_config(){
 
 export -f visualize_config
 
+python3 -m venv .venv
+. .venv/bin/activate
+pip install precice-config-visualizer
+
 IGNORE="partitioned-heat-conduction-direct"
 tutorials=$(find . -maxdepth 1 -type d -not -name ".*" | grep -vE $IGNORE | sed "s/^.\///")
 
-parallel visualize_config ::: "$tutorials"
+if command -v parallel &> /dev/null; then
+  parallel visualize_config ::: "$tutorials"
+else
+  visualize_config ::: "$tutorials"
+fi
