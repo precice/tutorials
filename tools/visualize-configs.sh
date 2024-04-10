@@ -4,7 +4,6 @@
 set -e -u
 
 visualize_config(){
-  echo "Visualizing the configuration in $1"
   (
     if [[ "$1" == quickstart ]]; then
       outfile="images/quickstart-precice-config"
@@ -14,6 +13,7 @@ visualize_config(){
 
     cd "$1"
     if [ -f precice-config.xml ]; then
+      echo "Visualizing the configuration in $1"
       mkdir -p images
       precice-config-visualizer -o "$outfile.dot" precice-config.xml
       dot -Tsvg "$outfile.dot" > "$outfile.svg"
