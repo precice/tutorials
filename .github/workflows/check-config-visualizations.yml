@@ -20,4 +20,12 @@ jobs:
         run: ./tools/visualize-configs.sh
       - name: Check if any visualizations were updated compared to what is in the repository
         run: ./tools/check-visualized-config-updates.sh
+      - name: Pack modified files
+        run: git status --porcelain | awk 'match($1, "M"){print $2}' | tar -czf modified-files.tar.gz -T -
+      - name: Upload any updated files
+        uses: actions/upload-artifact@v4
+        with:
+          name: modified-files
+          path: modified-files.tar.gz
+          if-no-files-found: ignore
 
