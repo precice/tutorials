@@ -16,6 +16,12 @@ visualize_config(){
       echo "Visualizing the configuration in $1"
       mkdir -p images
       precice-config-visualizer -o "$outfile.dot" precice-config.xml
+      
+      # Special case, to be removed once bug https://github.com/precice/config-visualizer/issues/22
+      if [[ "$1" == partitioned-heat-conduction-direct ]]; then
+         sed 's/compound=True;//' --in-place "$outfile.dot"
+      fi
+      
       dot -Tsvg "$outfile.dot" > "$outfile.svg"
     fi
   )
@@ -27,8 +33,7 @@ python3 -m venv .venv
 . .venv/bin/activate
 pip install precice-config-visualizer
 
-IGNORE="partitioned-heat-conduction-direct"
-tutorials=$(find . -maxdepth 1 -type d -not -name ".*" | grep -vE $IGNORE | sed "s/^.\///")
+tutorials=$(find . -maxdepth 1 -type d -not -name ".*" | sed "s/^.\///")
 
 if command -v parallel &> /dev/null; then
   parallel visualize_config ::: "$tutorials"

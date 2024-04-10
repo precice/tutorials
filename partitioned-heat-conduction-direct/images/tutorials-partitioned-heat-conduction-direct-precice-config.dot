@@ -1,0 +1,46 @@
+digraph G {
+
+layout=dot;
+margin=0;
+overlap=scale;
+rankdir=LR;
+splines=true;
+subgraph cluster_m2n {
+label="Communicators";
+"m2n-Dirichlet-Neumann" [label="sockets", shape=component];
+}
+
+subgraph cluster_cpl {
+label="Coupling Schemes";
+"cpl-Dirichlet-Neumann" [label="parallel-implicit", shape=component];
+}
+
+subgraph cluster_Dirichlet {
+label="Dirichlet";
+style=bold;
+"Dirichlet" [color="#0173B2", shape=doubleoctagon];
+"Dirichlet-Dirichlet-Mesh" [color="#0173B2", label=<Dirichlet-Mesh<SUP><I>2D</I></SUP>>, shape=cylinder];
+"Dirichlet-Neumann-Mesh" [color="#DE8F05", label="Neumann-Mesh
+from Neumann", shape=cylinder, style=dashed];
+"Dirichlet-Dirichlet-Mesh" -> "Dirichlet"  [color="#0173B2", label="Temperature", tooltip=scalar];
+"Dirichlet" -> "Dirichlet-Neumann-Mesh"  [color="#0173B2", label="Heat-Flux", tooltip=scalar];
+}
+
+subgraph cluster_Neumann {
+label="Neumann";
+style=bold;
+"Neumann" [color="#DE8F05", shape=doubleoctagon];
+"Neumann-Neumann-Mesh" [color="#DE8F05", label=<Neumann-Mesh<SUP><I>2D</I></SUP>>, shape=cylinder];
+"Neumann-Dirichlet-Mesh" [color="#0173B2", label="Dirichlet-Mesh
+from Dirichlet", shape=cylinder, style=dashed];
+"Neumann-Neumann-Mesh" -> "Neumann"  [color="#DE8F05", label="Heat-Flux", tooltip=scalar];
+"Neumann" -> "Neumann-Dirichlet-Mesh"  [color="#DE8F05", label="Temperature", tooltip=scalar];
+}
+
+"m2n-Dirichlet-Neumann" -> "Dirichlet"  [color="#0173B2", dir=both, lhead=cluster_Dirichlet];
+"m2n-Dirichlet-Neumann" -> "Neumann"  [color="#DE8F05", dir=both, lhead=cluster_Neumann];
+"cpl-Dirichlet-Neumann" -> "Dirichlet"  [color="#0173B2", lhead=cluster_Dirichlet, taillabel="first"];
+"cpl-Dirichlet-Neumann" -> "Neumann"  [color="#DE8F05", lhead=cluster_Neumann, taillabel="second"];
+"Dirichlet-Neumann-Mesh" -> "Neumann-Neumann-Mesh"  [color="#0173B2", label="Heat-Flux", style="", tooltip=scalar];
+"Neumann-Dirichlet-Mesh" -> "Dirichlet-Dirichlet-Mesh"  [color="#DE8F05", label="Temperature", style="", tooltip=scalar];
+}
