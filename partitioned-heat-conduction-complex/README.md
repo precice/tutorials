@@ -20,6 +20,12 @@ This case is an advanced version of `partitioned-heat-conduction`. Some advanced
 * The exchanged temperature is still scalar valued, but the heat flux is vector valued.
 * You can decide to use a time dependent heat flux and right-hand side to make the problem more challenging.
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-complex-precice-config.png)
+
 ## Available solvers and dependencies
 
 See `partitioned-heat-conduction`, only `fenics` is provided as a solver.

@@ -21,7 +21,14 @@ The behavior of the blob over the full 200 timesteps looks as follows:
   <source src="images/tutorials-channel-transport-animation.webm" type="video/webm">
   Animation of blob over 200 timesteps.
 </video>
-  
+
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-channel-transport-precice-config.png
+)
+
 ## Available solvers
 
 Fluid participant:

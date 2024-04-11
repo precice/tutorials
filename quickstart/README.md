@@ -71,6 +71,12 @@ In order to gain more control over the rigid body oscillation, a rotational spri
 
 ![overview](images/quickstart-setup.png)
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/quickstart-precice-config.png)
+
 ## Building the rigid body solver
 
 Before starting the coupled simulation, we need to build the rigid body solver. You can run the following commands from the `solid-cpp` directory to build the `rigid_body_solver.cpp`:

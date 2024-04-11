@@ -13,6 +13,12 @@ This case illustrates how to implement volume coupling in a simple toy problem. 
 
 ![Case setup of volume-coupled-diffusion case](images/tutorials-volume-coupled-diffusion-setup.png)
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-volume-coupled-diffusion-precice-config.png)
+
 ## Available solvers and dependencies
 
 Both participants (Source and Drain):
