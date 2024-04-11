@@ -23,6 +23,7 @@ visualize_config(){
       fi
       
       dot -Tpng "$outfile.dot" > "$outfile.png"
+      rm "$outfile.dot"
     fi
   )
 }
