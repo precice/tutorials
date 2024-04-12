@@ -24,7 +24,15 @@ At each Gauss point of the macro domain there exists a micro simulation. The mac
 * Both the macro and micro simulations can be solved using the finite element library [Nutils](https://nutils.org/install.html) v7 or the simulation framework [DuMu<sup>x</sup>](https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/).
 * While using Nutils, the macro simulation is written in Python, so it requires the [Python bindings of preCICE](https://precice.org/installation-bindings-python.html).
 * The [Micro Manager](https://precice.org/tooling-micro-manager-installation.html) controls all micro-simulations and facilitates coupling via preCICE. Use the [develop](https://github.com/precice/micro-manager/tree/develop) branch of the Micro Manager.
-* To solve either the macro or micro simulations with the DuMu<sup>x</sup> framework, the necessary DUNE modules need to be downloaded and set up. Run `sh setup-dumux.sh` in the tutorial folder to set up the DUNE modules.
+
+### DuMu<sup>x</sup> setup
+
+To solve either the macro or micro simulations with the DuMu<sup>x</sup> framework, the necessary DUNE modules need to be downloaded and set up. This is done by:
+
+* Setting the environment variable `DUNE_CONTROL_PATH` to `.` (the current directory specified by a relative path).
+* Running `sh setup-dumux.sh` in the tutorial folder.
+
+Note that if the `DUNE_CONTROL_PATH` points to an existing installation of the `dune_common` module, this may lead to problems in running the `setup-dumux.sh` script.
 
 ## Running the simulation
 
