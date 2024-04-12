@@ -127,7 +127,7 @@ RUN git clone https://github.com/precice/calculix-adapter.git && \
     make CXX_VERSION=${CALULIX_VERSION} ADDITIONAL_FFLAGS="-fallow-argument-mismatch" -j $(nproc) && \
     ln -s /home/precice/calculix-adapter/bin/ccx_preCICE /home/precice/.local/bin/ccx_preCICE
 
-FROM precice_dependecies as su2_adapter
+FROM python_bindings as su2_adapter
 COPY --from=precice /home/precice/.local /home/precice/.local
 USER root
 RUN apt-get -qq update && \
