@@ -27,12 +27,9 @@ At each Gauss point of the macro domain there exists a micro simulation. The mac
 
 ### DuMu<sup>x</sup> setup
 
-To solve either the macro or micro simulations with the DuMu<sup>x</sup> framework, the necessary DUNE modules need to be downloaded and set up. This is done by:
+To solve either the macro or micro simulations with the DuMu<sup>x</sup> framework, the necessary DUNE modules need to be downloaded and set up. This is done by running `sh setup-dumux.sh` in the tutorial folder.
 
-* Setting the environment variable `DUNE_CONTROL_PATH` to `.` (the current directory specified by a relative path).
-* Running `sh setup-dumux.sh` in the tutorial folder.
-
-Note that if the `DUNE_CONTROL_PATH` points to an existing installation of the `dune_common` module, this may lead to problems in running the `setup-dumux.sh` script.
+Note that if an existing installation of DUNE modules is detected in a default location, this may lead to problems in running the `setup-dumux.sh` script. The environment variable `DUNE_CONTROL_PATH` is suppressed by the script.
 
 ## Running the simulation
 
