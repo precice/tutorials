@@ -130,6 +130,8 @@ RUN git clone https://github.com/precice/calculix-adapter.git && \
 FROM precice_dependecies as su2_adapter
 COPY --from=precice /home/precice/.local /home/precice/.local
 USER root
+RUN apt-get -qq update && \
+    apt-get -qq install swig
 ARG SU2_VERSION
 USER precice
 
@@ -141,12 +143,15 @@ RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz
 ARG SU2_ADAPTER_REF
 WORKDIR /home/precice
 ENV SU2_RUN="/home/precice/SU2_RUN/bin" 
-ENV SU2_HOME="/home/precice/SU2_${SU2_VERSION}"
+ENV SU2_HOME="/home/precice/SU2-${SU2_VERSION}"
 ENV PATH="/home/precice/su2-adapter/run:$SU2_RUN:$PATH"
 ENV PYTHONPATH="$SU2_RUN:$PYTHONPATH"
 RUN git clone https://github.com/precice/su2-adapter.git && \
-    cd su2-adapter && \
+    cd su2-adapter &&\
     git checkout ${SU2_ADAPTER_REF} &&\
-    ./su2AdapterInstall &&\
-    ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN &&\
+    ./su2AdapterInstall
+RUN cd "${SU2_HOME}" &&\
+    ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN
+RUN cd "${SU2_HOME}" &&\
+    mkdir -p "${SU2_RUN}" &&\
     ./ninja -C build install
