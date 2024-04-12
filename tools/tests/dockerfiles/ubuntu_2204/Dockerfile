@@ -136,8 +136,8 @@ USER precice
 # Download and build SU2 (We could also use pre-built binaries from the SU2 releases)
 WORKDIR /home/precice
 RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
-    tar xvzf ${SU2_VERSION}.tar.gz && \
-    rm -fv ${SU2_VERSION}.tar.gz
+    tar xvzf v${SU2_VERSION}.tar.gz && \
+    rm -fv v${SU2_VERSION}.tar.gz
 ARG SU2_ADAPTER_REF
 WORKDIR /home/precice
 ENV SU2_RUN="/home/precice/SU2_RUN/bin" 
