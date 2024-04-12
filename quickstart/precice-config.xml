@@ -38,7 +38,7 @@
     <read-data name="Force" mesh="Solid-Mesh" />
     <write-data name="Displacement" mesh="Solid-Mesh" />
     <watch-point mesh="Solid-Mesh" name="Flap-Tip" coordinate="0.25;0.0" />
-    <export:vtk directory="coupling-meshes" />
+    <export:vtk directory="precice-exports" />
   </participant>
 
   <m2n:sockets acceptor="Fluid" connector="Solid" exchange-directory=".." />

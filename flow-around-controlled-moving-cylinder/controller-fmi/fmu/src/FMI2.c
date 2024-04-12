@@ -371,7 +371,7 @@ FMIStatus FMI2DeSerializeFMUstate(FMIInstance *instance, const fmi2Byte serializ
 }
 
 /* Getting partial derivatives */
-FMIStatus FMI2GetDirectionalDerivative(FMIInstance *            instance,
+FMIStatus FMI2GetDirectionalDerivative(FMIInstance             *instance,
                                        const fmi2ValueReference vUnknown_ref[], size_t nUnknown,
                                        const fmi2ValueReference vKnown_ref[], size_t nKnown,
                                        const fmi2Real dvKnown[],
@@ -484,7 +484,7 @@ Co-Simulation
 ****************************************************/
 
 /* Simulating the slave */
-FMIStatus FMI2SetRealInputDerivatives(FMIInstance *            instance,
+FMIStatus FMI2SetRealInputDerivatives(FMIInstance             *instance,
                                       const fmi2ValueReference vr[], size_t nvr,
                                       const fmi2Integer order[],
                                       const fmi2Real    value[])
@@ -492,7 +492,7 @@ FMIStatus FMI2SetRealInputDerivatives(FMIInstance *            instance,
   CALL_ARGS(SetRealInputDerivatives, "vr=0x%p, nvr=%zu, order=0x%p, value=0x%p", vr, nvr, order, value);
 }
 
-FMIStatus FMI2GetRealOutputDerivatives(FMIInstance *            instance,
+FMIStatus FMI2GetRealOutputDerivatives(FMIInstance             *instance,
                                        const fmi2ValueReference vr[], size_t nvr,
                                        const fmi2Integer order[],
                                        fmi2Real          value[])

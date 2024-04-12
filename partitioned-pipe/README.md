@@ -15,6 +15,12 @@ This scenario consists of two pipes connected in series, both simulated with Ope
 
 On the coupling interface, Fluid1 sends velocity to Fluid2 and receives pressure. Fluid2 uses the [fixedFluxExtrapolatedPressure](https://www.openfoam.com/documentation/guides/v2112/api/classFoam_1_1fixedFluxExtrapolatedPressureFvPatchScalarField.html) boundary condition, which allows a seamless flow continuity across the coupling interface [1]. Not all OpenFOAM solvers support this boundary condition. In such cases, it is recommended to use a fixed Gradient and additionally send the pressure gradient from Fluid1 to Fluid2 for better convergence[2].
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-partitioned-pipe-precice-config.png)
+
 ## Available solvers
 
 Both for Fluid1 and Fluid2, the following participants are available:

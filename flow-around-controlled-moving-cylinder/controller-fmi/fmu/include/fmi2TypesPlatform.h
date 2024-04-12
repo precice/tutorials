@@ -89,9 +89,9 @@
                              ('\0' terminated, UTF8 encoded)
    fmi2Byte                : smallest addressable unit of the machine, typically one byte.
 */
-typedef void *          fmi2Component;            /* Pointer to FMU instance       */
-typedef void *          fmi2ComponentEnvironment; /* Pointer to FMU environment    */
-typedef void *          fmi2FMUstate;             /* Pointer to internal FMU state */
+typedef void           *fmi2Component;            /* Pointer to FMU instance       */
+typedef void           *fmi2ComponentEnvironment; /* Pointer to FMU environment    */
+typedef void           *fmi2FMUstate;             /* Pointer to internal FMU state */
 typedef unsigned int    fmi2ValueReference;
 typedef double          fmi2Real;
 typedef int             fmi2Integer;

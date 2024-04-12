@@ -1,6 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u
 
+. ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
 if [ ! -f ../solver-fmi/Oscillator.fmu ]; then
   cd ../solver-fmi/fmu
@@ -16,3 +18,5 @@ fi
 
 fmiprecice fmi-settings.json precice-settings.json
 python3 ../solver-fmi/calculate-error.py ../mass-left-fmi/fmi-settings.json ../mass-left-fmi/precice-settings.json ../mass-right-fmi/fmi-settings.json ../mass-right-fmi/precice-settings.json Mass-Right
+
+close_log

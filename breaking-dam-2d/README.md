@@ -17,6 +17,12 @@ The two-dimensional breaking dam case is a free surface problem. A large column 
 
 A similar, but not identical, setup is used in [1].
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-breaking-dam-2d-precice-config.png)
+
 ## Available solvers
 
 Fluid participant:

@@ -15,8 +15,6 @@ def main():
     """
     is_coupled_case = True  # If False, single-physics problem is solved
 
-    # Original case from Bastidas et al.
-    # topo, geom = mesh.rectilinear([np.linspace(0, 1.0, 9), np.linspace(0, 0.5, 5)])
     topo, geom = mesh.rectilinear([np.linspace(0, 1.0, 5), np.linspace(0, 0.5, 4)])
 
     ns = function.Namespace(fallback_length=2)

@@ -69,8 +69,8 @@ public:
   // solve takes python dict for macro_write data, dt, and returns python dict for macro_read data
   py::dict solve(py::dict macro_write_data, double dt);
 
-  //void save_checkpoint();
-  //void reload_checkpoint();
+  // void save_checkpoint();
+  // void reload_checkpoint();
 
   void      setState(py::tuple phi);
   py::tuple getState() const;
@@ -83,11 +83,11 @@ private:
   double       _k_11;
   double       _porosity;
 
-  ACSolutionVector _phi;    //Solution of Allen Cahn Problem
-  ACSolutionVector _phiOld; //for checkpointing
-  CPSolutionVector _psi;    //Solutions(s) of Cell Problem
+  ACSolutionVector _phi;    // Solution of Allen Cahn Problem
+  ACSolutionVector _phiOld; // for checkpointing
+  CPSolutionVector _psi;    // Solutions(s) of Cell Problem
 
-  //shared pointers are necessary due to partitioned nature of micro simulation
+  // shared pointers are necessary due to partitioned nature of micro simulation
   std::shared_ptr<ACNewtonSolver>                    _acNonLinearSolver;
   std::shared_ptr<LinearSolver>                      _acLinearSolver;
   std::shared_ptr<CPLinearSolver>                    _cpLinearSolver;
@@ -183,7 +183,7 @@ MicroSimulation::MicroSimulation(int simulationID)
 // Initialize micro-data to be used in initial adaptivity
 py::dict MicroSimulation::initialize()
 {
-  //update Phi in the cell problem
+  // update Phi in the cell problem
   _cpProblem->spatialParams().updatePhi(_phi);
 
   // solve the cell problems
@@ -192,10 +192,10 @@ py::dict MicroSimulation::initialize()
   // calculate porosity
   _porosity = _acProblem->calculatePorosity(_phi);
 
-  //compute the psi derivatives (required for conductivity tensor)
+  // compute the psi derivatives (required for conductivity tensor)
   _cpProblem->computePsiDerivatives(*_cpProblem, *_cpAssembler, *_cpGridVariables, _psi);
 
-  //calculate the conductivity tensor
+  // calculate the conductivity tensor
   _k_00 = _cpProblem->calculateConductivityTensorComponent(0, 0);
   _k_11 = _cpProblem->calculateConductivityTensorComponent(1, 1);
 
@@ -236,7 +236,7 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
   // linearize & solve the allen cahn problem
   _acNonLinearSolver->solve(_phi, *_timeLoop);
 
-  //u pdate Phi in the cell problem
+  // u pdate Phi in the cell problem
   _cpProblem->spatialParams().updatePhi(_phi);
 
   // solve the cell problems
@@ -247,10 +247,10 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
   // calculate porosity
   _porosity = _acProblem->calculatePorosity(_phi);
 
-  //compute the psi derivatives (required for conductivity tensor)
+  // compute the psi derivatives (required for conductivity tensor)
   _cpProblem->computePsiDerivatives(*_cpProblem, *_cpAssembler, *_cpGridVariables, _psi);
 
-  //calculate the conductivity tensor
+  // calculate the conductivity tensor
   _k_00 = _cpProblem->calculateConductivityTensorComponent(0, 0);
   _k_10 = _cpProblem->calculateConductivityTensorComponent(1, 0);
   _k_01 = _cpProblem->calculateConductivityTensorComponent(0, 1);
@@ -311,7 +311,7 @@ PYBIND11_MODULE(micro_sim, m)
   m.doc() = "pybind11 example plugin"; // optional module docstring
 
   py::class_<MicroSimulation>(m, "MicroSimulation")
-      .def(py::init())
+      .def(py::init<int>())
       .def("initialize", &MicroSimulation::initialize)
       .def("solve", &MicroSimulation::solve)
       //.def("save_checkpoint", &MicroSimulation::save_checkpoint)
@@ -328,7 +328,7 @@ PYBIND11_MODULE(micro_sim, m)
               throw std::runtime_error("Invalid state!");
 
             /* Create a new C++ instance */
-            MicroSimulation ms;
+            MicroSimulation ms(0);
             ms.initialize();
             ms.setState(t);
 

@@ -100,7 +100,7 @@ const char *FMI3GetVersion(FMIInstance *instance)
   return instance->fmi3Functions->fmi3GetVersion();
 }
 
-FMIStatus FMI3SetDebugLogging(FMIInstance *    instance,
+FMIStatus FMI3SetDebugLogging(FMIInstance     *instance,
                               fmi3Boolean      loggingOn,
                               size_t           nCategories,
                               const fmi3String categories[])
@@ -293,7 +293,7 @@ FMIStatus FMI3InstantiateModelExchange(
 }
 
 FMIStatus FMI3InstantiateCoSimulation(
-    FMIInstance *                  instance,
+    FMIInstance                   *instance,
     fmi3String                     instantiationToken,
     fmi3String                     resourcePath,
     fmi3Boolean                    visible,
@@ -367,7 +367,7 @@ FMIStatus FMI3InstantiateCoSimulation(
 }
 
 FMIStatus FMI3InstantiateScheduledExecution(
-    FMIInstance *                instance,
+    FMIInstance                 *instance,
     fmi3String                   instantiationToken,
     fmi3String                   resourcePath,
     fmi3Boolean                  visible,
@@ -497,7 +497,7 @@ FMIStatus FMI3Reset(FMIInstance *instance)
 }
 
 /* Getting and setting variable values */
-FMIStatus FMI3GetFloat32(FMIInstance *            instance,
+FMIStatus FMI3GetFloat32(FMIInstance             *instance,
                          const fmi3ValueReference valueReferences[],
                          size_t                   nValueReferences,
                          fmi3Float32              values[],
@@ -506,7 +506,7 @@ FMIStatus FMI3GetFloat32(FMIInstance *            instance,
   CALL_ARRAY(Get, Float32);
 }
 
-FMIStatus FMI3GetFloat64(FMIInstance *            instance,
+FMIStatus FMI3GetFloat64(FMIInstance             *instance,
                          const fmi3ValueReference valueReferences[],
                          size_t                   nValueReferences,
                          fmi3Float64              values[],
@@ -515,7 +515,7 @@ FMIStatus FMI3GetFloat64(FMIInstance *            instance,
   CALL_ARRAY(Get, Float64);
 }
 
-FMIStatus FMI3GetInt8(FMIInstance *            instance,
+FMIStatus FMI3GetInt8(FMIInstance             *instance,
                       const fmi3ValueReference valueReferences[],
                       size_t                   nValueReferences,
                       fmi3Int8                 values[],
@@ -524,7 +524,7 @@ FMIStatus FMI3GetInt8(FMIInstance *            instance,
   CALL_ARRAY(Get, Int8);
 }
 
-FMIStatus FMI3GetUInt8(FMIInstance *            instance,
+FMIStatus FMI3GetUInt8(FMIInstance             *instance,
                        const fmi3ValueReference valueReferences[],
                        size_t                   nValueReferences,
                        fmi3UInt8                values[],
@@ -533,7 +533,7 @@ FMIStatus FMI3GetUInt8(FMIInstance *            instance,
   CALL_ARRAY(Get, UInt8);
 }
 
-FMIStatus FMI3GetInt16(FMIInstance *            instance,
+FMIStatus FMI3GetInt16(FMIInstance             *instance,
                        const fmi3ValueReference valueReferences[],
                        size_t                   nValueReferences,
                        fmi3Int16                values[],
@@ -542,7 +542,7 @@ FMIStatus FMI3GetInt16(FMIInstance *            instance,
   CALL_ARRAY(Get, Int16);
 }
 
-FMIStatus FMI3GetUInt16(FMIInstance *            instance,
+FMIStatus FMI3GetUInt16(FMIInstance             *instance,
                         const fmi3ValueReference valueReferences[],
                         size_t                   nValueReferences,
                         fmi3UInt16               values[],
@@ -551,7 +551,7 @@ FMIStatus FMI3GetUInt16(FMIInstance *            instance,
   CALL_ARRAY(Get, UInt16);
 }
 
-FMIStatus FMI3GetInt32(FMIInstance *            instance,
+FMIStatus FMI3GetInt32(FMIInstance             *instance,
                        const fmi3ValueReference valueReferences[],
                        size_t                   nValueReferences,
                        fmi3Int32                values[],
@@ -560,7 +560,7 @@ FMIStatus FMI3GetInt32(FMIInstance *            instance,
   CALL_ARRAY(Get, Int32);
 }
 
-FMIStatus FMI3GetUInt32(FMIInstance *            instance,
+FMIStatus FMI3GetUInt32(FMIInstance             *instance,
                         const fmi3ValueReference valueReferences[],
                         size_t                   nValueReferences,
                         fmi3UInt32               values[],
@@ -569,7 +569,7 @@ FMIStatus FMI3GetUInt32(FMIInstance *            instance,
   CALL_ARRAY(Get, UInt32);
 }
 
-FMIStatus FMI3GetInt64(FMIInstance *            instance,
+FMIStatus FMI3GetInt64(FMIInstance             *instance,
                        const fmi3ValueReference valueReferences[],
                        size_t                   nValueReferences,
                        fmi3Int64                values[],
@@ -578,7 +578,7 @@ FMIStatus FMI3GetInt64(FMIInstance *            instance,
   CALL_ARRAY(Get, Int64);
 }
 
-FMIStatus FMI3GetUInt64(FMIInstance *            instance,
+FMIStatus FMI3GetUInt64(FMIInstance             *instance,
                         const fmi3ValueReference valueReferences[],
                         size_t                   nValueReferences,
                         fmi3UInt64               values[],
@@ -587,7 +587,7 @@ FMIStatus FMI3GetUInt64(FMIInstance *            instance,
   CALL_ARRAY(Get, UInt64);
 }
 
-FMIStatus FMI3GetBoolean(FMIInstance *            instance,
+FMIStatus FMI3GetBoolean(FMIInstance             *instance,
                          const fmi3ValueReference valueReferences[],
                          size_t                   nValueReferences,
                          fmi3Boolean              values[],
@@ -596,7 +596,7 @@ FMIStatus FMI3GetBoolean(FMIInstance *            instance,
   CALL_ARRAY(Get, Boolean);
 }
 
-FMIStatus FMI3GetString(FMIInstance *            instance,
+FMIStatus FMI3GetString(FMIInstance             *instance,
                         const fmi3ValueReference valueReferences[],
                         size_t                   nValueReferences,
                         fmi3String               values[],
@@ -605,7 +605,7 @@ FMIStatus FMI3GetString(FMIInstance *            instance,
   CALL_ARRAY(Get, String);
 }
 
-FMIStatus FMI3GetBinary(FMIInstance *            instance,
+FMIStatus FMI3GetBinary(FMIInstance             *instance,
                         const fmi3ValueReference valueReferences[],
                         size_t                   nValueReferences,
                         size_t                   sizes[],
@@ -624,7 +624,7 @@ FMIStatus FMI3GetBinary(FMIInstance *            instance,
   return status;
 }
 
-FMIStatus FMI3GetClock(FMIInstance *            instance,
+FMIStatus FMI3GetClock(FMIInstance             *instance,
                        const fmi3ValueReference valueReferences[],
                        size_t                   nValueReferences,
                        fmi3Clock                values[])
@@ -641,7 +641,7 @@ FMIStatus FMI3GetClock(FMIInstance *            instance,
   return status;
 }
 
-FMIStatus FMI3SetFloat32(FMIInstance *            instance,
+FMIStatus FMI3SetFloat32(FMIInstance             *instance,
                          const fmi3ValueReference valueReferences[],
                          size_t                   nValueReferences,
                          const fmi3Float32        values[],
@@ -650,7 +650,7 @@ FMIStatus FMI3SetFloat32(FMIInstance *            instance,
   CALL_ARRAY(Set, Float32);
 }
 
-FMIStatus FMI3SetFloat64(FMIInstance *            instance,
+FMIStatus FMI3SetFloat64(FMIInstance             *instance,
                          const fmi3ValueReference valueReferences[],
                          size_t                   nValueReferences,
                          const fmi3Float64        values[],
@@ -659,7 +659,7 @@ FMIStatus FMI3SetFloat64(FMIInstance *            instance,
   CALL_ARRAY(Set, Float64);
 }
 
-FMIStatus FMI3SetInt8(FMIInstance *            instance,
+FMIStatus FMI3SetInt8(FMIInstance             *instance,
                       const fmi3ValueReference valueReferences[],
                       size_t                   nValueReferences,
                       const fmi3Int8           values[],
@@ -668,7 +668,7 @@ FMIStatus FMI3SetInt8(FMIInstance *            instance,
   CALL_ARRAY(Set, Int8);
 }
 
-FMIStatus FMI3SetUInt8(FMIInstance *            instance,
+FMIStatus FMI3SetUInt8(FMIInstance             *instance,
                        const fmi3ValueReference valueReferences[],
                        size_t                   nValueReferences,
                        const fmi3UInt8          values[],
@@ -677,7 +677,7 @@ FMIStatus FMI3SetUInt8(FMIInstance *            instance,
   CALL_ARRAY(Set, UInt8);
 }
 
-FMIStatus FMI3SetInt16(FMIInstance *            instance,
+FMIStatus FMI3SetInt16(FMIInstance             *instance,
                        const fmi3ValueReference valueReferences[],
                        size_t                   nValueReferences,
                        const fmi3Int16          values[],
@@ -686,7 +686,7 @@ FMIStatus FMI3SetInt16(FMIInstance *            instance,
   CALL_ARRAY(Set, Int16);
 }
 
-FMIStatus FMI3SetUInt16(FMIInstance *            instance,
+FMIStatus FMI3SetUInt16(FMIInstance             *instance,
                         const fmi3ValueReference valueReferences[],
                         size_t                   nValueReferences,
                         const fmi3UInt16         values[],
@@ -695,7 +695,7 @@ FMIStatus FMI3SetUInt16(FMIInstance *            instance,
   CALL_ARRAY(Set, UInt16);
 }
 
-FMIStatus FMI3SetInt32(FMIInstance *            instance,
+FMIStatus FMI3SetInt32(FMIInstance             *instance,
                        const fmi3ValueReference valueReferences[],
                        size_t                   nValueReferences,
                        const fmi3Int32          values[],
@@ -704,7 +704,7 @@ FMIStatus FMI3SetInt32(FMIInstance *            instance,
   CALL_ARRAY(Set, Int32);
 }
 
-FMIStatus FMI3SetUInt32(FMIInstance *            instance,
+FMIStatus FMI3SetUInt32(FMIInstance             *instance,
                         const fmi3ValueReference valueReferences[],
                         size_t                   nValueReferences,
                         const fmi3UInt32         values[],
@@ -713,7 +713,7 @@ FMIStatus FMI3SetUInt32(FMIInstance *            instance,
   CALL_ARRAY(Set, UInt32);
 }
 
-FMIStatus FMI3SetInt64(FMIInstance *            instance,
+FMIStatus FMI3SetInt64(FMIInstance             *instance,
                        const fmi3ValueReference valueReferences[],
                        size_t                   nValueReferences,
                        const fmi3Int64          values[],
@@ -722,7 +722,7 @@ FMIStatus FMI3SetInt64(FMIInstance *            instance,
   CALL_ARRAY(Set, Int64);
 }
 
-FMIStatus FMI3SetUInt64(FMIInstance *            instance,
+FMIStatus FMI3SetUInt64(FMIInstance             *instance,
                         const fmi3ValueReference valueReferences[],
                         size_t                   nValueReferences,
                         const fmi3UInt64         values[],
@@ -731,7 +731,7 @@ FMIStatus FMI3SetUInt64(FMIInstance *            instance,
   CALL_ARRAY(Set, UInt64);
 }
 
-FMIStatus FMI3SetBoolean(FMIInstance *            instance,
+FMIStatus FMI3SetBoolean(FMIInstance             *instance,
                          const fmi3ValueReference valueReferences[],
                          size_t                   nValueReferences,
                          const fmi3Boolean        values[],
@@ -740,7 +740,7 @@ FMIStatus FMI3SetBoolean(FMIInstance *            instance,
   CALL_ARRAY(Set, Boolean);
 }
 
-FMIStatus FMI3SetString(FMIInstance *            instance,
+FMIStatus FMI3SetString(FMIInstance             *instance,
                         const fmi3ValueReference valueReferences[],
                         size_t                   nValueReferences,
                         const fmi3String         values[],
@@ -749,7 +749,7 @@ FMIStatus FMI3SetString(FMIInstance *            instance,
   CALL_ARRAY(Set, String);
 }
 
-FMIStatus FMI3SetBinary(FMIInstance *            instance,
+FMIStatus FMI3SetBinary(FMIInstance             *instance,
                         const fmi3ValueReference valueReferences[],
                         size_t                   nValueReferences,
                         const size_t             sizes[],
@@ -768,7 +768,7 @@ FMIStatus FMI3SetBinary(FMIInstance *            instance,
   return status;
 }
 
-FMIStatus FMI3SetClock(FMIInstance *            instance,
+FMIStatus FMI3SetClock(FMIInstance             *instance,
                        const fmi3ValueReference valueReferences[],
                        size_t                   nValueReferences,
                        const fmi3Clock          values[])
@@ -786,14 +786,14 @@ FMIStatus FMI3SetClock(FMIInstance *            instance,
 }
 
 /* Getting Variable Dependency Information */
-FMIStatus FMI3GetNumberOfVariableDependencies(FMIInstance *      instance,
+FMIStatus FMI3GetNumberOfVariableDependencies(FMIInstance       *instance,
                                               fmi3ValueReference valueReference,
-                                              size_t *           nDependencies)
+                                              size_t            *nDependencies)
 {
   CALL_ARGS(GetNumberOfVariableDependencies, "valueReference=%u, nDependencies=0x%p", valueReference, nDependencies);
 }
 
-FMIStatus FMI3GetVariableDependencies(FMIInstance *      instance,
+FMIStatus FMI3GetVariableDependencies(FMIInstance       *instance,
                                       fmi3ValueReference dependent,
                                       size_t             elementIndicesOfDependent[],
                                       fmi3ValueReference independents[],
@@ -823,7 +823,7 @@ FMIStatus FMI3FreeFMUState(FMIInstance *instance, fmi3FMUState *FMUState)
 
 FMIStatus FMI3SerializedFMUStateSize(FMIInstance *instance,
                                      fmi3FMUState FMUState,
-                                     size_t *     size)
+                                     size_t      *size)
 {
   FMIStatus status = (FMIStatus) instance->fmi3Functions->fmi3SerializedFMUStateSize(instance->component, FMUState, size);
   if (instance->logFunctionCall) {
@@ -840,16 +840,16 @@ FMIStatus FMI3SerializeFMUState(FMIInstance *instance,
   CALL_ARGS(SerializeFMUState, "FMUstate=0x%p, serializedState=0x%p, size=%zu", FMUState, serializedState, size);
 }
 
-FMIStatus FMI3DeserializeFMUState(FMIInstance *  instance,
+FMIStatus FMI3DeserializeFMUState(FMIInstance   *instance,
                                   const fmi3Byte serializedState[],
                                   size_t         size,
-                                  fmi3FMUState * FMUState)
+                                  fmi3FMUState  *FMUState)
 {
   CALL_ARGS(DeserializeFMUState, "serializedState=0x%p, size=%zu, FMUState=0x%p", serializedState, size, FMUState);
 }
 
 /* Getting partial derivatives */
-FMIStatus FMI3GetDirectionalDerivative(FMIInstance *            instance,
+FMIStatus FMI3GetDirectionalDerivative(FMIInstance             *instance,
                                        const fmi3ValueReference unknowns[],
                                        size_t                   nUnknowns,
                                        const fmi3ValueReference knowns[],
@@ -864,7 +864,7 @@ FMIStatus FMI3GetDirectionalDerivative(FMIInstance *            instance,
             unknowns, nUnknowns, knowns, nKnowns, seed, nSeed, sensitivity, nSensitivity);
 }
 
-FMIStatus FMI3GetAdjointDerivative(FMIInstance *            instance,
+FMIStatus FMI3GetAdjointDerivative(FMIInstance             *instance,
                                    const fmi3ValueReference unknowns[],
                                    size_t                   nUnknowns,
                                    const fmi3ValueReference knowns[],
@@ -892,7 +892,7 @@ FMIStatus FMI3ExitConfigurationMode(FMIInstance *instance)
 
 /* Clock related functions */
 
-FMI_STATIC FMIStatus FMI3GetIntervalDecimal(FMIInstance *            instance,
+FMI_STATIC FMIStatus FMI3GetIntervalDecimal(FMIInstance             *instance,
                                             const fmi3ValueReference valueReferences[],
                                             size_t                   nValueReferences,
                                             fmi3Float64              intervals[],
@@ -903,7 +903,7 @@ FMI_STATIC FMIStatus FMI3GetIntervalDecimal(FMIInstance *            instance,
             valueReferences, nValueReferences, intervals, qualifiers);
 }
 
-FMIStatus FMI3GetIntervalFraction(FMIInstance *            instance,
+FMIStatus FMI3GetIntervalFraction(FMIInstance             *instance,
                                   const fmi3ValueReference valueReferences[],
                                   size_t                   nValueReferences,
                                   fmi3UInt64               intervalCounters[],
@@ -915,7 +915,7 @@ FMIStatus FMI3GetIntervalFraction(FMIInstance *            instance,
             valueReferences, nValueReferences, intervalCounters, resolutions, qualifiers);
 }
 
-FMIStatus FMI3GetShiftDecimal(FMIInstance *            instance,
+FMIStatus FMI3GetShiftDecimal(FMIInstance             *instance,
                               const fmi3ValueReference valueReferences[],
                               size_t                   nValueReferences,
                               fmi3Float64              shifts[])
@@ -925,7 +925,7 @@ FMIStatus FMI3GetShiftDecimal(FMIInstance *            instance,
             valueReferences, nValueReferences, shifts);
 }
 
-FMIStatus FMI3GetShiftFraction(FMIInstance *            instance,
+FMIStatus FMI3GetShiftFraction(FMIInstance             *instance,
                                const fmi3ValueReference valueReferences[],
                                size_t                   nValueReferences,
                                fmi3UInt64               shiftCounters[],
@@ -936,7 +936,7 @@ FMIStatus FMI3GetShiftFraction(FMIInstance *            instance,
             valueReferences, nValueReferences, shiftCounters, resolutions);
 }
 
-FMIStatus FMI3SetIntervalDecimal(FMIInstance *            instance,
+FMIStatus FMI3SetIntervalDecimal(FMIInstance             *instance,
                                  const fmi3ValueReference valueReferences[],
                                  size_t                   nValueReferences,
                                  const fmi3Float64        intervals[])
@@ -946,7 +946,7 @@ FMIStatus FMI3SetIntervalDecimal(FMIInstance *            instance,
             valueReferences, nValueReferences, intervals);
 }
 
-FMIStatus FMI3SetIntervalFraction(FMIInstance *            instance,
+FMIStatus FMI3SetIntervalFraction(FMIInstance             *instance,
                                   const fmi3ValueReference valueReferences[],
                                   size_t                   nValueReferences,
                                   const fmi3UInt64         intervalCounters[],
@@ -957,7 +957,7 @@ FMIStatus FMI3SetIntervalFraction(FMIInstance *            instance,
             valueReferences, nValueReferences, intervalCounters, resolutions);
 }
 
-FMIStatus FMI3SetShiftDecimal(FMIInstance *            instance,
+FMIStatus FMI3SetShiftDecimal(FMIInstance             *instance,
                               const fmi3ValueReference valueReferences[],
                               size_t                   nValueReferences,
                               const fmi3Float64        shifts[])
@@ -967,7 +967,7 @@ FMIStatus FMI3SetShiftDecimal(FMIInstance *            instance,
             valueReferences, nValueReferences, shifts);
 }
 
-FMIStatus FMI3SetShiftFraction(FMIInstance *            instance,
+FMIStatus FMI3SetShiftFraction(FMIInstance             *instance,
                                const fmi3ValueReference valueReferences[],
                                size_t                   nValueReferences,
                                const fmi3UInt64         shiftCounters[],
@@ -1037,7 +1037,7 @@ FMIStatus FMI3SetTime(FMIInstance *instance, fmi3Float64 time)
   CALL_ARGS(SetTime, "time=%.16g", time);
 }
 
-FMIStatus FMI3SetContinuousStates(FMIInstance *     instance,
+FMIStatus FMI3SetContinuousStates(FMIInstance      *instance,
                                   const fmi3Float64 continuousStates[],
                                   size_t            nContinuousStates)
 {
@@ -1114,13 +1114,13 @@ FMIStatus FMI3GetNominalsOfContinuousStates(FMIInstance *instance,
 }
 
 FMIStatus FMI3GetNumberOfEventIndicators(FMIInstance *instance,
-                                         size_t *     nEventIndicators)
+                                         size_t      *nEventIndicators)
 {
   CALL_ARGS(GetNumberOfEventIndicators, "nEventIndicators=0x%p", nEventIndicators);
 }
 
 FMIStatus FMI3GetNumberOfContinuousStates(FMIInstance *instance,
-                                          size_t *     nContinuousStates)
+                                          size_t      *nContinuousStates)
 {
   CALL_ARGS(GetNumberOfContinuousStates, "nContinuousStates=0x%p", nContinuousStates);
 }
@@ -1136,7 +1136,7 @@ FMIStatus FMI3EnterStepMode(FMIInstance *instance)
   CALL(EnterStepMode);
 }
 
-FMIStatus FMI3GetOutputDerivatives(FMIInstance *            instance,
+FMIStatus FMI3GetOutputDerivatives(FMIInstance             *instance,
                                    const fmi3ValueReference valueReferences[],
                                    size_t                   nValueReferences,
                                    const fmi3Int32          orders[],
@@ -1171,7 +1171,7 @@ FMIStatus FMI3DoStep(FMIInstance *instance,
   return status;
 }
 
-FMIStatus FMI3ActivateModelPartition(FMIInstance *      instance,
+FMIStatus FMI3ActivateModelPartition(FMIInstance       *instance,
                                      fmi3ValueReference clockReference,
                                      fmi3Float64        activationTime)
 {

@@ -10,7 +10,7 @@ namespace Foam {
 
 solidDisplacementFoamForceFvPatchVectorField::
     solidDisplacementFoamForceFvPatchVectorField(
-        const fvPatch &                          p,
+        const fvPatch                           &p,
         const DimensionedField<vector, volMesh> &iF)
     : fixedGradientFvPatchVectorField(p, iF),
       force_(p.size(), vector::zero),
@@ -18,14 +18,14 @@ solidDisplacementFoamForceFvPatchVectorField::
       curTimeIndex_(-1)
 {
   fvPatchVectorField::operator=(patchInternalField());
-  gradient()                  = vector::zero;
+  gradient() = vector::zero;
 }
 
 solidDisplacementFoamForceFvPatchVectorField::
     solidDisplacementFoamForceFvPatchVectorField(
-        const fvPatch &                          p,
+        const fvPatch                           &p,
         const DimensionedField<vector, volMesh> &iF,
-        const dictionary &                       dict)
+        const dictionary                        &dict)
     : fixedGradientFvPatchVectorField(p, iF),
       force_(p.size(), vector::zero),
       forceFieldPtr_(),
@@ -71,9 +71,9 @@ solidDisplacementFoamForceFvPatchVectorField::
 solidDisplacementFoamForceFvPatchVectorField::
     solidDisplacementFoamForceFvPatchVectorField(
         const solidDisplacementFoamForceFvPatchVectorField &stpvf,
-        const fvPatch &                                     p,
-        const DimensionedField<vector, volMesh> &           iF,
-        const fvPatchFieldMapper &                          mapper)
+        const fvPatch                                      &p,
+        const DimensionedField<vector, volMesh>            &iF,
+        const fvPatchFieldMapper                           &mapper)
     : fixedGradientFvPatchVectorField(stpvf, p, iF, mapper),
 #ifdef OPENFOAMFOUNDATION
       force_(mapper(stpvf.force_)),
@@ -98,7 +98,7 @@ solidDisplacementFoamForceFvPatchVectorField::solidDisplacementFoamForceFvPatchV
 
 solidDisplacementFoamForceFvPatchVectorField::solidDisplacementFoamForceFvPatchVectorField(
     const solidDisplacementFoamForceFvPatchVectorField &stpvf,
-    const DimensionedField<vector, volMesh> &           iF)
+    const DimensionedField<vector, volMesh>            &iF)
     : fixedGradientFvPatchVectorField(stpvf, iF),
       force_(stpvf.force_),
       forceFieldPtr_(),
@@ -123,7 +123,7 @@ void solidDisplacementFoamForceFvPatchVectorField::autoMap(
 // Reverse-map the given fvPatchField onto this fvPatchField
 void solidDisplacementFoamForceFvPatchVectorField::rmap(
     const fvPatchVectorField &ptf,
-    const labelList &         addr)
+    const labelList          &addr)
 {
   fixedGradientFvPatchVectorField::rmap(ptf, addr);
 
@@ -216,7 +216,7 @@ void solidDisplacementFoamForceFvPatchVectorField::write(Ostream &os) const
   // Bug-fix: courtesy of Michael@UW at https://www.cfd-online.com/Forums/
   // openfoam-cc-toolkits-fluid-structure-interaction/221892-solved-paraview
   // -cant-read-solids-files-duplicate-entries-keyword-value.html#post762325
-  //fixedGradientFvPatchVectorField::write(os);
+  // fixedGradientFvPatchVectorField::write(os);
   fvPatchVectorField::write(os);
 
   if (forceFieldPtr_.valid()) {

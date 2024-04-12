@@ -175,7 +175,7 @@ DllExport fmiComponent fmiInstantiateModel(fmiString            instanceName,
                                            fmiCallbackFunctions functions,
                                            fmiBoolean           loggingOn);
 DllExport void         fmiFreeModelInstance(fmiComponent c);
-DllExport fmiStatus fmiSetDebugLogging(fmiComponent c, fmiBoolean loggingOn);
+DllExport fmiStatus    fmiSetDebugLogging(fmiComponent c, fmiBoolean loggingOn);
 
 /* Providing independent variables and re-initialization of caching */
 DllExport fmiStatus fmiSetTime(fmiComponent c, fmiReal time);

@@ -222,83 +222,83 @@ Common Functions
 ****************************************************/
 
 /* Inquire version numbers and set debug logging */
-FMI3_Export fmi3GetVersionTYPE fmi3GetVersion;
+FMI3_Export fmi3GetVersionTYPE      fmi3GetVersion;
 FMI3_Export fmi3SetDebugLoggingTYPE fmi3SetDebugLogging;
 
 /* Creation and destruction of FMU instances */
-FMI3_Export fmi3InstantiateModelExchangeTYPE fmi3InstantiateModelExchange;
-FMI3_Export fmi3InstantiateCoSimulationTYPE fmi3InstantiateCoSimulation;
+FMI3_Export fmi3InstantiateModelExchangeTYPE      fmi3InstantiateModelExchange;
+FMI3_Export fmi3InstantiateCoSimulationTYPE       fmi3InstantiateCoSimulation;
 FMI3_Export fmi3InstantiateScheduledExecutionTYPE fmi3InstantiateScheduledExecution;
-FMI3_Export fmi3FreeInstanceTYPE fmi3FreeInstance;
+FMI3_Export fmi3FreeInstanceTYPE                  fmi3FreeInstance;
 
 /* Enter and exit initialization mode, terminate and reset */
 FMI3_Export fmi3EnterInitializationModeTYPE fmi3EnterInitializationMode;
-FMI3_Export fmi3ExitInitializationModeTYPE fmi3ExitInitializationMode;
-FMI3_Export fmi3EnterEventModeTYPE fmi3EnterEventMode;
-FMI3_Export fmi3TerminateTYPE fmi3Terminate;
-FMI3_Export fmi3ResetTYPE fmi3Reset;
+FMI3_Export fmi3ExitInitializationModeTYPE  fmi3ExitInitializationMode;
+FMI3_Export fmi3EnterEventModeTYPE          fmi3EnterEventMode;
+FMI3_Export fmi3TerminateTYPE               fmi3Terminate;
+FMI3_Export fmi3ResetTYPE                   fmi3Reset;
 
 /* Getting and setting variables values */
 FMI3_Export fmi3GetFloat32TYPE fmi3GetFloat32;
 FMI3_Export fmi3GetFloat64TYPE fmi3GetFloat64;
-FMI3_Export fmi3GetInt8TYPE fmi3GetInt8;
-FMI3_Export fmi3GetUInt8TYPE fmi3GetUInt8;
-FMI3_Export fmi3GetInt16TYPE fmi3GetInt16;
-FMI3_Export fmi3GetUInt16TYPE fmi3GetUInt16;
-FMI3_Export fmi3GetInt32TYPE fmi3GetInt32;
-FMI3_Export fmi3GetUInt32TYPE fmi3GetUInt32;
-FMI3_Export fmi3GetInt64TYPE fmi3GetInt64;
-FMI3_Export fmi3GetUInt64TYPE fmi3GetUInt64;
+FMI3_Export fmi3GetInt8TYPE    fmi3GetInt8;
+FMI3_Export fmi3GetUInt8TYPE   fmi3GetUInt8;
+FMI3_Export fmi3GetInt16TYPE   fmi3GetInt16;
+FMI3_Export fmi3GetUInt16TYPE  fmi3GetUInt16;
+FMI3_Export fmi3GetInt32TYPE   fmi3GetInt32;
+FMI3_Export fmi3GetUInt32TYPE  fmi3GetUInt32;
+FMI3_Export fmi3GetInt64TYPE   fmi3GetInt64;
+FMI3_Export fmi3GetUInt64TYPE  fmi3GetUInt64;
 FMI3_Export fmi3GetBooleanTYPE fmi3GetBoolean;
-FMI3_Export fmi3GetStringTYPE fmi3GetString;
-FMI3_Export fmi3GetBinaryTYPE fmi3GetBinary;
-FMI3_Export fmi3GetClockTYPE fmi3GetClock;
+FMI3_Export fmi3GetStringTYPE  fmi3GetString;
+FMI3_Export fmi3GetBinaryTYPE  fmi3GetBinary;
+FMI3_Export fmi3GetClockTYPE   fmi3GetClock;
 FMI3_Export fmi3SetFloat32TYPE fmi3SetFloat32;
 FMI3_Export fmi3SetFloat64TYPE fmi3SetFloat64;
-FMI3_Export fmi3SetInt8TYPE fmi3SetInt8;
-FMI3_Export fmi3SetUInt8TYPE fmi3SetUInt8;
-FMI3_Export fmi3SetInt16TYPE fmi3SetInt16;
-FMI3_Export fmi3SetUInt16TYPE fmi3SetUInt16;
-FMI3_Export fmi3SetInt32TYPE fmi3SetInt32;
-FMI3_Export fmi3SetUInt32TYPE fmi3SetUInt32;
-FMI3_Export fmi3SetInt64TYPE fmi3SetInt64;
-FMI3_Export fmi3SetUInt64TYPE fmi3SetUInt64;
+FMI3_Export fmi3SetInt8TYPE    fmi3SetInt8;
+FMI3_Export fmi3SetUInt8TYPE   fmi3SetUInt8;
+FMI3_Export fmi3SetInt16TYPE   fmi3SetInt16;
+FMI3_Export fmi3SetUInt16TYPE  fmi3SetUInt16;
+FMI3_Export fmi3SetInt32TYPE   fmi3SetInt32;
+FMI3_Export fmi3SetUInt32TYPE  fmi3SetUInt32;
+FMI3_Export fmi3SetInt64TYPE   fmi3SetInt64;
+FMI3_Export fmi3SetUInt64TYPE  fmi3SetUInt64;
 FMI3_Export fmi3SetBooleanTYPE fmi3SetBoolean;
-FMI3_Export fmi3SetStringTYPE fmi3SetString;
-FMI3_Export fmi3SetBinaryTYPE fmi3SetBinary;
-FMI3_Export fmi3SetClockTYPE fmi3SetClock;
+FMI3_Export fmi3SetStringTYPE  fmi3SetString;
+FMI3_Export fmi3SetBinaryTYPE  fmi3SetBinary;
+FMI3_Export fmi3SetClockTYPE   fmi3SetClock;
 
 /* Getting Variable Dependency Information */
 FMI3_Export fmi3GetNumberOfVariableDependenciesTYPE fmi3GetNumberOfVariableDependencies;
-FMI3_Export fmi3GetVariableDependenciesTYPE fmi3GetVariableDependencies;
+FMI3_Export fmi3GetVariableDependenciesTYPE         fmi3GetVariableDependencies;
 
 /* Getting and setting the internal FMU state */
-FMI3_Export fmi3GetFMUStateTYPE fmi3GetFMUState;
-FMI3_Export fmi3SetFMUStateTYPE fmi3SetFMUState;
-FMI3_Export fmi3FreeFMUStateTYPE fmi3FreeFMUState;
+FMI3_Export fmi3GetFMUStateTYPE            fmi3GetFMUState;
+FMI3_Export fmi3SetFMUStateTYPE            fmi3SetFMUState;
+FMI3_Export fmi3FreeFMUStateTYPE           fmi3FreeFMUState;
 FMI3_Export fmi3SerializedFMUStateSizeTYPE fmi3SerializedFMUStateSize;
-FMI3_Export fmi3SerializeFMUStateTYPE fmi3SerializeFMUState;
-FMI3_Export fmi3DeserializeFMUStateTYPE fmi3DeserializeFMUState;
+FMI3_Export fmi3SerializeFMUStateTYPE      fmi3SerializeFMUState;
+FMI3_Export fmi3DeserializeFMUStateTYPE    fmi3DeserializeFMUState;
 
 /* Getting partial derivatives */
 FMI3_Export fmi3GetDirectionalDerivativeTYPE fmi3GetDirectionalDerivative;
-FMI3_Export fmi3GetAdjointDerivativeTYPE fmi3GetAdjointDerivative;
+FMI3_Export fmi3GetAdjointDerivativeTYPE     fmi3GetAdjointDerivative;
 
 /* Entering and exiting the Configuration or Reconfiguration Mode */
 FMI3_Export fmi3EnterConfigurationModeTYPE fmi3EnterConfigurationMode;
-FMI3_Export fmi3ExitConfigurationModeTYPE fmi3ExitConfigurationMode;
+FMI3_Export fmi3ExitConfigurationModeTYPE  fmi3ExitConfigurationMode;
 
 /* Clock related functions */
-FMI3_Export fmi3GetIntervalDecimalTYPE fmi3GetIntervalDecimal;
-FMI3_Export fmi3GetIntervalFractionTYPE fmi3GetIntervalFraction;
-FMI3_Export fmi3GetShiftDecimalTYPE fmi3GetShiftDecimal;
-FMI3_Export fmi3GetShiftFractionTYPE fmi3GetShiftFraction;
-FMI3_Export fmi3SetIntervalDecimalTYPE fmi3SetIntervalDecimal;
-FMI3_Export fmi3SetIntervalFractionTYPE fmi3SetIntervalFraction;
-FMI3_Export fmi3SetShiftDecimalTYPE fmi3SetShiftDecimal;
-FMI3_Export fmi3SetShiftFractionTYPE fmi3SetShiftFraction;
+FMI3_Export fmi3GetIntervalDecimalTYPE     fmi3GetIntervalDecimal;
+FMI3_Export fmi3GetIntervalFractionTYPE    fmi3GetIntervalFraction;
+FMI3_Export fmi3GetShiftDecimalTYPE        fmi3GetShiftDecimal;
+FMI3_Export fmi3GetShiftFractionTYPE       fmi3GetShiftFraction;
+FMI3_Export fmi3SetIntervalDecimalTYPE     fmi3SetIntervalDecimal;
+FMI3_Export fmi3SetIntervalFractionTYPE    fmi3SetIntervalFraction;
+FMI3_Export fmi3SetShiftDecimalTYPE        fmi3SetShiftDecimal;
+FMI3_Export fmi3SetShiftFractionTYPE       fmi3SetShiftFraction;
 FMI3_Export fmi3EvaluateDiscreteStatesTYPE fmi3EvaluateDiscreteStates;
-FMI3_Export fmi3UpdateDiscreteStatesTYPE fmi3UpdateDiscreteStates;
+FMI3_Export fmi3UpdateDiscreteStatesTYPE   fmi3UpdateDiscreteStates;
 
 /***************************************************
 Functions for Model Exchange
@@ -315,20 +315,20 @@ FMI3_Export fmi3SetContinuousStatesTYPE fmi3SetContinuousStates;
 
 /* Evaluation of the model equations */
 FMI3_Export fmi3GetContinuousStateDerivativesTYPE fmi3GetContinuousStateDerivatives;
-FMI3_Export fmi3GetEventIndicatorsTYPE fmi3GetEventIndicators;
-FMI3_Export fmi3GetContinuousStatesTYPE fmi3GetContinuousStates;
+FMI3_Export fmi3GetEventIndicatorsTYPE            fmi3GetEventIndicators;
+FMI3_Export fmi3GetContinuousStatesTYPE           fmi3GetContinuousStates;
 FMI3_Export fmi3GetNominalsOfContinuousStatesTYPE fmi3GetNominalsOfContinuousStates;
-FMI3_Export fmi3GetNumberOfEventIndicatorsTYPE fmi3GetNumberOfEventIndicators;
-FMI3_Export fmi3GetNumberOfContinuousStatesTYPE fmi3GetNumberOfContinuousStates;
+FMI3_Export fmi3GetNumberOfEventIndicatorsTYPE    fmi3GetNumberOfEventIndicators;
+FMI3_Export fmi3GetNumberOfContinuousStatesTYPE   fmi3GetNumberOfContinuousStates;
 
 /***************************************************
 Functions for Co-Simulation
 ****************************************************/
 
 /* Simulating the FMU */
-FMI3_Export fmi3EnterStepModeTYPE fmi3EnterStepMode;
+FMI3_Export fmi3EnterStepModeTYPE        fmi3EnterStepMode;
 FMI3_Export fmi3GetOutputDerivativesTYPE fmi3GetOutputDerivatives;
-FMI3_Export fmi3DoStepTYPE fmi3DoStep;
+FMI3_Export fmi3DoStepTYPE               fmi3DoStep;
 
 /***************************************************
 Functions for Scheduled Execution
