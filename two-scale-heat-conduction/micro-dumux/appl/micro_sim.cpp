@@ -311,7 +311,7 @@ PYBIND11_MODULE(micro_sim, m)
   m.doc() = "pybind11 example plugin"; // optional module docstring
 
   py::class_<MicroSimulation>(m, "MicroSimulation")
-      .def(py::init())
+      .def(py::init<int>())
       .def("initialize", &MicroSimulation::initialize)
       .def("solve", &MicroSimulation::solve)
       //.def("save_checkpoint", &MicroSimulation::save_checkpoint)
@@ -328,7 +328,7 @@ PYBIND11_MODULE(micro_sim, m)
               throw std::runtime_error("Invalid state!");
 
             /* Create a new C++ instance */
-            MicroSimulation ms;
+            MicroSimulation ms(0);
             ms.initialize();
             ms.setState(t);
 
