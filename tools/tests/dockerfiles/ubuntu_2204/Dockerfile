@@ -140,6 +140,7 @@ WORKDIR /home/precice
 RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
     tar xvzf v${SU2_VERSION}.tar.gz && \
     rm -fv v${SU2_VERSION}.tar.gz
+RUN pip3 install --user mpi4py
 ARG SU2_ADAPTER_REF
 WORKDIR /home/precice
 ENV SU2_RUN="/home/precice/SU2_RUN/bin" 
