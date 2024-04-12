@@ -110,7 +110,7 @@ calculix-adapter:
 
 su2-adapter:
   repository: https://github.com/precice/su2-adapter
-  template: components-templates/su2-adapter.yaml # TODO
+  template: component-templates/su2-adapter.yaml
   build_arguments:
     PRECICE_REF:
       description: Version of preCICE to use
