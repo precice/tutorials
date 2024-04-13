@@ -143,7 +143,7 @@ RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz
 RUN pip3 install --user mpi4py
 ARG SU2_ADAPTER_REF
 WORKDIR /home/precice
-ENV SU2_RUN="/home/precice/SU2_RUN/bin" 
+ENV SU2_RUN="/home/precice/SU2_RUN" 
 ENV SU2_HOME="/home/precice/SU2-${SU2_VERSION}"
 ENV PATH="/home/precice/su2-adapter/run:$SU2_RUN:$PATH"
 ENV PYTHONPATH="$SU2_RUN:$PYTHONPATH"
@@ -152,7 +152,5 @@ RUN git clone https://github.com/precice/su2-adapter.git && \
     git checkout ${SU2_ADAPTER_REF} &&\
     ./su2AdapterInstall
 RUN cd "${SU2_HOME}" &&\
-    ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN
-RUN cd "${SU2_HOME}" &&\
-    mkdir -p "${SU2_RUN}" &&\
+    ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN &&\
     ./ninja -C build install
