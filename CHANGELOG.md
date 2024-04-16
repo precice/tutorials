@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 New tutorials:
 
-- Added new multi-scale tutorial [two-scale heat conduction](https://precice.org/tutorials-two-scale-heat-conduction.html) with Nutils [#343](https://github.com/precice/tutorials/pull/343) and DuMuX [#376](https://github.com/precice/tutorials/pull/376), using the new [micro manager](https://precice.org/tooling-micro-manager-overview.html).
+- Added new multi-scale tutorial [two-scale heat conduction](https://precice.org/tutorials-two-scale-heat-conduction.html) with Nutils [#343](https://github.com/precice/tutorials/pull/343) and DuMuX [#376](https://github.com/precice/tutorials/pull/376), using the new [Micro Manager](https://precice.org/tooling-micro-manager-overview.html).
 - Added new [flow around controlled moving cylinder](https://precice.org/tutorials-flow-around-controlled-moving-cylinder.html) tutorial, using the new [FMI runner](https://precice.org/tooling-fmi-runner.html) [#474](https://github.com/precice/tutorials/pull/474).
 - Added new two-phase FSI tutorial [breaking dam with flexible pillar 2D](https://precice.org/tutorials-breaking-dam-2d.html) with OpenFOAM (interFoam) and CalculiX [#279](https://github.com/precice/tutorials/pull/279).
 - Added new flow coupling tutorials [#326](https://github.com/precice/tutorials/pull/326):
