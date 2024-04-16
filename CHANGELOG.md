@@ -48,19 +48,30 @@ Developer-facing changes:
 
 ### Changed
 
+General updates:
+
 - Updated all example codes and configuration files to preCICE v3 (see the [porting guide](https://precice.org/couple-your-code-porting-v2-3.html)). preCICE v2 is not supported anymore. This has happened in various pull requests.
-- Updated the suggested OpenFOAM version in the [Quickstart](https://precice.org/quickstart.html) to OpenFOAM v2312.
 - Updated the SU2 configuration in the [perpendicular flap](https://precice.org/tutorials-perpendicular-flap.html) tutorial, for the updated SU2 adapter [da7a149](https://github.com/precice/tutorials/commit/da7a1494f5c36b4ef509daf2a43bfee42fb32d9d).
+- Updated the suggested OpenFOAM version in the [Quickstart](https://precice.org/quickstart.html) to OpenFOAM v2312.
 - Updated the documentation images for several tutorials, including [perpendicular flap](https://precice.org/tutorials-perpendicular-flap.html) ([#507](https://github.com/precice/tutorials/pull/507), now including reference watchpoint files), [heat exchanger: simplified](https://precice.org/tutorials-heat-exchanger-simplified.html) ([#327](https://github.com/precice/tutorials/pull/327) and [#513](https://github.com/precice/tutorials/pull/513)), [elastic tube 3d](https://precice.org/tutorials-elastic-tube-3d.html) ([#509](https://github.com/precice/tutorials/pull/509)), [multiple perpendicular flaps](https://precice.org/tutorials-multiple-perpendicular-flaps.html) ([#511](https://github.com/precice/tutorials/pull/511)), and more.
+
+Restructured:
+
 - Modified the following cases to fit the directory structure defined in the now extended [contributing guidelines](https://precice.org/community-contribute-to-precice.html#contributing-tutorials) ([#461](https://github.com/precice/tutorials/issues/461)):
   - [Oscillator](https://precice.org/tutorials-oscillator.html)
   - [Partitioned heat conduction](https://precice.org/tutorials-partitioned-heat-conduction.html)
   - [Partitioned heat condiction: Complex](https://precice.org/tutorials-partitioned-heat-conduction-complex.html)
   - [Partitioned heat condiction: Direct mesh access](https://precice.org/tutorials-partitioned-heat-conduction-direct.html)
   - [Volume-coupled diffusion](https://precice.org/tutorials-volume-coupled-diffusion.html)
-- Modified the [partitioned pipe](https://precice.org/tutorials-partitioned-pipe.html) tutorial:
-  - Modified the OpenFOAM cases to use the new custom boundary conditions [#326](https://github.com/precice/tutorials/pull/326).
-  - Removed the unused `PressureGradient` and `VelocityGradient` coupling data [#384](https://github.com/precice/tutorials/pull/384).
+
+Dependency and workflow updates:
+
+- Modified the [Turek-Hron FSI3](https://precice.org/tutorials-turek-hron-fsi3.html) and the [partitioned heat conduction](https://precice.org/tutorials-partitioned-heat-conduction.html) OpenFOAM cases to compute the parabolic inlet profiles using a coded boundary condition, dropping the dependency on groovyBC / swak4Foam [#428](https://github.com/precice/tutorials/pull/428) (added via [a688fa](https://github.com/precice/tutorials/commit/a688fa7db044efbb72ddab7dc0bece522a5ff1e5)).
+- Modified the run scripts so that Nutils is now installed automatically in a virtual environment in all related tutorials [#439](https://github.com/precice/tutorials/pull/439). Similarly for DUNE-FEM [#470](https://github.com/precice/tutorials/pull/470).
+- Modified the run scripts so that C++ solvers in the elastic-tube-1d tutorial are now built automatically [#330](https://github.com/precice/tutorials/pull/330).
+
+Improvements and bug fixes:
+
 - Modified all [partitioned heat conduction](https://precice.org/tutorials-partitioned-heat-conduction.html) tutorials (including the basic, complex, and direct mesh access variants):
   - Modified the configuration file to use the waveform iteration (time interpolation) feature [#281](https://github.com/precice/tutorials/pull/281).
   - Modified the preCICE configuration to use a (simpler) nearest-neighbor mapping [#382](https://github.com/precice/tutorials/pull/382).
@@ -68,13 +79,13 @@ Developer-facing changes:
   - Modified the FEniCS solvers to apply boundary conditions at the right time [#383](https://github.com/precice/tutorials/pull/383).
   - Modified the FEniCS solver of the basic case to use higher-order implicit Runge-Kutta methods [#415](https://github.com/precice/tutorials/pull/415).
   - Modified the OpenFOAM solver to output error estimations [#449](https://github.com/precice/tutorials/pull/449).
+- Modified the [partitioned pipe](https://precice.org/tutorials-partitioned-pipe.html) tutorial:
+  - Modified the OpenFOAM cases to use the new custom boundary conditions [#326](https://github.com/precice/tutorials/pull/326).
+  - Removed the unused `PressureGradient` and `VelocityGradient` coupling data [#384](https://github.com/precice/tutorials/pull/384).
 - Modified the [oscillator](https://precice.org/tutorials-oscillator.html) tutorial to use higher-order time stepping schemes.
 - Modified the configuration of the [flow over a heated plate: two meshes](https://precice.org/tutorials-flow-over-heated-plate-two-meshes.html) tutorial:
   - The CalculiX domain now has the same thickness as the OpenFOAM domain [#487](https://github.com/precice/tutorials/pull/487).
   - Removed an unused mesh [#390](https://github.com/precice/tutorials/pull/390).
-- Modified the [Turek-Hron FSI3](https://precice.org/tutorials-turek-hron-fsi3.html) and the [partitioned heat conduction](https://precice.org/tutorials-partitioned-heat-conduction.html) OpenFOAM cases to compute the parabolic inlet profiles using a coded boundary condition, dropping the dependency on groovyBC / swak4Foam [#428](https://github.com/precice/tutorials/pull/428) (added via [a688fa](https://github.com/precice/tutorials/commit/a688fa7db044efbb72ddab7dc0bece522a5ff1e5)).
-- Modified the run scripts so that Nutils is now installed automatically in a virtual environment in all related tutorials [#439](https://github.com/precice/tutorials/pull/439). Similarly for DUNE-FEM [#470](https://github.com/precice/tutorials/pull/470).
-- Modified the run scripts so that C++ solvers in the elastic-tube-1d tutorial are now built automatically [#330](https://github.com/precice/tutorials/pull/330).
 
 ## [v202211.0] 2022-11-21
 
