@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added new multi-scale tutorial [Two-scale heat conduction](https://precice.org/tutorials-two-scale-heat-conduction.html) with Nutils [#343](https://github.com/precice/tutorials/pull/343) and DuMuX [#376](https://github.com/precice/tutorials/pull/376).
 - Added new [Flow around controlled moving cylinder](https://precice.org/tutorials-flow-around-controlled-moving-cylinder.html) tutorial [#474](https://github.com/precice/tutorials/pull/474).
 - Added FMU participant options for the [Oscillator](https://precice.org/tutorials-oscillator.html) tutorial [#466](https://github.com/precice/tutorials/pull/466).
-- Added an overlapping Schwartz variants for the [Oscillator](https://precice.org/tutorials-oscillator-overlap.html) [#391](https://github.com/precice/tutorials/pull/391) and for the [Partitioned heat conduction](https://precice.org/tutorials-partitioned-heat-conduction-overlap.html) tutorials.
+- Added overlapping Schwartz variants for the [Oscillator](https://precice.org/tutorials-oscillator-overlap.html) [#391](https://github.com/precice/tutorials/pull/391) and for the [Partitioned heat conduction](https://precice.org/tutorials-partitioned-heat-conduction-overlap.html) tutorials.
 - Added new flow coupling tutorials [#326](https://github.com/precice/tutorials/pull/326):
   - [Partitioned flow over a backwards-facing step](https://precice.org/tutorials-partitioned-backwards-facing-step.html)
   - [Partitioned flow over a heated plate](https://precice.org/tutorials-flow-over-heated-plate-partitioned-flow.html)
