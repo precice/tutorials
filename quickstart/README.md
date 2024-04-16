@@ -70,7 +70,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     cd tutorials/quickstart
     ```
 
-If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](https://precice.org/installation-vm.html).
+If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](https://precice.org/installation-vm.html). If you are looking for previous versions, check out the [preCICE Distribution](https://precice.org/installation-distribution.html).
 
 ## Case setup
 
