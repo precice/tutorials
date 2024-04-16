@@ -38,7 +38,7 @@ General and documentation-related changes:
 - Added automatic logging in the run scripts [#479](https://github.com/precice/tutorials/pull/479).
 - Added a `.gitignore` and extended the clean-up scripts [#477](https://github.com/precice/tutorials/pull/477).
 - Added visualizations of the preCICE configuration file in every tutorial [#514](https://github.com/precice/tutorials/pull/514).
-- Added a list of exact Debian package links in the [quickstart](https://precice.org/quickstart.html) tutorial, to reduce cases of users installing the wrong package for their system.
+- Added a list of exact Debian package links in the [quickstart](https://precice.org/quickstart.html) tutorial, to reduce cases of users installing the wrong package for their system. Now referring users to releases instead of the master branches of the Git repositories.
 
 Developer-facing changes:
 
