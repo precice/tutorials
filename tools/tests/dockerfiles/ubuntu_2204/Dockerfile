@@ -126,3 +126,31 @@ RUN git clone https://github.com/precice/calculix-adapter.git && \
     git checkout ${CALULIX_ADAPTER_REF} &&\
     make CXX_VERSION=${CALULIX_VERSION} ADDITIONAL_FFLAGS="-fallow-argument-mismatch" -j $(nproc) && \
     ln -s /home/precice/calculix-adapter/bin/ccx_preCICE /home/precice/.local/bin/ccx_preCICE
+
+FROM python_bindings as su2_adapter
+COPY --from=precice /home/precice/.local /home/precice/.local
+USER root
+RUN apt-get -qq update && \
+    apt-get -qq install swig
+ARG SU2_VERSION
+USER precice
+
+# Download and build SU2 (We could also use pre-built binaries from the SU2 releases)
+WORKDIR /home/precice
+RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
+    tar xvzf v${SU2_VERSION}.tar.gz && \
+    rm -fv v${SU2_VERSION}.tar.gz
+RUN pip3 install --user mpi4py
+ARG SU2_ADAPTER_REF
+WORKDIR /home/precice
+ENV SU2_RUN="/home/precice/SU2_RUN" 
+ENV SU2_HOME="/home/precice/SU2-${SU2_VERSION}"
+ENV PATH="/home/precice/su2-adapter/run:$SU2_RUN:$PATH"
+ENV PYTHONPATH="$SU2_RUN:$PYTHONPATH"
+RUN git clone https://github.com/precice/su2-adapter.git && \
+    cd su2-adapter &&\
+    git checkout ${SU2_ADAPTER_REF} &&\
+    ./su2AdapterInstall
+RUN cd "${SU2_HOME}" &&\
+    ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN &&\
+    ./ninja -C build install
