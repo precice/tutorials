@@ -7,7 +7,7 @@
 export MATLABPATH="$BINDINGS"
 
 # Run MATLAB code without GUI
-LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 matlab -nodisplay -nosplash -nodesktop -r "Solver_Coil;exit;"
+LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 matlab -nodisplay -nosplash -nodesktop -r "coil;exit;"
 
 stty echo
 

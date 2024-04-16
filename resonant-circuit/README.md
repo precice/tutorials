@@ -37,13 +37,13 @@ After adding the MATLAB bindings to the MATLAB path (in both instances), run the
 In the first MATLAB instance one can run the solver for the current:
 
 ```MATLAB
-Solver_Coil
+coil
 ```
 
 And in the second MATLAB instance the solver for the voltage:
 
 ```MATLAB
-Solver_Capacitor
+capacitor
 ```
 
 The preCICE configuration file is available as `precice-config.xml`, and it is called directly in the solvers.
