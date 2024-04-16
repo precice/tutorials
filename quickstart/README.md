@@ -62,7 +62,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
      cd ..
     ```
 
-5. Get the tutorials and navigate to the quickstart:
+5. Get the quickstart tutorial case:
 
     ```bash
     wget https://github.com/precice/tutorials/releases/tag/v202404.0
