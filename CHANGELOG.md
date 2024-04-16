@@ -20,12 +20,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added new volume coupling cases/tutorials with OpenFOAM:
   - Added an OpenFOAM case in the [channel transport](https://precice.org/tutorials-channel-transport.html) tutorial [#315](https://github.com/precice/tutorials/pull/315).
   - Added a new tutorial [volume-coupled flow](https://precice.org/tutorials-volume-coupled-flow.html) [#350](https://github.com/precice/tutorials/pull/350).
-- Added new solver options in the [perpendicular flap](https://precice.org/tutorials-perpendicular-flap.html) tutorial:
-  - `solid-nutils` [#433](https://github.com/precice/tutorials/pull/433)
-  - `fluid-fake` [#472](https://github.com/precice/tutorials/pull/472), only meant for debugging of solid participants
 - Added overlapping Schwartz (Dirichlet-Dirichlet coupling) variants for the [oscillator](https://precice.org/tutorials-oscillator-overlap.html) [#391](https://github.com/precice/tutorials/pull/391) and for the [partitioned heat conduction](https://precice.org/tutorials-partitioned-heat-conduction-overlap.html) tutorials.
 - Added FMU participant options for the [oscillator](https://precice.org/tutorials-oscillator.html) tutorial [#466](https://github.com/precice/tutorials/pull/466).
 - Added an SU2 case in the [flow over a heated plate](https://precice.org/tutorials-flow-over-heated-plate.html) tutorial [da7a149](https://github.com/precice/tutorials/commit/da7a1494f5c36b4ef509daf2a43bfee42fb32d9d).
+- Added new solver options in the [perpendicular flap](https://precice.org/tutorials-perpendicular-flap.html) tutorial:
+  - `solid-nutils` [#433](https://github.com/precice/tutorials/pull/433)
+  - `fluid-fake` [#472](https://github.com/precice/tutorials/pull/472), only meant for debugging of solid participants
 - Added a Rust-based solver in the [elastic tube 1D](https://precice.org/tutorials-elastic-tube-1d.html) tutorial [#435](https://github.com/precice/tutorials/pull/435).
 - Added automatic logging in the run scripts [#479](https://github.com/precice/tutorials/pull/479).
 - Added on-demand system regression tests (multiple pull requests, starting from [#347](https://github.com/precice/tutorials/pull/347)).
