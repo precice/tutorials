@@ -52,7 +52,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     sudo apt install build-essential pkg-config cmake git
     ```
 
-4. Download and install the [OpenFOAM-preCICE adapter](https://precice.org/adapter-openfoam-get.html) from the [latest release](https://github.com/precice/openfoam-adapter/releases/latest), unpack it, and build the adapter:
+4. Download and install the [OpenFOAM-preCICE adapter](https://precice.org/adapter-openfoam-get.html):
 
     ```bash
      wget https://github.com/precice/openfoam-adapter/archive/refs/tags/v1.3.0.tar.gz
@@ -62,7 +62,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
      cd ..
     ```
 
-5. Get the [latest release of the tutorials](https://github.com/precice/tutorials/releases/latest), or get the latest `master` branch of the repository and navigate to the quickstart tutorial:
+5. Get the tutorials and navigate to the quickstart:
 
     ```bash
     wget https://github.com/precice/tutorials/releases/tag/v202404.0
@@ -70,7 +70,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     cd tutorials/quickstart
     ```
 
-If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](https://precice.org/installation-vm.html). If you are looking for previous versions or face compatibility issues, check out the [preCICE Distribution](https://precice.org/installation-distribution.html).
+If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](https://precice.org/installation-vm.html).
 
 ## Case setup
 
