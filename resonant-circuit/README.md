@@ -13,11 +13,11 @@ The purpose of this tutorial is to illustrate the usage of preCICE to couple MAT
 
 The circuit is described by the following system of ODEs:
 
-V(t) = L dI/dt
+$U(t) = L \frac{\text{d}I}{\text{d}t}$
 
-I(t) = -C dV/dt
+$I(t) = -C \frac{\text{d}U}{\text{d}t}$
 
-where I is the current and V the voltage of the cirucit.
+where $I$ is the current and $U$ the voltage of the cirucit.
 
 Each of these equations is going to be solved by a different MATLAB solver. Note that as only one scalar is solved per equation, this is a 0+1 dimensional problem.
 
