@@ -22,7 +22,7 @@ New tutorials:
 - Added new volume coupling cases/tutorials with OpenFOAM:
   - Added an OpenFOAM case in the [channel transport](https://precice.org/tutorials-channel-transport.html) tutorial [#315](https://github.com/precice/tutorials/pull/315).
   - Added a new tutorial [volume-coupled flow](https://precice.org/tutorials-volume-coupled-flow.html) [#350](https://github.com/precice/tutorials/pull/350).
-- Added overlapping Schwartz (Dirichlet-Dirichlet coupling) variants for the [oscillator](https://precice.org/tutorials-oscillator-overlap.html) [#391](https://github.com/precice/tutorials/pull/391) and for the [partitioned heat conduction](https://precice.org/tutorials-partitioned-heat-conduction-overlap.html) tutorials.
+- Added overlapping Schwarz (Dirichlet-Dirichlet coupling) variants for the [oscillator](https://precice.org/tutorials-oscillator-overlap.html) [#391](https://github.com/precice/tutorials/pull/391) and for the [partitioned heat conduction](https://precice.org/tutorials-partitioned-heat-conduction-overlap.html) tutorials.
 
 New solver options in existing tutorials:
 
