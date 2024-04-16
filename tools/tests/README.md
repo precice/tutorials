@@ -21,7 +21,7 @@ Workflow for the preCICE v3 release testing:
 3. Trigger the GitHub Actions Workflow. Until we merge the workflow to develop, this can only happen via the [GitHub CLI](https://cli.github.com/):
 
     ```bash
-    gh workflow run run_testsuite_manual.yml -f suites=release_test -f build_args="PRECICE_REF:150d4ee,OPENFOAM_ADAPTER_REF:a0e5263,PYTHON_BINDINGS_REF:49c2af0,FENICS_ADAPTER_REF:6f99859,TUTORIALS_REF:a1d46c4" --ref=develop
+    gh workflow run run_testsuite_manual.yml -f suites=release_test -f build_args="PRECICE_REF:v3.1.1,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,TUTORIALS_REF:340b447" --ref=develop
     ```
 
 4. Go to the tutorials [Actions](https://github.com/precice/tutorials/actions) page and find the running workflow
@@ -61,7 +61,7 @@ gh workflow run run_testsuite_manual.yml -f suites=fenics_test --ref=develop
 Another example, to use the latest releases and enable debug information of the tests:
 
 ```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v3.1.1,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0" -f loglevel=DEBUG --ref=develop
+gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v3.1.1,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,TUTORIALS_REF:340b447" -f loglevel=DEBUG --ref=develop
 ```
 
 where the `*_REF` should be a specific [commit-ish](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefcommit-ishacommit-ishalsocommittish).
@@ -286,7 +286,7 @@ volumes:
 command: >
   /bin/bash -c "id && 
   cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&
-  {{ run }} | tee {{ case_folder }}.log 2>&1"
+  {{ run }} | tee system-tests_{{ case_folder }}.log 2>&1"
 ```
 
 This template defines:
