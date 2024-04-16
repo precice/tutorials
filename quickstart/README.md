@@ -65,9 +65,9 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 5. Get the quickstart tutorial case:
 
     ```bash
-    wget https://github.com/precice/tutorials/releases/tag/v202404.0
+    wget https://github.com/precice/tutorials/archive/refs/tags/v202404.0.tar.gz
     tar -xzf v202404.0.tar.gz
-    cd tutorials/quickstart
+    cd tutorials-202404.0/quickstart
     ```
 
 If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](https://precice.org/installation-vm.html).
