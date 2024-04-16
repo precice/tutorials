@@ -12,8 +12,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Added new multi-scale tutorial [two-scale heat conduction](https://precice.org/tutorials-two-scale-heat-conduction.html) with Nutils [#343](https://github.com/precice/tutorials/pull/343) and DuMuX [#376](https://github.com/precice/tutorials/pull/376), using the new [micro manager](https://precice.org/tooling-micro-manager-overview.html).
 - Added new [flow around controlled moving cylinder](https://precice.org/tutorials-flow-around-controlled-moving-cylinder.html) tutorial, using the new [FMI runner](https://precice.org/tooling-fmi-runner.html) [#474](https://github.com/precice/tutorials/pull/474).
-- Added FMU participant options for the [oscillator](https://precice.org/tutorials-oscillator.html) tutorial [#466](https://github.com/precice/tutorials/pull/466).
-- Added overlapping Schwartz (Dirichlet-Dirichlet coupling) variants for the [oscillator](https://precice.org/tutorials-oscillator-overlap.html) [#391](https://github.com/precice/tutorials/pull/391) and for the [partitioned heat conduction](https://precice.org/tutorials-partitioned-heat-conduction-overlap.html) tutorials.
 - Added new two-phase FSI tutorial [breaking dam with flexible pillar 2D](https://precice.org/tutorials-breaking-dam-2d.html) with OpenFOAM (interFoam) and CalculiX [#279](https://github.com/precice/tutorials/pull/279).
 - Added new flow coupling tutorials [#326](https://github.com/precice/tutorials/pull/326):
   - [Partitioned flow over a backwards-facing step](https://precice.org/tutorials-partitioned-backwards-facing-step.html)
@@ -25,6 +23,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added new solver options in the [perpendicular flap](https://precice.org/tutorials-perpendicular-flap.html) tutorial:
   - `solid-nutils` [#433](https://github.com/precice/tutorials/pull/433)
   - `fluid-fake` [#472](https://github.com/precice/tutorials/pull/472), only meant for debugging of solid participants
+- Added overlapping Schwartz (Dirichlet-Dirichlet coupling) variants for the [oscillator](https://precice.org/tutorials-oscillator-overlap.html) [#391](https://github.com/precice/tutorials/pull/391) and for the [partitioned heat conduction](https://precice.org/tutorials-partitioned-heat-conduction-overlap.html) tutorials.
+- Added FMU participant options for the [oscillator](https://precice.org/tutorials-oscillator.html) tutorial [#466](https://github.com/precice/tutorials/pull/466).
 - Added an SU2 case in the [flow over a heated plate](https://precice.org/tutorials-flow-over-heated-plate.html) tutorial [da7a149](https://github.com/precice/tutorials/commit/da7a1494f5c36b4ef509daf2a43bfee42fb32d9d).
 - Added a Rust-based solver in the [elastic tube 1D](https://precice.org/tutorials-elastic-tube-1d.html) tutorial [#435](https://github.com/precice/tutorials/pull/435).
 - Added automatic logging in the run scripts [#479](https://github.com/precice/tutorials/pull/479).
