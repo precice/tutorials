@@ -1,0 +1,58 @@
+repos:
+# Official repo for default hooks
+- repo: https://github.com/precice/precice-pre-commit-hooks
+  rev: 'v3.3'
+  hooks:
+  - id: format-precice-config
+- repo: https://github.com/igorshubovych/markdownlint-cli
+  rev: v0.30.0
+  hooks:
+    - id: markdownlint
+      exclude:  |
+            (?x)^(
+                changelog-entries|
+                .github/pull_request_template.md
+            )$
+    - id: markdownlint-fix
+      exclude:  |
+            (?x)^(
+                changelog-entries|
+                .github/pull_request_template.md
+            )$
+- repo: https://github.com/hhatto/autopep8
+  rev: v2.0.4
+  hooks:
+    - id: autopep8
+      args: [ --in-place, --exit-code, --aggressive, --ignore=E402, --max-line-length=120 ]
+- repo: https://github.com/pre-commit/mirrors-clang-format
+  rev: 'v14.0.6'
+  hooks:
+  - id: clang-format
+    exclude: '\.json$'
+- repo: https://github.com/koalaman/shellcheck-precommit
+  rev: v0.10.0
+  hooks:
+    - id: shellcheck
+      args: [ --external-sources, --exclude=SC1091 ]
+- repo: local
+  hooks:
+    - id: check-image-naming
+      name: check image names
+      language: python
+      entry: tools/check-image-names.py
+      files: ".*/images/.*"
+    - id: check-size
+      name: check sizes
+      language: script
+      entry: tools/check-size.sh
+      pass_filenames: false
+    - id: check-names
+      name: check file names
+      language: script
+      entry: tools/check.sh
+      pass_filenames: false
+    - id: check-links-to-precice
+      name: check links to precice.org
+      language: script
+      entry: tools/check-links-to-precice.sh
+      types_or: ["markdown", "html"]

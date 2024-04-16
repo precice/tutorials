@@ -14,8 +14,10 @@ boundaryField
 {
     inlet
     {
-        type            fixedGradient;
-        gradient        uniform 0;
+        // Pressure Gradient is calculated by OpenFOAM to match inlet flux
+        type            fixedFluxExtrapolatedPressure; 
+        // type            fixedGradient;
+        // gradient        uniform 0;
     }
 
     outlet

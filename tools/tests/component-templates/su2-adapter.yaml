@@ -1,0 +1,16 @@
+build: 
+  context: {{ dockerfile_context }}
+  args:
+    {% for key, value in build_arguments.items() %}
+      - {{key}}={{value}}
+    {% endfor %}
+  target: su2_adapter
+depends_on:    
+  prepare:
+    condition: service_completed_successfully
+volumes:
+  - {{ run_directory }}:/runs
+command: >
+  /bin/bash -c "id && 
+  cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&
+  SU2_RUN="/home/precice/SU2_RUN/bin" PYTHONPATH="/home/precice/SU2_RUN/bin:$PYTHONPATH" {{ run }} | tee system-tests_{{ case_folder }}.log 2>&1"

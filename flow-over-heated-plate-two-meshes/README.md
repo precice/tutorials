@@ -12,7 +12,13 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-The scenario is exactly the same as the one described in the [flow over heated plate tutorial](http://precice.org/tutorials-flow-over-heated-plate.html). However, this tutorial is specialized for the case when heat fluxes and temperatures live on different meshes. This is the case with CalculiX: heat fluxes are written on face centers, while temperatures are read on nodes. This requires updating the `precice-config.xml` file to take this into account. On the fluid side, a single mesh can still be used.
+The scenario is exactly the same as the one described in the [flow over heated plate tutorial](https://precice.org/tutorials-flow-over-heated-plate.html). However, this tutorial is specialized for the case when heat fluxes and temperatures live on different meshes. This is the case with CalculiX: heat fluxes are written on face centers, while temperatures are read on nodes. This requires updating the `precice-config.xml` file to take this into account. On the fluid side, a single mesh can still be used.
+
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-two-meshes-precice-config.png)
 
 ## Available solvers
 
@@ -21,10 +27,11 @@ By default, the fluid participant reads heat-flux values and the solid participa
 Fluid participant:
 
 * OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* SU2 (copy the `fluid-su2` directory from the `flow-over-heated-plate` tutorial as-is). For more information, have a look at the [SU2 adapter docmentation](https://www.precice.org/adapter-su2.html).
 
 Solid participant:
 
-* CalculiX. For more information, have a look at the [CalculiX adapter documentation](http://precice.org/adapter-calculix-overview.html). Be sure to use at least version 2.19.1 of the adapter.
+* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html). Be sure to use at least version 2.19.1 of the adapter.
 
 ## Running the Simulation
 

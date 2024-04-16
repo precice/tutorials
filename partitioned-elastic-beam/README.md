@@ -15,6 +15,12 @@ We have a rectangular linear elastic beam of dimensions 1 x 1 x 8 m, divided in 
 
 ![beam setup](images/tutorials-partitioned-elastic-beam-setup.png)
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-partitioned-elastic-beam-precice-config.png)
+
 ## Available solvers
 
 * CalculiX. CalculiX is used for both structural parts. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html) for more.

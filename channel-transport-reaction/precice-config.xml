@@ -7,42 +7,38 @@
       enabled="true" />
   </log>
 
-  <solver-interface dimensions="2">
-    <data:vector name="Velocity" />
+  <data:vector name="Velocity" />
 
-    <mesh name="Flow-Mesh">
-      <use-data name="Velocity" />
-    </mesh>
+  <mesh name="Flow-Mesh" dimensions="2">
+    <use-data name="Velocity" />
+  </mesh>
 
-    <mesh name="Chemical-Mesh">
-      <use-data name="Velocity" />
-    </mesh>
+  <mesh name="Chemical-Mesh" dimensions="2">
+    <use-data name="Velocity" />
+  </mesh>
 
-    <participant name="Flow">
-      <use-mesh name="Flow-Mesh" provide="yes" />
-      <use-mesh name="Chemical-Mesh" from="Chemical" />
-      <write-data name="Velocity" mesh="Flow-Mesh" />
-    </participant>
+  <participant name="Flow">
+    <provide-mesh name="Flow-Mesh" />
+    <write-data name="Velocity" mesh="Flow-Mesh" />
+  </participant>
 
-    <participant name="Chemical">
-      <use-mesh name="Chemical-Mesh" provide="yes" />
-      <use-mesh name="Flow-Mesh" from="Flow" />
-      <read-data name="Velocity" mesh="Chemical-Mesh" />
-      <mapping:linear-cell-interpolation
-        direction="read"
-        from="Flow-Mesh"
-        to="Chemical-Mesh"
-        constraint="consistent" />
-    </participant>
+  <participant name="Chemical">
+    <provide-mesh name="Chemical-Mesh" />
+    <receive-mesh name="Flow-Mesh" from="Flow" />
+    <read-data name="Velocity" mesh="Chemical-Mesh" />
+    <mapping:linear-cell-interpolation
+      direction="read"
+      from="Flow-Mesh"
+      to="Chemical-Mesh"
+      constraint="consistent" />
+  </participant>
 
-    <m2n:sockets from="Flow" to="Chemical" exchange-directory=".." />
+  <m2n:sockets acceptor="Flow" connector="Chemical" exchange-directory=".." />
 
-    <coupling-scheme:serial-explicit>
-      <participants first="Flow" second="Chemical" />
-      <max-time value="5.0" />
-      <time-window-size value="0.05" />
-      <exchange data="Velocity" mesh="Flow-Mesh" from="Flow" to="Chemical" />
-
-    </coupling-scheme:serial-explicit>
-  </solver-interface>
+  <coupling-scheme:serial-explicit>
+    <participants first="Flow" second="Chemical" />
+    <max-time value="5.0" />
+    <time-window-size value="0.05" />
+    <exchange data="Velocity" mesh="Flow-Mesh" from="Flow" to="Chemical" />
+  </coupling-scheme:serial-explicit>
 </precice-configuration>

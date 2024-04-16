@@ -17,7 +17,13 @@ This scenario consists of one fluid and one solid participant and it is inspired
 
 The test case is two-dimensional and a serial-implicit coupling with Aitken underrelaxation is used for the coupling.
 
-The inlet velocity is $$ u_{\infty} = 0.1 m/s $$, the inlet temperature is $$ T_{\infty} = 300K $$. The fluid and solid have the same thermal conductivities $$ k_S = k_F = 100 W/m/K $$. Further material properties of the fluid are its viscosity $$ mu = 0.0002 kg/m/s $$ and specific heat capacity $$ c_p = 5000 J/kg/K $$. The Prandtl number $$ Pr = 0.01 $$ follows from thermal conductivity, viscosity and specific heat capacity. The solid has the thermal diffusivity $$ \alpha = 1 m^2/s $$. The gravitational acceleration is $$ g = 9.81 m/s^2 $$.
+The inlet velocity is $$ u_{\infty} = 0.1 m/s $$, the inlet temperature is $$ T_{\infty} = 300K $$. The fluid and solid have the same thermal conductivities $$ k_S = k_F = 100 W/m/K $$. Further material properties of the fluid are its viscosity $$ \mu = 0.0002 kg/m/s $$ and specific heat capacity $$ c_p = 5000 J/kg/K $$. The Prandtl number $$ Pr = 0.01 $$ follows from thermal conductivity, viscosity and specific heat capacity. The solid has the thermal diffusivity $$ \alpha = 1 m^2/s $$. The gravitational acceleration is $$ g = 9.81 m/s^2 $$.
+
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-precice-config.png)
 
 ## Available solvers
 
@@ -27,6 +33,8 @@ Fluid participant:
 
 * OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
 
+* SU2. For more information, have a look at the [SU2 adapter docmentation](https://www.precice.org/adapter-su2.html).
+
 Solid participant:
 
 * OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
@@ -35,7 +43,7 @@ Solid participant:
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
-* Dune-Fem. For more information, have a look at the [official documentation of Dune-Fem](https://www.dune-project.org/sphinx/dune-fem/). The solver can be installed through [PyPI](https://pypi.org/project/dune-fem/). Make sure that you are in a Python virtual environment first, which you can create inside the `solid-dune` directory and load again before running (you may need to install some tools again in this environment). Please note that Dune-Fem uses just-in-time compilation: The first time you run the solver script, it will take some time.
+* Dune-Fem. For more information, have a look at the [official documentation of Dune-Fem](https://www.dune-project.org/sphinx/dune-fem/). The `run.sh` script installs the solver from [PyPI](https://pypi.org/project/dune-fem/) into a Python virtual environment. Please note that Dune-Fem uses just-in-time compilation: The first time you run the solver script, it will take some time.
 
 It is also possible to use CalculiX as solid solver. In that case, two coupling meshes are needed: CalculiX read/writes temperatures on nodes, but read/writes heat-fluxes on face centers. This requires some adaptation of the `precice-config.xml` file, and [a separate tutorial](tutorials-flow-over-heated-plate-two-meshes.html) has been designed for it.
 
@@ -78,14 +86,14 @@ First generate the output for each run by adding export to the participant `Soli
 
 ```xml
 <participant name="Solid">
-  <export:vtk directory="preCICE-output" />
-  <use-mesh name="Fluid-Mesh" from="Fluid" />
-  <use-mesh name="Solid-Mesh" provide="yes" />
+  <export:vtk directory="precice-exports" />
+  <receive-mesh name="Fluid-Mesh" from="Fluid" />
+  <provide-mesh name="Solid-Mesh" />
   ...
 </participant>
 ```
 
-After that running a case from this tutorial will export data into `solid-*/preCICE-output`. To visualize and compare these results run `python3 plot-final-interface-temperature.py` (You can install the required python packages by running `pip3 install -r plot-final-interface-temperature-requirements.txt`). This will plot the dimensionless temperature `theta = (T-300)/(310-300)` (with `T` being the temperature) across the coupling interface, i.e. where the solid and the fluid meet and exchange heat. The x-axis shows the x coordinate and the y-axis the dimensionless temperature `theta` at the interface. If you want to exclude certain cases, simply comment out the corresponding lines in the script. For reference see below:
+After that running a case from this tutorial will export data into `solid-*/precice-exports`. To visualize and compare these results run `python3 plot-final-interface-temperature.py` (You can install the required python packages by running `pip3 install -r plot-final-interface-temperature-requirements.txt`). This will plot the dimensionless temperature `theta = (T-300)/(310-300)` (with `T` being the temperature) across the coupling interface, i.e. where the solid and the fluid meet and exchange heat. The x-axis shows the x coordinate and the y-axis the dimensionless temperature `theta` at the interface. If you want to exclude certain cases, simply comment out the corresponding lines in the script. For reference see below:
 
 ![Comparison of the results with different solvers](images/tutorials-flow-over-heated-plate-results-comparison.png)
 

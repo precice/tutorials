@@ -16,7 +16,7 @@ boundaryField
     cylinder
     {
         type            noSlip;
-    }    
+    }
 
     flap
     {
@@ -36,11 +36,39 @@ boundaryField
 
     inlet
     {
-     // Time-varying parabolic inlet profile
-     type            groovyBC;
-     variables "yp=pts().y;minY=min(yp);maxY=max(yp);para=-1.5*(maxY-pos().y)*(pos().y-minY)/(0.25*pow(maxY-minY,2))*normal();";
-     valueExpression "time()<2 ? 0.5*(1-cos(0.5*pi*time()))*2*para : 2*para";
-     value           uniform (2 0 0);
+        // Time-varying parabolic inlet profile
+        type            codedFixedValue;
+        value           uniform (1 0 0);
+        name            parabolicVelocity;
+
+        code
+        #{
+            const vectorField& Cf = patch().Cf();
+            vectorField& field = *this;
+
+            const scalar pi = constant::mathematical::pi;
+            const scalar Umean = 2.0;
+            const scalar H = 0.41;    // channel height
+            const scalar H_2 = H * H; // equals 0.1681
+            const scalar t = this->db().time().value();
+            // ramp up below 2 seconds
+            if (t < 2)
+            {
+                forAll(Cf, faceI)
+                {
+                    const scalar y = Cf[faceI].y();
+                    field[faceI] = vector((1.5 * Umean * 4.0 / H_2) * y * (H - y) * ((1 - cos((pi / 2) * t)) / 2), 0, 0);
+                }
+            }
+            else
+            {
+                forAll(Cf, faceI)
+                {
+                    const scalar y = Cf[faceI].y();
+                    field[faceI] = vector((1.5 * Umean * 4.0 / H_2) * y * (H - y), 0, 0);
+                }
+            }
+        #};
     }
 
     outlet

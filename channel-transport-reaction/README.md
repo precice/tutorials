@@ -19,6 +19,12 @@ The geometry is shown below:
 
 The simulation is split into two participants: a Fluid participant that computes the fluid flow and sends the velocity field to the Chemical participant which computes the reaction, diffusion and advection of all chemical species. The coupling is unidirectional (`serial-explicit` with only one data entity being transferred).
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-channel-transport-reaction-precice-config.png)
+
 ## Available solvers and dependencies
 
 Both participants run on FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter) to run this tutorial.

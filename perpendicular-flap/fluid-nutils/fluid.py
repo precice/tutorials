@@ -105,24 +105,22 @@ def main(inflow: 'inflow velocity' = 10,
     participantName = "Fluid"
     solverProcessIndex = 0
     solverProcessSize = 1
-    interface = precice.Interface(participantName, configFileName, solverProcessIndex, solverProcessSize)
+    participant = precice.Participant(participantName, configFileName, solverProcessIndex, solverProcessSize)
 
     # define coupling meshes
     meshName = "Fluid-Mesh"
-    meshID = interface.get_mesh_id(meshName)
 
     couplinginterface = domain.boundary['flap']
     couplingsample = couplinginterface.sample('gauss', degree=2)  # mesh located at Gauss points
-    dataIndices = interface.set_mesh_vertices(meshID, couplingsample.eval(ns.x0))
+    dataIndices = participant.set_mesh_vertices(meshName, couplingsample.eval(ns.x0))
 
     # coupling data
-    writeData = "Force"
-    readData = "Displacement"
-    writedataID = interface.get_data_id(writeData, meshID)
-    readdataID = interface.get_data_id(readData, meshID)
+    writeDataName = "Force"
+    readDataName = "Displacement"
 
     # initialize preCICE
-    precice_dt = interface.initialize()
+    participant.initialize()
+    precice_dt = participant.get_max_time_step_size()
     dt = min(precice_dt, timestepsize)
 
     # boundary conditions for fluid equations
@@ -155,25 +153,27 @@ def main(inflow: 'inflow velocity' = 10,
     meshsqr = domain.integral('d_i,x0_j d_i,x0_j d:x0' @ ns, degree=2)
 
     # better initial guess: start from Stokes solution, comment out for comparison with other solvers
-    #res_stokes = domain.integral('(ubasis_ni,j ((u_i,j + u_j,i) rho nu - p δ_ij) + pbasis_n u_k,k) d:x' @ ns, degree=4)
-    #lhs0 = solver.solve_linear('lhs', res_stokes, constrain=cons, arguments=dict(meshdofs=meshdofs, oldmeshdofs=oldmeshdofs, oldoldmeshdofs=oldoldmeshdofs, oldoldoldmeshdofs=oldoldoldmeshdofs, dt=dt))
+    # res_stokes = domain.integral('(ubasis_ni,j ((u_i,j + u_j,i) rho nu - p δ_ij) + pbasis_n u_k,k) d:x' @ ns, degree=4)
+    # lhs0 = solver.solve_linear('lhs', res_stokes, constrain=cons, arguments=dict(meshdofs=meshdofs, oldmeshdofs=oldmeshdofs, oldoldmeshdofs=oldoldmeshdofs, oldoldoldmeshdofs=oldoldoldmeshdofs, dt=dt))
     lhs00 = lhs0
 
     timestep = 0
     t = 0
 
-    while interface.is_coupling_ongoing():
+    while participant.is_coupling_ongoing():
 
-        # read displacements from interface
-        if interface.is_read_data_available():
-            readdata = interface.read_block_vector_data(readdataID, dataIndices)
-            coupledata = couplingsample.asfunction(readdata)
-            sqr = couplingsample.integral(((ns.d - coupledata)**2).sum(0))
-            meshcons = solver.optimize('meshdofs', sqr, droptol=1e-15, constrain=meshcons0)
-            meshdofs = solver.optimize('meshdofs', meshsqr, constrain=meshcons)
+        precice_dt = participant.get_max_time_step_size()
+        dt = min(precice_dt, timestepsize)
+
+        # read displacements from participant
+        readdata = participant.read_data(meshName, readDataName, dataIndices, dt)
+        coupledata = couplingsample.asfunction(readdata)
+        sqr = couplingsample.integral(((ns.d - coupledata)**2).sum(0))
+        meshcons = solver.optimize('meshdofs', sqr, droptol=1e-15, constrain=meshcons0)
+        meshdofs = solver.optimize('meshdofs', meshsqr, constrain=meshcons)
 
         # save checkpoint
-        if interface.is_action_required(precice.action_write_iteration_checkpoint()):
+        if participant.requires_writing_checkpoint():
             lhs_checkpoint = lhs0
             lhs00_checkpoint = lhs00
             t_checkpoint = t
@@ -181,7 +181,6 @@ def main(inflow: 'inflow velocity' = 10,
             oldmeshdofs_checkpoint = oldmeshdofs
             oldoldmeshdofs_checkpoint = oldoldmeshdofs
             oldoldoldmeshdofs_checkpoint = oldoldoldmeshdofs
-            interface.mark_action_fulfilled(precice.action_write_iteration_checkpoint())
 
         # solve fluid equations
         lhs1 = solver.newton('lhs', res, lhs0=lhs0, constrain=cons,
@@ -189,20 +188,18 @@ def main(inflow: 'inflow velocity' = 10,
                                             oldoldmeshdofs=oldoldmeshdofs, oldoldoldmeshdofs=oldoldoldmeshdofs)
                              ).solve(tol=1e-6)
 
-        # write forces to interface
-        if interface.is_write_data_required(dt):
-            F = solver.solve_linear('F', resF, constrain=consF,
-                                    arguments=dict(lhs00=lhs00, lhs0=lhs0, lhs=lhs1, dt=dt, meshdofs=meshdofs,
-                                                   oldmeshdofs=oldmeshdofs, oldoldmeshdofs=oldoldmeshdofs,
-                                                   oldoldoldmeshdofs=oldoldoldmeshdofs))
-            # writedata = couplingsample.eval(ns.F, F=F) # for stresses
-            writedata = couplingsample.eval('F_i d:x' @ ns, F=F, meshdofs=meshdofs) * \
-                numpy.concatenate([p.weights for p in couplingsample.points])[:, numpy.newaxis]
-            interface.write_block_vector_data(writedataID, dataIndices, writedata)
+        # write forces to participant
+        F = solver.solve_linear('F', resF, constrain=consF,
+                                arguments=dict(lhs00=lhs00, lhs0=lhs0, lhs=lhs1, dt=dt, meshdofs=meshdofs,
+                                               oldmeshdofs=oldmeshdofs, oldoldmeshdofs=oldoldmeshdofs,
+                                               oldoldoldmeshdofs=oldoldoldmeshdofs))
+        # writedata = couplingsample.eval(ns.F, F=F) # for stresses
+        writedata = couplingsample.eval('F_i d:x' @ ns, F=F, meshdofs=meshdofs) * \
+            numpy.concatenate([p.weights for p in couplingsample.points])[:, numpy.newaxis]
+        participant.write_data(meshName, writeDataName, dataIndices, writedata)
 
         # do the coupling
-        precice_dt = interface.advance(dt)
-        dt = min(precice_dt, timestepsize)
+        participant.advance(dt)
 
         # advance variables
         timestep += 1
@@ -214,7 +211,7 @@ def main(inflow: 'inflow velocity' = 10,
         oldmeshdofs = meshdofs
 
         # read checkpoint if required
-        if interface.is_action_required(precice.action_read_iteration_checkpoint()):
+        if participant.requires_reading_checkpoint():
             lhs0 = lhs_checkpoint
             lhs00 = lhs00_checkpoint
             t = t_checkpoint
@@ -222,15 +219,14 @@ def main(inflow: 'inflow velocity' = 10,
             oldmeshdofs = oldmeshdofs_checkpoint
             oldoldmeshdofs = oldoldmeshdofs_checkpoint
             oldoldoldmeshdofs = oldoldoldmeshdofs_checkpoint
-            interface.mark_action_fulfilled(precice.action_read_iteration_checkpoint())
 
-        if interface.is_time_window_complete():
+        if participant.is_time_window_complete():
             x, u, p = bezier.eval(['x_i', 'u_i', 'p'] @ ns, lhs=lhs1, meshdofs=meshdofs, oldmeshdofs=oldmeshdofs,
                                   oldoldmeshdofs=oldoldmeshdofs, oldoldoldmeshdofs=oldoldoldmeshdofs, dt=dt)
             with treelog.add(treelog.DataLog()):
                 export.vtk('Fluid_' + str(timestep), bezier.tri, x, u=u, p=p)
 
-    interface.finalize()
+    participant.finalize()
 
 
 if __name__ == '__main__':

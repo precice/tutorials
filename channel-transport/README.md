@@ -21,12 +21,21 @@ The behavior of the blob over the full 200 timesteps looks as follows:
   <source src="images/tutorials-channel-transport-animation.webm" type="video/webm">
   Animation of blob over 200 timesteps.
 </video>
-  
+
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-channel-transport-precice-config.png
+)
+
 ## Available solvers
 
 Fluid participant:
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://www.precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
+
+* OpenFOAM (pimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
 Transport participant:
 
