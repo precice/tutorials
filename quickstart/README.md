@@ -70,12 +70,6 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 
 If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](https://precice.org/installation-vm.html).
 
-{% note %}
-We are assuming here that the latest `master` branches refer to the latest releases, and that they all work together.
-This might not be the case in transition periods after a major preCICE release (e.g., v2 to v3).
-Versions that are guaranteed to work together are described in the [preCICE Distribution](https://precice.org/installation-distribution.html).
-{% endnote %}
-
 ## Case setup
 
 We will couple OpenFOAM with a C++ rigid body solver for fluid-structure interaction. The rigid body has only a single degree of freedom, namely the deflection angle of the flap in the channel. It is also fixed in the origin at (0,0) and the force exerted by the fluid on the rigid body structure causes an oscillatory rotation of the body. The simulation runs for 2.5 seconds.
