@@ -39,6 +39,13 @@ test_suites:
           - fluid-openfoam
           - solid-calculix
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz
+  su2_test:
+    tutorials:
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-su2
+          - solid-fenics
+        reference_result: ./perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz
   elastic_tube_1d_test:
     tutorials:
       - path: elastic-tube-1d
@@ -78,3 +85,13 @@ test_suites:
           - fluid-openfoam
           - solid-openfoam
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-su2
+          - solid-fenics
+        reference_result: ./perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz
