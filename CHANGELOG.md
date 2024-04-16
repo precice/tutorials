@@ -83,6 +83,7 @@ Improvements and bug fixes:
   - Modified the OpenFOAM cases to use the new custom boundary conditions [#326](https://github.com/precice/tutorials/pull/326).
   - Removed the unused `PressureGradient` and `VelocityGradient` coupling data [#384](https://github.com/precice/tutorials/pull/384).
 - Modified the [oscillator](https://precice.org/tutorials-oscillator.html) tutorial to use higher-order time stepping schemes.
+- Modified the [elastic tube 1d](https://precice.org/tutorials-elastic-tube-1d.html) tutorial to export and plot watchpoints [#438](https://github.com/precice/tutorials/pull/438).
 - Modified the configuration of the [flow over a heated plate: two meshes](https://precice.org/tutorials-flow-over-heated-plate-two-meshes.html) tutorial:
   - The CalculiX domain now has the same thickness as the OpenFOAM domain [#487](https://github.com/precice/tutorials/pull/487).
   - Removed an unused mesh [#390](https://github.com/precice/tutorials/pull/390).
