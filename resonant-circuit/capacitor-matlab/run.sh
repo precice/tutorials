@@ -1,12 +1,5 @@
 #!/bin/sh
 
-# Import MATLAB-bindings path
-. ../matlab-bindings-path.sh
-
-# Add bindings to MATLAB path
-export MATLABPATH="$BINDINGS"
-
 # Run MATLAB code without GUI
-LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 matlab -nodisplay -nosplash -nodesktop -r "capacitor;exit;"
+matlab -nodisplay -r "capacitor;exit;"
 
-stty echo
