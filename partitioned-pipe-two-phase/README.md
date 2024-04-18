@@ -33,6 +33,12 @@ FF
 This is a very basic example case demonstrating the coupling of a two-phase flow. To keep it as simple as possible, gravity is set to $0$ to avoid any kind of turbulences/vortices. Read more in the accompanying conference paper [1].
 {% endnote %}
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-partitioned-pipe-two-phase-precice-config.png)
+
 ## Available solvers
 
 Both Fluid1 and Fluid2 are simulated with OpenFOAM (interFoam). An incompressible multiphase solver for two immiscible fluids using the *Volume-of-fluid* method. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).

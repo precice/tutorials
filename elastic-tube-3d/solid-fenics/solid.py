@@ -1,9 +1,8 @@
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, VectorFunctionSpace, interpolate, \
-    TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, \
-    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, assemble_system
+    TrialFunction, TestFunction, Point, Expression, DirichletBC, \
+    Identity, inner, dx, ds, sym, grad, div, lhs, rhs, dot, File, solve, assemble_system
 from mshr import Cylinder, generate_mesh
-from ufl import nabla_div
 import numpy as np
 from fenicsprecice import Adapter
 import math
@@ -83,12 +82,12 @@ beta = Constant((gamma + 0.5) ** 2 / 4.)
 
 # Define strain
 def epsilon(u):
-    return 0.5 * (nabla_grad(u) + nabla_grad(u).T)
+    return 0.5 * (grad(u) + grad(u).T)
 
 
 # Define Stress tensor
 def sigma(u):
-    return lambda_ * nabla_div(u) * Identity(dim) + 2 * mu * epsilon(u)
+    return lambda_ * div(u) * Identity(dim) + 2 * mu * epsilon(u)
 
 
 # Define Mass form

@@ -17,6 +17,12 @@ This tutorial solves the same problem as the [oscillator tutorial](https://preci
 
 Note that this case applies an overlapping Schwarz-type coupling method and not (like most other tutorials in this repository) a Dirichlet-Neumann coupling. This results in a symmetric setup of the solvers. We will refer to the solver computing the trajectory of $m_1$ as `Mass-Left` and to the solver computing the trajectory of $m_2$ as `Mass-Right`. For more information, please refer to [1].
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-oscillator-overlap-precice-config.png)
+
 ## Available solvers
 
 This tutorial is only available in Python. You need to have preCICE and the Python bindings installed on your system.

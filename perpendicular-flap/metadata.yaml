@@ -19,11 +19,11 @@ cases:
     run: ./run.sh 
     component: openfoam-adapter
   
-  # fluid-su2:
-  #   participant: Fluid
-  #   directory: ./fluid-su2
-  #   run: ./run.sh
-  #   component: su2-adapter
+  fluid-su2:
+    participant: Fluid
+    directory: ./fluid-su2
+    run: ./run.sh
+    component: su2-adapter
   
   solid-calculix:
     participant: Solid

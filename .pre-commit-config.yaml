@@ -8,9 +8,17 @@ repos:
   rev: v0.30.0
   hooks:
     - id: markdownlint
-      exclude: changelog-entries
+      exclude:  |
+            (?x)^(
+                changelog-entries|
+                .github/pull_request_template.md
+            )$
     - id: markdownlint-fix
-      exclude: changelog-entries
+      exclude:  |
+            (?x)^(
+                changelog-entries|
+                .github/pull_request_template.md
+            )$
 - repo: https://github.com/hhatto/autopep8
   rev: v2.0.4
   hooks:

@@ -15,6 +15,12 @@ The expanding tube test case involves a cylindrical fluid domain surrounded by a
 
 The expanding tube test case comes with the interface surface mesh connectivity of the solid domain. This allows the use of nearest-projection mapping of the displacements of the solid domain. In order to run the example with nearest projection mapping, the "node-mesh-with-connectivity" has been specified in the `solid-calculix/config.yml` file. More details can be found in the [CalculiX configuration description](https://www.precice.org/adapter-calculix-config.html#nearest-projection-mapping).
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-elastic-tube-3d-precice-config.png)
+
 ## Available solvers
 
 Fluid participant:

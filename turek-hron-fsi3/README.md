@@ -17,15 +17,17 @@ The setup is shown schematically here:
 
 For more information please refer to the original publication of the benchmark [1].
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-turek-hron-fsi3-precice-config.png)
+
 ## Available solvers
 
 Fluid participant:
 
 * OpenFOAM (pimpleFoam). In case you are using a very old OpenFOAM version, you will need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
-
-{% important %}
-For the parabolic inflow profile, this tutorial requires groovyBC. groovyBC is part of swak4Foam. You can find more explanations in [openfoamwiki.net](https://openfoamwiki.net/index.php/Contrib/swak4Foam) or get it from an [unofficial GitHub mirror](https://github.com/Unofficial-Extend-Project-Mirror/openfoam-extend-swak4Foam-dev.git). Please follow the building instructions there.
-{% endimportant %}
 
 Solid participant:
 

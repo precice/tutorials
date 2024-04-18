@@ -107,3 +107,23 @@ calculix-adapter:
     CALULIX_ADAPTER_REF:
       description: Version of Calculix-Adapter to use
       default: "master"
+
+su2-adapter:
+  repository: https://github.com/precice/su2-adapter
+  template: component-templates/su2-adapter.yaml
+  build_arguments:
+    PRECICE_REF:
+      description: Version of preCICE to use
+      default: "main"
+    PLATFORM:
+      description: Dockerfile platform used
+      default: "ubuntu_2204"
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: "master"
+    SU2_VERSION:
+      description: Version of SU2 to use
+      default: "7.5.1"
+    SU2_ADAPTER_REF:
+      description: Version of SU2-Adapter to use
+      default: "master"

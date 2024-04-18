@@ -16,7 +16,7 @@ boundaryField
     cylinder
     {
         type            noSlip;
-    }    
+    }
 
     flap
     {
@@ -43,24 +43,29 @@ boundaryField
 
         code
         #{
-            const       vectorField& Cf = patch().Cf();
-            vectorField&    field = *this;
-            
-            const scalar pi=3.14159265358979;
-            const scalar Umean=2.0;            
+            const vectorField& Cf = patch().Cf();
+            vectorField& field = *this;
+
+            const scalar pi = constant::mathematical::pi;
+            const scalar Umean = 2.0;
+            const scalar H = 0.41;    // channel height
+            const scalar H_2 = H * H; // equals 0.1681
             const scalar t = this->db().time().value();
-            if(t<2){
-                forAll(Cf,faceI)
-                {
-                    const scalar y=Cf[faceI][1];
-                    field[faceI]=vector((1.5*Umean*4.0/0.1681)*y*(0.41-y)*((1-cos(pi/2 *t))/2),0,0);
-                }
-            }else
+            // ramp up below 2 seconds
+            if (t < 2)
             {
-                forAll(Cf,faceI)
+                forAll(Cf, faceI)
                 {
-                    const scalar y=Cf[faceI][1];
-                    field[faceI]=vector((1.5*Umean*4.0/0.1681)*y*(0.41-y),0,0);
+                    const scalar y = Cf[faceI].y();
+                    field[faceI] = vector((1.5 * Umean * 4.0 / H_2) * y * (H - y) * ((1 - cos((pi / 2) * t)) / 2), 0, 0);
+                }
+            }
+            else
+            {
+                forAll(Cf, faceI)
+                {
+                    const scalar y = Cf[faceI].y();
+                    field[faceI] = vector((1.5 * Umean * 4.0 / H_2) * y * (H - y), 0, 0);
                 }
             }
         #};
