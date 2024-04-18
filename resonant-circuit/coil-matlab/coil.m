@@ -4,7 +4,7 @@ clear; close all; clc;
 interface = precice.Participant("Coil", "../precice-config.xml", 0, 1);
 
 % Geometry IDs. As it is a 0-D simulation, only one vertex is necessary.
-meshName ="MeshCoil";
+meshName ="Coil-Mesh";
 vertex_ID = interface.setMeshVertex(meshName, [0 0]);
 
 % Data IDs

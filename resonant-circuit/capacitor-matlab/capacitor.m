@@ -4,7 +4,7 @@ clear; close all; clc;
 interface = precice.Participant("Capacitor", "../precice-config.xml", 0, 1);
 
 % Geometry IDs. As it is a 0-D simulation, only one vertex is necessary.
-meshName ="MeshCapacitor";
+meshName ="Capacitor-Mesh";
 vertex_ID = interface.setMeshVertex(meshName, [0 0]);
 
 % Data IDs
