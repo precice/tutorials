@@ -21,6 +21,11 @@ where $I$ is the current and $U$ the voltage of the cirucit.
 
 Each of these equations is going to be solved by a different MATLAB solver. Note that as only one scalar is solved per equation, this is a 0+1 dimensional problem.
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)): 
+![preCICE configuration visualization](images/tutorials-resonant-circuit-precice-config.png)
+
 ## Available solvers
 
 * <em>MATLAB</em> A solver using the [MATLAB bindings](https://github.com/precice/matlab-bindings).
