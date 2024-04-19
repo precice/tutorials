@@ -23,7 +23,8 @@ Each of these equations is going to be solved by a different MATLAB solver. Note
 
 ## Configuration
 
-preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)): 
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
 ![preCICE configuration visualization](images/tutorials-resonant-circuit-precice-config.png)
 
 ## Available solvers
