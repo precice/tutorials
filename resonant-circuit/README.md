@@ -30,7 +30,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 ## Available solvers
 
 * <em>MATLAB</em> A solver using the [MATLAB bindings](https://github.com/precice/matlab-bindings).
- Before running this tutorial, follow the [instructions](https://github.com/precice/matlab-bindings?tab=readme-ov-file#matlab-bindings) to correctly install the MATLAB bindings.
+ Before running this tutorial, follow the [instructions](https://precice.org/installation-bindings-matlab.html) to correctly install the MATLAB bindings.
 
 ## Running the simulation
 
