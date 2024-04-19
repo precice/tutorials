@@ -18,6 +18,12 @@ Note that it is usually recommended using the fully implicit parallel `coupling-
 
 The flow partitioning is done with the fluid-fluid module of the [preCICE OpenFOAM adapter](https://www.precice.org/adapter-openfoam-overview.html). Because we use buoyantPimpleFoam we have to tell the adapter that the coupled pressure has the name `p_rgh`. The temperature is coupled at the fluid-solid interface by exchanging *Temperature* and *Heat-Flux*, at the fluid-fluid interface it is *FlowTemperature* and *FlowTemperatureGradient*. Note the difference in naming: *Temperature* is used for conjugate heat transfer and *FlowTemperature* for fluid-fluid coupling.
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-partitioned-flow-precice-config.png)
+
 ## Available solvers
 
 The following participants are available:

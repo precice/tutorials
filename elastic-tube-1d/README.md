@@ -29,6 +29,12 @@ The following parameters have been chosen:
 
 Additionally the solvers use the parameters `N = 100` (number of cells), `tau = 0.01` (dimensionless timestep size), `kappa = 100` (dimensionless structural stiffness) by default. These values can be modified directly in each solver.
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-elastic-tube-1d-precice-config.png)
+
 ## Available solvers
 
 Both fluid and solid participant are supported in:

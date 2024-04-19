@@ -43,7 +43,6 @@
 
   <participant name="Solid">
     <provide-mesh name="Solid-Mesh" />
-    <receive-mesh name="Fluid-Mesh-Faces" from="Fluid" />
     <write-data name="DisplacementDelta" mesh="Solid-Mesh" />
     <read-data name="Force" mesh="Solid-Mesh" />
     <watch-point mesh="Solid-Mesh" name="Tube-Midpoint" coordinate="0.0;0.005;0.025" />

@@ -48,6 +48,7 @@ history
 postProcessing/
 *.foam
 *.OpenFOAM
+dynamicCode
 
 # CalculiX
 spooles.out
@@ -58,6 +59,7 @@ dummy
 *.frd
 *.sta
 *.eig
+*.rout
 
 # code_aster
 *.mess
@@ -69,6 +71,7 @@ REPE_OUT/
 restart_flow_*.dat
 forces_breakdown.dat
 surface_flow_*.csv
+history_*.csv
 
 # ASTE
 result.stats.json

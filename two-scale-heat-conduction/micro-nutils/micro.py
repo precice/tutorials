@@ -17,9 +17,9 @@ class MicroSimulation:
         """
         Constructor of MicroSimulation class.
         """
-        # Initial parameters
+        self._sim_id = sim_id
 
-        # self._nelems = 10  # Elements in one direction (original case from Bastidas et al.)
+        # Initial parameters
         self._nelems = 6  # Elements in one direction
 
         self._ref_level = 3  # Number of levels of mesh refinement
@@ -71,24 +71,15 @@ class MicroSimulation:
         # Initialize phase field once more on refined topology
         solphi = self._get_analytical_phasefield(self._topo, self._ns, self._degree_phi, self._ns.lam, self._r_initial)
 
-        target_porosity = 1 - math.pi * self._r_initial ** 2
-        print("Target amount of void space = {}".format(target_porosity))
-
-        dt_initial = 1E-3
-
-        # Solve Allen-Cahn equation till we reach target porosity value
-        psi = 0
-        while psi < target_porosity:
-            print("Solving Allen-Cahn equation to achieve initial target grain structure")
-            solphi = self._solve_allen_cahn(self._topo, solphi, 0.5, dt_initial)
-            psi = self._get_avg_porosity(self._topo, solphi)
-
         self._solphi = solphi  # Save solution of phi
+        psi = self._get_avg_porosity(self._topo, solphi)
         self._psi_nm1 = psi  # Average porosity value of last time step
 
         # Solve the heat cell problem
         solu = self._solve_heat_cell_problem(self._topo, solphi)
         k = self._get_eff_conductivity(self._topo, solu, solphi)
+
+        self._solu = solu  # Save solution for output
 
         output_data = dict()
         output_data["k_00"] = k[0][0]
@@ -124,7 +115,7 @@ class MicroSimulation:
 
     @staticmethod
     def _analytical_phasefield(x, y, r, lam):
-        return 1. / (1. + np.exp(-4. / lam * (np.sqrt(x ** 2 + y ** 2) - r + 0.001)))
+        return 1. / (1. + np.exp(-4. / lam * (np.sqrt(x ** 2 + y ** 2) - r)))
 
     @staticmethod
     def _get_analytical_phasefield(topo, ns, degree_phi, lam, r):
@@ -135,10 +126,10 @@ class MicroSimulation:
         return solphi
 
     # def output(self):
-    #    bezier = self._topo.sample('bezier', 2)
-    #    x, u, phi = bezier.eval(['x_i', 'u_i', 'phi'] @ self._ns, solu=self._solu, solphi=self._solphi)
-    #    with treelog.add(treelog.DataLog()):
-    #        export.vtk("micro-heat", bezier.tri, x, T=u, phi=phi)
+    #  bezier = self._topo.sample('bezier', 2)
+    #  x, u, phi = bezier.eval(['x_i', 'u_i', 'phi'] @ self._ns, solu=self._solu, solphi=self._solphi)
+    #  with treelog.add(treelog.DataLog()):
+    #      export.vtk("micro-heat-{}".format(self._sim_id), bezier.tri, x, T=u, phi=phi)
 
     def get_state(self):
         return [self._solphi.copy(), deepcopy(self._topo)]
