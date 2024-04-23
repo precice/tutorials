@@ -59,7 +59,7 @@ If you want to use DuMu<sup>x</sup>, use `cd macro-dumux` instead of `cd macro-n
 
 ## Running the simulation in parallel
 
-Only the `micro-nutils` participant can be run in parallel. To run it in parallel, run:
+All but the `macro-nutils` participant can be run in parallel. To run a participant in parallel, e.g. `micro-nutils`, run:
 
 ```bash
 cd micro-nutils
@@ -78,7 +78,7 @@ Here are the results from Nutils-Nutils and DuMu<sup>x</sup>-DuMu<sup>x</sup> co
 
 <img class="img-responsive" src="images/tutorials-two-scale-heat-conduction-results.png" alt="Macro and micro data of macro-nutils - micro-nutils simulation" width=50% height=30%/>
 
-<img class="img-responsive" src="images/tutorials-two-scale-heat-conduction-results-du-du.png" alt="Macro and micro data of macro-nutils - micro-nutils simulation" width=50% height=30%/>
+<img class="img-responsive" src="images/tutorials-two-scale-heat-conduction-results-du-du.png" alt="Macro and micro data of macro-dumux - micro-dumux simulation" width=50% height=30%/>
 
 The differences of the fields are mainly introduced in by the different numerical schemes in the two solvers.
 
