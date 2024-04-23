@@ -7,7 +7,6 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
-#include <numbers>
 #include <vector>
 
 #include <dune/common/timer.hh>
