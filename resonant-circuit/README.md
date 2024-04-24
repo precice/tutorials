@@ -29,7 +29,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 ## Available solvers
 
-* <em>MATLAB</em> A solver using the [MATLAB bindings](https://github.com/precice/matlab-bindings).
+* *MATLAB* A solver using the [MATLAB bindings](https://precice.org/installation-bindings-matlab.html).
  Before running this tutorial, follow the [instructions](https://precice.org/installation-bindings-matlab.html) to correctly install the MATLAB bindings.
 
 ## Running the simulation
@@ -56,16 +56,19 @@ The preCICE configuration file is available as `precice-config.xml`, and it is c
 
 #### Running from terminal
 
-If you prefer to not open the MATLAB GUIs, one can alternatively use two shells instead.
+If you prefer to not open the MATLAB GUIs, you can alternatively use two shells instead.
 For that, modify the path in the file `matlab-bindings-path.sh` found in the base directory of this tutorial to the path to your MATLAB bindings.
 
 By doing that, you can now open two shells and switch into the directories `capacitor-matlab` and `coil-matlab` and execute the `run.sh` scripts.
 
-## Visualization
+## Post-processing
 
 The solver for the current also records the current and voltage through time and at the end of the simulation saves a plot with the obtained curves, as well as the analytical solution.
 
 After successfully running the coupling, one can find the curves in the folder `capacitor-matlab` as `Curves.png`.
+
+The `Curves.png` plot could exemplarily look like the following:
+![Voltage and current plot of the resonant circuit](images/tutorials-resonant-circuit-curves.png)
 
 ## References
 
