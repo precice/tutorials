@@ -41,7 +41,7 @@ Both fluid and solid participant are supported in:
 
 - *C++*: example solvers using the intrinsic [C++ API of preCICE](https://www.precice.org/couple-your-code-api.html). The fluid solver also depends on LAPACK (e.g. on Ubuntu `sudo apt-get install liblapack-dev`)
 - *Python*: example solvers using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). Both solvers depend on `numpy`. The fluid solver additionally depends on the Python libraries `scipy matplotlib`. You can get these libraries from your system package manager or with `pip3 install --user <package>`.
-- *Rust*: example solvers using the preCICE [Rust bindings](https://www.precice.org/installation-bindings-rust.html). They need `cargo` to be installed. 
+- *Rust*: example solvers using the preCICE [Rust bindings](https://www.precice.org/installation-bindings-rust.html). They need `cargo` to be installed.
 
 ## Running the Simulation
 
