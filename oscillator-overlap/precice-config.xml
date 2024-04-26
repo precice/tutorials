@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<precice-configuration>
+  <log enabled="1">
+    <sink filter="%Severity% > debug" />
+  </log>
+
+  <data:scalar name="Displacement-Left" />
+  <data:scalar name="Displacement-Right" />
+
+  <mesh name="Mass-Left-Mesh" dimensions="2">
+    <use-data name="Displacement-Left" />
+    <use-data name="Displacement-Right" />
+  </mesh>
+
+  <mesh name="Mass-Right-Mesh" dimensions="2">
+    <use-data name="Displacement-Left" />
+    <use-data name="Displacement-Right" />
+  </mesh>
+
+  <participant name="Mass-Left">
+    <provide-mesh name="Mass-Left-Mesh" />
+    <write-data name="Displacement-Left" mesh="Mass-Left-Mesh" />
+    <read-data name="Displacement-Right" mesh="Mass-Left-Mesh" />
+  </participant>
+
+  <participant name="Mass-Right">
+    <receive-mesh name="Mass-Left-Mesh" from="Mass-Left" />
+    <provide-mesh name="Mass-Right-Mesh" />
+    <write-data name="Displacement-Right" mesh="Mass-Right-Mesh" />
+    <read-data name="Displacement-Left" mesh="Mass-Right-Mesh" />
+    <mapping:nearest-neighbor
+      direction="write"
+      from="Mass-Right-Mesh"
+      to="Mass-Left-Mesh"
+      constraint="consistent" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Mass-Left-Mesh"
+      to="Mass-Right-Mesh"
+      constraint="consistent" />
+  </participant>
+
+  <m2n:sockets acceptor="Mass-Left" connector="Mass-Right" exchange-directory=".." />
+
+  <coupling-scheme:serial-implicit>
+    <participants first="Mass-Left" second="Mass-Right" />
+    <max-time value="1" />
+    <time-window-size value="0.01" />
+    <max-iterations value="200" />
+    <relative-convergence-measure data="Displacement-Left" mesh="Mass-Left-Mesh" limit="1e-10" />
+    <relative-convergence-measure data="Displacement-Right" mesh="Mass-Left-Mesh" limit="1e-10" />
+    <exchange
+      data="Displacement-Left"
+      mesh="Mass-Left-Mesh"
+      from="Mass-Left"
+      to="Mass-Right"
+      initialize="true" />
+    <exchange
+      data="Displacement-Right"
+      mesh="Mass-Left-Mesh"
+      from="Mass-Right"
+      to="Mass-Left"
+      initialize="true" />
+  </coupling-scheme:serial-implicit>
+</precice-configuration>

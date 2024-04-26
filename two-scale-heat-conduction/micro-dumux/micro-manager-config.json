@@ -1,0 +1,25 @@
+{
+    "micro_file_name": "micro_sim",
+    "coupling_params": {
+            "participant_name": "Micro-Manager",
+            "config_file_name": "../precice-config.xml",
+            "macro_mesh_name": "macro-mesh",
+            "write_data_names": {"k_00": "scalar", "k_01": "scalar", "k_10": "scalar", "k_11": "scalar", "porosity": "scalar"},
+            "read_data_names": {"concentration": "scalar"}
+    },
+    "simulation_params": {
+      "macro_domain_bounds": [0.0, 1.0, 0.0, 0.5],
+      "adaptivity": {
+            "type": "global",
+            "data": ["k_00", "k_11", "porosity", "concentration"],
+            "history_param": 0.1,
+            "coarsening_constant": 0.2,
+            "refining_constant": 0.05,
+            "every_implicit_iteration": "False",
+            "similarity_measure": "L2rel"
+        }
+    },
+    "diagnostics": {
+      "data_from_micro_sims": {"grain_size": "scalar"}
+    }
+}

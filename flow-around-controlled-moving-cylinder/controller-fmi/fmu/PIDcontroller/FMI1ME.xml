@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<fmiModelDescription
+  fmiVersion="1.0"
+  modelName="PIDcontroller"
+  modelIdentifier="PIDcontroller"
+  description="This model is implemented as CO-SIMULATION FMU ONLY! This file is only given to simplify the process of creating a Model Exchange FMU."
+  generationTool="Reference FMUs (development build)"
+  guid="{1AE5E10D-9521-4DE3-80B9-D0EAAA7D5AF1}"
+  numberOfContinuousStates="5"
+  numberOfEventIndicators="0">
+  <DefaultExperiment startTime="0" stopTime="3" />
+
+  <ModelVariables>
+    <ScalarVariable
+      name="time"
+      valueReference="0"
+      causality="internal"
+      variability="continuous"
+      description="Simulation time">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable
+      name="u"
+      valueReference="1"
+      causality="output"
+      variability="continuous"
+      description="Control output value">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="y"
+      valueReference="2"
+      causality="input"
+      variability="continuous"
+      description="Control input value">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="r"
+      valueReference="3"
+      causality="internal"
+      variability="continuous"
+      description="Control reference value">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="e"
+      valueReference="4"
+      causality="internal"
+      variability="continuous"
+      description="Error between control input y and reference value r">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable
+      name="e_ls"
+      valueReference="5"
+      causality="internal"
+      variability="internal"
+      description="Error between control input y and reference value r from last time step">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable
+      name="kp"
+      valueReference="6"
+      causality="internal"
+      variability="parameter"
+      description="Proportional gain">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="ki"
+      valueReference="7"
+      causality="internal"
+      variability="parameter"
+      description="Integral gain">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="kd"
+      valueReference="8"
+      causality="internal"
+      variability="parameter"
+      description="Derivative gain">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="P"
+      valueReference="9"
+      causality="internal"
+      variability="parameter"
+      description="Proportional term">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="I"
+      valueReference="10"
+      causality="internal"
+      variability="parameter"
+      description="Integral term">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="D"
+      valueReference="11"
+      causality="internal"
+      variability="parameter"
+      description="Derivative term">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="force_x"
+      valueReference="12"
+      causality="input"
+      variability="continuous"
+      description="Force x direction">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="force_y"
+      valueReference="13"
+      causality="input"
+      variability="continuous"
+      description="Force y direction">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="velocity_x"
+      valueReference="14"
+      causality="output"
+      variability="continuous"
+      description="Velocity x direction">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="velocity_y"
+      valueReference="15"
+      causality="output"
+      variability="continuous"
+      description="Velocity y direction">
+      <Real start="0" />
+    </ScalarVariable>
+  </ModelVariables>
+</fmiModelDescription>

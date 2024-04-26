@@ -1,0 +1,2 @@
+nutils==6
+pyprecice==3

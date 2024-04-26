@@ -25,6 +25,12 @@ The top, bottom and flap are walls with a `noslip` condition.
 
 For a case showing fluid-structure interaction only (no multi-coupling), take a look at the [single perpendicular flap tutorial](https://www.precice.org/tutorials-perpendicular-flap.html).
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-multiple-perpendicular-flaps-precice-config.png)
+
 ## Why multi-coupling?
 
 This is a case with three participants: the fluid and each flap. In preCICE, there are two options to [couple more than two participants](https://www.precice.org/configuration-coupling-multi.html). The first option a composition of bi-coupling schemes, in which we must specify the exchange of data in a participant to participant manner. However, such a composition is not suited for combining multiple strong fluid-structure interactions [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling.
@@ -34,8 +40,8 @@ We can set this in our `precice-config.xml`:
 ```xml
 <coupling-scheme:multi>
   <participant name="Fluid" control="yes"/>
-   <participant name="Solid1" />
-   <participant name="Solid2" />
+   <participant name="Solid-Upstream" />
+   <participant name="Solid-Downstream" />
 ```
 
 The participant that has the control is the one that it is connected to all other participants. This is why we have chosen the fluid participant for this task.
@@ -44,21 +50,21 @@ The participant that has the control is the one that it is connected to all othe
 
 For the fluid participant we use OpenFOAM. In particular, we use the application `pimpleFoam`. The geometry of the Fluid participant is defined in the file `Fluid/system/blockMeshDict`. Besides, we must specify where are we exchanging data with the other participants. The interfaces are set in the file `Fluid/system/preciceDict`. In this file, we set to exchange stress and displacement on the surface of each flap.
 
-Most of the coupling details are specified in the file `precide-config.xml`. Here we estipulate the order in which we read/write data from one participant to another or how we map from the fluid to the solid's mesh. In particular, we have chosen the nearest-neighbor mapping scheme.
+Most of the coupling details are specified in the file `precice-config.xml`. Here we estipulate the order in which we read/write data from one participant to another or how we map from the fluid to the solid's mesh. In particular, we have chosen the nearest-neighbor mapping scheme.
 
-For the simulation of the solid participants we use the deal.II adapter. In deal.II, the geometry of the domain is specified directly on the solver. The two flaps in our case are essentially the same but for the x-coordinate. The flap geometry is given to the solver when we select the scenario in the '.prm' file.
+For the simulation of the solid participants we use the deal.II adapter. In deal.II, the geometry of the domain is specified directly on the solver. The two flaps in our case are essentially the same but for the x-coordinate. The flap geometry is given to the solver when we select the scenario in the `.prm` file.
 
 ```text
 set Scenario            = PF
 ```
 
-But to specify the position of the flap along the x-axis, we must specify it in the `Solid1/linear_elasticity.prm` file as follows:
+But to specify the position of the flap along the x-axis, we must specify it in the `solid-upstream-dealii/parameters.prm` file as follows:
 
 ```text
 set Flap location     = -1.0
 ```
 
-While in case of `Solid2/linear_elasticity.prm` we write:
+While in case of `solid-downstream-dealii/parameters.prm` we write:
 
 ```text
 set Flap location     = 1.0
@@ -69,7 +75,7 @@ The scenario settings are implemented similarly for the nonlinear case.
 ## Running the Simulation
 
 1. Preparation:
-   To run the coupled simulation, copy the deal.II executable `linear_elasticity` or `nonlinear_elasticity` into the main folder. To learn how to obtain the deal.II executable take a look at the description on the  [deal.II-adapter page](https://www.precice.org/adapter-dealii-overview.html).
+   To run the coupled simulation, copy the deal.II executable `elasticity` into the main folder. To learn how to obtain the deal.II executable take a look at the description on the  [deal.II-adapter page](https://www.precice.org/adapter-dealii-overview.html).
 2. Starting:
 
    We are going to run each solver in a different terminal. It is important that first we navigate to the simulation directory so that all solvers start in the same directory.
@@ -89,25 +95,25 @@ The scenario settings are implemented similarly for the nonlinear case.
 
    for a parallel run.
 
-   The solid participants are only designed for serial runs. To run the `Solid1` participant, execute the corresponding deal.II binary file e.g. by:
+   The solid participants are only designed for serial runs. To run the `Solid-Upstream` participant, execute the corresponding deal.II binary file e.g. by:
 
    ```bash
-   cd solid-left-dealii
-   ./run.sh -linear
+   cd solid-upstream-dealii
+   ./run.sh
    ```
 
-   Finally, in the third terminal we will run the solver for the `Solid2` participant by:
+   Finally, in the third terminal we will run the solver for the `Solid-Downstream` participant by:
 
    ```bash
-   cd solid-right-dealii
-   ./run.sh -linear
+   cd solid-downstream-dealii
+   ./run.sh
    ```
-
-   In case we want to run the nonlinear case, simply replace the flag`-linear` by `-nonlinear`.
 
 ## Postprocessing
 
 After the simulation has finished, you can visualize your results using e.g. ParaView. Fluid results are in the OpenFOAM format and you may load the `fluid-openfoam.foam` file. Looking at the fluid results is enough to obtain information about the behaviour of the flaps. You can also visualize the solid participants' vtks though.
+
+Example visualization of the fluid velocity and the solid displacement at t=2.3s, after synchronizing the results with a `Temporal Shift Scale` filter (scale for the deal.II results: 0.1):
 
 ![Example visualization](images/tutorials-multiple-perpendicular-flaps-results.png)
 

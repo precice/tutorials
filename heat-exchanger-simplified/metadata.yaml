@@ -1,0 +1,29 @@
+name: Heat Exchanger simplified
+path: heat-exchanger-simplified # relative to git repo 
+url: https://precice.org/tutorials-heat-exchanger-simplified.html
+
+participants:
+  - Fluid-Top
+  - Fluid-Bottom
+  - Solid
+
+cases:
+  fluid-btm-openfoam:
+    participant: Fluid-Bottom
+    directory: ./fluid-bottom-openfoam
+    run: ./run.sh 
+    component: openfoam-adapter
+  
+  fluid-top-openfoam:
+    participant: Fluid-Top
+    directory: ./fluid-top-openfoam
+    run: ./run.sh 
+    component: openfoam-adapter
+  
+  solid-calculix:
+    participant: Solid
+    directory: ./solid-calculix
+    run: ./run.sh 
+    component: calculix-adapter
+
+

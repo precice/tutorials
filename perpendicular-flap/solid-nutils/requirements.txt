@@ -1,0 +1,2 @@
+nutils>=8.5
+pyprecice==3

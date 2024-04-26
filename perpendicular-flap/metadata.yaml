@@ -1,0 +1,64 @@
+name: Perpendicular flap
+path: perpendicular-flap
+url: https://precice.org/tutorials-perpendicular-flap.html
+
+participants:
+  - Fluid 
+  - Solid 
+
+cases:
+  fluid-nutils:
+    participant: Fluid
+    directory: ./fluid-nutils
+    run: ./run.sh
+    component: nutils-adapter
+
+  fluid-openfoam:
+    participant: Fluid
+    directory: ./fluid-openfoam
+    run: ./run.sh 
+    component: openfoam-adapter
+  
+  fluid-su2:
+    participant: Fluid
+    directory: ./fluid-su2
+    run: ./run.sh
+    component: su2-adapter
+  
+  solid-calculix:
+    participant: Solid
+    directory: ./solid-calculix
+    run: ./run.sh 
+    component: calculix-adapter 
+  
+  # solid-dealii:
+  #   participant: Solid
+  #   directory: ./solid-dealii
+  #   run: ./run.sh
+  #   component: dealii-adapter
+  
+  # solid-dune:
+  #   participant: Solid
+  #   directory: ./solid-dune
+  #   run: ./run.sh
+  #   component: dune-adapter
+  
+  solid-fenics:
+    participant: Solid
+    directory: ./solid-fenics
+    run: ./run.sh
+    component: fenics-adapter 
+  
+  solid-openfoam:
+    participant: Solid
+    directory: ./solid-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+  
+  # solid-solids4foam:
+  #   participant: Solid
+  #   directory: ./solid-solids4foam
+  #   run: ./run.sh
+  #   component: openfoam-adapter
+
+

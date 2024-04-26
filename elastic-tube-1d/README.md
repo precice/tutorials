@@ -29,6 +29,12 @@ The following parameters have been chosen:
 
 Additionally the solvers use the parameters `N = 100` (number of cells), `tau = 0.01` (dimensionless timestep size), `kappa = 100` (dimensionless structural stiffness) by default. These values can be modified directly in each solver.
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-elastic-tube-1d-precice-config.png)
+
 ## Available solvers
 
 Both fluid and solid participant are supported in:
@@ -121,6 +127,14 @@ python3 plot-vtk.py diameter fluid-python/output/out_fluid_
 ```
 
 ![FSI3 setup](images/tutorials-elastic-tube-1d-diameter.png)
+
+## Comparing different Fluid results
+
+The Fluid participant defines a watchpoint at `x=5`, which records `pressure` and `diameter` for every timestep.
+To compare the results of the various Fluid participants, you can run them all and plot the watchpoints using `plot-all.sh`.
+The following is an example of running all Fluid solvers against the `solid-cpp` solver:
+
+![Plot comparing pressure and diameter of all Fluid participants](images/tutorials-elastic-tube-1d-all.png)
 
 ## References
 
