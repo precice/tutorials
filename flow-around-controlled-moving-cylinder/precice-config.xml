@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<precice-configuration>
+  <log>
+    <sink
+      filter="%Severity% > debug and %Rank% = 0"
+      format="---[precice] %ColorizedSeverity% %Message%"
+      enabled="true" />
+  </log>
+
+  <data:vector name="Displacement-Cylinder" />
+  <data:vector name="Displacement-Spring" />
+  <data:vector name="Force" />
+
+  <mesh name="Mesh-Controller" dimensions="2">
+    <use-data name="Displacement-Cylinder" />
+    <use-data name="Displacement-Spring" />
+  </mesh>
+
+  <mesh name="Mesh-Fluid" dimensions="2">
+    <use-data name="Displacement-Cylinder" />
+    <use-data name="Force" />
+  </mesh>
+
+  <mesh name="Mesh-Solid" dimensions="2">
+    <use-data name="Displacement-Spring" />
+    <use-data name="Displacement-Cylinder" />
+    <use-data name="Force" />
+  </mesh>
+
+  <participant name="Controller">
+    <provide-mesh name="Mesh-Controller" />
+    <receive-mesh name="Mesh-Solid" from="Solid" />
+    <write-data name="Displacement-Spring" mesh="Mesh-Controller" />
+    <read-data name="Displacement-Cylinder" mesh="Mesh-Controller" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Mesh-Solid"
+      to="Mesh-Controller"
+      constraint="consistent" />
+  </participant>
+
+  <participant name="Fluid">
+    <provide-mesh name="Mesh-Fluid" />
+    <receive-mesh name="Mesh-Solid" from="Solid" geometric-filter="no-filter" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Mesh-Solid"
+      to="Mesh-Fluid"
+      constraint="consistent" />
+    <mapping:nearest-neighbor
+      direction="write"
+      from="Mesh-Fluid"
+      to="Mesh-Solid"
+      constraint="conservative" />
+    <write-data name="Force" mesh="Mesh-Fluid" />
+    <read-data name="Displacement-Cylinder" mesh="Mesh-Fluid" />
+  </participant>
+
+  <participant name="Solid">
+    <provide-mesh name="Mesh-Solid" />
+    <receive-mesh name="Mesh-Controller" from="Controller" />
+    <write-data name="Displacement-Cylinder" mesh="Mesh-Solid" />
+    <read-data name="Force" mesh="Mesh-Solid" />
+    <read-data name="Displacement-Spring" mesh="Mesh-Solid" />
+    <watch-point mesh="Mesh-Solid" name="Spring" coordinate="0.0;0.0" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Mesh-Controller"
+      to="Mesh-Solid"
+      constraint="consistent" />
+  </participant>
+
+  <m2n:sockets acceptor="Controller" connector="Solid" exchange-directory="../" />
+  <m2n:sockets acceptor="Fluid" connector="Solid" exchange-directory="../" />
+
+  <coupling-scheme:serial-explicit>
+    <participants first="Fluid" second="Solid" />
+    <max-time value="3" />
+    <time-window-size value="0.00025" />
+    <exchange data="Force" mesh="Mesh-Solid" from="Fluid" to="Solid" />
+    <exchange
+      data="Displacement-Cylinder"
+      mesh="Mesh-Solid"
+      from="Solid"
+      to="Fluid"
+      initialize="true" />
+  </coupling-scheme:serial-explicit>
+
+  <coupling-scheme:serial-explicit>
+    <participants first="Solid" second="Controller" />
+    <max-time value="3" />
+    <time-window-size value="0.00025" />
+    <exchange
+      data="Displacement-Spring"
+      mesh="Mesh-Controller"
+      from="Controller"
+      to="Solid"
+      initialize="true" />
+    <exchange data="Displacement-Cylinder" mesh="Mesh-Solid" from="Solid" to="Controller" />
+  </coupling-scheme:serial-explicit>
+</precice-configuration>

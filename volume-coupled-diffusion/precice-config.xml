@@ -1,61 +1,62 @@
-<?xml version="1.0"?>
-
+<?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
-
   <log>
-    <sink filter="%Severity% > debug and %Rank% = 0" format="---[precice] %ColorizedSeverity% %Message%" enabled="true"/>
+    <sink
+      filter="%Severity% > debug and %Rank% = 0"
+      format="---[precice] %ColorizedSeverity% %Message%"
+      enabled="true" />
   </log>
 
-  <solver-interface dimensions="2">
+  <data:scalar name="Drain-Data" />
+  <data:scalar name="Source-Data" />
 
-    <data:scalar name="Drain-Data"/>
-    <data:scalar name="Source-Data"/>
+  <mesh name="Source-Mesh" dimensions="2">
+    <use-data name="Drain-Data" />
+    <use-data name="Source-Data" />
+  </mesh>
 
-    <mesh name="Source-Mesh">
-      <use-data name="Drain-Data"/>
-      <use-data name="Source-Data"/>
-    </mesh>
+  <mesh name="Drain-Mesh" dimensions="2">
+    <use-data name="Drain-Data" />
+    <use-data name="Source-Data" />
+  </mesh>
 
-    <mesh name="Drain-Mesh">
-      <use-data name="Drain-Data"/>
-      <use-data name="Source-Data"/>
-    </mesh>
+  <participant name="Source">
+    <provide-mesh name="Source-Mesh" />
+    <receive-mesh name="Drain-Mesh" from="Drain" />
+    <write-data name="Source-Data" mesh="Source-Mesh" />
+    <read-data name="Drain-Data" mesh="Source-Mesh" />
+    <mapping:rbf direction="read" from="Drain-Mesh" to="Source-Mesh" constraint="consistent">
+      <basis-function:compact-polynomial-c6 support-radius="1" />
+    </mapping:rbf>
+  </participant>
 
-    <participant name="Source">
-      <use-mesh name="Source-Mesh" provide="yes"/>
-      <use-mesh name="Drain-Mesh" from="Drain"/>
-      <write-data name="Source-Data" mesh="Source-Mesh"/>
-      <read-data name="Drain-Data" mesh="Source-Mesh"/>
-      <mapping:rbf-thin-plate-splines direction="read" from="Drain-Mesh" to="Source-Mesh" constraint="consistent"/>
-    </participant>
+  <participant name="Drain">
+    <provide-mesh name="Drain-Mesh" />
+    <receive-mesh name="Source-Mesh" from="Source" />
+    <write-data name="Drain-Data" mesh="Drain-Mesh" />
+    <read-data name="Source-Data" mesh="Drain-Mesh" />
+    <mapping:rbf direction="read" from="Source-Mesh" to="Drain-Mesh" constraint="consistent">
+      <basis-function:compact-polynomial-c6 support-radius="1" />
+    </mapping:rbf>
+  </participant>
 
-    <participant name="Drain">
-      <use-mesh name="Drain-Mesh" provide="yes"/>
-      <use-mesh name="Source-Mesh" from="Source"/>
-      <write-data name="Drain-Data" mesh="Drain-Mesh"/>
-      <read-data name="Source-Data" mesh="Drain-Mesh"/>
-      <mapping:rbf-thin-plate-splines direction="read" from="Source-Mesh" to="Drain-Mesh" constraint="consistent"/>
-    </participant>
+  <m2n:sockets acceptor="Source" connector="Drain" exchange-directory=".." />
 
-    <m2n:sockets from="Source" to="Drain" exchange-directory=".."/>
-
-    <coupling-scheme:serial-implicit>
-      <participants first="Source" second="Drain"/>
-      <max-time value="10.0"/>
-      <time-window-size value="0.1"/>
-      <max-iterations value="100"/>
-      <exchange data="Source-Data" mesh="Source-Mesh" from="Source" to="Drain" />
-      <exchange data="Drain-Data" mesh="Drain-Mesh" from="Drain" to="Source" initialize="true"/>
-      <relative-convergence-measure data="Source-Data" mesh="Source-Mesh" limit="1e-5"/>
-      <relative-convergence-measure data="Drain-Data" mesh="Drain-Mesh" limit="1e-5"/>
-      <acceleration:IQN-ILS>
-        <data name="Drain-Data" mesh="Drain-Mesh"/>
-        <initial-relaxation value="0.1"/>
-        <max-used-iterations value="10"/>
-        <time-windows-reused value="5"/>
-        <filter type="QR2" limit="1e-3"/>
-      </acceleration:IQN-ILS>
-    </coupling-scheme:serial-implicit>
-
-  </solver-interface>
+  <coupling-scheme:serial-implicit>
+    <participants first="Source" second="Drain" />
+    <max-time value="10.0" />
+    <time-window-size value="0.1" />
+    <max-iterations value="100" />
+    <exchange data="Source-Data" mesh="Source-Mesh" from="Source" to="Drain" />
+    <exchange data="Drain-Data" mesh="Drain-Mesh" from="Drain" to="Source" initialize="true" />
+    <relative-convergence-measure data="Source-Data" mesh="Source-Mesh" limit="1e-5" />
+    <relative-convergence-measure data="Drain-Data" mesh="Drain-Mesh" limit="1e-5" />
+    <acceleration:IQN-ILS>
+      <data name="Drain-Data" mesh="Drain-Mesh" />
+      <initial-relaxation value="0.1" />
+      <max-used-iterations value="10" />
+      <time-windows-reused value="5" />
+      <filter type="QR2" limit="1e-3" />
+    </acceleration:IQN-ILS>
+  </coupling-scheme:serial-implicit>
 </precice-configuration>

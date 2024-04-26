@@ -1,0 +1,112 @@
+# Check which files are ignored with: git status --ignored .
+# or, to also see which pattern matches: git check-ignore -v **/*
+# To deep-clean: git clean -idx .
+
+# In case there are tutorial-specific rules, add a separate .gitignore in the corresponding directory, 
+# but prefer adding general rules here, if possible.
+
+# General log files
+*.log
+out
+
+# Common result files
+*.vtk
+*.vtu
+*.pvd
+
+# preCICE
+precice-profiling/
+precice-run/
+core
+precice-*-events.json
+
+# C++
+*.o
+*.so
+.out
+build/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Rust
+Cargo.lock
+target/
+
+# OpenFOAM
+0.*/
+[1-9]*/
+!0/
+functionObjectProperties
+*/phi*
+*/meshPhi*
+processor*/
+history
+**/constant/polyMesh/
+postProcessing/
+*.foam
+*.OpenFOAM
+dynamicCode
+
+# CalculiX
+spooles.out
+dummy
+*.12d
+*.cvg
+*.dat
+*.frd
+*.sta
+*.eig
+*.rout
+
+# code_aster
+*.mess
+*.resu
+*.rmed
+REPE_OUT/
+
+# SU2
+restart_flow_*.dat
+forces_breakdown.dat
+surface_flow_*.csv
+history_*.csv
+
+# ASTE
+result.stats.json
+fine_mesh
+coarse_mesh
+mapped
+
+# deal.II
+linear_elasticity
+nonlinear_elasticity
+
+# DUNE
+dune-env/
+
+# DuMuX
+dumux/
+dumux-phasefield/
+dumux-adapter/
+dune-*
+*/build-cmake/
+install*
+
+# FEniCS covered by .vtk
+# Nutils covered by .vtk
+
+# System tests
+runs/
+
+# General editor and OS files
+.vscode
+*.DS_STORE
+.idea
+*.bak
+*~
+.cproject
+.project
+.settings/
+*.swp

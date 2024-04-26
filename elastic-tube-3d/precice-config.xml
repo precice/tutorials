@@ -7,69 +7,64 @@
       enabled="true" />
   </log>
 
-  <solver-interface dimensions="3">
-    <data:vector name="Force" />
-    <data:vector name="DisplacementDelta" />
+  <data:vector name="Force" />
+  <data:vector name="DisplacementDelta" />
 
-    <mesh name="Fluid-Mesh-Nodes">
-      <use-data name="DisplacementDelta" />
-    </mesh>
+  <mesh name="Fluid-Mesh-Nodes" dimensions="3">
+    <use-data name="DisplacementDelta" />
+  </mesh>
 
-    <mesh name="Fluid-Mesh-Faces">
-      <use-data name="Force" />
-    </mesh>
+  <mesh name="Fluid-Mesh-Faces" dimensions="3">
+    <use-data name="Force" />
+  </mesh>
 
-    <mesh name="Solid-Mesh">
-      <use-data name="DisplacementDelta" />
-      <use-data name="Force" />
-    </mesh>
+  <mesh name="Solid-Mesh" dimensions="3">
+    <use-data name="DisplacementDelta" />
+    <use-data name="Force" />
+  </mesh>
 
-    <participant name="Fluid">
-      <use-mesh name="Solid-Mesh" from="Solid" safety-factor="1.5" />
-      <use-mesh name="Fluid-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Fluid-Mesh-Faces" provide="yes" />
-      <write-data name="Force" mesh="Fluid-Mesh-Faces" />
-      <read-data name="DisplacementDelta" mesh="Fluid-Mesh-Nodes" />
-      <mapping:nearest-projection
-        direction="write"
-        from="Fluid-Mesh-Faces"
-        to="Solid-Mesh"
-        constraint="conservative"
-        timing="initial" />
-      <mapping:nearest-projection
-        direction="read"
-        from="Solid-Mesh"
-        to="Fluid-Mesh-Nodes"
-        constraint="consistent"
-        timing="initial" />
-    </participant>
+  <participant name="Fluid">
+    <receive-mesh name="Solid-Mesh" from="Solid" safety-factor="1.5" />
+    <provide-mesh name="Fluid-Mesh-Nodes" />
+    <provide-mesh name="Fluid-Mesh-Faces" />
+    <write-data name="Force" mesh="Fluid-Mesh-Faces" />
+    <read-data name="DisplacementDelta" mesh="Fluid-Mesh-Nodes" />
+    <mapping:nearest-projection
+      direction="write"
+      from="Fluid-Mesh-Faces"
+      to="Solid-Mesh"
+      constraint="conservative" />
+    <mapping:nearest-projection
+      direction="read"
+      from="Solid-Mesh"
+      to="Fluid-Mesh-Nodes"
+      constraint="consistent" />
+  </participant>
 
-    <participant name="Solid">
-      <use-mesh name="Solid-Mesh" provide="yes" />
-      <use-mesh name="Fluid-Mesh-Faces" from="Fluid" />
-      <write-data name="DisplacementDelta" mesh="Solid-Mesh" />
-      <read-data name="Force" mesh="Solid-Mesh" />
-      <watch-point mesh="Solid-Mesh" name="Tube-Midpoint" coordinate="0.0;0.005;0.025" />
-    </participant>
+  <participant name="Solid">
+    <provide-mesh name="Solid-Mesh" />
+    <write-data name="DisplacementDelta" mesh="Solid-Mesh" />
+    <read-data name="Force" mesh="Solid-Mesh" />
+    <watch-point mesh="Solid-Mesh" name="Tube-Midpoint" coordinate="0.0;0.005;0.025" />
+  </participant>
 
-    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
+  <m2n:sockets acceptor="Fluid" connector="Solid" exchange-directory=".." />
 
-    <coupling-scheme:serial-implicit>
-      <participants first="Fluid" second="Solid" />
-      <max-time-windows value="100" />
-      <time-window-size value="1e-4" />
-      <exchange data="Force" mesh="Solid-Mesh" from="Fluid" to="Solid" />
-      <exchange data="DisplacementDelta" mesh="Solid-Mesh" from="Solid" to="Fluid" />
-      <max-iterations value="30" />
-      <relative-convergence-measure limit="1e-3" data="DisplacementDelta" mesh="Solid-Mesh" />
-      <relative-convergence-measure limit="1e-3" data="Force" mesh="Solid-Mesh" />
-      <acceleration:IQN-IMVJ>
-        <data name="DisplacementDelta" mesh="Solid-Mesh" />
-        <preconditioner type="residual-sum" />
-        <initial-relaxation value="0.1" />
-        <max-used-iterations value="10" />
-        <time-windows-reused value="1" />
-      </acceleration:IQN-IMVJ>
-    </coupling-scheme:serial-implicit>
-  </solver-interface>
+  <coupling-scheme:serial-implicit>
+    <participants first="Fluid" second="Solid" />
+    <max-time-windows value="100" />
+    <time-window-size value="1e-4" />
+    <exchange data="Force" mesh="Solid-Mesh" from="Fluid" to="Solid" />
+    <exchange data="DisplacementDelta" mesh="Solid-Mesh" from="Solid" to="Fluid" />
+    <max-iterations value="30" />
+    <relative-convergence-measure limit="1e-3" data="DisplacementDelta" mesh="Solid-Mesh" />
+    <relative-convergence-measure limit="1e-3" data="Force" mesh="Solid-Mesh" />
+    <acceleration:IQN-IMVJ>
+      <data name="DisplacementDelta" mesh="Solid-Mesh" />
+      <preconditioner type="residual-sum" />
+      <initial-relaxation value="0.1" />
+      <max-used-iterations value="10" />
+      <time-windows-reused value="1" />
+    </acceleration:IQN-IMVJ>
+  </coupling-scheme:serial-implicit>
 </precice-configuration>

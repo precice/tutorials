@@ -1,0 +1,97 @@
+test_suites:
+  openfoam_adapter_pr:
+    tutorials:
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz
+  openfoam_adapter_release:
+    tutorials:
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+  fenics_test:
+    tutorials:
+      - path: flow-over-heated-plate
+        case_combination:
+         - fluid-openfoam
+         - solid-fenics
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz
+  nutils_test:
+    tutorials:
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-nutils
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-nutils.tar.gz
+  calculix_test:
+    tutorials:
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz
+  su2_test:
+    tutorials:
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-su2
+          - solid-fenics
+        reference_result: ./perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz
+  elastic_tube_1d_test:
+    tutorials:
+      - path: elastic-tube-1d
+        case_combination:
+          - fluid-cpp
+          - solid-cpp
+        reference_result: ./elastic-tube-1d/reference-results/fluid-cpp_solid-cpp.tar.gz
+      - path: elastic-tube-1d
+        case_combination:
+          - fluid-python
+          - solid-python
+        reference_result: ./elastic-tube-1d/reference-results/fluid-python_solid-python.tar.gz
+      - path: elastic-tube-1d
+        case_combination:
+          - fluid-cpp
+          - solid-python
+        reference_result: ./elastic-tube-1d/reference-results/fluid-cpp_solid-python.tar.gz
+  release_test:
+    tutorials:
+      - path: elastic-tube-1d
+        case_combination:
+          - fluid-cpp
+          - solid-python
+        reference_result: ./elastic-tube-1d/reference-results/fluid-cpp_solid-python.tar.gz
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-nutils
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-nutils.tar.gz
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-fenics
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-su2
+          - solid-fenics
+        reference_result: ./perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz

@@ -17,6 +17,12 @@ The setup for this tutorial is similar to the [flow over a heated plate](https:/
 This is a pseudo-2D case, but we still set a 3D `solver-interface` in `precice-config.xml`, because the code_aster case is set up like this at the moment. Contributions here are particularly welcome!
 {% endnote %}
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-flow-over-heated-plate-steady-state-precice-config.png)
+
 ## Available solvers
 
 Fluid participant:

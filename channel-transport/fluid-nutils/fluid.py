@@ -13,7 +13,7 @@ from mpi4py import MPI
 
 def main():
 
-    print("Running utils")
+    print("Running Nutils")
 
     # define the Nutils mesh
     nx = 48
@@ -55,28 +55,29 @@ def main():
     cons = solver.optimize(["u"], sqr, droptol=1e-15)
 
     # preCICE setup
-    interface = precice.Interface("Fluid", "../precice-config.xml", 0, 1)
+    participant = precice.Participant("Fluid", "../precice-config.xml", 0, 1)
 
     # define coupling mesh
     mesh_name = "Fluid-Mesh"
-    mesh_id = interface.get_mesh_id(mesh_name)
     vertices = gauss.eval(ns.x)
-    vertex_ids = interface.set_mesh_vertices(mesh_id, vertices)
+    vertex_ids = participant.set_mesh_vertices(mesh_name, vertices)
 
     # coupling data
-    velocity_id = interface.get_data_id("Velocity", mesh_id)
+    data_name = "Velocity"
 
-    precice_dt = interface.initialize()
+    participant.initialize()
 
     timestep = 0
-    dt = 0.005
+    solver_dt = 0.005
+    precice_dt = participant.get_max_time_step_size()
+    dt = min(precice_dt, solver_dt)
 
     state = solver.solve_linear(("u", "p"), (ures, pres), constrain=cons)  # initial condition
 
     # add convective term and time derivative for Navier-Stokes
     ures += gauss.integral("ubasis_ni (dudt_i + μ (u_i u_j)_,j) d:x" @ ns)
 
-    while interface.is_coupling_ongoing():
+    while participant.is_coupling_ongoing():
 
         if timestep % 1 == 0:  # visualize
             bezier = domain.sample("bezier", 2)
@@ -84,25 +85,26 @@ def main():
             with log.add(log.DataLog()):
                 export.vtk("Fluid_" + str(timestep), bezier.tri, x, u=u, p=p)
 
+        precice_dt = participant.get_max_time_step_size()
+
         # potentially adjust non-matching timestep sizes
-        dt = min(dt, precice_dt)
+        dt = min(solver_dt, precice_dt)
 
         # solve Nutils timestep
         state["u0"] = state["u"]
         state["dt"] = dt
         state = solver.newton(("u", "p"), (ures, pres), constrain=cons, arguments=state).solve(1e-10)
 
-        if interface.is_write_data_required(dt):
-            velocity_values = gauss.eval(ns.u, **state)
-            interface.write_block_vector_data(velocity_id, vertex_ids, velocity_values)
+        velocity_values = gauss.eval(ns.u, **state)
+        participant.write_data(mesh_name, data_name, vertex_ids, velocity_values)
 
         # do the coupling
-        precice_dt = interface.advance(dt)
+        participant.advance(dt)
 
         # advance variables
         timestep += 1
 
-    interface.finalize()
+    participant.finalize()
 
 
 if __name__ == "__main__":

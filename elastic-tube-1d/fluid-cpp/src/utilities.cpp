@@ -8,22 +8,22 @@
 #include <string>
 #include <vector>
 
-/* 
-   Function for solving the linear system 
+/*
+   Function for solving the linear system
    LAPACK is used DGESV computes the solution to a real system of linear equations
    A * x = b,
    where A is an N-by-N matrix and x and b are N-by-NRHS matrices.
 */
 extern "C" {
 void dgesv_(
-    int *   n,
-    int *   nrhs,
+    int    *n,
+    int    *nrhs,
     double *A,
-    int *   lda,
-    int *   ipiv,
+    int    *lda,
+    int    *ipiv,
     double *b,
-    int *   ldb,
-    int *   info);
+    int    *ldb,
+    int    *info);
 }
 
 void initializeWriting(std::ofstream &filestream)
@@ -35,19 +35,19 @@ void initializeWriting(std::ofstream &filestream)
 
 void writeHeader(std::ostream &outFile)
 {
-  outFile << "# vtk DataFile Version 2.0" << std::endl
-          << std::endl
-          << "ASCII" << std::endl
-          << std::endl
-          << "DATASET UNSTRUCTURED_GRID" << std::endl
-          << std::endl;
+  outFile << "# vtk DataFile Version 2.0\n"
+          << '\n'
+          << "ASCII\n"
+          << '\n'
+          << "DATASET UNSTRUCTURED_GRID\n"
+          << '\n';
 }
 
 void exportMesh(std::ofstream &outFile, int N_slices, double *grid)
 {
   // Plot vertices
-  outFile << "POINTS " << N_slices << " float " << std::endl
-          << std::endl;
+  outFile << "POINTS " << N_slices << " float\n"
+          << '\n';
 
   for (int i = 0; i < N_slices; i++) {
     // read x,y from grid. Set z = 0
@@ -55,14 +55,14 @@ void exportMesh(std::ofstream &outFile, int N_slices, double *grid)
     double x = grid[2 * i + 0];
     double y = grid[2 * i + 1];
     double z = 0.0;
-    outFile << x << "  " << y << "  " << z << std::endl;
+    outFile << x << "  " << y << "  " << z << '\n';
   }
-  outFile << std::endl;
+  outFile << '\n';
 }
 
 void exportVectorData(std::ofstream &outFile, int N_slices, double *data, const char *dataname)
 {
-  outFile << "VECTORS " << dataname << " float" << std::endl;
+  outFile << "VECTORS " << dataname << " float\n";
 
   for (int i = 0; i < N_slices; i++) {
     // Plot vertex data
@@ -71,23 +71,23 @@ void exportVectorData(std::ofstream &outFile, int N_slices, double *data, const 
     double vx = data[i];
     double vy = 0.0;
     double vz = 0.0;
-    outFile << vx << "  " << vy << "  " << vz << std::endl;
+    outFile << vx << "  " << vy << "  " << vz << '\n';
   }
 
-  outFile << std::endl;
+  outFile << '\n';
 }
 
 void exportScalarData(std::ofstream &outFile, int N_slices, double *data, std::string dataname)
 {
-  outFile << "SCALARS " << dataname << " float" << std::endl;
-  outFile << "LOOKUP_TABLE default" << std::endl;
+  outFile << "SCALARS " << dataname << " float\n";
+  outFile << "LOOKUP_TABLE default\n";
 
   for (int i = 0; i < N_slices; i++) {
     // Plot vertex data
-    outFile << data[i] << std::endl;
+    outFile << data[i] << '\n';
   }
 
-  outFile << std::endl;
+  outFile << '\n';
 }
 
 void write_vtk(double t, int iteration, const char *filename_prefix, int N_slices, double *grid, double *velocity, double *pressure, double *diameter)
@@ -103,8 +103,8 @@ void write_vtk(double t, int iteration, const char *filename_prefix, int N_slice
   writeHeader(outstream);
   exportMesh(outstream, N_slices, grid);
 
-  outstream << "POINT_DATA " << N_slices << std::endl;
-  outstream << std::endl;
+  outstream << "POINT_DATA " << N_slices << '\n';
+  outstream << '\n';
 
   exportVectorData(outstream, N_slices, velocity, "velocity");
   exportScalarData(outstream, N_slices, pressure, "pressure");

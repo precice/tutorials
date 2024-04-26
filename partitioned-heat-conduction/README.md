@@ -21,19 +21,25 @@ The heat equation is solved on a rectangular domain `Omega = [0,2] x [0,1]` with
 
 This simple case allows us to compare the solution for the partitioned case to a known analytical solution (method of manufactures solutions, see [1, p.37ff]). For more usage examples and details, please refer to [3, sect. 4.1].
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-precice-config.png)
+
 ## Available solvers and dependencies
 
 You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE and the python bindings installed on your system.
 
 * FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
 
-* Nutils. Install [Nutils](http://www.nutils.org/en/latest/).
+* Nutils. Install [Nutils](https://nutils.org/install-nutils.html).
 
-* OpenFOAM. This case also requires [funkySetFields](https://openfoamwiki.net/index.php/Contrib/funkySetFields) (part of [swak4Foam](https://openfoamwiki.net/index.php/Contrib/swak4Foam)) and uses the custom [heatTransfer](https://github.com/precice/tutorials/blob/master/partitioned-heat-conduction/openfoam-solver/heatTransfer.C) solver (find it in `openfoam-solver` and build with `wmake`). Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
+* OpenFOAM. This case uses the custom [heatTransfer](https://github.com/precice/tutorials/blob/master/partitioned-heat-conduction/solver-openfoam/heatTransfer.C) solver (find it in `solver-openfoam` and build with `wmake`). Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
 
 ## Running the simulation
 
-This tutorial is for FEniCS and Nutils. You can find the corresponding `run.sh` script in the folders `fenics` and `nutils`.
+You can find the corresponding `run.sh` script for running the case in the folders corresponding to the solver you want to use.
 
 For choosing whether you want to run the Dirichlet-kind and a Neumann-kind participant, please provide the following commandline input:
 
@@ -54,7 +60,7 @@ cd fenics
 ./run.sh -n
 ```
 
-If you want to use Nutils for one or both sides of the setup, just `cd nutils`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
+If you want to use Nutils, use `cd nutils` instead of `cd fenics`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
 
 ```bash
 mpirun -n <N_PROC> heat.py -d
