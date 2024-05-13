@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 set -e -u
 
 # shellcheck disable=SC1091

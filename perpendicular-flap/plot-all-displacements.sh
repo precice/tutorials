@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 # This script cannot be used as-is and is meant to generate the picture
 # images/tutorials-perpendicular-flap-displacement-all-watchpoints.png
