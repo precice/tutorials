@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 error() {
     echo "Error: $1" >&2

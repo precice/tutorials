@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Run this script at the root of the repository to check images and permalinks
 
 CODE=0

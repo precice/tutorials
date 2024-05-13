@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 gnuplot -p << EOF
 set grid
 set title 'Displacement of the Flap Tip'

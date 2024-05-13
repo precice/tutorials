@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Run this script at the root of the repository to check the size of images
 
 CODE=0
