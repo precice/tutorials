@@ -19,6 +19,12 @@ The state of the $$ U.x() $$ of the fluid at $$ t = 0.5s $$ (the source region i
 
 This case is a convenient starting point for volume coupling where OpenFOAM is a reading participant. The writing Nutils participant (dummy source) can be replaced by a more complex solver according to the user's needs.
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-volume-coupled-flow-precice-config.png)
+
 ## Available solvers
 
 Fluid participant:

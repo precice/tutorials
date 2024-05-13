@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 set -e # Not setting -u as it gets triggered by the OpenFOAM RunFunctions
 
 # Prepare an (intentionally empty) .foam file for the ParaView OpenFOAM reader

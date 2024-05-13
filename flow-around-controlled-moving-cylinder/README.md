@@ -17,6 +17,12 @@ We simulate a 2D flow around a cylinder. The cylinder is not fixed, but mounted 
 
 This case was contributed by Leonard Willeke et al. [1]. To reduce the overall runtime compared to the original contribution, this case uses a larger time step size 2.5e-3 (instead of 1e-3) and the controller switches on at t=2 (instead of t=40). Still, the scenario requires around an hour to complete.
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-flow-around-controlled-moving-cylinder-precice-config.png)
+
 ## Available solvers
 
 OpenFOAM is used for the `Fluid` participant. The spring-damper system is solved in a separate Python `Solid` participant. Finally, the PID algorithm is calculated in an FMU as participant `Controller`.

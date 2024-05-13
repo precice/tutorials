@@ -13,4 +13,4 @@ volumes:
 command: >
   /bin/bash -c "id && 
   cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&
-  {{ run }} | tee {{ case_folder }}.log 2>&1"
+  {{ run }} | tee system-tests_{{ case_folder }}.log 2>&1"

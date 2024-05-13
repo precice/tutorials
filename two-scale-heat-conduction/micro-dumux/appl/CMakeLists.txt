@@ -7,6 +7,7 @@ set(pybind11_DIR "${SITE_PACKAGES_DIR}/pybind11/share/cmake/pybind11/")
 
 find_package(pybind11 CONFIG REQUIRED)
 pybind11_add_module(micro_sim micro_sim.cpp)
+target_compile_options(micro_sim PUBLIC -DENABLE_MPI=0)
 
 #copy all source code to build directory to make available to pybind
 add_custom_target(copy_micro_heat_all ALL

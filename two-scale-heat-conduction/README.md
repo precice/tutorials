@@ -19,12 +19,23 @@ At each Gauss point of the macro domain there exists a micro simulation. The mac
 
 *Bastidas, Manuela & Bringedal, Carina & Pop, Iuliu Sorin (2021), A two-scale iterative scheme for a phase-field model for precipitation and dissolution in porous media. Applied Mathematics and Computation. 396. 125933. [10.1016/j.amc.2020.125933](https://doi.org/10.1016/j.amc.2020.125933)*.
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-two-scale-heat-conduction-precice-config.png)
+
 ## Available solvers and dependencies
 
 * Both the macro and micro simulations can be solved using the finite element library [Nutils](https://nutils.org/install.html) v7 or the simulation framework [DuMu<sup>x</sup>](https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/).
 * While using Nutils, the macro simulation is written in Python, so it requires the [Python bindings of preCICE](https://precice.org/installation-bindings-python.html).
 * The [Micro Manager](https://precice.org/tooling-micro-manager-installation.html) controls all micro-simulations and facilitates coupling via preCICE. Use the [develop](https://github.com/precice/micro-manager/tree/develop) branch of the Micro Manager.
-* To solve either the macro or micro simulations with the DuMu<sup>x</sup> framework, the necessary DUNE modules need to be downloaded and set up. Run `sh setup-dumux.sh` in the tutorial folder to set up the DUNE modules.
+
+### DuMu<sup>x</sup> setup
+
+To solve either the macro or micro simulations with the DuMu<sup>x</sup> framework, the necessary DUNE modules need to be downloaded and set up. This is done by running `sh setup-dumux.sh` in the tutorial folder.
+
+Note that if an existing installation of DUNE modules is detected in a default location, this may lead to problems in running the `setup-dumux.sh` script. The environment variable `DUNE_CONTROL_PATH` is suppressed by the script.
 
 ## Running the simulation
 
@@ -48,7 +59,7 @@ If you want to use DuMu<sup>x</sup>, use `cd macro-dumux` instead of `cd macro-n
 
 ## Running the simulation in parallel
 
-Only the `micro-nutils` participant can be run in parallel. To run it in parallel, run:
+All but the `macro-nutils` participant can be run in parallel. To run a participant in parallel, e.g. `micro-nutils`, run:
 
 ```bash
 cd micro-nutils
@@ -57,7 +68,7 @@ cd micro-nutils
 
 The `num_procs` needs to fit the decomposition specified in the `micro-manager-config.json` (default: two ranks).
 
-**NOTE**: When running `micro-nutils`, even though the case setup and involved physics is simple, each micro simulation is an instance of Nutils, which usually has a moderately high computation time. If the Micro Manager is run on 2 processors, the total runtime is approximately 25-30 minutes. Do not run the Micro Manager in serial, because the runtime will be several hours.
+**NOTE**: When running `micro-nutils`, even though the case setup and involved physics is simple, each micro simulation is an instance of Nutils, which usually has a moderately high computation time. If the Micro Manager is run on 2 processors, the total runtime is approximately 10-15 minutes depending on the compute machine. Do not run the Micro Manager in serial, because the runtime will be several hours.
 
 Running `micro-dumux` is much faster. A serial simulation takes approximately 2 minutes to finish.
 
@@ -67,7 +78,7 @@ Here are the results from Nutils-Nutils and DuMu<sup>x</sup>-DuMu<sup>x</sup> co
 
 <img class="img-responsive" src="images/tutorials-two-scale-heat-conduction-results.png" alt="Macro and micro data of macro-nutils - micro-nutils simulation" width=50% height=30%/>
 
-<img class="img-responsive" src="images/tutorials-two-scale-heat-conduction-results-du-du.png" alt="Macro and micro data of macro-nutils - micro-nutils simulation" width=50% height=30%/>
+<img class="img-responsive" src="images/tutorials-two-scale-heat-conduction-results-du-du.png" alt="Macro and micro data of macro-dumux - micro-dumux simulation" width=50% height=30%/>
 
 The differences of the fields are mainly introduced in by the different numerical schemes in the two solvers.
 
