@@ -7,7 +7,7 @@ summary: This tutorial describes how to run a conjugate heat transfer simulation
 
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/heat-exchanger-simplified). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/heat-exchanger-simplified). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -26,7 +26,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 Fluid participants:
 
-* OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
 Solid participant:
 
