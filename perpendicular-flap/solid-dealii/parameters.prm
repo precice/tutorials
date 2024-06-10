@@ -29,7 +29,7 @@ subsection System properties
   set Shear modulus   = 1538462
 
   # Density
-  set rho             = 3000
+  set rho             = 1
 
   # Body forces x,y,z
   set body forces     = 0.0,0.0,0.0
