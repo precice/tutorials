@@ -2,12 +2,14 @@ from __future__ import division
 
 import numpy as np
 import precice
+
+
 def displacement_param(t):
     # this parameter exists to define a time-dependent displacement of the flap's tip
     if t > 1:
         return 0.5
     else:
-        return 0.5*t
+        return 0.5 * t
 
 
 # computes the flap displacements
@@ -28,13 +30,13 @@ def compute_flap_displacements(t, height_flap, width_flap, vertices_per_side, di
         # if a=0 the flap is straight -> displacements are all 0
         return np.zeros((2 * vertices_per_side, dimensions))
 
-    fun_x_coord = lambda y: (np.cosh(a * y) - 1) / a
+    def fun_x_coord(y): return (np.cosh(a * y) - 1) / a
 
     ##########################
     # IN THE FOLLOWING: a!=0 #
     ##########################
 
-    #uniformly distributed vertices
+    # uniformly distributed vertices
     h_vert = height_flap / (vertices_per_side - 1)
     # with the function above, we know, that the middle flap's length can be computed with len=sinh(a*x)/a
     # now, we will compute the points of the flap_shape, were the len is not the height_flap, but n*h_vert
@@ -77,10 +79,10 @@ def compute_flap_displacements(t, height_flap, width_flap, vertices_per_side, di
     default_x_left = -width_flap / 2
     default_x_right = width_flap / 2
     for i in range(vertices_per_side):
-        #displacements right
+        # displacements right
         displacements_right[i][0] = displacements_right[i][0] - default_x_right
         displacements_right[i][1] = displacements_right[i][1] - h_vert * i
-        #displacements left
+        # displacements left
         displacements_left[i][0] = displacements_left[i][0] - default_x_left
         displacements_left[i][1] = displacements_left[i][1] - h_vert * i
     # bottom is fixed -> x & y displacement 0
@@ -88,6 +90,7 @@ def compute_flap_displacements(t, height_flap, width_flap, vertices_per_side, di
     displacements_right[0][:] = 0
 
     return np.concatenate((displacements_left, displacements_right), axis=0)
+
 
 configuration_file_name = "../precice-config.xml"
 participant_name = "Solid"
@@ -145,4 +148,3 @@ while interface.is_coupling_ongoing():
         t += dt
 
 interface.finalize()
-
