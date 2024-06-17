@@ -64,7 +64,7 @@ By doing that, you can now open two shells and switch into the directories `capa
 
 ## Post-processing
 
-The solver for the current also records the current and voltage through time and at the end of the simulation saves a plot with the obtained curves, as well as the analytical solution.
+The MATLAB participant for the current also records the current and voltage through time and at the end of the simulation saves a plot with the obtained curves, as well as the analytical solution.
 
 After successfully running the coupling, one can find the curves in the folder `capacitor-matlab` as `Curves.png`.
 
