@@ -6,7 +6,7 @@ summary: This tutorial describes how to run a structure-structure interaction si
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-elastic-beam). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-elastic-beam). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -15,9 +15,15 @@ We have a rectangular linear elastic beam of dimensions 1 x 1 x 8 m, divided in 
 
 ![beam setup](images/tutorials-partitioned-elastic-beam-setup.png)
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-partitioned-elastic-beam-precice-config.png)
+
 ## Available solvers
 
-* CalculiX. CalculiX is used for both structural parts. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html) for more.
+* CalculiX. CalculiX is used for both structural parts. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html) for more.
 
 ## Running the Simulation
 

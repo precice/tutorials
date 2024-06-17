@@ -6,7 +6,7 @@ summary: A dummy source participant is coupled to a fluid in a uni-directional w
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/volume-coupled-flow). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/volume-coupled-flow). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -19,6 +19,12 @@ The state of the $$ U.x() $$ of the fluid at $$ t = 0.5s $$ (the source region i
 
 This case is a convenient starting point for volume coupling where OpenFOAM is a reading participant. The writing Nutils participant (dummy source) can be replaced by a more complex solver according to the user's needs.
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-volume-coupled-flow-precice-config.png)
+
 ## Available solvers
 
 Fluid participant:
@@ -27,7 +33,7 @@ Fluid participant:
 
 Source participant:
 
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://www.precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
+* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
 
 ## Running the simulation
 

@@ -19,8 +19,6 @@
     <use-data name="Data" />
   </mesh>
 
-  <m2n:sockets acceptor="A" connector="B" exchange-directory="." />
-
   <participant name="A">
     <provide-mesh name="A-Mesh" />
     <write-data name="Data" mesh="A-Mesh" />
@@ -39,6 +37,8 @@
           <basis-function:compact-polynomial-c6 support-radius="0.1" />
           </mapping:rbf-global-direct> -->
   </participant>
+
+  <m2n:sockets acceptor="A" connector="B" exchange-directory="." />
 
   <coupling-scheme:parallel-explicit>
     <participants first="A" second="B" />

@@ -6,7 +6,7 @@ summary: We simulate an advection-diffusion-reaction scenario in a fluid in moti
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/channel-transport-reaction). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/channel-transport-reaction). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -18,6 +18,12 @@ The geometry is shown below:
 ![Geometry](images/tutorials-channel-transport-reaction-geometry.png)
 
 The simulation is split into two participants: a Fluid participant that computes the fluid flow and sends the velocity field to the Chemical participant which computes the reaction, diffusion and advection of all chemical species. The coupling is unidirectional (`serial-explicit` with only one data entity being transferred).
+
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-channel-transport-reaction-precice-config.png)
 
 ## Available solvers and dependencies
 

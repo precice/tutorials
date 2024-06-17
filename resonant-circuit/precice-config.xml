@@ -1,53 +1,49 @@
-<?xml version="1.0"?>
-
+<?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
+  <data:scalar name="Current" />
+  <data:scalar name="Voltage" />
 
-  <data:scalar name="I" waveform-degree="3" />
-  <data:scalar name="U" waveform-degree="3" />
-
-  <mesh name="MeshI" dimensions="2">
-    <use-data name="I" />
-    <use-data name="U" />
+  <mesh name="Coil-Mesh" dimensions="2">
+    <use-data name="Current" />
+    <use-data name="Voltage" />
   </mesh>
 
-  <mesh name="MeshU" dimensions="2">
-    <use-data name="U" />
-    <use-data name="I" />
+  <mesh name="Capacitor-Mesh" dimensions="2">
+    <use-data name="Current" />
+    <use-data name="Voltage" />
   </mesh>
 
-  <participant name="ParticipantI">
-    <provide-mesh name="MeshI" />
-    <receive-mesh name="MeshU" from="ParticipantU"/>
-    <write-data name="I"     mesh="MeshI" />
-    <read-data  name="U" mesh="MeshI" />
-    <mapping:nearest-neighbor
-      direction="write" from="MeshI" to="MeshU" constraint="consistent"/>
-    <mapping:nearest-neighbor
-      direction="read" from="MeshU" to="MeshI" constraint="consistent"/>
+  <participant name="Coil">
+    <provide-mesh name="Coil-Mesh" />
+    <write-data name="Current" mesh="Coil-Mesh" />
+    <read-data name="Voltage" mesh="Coil-Mesh" />
   </participant>
 
-  <participant name="ParticipantU">
-    <provide-mesh name="MeshU" />
-    <receive-mesh name="MeshI" from="ParticipantI"/>
-    <write-data name="U"     mesh="MeshU" />
-    <read-data  name="I" mesh="MeshU" />
+  <participant name="Capacitor">
+    <provide-mesh name="Capacitor-Mesh" />
+    <receive-mesh name="Coil-Mesh" from="Coil" />
+    <write-data name="Voltage" mesh="Capacitor-Mesh" />
+    <read-data name="Current" mesh="Capacitor-Mesh" />
     <mapping:nearest-neighbor
-      direction="write" from="MeshU" to="MeshI" constraint="consistent"/>
+      direction="write"
+      from="Capacitor-Mesh"
+      to="Coil-Mesh"
+      constraint="consistent" />
     <mapping:nearest-neighbor
-      direction="read" from="MeshI" to="MeshU" constraint="consistent"/>
-    <watch-point mesh="MeshU" name="UI" coordinate="0.0;0.0" />
+      direction="read"
+      from="Coil-Mesh"
+      to="Capacitor-Mesh"
+      constraint="consistent" />
   </participant>
 
-  <m2n:sockets acceptor="ParticipantI" connector="ParticipantU" exchange-directory=".." />
+  <m2n:sockets acceptor="Coil" connector="Capacitor" exchange-directory=".." />
 
   <coupling-scheme:serial-implicit>
-    <participants first="ParticipantI" second="ParticipantU" />
-    <max-time value="1" />
-    <time-window-size value=".1" />
-    <max-iterations value="20" />
-    <exchange data="I" mesh="MeshI" from="ParticipantI" to="ParticipantU" substeps="true" />
-    <exchange data="U" mesh="MeshU" from="ParticipantU" to="ParticipantI" substeps="true" />
-    <relative-convergence-measure limit="1e-8" data="U" mesh="MeshU" />
-    <relative-convergence-measure limit="1e-8" data="I" mesh="MeshI" />
+    <participants first="Coil" second="Capacitor" />
+    <max-time value="10" />
+    <time-window-size value="0.01" />
+    <max-iterations value="3" />
+    <exchange data="Current" mesh="Coil-Mesh" from="Coil" to="Capacitor" />
+    <exchange data="Voltage" mesh="Coil-Mesh" from="Capacitor" to="Coil" />
   </coupling-scheme:serial-implicit>
 </precice-configuration>

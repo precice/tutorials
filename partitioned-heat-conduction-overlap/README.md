@@ -6,7 +6,7 @@ summary: We solve a simple heat equation. The domain is partitioned and the coup
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-overlap). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-overlap). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -16,6 +16,12 @@ We solve a partitioned heat equation, but apply an overlapping Schwarz-type doma
 ![Case setup of partitioned-heat-conduction case with overlapping Schwarz-type domain decomposition](images/tutorials-partitioned-heat-conduction-overlap-setup.png)
 
 Note that this case applies an overlapping Schwarz-type coupling method and not (like most other tutorials in this repository) a Dirichlet-Neumann coupling. This results in a symmetric setup of the solvers.
+
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-overlap-precice-config.png)
 
 ## Running the simulation
 

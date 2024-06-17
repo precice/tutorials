@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 set -e -u
 
 # File check solution from: https://stackoverflow.com/questions/91368/checking-from-shell-script-if-a-directory-contains-files

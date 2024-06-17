@@ -6,7 +6,7 @@ summary: Flow around a rigid moving cylinder. A FMI-based controller is used to 
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-around-controlled-moving-cylinder). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-around-controlled-moving-cylinder). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -17,13 +17,19 @@ We simulate a 2D flow around a cylinder. The cylinder is not fixed, but mounted 
 
 This case was contributed by Leonard Willeke et al. [1]. To reduce the overall runtime compared to the original contribution, this case uses a larger time step size 2.5e-3 (instead of 1e-3) and the controller switches on at t=2 (instead of t=40). Still, the scenario requires around an hour to complete.
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-flow-around-controlled-moving-cylinder-precice-config.png)
+
 ## Available solvers
 
 OpenFOAM is used for the `Fluid` participant. The spring-damper system is solved in a separate Python `Solid` participant. Finally, the PID algorithm is calculated in an FMU as participant `Controller`.
 
 - *OpenFOAM*: To run this case, you need the preCICE [OpenFOAM Adapter](https://precice.org/adapter-openfoam-get.html). OpenFOAM is used to simulate the laminar flow around the cylinder with the solver `pimpleFoam`.
 - *FMI*: A solver using the [preCICE-FMI Runner](https://github.com/precice/fmi-runner) (requires at least v0.2). The Runner executes the FMU model `PIDcontroller.fmu` for computation. The provided run script (see below) builds this model if not already there. If you want to change the model parameters or simulation setup, have a look inside `fmi-settings.json` and `precice-settings.json` (see folder `controller-fmi`).
-- *Python*: A python script solving the spring damper system. It uses the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html) and depends on the Python library `numpy`. You can install `numpy` from your system package manager or with `pip3 install --user <package>`.
+- *Python*: A python script solving the spring damper system. It uses the preCICE [Python bindings](https://precice.org/installation-bindings-python.html) and depends on the Python library `numpy`. You can install `numpy` from your system package manager or with `pip3 install --user <package>`.
 
 ## Running the simulation
 

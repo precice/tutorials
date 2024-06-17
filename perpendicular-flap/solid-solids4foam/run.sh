@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 . ../../tools/log.sh
 exec > >(tee --append "$LOGFILE") 2>&1

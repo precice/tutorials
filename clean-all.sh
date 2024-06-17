@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 set -e -u
 
 echo "Cleaning up all tutorials..."

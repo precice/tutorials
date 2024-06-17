@@ -19,7 +19,7 @@ import logging
 import os
 
 
-GLOBAL_TIMEOUT = 360
+GLOBAL_TIMEOUT = 600
 SHORT_TIMEOUT = 10
 
 

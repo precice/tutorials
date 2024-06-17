@@ -19,7 +19,6 @@
 
   <participant name="Flow">
     <provide-mesh name="Flow-Mesh" />
-    <receive-mesh name="Chemical-Mesh" from="Chemical" />
     <write-data name="Velocity" mesh="Flow-Mesh" />
   </participant>
 

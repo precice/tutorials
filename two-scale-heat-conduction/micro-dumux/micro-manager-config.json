@@ -9,7 +9,9 @@
     },
     "simulation_params": {
       "macro_domain_bounds": [0.0, 1.0, 0.0, 0.5],
-      "adaptivity": {
+      "decomposition": [2, 1],
+      "adaptivity": "True",
+      "adaptivity_settings": {
             "type": "global",
             "data": ["k_00", "k_11", "porosity", "concentration"],
             "history_param": 0.1,

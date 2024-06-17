@@ -11,8 +11,6 @@ FoamFile
 // the case
 application     heatTransfer;
 
-libs ( "libgroovyBC.so" ) ;
-
 startFrom       startTime;
 
 startTime       0;

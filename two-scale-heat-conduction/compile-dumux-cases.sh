@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 set -e -u
 
 cd macro-dumux/build-cmake/appl
