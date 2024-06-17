@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
-  <data:scalar name="Current" />
-  <data:scalar name="Voltage" />
+  <data:scalar name="Current" waveform-degree="3" />
+  <data:scalar name="Voltage" waveform-degree="3" />
 
   <mesh name="Coil-Mesh" dimensions="2">
     <use-data name="Current" />
@@ -41,9 +41,11 @@
   <coupling-scheme:serial-implicit>
     <participants first="Coil" second="Capacitor" />
     <max-time value="10" />
-    <time-window-size value="0.01" />
-    <max-iterations value="3" />
-    <exchange data="Current" mesh="Coil-Mesh" from="Coil" to="Capacitor" />
-    <exchange data="Voltage" mesh="Coil-Mesh" from="Capacitor" to="Coil" />
+    <time-window-size value="1" />
+    <max-iterations value="100" />
+    <exchange data="Current" mesh="Coil-Mesh" from="Coil" to="Capacitor" substeps="true" />
+    <exchange data="Voltage" mesh="Coil-Mesh" from="Capacitor" to="Coil" substeps="true" />
+    <relative-convergence-measure limit="1e-3" data="Current" mesh="Coil-Mesh" />
+    <relative-convergence-measure limit="1e-3" data="Voltage" mesh="Coil-Mesh" />
   </coupling-scheme:serial-implicit>
 </precice-configuration>
