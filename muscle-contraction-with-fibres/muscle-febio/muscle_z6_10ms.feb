@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<febio_spec version="4.0">
+	<Module type="solid"/>
+	<Code>
+		<callback name="precice_callback"/>
+	</Code>
+	<Control>
+		<analysis>DYNAMIC</analysis>
+		<time_steps>3</time_steps>
+		<step_size>10.0</step_size>
+		<plot_zero_state>0</plot_zero_state>
+		<plot_range>0,-1</plot_range>
+		<plot_level>PLOT_MAJOR_ITRS</plot_level>
+		<output_level>OUTPUT_MAJOR_ITRS</output_level>
+		<plot_stride>1</plot_stride>
+		<adaptor_re_solve>1</adaptor_re_solve>
+		<time_stepper type="default">
+			<max_retries>5</max_retries>
+			<opt_iter>11</opt_iter>
+			<dtmin>0</dtmin>
+			<dtmax>10.0</dtmax>
+			<aggressiveness>0</aggressiveness>
+			<cutback>0.5</cutback>
+			<dtforce>0</dtforce>
+		</time_stepper>
+		<solver type="solid">
+			<symmetric_stiffness>symmetric</symmetric_stiffness>
+			<equation_scheme>staggered</equation_scheme>
+			<equation_order>default</equation_order>
+			<optimize_bw>0</optimize_bw>
+			<lstol>0.9</lstol>
+			<lsmin>0.01</lsmin>
+			<lsiter>5</lsiter>
+			<max_refs>15</max_refs>
+			<check_zero_diagonal>0</check_zero_diagonal>
+			<zero_diagonal_tol>0</zero_diagonal_tol>
+			<force_partition>0</force_partition>
+			<reform_each_time_step>1</reform_each_time_step>
+			<reform_augment>0</reform_augment>
+			<diverge_reform>1</diverge_reform>
+			<min_residual>1e-20</min_residual>
+			<max_residual>0</max_residual>
+			<dtol>0.001</dtol>
+			<etol>0.01</etol>
+			<rtol>0</rtol>
+			<rhoi>-2</rhoi>
+			<alpha>1</alpha>
+			<beta>0.25</beta>
+			<gamma>0.5</gamma>
+			<logSolve>0</logSolve>
+			<arc_length>0</arc_length>
+			<arc_length_scale>0</arc_length_scale>
+			<qn_method type="BFGS">
+				<max_ups>10</max_ups>
+				<max_buffer_size>0</max_buffer_size>
+				<cycle_buffer>1</cycle_buffer>
+				<cmax>100000</cmax>
+			</qn_method>
+		</solver>
+	</Control>
+	<Globals>
+		<Constants>
+			<T>0</T>
+			<P>0</P>
+			<R>8.31446</R>
+			<Fc>96485.3</Fc>
+		</Constants>
+	</Globals>
+	<Material>
+		<material id="1" name="Material2" type="DiHuMaterial">
+			<density>10</density>
+			<k>1000</k>
+			<pressure_model>default</pressure_model>
+			<c1>3.176e-10</c1>
+			<c2>1.813</c2>
+			<c3>0</c3>
+			<c4>1</c4>
+			<c5>0.01075</c5>
+			<lam_max>1</lam_max>
+			<fiber type="vector">
+				<vector>0,0,1</vector>
+			</fiber>
+			<active_contraction type="DiHuContraction">
+				<pmax>7.3</pmax>
+				<lam_opt>1.2</lam_opt>
+				<enable_force_length_relation>1</enable_force_length_relation>
+			</active_contraction>
+		</material>
+	</Material>
+	<Mesh>
+		<Nodes name="Object2">
+			<node id="1">0,0,0</node>
+			<node id="2">3,0,0</node>
+			<node id="3">3,3,0</node>
+			<node id="4">0,3,0</node>
+			<node id="5">0,0,12</node>
+			<node id="6">3,0,12</node>
+			<node id="7">3,3,12</node>
+			<node id="8">0,3,12</node>
+			<node id="9">1,0,0</node>
+			<node id="10">2,0,0</node>
+			<node id="11">3,0,2</node>
+			<node id="12">3,0,4</node>
+			<node id="13">3,0,6</node>
+			<node id="14">3,0,8</node>
+			<node id="15">3,0,10</node>
+			<node id="16">2,0,12</node>
+			<node id="17">1,0,12</node>
+			<node id="18">0,0,10</node>
+			<node id="19">0,0,8</node>
+			<node id="20">0,0,6</node>
+			<node id="21">0,0,4</node>
+			<node id="22">0,0,2</node>
+			<node id="23">3,1,0</node>
+			<node id="24">3,2,0</node>
+			<node id="25">3,3,2</node>
+			<node id="26">3,3,4</node>
+			<node id="27">3,3,6</node>
+			<node id="28">3,3,8</node>
+			<node id="29">3,3,10</node>
+			<node id="30">3,2,12</node>
+			<node id="31">3,1,12</node>
+			<node id="32">2,3,0</node>
+			<node id="33">1,3,0</node>
+			<node id="34">0,3,2</node>
+			<node id="35">0,3,4</node>
+			<node id="36">0,3,6</node>
+			<node id="37">0,3,8</node>
+			<node id="38">0,3,10</node>
+			<node id="39">1,3,12</node>
+			<node id="40">2,3,12</node>
+			<node id="41">0,2,0</node>
+			<node id="42">0,1,0</node>
+			<node id="43">0,1,12</node>
+			<node id="44">0,2,12</node>
+			<node id="45">1,2.22044605e-16,2</node>
+			<node id="46">2,0,2</node>
+			<node id="47">1,0,4</node>
+			<node id="48">2,0,4</node>
+			<node id="49">1,0,6</node>
+			<node id="50">2,0,6</node>
+			<node id="51">1,0,8</node>
+			<node id="52">2,0,8</node>
+			<node id="53">1,0,10</node>
+			<node id="54">2,2.22044605e-16,10</node>
+			<node id="55">3,1,2</node>
+			<node id="56">3,2,2</node>
+			<node id="57">3,1,4</node>
+			<node id="58">3,2,4</node>
+			<node id="59">3,1,6</node>
+			<node id="60">3,2,6</node>
+			<node id="61">3,1,8</node>
+			<node id="62">3,2,8</node>
+			<node id="63">3,1,10</node>
+			<node id="64">3,2,10</node>
+			<node id="65">2,3,2</node>
+			<node id="66">1,3,2</node>
+			<node id="67">2,3,4</node>
+			<node id="68">1,3,4</node>
+			<node id="69">2,3,6</node>
+			<node id="70">1,3,6</node>
+			<node id="71">2,3,8</node>
+			<node id="72">1,3,8</node>
+			<node id="73">2,3,10</node>
+			<node id="74">1,3,10</node>
+			<node id="75">2.22044605e-16,2,2</node>
+			<node id="76">0,1,2</node>
+			<node id="77">0,2,4</node>
+			<node id="78">0,1,4</node>
+			<node id="79">0,2,6</node>
+			<node id="80">0,1,6</node>
+			<node id="81">0,2,8</node>
+			<node id="82">0,1,8</node>
+			<node id="83">0,2,10</node>
+			<node id="84">2.22044605e-16,1,10</node>
+			<node id="85">1,2,0</node>
+			<node id="86">2,2,0</node>
+			<node id="87">1,1,0</node>
+			<node id="88">2,1,0</node>
+			<node id="89">1,1,12</node>
+			<node id="90">2,1,12</node>
+			<node id="91">1,2,12</node>
+			<node id="92">2,2,12</node>
+			<node id="93">1,1,2</node>
+			<node id="94">2,1,2</node>
+			<node id="95">1,2,2</node>
+			<node id="96">2,2,2</node>
+			<node id="97">1,1,4</node>
+			<node id="98">2,1,4</node>
+			<node id="99">1,2,4</node>
+			<node id="100">2,2,4</node>
+			<node id="101">1,1,6</node>
+			<node id="102">2,1,6</node>
+			<node id="103">1,2,6</node>
+			<node id="104">2,2,6</node>
+			<node id="105">1,1,8</node>
+			<node id="106">2,1,8</node>
+			<node id="107">1,2,8</node>
+			<node id="108">2,2,8</node>
+			<node id="109">1,1,10</node>
+			<node id="110">2,1,10</node>
+			<node id="111">1,2,10</node>
+			<node id="112">2,2,10</node>
+		</Nodes>
+		<Elements type="hex8" name="MusclePart">
+			<elem id="1">1,9,87,42,22,45,93,76</elem>
+			<elem id="2">9,10,88,87,45,46,94,93</elem>
+			<elem id="3">10,2,23,88,46,11,55,94</elem>
+			<elem id="4">42,87,85,41,76,93,95,75</elem>
+			<elem id="5">87,88,86,85,93,94,96,95</elem>
+			<elem id="6">88,23,24,86,94,55,56,96</elem>
+			<elem id="7">41,85,33,4,75,95,66,34</elem>
+			<elem id="8">85,86,32,33,95,96,65,66</elem>
+			<elem id="9">86,24,3,32,96,56,25,65</elem>
+			<elem id="10">22,45,93,76,21,47,97,78</elem>
+			<elem id="11">45,46,94,93,47,48,98,97</elem>
+			<elem id="12">46,11,55,94,48,12,57,98</elem>
+			<elem id="13">76,93,95,75,78,97,99,77</elem>
+			<elem id="14">93,94,96,95,97,98,100,99</elem>
+			<elem id="15">94,55,56,96,98,57,58,100</elem>
+			<elem id="16">75,95,66,34,77,99,68,35</elem>
+			<elem id="17">95,96,65,66,99,100,67,68</elem>
+			<elem id="18">96,56,25,65,100,58,26,67</elem>
+			<elem id="19">21,47,97,78,20,49,101,80</elem>
+			<elem id="20">47,48,98,97,49,50,102,101</elem>
+			<elem id="21">48,12,57,98,50,13,59,102</elem>
+			<elem id="22">78,97,99,77,80,101,103,79</elem>
+			<elem id="23">97,98,100,99,101,102,104,103</elem>
+			<elem id="24">98,57,58,100,102,59,60,104</elem>
+			<elem id="25">77,99,68,35,79,103,70,36</elem>
+			<elem id="26">99,100,67,68,103,104,69,70</elem>
+			<elem id="27">100,58,26,67,104,60,27,69</elem>
+			<elem id="28">20,49,101,80,19,51,105,82</elem>
+			<elem id="29">49,50,102,101,51,52,106,105</elem>
+			<elem id="30">50,13,59,102,52,14,61,106</elem>
+			<elem id="31">80,101,103,79,82,105,107,81</elem>
+			<elem id="32">101,102,104,103,105,106,108,107</elem>
+			<elem id="33">102,59,60,104,106,61,62,108</elem>
+			<elem id="34">79,103,70,36,81,107,72,37</elem>
+			<elem id="35">103,104,69,70,107,108,71,72</elem>
+			<elem id="36">104,60,27,69,108,62,28,71</elem>
+			<elem id="37">19,51,105,82,18,53,109,84</elem>
+			<elem id="38">51,52,106,105,53,54,110,109</elem>
+			<elem id="39">52,14,61,106,54,15,63,110</elem>
+			<elem id="40">82,105,107,81,84,109,111,83</elem>
+			<elem id="41">105,106,108,107,109,110,112,111</elem>
+			<elem id="42">106,61,62,108,110,63,64,112</elem>
+			<elem id="43">81,107,72,37,83,111,74,38</elem>
+			<elem id="44">107,108,71,72,111,112,73,74</elem>
+			<elem id="45">108,62,28,71,112,64,29,73</elem>
+			<elem id="46">18,53,109,84,5,17,89,43</elem>
+			<elem id="47">53,54,110,109,17,16,90,89</elem>
+			<elem id="48">54,15,63,110,16,6,31,90</elem>
+			<elem id="49">84,109,111,83,43,89,91,44</elem>
+			<elem id="50">109,110,112,111,89,90,92,91</elem>
+			<elem id="51">110,63,64,112,90,31,30,92</elem>
+			<elem id="52">83,111,74,38,44,91,39,8</elem>
+			<elem id="53">111,112,73,74,91,92,40,39</elem>
+			<elem id="54">112,64,29,73,92,30,7,40</elem>
+		</Elements>
+		<Surface name="ZeroDisplacement1">
+			<quad4 id="1">4,33,85,41</quad4>
+			<quad4 id="2">33,32,86,85</quad4>
+			<quad4 id="3">32,3,24,86</quad4>
+			<quad4 id="4">41,85,87,42</quad4>
+			<quad4 id="5">85,86,88,87</quad4>
+			<quad4 id="6">86,24,23,88</quad4>
+			<quad4 id="7">42,87,9,1</quad4>
+			<quad4 id="8">87,88,10,9</quad4>
+			<quad4 id="9">88,23,2,10</quad4>
+		</Surface>
+	</Mesh>
+	<MeshDomains>
+		<SolidDomain name="MusclePart" mat="Material2"/>
+	</MeshDomains>
+	<Boundary>
+		<bc name="ZeroDisplacement1" node_set="@surface:ZeroDisplacement1" type="zero displacement">
+			<x_dof>1</x_dof>
+			<y_dof>1</y_dof>
+			<z_dof>1</z_dof>
+		</bc>
+	</Boundary>
+	<Output>
+		<plotfile type="febio">
+			<var type="displacement"/>
+			<var type="stress"/>
+			<var type="relative volume"/>
+		</plotfile>
+	</Output>
+</febio_spec>
