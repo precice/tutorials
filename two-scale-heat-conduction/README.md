@@ -6,7 +6,7 @@ summary: We solve a two-scale heat conduction problem with a predefined micro st
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/two-scale-heat-conduction). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/two-scale-heat-conduction). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup

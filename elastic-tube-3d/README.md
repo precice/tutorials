@@ -6,14 +6,14 @@ summary: Tutorial for an FSI simulation of a three-dimensional expanding tube sc
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/elastic-tube-3d). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/elastic-tube-3d). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
 
 The expanding tube test case involves a cylindrical fluid domain surrounded by a solid domain. A pressure inlet boundary condition is applied at the inlet for 3 milliseconds, and then 0 set to zero for a further 7 millisecond. The pressure of the fluid expands the tube which then relaxes once the pressure decreases.
 
-The expanding tube test case comes with the interface surface mesh connectivity of the solid domain. This allows the use of nearest-projection mapping of the displacements of the solid domain. In order to run the example with nearest projection mapping, the "node-mesh-with-connectivity" has been specified in the `solid-calculix/config.yml` file. More details can be found in the [CalculiX configuration description](https://www.precice.org/adapter-calculix-config.html#nearest-projection-mapping).
+The expanding tube test case comes with the interface surface mesh connectivity of the solid domain. This allows the use of nearest-projection mapping of the displacements of the solid domain. In order to run the example with nearest projection mapping, the "node-mesh-with-connectivity" has been specified in the `solid-calculix/config.yml` file. More details can be found in the [CalculiX configuration description](https://precice.org/adapter-calculix-config.html#nearest-projection-mapping).
 
 ## Configuration
 
@@ -25,13 +25,13 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 Fluid participant:
 
-* OpenFOAM (pimpleFoam). In case you are using a very old OpenFOAM version, you will need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* OpenFOAM (pimpleFoam). In case you are using a very old OpenFOAM version, you will need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
 Solid participant:
 
-* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html).
+* CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html).
 
-* FEniCS. The structural model is currently limited to linear elasticity. Currently 3D functionality is experimental in the FEniCS adapter and more details can be found [here](https://github.com/precice/fenics-adapter/pull/133) For more information, have a look at the [FeniCS adapter documentation](https://www.precice.org/adapter-fenics.html).
+* FEniCS. The structural model is currently limited to linear elasticity. Currently 3D functionality is experimental in the FEniCS adapter and more details can be found [here](https://github.com/precice/fenics-adapter/pull/133) For more information, have a look at the [FeniCS adapter documentation](https://precice.org/adapter-fenics.html).
 
 ## Running the simulation
 

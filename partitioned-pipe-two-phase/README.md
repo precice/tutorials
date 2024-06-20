@@ -6,7 +6,7 @@ summary: This tutorial describes how to run a partitioned two-phse fluid simulat
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-pipe-two-phase). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-pipe-two-phase). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -41,7 +41,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 ## Available solvers
 
-Both Fluid1 and Fluid2 are simulated with OpenFOAM (interFoam). An incompressible multiphase solver for two immiscible fluids using the *Volume-of-fluid* method. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+Both Fluid1 and Fluid2 are simulated with OpenFOAM (interFoam). An incompressible multiphase solver for two immiscible fluids using the *Volume-of-fluid* method. For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
 ## Running the Simulation
 

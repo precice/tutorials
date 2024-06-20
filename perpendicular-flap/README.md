@@ -6,7 +6,7 @@ summary: This tutorial describes how to run a fluid-structure interaction using 
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/perpendicular-flap). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/perpendicular-flap). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -27,25 +27,25 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 Fluid participant:
 
-* OpenFOAM (pimpleFoam). In case you are using a very old OpenFOAM version, you will need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://www.precice.org/adapter-openfoam-overview.html).
+* OpenFOAM (pimpleFoam). In case you are using a very old OpenFOAM version, you will need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
-* SU2. As opposed to the other two fluid codes, SU2 is in particular specialized for compressible flow. Therefore the default simulation parameters haven been adjusted in order to pull the setup into the compressible flow regime. For more information, have a look at the [SU2 adapter documentation](https://www.precice.org/adapter-su2-overview.html).
+* SU2. As opposed to the other two fluid codes, SU2 is in particular specialized for compressible flow. Therefore the default simulation parameters haven been adjusted in order to pull the setup into the compressible flow regime. For more information, have a look at the [SU2 adapter documentation](https://precice.org/adapter-su2-overview.html).
 
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://www.precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v6.0. This case currently takes orders of magnitude longer than the OpenFOAM and SU2 cases, see [related issue](https://github.com/precice/tutorials/issues/506).
+* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v6.0. This case currently takes orders of magnitude longer than the OpenFOAM and SU2 cases, see [related issue](https://github.com/precice/tutorials/issues/506).
 
 * Fake. A simple python script that acts as a fake solver and provides an arbitrary force, linearly-increasing per length of the flap. This solver can be used for debugging of the solid participant and its adapter. It also technically works with implicit coupling, thus no changes to the preCICE configuration are necessary. Note that [ASTE's replay mode](https://precice.org/tooling-aste.html#replay-mode) has a similar use case and could also feed artificial or previously recorded real data, replacing an actual solver.
 
 Solid participant:
 
-* FEniCS. The structural model is currently limited to linear elasticity. For more information, have a look at the [FEniCS adapter documentation](https://www.precice.org/adapter-fenics.html).
+* FEniCS. The structural model is currently limited to linear elasticity. For more information, have a look at the [FEniCS adapter documentation](https://precice.org/adapter-fenics.html).
 
-* CalculiX. In order to allow a reasonable comparison to all solid codes, the geometrically non-linear solver has been disabled and only a linear model is used by default. For more information, have a look at the [CalculiX adapter documentation](https://www.precice.org/adapter-calculix-overview.html). Two cases are provided: one as a regular simulation, and one with modal dynamic simulations where a few eigenmodes are computed, and then used to simulate a reduced model. In that case, the `run.sh` script runs the frequency analysis, renames the output file to match with the actual input file, and then runs it. For more details, see the [adapter configuration documentation](https://precice.org/adapter-calculix-config.html). To run the modal dynamic version, add the `-modal` argument to the `run.sh` script.
+* CalculiX. In order to allow a reasonable comparison to all solid codes, the geometrically non-linear solver has been disabled and only a linear model is used by default. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html). Two cases are provided: one as a regular simulation, and one with modal dynamic simulations where a few eigenmodes are computed, and then used to simulate a reduced model. In that case, the `run.sh` script runs the frequency analysis, renames the output file to match with the actual input file, and then runs it. For more details, see the [adapter configuration documentation](https://precice.org/adapter-calculix-config.html). To run the modal dynamic version, add the `-modal` argument to the `run.sh` script.
 
-* deal.II. This tutorial works only with `Model = linear` since the deal.II codes were developed with read data `Stress` instead of `Force` as applied here (example given in Turek-Hron-FSI) in the first place. The `./run.sh` script takes the compiled executable `elasticity` as input argument (`run.sh -e=/path/to/elasticity`) and is required in case the executable is not discoverable at runtime (e.g. has been added to the system `PATH`). For more information, have a look at the [deal.II adapter documentation](https://www.precice.org/adapter-dealii-overview.html).
+* deal.II. This tutorial works only with `Model = linear` since the deal.II codes were developed with read data `Stress` instead of `Force` as applied here (example given in Turek-Hron-FSI) in the first place. The `./run.sh` script takes the compiled executable `elasticity` as input argument (`run.sh -e=/path/to/elasticity`) and is required in case the executable is not discoverable at runtime (e.g. has been added to the system `PATH`). For more information, have a look at the [deal.II adapter documentation](https://precice.org/adapter-dealii-overview.html).
 
 * DUNE. For more information, have a look at the [experimental DUNE adapter](https://github.com/precice/dune-adapter) and send us your feedback.
 
-* Nutils. The structural model is currently limited to linear elasticity. For more information, have a look at the [Nutils adapter documentation](https://www.precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v8.0.
+* Nutils. The structural model is currently limited to linear elasticity. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v8.0.
 
 * solids4foam. Like for CalculiX, the geometrically non-linear solver is used by default. For more information, see the [solids4foam documentation](https://solids4foam.github.io/documentation/overview.html) and a [related tutorial](https://solids4foam.github.io/tutorials/more-tutorials/flexibleOversetCylinder.html). This case works with solids4foam v2.0, which is compatible with up to OpenFOAM v2012 and OpenFOAM 9 (as well as foam-extend, with which the OpenFOAM-preCICE adapter is not compatible), as well as the OpenFOAM-preCICE adapter v1.2.0 or later.
 

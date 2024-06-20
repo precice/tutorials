@@ -6,7 +6,7 @@ summary: We solve an oscillator with two masses in a partitioned fashion. Each m
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/oscillator). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/oscillator). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -27,7 +27,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 There are two different implementations:
 
-- *Python*: A solver using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy`, which you can get from your system package manager or with `pip3 install --user <package>`. Using the option `-ts` allows you to pick the time stepping scheme being used. Available choices are Newmark beta, generalized alpha, explicit Runge Kutta 4, and implicit RadauIIA. The solver uses subcycling: Each participant performs 4 time steps in each time window. The data of these 4 substeps is then used by preCICE to create a third order B-spline interpolation (`waveform-degree="3"` in `precice-config.xml`).
+- *Python*: A solver using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy`, which you can get from your system package manager or with `pip3 install --user <package>`. Using the option `-ts` allows you to pick the time stepping scheme being used. Available choices are Newmark beta, generalized alpha, explicit Runge Kutta 4, and implicit RadauIIA. The solver uses subcycling: Each participant performs 4 time steps in each time window. The data of these 4 substeps is then used by preCICE to create a third order B-spline interpolation (`waveform-degree="3"` in `precice-config.xml`).
 - *FMI*: A solver using the [preCICE-FMI runner](https://github.com/precice/fmi-runner) (requires at least v0.2). The Runner executes the FMU model `Oscillator.fmu` for computation. The provided run scripts (see below) build this model if not already there. For more information, please refer to [2].
 
 ## Running the simulation

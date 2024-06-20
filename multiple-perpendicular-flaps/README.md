@@ -6,7 +6,7 @@ summary: In this case, a fluid and two solids are coupled together using a fully
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/multiple-perpendicular-flaps). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/multiple-perpendicular-flaps). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Case Setup
@@ -23,7 +23,7 @@ The inflow velocity is 5 m/s (uniform) on the left boundary.
 At the outlet, pressure is set to zero and velocity to `zeroGradient`.
 The top, bottom and flap are walls with a `noslip` condition.
 
-For a case showing fluid-structure interaction only (no multi-coupling), take a look at the [single perpendicular flap tutorial](https://www.precice.org/tutorials-perpendicular-flap.html).
+For a case showing fluid-structure interaction only (no multi-coupling), take a look at the [single perpendicular flap tutorial](https://precice.org/tutorials-perpendicular-flap.html).
 
 ## Configuration
 
@@ -33,7 +33,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 ## Why multi-coupling?
 
-This is a case with three participants: the fluid and each flap. In preCICE, there are two options to [couple more than two participants](https://www.precice.org/configuration-coupling-multi.html). The first option a composition of bi-coupling schemes, in which we must specify the exchange of data in a participant to participant manner. However, such a composition is not suited for combining multiple strong fluid-structure interactions [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling.
+This is a case with three participants: the fluid and each flap. In preCICE, there are two options to [couple more than two participants](https://precice.org/configuration-coupling-multi.html). The first option a composition of bi-coupling schemes, in which we must specify the exchange of data in a participant to participant manner. However, such a composition is not suited for combining multiple strong fluid-structure interactions [1]. Thus, in this case, we use the second option, fully-implicit multi-coupling.
 
 We can set this in our `precice-config.xml`:
 
@@ -75,7 +75,7 @@ The scenario settings are implemented similarly for the nonlinear case.
 ## Running the Simulation
 
 1. Preparation:
-   To run the coupled simulation, copy the deal.II executable `elasticity` into the main folder. To learn how to obtain the deal.II executable take a look at the description on the  [deal.II-adapter page](https://www.precice.org/adapter-dealii-overview.html).
+   To run the coupled simulation, copy the deal.II executable `elasticity` into the main folder. To learn how to obtain the deal.II executable take a look at the description on the  [deal.II-adapter page](https://precice.org/adapter-dealii-overview.html).
 2. Starting:
 
    We are going to run each solver in a different terminal. It is important that first we navigate to the simulation directory so that all solvers start in the same directory.

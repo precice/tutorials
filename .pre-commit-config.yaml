@@ -28,7 +28,7 @@ repos:
   rev: 'v14.0.6'
   hooks:
   - id: clang-format
-    exclude: '\.json$'
+    exclude: '\.(json|m|mm)$'
 - repo: https://github.com/koalaman/shellcheck-precommit
   rev: v0.10.0
   hooks:

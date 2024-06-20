@@ -6,7 +6,7 @@ summary: The 1D Elastic Tube is a FSI case, that consists of an internal flow in
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/elastic-tube-1d). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/elastic-tube-1d). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -39,9 +39,9 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 Both fluid and solid participant are supported in:
 
-- *C++*: example solvers using the intrinsic [C++ API of preCICE](https://www.precice.org/couple-your-code-api.html). The fluid solver also depends on LAPACK (e.g. on Ubuntu `sudo apt-get install liblapack-dev`)
-- *Python*: example solvers using the preCICE [Python bindings](https://www.precice.org/installation-bindings-python.html). Both solvers depend on `numpy`. The fluid solver additionally depends on the Python libraries `scipy matplotlib`. You can get these libraries from your system package manager or with `pip3 install --user <package>`.
-- *Rust*: example solvers using the preCICE [Rust bindings](https://www.precice.org/installation-bindings-rust.html). They need `cargo` to be installed.
+- *C++*: example solvers using the intrinsic [C++ API of preCICE](https://precice.org/couple-your-code-api.html). The fluid solver also depends on LAPACK (e.g. on Ubuntu `sudo apt-get install liblapack-dev`)
+- *Python*: example solvers using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html). Both solvers depend on `numpy`. The fluid solver additionally depends on the Python libraries `scipy matplotlib`. You can get these libraries from your system package manager or with `pip3 install --user <package>`.
+- *Rust*: example solvers using the preCICE [Rust bindings](https://precice.org/installation-bindings-rust.html). They need `cargo` to be installed.
 
 ## Running the Simulation
 

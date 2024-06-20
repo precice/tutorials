@@ -6,7 +6,7 @@ summary: This tutorial is the advanced version of the "partitioned heat conducti
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-complex). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-complex). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
