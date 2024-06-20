@@ -139,9 +139,14 @@ while participant.is_coupling_ongoing():
     u_new, v_new, a_new, sol = time_stepper.do_step(u, v, a, f, dt)
     t_new = t + dt
 
-    n_pseudo = 5 * len(sol.ts)  # 5 times no. substeps should be on the safe side.
+    # create n samples_per_step of time stepping scheme. Degree of dense
+    # interpolating function is usually larger 1 and, therefore, we need
+    # multiple samples per step.
+    samples_per_step = 5
+    n_time_steps = len(sol.ts)  # number of time steps performed by adaptive time stepper
+    n_pseudo = samples_per_step * n_time_steps  # samples_per_step times no. time steps per window.
+
     t_pseudo = 0
-    print(n_pseudo)
     for i in range(n_pseudo):
         # perform n_pseudo pseudosteps
         dt_pseudo = dt / n_pseudo

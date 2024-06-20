@@ -128,9 +128,7 @@ class RadauIIA():
         def fun(t, x):
             return self.ode_system.dot(x) + rhs_fun(t)
 
-        # use large rtol and atol to circumvent error control.
-        # ret = sp.integrate.solve_ivp(fun, [t0, t0 + dt], x0, method="Radau",
-        #                              first_step=dt, max_step=dt, rtol=10e10, atol=10e10)
+        # use adaptive time stepping; dense_output=True allows us to sample from continuous function later
         ret = sp.integrate.solve_ivp(fun, [t0, t0 + dt], x0, method="Radau",
                                      dense_output=True, rtol=10e-5, atol=10e-9)
 
