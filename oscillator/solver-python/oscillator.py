@@ -135,25 +135,34 @@ while participant.is_coupling_ongoing():
 
     def f(t): return participant.read_data(mesh_name, read_data_name, vertex_ids, t)[0]
 
-    # do generalized alpha step
-    u_new, v_new, a_new, sol = time_stepper.do_step(u, v, a, f, dt)
-    t_new = t + dt
+    # do time step, write data, and advance
+    # performs adaptive time stepping with dense output; multiple write calls per time step
+    if args.time_stepping == timeSteppers.TimeSteppingSchemes.Radau_IIA.value:
+        u_new, v_new, a_new, sol = time_stepper.do_step(u, v, a, f, dt)
+        t_new = t + dt
+        # create n samples_per_step of time stepping scheme. Degree of dense
+        # interpolating function is usually larger 1 and, therefore, we need
+        # multiple samples per step.
+        samples_per_step = 5
+        n_time_steps = len(sol.ts)  # number of time steps performed by adaptive time stepper
+        n_pseudo = samples_per_step * n_time_steps  # samples_per_step times no. time steps per window.
 
-    # create n samples_per_step of time stepping scheme. Degree of dense
-    # interpolating function is usually larger 1 and, therefore, we need
-    # multiple samples per step.
-    samples_per_step = 5
-    n_time_steps = len(sol.ts)  # number of time steps performed by adaptive time stepper
-    n_pseudo = samples_per_step * n_time_steps  # samples_per_step times no. time steps per window.
+        t_pseudo = 0
+        for i in range(n_pseudo):
+            # perform n_pseudo pseudosteps
+            dt_pseudo = dt / n_pseudo
+            t_pseudo += dt_pseudo
+            write_data = [connecting_spring.k * sol(t_pseudo)[0]]
+            participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
+            participant.advance(dt_pseudo)
 
-    t_pseudo = 0
-    for i in range(n_pseudo):
-        # perform n_pseudo pseudosteps
-        dt_pseudo = dt / n_pseudo
-        t_pseudo += dt_pseudo
-        write_data = [connecting_spring.k * sol(t_pseudo)[0]]
+    else:  # simple time stepping without dense output; only a single write call per time step
+        u_new, v_new, a_new = time_stepper.do_step(u, v, a, f, dt)
+        t_new = t + dt
+
+        write_data = [connecting_spring.k * u_new]
         participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
-        participant.advance(dt_pseudo)
+        participant.advance(dt)
 
     if participant.requires_reading_checkpoint():
         u = u_cp
