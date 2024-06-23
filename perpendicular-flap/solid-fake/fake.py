@@ -10,14 +10,13 @@ def displace_flap(x, y, t, flap_tip_y):
     # first, get displacement independent of x, only dependent on y and t
     # maximal displacement at flap tip should be 0.5
     # initially, flap's displacement is 0
-    x_displ = np.minimum(((np.sin(3*np.pi*t + np.arcsin(-0.95)) +0.95)/ 8) * y / flap_tip_y, 0.5 * y / flap_tip_y)
+    x_displ = np.minimum(((np.sin(3 * np.pi * t + np.arcsin(-0.95)) + 0.95) / 8) * y / flap_tip_y, 0.5 * y / flap_tip_y)
 
     displ = np.zeros((len(x), 2))
     displ[:, 0] = x_displ
     displ[:, 1] = y_displ
 
     return displ
-
 
 
 configuration_file_name = "../precice-config.xml"
@@ -44,7 +43,7 @@ y_top = y_bottom + H  # top of the flap
 n = 24  # Number of vertices per side
 t = 0
 
-vertices_mid = np.zeros((2*n, dimensions))
+vertices_mid = np.zeros((2 * n, dimensions))
 vertices_mid[:n, 1] = np.linspace(y_bottom, y_top, n)
 vertices_mid[n:, 1] = np.linspace(y_bottom, y_top, n)
 
