@@ -42,28 +42,4 @@ boundaryField
     {
         type            empty;
     }
-
-    blob
-    {
-      type codedFixedValue;
-      value uniform 0;
-      redirectType    fixedValue;
-      code
-      #{
-          const fvPatch& boundaryPatch = patch();
-          scalarField& field = *this;
-
-          // Blob parameters
-          vector xblob(1, 1, 0);  // Center of the blob
-          scalar R = 0.5;         // Characteristic length (radius)
-          scalar width = 0.1;     // Smoothing factor
-
-          forAll(boundaryPatch, faceI)
-          {
-              const point& faceCenter = boundaryPatch.faceCentres()[faceI];
-              scalar distanceSquared = magSqr(faceCenter - xblob.xy());
-              field[faceI] = 0.5 - 0.5 * tanh((distanceSquared - R*R) / width);
-          }
-      #};
-    }
 }
