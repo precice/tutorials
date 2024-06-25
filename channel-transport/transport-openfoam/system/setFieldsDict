@@ -13,12 +13,16 @@ defaultFieldValues
 
 regions
 (
-    boxToCell
+    cylinderToCell
     {
-       box (0.5 0.5 0) (1.5 1.5 1);
+        p1 (1 1 0);
+        p2 (1 1 1);
+        radius 0.5;
+
         fieldValues
         (
             volScalarFieldValue T 1
+            //TODO "0.5 - 0.5 * tanh(((x - 1)*(x - 1) + (y - 1)*(y - 1) - 0.5) / 0.1)"
         );
     }
 );

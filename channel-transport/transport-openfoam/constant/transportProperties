@@ -6,4 +6,4 @@ FoamFile
     object      transportProperties;
 }
 
-DT 0.01;
+DT 0.1;

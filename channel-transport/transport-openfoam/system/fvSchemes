@@ -19,12 +19,14 @@ gradSchemes
 divSchemes
 {
     default         none;
-    div(phi,T)      Gauss linearUpwind grad(T);
+    div(phi,U)      Gauss linear;
+    div(phi,T)      Gauss upwind; //linearUpwind grad(T);
 }
 
 laplacianSchemes
 {
     default         none;
+    laplacian(DT,U) Gauss linear corrected;
     laplacian(DT,T) Gauss linear corrected;
 }
 

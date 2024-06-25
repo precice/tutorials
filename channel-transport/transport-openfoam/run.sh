@@ -5,6 +5,7 @@ set -e -u
 exec > >(tee --append "$LOGFILE") 2>&1
 
 blockMesh
+topoSet
 cp -r 0.orig 0
 setFields
 

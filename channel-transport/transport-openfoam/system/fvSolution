@@ -11,11 +11,11 @@ solvers
 {
   T
   {
-    solver PBiCGStab;
+    solver           PBiCGStab;
     preconditioner   DILU;
     tolerance        1e-6;
     relTol 	         0;
-    norm default;
+    norm             default;
   }
 }
 
