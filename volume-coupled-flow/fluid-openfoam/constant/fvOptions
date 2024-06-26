@@ -27,6 +27,8 @@ codedSource
         for(auto cell : cells)
         {
             fld[cell].x() = U_vol[cell].x();
+            fld[cell].y() = U_vol[cell].y();
+            fld[cell].z() = U_vol[cell].z();
         }
     #};
 
