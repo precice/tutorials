@@ -6,7 +6,7 @@ FoamFile
     object      controlDict;
 }
 
-application     scalarTransportFoam;
+application     dynamicScalarTransportFoam;
 
 startFrom       startTime;
 
