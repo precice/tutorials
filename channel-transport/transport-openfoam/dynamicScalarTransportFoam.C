@@ -81,17 +81,17 @@ int main(int argc, char *argv[])
 
     Info<< "\nCalculating scalar transport\n" << endl;
 
-    #include "CourantNo.H"
-
     while (simple.loop())
     {
         Info << "Time = " << runTime.timeName() << nl << endl;
 
+        Info<< "Recompute phi" << endl;
+        fvOptions.correct(U);
+        phi = fvc::flux(U);
+        #include "CourantNo.H"
+
         while (simple.correctNonOrthogonal())
         {
-            // Update phi as U changes
-            phi = fvc::flux(U);
-
             fvScalarMatrix TEqn
             (
                 fvm::ddt(T)
