@@ -63,51 +63,57 @@ Description
 
 int main(int argc, char *argv[])
 {
-  argList::addNote(
-      "Passive scalar transport equation solver.");
+    argList::addNote
+    (
+        "Passive scalar transport equation solver."
+    );
 
-#include "addCheckCaseOptions.H"
-#include "createMesh.H"
-#include "createTime.H"
-#include "setRootCaseLists.H"
+    #include "addCheckCaseOptions.H"
+    #include "setRootCaseLists.H"
+    #include "createTime.H"
+    #include "createMesh.H"
 
-  simpleControl simple(mesh);
+    simpleControl simple(mesh);
 
-#include "createFields.H"
+    #include "createFields.H"
 
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-  Info << "\nCalculating scalar transport\n"
-       << endl;
+    Info<< "\nCalculating scalar transport\n" << endl;
 
-#include "CourantNo.H"
+    #include "CourantNo.H"
 
-  while (simple.loop()) {
-    Info << "Time = " << runTime.timeName() << nl << endl;
+    while (simple.loop())
+    {
+        Info << "Time = " << runTime.timeName() << nl << endl;
 
-    while (simple.correctNonOrthogonal()) {
-      // TODO directly read from U
-      fvOptions.correct(U);
-      phi = fvc::flux(U);
-      // fvOptions.correct(phi);
+        while (simple.correctNonOrthogonal())
+        {
+            // Update phi as U changes
+            phi = fvc::flux(U);
 
-      fvScalarMatrix TEqn(
-          fvm::ddt(T) + fvm::div(phi, T) - fvm::laplacian(DT, T) ==
-          fvOptions(T));
+            fvScalarMatrix TEqn
+            (
+                fvm::ddt(T)
+              + fvm::div(phi, T)
+              - fvm::laplacian(DT, T)
+             ==
+                fvOptions(T)
+            );
 
-      TEqn.relax();
-      fvOptions.constrain(TEqn);
-      TEqn.solve();
-      fvOptions.correct(T);
+            TEqn.relax();
+            fvOptions.constrain(TEqn);
+            TEqn.solve();
+            fvOptions.correct(T);
+        }
+
+        runTime.write();
     }
 
-    runTime.write();
-  }
+    Info<< "End\n" << endl;
 
-  Info << "End\n"
-       << endl;
-
-  return 0;
+    return 0;
 }
+
 
 // ************************************************************************* //

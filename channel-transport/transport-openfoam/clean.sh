@@ -5,3 +5,4 @@ set -e -u
 
 clean_openfoam .
 rm -rf ./0/
+rm -rf ./Make/linux*
