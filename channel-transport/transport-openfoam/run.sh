@@ -6,7 +6,7 @@ exec > >(tee --append "$LOGFILE") 2>&1
 
 blockMesh
 cp -r 0.orig 0
-setFields
+setExprFields
 
 ../../tools/run-openfoam.sh "$@"
 . ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
