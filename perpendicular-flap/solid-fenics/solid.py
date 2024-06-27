@@ -74,7 +74,7 @@ fixed_boundary = AutoSubDomain(clamped_boundary)
 precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
 
 # Initialize the coupling interface
-precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fixed_boundary=fixed_boundary)
+precice.initialize(coupling_boundary, read_function_space=V, write_object=u_n, fixed_boundary=fixed_boundary)
 
 precice_dt = precice.get_max_time_step_size()
 fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
