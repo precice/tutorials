@@ -1,3 +1,4 @@
 nutils==7
+numpy >1, <2
 pyprecice==3
 micro-manager-precice==0.4.0

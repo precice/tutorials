@@ -1,2 +1,3 @@
 nutils==6
+numpy >1, <2
 pyprecice==3
