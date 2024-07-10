@@ -109,7 +109,7 @@ Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid
 
 In order for the systemtests to pick up the tutorial we need to define a `metadata.yaml` in the folder of the tutorial. There are a few `metadata.yaml` already present to get inspiration from. You can also have a look at the implementation details but normally the currently available ones should be easy to adopt. You can check your metadata parsing by `python print_metadata.py` and `python print_case_combinations.py`
 
-### Adding Testsuites
+### Adding testsuites
 
 To add a testsuite just open the `tests.yaml` file and use the output of `python print_case_combinations.py` to add the right case combinations you want to test. Note that you can specify a `reference_result` which is not yet present. The `generate_reference_data.py` will pick that up and create it for you.
 Note that its important to carefully check the paths of the `reference_result` in order to not have typos in there. Also note that same cases in different testsuites should use the same `reference_result`.
@@ -118,6 +118,10 @@ Note that its important to carefully check the paths of the `reference_result` i
 
 Since we need data to compare against, you need to run `python generate_reference_data.py`. This process might take a while.
 Please include the generated reference results in the pull request as they are strongly connected to the new testsuites.
+
+## Adding repositories
+
+If you want to trigger a testsuite from a new repository, you need to add a workflow file to that repository (under `.github/workflows/`). You can, for example, copy and adjust [the one from the OpenFOAM adapter](https://github.com/precice/openfoam-adapter/blob/develop/.github/workflows/system-tests.yaml). Then, you need a new label to trigger the workflow (e.g. `Issues`->`Labels`->`New label`). Last, in the [preCICE organization settings](https://github.com/organizations/precice/settings), you need to add the new repository to the action secret `WORKFLOW_DISPATCH_TOKEN`. Adding the new label directly to the pull request in which you add the workflow should already trigger the system tests, compare the [pull request in the `precice` repository](https://github.com/precice/precice/pull/2052). 
 
 ## Implementation details
 
