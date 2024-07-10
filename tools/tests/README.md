@@ -121,7 +121,7 @@ Please include the generated reference results in the pull request as they are s
 
 ## Adding repositories
 
-If you want to trigger a testsuite from a new repository, you need to add a workflow file to that repository (under `.github/workflows/`). You can, for example, copy and adjust [the one from the OpenFOAM adapter](https://github.com/precice/openfoam-adapter/blob/develop/.github/workflows/system-tests.yaml). Then, you need a new label to trigger the workflow (e.g. `Issues`->`Labels`->`New label`). Last, in the [preCICE organization settings](https://github.com/organizations/precice/settings), you need to add the new repository to the action secret `WORKFLOW_DISPATCH_TOKEN`. Adding the new label directly to the pull request in which you add the workflow should already trigger the system tests, compare the [pull request in the `precice` repository](https://github.com/precice/precice/pull/2052). 
+If you want to trigger a testsuite from a new repository, you need to add a workflow file to that repository (under `.github/workflows/`). You can, for example, copy and adjust [the one from the OpenFOAM adapter](https://github.com/precice/openfoam-adapter/blob/develop/.github/workflows/system-tests.yaml). Then, you need a new label to trigger the workflow (e.g. `Issues`->`Labels`->`New label`). Last, in the [preCICE organization settings](https://github.com/organizations/precice/settings), you need to add the new repository to the action secret `WORKFLOW_DISPATCH_TOKEN`. Adding the new label directly to the pull request in which you add the workflow should already trigger the system tests, compare the [pull request in the `precice` repository](https://github.com/precice/precice/pull/2052).
 
 ## Implementation details
 
