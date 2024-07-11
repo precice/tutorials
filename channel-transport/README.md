@@ -41,7 +41,7 @@ Transport participant:
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
 
-* OpenFOAM. This case uses a modified version of scalarTransportFoam, which recomputes `phi` after the preCICE adapter reads the velocity field. Build it with `wmake`. Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
+* OpenFOAM. This case uses a modified version of scalarTransportFoam, which recomputes `phi` after the preCICE adapter reads the velocity field. Build it with `wmake`. Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html). Note that T accumulates in front of the outlet as this case conserves overall T.
 
 ## Running the simulation
 
