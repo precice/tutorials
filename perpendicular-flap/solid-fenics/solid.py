@@ -77,7 +77,7 @@ precice = Adapter(adapter_config_filename="precice-adapter-config-fsi-s.json")
 precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fixed_boundary=fixed_boundary)
 
 precice_dt = precice.get_max_time_step_size()
-fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
+fenics_dt = precice_dt / 10  # if fenics_dt == precice_dt, no subcycling is applied
 # n_substeps = 5  # number of substeps per window
 # fenics_dt = precice_dt / n_substeps  # if fenics_dt < precice_dt, subcycling is applied
 dt = Constant(np.min([precice_dt, fenics_dt]))
@@ -158,16 +158,14 @@ def update_v(a, u_old, v_old, a_old, ufl=True):
 def update_fields(u, u_old, v_old, a_old):
     """Update all fields at the end of a timestep."""
 
-    u_vec, u0_vec = u.vector(), u_old.vector()
-    v0_vec, a0_vec = v_old.vector(), a_old.vector()
-
     # call update functions
-    a_vec = update_a(u_vec, u0_vec, v0_vec, a0_vec, ufl=False)
-    v_vec = update_v(a_vec, u0_vec, v0_vec, a0_vec, ufl=False)
+    a_new = update_a(u, u_old, v_old, a_old)
+    v_new = update_v(u, u_old, v_old, a_old)
 
-    # assign u->u_old
-    v_old.vector()[:], a_old.vector()[:] = v_vec, a_vec
-    u_old.vector()[:] = u.vector()
+    # update values
+    a_old.assign(project(a_new, V))
+    v_old.assign(project(v_new, V))
+    u_old.assign(u)
 
 
 def avg(x_old, x_new, alpha):
@@ -238,7 +236,6 @@ while precice.is_coupling_ongoing():
         n = n_cp
     else:
         update_fields(u_np1, u_n, v_n, a_n)
-        u_n.assign(u_np1)
         t += float(dt)
         n += 1
 
