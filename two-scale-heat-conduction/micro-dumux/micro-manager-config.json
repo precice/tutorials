@@ -8,6 +8,7 @@
             "read_data_names": {"concentration": "scalar"}
     },
     "simulation_params": {
+      "micro_dt": 0.01,
       "macro_domain_bounds": [0.0, 1.0, 0.0, 0.5],
       "decomposition": [2, 1],
       "adaptivity": "True",
