@@ -43,11 +43,13 @@ y_top = y_bottom + H  # top of the flap
 n = 24  # Number of vertices per side
 t = 0
 
-vertices_mid = np.zeros((2 * n, dimensions))
-vertices_mid[:n, 1] = np.linspace(y_bottom, y_top, n)
-vertices_mid[n:, 1] = np.linspace(y_bottom, y_top, n)
+vertices = np.zeros((2 * n, dimensions))
+vertices[:n, 1] = np.linspace(y_bottom, y_top, n)
+vertices[n:, 1] = np.linspace(y_bottom, y_top, n)
+vertices[:n, 0] = x_left
+vertices[n:, 0] = x_right
 
-vertex_ids = interface.set_mesh_vertices(mesh_name, vertices_mid)
+vertex_ids = interface.set_mesh_vertices(mesh_name, vertices)
 
 interface.initialize()
 # change if necessary
@@ -62,7 +64,7 @@ while interface.is_coupling_ongoing():
     precice_dt = interface.get_max_time_step_size()
     dt = min([solver_dt, precice_dt])
     # wiggle the flap
-    write_data = displace_flap(vertices_mid[:, 0], vertices_mid[:, 1], t, H)
+    write_data = displace_flap(vertices[:, 0], vertices[:, 1], t, H)
 
     interface.write_data(mesh_name, write_data_name, vertex_ids, write_data)
     interface.advance(dt)
