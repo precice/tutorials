@@ -7,12 +7,20 @@ import precice
 def displace_flap(x, y, t, flap_tip_y):
     x_displ = np.zeros_like(x)
     y_displ = np.zeros_like(y)
-    # first, get displacement independent of x, only dependent on y and t
-    # maximal displacement at flap tip should be 0.5
-    # initially, flap's displacement is 0
-    x_displ = np.minimum(((np.sin(3 * np.pi * t + np.arcsin(-0.95)) + 0.95) / 8) * y / flap_tip_y, 0.5 * y / flap_tip_y)
+    # get displacement independent of x, only dependent on y and t
+    max_x_displ = 0.5
+    period_fac = 3 * np.pi
+    damping_fac = 8  # damps the amplitude of the sine
+    # defines how much the sine is shifted in y-direction
+    shift = 0.95
+    # wiggles the flap periodically.
+    # the arcsin(-shift) in the sine evaluation is necessary to start at a flap displacement of 0 at t=0
+    # (i.e. sin(arcsin(-shift))+shift = 0)
+    x_displ = np.minimum(((np.sin(period_fac * t + np.arcsin(-shift)) + shift) /
+                         damping_fac), max_x_displ) * y / flap_tip_y
 
-    displ = np.zeros((len(x), 2))
+    dimensions = 2
+    displ = np.zeros((len(x), dimensions))
     displ[:, 0] = x_displ
     displ[:, 1] = y_displ
 
@@ -44,12 +52,18 @@ n = 24  # Number of vertices per side
 t = 0
 
 vertices = np.zeros((2 * n, dimensions))
+# define vertices of flap's left side
 vertices[:n, 1] = np.linspace(y_bottom, y_top, n)
-vertices[n:, 1] = np.linspace(y_bottom, y_top, n)
 vertices[:n, 0] = x_left
+# define vertices of flap's right side
+vertices[n:, 1] = np.linspace(y_bottom, y_top, n)
 vertices[n:, 0] = x_right
 
 vertex_ids = interface.set_mesh_vertices(mesh_name, vertices)
+
+if interface.requires_initial_data():
+    # initially, there should be no displacement
+    interface.write_data(np.zeros_like(vertices))
 
 interface.initialize()
 # change if necessary
