@@ -39,6 +39,7 @@ from pySDC.implementations.sweeper_classes.imex_1st_order_mass import imex_1st_o
 from pySDC.implementations.controller_classes.controller_nonMPI import controller_nonMPI
 from heat_pySDC_problem_class import fenics_heat_2d
 
+
 def determine_gradient(V_g, u, flux):
     """
     compute flux following http://hplgit.github.io/INF5620/doc/pub/fenics_tutorial1.1/tu2.html#tut-poisson-gradu
@@ -54,6 +55,82 @@ def determine_gradient(V_g, u, flux):
     L = inner(grad(u), v) * dx
     solve(a == L, flux)
 
+
+def setup_problem(
+        participant_name,
+        domain_mesh,
+        coupling_boundary,
+        remaining_boundary,
+        V,
+        u_D,
+        forcing_expr,
+        precice,
+        coupling_expression,
+        dt,
+        res_tol=1e-11,
+        maxiter=40,
+        quad_type='LOBATTO',
+        num_nodes=4,
+        logger_level=30):
+    """
+    Setup the problem for pySDC controller
+    :param participant_name: name of the participant
+    :param domain_mesh: mesh of the domain
+    :param coupling_boundary: boundary where coupling happens
+    :param remaining_boundary: remaining boundary
+    :param V: function space
+    :param u_D: initial condition
+    :param forcing_expr: forcing term
+    :param precice: preCICE adapter
+    :param coupling_expression: coupling expression
+    :param dt: pySDC time step size
+    :return: controller, problem class
+
+    pySDC can be installed via `pip install pySDC`.
+    If you want to use the developer version, the source code repository can be cloned from "https://github.com/Parallel-in-Time/pySDC".
+    For more information on pySDC, see also "https://parallel-in-time.org/pySDC/"
+    """
+
+    # initialize controller parameters
+    controller_params = {
+        'logger_level': logger_level
+    }
+
+    # fill description dictionary for easy instantiation
+    description = {
+        'problem_class': fenics_heat_2d,
+        'problem_params': {
+            'mesh': domain_mesh,
+            'function_space': V,
+            'coupling_boundary': coupling_boundary,
+            'remaining_boundary': remaining_boundary,
+            'solution_expr': u_D,
+            'forcing_term_expr': forcing_expr,
+            'precice_ref': precice,
+            'coupling_expr': coupling_expression,
+            'participant_name': participant_name
+        },
+        'sweeper_class': imex_1st_order_mass,
+        'sweeper_params': {
+            'quad_type': quad_type,
+            'num_nodes': num_nodes
+        },
+        'level_params': {
+            'restol': res_tol,
+            'dt': dt
+        },
+        'step_params': {
+            'maxiter': maxiter,
+        }
+    }
+
+    # Controller for time stepping
+    controller = controller_nonMPI(num_procs=1, controller_params=controller_params, description=description)
+
+    # Reference to problem class for easy access to exact solution
+    P = controller.MS[0].levels[0].prob
+
+    return controller, P
 
 
 parser = argparse.ArgumentParser(description="Solving heat equation for simple or complex interface case")
@@ -84,15 +161,9 @@ V_g = VectorFunctionSpace(domain_mesh, 'P', 1)
 W = V_g.sub(0).collapse()
 
 
-##################################################################
-# Problem definition and preCICE initialization
-##################################################################
-
 # Time step size
 # Should be integer fraction of the used time window size
-precice_time_window_size = 0.1
-precice_waveform_deg = 1
-pySDC_dt = precice_time_window_size/precice_waveform_deg
+pySDC_dt = 0.1
 
 # Manufactured solution parameters
 alpha = 3  # parameter alpha
@@ -136,6 +207,25 @@ dt = Constant(0)
 dt.assign(np.min([pySDC_dt, precice_dt]))
 
 coupling_expression = precice.create_coupling_expression()
+
+
+controller, P = setup_problem(
+    participant_name=precice.get_participant_name(),
+    domain_mesh=domain_mesh,
+    coupling_boundary=coupling_boundary,
+    remaining_boundary=remaining_boundary,
+    V=V,
+    u_D=u_D,
+    forcing_expr=forcing_expr,
+    precice=precice,
+    coupling_expression=coupling_expression,
+    dt=dt,
+    res_tol=error_tol,
+    maxiter=40,
+    quad_type='LOBATTO',
+    num_nodes=4,
+    logger_level=30
+)
 
 
 # Time-stepping
@@ -185,73 +275,9 @@ err = error_pointwise.copy()
 err.rename("err", "")
 error_write.append(err)
 
-
 if problem is ProblemType.DIRICHLET:
     flux = Function(V_g)
     flux.rename("Heat-Flux", "")
-
-
-##################################################################
-# Setup pySDC controller
-##################################################################
-'''
-pySDC can be installed via `pip install pySDC`.
-If you want to use the developer version, the source code repository can be cloned from "https://github.com/Parallel-in-Time/pySDC".
-For more information on pySDC, see also "https://parallel-in-time.org/pySDC/"
-'''
-
-# initialize level parameters
-level_params = dict()
-level_params['restol'] = 1e-11
-level_params['dt'] = pySDC_dt
-
-# initialize step parameters
-step_params = dict()
-step_params['maxiter'] = 40
-
-# initialize sweeper parameters
-sweeper_params = dict()
-sweeper_params['quad_type'] = 'LOBATTO'
-sweeper_params['num_nodes'] = 4
-
-# initialize problem parameters
-problem_params = dict()
-problem_params['mesh'] = domain_mesh
-problem_params['function_space'] = V
-problem_params['coupling_boundary'] = coupling_boundary
-problem_params['remaining_boundary'] = remaining_boundary
-problem_params['solution_expr'] = u_D
-problem_params['forcing_term_expr'] = forcing_expr
-problem_params['precice_ref'] = precice
-problem_params['coupling_expr'] = coupling_expression
-problem_params['participant_name'] = participant_name
-
-# initialize controller parameters
-controller_params = dict()
-controller_params['logger_level'] = 30
-
-# fill description dictionary for easy step instantiation
-description = dict()
-description['problem_class'] = fenics_heat_2d
-description['problem_params'] = problem_params
-description['sweeper_class'] = imex_1st_order_mass
-description['sweeper_params'] = sweeper_params
-description['level_params'] = level_params
-description['step_params'] = step_params
-
-# Controller for time stepping
-controller = controller_nonMPI(num_procs=1, controller_params=controller_params, description=description)
-
-# Reference to problem class for easy access to exact solution
-P = controller.MS[0].levels[0].prob
-
-##################################################################
-
-    
-
-#################################################################
-# Coupling loop
-#################################################################
 
 while precice.is_coupling_ongoing():
 
@@ -277,12 +303,12 @@ while precice.is_coupling_ongoing():
     # the problem class.
     # This is necessary, that the coupling expression update in the problem class
     # is executed correctly.
-    P.set_t_start(t)
+    P.t_start = t
 
     # Retrieve the result at the end of the timestep from pySDC
     # Possible statistics generated by pySDC can be accessed via the 'stats' variable if needed
     uend, stats = controller.run(u_n, t0=t, Tend=t + float(dt))
-    
+
     # Update the buffer with the new solution values
     u_np1 = uend.values
 
@@ -329,8 +355,8 @@ while precice.is_coupling_ongoing():
         u_ref.rename("reference", " ")
         error, error_pointwise = compute_errors(u_n, u_ref, V, total_error_tol=error_tol)
         print("n = %d, t = %.2f: L2 error on domain = %.3g" % (n, t, error))
-    
-    
+
+
 # output solution and reference solution at t_n+1 and substeps (read from buffer)
 print("output u^%d and u_ref^%d" % (n, n))
 for sample in u_write:
