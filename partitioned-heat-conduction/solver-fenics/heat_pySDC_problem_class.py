@@ -1,4 +1,14 @@
+"""
+This file contains the implementation of the pySDC problem class for the 2D heat equation.
+This class is used to define the problem pySDC uses in "heat_pySDC.py" for time-stepping.
+
+This class is based on the pySDC tutorial example for its usage with FEniCS.
+More about that tutorial can be found at "https://parallel-in-time.org/pySDC/tutorial/step_7.html#part-a-pysdc-and-fenics".
+"""
+
 from fenics import TrialFunction, TestFunction, dx, assemble, inner, nabla_grad, DirichletBC, Constant, solve, interpolate
+from my_enums import ProblemType
+
 
 from pySDC.core.Problem import ptype
 from pySDC.implementations.datatype_classes.fenics_mesh import fenics_mesh, rhs_fenics_mesh
@@ -8,14 +18,13 @@ class fenics_heat_2d(ptype):
     dtype_u = fenics_mesh
     dtype_f = rhs_fenics_mesh
 
-    def __init__(self, mesh, function_space, forcing_term_expr, solution_expr, coupling_boundary,
-                 remaining_boundary, coupling_expr, precice_ref, participant_name):
+    def __init__(self, function_space, forcing_term_expr, solution_expr, coupling_boundary,
+                 remaining_boundary, coupling_expr, precice_ref):
         # Add docstring
         """
         Constructor of the 2D heat equation problem class.
 
         Args:
-            mesh: FEniCS mesh object
             function_space: FEniCS function space object
             forcing_term_expr: FEniCS expression for the forcing term
             solution_expr: FEniCS expression for the manufactured solution
@@ -23,7 +32,6 @@ class fenics_heat_2d(ptype):
             remaining_boundary: FEniCS SubDomain object for the remaining boundary
             coupling_expr: FEniCS expression for the coupling boundary condition
             precice_ref: preCICE-FEniCS adapter object reference
-            participant_name: Name of the participant (Dirichlet or Neumann)
         """
 
         # Set precice reference and coupling expression reference to update coupling boundary
@@ -31,10 +39,8 @@ class fenics_heat_2d(ptype):
         self.precice = precice_ref
         self.coupling_expression = coupling_expr
         self.t_start = 0.0
-        self.participant_name = participant_name
 
         # set mesh and function space for future reference
-        self.mesh = mesh
         self.V = function_space
 
         # invoke super init
@@ -60,7 +66,7 @@ class fenics_heat_2d(ptype):
         self.solution_expr = solution_expr
 
         # Currently only for Dirichlet boundary, has to be changed for Neumann boundary
-        if self.participant_name == 'Dirichlet':
+        if self.precice.get_participant_name() == ProblemType.DIRICHLET.value:
             self.couplingBC = DirichletBC(self.V, coupling_expr, coupling_boundary)
 
         self.remainingBC = DirichletBC(self.V, solution_expr, remaining_boundary)
@@ -86,7 +92,7 @@ class fenics_heat_2d(ptype):
         self.remainingBC.apply(T, b.values.vector())
 
         # Update the coupling boundary condition for the Dirichlet participant
-        if self.participant_name == 'Dirichlet':
+        if self.precice.get_participant_name() == ProblemType.DIRICHLET.value:
             dt = t - self.t_start                   # This dt is used to read data from the current time window
             read_data = self.precice.read_data(dt)  # Read the data to update the coupling expression
             self.precice.update_coupling_expression(

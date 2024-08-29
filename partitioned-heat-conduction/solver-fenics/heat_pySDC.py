@@ -22,10 +22,16 @@ Heat equation with mixed boundary conditions. (Neumann problem)
   u = u_0             at t = 0
   u = 1 + x^2 + alpha*y^2 + \beta*t
   f = beta - 2 - 2*alpha
+  
+
+This variant of this tutorial example uses the open-source library pySDC for time-stepping.
+pySDC can be installed via `pip install pySDC`.
+If you want to use the developer version, the source code repository can be cloned from "https://github.com/Parallel-in-Time/pySDC".
+For more information on pySDC, see also "https://parallel-in-time.org/pySDC/"
 """
 
 from __future__ import print_function, division
-from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, \
+from fenics import Function, FunctionSpace, Expression, Constant, TrialFunction, TestFunction, \
     File, solve, grad, inner, dx, interpolate, VectorFunctionSpace, MeshFunction, MPI
 from fenicsprecice import Adapter
 from errorcomputation import compute_errors
@@ -57,40 +63,43 @@ def determine_gradient(V_g, u, flux):
 
 
 def setup_problem(
-        participant_name,
-        domain_mesh,
-        coupling_boundary,
-        remaining_boundary,
-        V,
-        u_D,
-        forcing_expr,
-        precice,
-        coupling_expression,
-        dt,
-        res_tol=1e-11,
-        maxiter=40,
-        quad_type='LOBATTO',
-        num_nodes=4,
-        logger_level=30):
+        function_space, 
+        coupling_boundary, 
+        remaining_boundary, 
+        u_D, forcing_expr, 
+        coupling_expression, 
+        precice, 
+        dt, 
+        logger_level=30,
+        quad_type='LOBATTO', 
+        num_nodes=4, 
+        restol=1e-11, 
+        maxiter=40):
+    
+    # Create docstring for this function
     """
-    Setup the problem for pySDC controller
-    :param participant_name: name of the participant
-    :param domain_mesh: mesh of the domain
-    :param coupling_boundary: boundary where coupling happens
-    :param remaining_boundary: remaining boundary
-    :param V: function space
-    :param u_D: initial condition
-    :param forcing_expr: forcing term
-    :param precice: preCICE adapter
-    :param coupling_expression: coupling expression
-    :param dt: pySDC time step size
-    :return: controller, problem class
-
-    pySDC can be installed via `pip install pySDC`.
-    If you want to use the developer version, the source code repository can be cloned from "https://github.com/Parallel-in-Time/pySDC".
-    For more information on pySDC, see also "https://parallel-in-time.org/pySDC/"
+    Setup the problem and controller for the heat equation problem.
+    
+    Args:
+        function_space: FEniCS function space object
+        coupling_boundary: FEniCS SubDomain object for the coupling boundary
+        remaining_boundary: FEniCS SubDomain object for the remaining boundary
+        u_D: FEniCS expression for the manufactured solution
+        forcing_expr: FEniCS expression for the forcing term
+        coupling_expression: FEniCS expression for the coupling boundary condition
+        precice: preCICE-FEniCS adapter object reference
+        dt: time step size
+        logger_level: logging level
+        quad_type: quadrature type
+        num_nodes: number of nodes
+        restol: residual tolerance
+        maxiter: maximum number of iterations
+        
+    Returns:
+        controller: pySDC controller object
+        P: problem object
     """
-
+    
     # initialize controller parameters
     controller_params = {
         'logger_level': logger_level
@@ -100,23 +109,21 @@ def setup_problem(
     description = {
         'problem_class': fenics_heat_2d,
         'problem_params': {
-            'mesh': domain_mesh,
-            'function_space': V,
+            'function_space': function_space,
             'coupling_boundary': coupling_boundary,
             'remaining_boundary': remaining_boundary,
             'solution_expr': u_D,
             'forcing_term_expr': forcing_expr,
             'precice_ref': precice,
-            'coupling_expr': coupling_expression,
-            'participant_name': participant_name
+            'coupling_expr': coupling_expression
         },
         'sweeper_class': imex_1st_order_mass,
         'sweeper_params': {
             'quad_type': quad_type,
-            'num_nodes': num_nodes
+            'num_nodes': num_nodes,
         },
         'level_params': {
-            'restol': res_tol,
+            'restol': restol,
             'dt': dt
         },
         'step_params': {
@@ -129,8 +136,8 @@ def setup_problem(
 
     # Reference to problem class for easy access to exact solution
     P = controller.MS[0].levels[0].prob
-
     return controller, P
+
 
 
 parser = argparse.ArgumentParser(description="Solving heat equation for simple or complex interface case")
@@ -209,23 +216,13 @@ dt.assign(np.min([pySDC_dt, precice_dt]))
 coupling_expression = precice.create_coupling_expression()
 
 
-controller, P = setup_problem(
-    participant_name=precice.get_participant_name(),
-    domain_mesh=domain_mesh,
-    coupling_boundary=coupling_boundary,
-    remaining_boundary=remaining_boundary,
-    V=V,
-    u_D=u_D,
-    forcing_expr=forcing_expr,
-    precice=precice,
-    coupling_expression=coupling_expression,
-    dt=dt,
-    res_tol=error_tol,
-    maxiter=40,
-    quad_type='LOBATTO',
-    num_nodes=4,
-    logger_level=30
-)
+controller, P = setup_problem(V, 
+                              coupling_boundary, 
+                              remaining_boundary, 
+                              u_D, forcing_expr, 
+                              coupling_expression, 
+                              precice, 
+                              pySDC_dt)
 
 
 # Time-stepping
