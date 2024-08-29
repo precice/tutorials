@@ -101,10 +101,10 @@ calculix-adapter:
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
-    CALULIX_VERSION:
+    CALCULIX_VERSION:
       description: Version of Calculix to use
       default: "2.20"
-    CALULIX_ADAPTER_REF:
+    CALCULIX_ADAPTER_REF:
       description: Version of Calculix-Adapter to use
       default: "master"
 
