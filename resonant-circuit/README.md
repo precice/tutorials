@@ -31,7 +31,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 * *MATLAB* A solver using the [MATLAB bindings](https://precice.org/installation-bindings-matlab.html).
  Before running this tutorial, follow the [instructions](https://precice.org/installation-bindings-matlab.html) to correctly install the MATLAB bindings.
-* *Python* A solver using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy` and `scipy`, which you can get from your system package manager or with `pip3 install --user <package>`.
+* *Python* A solver using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html). 
 
 ## Running the simulation
 
