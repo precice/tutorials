@@ -30,12 +30,8 @@ class GeneralizedAlpha():
         self.stiffness = stiffness
         self.mass = mass
 
-    def rhs_eval_points(self, dt) -> List[float]:
-        return [(1 - self.alpha_f) * dt]
-
-    def do_step(self, u, v, a, f, dt) -> Tuple[float, float, float]:
-        if isinstance(f, list):  # if f is list, turn it into a number
-            f = f[0]
+    def do_step(self, u, v, a, rhs, dt) -> Tuple[float, float, float]:
+        f = rhs((1 - self.alpha_f) * dt)
 
         m = 3 * [None]
         m[0] = (1 - self.alpha_m) / (self.beta * dt**2)
@@ -71,31 +67,25 @@ class RungeKutta4():
         self.ode_system = ode_system
         pass
 
-    def rhs_eval_points(self, dt) -> List[float]:
-        return [self.c[0] * dt, self.c[1] * dt, self.c[2] * dt, self.c[3] * dt]
-
-    def do_step(self, u, v, a, f, dt) -> Tuple[float, float, float]:
+    def do_step(self, u, v, a, rhs, dt) -> Tuple[float, float, float]:
         assert (isinstance(u, type(v)))
 
         n_stages = 4
 
-        if isinstance(f, numbers.Number):  # if f is number, assume constant f
-            f = n_stages * [f]
-
         if isinstance(u, np.ndarray):
             x = np.concatenate([u, v])
-            rhs = [np.concatenate([np.array([0, 0]), f[i]]) for i in range(n_stages)]
+            def f(t): return np.concatenate([np.array([0, 0]), rhs(t)])
         elif isinstance(u, numbers.Number):
             x = np.array([u, v])
-            rhs = [np.array([0, f[i]]) for i in range(n_stages)]
+            def f(t): return np.array([0, rhs(t)])
         else:
             raise Exception(f"Cannot handle input type {type(u)} of u and v")
 
         s = n_stages * [None]
-        s[0] = self.ode_system.dot(x) + rhs[0]
-        s[1] = self.ode_system.dot(x + self.a[1, 0] * s[0] * dt) + rhs[1]
-        s[2] = self.ode_system.dot(x + self.a[2, 1] * s[1] * dt) + rhs[2]
-        s[3] = self.ode_system.dot(x + self.a[3, 2] * s[2] * dt) + rhs[3]
+        s[0] = self.ode_system.dot(x) + f(self.c[0] * dt)
+        s[1] = self.ode_system.dot(x + self.a[1, 0] * s[0] * dt) + f(self.c[1] * dt)
+        s[2] = self.ode_system.dot(x + self.a[2, 1] * s[1] * dt) + f(self.c[2] * dt)
+        s[3] = self.ode_system.dot(x + self.a[3, 2] * s[2] * dt) + f(self.c[3] * dt)
 
         x_new = x
 
@@ -119,14 +109,7 @@ class RadauIIA():
         self.ode_system = ode_system
         pass
 
-    def rhs_eval_points(self, dt) -> List[float]:
-        return np.linspace(0, dt, 5)  # will create an interpolant from this later
-
-    def do_step(self, u, v, a, f, dt) -> Tuple[float, float, float]:
-        from brot.interpolation import do_lagrange_interpolation
-
-        ts = self.rhs_eval_points(dt)
-
+    def do_step(self, u, v, a, rhs, dt) -> Tuple[float, float, float]:
         t0 = 0
 
         assert (isinstance(u, type(v)))
@@ -135,20 +118,19 @@ class RadauIIA():
             x0 = np.concatenate([u, v])
             f = np.array(f)
             assert (u.shape[0] == f.shape[1])
-            def rhs_fun(t, x): return np.concatenate([np.array([np.zeros_like(t), np.zeros_like(t)]), [
-                do_lagrange_interpolation(t, ts, f[:, i]) for i in range(u.shape[0])]])
+            def rhs_fun(t): return np.concatenate([np.array([np.zeros_like(t), np.zeros_like(t)]), rhs(t)])
         elif isinstance(u, numbers.Number):
             x0 = np.array([u, v])
-            def rhs_fun(t, x): return np.array([np.zeros_like(t), do_lagrange_interpolation(t, ts, f)])
+            def rhs_fun(t): return np.array([np.zeros_like(t), rhs(t)])
         else:
             raise Exception(f"Cannot handle input type {type(u)} of u and v")
 
         def fun(t, x):
-            return self.ode_system.dot(x) + rhs_fun(t, x)
+            return self.ode_system.dot(x) + rhs_fun(t)
 
-        # use large rtol and atol to circumvent error control.
+        # use adaptive time stepping; dense_output=True allows us to sample from continuous function later
         ret = sp.integrate.solve_ivp(fun, [t0, t0 + dt], x0, method="Radau",
-                                     first_step=dt, max_step=dt, rtol=10e10, atol=10e10)
+                                     dense_output=True, rtol=10e-5, atol=10e-9)
 
         a_new = None
         if isinstance(u, np.ndarray):
@@ -156,4 +138,4 @@ class RadauIIA():
         elif isinstance(u, numbers.Number):
             u_new, v_new = ret.y[:, -1]
 
-        return u_new, v_new, a_new
+        return u_new, v_new, a_new, ret.sol
