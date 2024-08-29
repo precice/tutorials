@@ -31,7 +31,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 * *MATLAB* A solver using the [MATLAB bindings](https://precice.org/installation-bindings-matlab.html).
  Before running this tutorial, follow the [instructions](https://precice.org/installation-bindings-matlab.html) to correctly install the MATLAB bindings.
-* *Python* A solver using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html). 
+* *Python* A solver using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html).
 
 ## Running the simulation
 
@@ -61,6 +61,10 @@ If you prefer to not open the MATLAB GUIs, you can alternatively use two shells 
 For that, modify the path in the file `matlab-bindings-path.sh` found in the base directory of this tutorial to the path to your MATLAB bindings.
 
 By doing that, you can now open two shells and switch into the directories `capacitor-matlab` and `coil-matlab` and execute the `run.sh` scripts.
+
+### Python
+
+This example can be executed by starting the `run.sh` file located in each of the directories `coil-python` and `capacitor-python`.
 
 ## Post-processing
 
