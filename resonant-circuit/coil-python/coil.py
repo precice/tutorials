@@ -81,7 +81,10 @@ while participant.is_coupling_ongoing():
 # Stop coupling
 participant.finalize()
 
+
 def I_analytical(t): return Io * np.cos(t * w0 + phi)
+
+
 error = I0 - I_analytical(t)
 print(f"{error=}")
 print(f"{f_evals=}")
