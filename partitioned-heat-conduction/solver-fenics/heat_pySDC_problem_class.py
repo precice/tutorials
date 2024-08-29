@@ -40,8 +40,15 @@ class fenics_heat_2d(ptype):
         self.coupling_expression = coupling_expr
         self.t_start = 0.0
 
-        # set mesh and function space for future reference
+        # save function space for future reference
         self.V = function_space
+        
+        # Forcing term
+        self.forcing_term_expr = forcing_term_expr
+
+        # Solution expression for error comparison and as boundary condition
+        # on the non-coupling boundary
+        self.solution_expr = solution_expr
 
         # invoke super init
         super(fenics_heat_2d, self).__init__(self.V)
@@ -58,14 +65,7 @@ class fenics_heat_2d(ptype):
         a_K = -1.0 * inner(nabla_grad(u), nabla_grad(v)) * dx
         self.K = assemble(a_K)
 
-        # Forcing term
-        self.forcing_term_expr = forcing_term_expr
-
-        # Solution expression for error comparison and as boundary condition
-        # on the non-coupling boundary
-        self.solution_expr = solution_expr
-
-        # Currently only for Dirichlet boundary, has to be changed for Neumann boundary
+        # Currently only Dirichlet participant is supported
         if self.precice.get_participant_name() == ProblemType.DIRICHLET.value:
             self.couplingBC = DirichletBC(self.V, coupling_expr, coupling_boundary)
 
