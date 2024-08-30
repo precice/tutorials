@@ -62,10 +62,6 @@ For that, modify the path in the file `matlab-bindings-path.sh` found in the bas
 
 By doing that, you can now open two shells and switch into the directories `capacitor-matlab` and `coil-matlab` and execute the `run.sh` scripts.
 
-### Python
-
-This example can be executed by starting the `run.sh` file located in each of the directories `coil-python` and `capacitor-python`.
-
 ## Post-processing
 
 The MATLAB participant for the current also records the current and voltage through time and at the end of the simulation saves a plot with the obtained curves, as well as the analytical solution.
