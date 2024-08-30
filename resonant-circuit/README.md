@@ -68,7 +68,9 @@ This example can be executed by starting the `run.sh` file located in each of th
 
 ## Post-processing
 
-The MATLAB participant for the current also records the current and voltage through time and at the end of the simulation saves a plot with the obtained curves, as well as the analytical solution.
+As we defined a watchpoint on the 'Capacitor' participant (see `precice-config.xml`), we can plot it with gnuplot using the script `plot-solution.sh.` You need to specify the directory of the selected solid participant as a command line argument, so that the script can pick-up the desired watchpoint file, e.g. `./plot-solution.sh capacitor-python`. The resulting graph shows the voltage and current exchanged between the two participants.
+
+Additionally, the MATLAB participant for the current also records the current and voltage through time and at the end of the simulation saves a plot with the obtained curves, as well as the analytical solution.
 
 After successfully running the coupling, one can find the curves in the folder `capacitor-matlab` as `Curves.png`.
 

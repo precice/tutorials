@@ -5,10 +5,10 @@ if [ "${1:-}" = "" ]; then
     exit 1
 fi
 
-FILE="$1/precice-ParticipantU-watchpoint-UI.log"
+FILE="$1/precice-Capacitor-watchpoint-VoltageCurrent.log"
 
 if [ ! -f "$FILE" ]; then
-    echo "Unable to locate the watchpoint file (precice-ParticipantU-watchpoint-UI.log) in the specified participant directory '${1}'. Make sure the specified directory matches the participant you used for the calculations."
+    echo "Unable to locate the watchpoint file (precice-Capacitor-watchpoint-VoltageCurrent.log) in the specified participant directory '${1}'. Make sure the specified directory matches the participant you used for the calculations."
     exit 1
 fi
 
@@ -17,5 +17,5 @@ gnuplot -p << EOF
 	set title 'Voltage and current'
 	set xlabel 'time [s]'
 	set ylabel 'Voltage / Current'
-	plot "$1/precice-ParticipantU-watchpoint-UI.log" using 1:4 with linespoints title "Voltage", "$1/precice-ParticipantU-watchpoint-UI.log" using 1:5 with linespoints title "Current"
+	plot "$1/precice-Capacitor-watchpoint-VoltageCurrent.log" using 1:4 with linespoints title "Voltage", "$1/precice-Capacitor-watchpoint-VoltageCurrent.log" using 1:5 with linespoints title "Current"
 EOF

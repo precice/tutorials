@@ -34,6 +34,7 @@
       from="Coil-Mesh"
       to="Capacitor-Mesh"
       constraint="consistent" />
+    <watch-point mesh="Capacitor-Mesh" name="VoltageCurrent" coordinate="0.0;0.0" />
   </participant>
 
   <m2n:sockets acceptor="Coil" connector="Capacitor" exchange-directory=".." />
