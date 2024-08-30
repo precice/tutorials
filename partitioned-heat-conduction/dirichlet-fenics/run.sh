@@ -17,13 +17,13 @@ else
         -[hH]|--help)
             echo "Usage: $0 [highorder|sdc|*]"
             echo ""
-            echo "      highorder: Run simulation with higher order FEniCS implementation"
-            echo "      sdc      : Run simulation with pySDC+FEniCS implementation"
-            echo "      *        : For every other input run the simulation with default FEniCS implementation"
+            echo "      irk : Run simulation with higher-order implicit Runge-Kutta schemes FEniCS implementation"
+            echo "      sdc : Run simulation with pySDC+FEniCS implementation"
+            echo "      *   : For every other input run the simulation with default FEniCS implementation"
             exit 0
             ;;
-        highorder)
-            echo "Running simulation with higher order FEniCS implementation"
+        irk)
+            echo "Running simulation with higher-order implicit Runge-Kutta schemes FEniCS implementation"
             python3 ../solver-fenics/heatHigherOrder.py Dirichlet
             ;;
         sdc)
