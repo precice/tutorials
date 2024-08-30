@@ -31,7 +31,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE and the python bindings installed on your system.
 
-* FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
+* FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1]. In `fenics-solver`, You can find alternative version of the solver that offering higher-order time-stepping schemes: `heatHigherOrder.py` offers higher-order implicit Runge Kutta schemes [4] and `heat_pySDC.py` spectral deferred correction methods and pySDC [5].
 
 * Nutils. Install [Nutils](https://nutils.org/install-nutils.html).
 
@@ -87,3 +87,5 @@ Visualization in paraview for `x_c = 1.5`.
 [1] Hans Petter Langtangen and Anders Logg. "Solving PDEs in Minutes-The FEniCS Tutorial Volume I." (2016). [pdf](https://fenicsproject.org/pub/tutorial/pdf/fenics-tutorial-vol1.pdf)  
 [2] Azahar Monge and Philipp Birken. "Convergence Analysis of the Dirichlet-Neumann Iteration for Finite Element Discretizations." (2016). Proceedings in Applied Mathematics and Mechanics. [doi](https://doi.org/10.1002/pamm.201610355)  
 [3] Benjamin Rüth, Benjamin Uekermann, Miriam Mehl, Philipp Birken, Azahar Monge, and Hans Joachim Bungartz. "Quasi-Newton waveform iteration for partitioned surface-coupled multiphysics applications." (2020). International Journal for Numerical Methods in Engineering. [doi](https://doi.org/10.1002/nme.6443)  
+[4] Niklas Vinnitchenko. "Evaluation of Higher-Order Coupling Schemes with FEniCS-preCICE." (2024). Bachelor's thesis at Technical University of Munich. [url](https://mediatum.ub.tum.de/1732367)  
+[5] Thesis Tobias Eppacher, "TODO" (2024). Bachelor's thesis at Technical University of Munich. [url](TODO)
