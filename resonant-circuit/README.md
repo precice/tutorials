@@ -62,10 +62,6 @@ For that, modify the path in the file `matlab-bindings-path.sh` found in the bas
 
 By doing that, you can now open two shells and switch into the directories `capacitor-matlab` and `coil-matlab` and execute the `run.sh` scripts.
 
-### Python
-
-This example can be executed by starting the `run.sh` file located in each of the directories `coil-python` and `capacitor-python`.
-
 ## Post-processing
 
 As we defined a watchpoint on the 'Capacitor' participant (see `precice-config.xml`), we can plot it with gnuplot using the script `plot-solution.sh.` You need to specify the directory of the selected solid participant as a command line argument, so that the script can pick-up the desired watchpoint file, e.g. `./plot-solution.sh capacitor-python`. The resulting graph shows the voltage and current exchanged between the two participants.
