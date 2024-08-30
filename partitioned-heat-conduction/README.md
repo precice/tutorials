@@ -31,7 +31,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE and the python bindings installed on your system.
 
-* FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1]. In `fenics-solver`, You can find alternative version of the solver that offering higher-order time-stepping schemes: `heatHigherOrder.py` offers higher-order implicit Runge Kutta schemes [4] and `heat_pySDC.py` spectral deferred correction methods and pySDC [5].
+* FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1]. In `fenics-solver`, You can find alternative versions of the solver, offering higher-order time-stepping schemes: `heatHigherOrder.py` offers higher-order implicit Runge Kutta schemes [4], and `heat_pySDC.py` offers spectral deferred correction methods and pySDC [5].
 
 * Nutils. Install [Nutils](https://nutils.org/install-nutils.html).
 
