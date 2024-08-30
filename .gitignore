@@ -18,7 +18,9 @@ out
 precice-profiling/
 precice-run/
 core
-precice-*-events.json
+profiling.json
+profiling.csv
+trace.json
 
 # C++
 *.o

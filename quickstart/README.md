@@ -39,10 +39,10 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     ```bash
     # Add the signing key, add the repository, update (check this):
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash
-    # Install OpenFOAM v2312:
-    sudo apt install openfoam2312-dev
+    # Install OpenFOAM v2406:
+    sudo apt install openfoam2406-dev
     # Enable OpenFOAM by default in your system and apply now:
-    echo "source /usr/lib/openfoam/openfoam2312/etc/bashrc" >> ~/.bashrc
+    echo "source /usr/lib/openfoam/openfoam2406/etc/bashrc" >> ~/.bashrc
     source ~/.bashrc
     ```
 
@@ -55,9 +55,9 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 4. Download and install the [OpenFOAM-preCICE adapter](https://precice.org/adapter-openfoam-get.html):
 
     ```bash
-     wget https://github.com/precice/openfoam-adapter/archive/refs/tags/v1.3.0.tar.gz
-     tar -xzf v1.3.0.tar.gz 
-     cd openfoam-adapter-1.3.0/
+     wget https://github.com/precice/openfoam-adapter/archive/refs/tags/v1.3.1.tar.gz
+     tar -xzf v1.3.1.tar.gz 
+     cd openfoam-adapter-1.3.1/
      ./Allwmake
      cd ..
     ```
