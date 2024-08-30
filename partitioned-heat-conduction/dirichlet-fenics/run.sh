@@ -28,6 +28,7 @@ else
             ;;
         sdc)
             echo "Running simulation with pySDC+FEniCS implementation"
+            python3 ../solver-fenics/check_pySDC.py
             python3 ../solver-fenics/heat_pySDC.py Dirichlet
             ;;
         *)

@@ -1,6 +1,7 @@
 numpy >1, <2
 fenicsprecice~=2.0
 scipy
+pySDC~=5.5
 
 # Assuming FEniCS from ppa:fenics-packages/fenics was installed https://fenicsproject.org/download/archive/
 # Use --system-site-packages in venv
