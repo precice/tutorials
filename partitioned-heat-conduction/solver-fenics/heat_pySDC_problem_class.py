@@ -42,7 +42,7 @@ class fenics_heat_2d(ptype):
 
         # save function space for future reference
         self.V = function_space
-        
+
         # Forcing term
         self.forcing_term_expr = forcing_term_expr
 

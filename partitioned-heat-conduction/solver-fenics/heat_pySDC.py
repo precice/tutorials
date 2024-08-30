@@ -22,7 +22,7 @@ Heat equation with mixed boundary conditions. (Neumann problem)
   u = u_0             at t = 0
   u = 1 + x^2 + alpha*y^2 + \beta*t
   f = beta - 2 - 2*alpha
-  
+
 
 This variant of this tutorial example uses the open-source library pySDC for time-stepping.
 pySDC can be installed via `pip install pySDC`.
@@ -63,23 +63,23 @@ def determine_gradient(V_g, u, flux):
 
 
 def setup_problem(
-        function_space, 
-        coupling_boundary, 
-        remaining_boundary, 
-        u_D, forcing_expr, 
-        coupling_expression, 
-        precice, 
-        dt, 
+        function_space,
+        coupling_boundary,
+        remaining_boundary,
+        u_D, forcing_expr,
+        coupling_expression,
+        precice,
+        dt,
         logger_level=30,
-        quad_type='LOBATTO', 
-        num_nodes=4, 
-        restol=1e-11, 
+        quad_type='LOBATTO',
+        num_nodes=4,
+        restol=1e-11,
         maxiter=40):
-    
+
     # Create docstring for this function
     """
     Setup the problem and controller for the heat equation problem.
-    
+
     Args:
         function_space: FEniCS function space object
         coupling_boundary: FEniCS SubDomain object for the coupling boundary
@@ -94,12 +94,12 @@ def setup_problem(
         num_nodes: number of nodes
         restol: residual tolerance
         maxiter: maximum number of iterations
-        
+
     Returns:
         controller: pySDC controller object
         P: problem object
     """
-    
+
     # initialize controller parameters
     controller_params = {
         'logger_level': logger_level
@@ -137,7 +137,6 @@ def setup_problem(
     # Reference to problem class for easy access to exact solution
     P = controller.MS[0].levels[0].prob
     return controller, P
-
 
 
 parser = argparse.ArgumentParser(description="Solving heat equation for simple or complex interface case")
@@ -216,12 +215,12 @@ dt.assign(np.min([pySDC_dt, precice_dt]))
 coupling_expression = precice.create_coupling_expression()
 
 
-controller, P = setup_problem(V, 
-                              coupling_boundary, 
-                              remaining_boundary, 
-                              u_D, forcing_expr, 
-                              coupling_expression, 
-                              precice, 
+controller, P = setup_problem(V,
+                              coupling_boundary,
+                              remaining_boundary,
+                              u_D, forcing_expr,
+                              coupling_expression,
+                              precice,
                               pySDC_dt)
 
 
