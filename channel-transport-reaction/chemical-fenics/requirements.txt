@@ -1,0 +1,5 @@
+numpy >1, <2
+pyprecice~=3.0
+mpi4py < 4
+fenicsprecice
+
