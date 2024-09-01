@@ -1,0 +1,155 @@
+Header
+  CHECK KEYWORDS Warn
+  Mesh DB "." "Solid_Participant_Mesh"
+  Include Path ""
+  Results Directory "../out"
+End
+
+Simulation
+  Max Output Level = 5
+  Coordinate System = Cartesian
+  Coordinate Mapping(3) = 1 2 3
+  Simulation Type = Transient
+  Steady State Max Iterations = 10
+  Output Intervals = 1
+  Timestepping Method = BDF
+  BDF Order = 2
+  Timestep intervals = 10
+  Timestep Sizes = 0.1
+  Solver Input File = case.sif
+  Post File = Solid.vtu
+  Use Mesh Names = Logical True
+
+  maskName = String "Coupler Interface"
+  participantName = String "Solid"
+  meshName = String "Solid-Mesh"
+  configPath = String "../precice-config.xml" 
+End
+
+Constants
+  Gravity(4) = 0 -1 0 9.82
+  Stefan Boltzmann = 5.67e-08
+  Permittivity of Vacuum = 8.8542e-12
+  Boltzmann Constant = 1.3807e-23
+  Unit Charge = 1.602e-19
+End
+
+Body 1
+  !Target Bodies(1) = 4
+  Name = "Plate"
+  Equation = 1
+  Material = 1
+  Body Force = 1
+  Initial Condition = 1
+End
+
+Solver 1
+  Equation = Heat Equation
+  Procedure = "HeatSolve" "HeatSolver"
+  Calculate Loads = Logical True
+  Variable = Temperature
+  Exec Solver = Always
+  Stabilize = True
+  Bubbles = False
+  Lumped Mass Matrix = False
+  Optimize Bandwidth = True
+  Steady State Convergence Tolerance = 1.0e-5
+  Nonlinear System Convergence Tolerance = 1.0e-7
+  Nonlinear System Max Iterations = 20
+  Nonlinear System Newton After Iterations = 3
+  Nonlinear System Newton After Tolerance = 1.0e-3
+  Nonlinear System Relaxation Factor = 1
+  Linear System Solver = Iterative
+  Linear System Iterative Method = BiCGStab
+  Linear System Max Iterations = 500
+  Linear System Convergence Tolerance = 1.0e-10
+  BiCGstabl polynomial degree = 2
+  Linear System Preconditioning = ILU0
+  Linear System ILUT Tolerance = 1.0e-3
+  Linear System Abort Not Converged = False
+  Linear System Residual Output = 10
+  Linear System Precondition Recompute = 1
+End
+
+Solver 2
+ Exec Solver = after timestep
+ Equation = "flux compute"
+ Procedure = "FluxSolver" "FluxSolver"
+ Calculate Flux = Logical True
+ Calculate Flux Abs = Logical True
+ Flux Variable = String Temperature
+ Flux Coefficient = String "Heat Conductivity"
+ Linear System Solver = "Iterative"
+ Linear System Iterative Method = "cg"
+ Linear System Preconditioning = ILU0
+ Linear System Residual Output = 10
+ Linear System Max Iterations = Integer 500
+ Linear System Convergence Tolerance = 1.0e-10
+End
+
+Solver 3
+    Equation = "Initialize"
+    Procedure = "../Coupler_Solver.so" "CouplerSolver"
+    readDataName = String "Temperature"
+    writeDataName = String "temperature flux_abs"
+    Exec Solver = before all
+End
+
+Solver 4
+    Equation = "ReadData"
+    Procedure = "../Coupler_Solver.so" "CouplerSolver"
+    readDataName = String "Temperature"
+    writeDataName = String "temperature flux_abs"
+    Exec Solver = before timestep 
+End
+
+Solver 5
+    Equation = "WriteDataAdvance"
+    Procedure = "../Coupler_Solver.so" "CouplerSolver"
+    readDataName = String "Temperature"
+    writeDataName = String "temperature flux_abs"
+    Exec Solver = after timestep 
+End
+
+Solver 6
+    Equation = "Finalize"
+    Procedure = "../Coupler_Solver.so" "CouplerSolver"
+    readDataName = String "Temperature"
+    writeDataName = String "temperature flux_abs"
+    Exec Solver = after all 
+End
+
+Equation 1
+  Name = "Heat_Plate"
+  Active Solvers(2) = 1 2
+End
+
+Material 1
+  Name = "PlateMaterial"
+  Heat Conductivity = 100
+  Heat Capacity = 1
+  Density = 0.2
+End
+
+Initial Condition 1
+    Name = "Temp_Init"
+    Temperature = 300
+End
+
+Boundary Condition 1
+  !Target Boundaries(1) = 1
+  Name = "Plate_Bottom"
+  Temperature = 310
+End
+
+Boundary Condition 2
+  !Target Boundaries(1) = 2 
+  Name = "Plate_Sides"
+End
+
+Boundary Condition 3
+  !Target Boundaries(1) = 3
+  Name = "Coupling_Interface"
+  Temperature = Equals "Temperature"
+  Coupler Interface = Logical True
+End
