@@ -28,8 +28,8 @@ else
             ;;
         sdc)
             # install pySDC + its dependencies only if needed
-            pip install git+https://github.com/Parallel-in-Time/pySDC@5.4.3
-            pip install pySDC~=5.4
+            pip install git+https://github.com/Parallel-in-Time/pySDC@5.5.0
+            pip install pySDC~=5.5
             echo "Running simulation with pySDC+FEniCS implementation"
             python3 ../solver-fenics/heat_pySDC.py Dirichlet
             ;;

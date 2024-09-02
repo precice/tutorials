@@ -10,11 +10,11 @@ from fenics import TrialFunction, TestFunction, dx, assemble, inner, nabla_grad,
 from my_enums import ProblemType
 
 
-from pySDC.core.Problem import ptype
+from pySDC.core.problem import Problem
 from pySDC.implementations.datatype_classes.fenics_mesh import fenics_mesh, rhs_fenics_mesh
 
 
-class fenics_heat_2d(ptype):
+class fenics_heat_2d(Problem):
     dtype_u = fenics_mesh
     dtype_f = rhs_fenics_mesh
 
