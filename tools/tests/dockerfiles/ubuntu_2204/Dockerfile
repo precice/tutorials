@@ -111,20 +111,20 @@ COPY --from=precice /home/precice/.local /home/precice/.local
 USER root
 RUN apt-get -qq update && \
     apt-get -qq install libarpack2-dev libspooles-dev libyaml-cpp-dev
-ARG CALULIX_VERSION
+ARG CALCULIX_VERSION
 USER precice
 #Download Calculix
 WORKDIR /home/precice
-RUN wget http://www.dhondt.de/ccx_${CALULIX_VERSION}.src.tar.bz2 && \
-    tar xvjf ccx_${CALULIX_VERSION}.src.tar.bz2 && \
-    rm -fv ccx_${CALULIX_VERSION}.src.tar.bz2
+RUN wget http://www.dhondt.de/ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
+    tar xvjf ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
+    rm -fv ccx_${CALCULIX_VERSION}.src.tar.bz2
 
-ARG CALULIX_ADAPTER_REF
+ARG CALCULIX_ADAPTER_REF
 WORKDIR /home/precice
 RUN git clone https://github.com/precice/calculix-adapter.git && \
     cd calculix-adapter && \
-    git checkout ${CALULIX_ADAPTER_REF} &&\
-    make CXX_VERSION=${CALULIX_VERSION} ADDITIONAL_FFLAGS="-fallow-argument-mismatch" -j $(nproc) && \
+    git checkout ${CALCULIX_ADAPTER_REF} &&\
+    make CXX_VERSION=${CALCULIX_VERSION} ADDITIONAL_FFLAGS="-fallow-argument-mismatch" -j $(nproc) && \
     ln -s /home/precice/calculix-adapter/bin/ccx_preCICE /home/precice/.local/bin/ccx_preCICE
 
 FROM python_bindings as su2_adapter
