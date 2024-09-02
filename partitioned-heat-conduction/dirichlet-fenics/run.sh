@@ -27,8 +27,10 @@ else
             python3 ../solver-fenics/heatHigherOrder.py Dirichlet
             ;;
         sdc)
+            # install pySDC + its dependencies only if needed
+            pip install git+https://github.com/Parallel-in-Time/pySDC@5.4.3
+            pip install pySDC~=5.4
             echo "Running simulation with pySDC+FEniCS implementation"
-            python3 ../solver-fenics/check_pySDC.py
             python3 ../solver-fenics/heat_pySDC.py Dirichlet
             ;;
         *)
