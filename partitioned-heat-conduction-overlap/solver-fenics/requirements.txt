@@ -1,4 +1,8 @@
-pyprecice~=3.0
-fenicsprecice
-numpy
-mpi4py <4
+fenicsprecice~=2.0
+numpy >1, <2
+
+fenics-dijitso==2019.2.0.dev0
+fenics-dolfin==2019.2.0.13.dev0
+fenics-ffc==2019.2.0.dev0
+fenics-fiat==2019.2.0.dev0
+fenics-ufl-legacy==2022.3.0

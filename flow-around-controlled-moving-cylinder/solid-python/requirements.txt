@@ -1,2 +1,2 @@
 pyprecice~=3.0
-numpy
+numpy >1, <2

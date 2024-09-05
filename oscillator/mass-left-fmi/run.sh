@@ -16,8 +16,8 @@ if [ ! -f ../solver-fmi/Oscillator.fmu ]; then
   cd ../../../mass-left-fmi
 fi
 
-python3 -m venv ../sover-fmi/.venv
-. ../sover-fmi/.venv/bin/activate
+python3 -m venv .venv
+. .venv/bin/activate
 pip install -r requirements.txt
 
 fmiprecice fmi-settings.json precice-settings.json
