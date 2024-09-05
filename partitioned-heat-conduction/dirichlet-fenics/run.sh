@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e -u
 
-python3 -m venv --system-site-packages ../solver-fenics/.venv
-. ../solver-fenics/.venv/bin/activate
+python3 -m venv --system-site-packages .venv
+. .venv/bin/activate
 pip install -r ../solver-fenics/requirements.txt
 
 . ../../tools/log.sh
