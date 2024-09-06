@@ -1,7 +1,9 @@
-fenicsprecice~=2.0
 numpy >1, <2
-sympy
+fenicsprecice~=2.0
+scipy
 
+# Assuming FEniCS from ppa:fenics-packages/fenics was installed https://fenicsproject.org/download/archive/
+# Use --system-site-packages in venv
 fenics-dijitso==2019.2.0.dev0
 fenics-dolfin==2019.2.0.13.dev0
 fenics-ffc==2019.2.0.dev0
