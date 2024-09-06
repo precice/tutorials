@@ -1,4 +1,4 @@
-pyprecice~=3.0
+fenicsprecice~=2.0
 numpy  >1, <2
 
 fenics-dijitso==2019.2.0.dev0
