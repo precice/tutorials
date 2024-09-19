@@ -6,4 +6,9 @@ FoamFile
     object      turbulenceProperties;
 }
 
-simulationType  laminar;
+simulationType RAS;
+RAS
+{
+    RASModel        kOmegaSST;
+    turbulence      on;
+}
