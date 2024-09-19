@@ -1,7 +1,8 @@
-from typing import Tuple, List
+from typing import Tuple, List, Callable
 import numpy as np
 import numbers
 import scipy as sp
+from scipy.integrate import OdeSolution
 from enum import Enum
 
 
@@ -13,14 +14,7 @@ class TimeSteppingSchemes(Enum):
 
 
 class GeneralizedAlpha():
-    alpha_f = None
-    alpha_m = None
-    gamma = None
-    beta = None
-    mass = None
-    stiffness = None
-
-    def __init__(self, stiffness, mass, alpha_f=0.4, alpha_m=0.2) -> None:
+    def __init__(self, stiffness: float, mass: float, alpha_f: float = 0.4, alpha_m: float = 0.2) -> None:
         self.alpha_f = alpha_f
         self.alpha_m = alpha_m
 
@@ -30,25 +24,35 @@ class GeneralizedAlpha():
         self.stiffness = stiffness
         self.mass = mass
 
-    def do_step(self, u0, v0, a0, rhs, dt) -> Tuple[float, float, float]:
-        f = rhs((1 - self.alpha_f) * dt)
+    def do_step(self,
+                u0: float,
+                v0: float,
+                a0: float,
+                rhs: Callable[[float], float],
+                dt: float
+                ) -> Tuple[float, float, float]:
+        """Perform a step with generalized Alpha or Newmark Beta scheme (depends on parameters alpha_f and alpha_m)
 
-        m = 3 * [None]
-        m[0] = (1 - self.alpha_m) / (self.beta * dt**2)
-        m[1] = (1 - self.alpha_m) / (self.beta * dt)
-        m[2] = (1 - self.alpha_m - 2 * self.beta) / (2 * self.beta)
+        Args:
+            u0 (float): displacement at time t0
+            v0 (float): velocity at time t0
+            a0 (float): acceleration at time t0
+            rhs (Callable[[float],float]): time dependent right-hand side
+            dt (float): time step size
+
+        Returns:
+            Tuple[float, float, float]: returns computed displacement, velocity, and acceleration at time t1 = t0 + dt.
+        """
+        f = rhs((1.0 - self.alpha_f) * dt)
+
+        m = [(1 - self.alpha_m) / (self.beta * dt**2),
+             (1 - self.alpha_m) / (self.beta * dt),
+             (1 - self.alpha_m - 2 * self.beta) / (2 * self.beta)]
 
         k_bar = self.stiffness * (1 - self.alpha_f) + m[0] * self.mass
 
         # do generalized alpha step
-        if (type(self.stiffness)) is np.ndarray:
-            u1 = np.linalg.solve(
-                k_bar,
-                (f - self.alpha_f * self.stiffness.dot(u0) + self.mass.dot((m[0] * u0 + m[1] * v0 + m[2] * a0)))
-            )
-        else:
-            u1 = (f - self.alpha_f * self.stiffness * u0 + self.mass * (m[0] * u0 + m[1] * v0 + m[2] * a0)) / k_bar
-
+        u1 = (f - self.alpha_f * self.stiffness * u0 + self.mass * (m[0] * u0 + m[1] * v0 + m[2] * a0)) / k_bar
         a1 = 1.0 / (self.beta * dt**2) * (u1 - u0 - dt * v0) - (1 - 2 * self.beta) / (2 * self.beta) * a0
         v1 = v0 + dt * ((1 - self.gamma) * a0 + self.gamma * a1)
 
@@ -56,6 +60,7 @@ class GeneralizedAlpha():
 
 
 class RungeKutta4():
+    # parameters from Butcher tableau of classic Runge Kutta scheme (RK4)
     a = np.array([[0, 0, 0, 0],
                   [0.5, 0, 0, 0],
                   [0, 0.5, 0, 0],
@@ -67,19 +72,30 @@ class RungeKutta4():
         self.ode_system = ode_system
         pass
 
-    def do_step(self, u0, v0, _, rhs, dt) -> Tuple[float, float, float]:
-        assert (isinstance(u0, type(v0)))
+    def do_step(self,
+                u0: float,
+                v0: float,
+                _: float,
+                rhs: Callable[[float], float],
+                dt: float
+                ) -> Tuple[float, float, float]:
+        """Perform a step with the classic Runge Kutta scheme (4 stages)
+
+        Args:
+            u0 (float): displacement at time t0
+            v0 (float): velocity at time t0
+            _ (float): ignored argument (acceleration for other time stepping schemes)
+            rhs (Callable[[float],float]): time dependent right-hand side
+            dt (float): time step size
+
+        Returns:
+            Tuple[float, float, float]: returns computed displacement and velocity at time t1 = t0 + dt.
+        """
 
         k = 4 * [None]  # store stages in list
 
-        if isinstance(u0, np.ndarray):
-            x0 = np.concatenate([u0, v0])
-            def f(t,x): return self.ode_system.dot(x) + np.concatenate([np.array([0, 0]), rhs(t)])
-        elif isinstance(u0, numbers.Number):
-            x0 = np.array([u0, v0])
-            def f(t,x): return self.ode_system.dot(x) + np.array([0, rhs(t)])
-        else:
-            raise Exception(f"Cannot handle input type {type(u0)} of u and v")
+        x0 = np.array([u0, v0])
+        def f(t, x): return self.ode_system.dot(x) + np.array([0, rhs(t)])
 
         k[0] = f(self.c[0] * dt, x0)
         k[1] = f(self.c[1] * dt, x0 + self.a[1, 0] * k[0] * dt)
@@ -88,14 +104,7 @@ class RungeKutta4():
 
         x1 = x0 + dt * sum(b_i * k_i for k_i, b_i in zip(k, self.b))
 
-        if isinstance(u0, np.ndarray):
-            u1 = x1[0:2]
-            v1 = x1[2:4]
-        elif isinstance(u0, numbers.Number):
-            u1 = x1[0]
-            v1 = x1[1]
-
-        return u1, v1, None
+        return x1[0], x1[1], np.nan
 
 
 class RadauIIA():
@@ -103,27 +112,36 @@ class RadauIIA():
         self.ode_system = ode_system
         pass
 
-    def do_step(self, u0, v0, _, rhs, dt) -> Tuple[float, float, float]:
-        assert (isinstance(u0, type(v0)))
+    def do_step(self,
+                u0: float,
+                v0: float,
+                _: float,
+                rhs: Callable[[float], float],
+                dt: float
+                ) -> Tuple[float, float, float, OdeSolution]:
+        """Perform a step with the adaptive RadauIIA time stepper of scipy.integrate
 
-        t0 = 0
+        Args:
+            u0 (float): displacement at time t0
+            v0 (float): velocity at time t0
+            _ (float): ignored argument (acceleration for other time stepping schemes)
+            rhs (Callable[[float],float]): time dependent right-hand side
+            dt (float): time step size
 
-        if isinstance(u0, np.ndarray):
-            x0 = np.concatenate([u0, v0])
-            def f(t,x): return self.ode_system.dot(x) + np.concatenate([np.array([np.zeros_like(t), np.zeros_like(t)]), rhs(t)])
-        elif isinstance(u0, numbers.Number):
-            x0 = np.array([u0, v0])
-            def f(t,x): return self.ode_system.dot(x) + np.array([np.zeros_like(t), rhs(t)])
-        else:
-            raise Exception(f"Cannot handle input type {type(u0)} of u and v")
+        Raises:
+            Exception: if input u0 is malformed
+
+        Returns:
+            Tuple[float, float, None, OdeSolution]: returns computed displacement and velocity at time t1 = t0 + dt and an OdeSolution with dense output for the integration interval.
+        """
+
+        t0, t1 = 0, dt
+
+        x0 = np.array([u0, v0])
+        def f(t, x): return self.ode_system.dot(x) + np.array([np.zeros_like(t), rhs(t)])
 
         # use adaptive time stepping; dense_output=True allows us to sample from continuous function later
-        ret = sp.integrate.solve_ivp(f, [t0, t0 + dt], x0, method="Radau",
+        ret = sp.integrate.solve_ivp(f, [t0, t1], x0, method="Radau",
                                      dense_output=True, rtol=10e-5, atol=10e-9)
 
-        if isinstance(u0, np.ndarray):
-            u1, v1 = ret.y[0:2, -1], ret.y[2:4, -1]
-        elif isinstance(u0, numbers.Number):
-            u1, v1 = ret.y[:, -1]
-
-        return u1, v1, None, ret.sol
+        return ret.y[0, -1], ret.y[1, -1], np.nan, ret.sol

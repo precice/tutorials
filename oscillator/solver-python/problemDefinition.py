@@ -1,5 +1,6 @@
 import numpy as np
 from numpy.linalg import eig
+from typing import Callable
 
 
 class SpringLeft:
@@ -23,7 +24,9 @@ class MassLeft:
     u0 = 1.0
     v0 = 0.0
 
-    u_analytical, v_analytical = None, None  # will be defined below
+    # will be defined below
+    u_analytical: Callable[[float | np.ndarray], float | np.ndarray]
+    v_analytical: Callable[[float | np.ndarray], float | np.ndarray]
 
 
 class MassRight:
@@ -35,7 +38,9 @@ class MassRight:
     u0 = 0.0
     v0 = 0.0
 
-    u_analytical, v_analytical = None, None  # will be defined below
+    # will be defined below
+    u_analytical: Callable[[float | np.ndarray], float | np.ndarray]
+    v_analytical: Callable[[float | np.ndarray], float | np.ndarray]
 
 
 # Mass matrix
