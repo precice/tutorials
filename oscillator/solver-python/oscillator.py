@@ -32,9 +32,9 @@ args = parser.parse_args()
 
 participant_name = args.participantName
 
-this_mass: problemDefinition.Mass
-other_mass: problemDefinition.Mass
-this_spring: problemDefinition.Spring
+this_mass: Type[problemDefinition.Mass]
+other_mass: Type[problemDefinition.Mass]
+this_spring: Type[problemDefinition.Spring]
 connecting_spring = problemDefinition.SpringMiddle
 
 if participant_name == Participant.MASS_LEFT.value:
@@ -42,18 +42,18 @@ if participant_name == Participant.MASS_LEFT.value:
     read_data_name = 'Force-Right'
     mesh_name = 'Mass-Left-Mesh'
 
-    this_mass = problemDefinition.MassLeft()
-    this_spring = problemDefinition.SpringLeft()
-    other_mass = problemDefinition.MassRight()
+    this_mass = problemDefinition.MassLeft
+    this_spring = problemDefinition.SpringLeft
+    other_mass = problemDefinition.MassRight
 
 elif participant_name == Participant.MASS_RIGHT.value:
     read_data_name = 'Force-Left'
     write_data_name = 'Force-Right'
     mesh_name = 'Mass-Right-Mesh'
 
-    this_mass = problemDefinition.MassRight()
-    this_spring = problemDefinition.SpringRight()
-    other_mass = problemDefinition.MassLeft()
+    this_mass = problemDefinition.MassRight
+    this_spring = problemDefinition.SpringRight
+    other_mass = problemDefinition.MassLeft
 
 else:
     raise Exception(f"wrong participant name: {participant_name}")
