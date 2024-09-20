@@ -53,8 +53,8 @@ class TimeStepper:
 class GeneralizedAlpha(TimeStepper):
     """TimeStepper implementing generalized Alpha or Newmark Beta scheme (depends on parameters alpha_f and alpha_m set in constructor)
     """
-    alpha_f:float
-    alpha_m:float
+    alpha_f: float
+    alpha_m: float
 
     def __init__(self, stiffness: float, mass: float, alpha_f: float = 0.4, alpha_m: float = 0.2) -> None:
         self.alpha_f = alpha_f
