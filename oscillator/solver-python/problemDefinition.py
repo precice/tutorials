@@ -3,19 +3,31 @@ from numpy.linalg import eig
 from typing import Callable
 
 
-class SpringLeft:
+class Spring:
+    k: float
+
+
+class SpringLeft(Spring):
     k = 4 * np.pi**2
 
 
-class SpringMiddle:
+class SpringMiddle(Spring):
     k = 16 * (np.pi**2)
 
 
-class SpringRight:
+class SpringRight(Spring):
     k = 4 * np.pi**2
 
 
-class MassLeft:
+class Mass:
+    m: float
+    u0: float
+    v0: float
+    u_analytical: Callable[[float | np.ndarray], float | np.ndarray]
+    v_analytical: Callable[[float | np.ndarray], float | np.ndarray]
+
+
+class MassLeft(Mass):
     # mass
     m = 1
 
@@ -24,12 +36,8 @@ class MassLeft:
     u0 = 1.0
     v0 = 0.0
 
-    # will be defined below
-    u_analytical: Callable[[float | np.ndarray], float | np.ndarray]
-    v_analytical: Callable[[float | np.ndarray], float | np.ndarray]
 
-
-class MassRight:
+class MassRight(Mass):
     # mass
     m = 1
 
@@ -37,10 +45,6 @@ class MassRight:
     # solution allows arbitrary u0, but requires v0 = 0)
     u0 = 0.0
     v0 = 0.0
-
-    # will be defined below
-    u_analytical: Callable[[float | np.ndarray], float | np.ndarray]
-    v_analytical: Callable[[float | np.ndarray], float | np.ndarray]
 
 
 # Mass matrix

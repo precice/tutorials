@@ -10,7 +10,7 @@ import os
 from typing import Type
 
 import problemDefinition
-from timeSteppers import TimeSteppingSchemes, GeneralizedAlpha, RungeKutta4, RadauIIA
+from timeSteppers import TimeStepper, TimeSteppingSchemes, GeneralizedAlpha, RungeKutta4, RadauIIA
 
 
 class Participant(Enum):
@@ -32,9 +32,9 @@ args = parser.parse_args()
 
 participant_name = args.participantName
 
-this_mass: Type[problemDefinition.MassRight] | Type[problemDefinition.MassLeft]
-other_mass: Type[problemDefinition.MassRight] | Type[problemDefinition.MassLeft]
-this_spring: Type[problemDefinition.SpringRight] | Type[problemDefinition.SpringLeft]
+this_mass: problemDefinition.Mass
+other_mass: problemDefinition.Mass
+this_spring: problemDefinition.Spring
 connecting_spring = problemDefinition.SpringMiddle
 
 if participant_name == Participant.MASS_LEFT.value:
@@ -42,18 +42,18 @@ if participant_name == Participant.MASS_LEFT.value:
     read_data_name = 'Force-Right'
     mesh_name = 'Mass-Left-Mesh'
 
-    this_mass = problemDefinition.MassLeft
-    this_spring = problemDefinition.SpringLeft
-    other_mass = problemDefinition.MassRight
+    this_mass = problemDefinition.MassLeft()
+    this_spring = problemDefinition.SpringLeft()
+    other_mass = problemDefinition.MassRight()
 
 elif participant_name == Participant.MASS_RIGHT.value:
     read_data_name = 'Force-Left'
     write_data_name = 'Force-Right'
     mesh_name = 'Mass-Right-Mesh'
 
-    this_mass = problemDefinition.MassRight
-    this_spring = problemDefinition.SpringRight
-    other_mass = problemDefinition.MassLeft
+    this_mass = problemDefinition.MassRight()
+    this_spring = problemDefinition.SpringRight()
+    other_mass = problemDefinition.MassLeft()
 
 else:
     raise Exception(f"wrong participant name: {participant_name}")
@@ -93,24 +93,16 @@ v = v0
 a = a0
 t = 0
 
-time_stepper: GeneralizedAlpha | RungeKutta4 | RadauIIA
+time_stepper: TimeStepper
 
 if args.time_stepping == TimeSteppingSchemes.GENERALIZED_ALPHA.value:
     time_stepper = GeneralizedAlpha(stiffness=stiffness, mass=mass, alpha_f=0.4, alpha_m=0.2)
 elif args.time_stepping == TimeSteppingSchemes.NEWMARK_BETA.value:
     time_stepper = GeneralizedAlpha(stiffness=stiffness, mass=mass, alpha_f=0.0, alpha_m=0.0)
 elif args.time_stepping == TimeSteppingSchemes.RUNGE_KUTTA_4.value:
-    ode_system = np.array([
-        [0, 1],  # du
-        [-stiffness / mass, 0],  # dv
-    ])
-    time_stepper = RungeKutta4(ode_system=ode_system)
+    time_stepper = RungeKutta4(stiffness=stiffness, mass=mass)
 elif args.time_stepping == TimeSteppingSchemes.Radau_IIA.value:
-    ode_system = np.array([
-        [0, 1],  # du
-        [-stiffness / mass, 0],  # dv
-    ])
-    time_stepper = RadauIIA(ode_system=ode_system)
+    time_stepper = RadauIIA(stiffness=stiffness, mass=mass)
 else:
     raise Exception(
         f"Invalid time stepping scheme {args.time_stepping}. Please use one of {[ts.value for ts in TimeSteppingSchemes]}")
@@ -142,24 +134,24 @@ while participant.is_coupling_ongoing():
     def f(t: float) -> float: return participant.read_data(mesh_name, read_data_name, vertex_ids, t)[0]
 
     # do time step, write data, and advance
-    u_new, v_new, a_new, *other = time_stepper.do_step(u, v, a, f, dt)
+    u_new, v_new, a_new = time_stepper.do_step(u, v, a, f, dt)
+
     t_new = t + dt
 
-    if other:
-        # if dense output is available, performed adaptive time stepping. Do multiple write calls per time step
-        sol, *_ = other
+    # RadauIIA time stepper provides dense output. Do multiple write calls per time step.
+    if isinstance(time_stepper, RadauIIA):
         # create n samples_per_step of time stepping scheme. Degree of dense
         # interpolating function is usually larger 1 and, therefore, we need
         # multiple samples per step.
         samples_per_step = 5
-        n_time_steps = len(sol.ts)  # number of time steps performed by adaptive time stepper
+        n_time_steps = len(time_stepper.dense_output.ts)  # number of time steps performed by adaptive time stepper
         n_pseudo = samples_per_step * n_time_steps  # samples_per_step times no. time steps per window.
         t_pseudo = 0
         for i in range(n_pseudo):
             # perform n_pseudo pseudosteps
             dt_pseudo = dt / n_pseudo
             t_pseudo += dt_pseudo
-            write_data = np.array([connecting_spring.k * sol(t_pseudo)[0]])
+            write_data = np.array([connecting_spring.k * time_stepper.dense_output(t_pseudo)[0]])
             participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
             participant.advance(dt_pseudo)
 

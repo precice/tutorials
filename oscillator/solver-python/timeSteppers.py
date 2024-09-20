@@ -1,4 +1,4 @@
-from typing import Tuple, List, Callable
+from typing import Tuple, Callable
 import numpy as np
 import numbers
 import scipy as sp
@@ -13,7 +13,49 @@ class TimeSteppingSchemes(Enum):
     Radau_IIA = "radauIIA"  # 5th order implicit
 
 
-class GeneralizedAlpha():
+class TimeStepper:
+    """Time stepper for a mass spring system with given mass and spring stiffness
+    """
+
+    def __init__(self,
+                 stiffness: float,
+                 mass: float) -> None:
+        """Initializes time stepper with parameters describing mass spring system
+
+        Args:
+            stiffness (float): the stiffness of the spring connected to the mass
+            mass (float): the mass
+        """
+        raise NotImplementedError()
+
+    def do_step(self,
+                u0: float,
+                v0: float,
+                a0: float,
+                rhs: Callable[[float], float],
+                dt: float
+                ) -> Tuple[float, float, float]:
+        """Perform a time step of size dt with given time stepper
+
+        Args:
+            u0 (float): displacement at time t0
+            v0 (float): velocity at time t0
+            a0 (float): acceleration at time t0
+            rhs (Callable[[float],float]): time dependent right-hand side
+            dt (float): time step size
+
+        Returns:
+            Tuple[float, float, float]: returns computed displacement, velocity, and acceleration at time t1 = t0 + dt.
+        """
+        raise NotImplementedError()
+
+
+class GeneralizedAlpha(TimeStepper):
+    """TimeStepper implementing generalized Alpha or Newmark Beta scheme (depends on parameters alpha_f and alpha_m set in constructor)
+    """
+    alpha_f:float
+    alpha_m:float
+
     def __init__(self, stiffness: float, mass: float, alpha_f: float = 0.4, alpha_m: float = 0.2) -> None:
         self.alpha_f = alpha_f
         self.alpha_m = alpha_m
@@ -31,18 +73,6 @@ class GeneralizedAlpha():
                 rhs: Callable[[float], float],
                 dt: float
                 ) -> Tuple[float, float, float]:
-        """Perform a step with generalized Alpha or Newmark Beta scheme (depends on parameters alpha_f and alpha_m)
-
-        Args:
-            u0 (float): displacement at time t0
-            v0 (float): velocity at time t0
-            a0 (float): acceleration at time t0
-            rhs (Callable[[float],float]): time dependent right-hand side
-            dt (float): time step size
-
-        Returns:
-            Tuple[float, float, float]: returns computed displacement, velocity, and acceleration at time t1 = t0 + dt.
-        """
         f = rhs((1.0 - self.alpha_f) * dt)
 
         m = [(1 - self.alpha_m) / (self.beta * dt**2),
@@ -59,7 +89,9 @@ class GeneralizedAlpha():
         return u1, v1, a1
 
 
-class RungeKutta4():
+class RungeKutta4(TimeStepper):
+    """TimeStepper implementing classic Runge Kutta scheme (4 stages)
+    """
     # parameters from Butcher tableau of classic Runge Kutta scheme (RK4)
     a = np.array([[0, 0, 0, 0],
                   [0.5, 0, 0, 0],
@@ -68,9 +100,11 @@ class RungeKutta4():
     b = np.array([1 / 6, 1 / 3, 1 / 3, 1 / 6])
     c = np.array([0, 0.5, 0.5, 1])
 
-    def __init__(self, ode_system) -> None:
-        self.ode_system = ode_system
-        pass
+    def __init__(self, stiffness: float, mass: float) -> None:
+        self.ode_system = np.array([
+            [0, 1],  # du
+            [-stiffness / mass, 0],  # dv
+        ])
 
     def do_step(self,
                 u0: float,
@@ -79,19 +113,6 @@ class RungeKutta4():
                 rhs: Callable[[float], float],
                 dt: float
                 ) -> Tuple[float, float, float]:
-        """Perform a step with the classic Runge Kutta scheme (4 stages)
-
-        Args:
-            u0 (float): displacement at time t0
-            v0 (float): velocity at time t0
-            _ (float): ignored argument (acceleration for other time stepping schemes)
-            rhs (Callable[[float],float]): time dependent right-hand side
-            dt (float): time step size
-
-        Returns:
-            Tuple[float, float, float]: returns computed displacement and velocity at time t1 = t0 + dt.
-        """
-
         k = 4 * [None]  # store stages in list
 
         x0 = np.array([u0, v0])
@@ -104,13 +125,19 @@ class RungeKutta4():
 
         x1 = x0 + dt * sum(b_i * k_i for k_i, b_i in zip(k, self.b))
 
-        return x1[0], x1[1], np.nan
+        return x1[0], x1[1], f(dt, x1)[1]
 
 
-class RadauIIA():
-    def __init__(self, ode_system) -> None:
-        self.ode_system = ode_system
-        pass
+class RadauIIA(TimeStepper):
+    """Perform a step with the adaptive RadauIIA time stepper of scipy.integrate
+    """
+    _dense_output: OdeSolution
+
+    def __init__(self, stiffness: float, mass: float) -> None:
+        self.ode_system = np.array([
+            [0, 1],  # du
+            [-stiffness / mass, 0],  # dv
+        ])
 
     def do_step(self,
                 u0: float,
@@ -118,23 +145,7 @@ class RadauIIA():
                 _: float,
                 rhs: Callable[[float], float],
                 dt: float
-                ) -> Tuple[float, float, float, OdeSolution]:
-        """Perform a step with the adaptive RadauIIA time stepper of scipy.integrate
-
-        Args:
-            u0 (float): displacement at time t0
-            v0 (float): velocity at time t0
-            _ (float): ignored argument (acceleration for other time stepping schemes)
-            rhs (Callable[[float],float]): time dependent right-hand side
-            dt (float): time step size
-
-        Raises:
-            Exception: if input u0 is malformed
-
-        Returns:
-            Tuple[float, float, None, OdeSolution]: returns computed displacement and velocity at time t1 = t0 + dt and an OdeSolution with dense output for the integration interval.
-        """
-
+                ) -> Tuple[float, float, float]:
         t0, t1 = 0, dt
 
         x0 = np.array([u0, v0])
@@ -144,4 +155,15 @@ class RadauIIA():
         ret = sp.integrate.solve_ivp(f, [t0, t1], x0, method="Radau",
                                      dense_output=True, rtol=10e-5, atol=10e-9)
 
-        return ret.y[0, -1], ret.y[1, -1], np.nan, ret.sol
+        self._dense_output = ret.sol  # store dense output in class
+
+        return ret.y[0, -1], ret.y[1, -1], f(dt, ret.y[:, -1])[1]
+
+    @property
+    def dense_output(self) -> OdeSolution:
+        """Returns dense output created for the last call of do_step
+
+        Returns:
+            OdeSolution: dense output
+        """
+        return self._dense_output
