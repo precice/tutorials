@@ -97,4 +97,4 @@ Visualization in paraview for `x_c = 1.5`.
 [2] Azahar Monge and Philipp Birken. "Convergence Analysis of the Dirichlet-Neumann Iteration for Finite Element Discretizations." (2016). Proceedings in Applied Mathematics and Mechanics. [doi](https://doi.org/10.1002/pamm.201610355)  
 [3] Benjamin Rüth, Benjamin Uekermann, Miriam Mehl, Philipp Birken, Azahar Monge, and Hans Joachim Bungartz. "Quasi-Newton waveform iteration for partitioned surface-coupled multiphysics applications." (2020). International Journal for Numerical Methods in Engineering. [doi](https://doi.org/10.1002/nme.6443)  
 [4] Niklas Vinnitchenko. "Evaluation of Higher-Order Coupling Schemes with FEniCS-preCICE." (2024). Bachelor's thesis at Technical University of Munich. [pdf](https://mediatum.ub.tum.de/1732367)
-[5] Tobias Eppacher. "Parallel-in-Time Integration with preCICE" (2024). Bachlor's thesis at Technical University of Munich. [pdf](TODO)
+[5] Tobias Eppacher. "Parallel-in-Time Integration with preCICE" (2024). Bachlor's thesis at Technical University of Munich. [pdf](https://mediatum.ub.tum.de/1755012)
