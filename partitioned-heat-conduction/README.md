@@ -39,28 +39,37 @@ You can either couple a solver with itself or different solvers with each other.
 
 ## Running the simulation
 
-You can find the corresponding `run.sh` script for running the case in the folders corresponding to the solver you want to use.
+You can find the corresponding `run.sh` script for running the case in the folders corresponding to the participant you want to use.
 
-For choosing whether you want to run the Dirichlet-kind and a Neumann-kind participant, please provide the following commandline input:
-
-* `-d` flag will enforce Dirichlet boundary conditions on the coupling interface.
-* `-n` flag will enforce Neumann boundary conditions on the coupling interface.
-
-For running the case, open two terminals run:
+For choosing whether you want to run the Dirichlet-kind and a Neumann-kind participant, please navigate to the corresponding folder (e.g. `dirichlet-fenics` or `neumann-openfoam`) and use the `run.sh` script. For running the case, open two terminals and run:
 
 ```bash
-cd fenics
-./run.sh -d
+cd dirichlet-fenics
+./run.sh
 ```
 
 and
 
 ```bash
-cd fenics
-./run.sh -n
+cd neumann-fenics
+./run.sh
 ```
 
-If you want to use Nutils, use `cd nutils` instead of `cd fenics`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
+The FEniCS-based version of the tutorial offers higher-order time stepping with implicit Runge Kutta schemes (Neumann and Dirichlet participant, see [4]) by running 
+
+```bash
+cd neumann-fenics
+./run.sh irk
+```
+
+or Spectral Deferred Corrections (SDC, only Dirichlet participant, see [5]) via
+
+```bash
+cd dirichlet-fenics
+./run.sh sdc
+```
+
+If you want to use Nutils or OpenFOAM, use `cd dirichlet/neumann-nutils`, respectively `cd dirichlet/neumann-openfoam`, instead of `cd dirichlet/neumann-fenics`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
 
 ```bash
 mpirun -n <N_PROC> heat.py -d
@@ -87,3 +96,5 @@ Visualization in paraview for `x_c = 1.5`.
 [1] Hans Petter Langtangen and Anders Logg. "Solving PDEs in Minutes-The FEniCS Tutorial Volume I." (2016). [pdf](https://fenicsproject.org/pub/tutorial/pdf/fenics-tutorial-vol1.pdf)  
 [2] Azahar Monge and Philipp Birken. "Convergence Analysis of the Dirichlet-Neumann Iteration for Finite Element Discretizations." (2016). Proceedings in Applied Mathematics and Mechanics. [doi](https://doi.org/10.1002/pamm.201610355)  
 [3] Benjamin Rüth, Benjamin Uekermann, Miriam Mehl, Philipp Birken, Azahar Monge, and Hans Joachim Bungartz. "Quasi-Newton waveform iteration for partitioned surface-coupled multiphysics applications." (2020). International Journal for Numerical Methods in Engineering. [doi](https://doi.org/10.1002/nme.6443)  
+[4] Niklas Vinnitchenko. "Evaluation of Higher-Order Coupling Schemes with FEniCS-preCICE." (2024). Bachelor's thesis at Technical University of Munich. [pdf](https://mediatum.ub.tum.de/1732367)
+[5] Tobias Eppacher. "Parallel-in-Time Integration with preCICE" (2024). Bachlor's thesis at Technical University of Munich. [pdf](TODO)
