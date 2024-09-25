@@ -55,7 +55,7 @@ cd neumann-fenics
 ./run.sh
 ```
 
-The FEniCS-based version of the tutorial offers higher-order time stepping with implicit Runge Kutta schemes (Neumann and Dirichlet participant, see [4]) by running 
+The FEniCS-based version of the tutorial offers higher-order time stepping with implicit Runge Kutta schemes (Neumann and Dirichlet participant, see [4]) by running
 
 ```bash
 cd neumann-fenics
