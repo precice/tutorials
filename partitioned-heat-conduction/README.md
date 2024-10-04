@@ -39,9 +39,7 @@ You can either couple a solver with itself or different solvers with each other.
 
 ## Running the simulation
 
-You can find the corresponding `run.sh` script for running the case in the folders corresponding to the participant you want to use.
-
-For choosing whether you want to run the Dirichlet-kind and a Neumann-kind participant, please navigate to the corresponding folder (e.g. `dirichlet-fenics` or `neumann-openfoam`) and use the `run.sh` script. For running the case, open two terminals and run:
+You can find the corresponding `run.sh` script for running the case in the folders corresponding to the participant you want to use:
 
 ```bash
 cd dirichlet-fenics
