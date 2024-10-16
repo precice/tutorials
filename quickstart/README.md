@@ -27,14 +27,15 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 
     | OS                            | Package |
     | ---                           | ---     |
-    | Ubuntu 20.04 Focal Fossa      | [`libprecice3_3.1.1_focal.deb`](https://github.com/precice/precice/releases/download/v3.1.1/libprecice3_3.1.1_focal.deb) |
-    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.1.1_jammy.deb`](https://github.com/precice/precice/releases/download/v3.1.1/libprecice3_3.1.1_jammy.deb) |
-    | Debian 11 "bullseye"          | [`libprecice3_3.1.1_bullseye.deb`](https://github.com/precice/precice/releases/download/v3.1.1/libprecice3_3.1.1_bullseye.deb) |
-    | Debian 12 "bookworm"          | [`libprecice3_3.1.1_bookworm.deb`](https://github.com/precice/precice/releases/download/v3.1.1/libprecice3_3.1.1_bookworm.deb) |
+    | Ubuntu 20.04 Focal Fossa      | [`libprecice3_3.1.2_focal.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_focal.deb) |
+    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.1.2_jammy.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_jammy.deb) |
+    | Ubuntu 24.04 Jammy Jellyfish  | [`libprecice3_3.1.2_jammy.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_noble.deb) | 
+    | Debian 11 "bullseye"          | [`libprecice3_3.1.2_bullseye.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_bullseye.deb) |
+    | Debian 12 "bookworm"          | [`libprecice3_3.1.2_bookworm.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_bookworm.deb) |
     | Something else                | See an [overview of options](https://precice.org/installation-overview.html) |
 
     - Facing any problems? [Ask for help](https://precice.org/community-channels.html).
-2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](https://precice.org/adapter-openfoam-support.html):
+3. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](https://precice.org/adapter-openfoam-support.html):
 
     ```bash
     # Add the signing key, add the repository, update (check this):
@@ -46,13 +47,13 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     source ~/.bashrc
     ```
 
-3. Install a few common dependencies that we will need later:
+4. Install a few common dependencies that we will need later:
 
     ```bash
     sudo apt install build-essential pkg-config cmake git
     ```
 
-4. Download and install the [OpenFOAM-preCICE adapter](https://precice.org/adapter-openfoam-get.html):
+5. Download and install the [OpenFOAM-preCICE adapter](https://precice.org/adapter-openfoam-get.html):
 
     ```bash
      wget https://github.com/precice/openfoam-adapter/archive/refs/tags/v1.3.1.tar.gz
@@ -62,7 +63,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
      cd ..
     ```
 
-5. Get the quickstart tutorial case:
+6. Get the quickstart tutorial case:
 
     ```bash
     wget https://github.com/precice/tutorials/archive/refs/tags/v202404.0.tar.gz
