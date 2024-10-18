@@ -21,8 +21,8 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 1. Get and install preCICE. For Ubuntu 22.04 (Jammy Jellyfish), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v3.1.1/libprecice3_3.1.1_jammy.deb
-    sudo apt install ./libprecice3_3.1.1_jammy.deb
+    wget https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_jammy.deb
+    sudo apt install ./libprecice3_3.1.2_jammy.deb
     ```
 
     | OS                            | Package |
