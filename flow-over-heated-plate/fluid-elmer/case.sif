@@ -1,6 +1,6 @@
 Header
   CHECK KEYWORDS Warn
-  Mesh DB "." "Fluid_Participant_Mesh"
+  Mesh DB "." "Fluid-Mesh"
   Include Path ""
   Results Directory "../out"
 End

@@ -1,6 +1,6 @@
 Header
   CHECK KEYWORDS Warn
-  Mesh DB "." "Solid_Participant_Mesh"
+  Mesh DB "." "Solid-Mesh"
   Include Path ""
   Results Directory "../out"
 End
