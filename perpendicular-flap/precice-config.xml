@@ -46,8 +46,8 @@
     <time-window-size value="0.01" />
     <max-time value="5" />
     <participants first="Fluid" second="Solid" />
-    <exchange data="Force" mesh="Solid-Mesh" from="Fluid" to="Solid" />
-    <exchange data="Displacement" mesh="Solid-Mesh" from="Solid" to="Fluid" />
+    <exchange data="Force" mesh="Solid-Mesh" from="Fluid" to="Solid" initialize="true" />
+    <exchange data="Displacement" mesh="Solid-Mesh" from="Solid" to="Fluid" initialize="true" />
     <max-iterations value="50" />
     <relative-convergence-measure limit="5e-3" data="Displacement" mesh="Solid-Mesh" />
     <relative-convergence-measure limit="5e-3" data="Force" mesh="Solid-Mesh" />
