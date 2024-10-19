@@ -29,7 +29,7 @@ If you want to use the developer version, the source code repository can be clon
 For more information on pySDC, see also "https://parallel-in-time.org/pySDC/"
 
 For information on the partitioned heat conduction problem using pySDC methods see
-* "Eppacher, TObias. Parallel-in-Time Integration with preCICE. Bachelor's thesis at Technical University of Munich, 2024. URL: https://mediatum.ub.tum.de/1755012"
+* "Eppacher, Tobias. Parallel-in-Time Integration with preCICE. Bachelor's thesis at Technical University of Munich, 2024. URL: https://mediatum.ub.tum.de/1755012"
 
 """
 
