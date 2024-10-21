@@ -29,7 +29,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     | ---                           | ---     |
     | Ubuntu 20.04 Focal Fossa      | [`libprecice3_3.1.2_focal.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_focal.deb) |
     | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.1.2_jammy.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_jammy.deb) |
-    | Ubuntu 24.04 Jammy Jellyfish  | [`libprecice3_3.1.2_jammy.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_noble.deb) |
+    | Ubuntu 24.04 Noble Numbat  | [`libprecice3_3.1.2_noble.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_noble.deb) |
     | Debian 11 "bullseye"          | [`libprecice3_3.1.2_bullseye.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_bullseye.deb) |
     | Debian 12 "bookworm"          | [`libprecice3_3.1.2_bookworm.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_bookworm.deb) |
     | Something else                | See an [overview of options](https://precice.org/installation-overview.html) |
