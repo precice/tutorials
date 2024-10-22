@@ -21,16 +21,17 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 1. Get and install preCICE. For Ubuntu 22.04 (Jammy Jellyfish), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v3.1.1/libprecice3_3.1.1_jammy.deb
-    sudo apt install ./libprecice3_3.1.1_jammy.deb
+    wget https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_jammy.deb
+    sudo apt install ./libprecice3_3.1.2_jammy.deb
     ```
 
     | OS                            | Package |
     | ---                           | ---     |
-    | Ubuntu 20.04 Focal Fossa      | [`libprecice3_3.1.1_focal.deb`](https://github.com/precice/precice/releases/download/v3.1.1/libprecice3_3.1.1_focal.deb) |
-    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.1.1_jammy.deb`](https://github.com/precice/precice/releases/download/v3.1.1/libprecice3_3.1.1_jammy.deb) |
-    | Debian 11 "bullseye"          | [`libprecice3_3.1.1_bullseye.deb`](https://github.com/precice/precice/releases/download/v3.1.1/libprecice3_3.1.1_bullseye.deb) |
-    | Debian 12 "bookworm"          | [`libprecice3_3.1.1_bookworm.deb`](https://github.com/precice/precice/releases/download/v3.1.1/libprecice3_3.1.1_bookworm.deb) |
+    | Ubuntu 20.04 Focal Fossa      | [`libprecice3_3.1.2_focal.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_focal.deb) |
+    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.1.2_jammy.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_jammy.deb) |
+    | Ubuntu 24.04 Noble Numbat  | [`libprecice3_3.1.2_noble.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_noble.deb) |
+    | Debian 11 "bullseye"          | [`libprecice3_3.1.2_bullseye.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_bullseye.deb) |
+    | Debian 12 "bookworm"          | [`libprecice3_3.1.2_bookworm.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_bookworm.deb) |
     | Something else                | See an [overview of options](https://precice.org/installation-overview.html) |
 
     - Facing any problems? [Ask for help](https://precice.org/community-channels.html).
