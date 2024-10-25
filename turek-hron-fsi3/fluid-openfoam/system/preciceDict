@@ -26,10 +26,9 @@ interfaces
     
     writeData
     (
-      Stress
+      Force
     );
   };
-  
   Interface2
   {
     mesh              Fluid-Mesh-Nodes;

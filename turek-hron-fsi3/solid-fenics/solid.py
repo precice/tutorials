@@ -1,12 +1,9 @@
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
     TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, \
-    Identity, inner, dx, ds, sym, grad, lhs, rhs, dot, File, solve, PointSource, assemble_system
-import dolfin
+    Identity, inner, dx, sym, grad, lhs, rhs, File, solve, assemble_system, project, div
 
-from ufl import nabla_div
 import numpy as np
-import matplotlib.pyplot as plt
 from fenicsprecice import Adapter
 from enum import Enum
 
@@ -89,16 +86,26 @@ force_boundary = AutoSubDomain(remaining_boundary)
 
 # Initialize the coupling interface
 # Function space V is passed twice as both read and write functions are defined using the same space
-precice_dt = precice.initialize(coupling_boundary, read_function_space=V, write_object=V,
-                                fixed_boundary=clamped_boundary_domain)
+precice.initialize(coupling_boundary, read_function_space=V, write_object=V, fixed_boundary=clamped_boundary_domain)
 
-fenics_dt = precice_dt  # if fenics_dt == precice_dt, no subcycling is applied
-# fenics_dt = 0.02  # if fenics_dt < precice_dt, subcycling is applied
+precice_dt = precice.get_max_time_step_size()
+fenics_dt = precice_dt
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
-# generalized alpha method (time stepping) parameters
-alpha_m = Constant(0.2)
-alpha_f = Constant(0.4)
+# alpha method parameters
+# alpha_m = Constant(0.2)
+# alpha_f = Constant(0.4)
+alpha_m = Constant(0)
+alpha_f = Constant(0)
+
+"""
+Check requirements for alpha_m and alpha_f from
+    Chung, J., and Hulbert, G. M. (June 1, 1993). "A Time Integration Algorithm for Structural Dynamics With Improved Numerical Dissipation:
+    The Generalized-α Method." ASME. J. Appl. Mech. June 1993; 60(2): 371–375. https://doi.org/10.1115/1.2900803
+"""
+assert (float(alpha_m) <= float(alpha_f))
+assert (float(alpha_f) <= 0.5)
+
 gamma = Constant(0.5 + alpha_f - alpha_m)
 beta = Constant((gamma + 0.5) ** 2 * 0.25)
 
@@ -113,7 +120,7 @@ def epsilon(u):
 
 # Define Stress tensor
 def sigma(u):
-    return lambda_ * nabla_div(u) * Identity(dim) + 2 * mu * epsilon(u)
+    return lambda_ * div(u) * Identity(dim) + 2 * mu * epsilon(u)
 
 
 # Define Mass form
@@ -151,16 +158,14 @@ def update_velocity(a, u_old, v_old, a_old, ufl=True):
 def update_fields(u, u_old, v_old, a_old):
     """Update all fields at the end of a timestep."""
 
-    u_vec, u0_vec = u.vector(), u_old.vector()
-    v0_vec, a0_vec = v_old.vector(), a_old.vector()
-
     # call update functions
-    a_vec = update_acceleration(u_vec, u0_vec, v0_vec, a0_vec, ufl=False)
-    v_vec = update_velocity(a_vec, u0_vec, v0_vec, a0_vec, ufl=False)
+    a_new = update_acceleration(u, u_old, v_old, a_old)
+    v_new = update_velocity(a_new, u_old, v_old, a_old)
 
     # assign u->u_old
-    v_old.vector()[:], a_old.vector()[:] = v_vec, a_vec
-    u_old.vector()[:] = u.vector()
+    a_old.assign(project(a_new, V))
+    v_old.assign(project(v_new, V))
+    u_old.assign(u)
 
 
 def avg(x_old, x_new, alpha):
@@ -179,13 +184,9 @@ L_form = rhs(res)
 # Prepare for time-stepping
 t = 0.0
 n = 0
-time = []
-u_tip = []
-time.append(0.0)
-u_tip.append(0.0)
 E_ext = 0
 
-displacement_out = File("Solid/FSI-S/u_fsi.pvd")
+displacement_out = File("output/u_fsi.pvd")
 
 u_n.rename("Displacement", "")
 u_np1.rename("Displacement", "")
@@ -194,11 +195,16 @@ displacement_out << u_n
 # time loop for coupling
 while precice.is_coupling_ongoing():
 
-    if precice.is_action_required(precice.action_write_iteration_checkpoint()):  # write checkpoint
-        precice.store_checkpoint(u_n, t, n)
+    if precice.requires_writing_checkpoint():  # write checkpoint
+        precice.store_checkpoint((u_n, v_n, a_n), t, n)
+
+    precice_dt = precice.get_max_time_step_size()
+    dt = Constant(np.min([precice_dt, fenics_dt]))
 
     # read data from preCICE and get a new coupling expression
-    read_data = precice.read_data()
+    # sample force F at $F(t_{n+1-\alpha_f})$ (see generalized alpha paper)
+    read_data = precice.read_data((1 - float(alpha_f)) * dt)
+    # read_data = precice.read_data(dt)
 
     # Update the point sources on the coupling boundary with the new read data
     Forces_x, Forces_y = precice.get_point_sources(read_data)
@@ -215,39 +221,30 @@ while precice.is_coupling_ongoing():
     assert (b is not b_forces)
     solve(A, u_np1.vector(), b_forces)
 
-    dt = Constant(np.min([precice_dt, fenics_dt]))
-
     # Write new displacements to preCICE
     precice.write_data(u_np1)
 
     # Call to advance coupling, also returns the optimum time step value
-    precice_dt = precice.advance(dt(0))
+    precice.advance(float(dt))
 
     # Either revert to old step if timestep has not converged or move to next timestep
-    if precice.is_action_required(precice.action_read_iteration_checkpoint()):  # roll back to checkpoint
-        u_cp, t_cp, n_cp = precice.retrieve_checkpoint()
+    if precice.requires_reading_checkpoint():  # roll back to checkpoint
+        uva_cp, t_cp, n_cp = precice.retrieve_checkpoint()
+        u_cp, v_cp, a_cp = uva_cp
         u_n.assign(u_cp)
+        v_n.assign(v_cp)
+        a_n.assign(a_cp)
         t = t_cp
         n = n_cp
     else:
-        u_n.assign(u_np1)
+        update_fields(u_np1, u_n, v_n, a_n)
         t += float(dt)
         n += 1
 
     if precice.is_time_window_complete():
-        update_fields(u_np1, saved_u_old, v_n, a_n)
         if n % 20 == 0:
             displacement_out << (u_n, t)
 
-        u_tip.append(u_n(0.6, 0.2)[1])
-        time.append(t)
-
-# Plot tip displacement evolution
 displacement_out << u_n
-plt.figure()
-plt.plot(time, u_tip)
-plt.xlabel("Time")
-plt.ylabel("Tip displacement")
-plt.show()
 
 precice.finalize()

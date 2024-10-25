@@ -6,12 +6,12 @@ FoamFile
     object      decomposeParDict;
 }
 
-numberOfSubdomains 25;
+numberOfSubdomains 3;
 
 method hierarchical;
 hierarchicalCoeffs
 {
-    n (5 5 1);
+    n (3 1 1);
     delta 0.001;
     order xyz;
 }

@@ -7,11 +7,11 @@
       enabled="true" />
   </log>
 
-  <data:vector name="Stress" />
+  <data:vector name="Force" />
   <data:vector name="Displacement" />
 
   <mesh name="Fluid-Mesh-Centers" dimensions="2">
-    <use-data name="Stress" />
+    <use-data name="Force" />
   </mesh>
 
   <mesh name="Fluid-Mesh-Nodes" dimensions="2">
@@ -20,29 +20,28 @@
 
   <mesh name="Solid-Mesh" dimensions="2">
     <use-data name="Displacement" />
-    <use-data name="Stress" />
+    <use-data name="Force" />
   </mesh>
 
   <participant name="Fluid">
-    <provide-mesh name="Fluid-Mesh-Nodes" />
     <provide-mesh name="Fluid-Mesh-Centers" />
+    <provide-mesh name="Fluid-Mesh-Nodes" />
     <receive-mesh name="Solid-Mesh" from="Solid" />
     <read-data name="Displacement" mesh="Fluid-Mesh-Nodes" />
-    <write-data name="Stress" mesh="Fluid-Mesh-Centers" />
+    <write-data name="Force" mesh="Fluid-Mesh-Centers" />
     <mapping:rbf direction="read" from="Solid-Mesh" to="Fluid-Mesh-Nodes" constraint="consistent">
+      <basis-function:compact-polynomial-c6 support-radius="0.35" />
+    </mapping:rbf>
+    <mapping:rbf direction="write" from="Fluid-Mesh-Centers" to="Solid-Mesh" constraint="conservative">
       <basis-function:compact-polynomial-c6 support-radius="0.35" />
     </mapping:rbf>
   </participant>
 
   <participant name="Solid">
     <provide-mesh name="Solid-Mesh" />
-    <receive-mesh name="Fluid-Mesh-Centers" from="Fluid" />
-    <read-data name="Stress" mesh="Solid-Mesh" />
+    <read-data name="Force" mesh="Solid-Mesh" />
     <write-data name="Displacement" mesh="Solid-Mesh" />
     <watch-point mesh="Solid-Mesh" name="Flap-Tip" coordinate="0.6;0.2" />
-    <mapping:rbf direction="read" from="Fluid-Mesh-Centers" to="Solid-Mesh" constraint="consistent">
-      <basis-function:compact-polynomial-c6 support-radius="0.35" />
-    </mapping:rbf>
   </participant>
 
   <m2n:sockets acceptor="Fluid" connector="Solid" exchange-directory=".." />
@@ -51,14 +50,14 @@
     <time-window-size value="1e-3" />
     <max-time value="15" />
     <participants first="Fluid" second="Solid" />
-    <exchange data="Stress" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
+    <exchange data="Force" mesh="Solid-Mesh" from="Fluid" to="Solid" />
     <exchange data="Displacement" mesh="Solid-Mesh" from="Solid" to="Fluid" />
     <max-iterations value="100" />
-    <relative-convergence-measure limit="1e-4" data="Stress" mesh="Fluid-Mesh-Centers" />
+    <relative-convergence-measure limit="1e-4" data="Force" mesh="Solid-Mesh" />
     <relative-convergence-measure limit="1e-4" data="Displacement" mesh="Solid-Mesh" />
     <acceleration:IQN-ILS>
       <data name="Displacement" mesh="Solid-Mesh" />
-      <data name="Stress" mesh="Fluid-Mesh-Centers" />
+      <data name="Force" mesh="Solid-Mesh" />
       <preconditioner type="residual-sum" />
       <filter type="QR2" limit="1.2e-3" />
       <initial-relaxation value="0.1" />
