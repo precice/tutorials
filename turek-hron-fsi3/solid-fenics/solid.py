@@ -1,7 +1,7 @@
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
     TrialFunction, TestFunction, Point, Expression, DirichletBC, nabla_grad, \
-    Identity, inner, dx, sym, grad, lhs, rhs, File, solve, assemble_system, project, div
+    Identity, inner, dx, sym, grad, lhs, rhs, File, solve, assemble_system, div
 
 import numpy as np
 from fenicsprecice import Adapter
@@ -93,10 +93,10 @@ fenics_dt = precice_dt
 dt = Constant(np.min([precice_dt, fenics_dt]))
 
 # alpha method parameters
-# alpha_m = Constant(0.2)
-# alpha_f = Constant(0.4)
-alpha_m = Constant(0)
-alpha_f = Constant(0)
+alpha_m = Constant(0.2)
+alpha_f = Constant(0.4)
+# alpha_m = Constant(0)
+# alpha_f = Constant(0)
 
 """
 Check requirements for alpha_m and alpha_f from
@@ -133,7 +133,7 @@ def k(u, v):
     return inner(sigma(u), sym(grad(v))) * dx
 
 
-def update_acceleration(u, u_old, v_old, a_old, ufl=True):
+def update_a(u, u_old, v_old, a_old, ufl=True):
     if ufl:
         dt_ = dt
         beta_ = beta
@@ -144,7 +144,7 @@ def update_acceleration(u, u_old, v_old, a_old, ufl=True):
     return (u - u_old - dt_ * v_old) / beta / dt_ ** 2 - .5 * (1 - 2 * beta_) / beta_ * a_old
 
 
-def update_velocity(a, u_old, v_old, a_old, ufl=True):
+def update_v(a, u_old, v_old, a_old, ufl=True):
     if ufl:
         dt_ = dt
         gamma_ = gamma
@@ -157,15 +157,16 @@ def update_velocity(a, u_old, v_old, a_old, ufl=True):
 
 def update_fields(u, u_old, v_old, a_old):
     """Update all fields at the end of a timestep."""
+    u_vec, u0_vec = u.vector(), u_old.vector()
+    v0_vec, a0_vec = v_old.vector(), a_old.vector()
 
     # call update functions
-    a_new = update_acceleration(u, u_old, v_old, a_old)
-    v_new = update_velocity(a_new, u_old, v_old, a_old)
+    a_vec = update_a(u_vec, u0_vec, v0_vec, a0_vec, ufl=False)
+    v_vec = update_v(a_vec, u0_vec, v0_vec, a0_vec, ufl=False)    
 
     # assign u->u_old
-    a_old.assign(project(a_new, V))
-    v_old.assign(project(v_new, V))
-    u_old.assign(u)
+    v_old.vector()[:], a_old.vector()[:] = v_vec, a_vec
+    u_old.vector()[:] = u.vector()
 
 
 def avg(x_old, x_new, alpha):
@@ -173,8 +174,8 @@ def avg(x_old, x_new, alpha):
 
 
 # residual
-a_np1 = update_acceleration(du, u_n, v_n, a_n, ufl=True)
-v_np1 = update_velocity(a_np1, u_n, v_n, a_n, ufl=True)
+a_np1 = update_a(du, u_n, v_n, a_n, ufl=True)
+v_np1 = update_v(a_np1, u_n, v_n, a_n, ufl=True)
 
 res = m(avg(a_n, a_np1, alpha_m), v) + k(avg(u_n, du, alpha_f), v)
 
@@ -238,6 +239,7 @@ while precice.is_coupling_ongoing():
         n = n_cp
     else:
         update_fields(u_np1, u_n, v_n, a_n)
+        u_n.assign(u_np1)
         t += float(dt)
         n += 1
 
