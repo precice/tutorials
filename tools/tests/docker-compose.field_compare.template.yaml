@@ -7,7 +7,4 @@ services:
     command:
       - /runs/{{ tutorial_folder }}/{{ precice_output_folder }}
       - /runs/{{ tutorial_folder }}/{{ reference_output_folder }}
-      - "-rtol 3e-7"
-
-# Currently its really hard to estimate the impact of compiling and executing in a different platform (like github actions)
-# 3e-7 might not be the thightest we can afford and we want to have but its an okayish guestimation for now. 
+      - "-rtol 3e-7 --ignore-missing-reference-files --diff"

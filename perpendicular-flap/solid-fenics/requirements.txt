@@ -1,4 +1,4 @@
-fenicsprecice~=2.0
+fenicsprecice~=2.2
 numpy >1, <2
 matplotlib
 
