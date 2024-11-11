@@ -35,6 +35,8 @@ Fluid participant:
 
 * SU2. For more information, have a look at the [SU2 adapter docmentation](https://precice.org/adapter-su2-overview.html).
 
+* Elmer. For more information, have a look at the [Elmer adapter documentation](https://github.com/precice/elmer-adapter).
+
 Solid participant:
 
 * OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
@@ -44,6 +46,8 @@ Solid participant:
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
 * Dune-Fem. For more information, have a look at the [official documentation of Dune-Fem](https://www.dune-project.org/sphinx/dune-fem/). The `run.sh` script installs the solver from [PyPI](https://pypi.org/project/dune-fem/) into a Python virtual environment. Please note that Dune-Fem uses just-in-time compilation: The first time you run the solver script, it will take some time.
+
+* Elmer. For more information, have a look at the [Elmer adapter documentation](https://github.com/precice/elmer-adapter).
 
 It is also possible to use CalculiX as solid solver. In that case, two coupling meshes are needed: CalculiX read/writes temperatures on nodes, but read/writes heat-fluxes on face centers. This requires some adaptation of the `precice-config.xml` file, and [a separate tutorial](tutorials-flow-over-heated-plate-two-meshes.html) has been designed for it.
 
