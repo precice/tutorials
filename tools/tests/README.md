@@ -21,7 +21,7 @@ Workflow for the preCICE v3 release testing:
 3. Trigger the GitHub Actions Workflow. Until we merge the workflow to develop, this can only happen via the [GitHub CLI](https://cli.github.com/):
 
     ```bash
-    gh workflow run run_testsuite_manual.yml -f suites=release_test -f build_args="PRECICE_REF:v3.1.1,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,TUTORIALS_REF:340b447" --ref=develop
+    gh workflow run run_testsuite_manual.yml -f suites=release_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,TUTORIALS_REF:340b447" --ref=develop
     ```
 
 4. Go to the tutorials [Actions](https://github.com/precice/tutorials/actions) page and find the running workflow
@@ -61,7 +61,7 @@ gh workflow run run_testsuite_manual.yml -f suites=fenics_test --ref=develop
 Another example, to use the latest releases and enable debug information of the tests:
 
 ```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v3.1.1,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,TUTORIALS_REF:340b447" -f loglevel=DEBUG --ref=develop
+gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,TUTORIALS_REF:340b447" -f loglevel=DEBUG --ref=develop
 ```
 
 where the `*_REF` should be a specific [commit-ish](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefcommit-ishacommit-ishalsocommittish).
@@ -71,7 +71,7 @@ Example output:
 ```text
 Run cd tools/tests
   cd tools/tests
-  python systemtests.py --build_args=PRECICE_REF:v3.1.1,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0 --suites=fenics_test --log-level=DEBUG
+  python systemtests.py --build_args=PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0 --suites=fenics_test --log-level=DEBUG
   cd ../../
   shell: /usr/bin/bash -e {0}
 INFO: About to run the following systemtest in the directory /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs:
@@ -248,6 +248,9 @@ openfoam-adapter:
     PRECICE_REF:
       description: Version of preCICE to use
       default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
       default: "ubuntu_2204"

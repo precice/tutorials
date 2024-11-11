@@ -5,6 +5,9 @@ bare: # A default component used when the solver does not have any dependencies 
     PRECICE_REF:
       description: Version of preCICE to use
       default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
       default: "ubuntu_2204"
@@ -19,6 +22,9 @@ python-bindings:
     PRECICE_REF:
       description: Version of preCICE to use
       default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
       default: "ubuntu_2204"
@@ -36,6 +42,9 @@ openfoam-adapter:
     PRECICE_REF:
       description: Version of preCICE to use
       default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
       default: "ubuntu_2204"
@@ -58,6 +67,9 @@ fenics-adapter:
     PRECICE_REF:
       description: Version of preCICE to use
       default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
       default: "ubuntu_2204"
@@ -78,6 +90,9 @@ nutils-adapter:
     PRECICE_REF:
       description: Version of preCICE to use
       default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
       default: "ubuntu_2204"
@@ -95,6 +110,9 @@ calculix-adapter:
     PRECICE_REF:
       description: Version of preCICE to use
       default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
       default: "ubuntu_2204"
@@ -115,6 +133,9 @@ su2-adapter:
     PRECICE_REF:
       description: Version of preCICE to use
       default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
       default: "ubuntu_2204"

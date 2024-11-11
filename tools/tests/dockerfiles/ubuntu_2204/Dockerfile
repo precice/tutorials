@@ -48,13 +48,14 @@ RUN python3 -m pip install --user --upgrade pip
 FROM precice_dependecies as precice
 # Install & build precice into /home/precice/precice
 ARG PRECICE_REF
+ARG PRECICE_PRESET
 USER precice
 WORKDIR /home/precice
 RUN git clone https://github.com/precice/precice.git precice && \
     cd precice && \
     git checkout ${PRECICE_REF} && \
     mkdir build && cd build &&\
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DPRECICE_PETScMapping=OFF -DBUILD_TESTING=OFF && \
+    cmake .. --preset=${PRECICE_PRESET} -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DPRECICE_PETScMapping=OFF -DBUILD_TESTING=OFF && \
     make all install -j $(nproc)
 
 FROM precice_dependecies as openfoam_adapter
