@@ -14,8 +14,8 @@ Simulation
   Output Intervals = 1
   Timestepping Method = BDF
   BDF Order = 2
-  Timestep intervals = 10
-  Timestep Sizes = 0.1
+  Timestep intervals = 100
+  Timestep Sizes = 0.01
   Solver Input File = case.sif
   Post File = Fluid.vtu
   Use Mesh Names = Logical True
