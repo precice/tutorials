@@ -68,7 +68,6 @@ jobs:
         name: runs
         path: |
           runs/*
-          /home/precice/.local/lib/
     - name: tidy up the docker
       run: |
         docker network prune -f
