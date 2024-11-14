@@ -4,8 +4,8 @@ scipy
 
 # Assuming FEniCS from ppa:fenics-packages/fenics was installed https://fenicsproject.org/download/archive/
 # Use --system-site-packages in venv
-fenics-dijitso==2019.2.0.dev0
-fenics-dolfin==2019.2.0.13.dev0
-fenics-ffc==2019.2.0.dev0
-fenics-fiat==2019.2.0.dev0
-fenics-ufl-legacy==2022.3.0
+fenics-dijitso~=2019.0
+fenics-dolfin~=2019.0
+fenics-ffc~=2019.0
+fenics-fiat~=2019.0
+fenics-ufl-legacy~=2022.0
