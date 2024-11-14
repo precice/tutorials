@@ -94,7 +94,6 @@ RUN add-apt-repository -y ppa:fenics-packages/fenics && \
     apt-get -qq update && \
     apt-get -qq install --no-install-recommends fenics
 USER precice
-RUN pip3 install --user fenics-ufl
 ARG FENICS_ADAPTER_REF
 # Building fenics-adapter
 RUN pip3 install --user git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
