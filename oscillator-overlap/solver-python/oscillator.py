@@ -130,13 +130,14 @@ while participant.is_coupling_ongoing():
     precice_dt = participant.get_max_time_step_size()
     dt = np.min([precice_dt, my_dt])
 
-    def f(t: float) -> float: return connecting_spring.k * participant.read_data(mesh_name, read_data_name, vertex_ids, t)[0]
-    
+    def f(t: float) -> float: return connecting_spring.k * \
+        participant.read_data(mesh_name, read_data_name, vertex_ids, t)[0]
+
     # do time step, write data, and advance
     u_new, v_new, a_new = time_stepper.do_step(u, v, a, f, dt)
 
     t_new = t + dt
-    
+
     # RadauIIA time stepper provides dense output. Do multiple write calls per time step.
     if isinstance(time_stepper, RadauIIA):
         # create n samples_per_step of time stepping scheme. Degree of dense
