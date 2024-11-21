@@ -83,7 +83,7 @@ if participant.requires_initial_data():
 
 participant.initialize()
 precice_dt = participant.get_max_time_step_size()
-my_dt = precice_dt  # use my_dt < precice_dt for subcycling
+my_dt = precice_dt / 4  # use my_dt < precice_dt for subcycling
 
 # Initial Conditions
 a0 = (f0 - stiffness * u0) / mass
