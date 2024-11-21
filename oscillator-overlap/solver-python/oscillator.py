@@ -74,7 +74,7 @@ dimensions = participant.get_mesh_dimensions(mesh_name)
 
 vertex = np.zeros(dimensions)
 read_data = np.zeros(num_vertices)
-write_data = connecting_spring.k * u0 * np.ones(num_vertices)
+write_data = u0 * np.ones(num_vertices)
 
 vertex_ids = [participant.set_mesh_vertex(mesh_name, vertex)]
 
