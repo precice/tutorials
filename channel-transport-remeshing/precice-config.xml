@@ -38,5 +38,5 @@
     <max-time value="1.0" />
     <participants first="Fluid" second="Transport" />
     <exchange data="Velocity" mesh="Transport-Mesh" from="Fluid" to="Transport" />
-  </coupling-scheme:serial-explicit>
+  </coupling-scheme:parallel-explicit>
 </precice-configuration>
