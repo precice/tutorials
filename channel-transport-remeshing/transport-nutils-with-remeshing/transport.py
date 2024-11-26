@@ -11,8 +11,8 @@ import json
 import precice
 from mpi4py import MPI
 
-REFINEMENT_LIMITS=[1.0, 2.0]
-REFINEMENT_FREQUENCY=2
+REFINEMENT_LIMITS = [1.0, 2.0]
+REFINEMENT_FREQUENCY = 2
 VISUALIZE = True
 
 
@@ -77,8 +77,8 @@ def main():
     print("Running Nutils")
 
     # define the Nutils mesh
-    nx = 60 #120
-    ny = 16 #32
+    nx = 60  # 120
+    ny = 16  # 32
     step_start = nx // 3
     step_end = nx // 2
     step_height = ny // 2
@@ -199,7 +199,7 @@ def main():
         lhs0 = lhs
 
     if VISUALIZE:
-        with open("Transport.vtk.series","w") as f:
+        with open("Transport.vtk.series", "w") as f:
             json.dump(series, f)
 
     participant.finalize()
