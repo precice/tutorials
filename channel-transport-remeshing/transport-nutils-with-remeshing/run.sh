@@ -1,6 +1,13 @@
 #!/bin/sh
 set -e -u
 
-export OMP_NUM_THREADS=1 NUTILS_NPROCS=4
+. ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+export OMP_NUM_THREADS=1 NUTILS_NPROCS=4
 python3 transport.py
+
+close_log
