@@ -24,6 +24,8 @@ The behavior of the blob over the full 200 timesteps looks as follows:
 
 The case also features a version of the transport solver using adaptive mesh refinement.
 
+![Setup with AMR](images/tutorials-channel-transport-amr.jpeg)
+
 ## Configuration
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
