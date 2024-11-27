@@ -182,12 +182,6 @@ while participant.is_coupling_ongoing():
         t_write.append(t)
 
 # store final result
-u = u_new
-v = v_new
-a = a_new
-u_write.append(u)
-v_write.append(v)
-t_write.append(t)
 positions += u_write
 velocities += v_write
 times += t_write
