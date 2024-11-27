@@ -59,7 +59,7 @@ else:
 
 mass = this_mass.m
 stiffness = this_spring.k + connecting_spring.k
-u0, v0, f0, d_dt_f0 = this_mass.u0, this_mass.v0, connecting_spring.k * other_mass.u0, connecting_spring.k * other_mass.v0
+u0, v0, f0 = this_mass.u0, this_mass.v0, connecting_spring.k * other_mass.u0
 
 num_vertices = 1  # Number of vertices
 
@@ -73,13 +73,10 @@ participant = precice.Participant(participant_name, configuration_file_name, sol
 dimensions = participant.get_mesh_dimensions(mesh_name)
 
 vertex = np.zeros(dimensions)
-read_data = np.zeros(num_vertices)
-write_data = u0 * np.ones(num_vertices)
-
 vertex_ids = [participant.set_mesh_vertex(mesh_name, vertex)]
 
 if participant.requires_initial_data():
-    participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
+    participant.write_data(mesh_name, write_data_name, vertex_ids, np.array([u0]))
 
 participant.initialize()
 precice_dt = participant.get_max_time_step_size()
@@ -151,13 +148,12 @@ while participant.is_coupling_ongoing():
             # perform n_pseudo pseudosteps
             dt_pseudo = dt / n_pseudo
             t_pseudo += dt_pseudo
-            write_data = np.array([time_stepper.dense_output(t_pseudo)[0]])
-            participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
+            u_pseudo = time_stepper.dense_output(t_pseudo)[0]
+            participant.write_data(mesh_name, write_data_name, vertex_ids, np.array([u_pseudo]))
             participant.advance(dt_pseudo)
 
     else:  # simple time stepping without dense output; only a single write call per time step
-        write_data = np.array([u_new])
-        participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
+        participant.write_data(mesh_name, write_data_name, vertex_ids, np.array([u_new]))
         participant.advance(dt)
 
     if participant.requires_reading_checkpoint():

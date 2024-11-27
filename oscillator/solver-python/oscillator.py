@@ -74,7 +74,7 @@ vertex = np.zeros(dimensions)
 vertex_ids = [participant.set_mesh_vertex(mesh_name, vertex)]
 
 if participant.requires_initial_data():
-    participant.write_data(mesh_name, write_data_name, vertex_ids, connecting_spring.k * np.ndarray([u0]))
+    participant.write_data(mesh_name, write_data_name, vertex_ids, connecting_spring.k * np.array([u0]))
 
 participant.initialize()
 precice_dt = participant.get_max_time_step_size()
@@ -150,8 +150,7 @@ while participant.is_coupling_ongoing():
             participant.advance(dt_pseudo)
 
     else:  # simple time stepping without dense output; only a single write call per time step
-        write_data = np.array([connecting_spring.k * u_new])
-        participant.write_data(mesh_name, write_data_name, vertex_ids, write_data)
+        participant.write_data(mesh_name, write_data_name, vertex_ids, connecting_spring.k * np.array([u_new]))
         participant.advance(dt)
 
     if participant.requires_reading_checkpoint():
