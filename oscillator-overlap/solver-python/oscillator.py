@@ -61,8 +61,6 @@ mass = this_mass.m
 stiffness = this_spring.k + connecting_spring.k
 u0, v0, f0 = this_mass.u0, this_mass.v0, connecting_spring.k * other_mass.u0
 
-num_vertices = 1  # Number of vertices
-
 solver_process_index = 0
 solver_process_size = 1
 
