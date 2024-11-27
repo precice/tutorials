@@ -1,5 +1,6 @@
 import numpy as np
 from numpy.linalg import eig
+from numpy.typing import NDArray
 from typing import Callable
 
 
@@ -23,8 +24,8 @@ class Mass:
     m: float
     u0: float
     v0: float
-    u_analytical: Callable[[float | np.ndarray], float | np.ndarray]
-    v_analytical: Callable[[float | np.ndarray], float | np.ndarray]
+    u_analytical: Callable[[float | NDArray], float | NDArray]
+    v_analytical: Callable[[float | NDArray], float | NDArray]
 
 
 class MassLeft(Mass):
