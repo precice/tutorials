@@ -1,0 +1,4 @@
+nutils==7
+numpy >1, <2
+pyprecice @ git+https://github.com/precice/python-bindings.git@develop
+setuptools

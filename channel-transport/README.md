@@ -1,7 +1,7 @@
 ---
 title: Channel transport
 permalink: tutorials-channel-transport.html
-keywords: volume coupling, chemistry, OpenFOAM, Nutils, species, transport
+keywords: volume coupling, chemistry, OpenFOAM, Nutils, species, transport, remeshing
 summary: A CFD problem is coupled to a transport (of, e.g., a chemistry species) in a uni-directional way.
 ---
 
@@ -22,6 +22,8 @@ The behavior of the blob over the full 200 timesteps looks as follows:
   Animation of blob over 200 timesteps.
 </video>
 
+The case also features a version of the transport solver using adaptive mesh refinement.
+
 ## Configuration
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
@@ -40,6 +42,7 @@ Fluid participant:
 Transport participant:
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
+* Nutils with adaptive mesh refinement on the interface. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
 
 ## Running the simulation
 

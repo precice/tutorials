@@ -7,6 +7,7 @@
 from nutils import function, mesh, cli, solver, export
 import treelog as log
 import numpy as np
+import json
 import precice
 from mpi4py import MPI
 
@@ -66,6 +67,7 @@ def main():
     timestep = 0
     solver_dt = 0.005
     precice_dt = participant.get_max_time_step_size()
+    t = 0
     dt = min(precice_dt, solver_dt)
 
     # set blob as initial condition
@@ -75,6 +77,8 @@ def main():
     # initialize the velocity values
     velocity_values = np.zeros_like(vertices)
 
+    series = {"file-series-version": "1.0", "files": []}
+
     while participant.is_coupling_ongoing():
 
         if timestep % 1 == 0:  # visualize
@@ -82,6 +86,7 @@ def main():
             x, u = bezier.eval(["x_i", "u"] @ ns, lhs=lhs0)
             with log.add(log.DataLog()):
                 export.vtk("Transport_" + str(timestep), bezier.tri, x, T=u)
+                series["files"].append({"name": f"Transport_{timestep}.vtk", "time": t})
 
         precice_dt = participant.get_max_time_step_size()
 
@@ -100,9 +105,12 @@ def main():
         participant.advance(dt)
 
         # advance variables
+        t += dt
         timestep += 1
         lhs0 = lhs
 
+    with open("Transport.vtk.series", "w") as f:
+        json.dump(series, f)
     participant.finalize()
 
 
