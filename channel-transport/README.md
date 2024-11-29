@@ -22,7 +22,7 @@ The behavior of the blob over the full 200 timesteps looks as follows:
   Animation of blob over 200 timesteps.
 </video>
 
-The case also features a version of the transport solver using adaptive mesh refinement.
+The transport solver also supports the use of adaptive mesh refinement.
 
 ![Setup with AMR](images/tutorials-channel-transport-amr.png)
 
@@ -43,8 +43,7 @@ Fluid participant:
 
 Transport participant:
 
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
-* Nutils with adaptive mesh refinement on the interface. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
+* Nutils with support for adaptive mesh refinement. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
 
 ## Running the simulation
 
@@ -55,11 +54,25 @@ cd fluid-nutils
 ./run.sh
 ```
 
-and
+and either the non-adaptive mesh transport solver
 
 ```bash
 cd transport-nutils
 ./run.sh
+```
+
+or the adaptive mesh transport solver
+
+```bash
+cd transport-nutils
+./run.sh remesh=True
+```
+
+The mesh refinement frequency can also be adjusted:
+
+```bash
+cd transport-nutils
+./run.sh remesh=True frequency=4 # refine every 4 time-windows
 ```
 
 ## Post-processing
