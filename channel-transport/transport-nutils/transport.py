@@ -212,22 +212,8 @@ def main(remesh: bool, frequency: int, limits: [float], visualize: bool):
 
 if __name__ == "__main__":
 
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("-r", "--remesh", action="store_true", help="Weather to use remeshing or not")
-    # parser.add_argument("-f", "--frequency", default=2, type=int, help="Refinement frequency in time windows")
-    # parser.add_argument("-l", "--limits", default=[1.0, 2.0], type=float, nargs="*")
-    # parser.add_argument("-q", "--no-visualize", action="store_false", dest="visualize")
-    # args = parser.parse_args()
-
-    # print(args)
-    # if args.remesh:
-    #    assert args.frequency > 0
-    #    assert len(args.limits) > 0
-
-    # cli.run(main)
-    # cli.run(main,args.remesh, args.frequency, args.limits, args.visualize)
-
     def run(remesh: bool = False, frequency: int = 2, visualize: bool = True):
+        # we use 1 and 2 as default refinement limits.
         main(remesh, frequency, [1.0, 2.0], visualize)
 
     cli.run(run)
