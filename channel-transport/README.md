@@ -43,7 +43,7 @@ Fluid participant:
 
 Transport participant:
 
-* Nutils with support for adaptive mesh refinement. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
+* Nutils with support for [adaptive mesh refinement](https://precice.org/couple-your-code-moving-or-changing-meshes.html#pseudo-reference-domain). For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0 and a preCICE release above 3.1.2 for remeshing support.
 
 ## Running the simulation
 
