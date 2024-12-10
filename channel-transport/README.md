@@ -47,6 +47,8 @@ Transport participant:
 
 ## Running the simulation
 
+For the fluid solver, use Nutils for ease of installation and OpenFOAM for speed.
+
 Open two separate terminals and start one fluid and one transport participant by calling the respective run scripts `run.sh` located in each of the participants' directory. For example:
 
 ```bash
