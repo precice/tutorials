@@ -1,88 +1,69 @@
-module utilities
-  implicit none
-  integer, parameter :: dp = kind(1.0d0)
-contains
+MODULE Utilities
+  IMPLICIT NONE
+  INTEGER, PARAMETER :: dp = KIND(1.0D0)
+CONTAINS
 
-  subroutine write_vtk(t, iteration, filenamePrefix, nSlices, &
+  SUBROUTINE write_vtk(t, iteration, filenamePrefix, nSlices, &
                        grid, velocity, pressure, diameter)
-    implicit none
+    IMPLICIT NONE
 
-    ! Input Parameters
-    real(dp), intent(in) :: t
-    integer, intent(in) :: iteration
-    character(len=*), intent(in) :: filenamePrefix
-    integer, intent(in) :: nSlices
-    real(dp), intent(in) :: grid(:)
-    real(dp), intent(in) :: velocity(:)
-    real(dp), intent(in) :: pressure(:)
-    real(dp), intent(in) :: diameter(:)
+    DOUBLE PRECISION, INTENT(IN)       :: t
+    INTEGER, INTENT(IN)                :: iteration
+    CHARACTER(LEN=*), INTENT(IN)       :: filenamePrefix
+    INTEGER, INTENT(IN)                :: nSlices
+    DOUBLE PRECISION, INTENT(IN)       :: grid(:), velocity(:), pressure(:), diameter(:)
 
-    ! Local Variables
-    integer :: ioUnit, i, ioStatus
-    character(len=256) :: filename
+    INTEGER :: ioUnit, i, ioStatus
+    CHARACTER(LEN=256) :: filename
 
-    ! Generate Filename
-    write(filename, '(A,"_",I0,".vtk")') trim(filenamePrefix), iteration
+    WRITE(filename, '(A,"_",I0,".vtk")') TRIM(filenamePrefix), iteration
+    PRINT *, 'Writing timestep at t=', t, ' to ', TRIM(filename)
 
-    ! Print Status Message
-    print *, 'Writing timestep at t=', t, ' to ', trim(filename)
+    OPEN(newunit=ioUnit, file=TRIM(filename), status="replace", action="write", form="formatted", iostat=ioStatus)
+    IF (ioStatus /= 0) THEN
+      PRINT *, 'Error: Unable to open file ', TRIM(filename)
+      RETURN
+    END IF
 
-    ! Open File
-    open(newunit=ioUnit, file=trim(filename), status="replace", &
-         action="write", form="formatted", iostat=ioStatus)
-    if (ioStatus /= 0) then
-      print *, 'Error: Unable to open file ', trim(filename)
-      return
-    end if
+    WRITE(ioUnit, '(A)') '# vtk DataFile Version 2.0'
+    WRITE(ioUnit, '(A)') ''
+    WRITE(ioUnit, '(A)') 'ASCII'
+    WRITE(ioUnit, '(A)') ''
+    WRITE(ioUnit, '(A)') 'DATASET UNSTRUCTURED_GRID'
+    WRITE(ioUnit, '(A)') ''
 
-    ! Write VTK Header
-    write(ioUnit, '(A)') '# vtk DataFile Version 2.0'
-    write(ioUnit, '(A)') ''
-    write(ioUnit, '(A)') 'ASCII'
-    write(ioUnit, '(A)') ''
-    write(ioUnit, '(A)') 'DATASET UNSTRUCTURED_GRID'
-    write(ioUnit, '(A)') ''
+    WRITE(ioUnit, '(A,I0,A)') 'POINTS ', nSlices, ' float'
+    WRITE(ioUnit, '(A)') ''
+    DO i = 1, nSlices
+      WRITE(ioUnit, '(ES24.16,1X,ES24.16,1X,ES24.16)') grid(2*(i-1)+1), grid(2*(i-1)+2), 0.0D0
+    END DO
+    WRITE(ioUnit, '(A)') ''
 
-    ! Write POINTS Section
-    write(ioUnit, '(A,I0,A)') 'POINTS ', nSlices, ' float'
-    write(ioUnit, '(A)') ''
+    WRITE(ioUnit, '(A,I0)') 'POINT_DATA ', nSlices
+    WRITE(ioUnit, '(A)') ''
 
-    ! Export Mesh Points
-    do i = 1, nSlices
-      write(ioUnit, '(F24.16,1X,F24.16,1X,F24.16)') grid(2*(i-1)+1), grid(2*(i-1)+2), 0.0_dp
-    end do
-    write(ioUnit, '(A)') ''
+    WRITE(ioUnit, '(A,A,A)') 'VECTORS ', 'velocity', ' float'
+    DO i = 1, nSlices
+      WRITE(ioUnit, '(ES24.16,1X,ES24.16,1X,ES24.16)') velocity(i), 0.0D0, 0.0D0
+    END DO
+    WRITE(ioUnit, '(A)') ''
 
-    ! Write POINT_DATA Section
-    write(ioUnit, '(A,I0)') 'POINT_DATA ', nSlices
-    write(ioUnit, '(A)') ''
+    WRITE(ioUnit, '(A,A,A)') 'SCALARS ', 'pressure', ' float'
+    WRITE(ioUnit, '(A)') 'LOOKUP_TABLE default'
+    DO i = 1, nSlices
+      WRITE(ioUnit, '(ES24.16)') pressure(i)
+    END DO
+    WRITE(ioUnit, '(A)') ''
 
-    ! Export Velocity Vectors
-    write(ioUnit, '(A,A,A)') 'VECTORS ', 'velocity', ' float'
-    do i = 1, nSlices
-      write(ioUnit, '(F24.16,1X,F24.16,1X,F24.16)') velocity(i), 0.0_dp, 0.0_dp
-    end do
-    write(ioUnit, '(A)') ''
+    WRITE(ioUnit, '(A,A,A)') 'SCALARS ', 'diameter', ' float'
+    WRITE(ioUnit, '(A)') 'LOOKUP_TABLE default'
+    DO i = 1, nSlices
+      WRITE(ioUnit, '(ES24.16)') diameter(i)
+    END DO
+    WRITE(ioUnit, '(A)') ''
 
-    ! Export Pressure Scalars
-    write(ioUnit, '(A,A,A)') 'SCALARS ', 'pressure', ' float'
-    write(ioUnit, '(A)') 'LOOKUP_TABLE default'
-    do i = 1, nSlices
-      write(ioUnit, '(F24.16)') pressure(i)
-    end do
-    write(ioUnit, '(A)') ''
+    CLOSE(ioUnit)
 
-    ! Export Diameter Scalars
-    write(ioUnit, '(A,A,A)') 'SCALARS ', 'diameter', ' float'
-    write(ioUnit, '(A)') 'LOOKUP_TABLE default'
-    do i = 1, nSlices
-      write(ioUnit, '(F24.16)') diameter(i)
-    end do
-    write(ioUnit, '(A)') ''
+  END SUBROUTINE write_vtk
 
-    ! Close File
-    close(ioUnit)
-
-  end subroutine write_vtk
-
-end module utilities
+END MODULE Utilities
