@@ -1,6 +1,6 @@
 PROGRAM FluidSolver
   USE FluidComputeSolution, ONLY: fluidComputeSolutionSerial
-  USE Utilities_mod,            ONLY: write_vtk
+  USE utilities,            ONLY: write_vtk
   IMPLICIT NONE
 
   ! Variable Declarations
@@ -116,7 +116,6 @@ PROGRAM FluidSolver
   CALL precicef_requires_initial_data(bool)
   IF (bool == 1) THEN
     WRITE (*,*) 'Fluid: Writing initial data'
-    CALL precicef_write_data(meshName, pressureName, chunkLength, vertexIDs, pressure)
   END IF
 
   ! Initialize Simulation Time
@@ -151,7 +150,7 @@ PROGRAM FluidSolver
   DO WHILE (ongoing /= 0)
     ! Check if Writing a Checkpoint is Required
     CALL precicef_requires_writing_checkpoint(bool)
-    IF (bool == 1) THEN
+    IF (bool.EQ.1) THEN
       WRITE (*,*) 'Fluid: Writing iteration checkpoint'
     END IF
 
@@ -169,7 +168,16 @@ PROGRAM FluidSolver
          velocity, pressure, & ! resulting velocity pressure
          info) 
 
+    ! Print all arrays with 2 decimal places
+    print *, "Index | Pressure | Pressure_Old | CrossSection | CrossSection_Old | Velocity | Velocity_Old"
+    do i = 1, chunkLength
+        print "(I5, 3X, F8.2, 3X, F13.2, 3X, F13.2, 3X, F16.2, 3X, F8.2, 3X, F13.2)", &
+            i - 1, pressure(i), pressure_old(i), crossSectionLength(i), &
+            crossSectionLength_old(i), velocity(i), velocity_old(i)
+    end do 
 
+    CALL precicef_write_data(meshName, pressureName, chunkLength, vertexIDs, pressure)
+    
     CALL precicef_advance(dt)
 
     CALL precicef_get_max_time_step_size(dt)
@@ -177,7 +185,7 @@ PROGRAM FluidSolver
     CALL precicef_read_data(meshName, crossSectionLengthName, chunkLength, vertexIDs, dt, crossSectionLength)
 
     CALL precicef_requires_reading_checkpoint(bool)
-    IF (bool == 1) THEN
+    IF (bool.EQ.1) THEN
       WRITE (*,*) 'Fluid: Reading iteration checkpoint'
     ELSE
       t = t + dt
