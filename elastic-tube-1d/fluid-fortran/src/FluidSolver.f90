@@ -4,7 +4,6 @@ program FluidSolver
   implicit none
   integer, parameter :: dp = kind(1.0d0) ! Double precision
 
-  ! Variable declarations
   character(LEN=512) :: configFileName
   character(LEN=50)  :: solverName
   character(LEN=50)  :: meshName, pressureName, crossSectionLengthName
