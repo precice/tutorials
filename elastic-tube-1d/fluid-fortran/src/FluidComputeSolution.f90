@@ -1,7 +1,7 @@
 module FluidComputeSolution
     implicit none
     integer, parameter :: dp = kind(1.0d0)
-    
+
 contains
 
     subroutine fluid_compute_solution(velocity_old, pressure_old, &
@@ -17,7 +17,7 @@ contains
         integer, intent(out) :: info
 
         ! Local variables
-        integer :: i, k, j
+        integer :: i, k
         real(dp), parameter :: pi = 3.141592653589793_dp
         real(dp), parameter :: e = 10000.0_dp
         real(dp), parameter :: c_mk2 = e / 2.0_dp * sqrt(pi)
