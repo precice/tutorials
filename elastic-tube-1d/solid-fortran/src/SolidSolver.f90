@@ -83,7 +83,7 @@ PROGRAM SolidSolver
   DO WHILE (ongoing /= 0)
 
     CALL precicef_requires_writing_checkpoint(bool)
-    IF (bool == 1) THEN
+    IF (bool.EQ.1) THEN
       WRITE (*,*) 'Solid: Writing iteration checkpoint (not implemented).'
     END IF
 
@@ -98,7 +98,7 @@ PROGRAM SolidSolver
     CALL precicef_advance(dt)
 
     CALL precicef_requires_reading_checkpoint(bool)
-    IF (bool == 1) THEN
+    IF (bool.EQ.1) THEN
       WRITE (*,*) 'Solid: Reading iteration checkpoint (not implemented).'
     END IF
 

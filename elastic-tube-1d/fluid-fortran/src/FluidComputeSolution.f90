@@ -113,6 +113,7 @@ contains
 
             if ((norm < tolerance .and. k > 1) .or. k > max_iterations) then
                 exit
+                print *, "exiting"
             end if
 
             ! Initialize the LHS matrix
@@ -180,14 +181,15 @@ contains
             ! do i = 1, size(LHS, 1)
             !     print *, "LHS(", i, ",", i, ") =", LHS(i, i)
             ! end do
-            print *, "LHS Matrix (size: ", size(LHS, 1), "x", size(LHS, 2), "):"
-            do i = 1, size(LHS, 1)
-                write(*, '(10F8.2)') (LHS(i, j), j = 1, size(LHS, 2))
-            end do
+            ! print *, "LHS Matrix (size: ", size(LHS, 1), "x", size(LHS, 2), "):"
+            ! do i = 1, size(LHS, 1)
+            !     write(*, '(10F8.2)') (LHS(i, j), j = 1, size(LHS, 2))
+            ! end do
 
             call dgesv(nlhs, nrhs, LHS, nlhs, ipiv, Res, nlhs, info)
             if (info /= 0) then
-                return
+                ! return
+                print *, "Couldnt solve"
             end if
 
             ! Update velocity and pressure
