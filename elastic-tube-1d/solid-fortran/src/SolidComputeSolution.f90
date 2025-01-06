@@ -1,28 +1,32 @@
-module SolidComputeSolution_mod
+module SolidComputeSolution
   implicit none
+  integer, parameter :: dp = kind(1.0d0)
+
 contains
 
-  subroutine SolidComputeSolution(chunkLength, pressure, crossSectionLength)
+  subroutine solid_compute_solution(chunkLength, pressure, crossSectionLength)
     integer, intent(in) :: chunkLength
-    real(8), intent(in) :: pressure(1:chunkLength)
-    real(8), intent(inout) :: crossSectionLength(1:chunkLength)
+    real(dp), intent(in) :: pressure(1:chunkLength)
+    real(dp), intent(inout) :: crossSectionLength(1:chunkLength)
 
-    real(8) :: PI, E, r0, c_mk, c_mk2
-    real(8) :: pressure0
+    real(dp) :: pi, e, r0, c_mk, c_mk2
+    real(dp) :: pressure0
     integer :: i
 
-    PI = 3.14159265359d0
-    E  = 10000.d0
-    r0 = 1.d0 / sqrt(PI)
-    c_mk = sqrt(E / (2.d0*r0))
+    ! constants
+    pi = 3.141592653589793_dp
+    e = 10000.0_dp
+    r0 = 1.0_dp / sqrt(pi)
+    c_mk = sqrt(e / (2.0_dp * r0))
     c_mk2 = c_mk * c_mk
-    pressure0 = 0.d0
+    pressure0 = 0.0_dp
 
-    do i=1, chunkLength
-       crossSectionLength(i) = ( (pressure0 - 2.d0 * c_mk2)**2 ) / &
-                               ( (pressure(i) - 2.d0 * c_mk2)**2 )
+    ! Update crossSectionLength based on pressure
+    do i = 1, chunkLength
+      crossSectionLength(i) = ((pressure0 - 2.0_dp * c_mk2)**2) / &
+                              ((pressure(i) - 2.0_dp * c_mk2)**2)
     end do
 
-  end subroutine SolidComputeSolution
+  end subroutine solid_compute_solution
 
-end module SolidComputeSolution_mod
+end module SolidComputeSolution
