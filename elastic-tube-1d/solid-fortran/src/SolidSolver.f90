@@ -59,14 +59,6 @@ program SolidSolver
     vertexIDs(i) = i - 1                                  ! 0-based indexing here
   end do
 
-  ! Print the grid
-  print *, "Grid values:"
-  do i = 1, chunkLength
-      do j = 1, dimensions
-          print "(A,I4,A,F6.2)", "grid(", (i - 1)*dimensions + j, ") = ", grid((i - 1)*dimensions + j)
-      end do
-  end do
-
   call precicef_set_vertices(meshName, chunkLength, grid, vertexIDs)
 
   ! Check if initial data is required and write if necessary
@@ -84,7 +76,7 @@ program SolidSolver
 
     call precicef_requires_writing_checkpoint(bool)
     if (bool .eq. 1) then
-      write (*, *) 'Solid: Writing iteration checkpoint (not implemented).'
+      ! Do nothing here
     end if
 
     call precicef_get_max_time_step_size(dt)
@@ -99,7 +91,7 @@ program SolidSolver
 
     call precicef_requires_reading_checkpoint(bool)
     if (bool .eq. 1) then
-      write (*, *) 'Solid: Reading iteration checkpoint (not implemented).'
+      ! nothing
     end if
 
     call precicef_is_coupling_ongoing(ongoing)
