@@ -7,11 +7,11 @@ contains
                        grid, velocity, pressure, diameter)
     implicit none
 
-    double precision, intent(IN)       :: t
-    integer, intent(IN)                :: iteration
-    character(LEN=*), intent(IN)       :: filenamePrefix
-    integer, intent(IN)                :: nSlices
-    double precision, intent(IN)       :: grid(:), velocity(:), pressure(:), diameter(:)
+    real(dp), intent(IN)       :: t
+    integer, intent(IN)        :: iteration
+    character(LEN=*), intent(IN) :: filenamePrefix
+    integer, intent(IN)        :: nSlices
+    real(dp), intent(IN)       :: grid(:), velocity(:), pressure(:), diameter(:)
 
     integer :: ioUnit, i, ioStatus
     character(LEN=256) :: filename
@@ -25,6 +25,7 @@ contains
       return
     end if
 
+    ! Write vtk headers
     write (ioUnit, '(A)') '# vtk DataFile Version 2.0'
     write (ioUnit, '(A)') ''
     write (ioUnit, '(A)') 'ASCII'
@@ -32,6 +33,7 @@ contains
     write (ioUnit, '(A)') 'DATASET UNSTRUCTURED_GRID'
     write (ioUnit, '(A)') ''
 
+    ! Write points
     write (ioUnit, '(A,I0,A)') 'POINTS ', nSlices, ' float'
     write (ioUnit, '(A)') ''
     do i = 1, nSlices
@@ -42,12 +44,14 @@ contains
     write (ioUnit, '(A,I0)') 'POINT_DATA ', nSlices
     write (ioUnit, '(A)') ''
 
+    ! Write velocity vector field
     write (ioUnit, '(A,A,A)') 'VECTORS ', 'velocity', ' float'
     do i = 1, nSlices
       write (ioUnit, '(ES24.16,1X,ES24.16,1X,ES24.16)') velocity(i), 0.0D0, 0.0D0
     end do
     write (ioUnit, '(A)') ''
 
+    ! Write pressure
     write (ioUnit, '(A,A,A)') 'SCALARS ', 'pressure', ' float'
     write (ioUnit, '(A)') 'LOOKUP_TABLE default'
     do i = 1, nSlices
@@ -55,6 +59,7 @@ contains
     end do
     write (ioUnit, '(A)') ''
 
+    ! Write diameter
     write (ioUnit, '(A,A,A)') 'SCALARS ', 'diameter', ' float'
     write (ioUnit, '(A)') 'LOOKUP_TABLE default'
     do i = 1, nSlices
