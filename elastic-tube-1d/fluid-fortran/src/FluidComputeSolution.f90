@@ -107,7 +107,6 @@ contains
 
             if ((norm < tolerance .and. k > 1) .or. k > max_iterations) then
                 exit
-                print *, "exiting"
             end if
 
             ! Initialize the LHS matrix
@@ -166,8 +165,7 @@ contains
 
             call dgesv(nlhs, nrhs, LHS, nlhs, ipiv, Res, nlhs, info)
             if (info /= 0) then
-                ! return
-                print *, "Couldnt solve"
+                write(*, *) "Linear Solver not converged!, Info: ", info
             end if
 
             ! Update velocity and pressure

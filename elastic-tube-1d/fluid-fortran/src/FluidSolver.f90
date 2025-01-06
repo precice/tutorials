@@ -101,14 +101,6 @@ program FluidSolver
     vertexIDs(i) = i - 1
   end do
 
-  ! Print the grid
-  print *, "Grid values:"
-  do i = 1, chunkLength
-      do j = 1, dimensions
-          print "(A,I4,A,F6.2)", "grid(", (i - 1)*dimensions + j, ") = ", grid((i - 1)*dimensions + j)
-      end do
-  end do
-
   call precicef_set_vertices(meshName, chunkLength, grid, vertexIDs)
 
   ! Check if Initial Data is Required and Write if Necessary
@@ -117,8 +109,6 @@ program FluidSolver
     write (*, *) 'Fluid: Writing initial data'
   end if
 
-  
-  t = 0.0d0 
   write (*, *) "Initialize preCICE..."
   call precicef_initialize()
 
@@ -133,23 +123,16 @@ program FluidSolver
     velocity_old(i) = vel_in_0*crossSectionLength_old(1)/crossSectionLength_old(i)
   end do
 
+  t = 0.0d0 
   out_counter = 0
-
-  ! Print all arrays with 2 decimal places
-  print *, "Index | Pressure | Pressure_Old | CrossSection | CrossSection_Old | Velocity | Velocity_Old"
-  do i = 1, chunkLength
-      print "(I5, 3X, F8.2, 3X, F13.2, 3X, F13.2, 3X, F16.2, 3X, F8.2, 3X, F13.2)", &
-          i - 1, pressure(i), pressure_old(i), crossSectionLength(i), &
-          crossSectionLength_old(i), velocity(i), velocity_old(i)
-  end do
 
   ! Main coupling loop
   call precicef_is_coupling_ongoing(ongoing)
   do while (ongoing /= 0)
-    ! Check if writing a checkpoint is required
+    ! checkpointing is required in implicit coupling
     call precicef_requires_writing_checkpoint(bool)
     if (bool .eq. 1) then
-      write (*, *) 'Fluid: Writing iteration checkpoint'
+      ! nothing 
     end if
 
     call precicef_get_max_time_step_size(dt)
@@ -165,14 +148,6 @@ program FluidSolver
          velocity, pressure, & ! resulting velocity pressure
          info)
 
-    ! Print all arrays with 2 decimal places
-    print *, "Index | Pressure | Pressure_Old | CrossSection | CrossSection_Old | Velocity | Velocity_Old"
-    do i = 1, chunkLength
-        print "(I5, 3X, F8.2, 3X, F13.2, 3X, F13.2, 3X, F16.2, 3X, F8.2, 3X, F13.2)", &
-            i - 1, pressure(i), pressure_old(i), crossSectionLength(i), &
-            crossSectionLength_old(i), velocity(i), velocity_old(i)
-    end do
-
     call precicef_write_data(meshName, pressureName, chunkLength, vertexIDs, pressure)
     
     call precicef_advance(dt)
@@ -183,8 +158,9 @@ program FluidSolver
 
     call precicef_requires_reading_checkpoint(bool)
     if (bool .eq. 1) then
-      write (*, *) 'Fluid: Reading iteration checkpoint'
+      ! not yet converged
     else
+      ! converged, advance in time 
       t = t + dt
  
       call write_vtk(t, out_counter, outputFilePrefix, chunkLength, grid, velocity, pressure, crossSectionLength)
@@ -195,7 +171,7 @@ program FluidSolver
       out_counter = out_counter + 1
     end if
 
-    ! Check if Coupling is Still Ongoing
+    ! Check if coupling is still ongoing
     call precicef_is_coupling_ongoing(ongoing)
   end do
 
