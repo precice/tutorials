@@ -1,5 +1,8 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 set -e -u
 
-rm -rf build || true
-rm -rf output || true
+. ../../tools/cleaning-tools.sh
+
+rm -rvf ./output/*.vtk
+clean_precice_logs .
+clean_case_logs .
