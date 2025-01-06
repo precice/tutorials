@@ -17,7 +17,7 @@ contains
     character(LEN=256) :: filename
 
     write (filename, '(A,"_",I0,".vtk")') trim(filenamePrefix), iteration
-    print *, 'Writing timestep at t=', t, ' to ', trim(filename)
+    print '(A, F7.6, A, A)', 'writing timestep at t=', t, ' to ', trim(filename)
 
     open (newunit=ioUnit, file=trim(filename), status="replace", action="write", form="formatted", iostat=ioStatus)
     if (ioStatus /= 0) then
