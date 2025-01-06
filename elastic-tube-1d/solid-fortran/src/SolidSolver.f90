@@ -25,7 +25,7 @@ PROGRAM SolidSolver
 
   CALL get_command_argument(1, configFileName)
 
-  domainSize  = 4  
+  domainSize  = 100  
   chunkLength = domainSize + 1
   tubeLength  = 10.0D0
 

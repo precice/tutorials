@@ -48,7 +48,7 @@ PROGRAM FluidSolver
   pressureName = "Pressure"
   crossSectionLengthName = "CrossSectionLength"
 
-  domainSize = 4
+  domainSize = 100
   chunkLength = domainSize + 1
   kappa = 100.0d0
   L = 10.0d0
