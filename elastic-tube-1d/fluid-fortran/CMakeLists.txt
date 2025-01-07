@@ -22,6 +22,7 @@ add_executable(FluidSolver
   src/FluidComputeSolution.f90
   src/utilities.f90
   src/FluidSolver.f90
+  src/precice.f90
 )
 
 target_link_libraries(FluidSolver PRIVATE precice::precice)

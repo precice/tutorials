@@ -20,6 +20,7 @@ find_package(precice 3 REQUIRED CONFIG)
 add_executable(SolidSolver
   src/SolidComputeSolution.f90
   src/SolidSolver.f90
+  src/precice.f90
 )
 
 target_link_libraries(SolidSolver PRIVATE precice::precice)

@@ -1,4 +1,5 @@
 program SolidSolver
+  use precice
   use SolidComputeSolution, only: solid_compute_solution
   implicit none
 
@@ -39,10 +40,12 @@ program SolidSolver
 
   rank = 0
   commsize = 1
-  call precicef_create(solverName, configFileName, rank, commsize)
+  call precicef_create(solverName, configFileName, rank, commsize, &
+                       len_trim(solverName), len_trim(configFileName))
   write(*, *) 'preCICE configured...'
 
-  call precicef_get_mesh_dimensions(meshName, dimensions)
+  call precicef_get_mesh_dimensions(meshName, dimensions, &
+                                    len_trim(meshName))
 
   ! Allocate arrays
   allocate(pressure(chunkLength))
@@ -53,18 +56,21 @@ program SolidSolver
   pressure = 0.0_dp
   crossSectionLength = 1.0_dp
   dx = tubeLength / real(domainSize, dp)
+
   do i = 1, chunkLength
     grid((i - 1)*dimensions + 1) = dx * real(i - 1, dp)  ! x-coordinate
     grid((i - 1)*dimensions + 2) = 0.0_dp                 ! y-coordinate
     vertexIDs(i) = i - 1                                  ! 0-based indexing here
   end do
 
-  call precicef_set_vertices(meshName, chunkLength, grid, vertexIDs)
+  call precicef_set_vertices(meshName, chunkLength, grid, vertexIDs, &
+                             len_trim(meshName))
 
   ! Check if initial data is required and write if necessary
   call precicef_requires_initial_data(bool)
   if (bool == 1) then
-    call precicef_write_data(meshName, crossSectionLengthName, chunkLength, vertexIDs, crossSectionLength)
+    call precicef_write_data(meshName, crossSectionLengthName, chunkLength, vertexIDs, &
+                             crossSectionLength, len_trim(meshName), len_trim(crossSectionLengthName))
   end if
 
   write (*, *) 'Initialize preCICE...'
@@ -81,11 +87,13 @@ program SolidSolver
 
     call precicef_get_max_time_step_size(dt)
 
-    call precicef_read_data(meshName, pressureName, chunkLength, vertexIDs, dt, pressure)
+    call precicef_read_data(meshName, pressureName, chunkLength, vertexIDs, dt, pressure, &
+                            len_trim(meshName), len_trim(pressureName))
 
     call solid_compute_solution(chunkLength, pressure, crossSectionLength)
 
-    call precicef_write_data(meshName, crossSectionLengthName, chunkLength, vertexIDs, crossSectionLength)
+    call precicef_write_data(meshName, crossSectionLengthName, chunkLength, vertexIDs, &
+                             crossSectionLength, len_trim(meshName), len_trim(crossSectionLengthName))
     
     call precicef_advance(dt)
 

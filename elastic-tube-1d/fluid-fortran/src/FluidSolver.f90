@@ -1,4 +1,5 @@
 program FluidSolver
+  use precice
   use FluidComputeSolution, only: fluid_compute_solution
   use Utilities, only: write_vtk
   implicit none
@@ -39,7 +40,7 @@ program FluidSolver
   ! Configure precice
   rank = 0
   commsize = 1
-  call precicef_create(solverName, configFileName, rank, commsize)
+  call precicef_create(solverName, configFileName, rank, commsize, len_trim(solverName), len_trim(configFileName))
   write(*, *) "preCICE configured..."
 
   ! Define mesh and data names
@@ -53,7 +54,7 @@ program FluidSolver
   l = 10.0_dp
 
   ! Get mesh dimensions 
-  call precicef_get_mesh_dimensions(meshName, dimensions)
+  call precicef_get_mesh_dimensions(meshName, dimensions, len_trim(meshName))
 
   ! Allocate arrays
   allocate(vertexIDs(chunkLength))
@@ -100,7 +101,7 @@ program FluidSolver
     vertexIDs(i) = i - 1
   end do
 
-  call precicef_set_vertices(meshName, chunkLength, grid, vertexIDs)
+  call precicef_set_vertices(meshName, chunkLength, grid, vertexIDs, len_trim(meshName))
 
   ! Check if Initial Data is Required and Write if Necessary
   call precicef_requires_initial_data(bool)
@@ -112,7 +113,8 @@ program FluidSolver
   call precicef_initialize()
 
   ! read initial cross-Section length
-  call precicef_read_data(meshName, crossSectionLengthName, chunkLength, vertexIDs, 0.0d0, crossSectionLength)
+  call precicef_read_data(meshName, crossSectionLengthName, chunkLength, vertexIDs, 0.0d0, crossSectionLength, &
+                          len_trim(meshName), len_trim(crossSectionLengthName))
 
   ! Copy current cross-Section length to old array
   crossSectionLength_old = crossSectionLength
@@ -147,13 +149,15 @@ program FluidSolver
          velocity, pressure, & ! resulting velocity pressure
          info)
 
-    call precicef_write_data(meshName, pressureName, chunkLength, vertexIDs, pressure)
-    
+    call precicef_write_data(meshName, pressureName, chunkLength, vertexIDs, pressure, &
+                             len_trim(meshName), len_trim(pressureName))
+
     call precicef_advance(dt)
 
     call precicef_get_max_time_step_size(dt)
 
-    call precicef_read_data(meshName, crossSectionLengthName, chunkLength, vertexIDs, dt, crossSectionLength)
+    call precicef_read_data(meshName, crossSectionLengthName, chunkLength, vertexIDs, dt, crossSectionLength, &
+                            len_trim(meshName), len_trim(crossSectionLengthName))
 
     call precicef_requires_reading_checkpoint(bool)
     if (bool .eq. 1) then
