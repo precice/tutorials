@@ -4,9 +4,9 @@ program SolidSolver
 
   integer, parameter :: dp = kind(1.0d0)
 
-  character(len=512) :: configFileName
-  character(len=256) :: solverName
-  character(len=256) :: meshName, crossSectionLengthName, pressureName
+  character(len=50) :: configFileName
+  character(len=50) :: solverName
+  character(len=50) :: meshName, crossSectionLengthName, pressureName
   integer            :: rank, commsize, ongoing, dimensions, bool
   integer            :: domainSize, chunkLength
   integer            :: i
