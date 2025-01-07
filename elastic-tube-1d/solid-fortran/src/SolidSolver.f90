@@ -9,7 +9,7 @@ program SolidSolver
   character(len=256) :: meshName, crossSectionLengthName, pressureName
   integer            :: rank, commsize, ongoing, dimensions, bool
   integer            :: domainSize, chunkLength
-  integer            :: i, j
+  integer            :: i
   integer, allocatable :: vertexIDs(:)
   real(dp), allocatable :: pressure(:), crossSectionLength(:)
   real(dp), allocatable :: grid(:)
