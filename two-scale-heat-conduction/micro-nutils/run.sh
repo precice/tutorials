@@ -8,7 +8,7 @@ usage() { echo "Usage: cmd [-s] [-p n]" 1>&2; exit 1; }
 
 python3 -m venv .venv
 . .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements.txt && pip freeze > pip-installed-packages.log
 
 # Check if no input argument was provided
 if [ -z "$*" ] ; then
