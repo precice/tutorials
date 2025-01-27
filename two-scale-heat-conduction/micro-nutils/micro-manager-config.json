@@ -2,7 +2,7 @@
     "micro_file_name": "micro",
     "coupling_params": {
             "participant_name": "Micro-Manager",
-            "config_file_name": "../precice-config.xml",
+            "precice_config_file_name": "../precice-config.xml",
             "macro_mesh_name": "macro-mesh",
             "write_data_names": ["k_00", "k_01", "k_10", "k_11", "porosity"],
             "read_data_names": ["concentration"]
