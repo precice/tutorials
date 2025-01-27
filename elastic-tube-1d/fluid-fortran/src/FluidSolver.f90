@@ -7,7 +7,7 @@ program FluidSolver
   character(LEN=50) :: configFileName
   character(LEN=50)  :: solverName
   character(LEN=50)  :: meshName, pressureName, crossSectionLengthName
-  character(LEN=256) :: outputFilePrefix
+  character(LEN=50) :: outputFilePrefix
   integer             :: rank, commsize, ongoing, dimensions, bool
   integer             :: domainSize, chunkLength
   integer             :: i, j, info
