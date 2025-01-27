@@ -18,7 +18,7 @@ program FluidSolver
   real(dp), allocatable :: velocity(:), velocity_old(:)
   integer, allocatable :: vertexIDs(:)
   integer             :: out_counter
-  real(dp), parameter :: pi = 3.141592653589793_dp
+  real(dp), parameter :: PI = 3.141592653589793_dp
   real(dp)            :: kappa, l
   real(dp)            :: r0, a0, u0, ampl, frequency, t_shift, p0, vel_in_0
   real(dp), allocatable :: grid(:)
@@ -67,14 +67,14 @@ program FluidSolver
   allocate(grid(dimensions*chunkLength))
 
   ! Initialize physical parameters
-  r0 = 1.0_dp / sqrt(pi)
-  a0 = r0**2 * pi
-  u0 = 10.0_dp
-  ampl = 3.0_dp
-  frequency = 10.0_dp
-  t_shift = 0.0_dp
-  p0 = 0.0_dp
-  vel_in_0 = u0 + ampl * sin(frequency * (t_shift) * pi)
+  r0 = 1.0_dp / sqrt(PI) ! radius of the tube
+  a0 = r0**2 * PI        ! cross-sectional area
+  u0 = 10.0_dp           ! mean velocity
+  ampl = 3.0_dp          ! amplitude of varying velocity
+  frequency = 10.0_dp    ! frequency of variation
+  t_shift = 0.0_dp       ! temporal shift of variation
+  p0 = 0.0_dp            ! pressure at outlet
+  vel_in_0 = u0 + ampl * sin(frequency * (t_shift) * PI)
 
   ! Initialize data arrays
   pressure = p0
