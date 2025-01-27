@@ -5,33 +5,33 @@ module FluidComputeSolution
 contains
 
     subroutine fluid_compute_solution(velocity_old, pressure_old, &
-        crossSectionLength_old, crossSectionLength, t, n, kappa, tau, &
+        crossSectionLength_old, crossSectionLength, t, N, kappa, tau, &
         velocity, pressure, info)
 
         real(dp), intent(in) :: velocity_old(:), pressure_old(:)
         real(dp), intent(in) :: crossSectionLength_old(:), crossSectionLength(:)
         real(dp), intent(in) :: t
-        integer, intent(in) :: n
+        integer, intent(in) :: N
         real(dp), intent(in) :: kappa, tau
         real(dp), intent(inout) :: velocity(:), pressure(:)
         integer, intent(out) :: info
 
         ! Local variables
         integer :: i, k
-        real(dp), parameter :: pi = 3.141592653589793_dp
+        real(dp), parameter :: PI = 3.141592653589793_dp
         real(dp), parameter :: e = 10000.0_dp
-        real(dp), parameter :: c_mk2 = e / 2.0_dp * sqrt(pi)
+        real(dp), parameter :: c_mk2 = e / 2.0_dp * sqrt(PI)
         real(dp), parameter :: u0 = 10.0_dp, ampl = 3.0_dp, frequency = 10.0_dp, &
                                 t_shift = 0.0_dp
         real(dp), parameter :: tolerance = 1.0e-15_dp
         integer, parameter :: max_iterations = 50
 
-        real(dp) :: alpha, l, dx, velocity_in, tmp2, norm_1, norm_2, norm
+        real(dp) :: alpha, L, dx, velocity_in, tmp2, norm_1, norm_2, norm
 
         ! LAPACK Variables
         integer :: nlhs, nrhs
-        real(dp), allocatable :: res(:)
-        real(dp), allocatable :: lhs(:, :)
+        real(dp), allocatable :: Res(:)
+        real(dp), allocatable :: LHS(:, :)
         integer, allocatable :: ipiv(:)
 
         nlhs = 2*N + 2
@@ -50,7 +50,7 @@ contains
         L = 10.0
         dx = L/kappa  !1.0 / (N * kappa);
 
-        ! result variable
+        ! Output status from dgesv (0 = success, < 0 = invalid argument, > 0 = singular matrix)
         info = 0
 
         ! Nonlinear solver loop
