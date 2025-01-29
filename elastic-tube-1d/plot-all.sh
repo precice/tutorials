@@ -13,7 +13,8 @@ gnuplot -p << EOF
     "fluid-cpp/precice-Fluid-watchpoint-Middle.log" using 1:4 with linespoints title "cpp", \
     "fluid-python/precice-Fluid-watchpoint-Middle.log" using 1:4 with linespoints lw 2 title "python", \
     "fluid-rust/precice-Fluid-watchpoint-Middle.log" using 1:4 with linespoints title "rust", \
-    "fluid-fortran/precice-Fluid-watchpoint-Middle.log" using 1:4 with linespoints title "fortran"
+    "fluid-fortran/precice-Fluid-watchpoint-Middle.log" using 1:4 with linespoints title "fortran", \
+    "fluid-fortran-module/precice-Fluid-watchpoint-Middle.log" using 1:4 with linespoints title "fortran-module"
 
   set title 'Pressure of elastic-tube at x=5'
   set ylabel 'pressure'
@@ -21,7 +22,8 @@ gnuplot -p << EOF
     "fluid-cpp/precice-Fluid-watchpoint-Middle.log" using 1:5 with linespoints title "cpp", \
     "fluid-python/precice-Fluid-watchpoint-Middle.log" using 1:5 with linespoints title "python", \
     "fluid-rust/precice-Fluid-watchpoint-Middle.log" using 1:5 with linespoints title "rust", \
-    "fluid-fortran/precice-Fluid-watchpoint-Middle.log" using 1:5 with linespoints title "fortran"
-
+    "fluid-fortran/precice-Fluid-watchpoint-Middle.log" using 1:5 with linespoints title "fortran", \
+    "fluid-fortran-module/precice-Fluid-watchpoint-Middle.log" using 1:5 with linespoints title "fortran-module"
+    
   set xlabel 'time [s]'
 EOF
