@@ -15,6 +15,8 @@ if [ ! -d build ]; then
   cmake --build build
 fi
 
+mkdir -p output
+
 ./build/FluidSolver ../precice-config.xml
 
 close_log
