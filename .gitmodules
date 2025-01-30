@@ -1,0 +1,6 @@
+[submodule "elastic-tube-1d/fluid-fortran-module/fortran-module"]
+	path = elastic-tube-1d/fluid-fortran-module/fortran-module
+	url = https://github.com/precice/fortran-module
+[submodule "elastic-tube-1d/solid-fortran-module/fortran-module"]
+	path = elastic-tube-1d/solid-fortran-module/fortran-module
+	url = https://github.com/precice/fortran-module
