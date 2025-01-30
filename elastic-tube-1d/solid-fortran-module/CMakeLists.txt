@@ -15,10 +15,16 @@ endif()
 
 find_package(precice 3 REQUIRED CONFIG)
 
+# specify the path to the preCICE Fortran module
+if(NOT DEFINED PRECICE_FORTRAN_MODULE)
+  message(FATAL_ERROR "PRECICE_FORTRAN_MODULE not set. Provide it with -DPRECICE_FORTRAN_MODULE=<path>")
+endif()
+
 add_executable(SolidSolver
   src/SolidComputeSolution.f90
   src/SolidSolver.f90
-  src/precice.f90
+  ${PRECICE_FORTRAN_MODULE}
 )
+
 
 target_link_libraries(SolidSolver PRIVATE precice::precice)

@@ -16,13 +16,17 @@ endif()
 find_package(precice 3 REQUIRED CONFIG)
 find_package(LAPACK REQUIRED)
 
+# specify the path to the preCICE Fortran module
+if(NOT DEFINED PRECICE_FORTRAN_MODULE)
+  message(FATAL_ERROR "PRECICE_FORTRAN_MODULE not set. Provide it with -DPRECICE_FORTRAN_MODULE=<path>")
+endif()
+
 add_executable(FluidSolver
   src/FluidComputeSolution.f90
   src/utilities.f90
   src/FluidSolver.f90
-  src/precice.f90
+  ${PRECICE_FORTRAN_MODULE}
 )
 
 target_link_libraries(FluidSolver PRIVATE precice::precice)
 target_link_libraries(FluidSolver PRIVATE ${LAPACK_LIBRARIES} ${LAPACK_LINKER_FLAGS})
-
