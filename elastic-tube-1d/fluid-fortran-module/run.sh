@@ -4,14 +4,11 @@ set -e -u
 . ../../tools/log.sh
 exec > >(tee --append "$LOGFILE") 2>&1
 
-if [ ! -f src/precice.f90 ]; then
-  echo "Fetching precice.f90 (Module for Fortran bindings of preCICE)..."
-  curl -o src/precice.f90 https://raw.githubusercontent.com/precice/fortran-module/master/precice.f90
-fi
+git submodule update --init
 
 if [ ! -d build ]; then
   mkdir build
-  cmake -S . -B build
+  cmake -S . -B build -DPRECICE_FORTRAN_MODULE=fortran-module/precice.f90
   cmake --build build
 fi
 
