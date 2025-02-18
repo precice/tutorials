@@ -4,6 +4,8 @@
     <sink filter="%Severity% > debug" />
   </log>
 
+  <profiling mode="fundamental" synchronize="false" />
+
   <data:scalar name="Pressure" />
   <data:scalar name="CrossSectionLength" />
 

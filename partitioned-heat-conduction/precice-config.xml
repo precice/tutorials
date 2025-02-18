@@ -7,6 +7,8 @@
       enabled="true" />
   </log>
 
+  <profiling mode="fundamental" synchronize="false" />
+
   <data:scalar name="Temperature" waveform-degree="1" />
   <data:scalar name="Heat-Flux" waveform-degree="1" />
 

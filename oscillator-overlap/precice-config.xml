@@ -4,6 +4,8 @@
     <sink filter="%Severity% > debug" />
   </log>
 
+  <profiling mode="fundamental" synchronize="false" />
+
   <data:scalar name="Displacement-Left" />
   <data:scalar name="Displacement-Right" />
 
