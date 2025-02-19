@@ -135,7 +135,7 @@ FROM python_bindings as su2_adapter
 COPY --from=precice /home/precice/.local /home/precice/.local
 USER root
 RUN apt-get -qq update && \
-    apt-get -qq install swig
+    apt-get -qq install swig python3-mpi4py python3-setuptools
 ARG SU2_VERSION
 USER precice
 
@@ -146,8 +146,7 @@ RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz
     tar xvzf v${SU2_VERSION}.tar.gz && \
     rm -fv v${SU2_VERSION}.tar.gz
 RUN python3 -m venv /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
-    pip3 install mpi4py setuptools
+    . /home/precice/venv/bin/activate
 ARG SU2_ADAPTER_REF
 WORKDIR /home/precice
 ENV SU2_RUN="/home/precice/SU2_RUN" 
