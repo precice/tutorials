@@ -10,7 +10,7 @@ bare: # A default component used when the solver does not have any dependencies 
       default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
-      default: "ubuntu_2204"
+      default: "ubuntu_2404"
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
@@ -27,7 +27,7 @@ python-bindings:
       default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
-      default: "ubuntu_2204"
+      default: "ubuntu_2404"
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
@@ -47,7 +47,7 @@ openfoam-adapter:
       default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
-      default: "ubuntu_2204"
+      default: "ubuntu_2404"
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
@@ -72,7 +72,7 @@ fenics-adapter:
       default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
-      default: "ubuntu_2204"
+      default: "ubuntu_2404"
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
@@ -95,7 +95,7 @@ nutils-adapter:
       default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
-      default: "ubuntu_2204"
+      default: "ubuntu_2404"
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
@@ -115,7 +115,7 @@ calculix-adapter:
       default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
-      default: "ubuntu_2204"
+      default: "ubuntu_2404"
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
@@ -138,7 +138,7 @@ su2-adapter:
       default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
-      default: "ubuntu_2204"
+      default: "ubuntu_2404"
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"

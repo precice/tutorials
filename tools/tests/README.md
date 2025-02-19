@@ -161,8 +161,8 @@ Metadata and workflow/script files:
     - `fenics-adapter.yaml`
     - `openfoam-adapter.yaml`
     - ...
-  - `dockerfiles/ubuntu_2204/`
-    - Dockerfile: a multi-stage build Dockerfile that defines how to build each component, in a layered approach
+  - `dockerfiles/`
+    - Multi-stage build Dockerfiles that define how to build each component, in a layered approach
   - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Componse service template)
   - `docker-compose.field_compare.template.yaml`: Describes how to compare results with fieldcompare (Docker Compose service template)
   - `components.yaml`: Declares the available components and their parameters/options
@@ -253,7 +253,7 @@ openfoam-adapter:
       default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
-      default: "ubuntu_2204"
+      default: "ubuntu_2404"
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
