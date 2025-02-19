@@ -140,6 +140,7 @@ ARG SU2_VERSION
 USER precice
 
 # Download and build SU2 (We could also use pre-built binaries from the SU2 releases)
+# The sed command applies a patch needed for Ubuntu 24.04.
 WORKDIR /home/precice
 RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
     tar xvzf v${SU2_VERSION}.tar.gz && \
@@ -158,5 +159,6 @@ RUN git clone https://github.com/precice/su2-adapter.git && \
     git checkout ${SU2_ADAPTER_REF} &&\
     ./su2AdapterInstall
 RUN cd "${SU2_HOME}" &&\
+    sed -i '1s/^/#include <cstdint>\n/' SU2_CFD/src/output/filewriter/CParaviewXMLFileWriter.cpp &&\
     ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN &&\
     ./ninja -C build install
