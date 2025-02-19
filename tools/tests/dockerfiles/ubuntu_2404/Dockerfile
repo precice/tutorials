@@ -42,8 +42,6 @@ RUN apt-get -qq update && \
         pkg-config \
         wget
 USER precice
-RUN python3 -m pip install --upgrade pip
-
 
 FROM precice_dependecies as precice
 # Install & build precice into /home/precice/precice
