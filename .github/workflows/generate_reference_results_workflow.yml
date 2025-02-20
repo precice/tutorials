@@ -45,6 +45,11 @@ jobs:
     - name: Install Python dependencies
       run: |
         pip install --user -r tools/tests/requirements.txt
+    - name: Cleanup Docker cache
+      # Remove all Docker containers, images, and build caches
+      # to ensure consistent results and as storage cleanup
+      run: |
+        docker system prune --all --force
     - name: Run tests
       run: |
         cd tools/tests
