@@ -103,8 +103,8 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
         print(separator)
         if "GITHUB_STEP_SUMMARY" in os.environ:
             with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
-                print(row)
-                print(separator)
+                print(row, file=f)
+                print(separator, file=f)
 
 
 @dataclass
