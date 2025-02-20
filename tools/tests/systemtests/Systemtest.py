@@ -91,10 +91,20 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
     print(header)
     print(separator)
 
+    if "GITHUB_STEP_SUMMARY" in os.environ:
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+            print(separator, file=f)
+            print(header, file=f)
+            print(separator, file=f)
+
     for result in results:
         row = f"| {str(result.systemtest):<{max_name_length + 2}} | {result.success:^7} | {result.build_time:^17.2f} | {result.solver_time:^15.2f} | {result.fieldcompare_time:^21.2f} |"
         print(row)
         print(separator)
+        if "GITHUB_STEP_SUMMARY" in os.environ:
+            with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+                print(row)
+                print(separator)
 
 
 @dataclass
