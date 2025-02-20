@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as base_image
+FROM ubuntu:22.04 AS base_image
 USER root
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
@@ -17,7 +17,7 @@ ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
 ENV CMAKE_PREFIX_PATH="/home/precice/.local:$CMAKE_PREFIX_PATH"
 USER precice
 
-FROM base_image as precice_dependecies
+FROM base_image AS precice_dependecies
 USER root
 # Installing necessary dependecies for preCICE
 RUN apt-get -qq update && \
@@ -45,7 +45,7 @@ USER precice
 RUN python3 -m pip install --user --upgrade pip
 
 
-FROM precice_dependecies as precice
+FROM precice_dependecies AS precice
 # Install & build precice into /home/precice/precice
 ARG PRECICE_REF
 ARG PRECICE_PRESET
@@ -58,7 +58,7 @@ RUN git clone https://github.com/precice/precice.git precice && \
     cmake .. --preset=${PRECICE_PRESET} -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DPRECICE_PETScMapping=OFF -DBUILD_TESTING=OFF && \
     make all install -j $(nproc)
 
-FROM precice_dependecies as openfoam_adapter
+FROM precice_dependecies AS openfoam_adapter
 ARG OPENFOAM_EXECUTABLE
 USER root
 RUN apt-get update &&\
@@ -77,7 +77,7 @@ RUN git clone https://github.com/precice/openfoam-adapter.git &&\
     /usr/bin/${OPENFOAM_EXECUTABLE} ./Allwmake -j $(nproc)
 
 
-FROM precice_dependecies as python_bindings
+FROM precice_dependecies AS python_bindings
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG PYTHON_BINDINGS_REF
 USER precice
@@ -87,7 +87,7 @@ WORKDIR /home/precice
 RUN pip3 install --user git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
     pip3 install --user matplotlib 
 
-FROM precice_dependecies as fenics_adapter
+FROM precice_dependecies AS fenics_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
 USER root
 RUN add-apt-repository -y ppa:fenics-packages/fenics && \
@@ -99,14 +99,14 @@ ARG FENICS_ADAPTER_REF
 RUN pip3 install --user git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
 
 
-FROM precice_dependecies as nutils_adapter
+FROM precice_dependecies AS nutils_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
 USER precice
 # Installing nutils - There is no adapter
 RUN pip3 install --user nutils
 
 
-FROM precice_dependecies as calculix_adapter
+FROM precice_dependecies AS calculix_adapter
 COPY --from=precice /home/precice/.local /home/precice/.local
 USER root
 RUN apt-get -qq update && \
@@ -127,7 +127,7 @@ RUN git clone https://github.com/precice/calculix-adapter.git && \
     make CXX_VERSION=${CALCULIX_VERSION} ADDITIONAL_FFLAGS="-fallow-argument-mismatch" -j $(nproc) && \
     ln -s /home/precice/calculix-adapter/bin/ccx_preCICE /home/precice/.local/bin/ccx_preCICE
 
-FROM python_bindings as su2_adapter
+FROM python_bindings AS su2_adapter
 COPY --from=precice /home/precice/.local /home/precice/.local
 USER root
 RUN apt-get -qq update && \
