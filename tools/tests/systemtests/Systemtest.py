@@ -286,8 +286,10 @@ class Systemtest:
         src = PRECICE_TOOLS_DIR
         try:
             shutil.copytree(src, destination)
+        except FileExistsError as e:
+            logging.debug(f"Tools directory has already been copied to the workspace - skipping.")
         except Exception as e:
-            logging.debug(f"tools are already copied: {e} ")
+            logging.warning(f"Something went wrong while copying the tools directory to the workspace: {e}")
 
     def __put_gitignore(self, run_directory: Path):
         # Create the .gitignore file with a single asterisk
