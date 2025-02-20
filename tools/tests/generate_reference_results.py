@@ -53,8 +53,14 @@ def render_reference_results_info(
         arguments_used: SystemtestArguments,
         time: str):
     def sha256sum(filename):
+        # Implementation from https://stackoverflow.com/a/44873382/2254346,
+        # compatible with Python 3.10.
+        h = hashlib.sha256()
+        mv = memoryview(bytearray(128 * 1024))
         with open(filename, 'rb', buffering=0) as f:
-            return hashlib.file_digest(f, 'sha256').hexdigest()
+            while n := f.readinto(mv):
+                h.update(mv[:n])
+        return h.hexdigest()
 
     files = []
     for reference_result in reference_results:
