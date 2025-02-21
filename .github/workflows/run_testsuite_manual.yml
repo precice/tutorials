@@ -28,7 +28,7 @@ on:
             - 'CRITICAL'
       upload_artifacts:
         description: 'Upload artifacts also on success (not only on failure)'
-        default: 'FALSE'
+        default: 'TRUE'
         type: choice
         options:
             - 'FALSE'

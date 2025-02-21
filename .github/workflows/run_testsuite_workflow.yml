@@ -21,8 +21,8 @@ on:
         required: false
         type: string
       upload_artifacts:
-          description: 'TRUE or FALSE (Default: FALSE -> Upload only when the workflow fails)'
-          default: 'FALSE'
+          description: 'TRUE or FALSE (FALSE -> Upload only when the workflow fails)'
+          default: 'TRUE'
           type: string
 jobs:
   run_testsuite:
