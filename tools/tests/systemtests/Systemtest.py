@@ -84,31 +84,38 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
     max_name_length = _get_length_of_name(results)
 
     header = f"| {'systemtest':<{max_name_length + 2}} | {'success':^7} | {'building time [s]':^17} | {'solver time [s]':^15} | {'fieldcompare time [s]':^21} |"
-    separator = "|-" + "-" * (max_name_length + 2) + \
-        "-|---------|-------------------|-----------------|-----------------------|"
+    separator_plaintext = "+-" + "-" * (max_name_length + 2) + \
+        "-+---------+-------------------+-----------------+-----------------------+"
+    separator_markdown = "| --- | --- | --- | --- | --- |"
 
-    print(separator)
+    print(separator_plaintext)
     print(header)
-    print(separator)
+    print(separator_plaintext)
 
     if "GITHUB_STEP_SUMMARY" in os.environ:
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
-            print(separator, file=f)
+            print(separator_markdown, file=f)
             print(header, file=f)
-            print(separator, file=f)
+            print(separator_markdown, file=f)
 
     for result in results:
         row = f"| {str(result.systemtest):<{max_name_length + 2}} | {result.success:^7} | {result.build_time:^17.2f} | {result.solver_time:^15.2f} | {result.fieldcompare_time:^21.2f} |"
         print(row)
-        print(separator)
+        print(separator_plaintext)
         if "GITHUB_STEP_SUMMARY" in os.environ:
             with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
                 print(row, file=f)
-                print(separator, file=f)
+                print(separator_markdown, file=f)
 
-    print("\n\n")
-    print("In case a test fails, download the archive from the bottom of this page and look into each `stdout.log` and `stderr.log`.")
-    print("See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).")
+    if "GITHUB_STEP_SUMMARY" in os.environ:
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+            print("\n\n", file=f)
+            print(
+                "In case a test fails, download the archive from the bottom of this page and look into each `stdout.log` and `stderr.log`.",
+                file=f)
+            print(
+                "See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).",
+                file=f)
 
 
 @dataclass
