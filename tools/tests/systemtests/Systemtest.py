@@ -109,7 +109,7 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
             print("\n\n", file=f)
             print(
-                "In case a test fails, download the archive from the bottom of this page and look into each `stdout.log` and `stderr.log`.",
+                "In case a test fails, download the archive from the bottom of this page and look into each `stdout.log` and `stderr.log`. The time spent in each step might already give useful hints.",
                 file=f)
             print(
                 "See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).",
