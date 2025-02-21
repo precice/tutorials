@@ -71,6 +71,6 @@ jobs:
       if: failure()
       uses: actions/upload-artifact@v4
       with:
-        name: system_tests_run_${{ github.run_id }}_${{ github.run_number }}_reference
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference
         path: |
           runs/*
