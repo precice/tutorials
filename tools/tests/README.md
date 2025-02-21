@@ -166,7 +166,7 @@ Metadata and workflow/script files:
   - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Componse service template)
   - `docker-compose.field_compare.template.yaml`: Describes how to compare results with fieldcompare (Docker Compose service template)
   - `components.yaml`: Declares the available components and their parameters/options
-  - `reference_results.metadata.template`: Template for reporting the versions used to generate the reference results
+  - `reference_results_metadata.template`: Template for reporting the versions used to generate the reference results
   - `reference_versions.yaml`: List of arguments to use for generating the reference results
   - `tests.yaml`: Declares the available tests, grouped in test suites
 

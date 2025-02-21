@@ -23,12 +23,26 @@ We also include some information on the machine used to generate them
 {% endfor -%}
 
 
-## Information about the machine
+## Platform information
 
-### uname -a
+### Operating system
 
+`uname -a` returns:
+
+```
 {{ uname }}
+```
 
-### lscpu
+`lsb_release -a` returns:
 
+```
+{{ lsb }}
+```
+
+### Hardware
+
+`lscpu` returns:
+
+```
 {{ lscpu }}
+```

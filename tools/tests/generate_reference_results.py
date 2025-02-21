@@ -32,11 +32,17 @@ def get_machine_informations():
 
         return rc == 0
     uname_info = "uname not available on the machine the systemtests were executed."
+    lsb_info = "lsb_release not available on the machine the systemtests were executed."
     lscpu_info = "lscpu not available on the machine the systemtests were executed."
     if (command_is_avail("uname")):
         result = subprocess.run(["uname", "-a"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if result.returncode == 0:
             uname_info = result.stdout
+
+    if (command_is_avail("lsb_release")):
+        result = subprocess.run(["lsb_release", "-a"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if result.returncode == 0:
+            lsb_info = result.stdout
 
     if (command_is_avail("lscpu") and command_is_avail("grep")):
         result_lscpu = subprocess.run(["lscpu"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -45,7 +51,7 @@ def get_machine_informations():
         if result.returncode == 0:
             lscpu_info = result.stdout
 
-    return (uname_info, lscpu_info)
+    return (uname_info, lsb_info, lscpu_info)
 
 
 def render_reference_results_info(
@@ -69,16 +75,17 @@ def render_reference_results_info(
             'time': time,
             'name': reference_result.path.name,
         })
-    uname, lscpu = get_machine_informations()
+    uname, lsb, lscpu = get_machine_informations()
     render_dict = {
         'arguments': arguments_used.arguments,
         'files': files,
         'uname': uname,
-        'lscpu': lscpu,
+        'lsb': lsb,
+        'lscpu': lscpu
     }
 
     jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
-    template = jinja_env.get_template("reference_results.metadata.template")
+    template = jinja_env.get_template("reference_results_metadata.template")
     return template.render(render_dict)
 
 
@@ -142,7 +149,7 @@ def main():
 
     # write readme
     for tutorial in reference_result_per_tutorial.keys():
-        with open(tutorial.path / "reference_results.metadata", 'w') as file:
+        with open(tutorial.path / "reference-results/reference_results_metadata.md", 'w') as file:
             ref_results_info = render_reference_results_info(
                 reference_result_per_tutorial[tutorial], build_args, current_time_string)
             logging.info(f"Writing results for {tutorial.name}")
