@@ -106,9 +106,9 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
                 print(row, file=f)
                 print(separator, file=f)
 
-        print("\n\n")
-        print("In case a test fails, download the archive from the bottom of this page and look into each `stdout.log` and `stderr.log`.")
-        print("See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).")
+    print("\n\n")
+    print("In case a test fails, download the archive from the bottom of this page and look into each `stdout.log` and `stderr.log`.")
+    print("See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).")
 
 
 @dataclass
