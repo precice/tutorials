@@ -98,7 +98,7 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
             print(separator_markdown, file=f)
 
     for result in results:
-        row = f"| {str(result.systemtest):<{max_name_length + 2}} | {result.success:^7} | {result.build_time:^17.2f} | {result.solver_time:^15.2f} | {result.fieldcompare_time:^21.2f} |"
+        row = f"| {str(result.systemtest):<{max_name_length + 2}} | {result.success:^7} | {result.build_time:^17.1f} | {result.solver_time:^15.1f} | {result.fieldcompare_time:^21.1f} |"
         print(row)
         print(separator_plaintext)
         if "GITHUB_STEP_SUMMARY" in os.environ:

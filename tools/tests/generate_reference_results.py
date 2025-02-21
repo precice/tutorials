@@ -123,7 +123,7 @@ def main():
         t = time.perf_counter()
         result = systemtest.run_for_reference_results(run_directory)
         elapsed_time = time.perf_counter() - t
-        logging.info(f"Running {systemtest} took {elapsed_time} seconds")
+        logging.info(f"Running {systemtest} took {elapsed_time:^17.1f} seconds")
         if not result.success:
             raise RuntimeError(f"Failed to execute {systemtest}")
         reference_result_per_tutorial[systemtest.tutorial] = []
