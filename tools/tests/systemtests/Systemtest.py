@@ -84,8 +84,8 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
     max_name_length = _get_length_of_name(results)
 
     header = f"| {'systemtest':<{max_name_length + 2}} | {'success':^7} | {'building time [s]':^17} | {'solver time [s]':^15} | {'fieldcompare time [s]':^21} |"
-    separator = "+-" + "-" * (max_name_length + 2) + \
-        "-+---------+-------------------+-----------------+-----------------------+"
+    separator = "|-" + "-" * (max_name_length + 2) + \
+        "-|---------|-------------------|-----------------|-----------------------|"
 
     print(separator)
     print(header)
