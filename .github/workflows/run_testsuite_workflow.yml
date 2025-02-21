@@ -65,7 +65,7 @@ jobs:
       if: ${{  failure() || inputs.upload_artifacts == 'TRUE' }}
       uses: actions/upload-artifact@v4
       with:
-        name: runs
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_number }}
         path: |
           runs/*
     - name: tidy up the docker
