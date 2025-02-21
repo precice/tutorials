@@ -94,7 +94,6 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
 
     if "GITHUB_STEP_SUMMARY" in os.environ:
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
-            print(separator_markdown, file=f)
             print(header, file=f)
             print(separator_markdown, file=f)
 
@@ -105,7 +104,6 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
         if "GITHUB_STEP_SUMMARY" in os.environ:
             with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
                 print(row, file=f)
-                print(separator_markdown, file=f)
 
     if "GITHUB_STEP_SUMMARY" in os.environ:
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
