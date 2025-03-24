@@ -65,7 +65,8 @@ print("Solid: init precice...")
 interface.initialize()
 
 # Calculate initial crossSection and local pressure from initial received pressure
-pressure = interface.read_data(meshName, pressureName, vertexIDs, 0)
+precice_dt = interface.get_max_time_step_size()
+pressure = interface.read_data(meshName, pressureName, vertexIDs, precice_dt)
 
 crossSection0 = crossSection0(pressure.shape[0] - 1)
 pressure0 = p0 * np.ones_like(pressure)
