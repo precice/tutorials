@@ -63,6 +63,7 @@
     <acceleration:IQN-ILS>
       <data name="CrossSectionLength" mesh="Solid-Nodes-Mesh" />
       <initial-relaxation value="0.01" />
+      <preconditioner type="residual-sum" update-on-threshold="false" />
       <max-used-iterations value="50" />
       <time-windows-reused value="8" />
       <filter type="QR2" limit="1e-3" />
