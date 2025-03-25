@@ -15,8 +15,8 @@ on:
         default: 'develop'
         required: true
         type: string
-      loglevel:
-        description: 'loglevel used for the systemtests'
+      log_level:
+        description: 'Logging verbosity level used for the systemtests'
         default: 'INFO'
         required: false
         type: string
@@ -33,7 +33,7 @@ jobs:
         echo "Initiated by: ${{ github.actor }}"
         echo "Test suites: ${{ inputs.suites}}"
         echo "System tests branch (tools/): ${{ inputs.systests_branch }}"
-        echo "System tests log level: ${{ inputs.loglevel }}"
+        echo "System tests log level: ${{ inputs.log_level }}"
         echo "Uploading the runs folder on success: ${{ inputs.upload_artifacts }}"
         echo "Running the following command inside tutorials/tools/:"
         echo "python3 systemtests.py --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}"
@@ -43,7 +43,7 @@ jobs:
         echo "- Initiated by: @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
         echo "- Test suites: \`${{ inputs.suites}}\`" >> $GITHUB_STEP_SUMMARY
         echo "- System tests branch (\`tools/\`): [\`${{ inputs.systests_branch }}\`](https://github.com/precice/tutorials/tree/${{ inputs.systests_branch }})" >> $GITHUB_STEP_SUMMARY
-        echo "- System tests log level: \`${{ inputs.loglevel }}\`"
+        echo "- System tests log level: \`${{ inputs.log_level }}\`"
         echo "- Uploading the runs folder on success: \`${{ inputs.upload_artifacts }}\`" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "Running the following command inside \`tutorials/tools/\`:" >> $GITHUB_STEP_SUMMARY
@@ -75,7 +75,7 @@ jobs:
     - name: Run tests
       run: |
         cd tools/tests
-        python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log-level=${{ inputs.loglevel}}
+        python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log-level=${{ inputs.log_level}}
         cd ../../
     - name: Archive run files
       if: ${{  failure() || inputs.upload_artifacts == 'TRUE' }}

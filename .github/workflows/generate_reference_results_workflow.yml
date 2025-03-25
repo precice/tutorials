@@ -10,8 +10,8 @@ on:
         description: 'Commit msg for commit that adds the reference results'
         default: "Adding reference results"
         type: string
-      loglevel:
-        description: 'loglevel used for the systemtests'
+      log_level:
+        description: 'Logging verbosity level used for the systemtests'
         default: 'INFO'
         required: true
         type: string
@@ -22,7 +22,7 @@ jobs:
     - name: Display a quick job summary
       run: |
         echo "Initiated by: ${{ github.actor }}"
-        echo "Running generate_reference_results.py --log-level ${{inputs.loglevel}}"
+        echo "Running generate_reference_results.py --log-level ${{inputs.log_level}}"
         echo "Using Ref: ${{ inputs.from_ref }}"
         echo "Commit message on success:  ${{ inputs.commit_msg }}"
     - name: Move LFS URL to local LFS server
@@ -56,7 +56,7 @@ jobs:
         test -f generate_reference_results.py && export GENERATE_REF_RESULTS=generate_reference_results.py
         test -f generate_reference_data.py && export GENERATE_REF_RESULTS=generate_reference_data.py
         echo "Selected $GENERATE_REF_RESULTS to run"
-        python $GENERATE_REF_RESULTS --log-level=${{inputs.loglevel}}
+        python $GENERATE_REF_RESULTS --log-level=${{inputs.log_level}}
         cd ../../
     - name: Create commit
       if: success()
