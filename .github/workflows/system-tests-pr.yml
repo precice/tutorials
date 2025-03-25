@@ -109,6 +109,7 @@ jobs:
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "### Tutorials" >> $GITHUB_STEP_SUMMARY
           echo "Reference (pull request): \`${{ github.event.pull_request.head.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "Pull request number: [${{ github.event.number }}](https://github.com/precice/tutorials/pull/${{ github.event.number }})" >> $GITHUB_STEP_SUMMARY
 
   run-system-tests:
     name: Trigger system tests
@@ -127,6 +128,7 @@ jobs:
         OPENFOAM_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-openfoam-adapter }},\
         SU2_VERSION:7.5.1,\
         SU2_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-su2-adapter }},\
+        TUTORIALS_PR:${{ github.event.number }},\
         TUTORIALS_REF:${{ github.event.pull_request.head.sha }}"
-      system_tests_branch: develop
-      log_level: "INFO"
+      system_tests_branch: test-forks
+      log_level: "DEBUG"

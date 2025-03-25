@@ -59,7 +59,7 @@ jobs:
         rm -rf ./*
         rm -rf ./.??*
         ls -la ./
-    - name: Check out Tutorials for them system tests (tools/tests/)
+    - name: Check out Tutorials for the system tests (tools/tests/)
       uses: actions/checkout@v4
       with:
         repository: precice/tutorials

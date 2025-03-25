@@ -45,12 +45,14 @@ USER precice
 
 FROM precice_dependecies AS precice
 # Install & build precice into /home/precice/precice
+ARG PRECICE_PR
 ARG PRECICE_REF
 ARG PRECICE_PRESET
 USER precice
 WORKDIR /home/precice
 RUN git clone https://github.com/precice/precice.git precice && \
     cd precice && \
+    if [ -n "${PRECICE_PR}" ]; then git fetch origin pull/${PRECICE_PR}/head; fi && \
     git checkout ${PRECICE_REF} && \
     mkdir build && cd build &&\
     cmake .. --preset=${PRECICE_PRESET} -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DPRECICE_PETScMapping=OFF -DBUILD_TESTING=OFF && \
@@ -65,12 +67,14 @@ RUN apt-get update &&\
     ln -s $(which ${OPENFOAM_EXECUTABLE} ) /usr/bin/openfoam
 USER precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
+ARG OPENFOAM_ADAPTER_PR
 ARG OPENFOAM_ADAPTER_REF
 # Build the OpenFOAM adapter 
 USER precice
 WORKDIR /home/precice
 RUN git clone https://github.com/precice/openfoam-adapter.git &&\
     cd openfoam-adapter && \
+    if [ -n "${OPENFOAM_ADAPTER_PR}" ]; then git fetch origin pull/${OPENFOAM_ADAPTER_PR}/head; fi && \
     git checkout ${OPENFOAM_ADAPTER_REF} && \
     /usr/bin/${OPENFOAM_EXECUTABLE} ./Allwmake -j $(nproc)
 
@@ -123,10 +127,12 @@ RUN wget http://www.dhondt.de/ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
     tar xvjf ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
     rm -fv ccx_${CALCULIX_VERSION}.src.tar.bz2
 
+ARG CALCULIX_ADAPTER_PR
 ARG CALCULIX_ADAPTER_REF
 WORKDIR /home/precice
 RUN git clone https://github.com/precice/calculix-adapter.git && \
     cd calculix-adapter && \
+    if [ -n "${CALCULIX_ADAPTER_PR}" ]; then git fetch origin pull/${CALCULIX_ADAPTER_PR}/head; fi && \
     git checkout ${CALCULIX_ADAPTER_REF} &&\
     make CXX_VERSION=${CALCULIX_VERSION} ADDITIONAL_FFLAGS="-fallow-argument-mismatch" -j $(nproc) && \
     ln -s /home/precice/calculix-adapter/bin/ccx_preCICE /home/precice/.local/bin/ccx_preCICE
@@ -147,6 +153,7 @@ RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz
     rm -fv v${SU2_VERSION}.tar.gz
 RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate
+ARG SU2_ADAPTER_PR
 ARG SU2_ADAPTER_REF
 WORKDIR /home/precice
 ENV SU2_RUN="/home/precice/SU2_RUN" 
@@ -155,6 +162,7 @@ ENV PATH="/home/precice/su2-adapter/run:$SU2_RUN:$PATH"
 ENV PYTHONPATH="$SU2_RUN:$PYTHONPATH"
 RUN git clone https://github.com/precice/su2-adapter.git && \
     cd su2-adapter &&\
+    if [ -n "${SU2_ADAPTER_PR}" ]; then git fetch origin pull/${SU2_ADAPTER_PR}/head; fi && \
     git checkout ${SU2_ADAPTER_REF} &&\
     ./su2AdapterInstall
 RUN cd "${SU2_HOME}" &&\
