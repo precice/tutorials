@@ -32,7 +32,7 @@ jobs:
       run: |
         echo "Initiated by: ${{ github.actor }}"
         echo "Test suites: ${{ inputs.suites}}"
-        echo "System tests branch (`tools/`): ${{ inputs.systests_branch }}"
+        echo "System tests branch (tools/): ${{ inputs.systests_branch }}"
         echo "System tests log level: ${{ inputs.loglevel }}"
         echo "Uploading the runs folder on success: ${{ inputs.upload_artifacts }}"
         echo "Running the following command inside tutorials/tools/:"
