@@ -32,7 +32,7 @@ jobs:
       run: |
         echo "Initiated by: ${{ github.actor }}"
         echo "Test suites: ${{ inputs.suites}}"
-        echo "System tests branch: ${{ inputs.systests_branch }}"
+        echo "System tests branch (`tools/`): ${{ inputs.systests_branch }}"
         echo "System tests log level: ${{ inputs.loglevel }}"
         echo "Uploading the runs folder on success: ${{ inputs.upload_artifacts }}"
         echo "Running the following command inside tutorials/tools/:"
@@ -42,7 +42,7 @@ jobs:
         echo "Job inputs:"
         echo "- Initiated by: @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
         echo "- Test suites: \`${{ inputs.suites}}\`" >> $GITHUB_STEP_SUMMARY
-        echo "- System tests branch: [\`${{ inputs.systests_branch }}\`](https://github.com/precice/tutorials/tree/${{ inputs.systests_branch }})" >> $GITHUB_STEP_SUMMARY
+        echo "- System tests branch (\`tools/\`): [\`${{ inputs.systests_branch }}\`](https://github.com/precice/tutorials/tree/${{ inputs.systests_branch }})" >> $GITHUB_STEP_SUMMARY
         echo "- System tests log level: \`${{ inputs.loglevel }}\`"
         echo "- Uploading the runs folder on success: \`${{ inputs.upload_artifacts }}\`" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
