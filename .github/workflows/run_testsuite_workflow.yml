@@ -10,8 +10,8 @@ on:
         description: 'Build arguments'
         required: false
         type: string
-      systests_branch:
-        description: 'Branch to take the systest from'
+      system_tests_branch:
+        description: 'Branch to take the system tests from'
         default: 'develop'
         required: true
         type: string
@@ -32,7 +32,7 @@ jobs:
       run: |
         echo "Initiated by: ${{ github.actor }}"
         echo "Test suites: ${{ inputs.suites}}"
-        echo "System tests branch (tools/): ${{ inputs.systests_branch }}"
+        echo "System tests branch (tools/): ${{ inputs.system_tests_branch }}"
         echo "System tests log level: ${{ inputs.log_level }}"
         echo "Uploading the runs folder on success: ${{ inputs.upload_artifacts }}"
         echo "Running the following command inside tutorials/tools/:"
@@ -42,7 +42,7 @@ jobs:
         echo "Job inputs:"
         echo "- Initiated by: @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
         echo "- Test suites: \`${{ inputs.suites}}\`" >> $GITHUB_STEP_SUMMARY
-        echo "- System tests branch (\`tools/\`): [\`${{ inputs.systests_branch }}\`](https://github.com/precice/tutorials/tree/${{ inputs.systests_branch }})" >> $GITHUB_STEP_SUMMARY
+        echo "- System tests branch (\`tools/\`): [\`${{ inputs.system_tests_branch }}\`](https://github.com/precice/tutorials/tree/${{ inputs.system_tests_branch }})" >> $GITHUB_STEP_SUMMARY
         echo "- System tests log level: \`${{ inputs.log_level }}\`"
         echo "- Uploading the runs folder on success: \`${{ inputs.upload_artifacts }}\`" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
@@ -59,11 +59,11 @@ jobs:
         rm -rf ./*
         rm -rf ./.??*
         ls -la ./
-    - name: Check out Tutorials for systest
+    - name: Check out Tutorials for them system tests (tools/tests/)
       uses: actions/checkout@v4
       with:
         repository: precice/tutorials
-        ref: ${{ inputs.systests_branch }}
+        ref: ${{ inputs.system_tests_branch }}
         lfs: true
         fetch-depth: 0
     - name: Map remote branches to local ones
