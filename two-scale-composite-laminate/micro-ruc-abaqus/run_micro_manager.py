@@ -2,7 +2,7 @@
 Script to run the Micro Manager
 """
 
-from micro_manager import MicroManager
+from micro_manager import MicroManagerCoupling
 from argparse import ArgumentParser
 
 print("Entered the Python scrip to run the Micro Manager")
@@ -13,7 +13,7 @@ args = parser.parse_args()
 
 print("Accepted the config file")
 
-manager = MicroManager(args.config)
+manager = MicroManagerCoupling(args.config)
 
 print("Micro Manager object created")
 
