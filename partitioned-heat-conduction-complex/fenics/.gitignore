@@ -1,7 +1,0 @@
-*.txt
-venv
-.idea
-*.pyc
-out
-*.log
-*events.json

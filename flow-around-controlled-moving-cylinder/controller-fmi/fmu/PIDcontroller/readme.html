@@ -1,0 +1,135 @@
+
+<html>
+<head>
+<title>PIDcontroller</title>
+<style>
+body {
+    font-family: Helvetica, Arial, Sans-Serif;
+    margin: 2em;
+}
+
+div.container {
+    max-width: 750px;
+    margin: auto;
+}
+
+
+h1, h2 {
+    border-bottom: 1px solid #eaecef;
+    padding-bottom: .3em;
+}
+
+pre {
+    background-color: #f6f8fa;
+    border-radius: 3px;
+    font-size: 85%;
+    line-height: 1.45;
+    overflow: auto;
+    padding: 16px;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+th, td {
+    font-size: 0.9em;
+    border: 1px solid #dfe2e5;
+    padding: 6px 13px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>PIDcontroller</h1>
+
+<p>The PID Controller implements the following equation:</p>
+
+<pre><code>e = r - y
+u = kp*e + ki*e*dt + kd*(e-e_ls)*(1/dt)
+</code></pre>
+
+<p>with the variables</p>
+
+<table>
+<thead>
+<tr>
+  <th align="left">Variable</th>
+  <th align="right">Start</th>
+  <th>Causality</th>
+  <th>Variability</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td align="left">u</td>
+  <td align="right">0</td>
+  <td>output</td>
+  <td>continuous</td>
+  <td align="left">Control output</td>
+</tr>
+<tr>
+  <td align="left">y</td>
+  <td align="right">0</td>
+  <td>parameter</td>
+  <td>tunable</td>
+  <td align="left">Control input</td>
+</tr>
+<tr>
+  <td align="left">r</td>
+  <td align="right">0</td>
+  <td>parameter</td>
+  <td>tunable</td>
+  <td align="left">Reference value</td>
+</tr>
+<tr>
+  <td align="left">e</td>
+  <td align="right"></td>
+  <td>local</td>
+  <td>continuous</td>
+  <td align="left">Error between reference and input</td>
+</tr>
+<tr>
+  <td align="left">e_ls</td>
+  <td align="right"></td>
+  <td>local</td>
+  <td>continuous</td>
+  <td align="left">Error between reference and input from last time step</td>
+</tr>
+<tr>
+  <td align="left">kp</td>
+  <td align="right">0</td>
+  <td>parameter</td>
+  <td>tunable</td>
+  <td align="left">Proportional gain</td>
+</tr>
+<tr>
+  <td align="left">ki</td>
+  <td align="right">0</td>
+  <td>parameter</td>
+  <td>tunable</td>
+  <td align="left">Integral gain</td>
+</tr>
+<tr>
+  <td align="left">kd</td>
+  <td align="right">0</td>
+  <td>parameter</td>
+  <td>tunable</td>
+  <td align="left">Derivative gain</td>
+</tr>
+<tr>
+  <td align="left">dt</td>
+  <td align="right">0.01</td>
+  <td>parameter</td>
+  <td>tunable</td>
+  <td align="left">Solver step size</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</body>
+</html>

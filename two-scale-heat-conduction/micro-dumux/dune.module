@@ -1,0 +1,12 @@
+################################
+# Dune module information file #
+################################
+
+# Name of the module
+Module: micro_sim
+Version: 1.0
+Maintainer: jun.chen@ipvs.uni-stuttgart.de 
+# Required build dependencies
+Depends: dumux-phasefield
+# Optional build dependencies
+#Suggests:

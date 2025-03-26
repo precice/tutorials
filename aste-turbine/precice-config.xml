@@ -7,6 +7,8 @@
       enabled="true" />
   </log>
 
+  <profiling flush-every="50" directory="." mode="all" synchronize="true" />
+
   <data:scalar name="Data" />
 
   <mesh name="A-Mesh" dimensions="3">
@@ -16,8 +18,6 @@
   <mesh name="B-Mesh" dimensions="3">
     <use-data name="Data" />
   </mesh>
-
-  <m2n:sockets acceptor="A" connector="B" exchange-directory="." />
 
   <participant name="A">
     <provide-mesh name="A-Mesh" />
@@ -30,13 +30,15 @@
     <read-data name="Data" mesh="B-Mesh" />
     <mapping:nearest-neighbor constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" />
     <!-- <mapping:nearest-projection constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" /> -->
-    <!-- <mapping:rbf-pum-direct constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" />
+    <!-- <mapping:rbf-pum-direct constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" >
           <basis-function:compact-polynomial-c6 support-radius="0.1" />
           </mapping:rbf-pum-direct> -->
-    <!-- <mapping:rbf-global-direct constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" />
+    <!-- <mapping:rbf-global-direct constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" >
           <basis-function:compact-polynomial-c6 support-radius="0.1" />
           </mapping:rbf-global-direct> -->
   </participant>
+
+  <m2n:sockets acceptor="A" connector="B" exchange-directory="." />
 
   <coupling-scheme:parallel-explicit>
     <participants first="A" second="B" />

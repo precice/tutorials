@@ -15,6 +15,12 @@ Our example consists of a wind turbine blade geometry, which was triangulated us
 
 ![Turbine setup](images/tutorials-aste-turbine-setup.png)
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-aste-turbine-precice-config.png)
+
 ## Running the tutorial
 
 All necessary steps in order to run the mapping setup are summarized in the `run.sh` script. Have a look at the comments in the run script in order to understand what is happening. In particular, the script executes the following steps:

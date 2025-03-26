@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<fmiModelDescription
+  fmiVersion="2.0"
+  modelName="Oscillator"
+  description="This model is used for the partitioned simulation of an oscillator with three springs and two masses. The oscillator is cut in the middle spring for partitioning. Here, two springs with one mass between them are calculated."
+  generationTool="Reference FMUs (development build)"
+  guid="{1AE5E10D-9521-4DE3-80B9-D0EAAA7D5AF1}"
+  numberOfEventIndicators="1">
+  <ModelExchange modelIdentifier="Oscillator">
+    <SourceFiles>
+      <File name="all.c" />
+    </SourceFiles>
+  </ModelExchange>
+
+  <CoSimulation
+    modelIdentifier="Oscillator"
+    canHandleVariableCommunicationStepSize="true"
+    canNotUseMemoryManagementFunctions="true"
+    canGetAndSetFMUstate="true"
+    canSerializeFMUstate="false">
+    <SourceFiles>
+      <File name="all.c" />
+    </SourceFiles>
+  </CoSimulation>
+
+  <UnitDefinitions>
+    <Unit name="N/m">
+      <BaseUnit s="-2" kg="1" />
+    </Unit>
+    <Unit name="rad/s">
+      <BaseUnit s="-1" />
+    </Unit>
+    <Unit name="Hz">
+      <BaseUnit s="-1" />
+    </Unit>
+    <Unit name="kg">
+      <BaseUnit kg="1" />
+    </Unit>
+    <Unit name="N">
+      <BaseUnit m="1" s="-2" kg="1" />
+    </Unit>
+    <Unit name="m/s2">
+      <BaseUnit m="1" s="-2" />
+    </Unit>
+    <Unit name="m.s-2">
+      <BaseUnit m="1" s="-2" />
+    </Unit>
+    <Unit name="m.s-1">
+      <BaseUnit m="1" s="-1" />
+    </Unit>
+    <Unit name="m/s">
+      <BaseUnit m="1" s="-1" />
+    </Unit>
+    <Unit name="m">
+      <BaseUnit m="1" />
+    </Unit>
+  </UnitDefinitions>
+
+  <LogCategories>
+    <Category name="logEvents" description="Log events" />
+    <Category name="logStatusError" description="Log error messages" />
+  </LogCategories>
+
+  <DefaultExperiment startTime="0" stopTime="1" stepSize="1e-3" />
+
+  <ModelVariables>
+    <ScalarVariable
+      name="mass.m"
+      valueReference="1"
+      causality="parameter"
+      variability="fixed"
+      initial="exact"
+      description="Mass of the body">
+      <Real start="1" unit="kg" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="mass.u"
+      valueReference="2"
+      causality="parameter"
+      variability="tunable"
+      initial="exact"
+      description="Absolute position of the body">
+      <Real start="0.0" unit="m" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="mass.v"
+      valueReference="3"
+      causality="parameter"
+      variability="tunable"
+      initial="exact"
+      description="Velocity of the body">
+      <Real start="0.0" unit="m/s" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="mass.a"
+      valueReference="4"
+      causality="local"
+      variability="tunable"
+      initial="calculated"
+      description="Acceleration of the body">
+      <Real unit="m/s2" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="spring_fixed.c"
+      valueReference="5"
+      causality="parameter"
+      variability="fixed"
+      initial="exact"
+      description="Spring constant of the spring mounted on the wall">
+      <Real start="3.1416" unit="N/m" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="spring_middle.c"
+      valueReference="6"
+      causality="parameter"
+      variability="fixed"
+      initial="exact"
+      description="Spring constant of the spring between the masses">
+      <Real start="3.1416" unit="N/m" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="force_in"
+      valueReference="7"
+      causality="parameter"
+      variability="tunable"
+      initial="exact"
+      description="Input force calculated by the other partition">
+      <Real start="0" unit="N" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="force_out"
+      valueReference="8"
+      causality="parameter"
+      variability="tunable"
+      initial="exact"
+      description="Output force calculated by this partition">
+      <Real start="0" unit="N" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="alpha_f"
+      valueReference="9"
+      causality="parameter"
+      variability="fixed"
+      initial="exact"
+      description="Parameter f of generalized alpha method">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="alpha_m"
+      valueReference="10"
+      causality="parameter"
+      variability="fixed"
+      initial="exact"
+      description="Parameter m of generalized alpha method">
+      <Real start="0" />
+    </ScalarVariable>
+  </ModelVariables>
+
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="2" />
+    </Outputs>
+    <InitialUnknowns>
+      <Unknown index="4" dependencies="6 7" dependenciesKind="dependent dependent" />
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

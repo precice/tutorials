@@ -1,12 +1,12 @@
 ---
 title: Partitioned heat conduction
 permalink: tutorials-partitioned-heat-conduction.html
-keywords: FEniCSx, FEniCS, Nutils, Heat conduction
+keywords: FEniCS, Nutils, Heat conduction
 summary: We solve a simple heat equation. The domain is partitioned and the coupling is established in a Dirichlet-Neumann fashion.
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -21,42 +21,53 @@ The heat equation is solved on a rectangular domain `Omega = [0,2] x [0,1]` with
 
 This simple case allows us to compare the solution for the partitioned case to a known analytical solution (method of manufactures solutions, see [1, p.37ff]). For more usage examples and details, please refer to [3, sect. 4.1].
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-precice-config.png)
+
 ## Available solvers and dependencies
 
 You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE and the python bindings installed on your system.
-
-* FEniCSx. Install [FEniCSx](https://fenicsproject.org/download/) and the [FEniCSx-adapter](https://github.com/precice/fenicsx-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1] and has been adapted to FEniCSx.
 
 * FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
 
 * Nutils. Install [Nutils](https://nutils.org/install-nutils.html).
 
-* OpenFOAM. This case also requires [funkySetFields](https://openfoamwiki.net/index.php/Contrib/funkySetFields) (part of [swak4Foam](https://openfoamwiki.net/index.php/Contrib/swak4Foam)) and uses the custom [heatTransfer](https://github.com/precice/tutorials/blob/master/partitioned-heat-conduction/openfoam-solver/heatTransfer.C) solver (find it in `openfoam-solver` and build with `wmake`). Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
+* OpenFOAM. This case uses the custom [heatTransfer](https://github.com/precice/tutorials/blob/master/partitioned-heat-conduction/solver-openfoam/heatTransfer.C) solver (find it in `solver-openfoam` and build with `wmake`). Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
 
 ## Running the simulation
 
-You can find the corresponding `run.sh` script for running the case in the folders corresponding to the solver you want to use.
-
-For choosing whether you want to run the Dirichlet-kind and a Neumann-kind participant, please provide the following commandline input:
-
-* `-d` flag will enforce Dirichlet boundary conditions on the coupling interface.
-* `-n` flag will enforce Neumann boundary conditions on the coupling interface.
-
-For running the case, open two terminals run:
+You can find the corresponding `run.sh` script for running the case in the folders corresponding to the participant you want to use:
 
 ```bash
-cd fenicsx
-./run.sh -d
+cd dirichlet-fenics
+./run.sh
 ```
 
 and
 
 ```bash
-cd fenicsx
-./run.sh -n
+cd neumann-fenics
+./run.sh
 ```
 
-If you want to use FEniCS or Nutils, use `cd fenics`/ `cd nutils` instead of `cd fenicsx`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
+The FEniCS-based version of the tutorial offers higher-order time stepping with implicit Runge Kutta schemes (Neumann and Dirichlet participant, see [4]) by running
+
+```bash
+cd neumann-fenics
+./run.sh irk
+```
+
+or Spectral Deferred Corrections (SDC, only Dirichlet participant, see [5]) via
+
+```bash
+cd dirichlet-fenics
+./run.sh sdc
+```
+
+If you want to use Nutils or OpenFOAM, use `cd dirichlet/neumann-nutils`, respectively `cd dirichlet/neumann-openfoam`, instead of `cd dirichlet/neumann-fenics`. The FEniCS case also supports parallel runs. Here, you cannot use the `run.sh` script, but must simply execute
 
 ```bash
 mpirun -n <N_PROC> heat.py -d
@@ -68,9 +79,7 @@ You can mix the Nutils and FEniCS solver, if you like. Note that the error for a
 
 ## Visualization
 
-Output is written into the folders `fenicsx/out`, `fenics/out` and `nutils`.
-
-For FEniCSx you can visualize the content with paraview by opening the `*.xdmf` files. The files `Dirichlet.xdmf` and `Neumann.xdmf` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution.
+Output is written into the folders `fenics/out` and `nutils`.
 
 For FEniCS you can visualize the content with paraview by opening the `*.pvd` files. The files `Dirichlet.pvd` and `Neumann.pvd` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution, the files with `error` show the error and the files with `ranks` the ranks of the solvers (if executed in parallel).
 
@@ -85,3 +94,5 @@ Visualization in paraview for `x_c = 1.5`.
 [1] Hans Petter Langtangen and Anders Logg. "Solving PDEs in Minutes-The FEniCS Tutorial Volume I." (2016). [pdf](https://fenicsproject.org/pub/tutorial/pdf/fenics-tutorial-vol1.pdf)  
 [2] Azahar Monge and Philipp Birken. "Convergence Analysis of the Dirichlet-Neumann Iteration for Finite Element Discretizations." (2016). Proceedings in Applied Mathematics and Mechanics. [doi](https://doi.org/10.1002/pamm.201610355)  
 [3] Benjamin Rüth, Benjamin Uekermann, Miriam Mehl, Philipp Birken, Azahar Monge, and Hans Joachim Bungartz. "Quasi-Newton waveform iteration for partitioned surface-coupled multiphysics applications." (2020). International Journal for Numerical Methods in Engineering. [doi](https://doi.org/10.1002/nme.6443)  
+[4] Niklas Vinnitchenko. "Evaluation of Higher-Order Coupling Schemes with FEniCS-preCICE." (2024). Bachelor's thesis at Technical University of Munich. [pdf](https://mediatum.ub.tum.de/1732367)
+[5] Tobias Eppacher. "Parallel-in-Time Integration with preCICE" (2024). Bachlor's thesis at Technical University of Munich. [pdf](https://mediatum.ub.tum.de/1755012)

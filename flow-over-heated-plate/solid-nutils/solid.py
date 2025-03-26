@@ -52,11 +52,12 @@ def main():
     cons0 = cons  # to not lose the Dirichlet BC at the bottom
     lhs0 = np.zeros(res.shape)  # solution from previous timestep
     timestep = 0
-    dt = 0.01
+    solver_dt = 0.01
 
     participant.initialize()
+
     precice_dt = participant.get_max_time_step_size()
-    dt = min(dt, precice_dt)
+    dt = min(precice_dt, solver_dt)
 
     # set u = uwall as initial condition and visualize
     sqr = domain.integral('(u - uwall)^2' @ ns, degree=2)
@@ -68,20 +69,21 @@ def main():
 
     while participant.is_coupling_ongoing():
 
-        # read temperature from participant
-        temperature_values = participant.read_data(mesh_name, "Temperature", vertex_ids, dt)
-        temperature_function = coupling_sample.asfunction(temperature_values)
-
-        sqr = coupling_sample.integral((ns.u - temperature_function)**2)
-        cons = solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons0)
-
         # save checkpoint
         if participant.requires_writing_checkpoint():
             lhs_checkpoint = lhs0
             timestep_checkpoint = timestep
 
         # potentially adjust non-matching timestep sizes
-        dt = min(dt, precice_dt)
+        precice_dt = participant.get_max_time_step_size()
+        dt = min(solver_dt, precice_dt)
+
+        # read temperature from participant
+        temperature_values = participant.read_data(mesh_name, "Temperature", vertex_ids, dt)
+        temperature_function = coupling_sample.asfunction(temperature_values)
+
+        sqr = coupling_sample.integral((ns.u - temperature_function)**2)
+        cons = solver.optimize('lhs', sqr, droptol=1e-15, constrain=cons0)
 
         # solve nutils timestep
         lhs = solver.solve_linear('lhs', res, constrain=cons, arguments=dict(lhs0=lhs0, dt=dt))
@@ -93,7 +95,6 @@ def main():
 
         # do the coupling
         participant.advance(dt)
-        precice_dt = participant.get_max_time_step_size()
 
         # advance variables
         timestep += 1

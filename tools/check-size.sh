@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Run this script at the root of the repository to check the size of images
 
 CODE=0
-MAXIMUMSIZE=250
+MAXIMUMSIZE=750
 MAXIMUMGIFSIZE=2200
 
 RED='\033[0;31m'

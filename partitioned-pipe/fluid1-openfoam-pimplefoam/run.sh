@@ -1,5 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e -u
+
+. ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
 use_skewed=false
 
@@ -16,9 +19,9 @@ else
     blockMesh
 fi
 
-touch fluid1-openfoam-pimplefoam.foam
-
 ../../tools/run-openfoam.sh "$@"
 . ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
 
 postProcess -func "flowRatePatch(name=inlet)" -latestTime -noZero
+
+close_log

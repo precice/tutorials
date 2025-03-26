@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env sh
  
 gnuplot -p << EOF                                                               
 	set grid                                                                        
-	set title 'displacement at the middle of the tube                                        
+	set title 'displacement at the middle of the tube'                                        
 	set xlabel 'time [s]'                                                           
 	set ylabel 'displacement [m]'
 	set term pngcairo enhanced size 900,654

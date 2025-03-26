@@ -8,9 +8,11 @@
             "read_data_names": {"concentration": "scalar"}
     },
     "simulation_params": {
+      "micro_dt": 0.01,
       "macro_domain_bounds": [0.0, 1.0, 0.0, 0.5],
       "decomposition": [2, 1],
-      "adaptivity": {
+      "adaptivity": "True",
+      "adaptivity_settings": {
         "type": "global",
         "data": ["k_00", "k_11", "porosity", "concentration"],
         "history_param": 0.1,

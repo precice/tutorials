@@ -1,0 +1,13 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+Description
+    Calculates pressure and viscous forces over specified patches for a case
+    where the solver is incompressible (pressure is kinematic, e.g. m^2/s^2).
+\*---------------------------------------------------------------------------*/
+
+#includeEtc "caseDicts/postProcessing/forces/forcesIncompressible.cfg"
+log           yes;
+rho         rhoInf;     // Indicates incompressible 
+rhoInf      1000;    // Redundant for incompressible
+patches     (cylinder);
+CofR        (0 0 0);
+pitchAxis   (0 0 1);

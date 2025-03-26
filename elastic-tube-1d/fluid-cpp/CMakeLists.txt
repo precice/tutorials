@@ -15,7 +15,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STRE
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter")
 endif()
 
-find_package(precice REQUIRED CONFIG)
+find_package(precice 3 REQUIRED CONFIG)
 find_package(LAPACK REQUIRED)
 
 add_executable(FluidSolver

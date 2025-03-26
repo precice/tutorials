@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 echo "This tutorial is based on a case prepared with SimScale."
 echo "Since the mesh files are several MB large, we don't store them in the Git repository."

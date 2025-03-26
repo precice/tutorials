@@ -1,0 +1,20 @@
+{
+    "model_params": {
+        "mass.m": 1,
+        "spring_fixed.c": 39.4784176044,
+        "spring_middle.c": 157.913670417
+    },
+    "initial_conditions": {
+        "mass.u": 1,
+        "mass.v": 0, 
+        "mass.a": -197.392088022
+    },
+    "simulation_params": {
+        "fmu_file_name": "../solver-fmi/Oscillator.fmu",
+        "output_file_name": "./output/trajectory-Mass-Left.csv",
+        "output": ["mass.u", "mass.v"],
+        "fmu_read_data_names": ["force_in"],
+        "fmu_write_data_names": ["force_out"],
+        "fmu_instance_name": "instance_left"
+    }
+}

@@ -1,0 +1,12 @@
+# This case stores pre-generated meshes outside the repository
+solid-calculix/adiabatic.dfl
+solid-calculix/all.msh
+solid-calculix/inner-interface.flm
+solid-calculix/inner-interface.nam
+solid-calculix/inner-interface.sur
+solid-calculix/outer-interface.flm
+solid-calculix/outer-interface.nam
+solid-calculix/outer-interface.sur
+solid-calculix/solid.inp
+fluid-inner-openfoam/constant/polyMesh
+fluid-outer-openfoam/constant/polyMesh

@@ -6,7 +6,7 @@ summary: This tutorial is the advanced version of the "partitioned heat conducti
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-complex). Read how in the [tutorials introduction](https://www.precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-complex). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -20,10 +20,16 @@ This case is an advanced version of `partitioned-heat-conduction`. Some advanced
 * The exchanged temperature is still scalar valued, but the heat flux is vector valued.
 * You can decide to use a time dependent heat flux and right-hand side to make the problem more challenging.
 
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-complex-precice-config.png)
+
 ## Available solvers and dependencies
 
 See `partitioned-heat-conduction`, only `fenics` is provided as a solver.
 
 ## Running the simulation
 
-See `partitioned-heat-conduction`. The additional featured mentioned above can be activated via command line arguments. Please run `python3 fenics/heat.py --help` for a full list of provided arguments.
+See `partitioned-heat-conduction`. The additional featured mentioned above can be activated via command line arguments. Please run `python3 solver-fenics/heat.py --help` for a full list of provided arguments.

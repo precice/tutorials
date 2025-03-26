@@ -10,8 +10,8 @@ on:
         description: 'Commit msg for commit that adds the reference results'
         default: "Adding reference results"
         type: string
-      loglevel:
-        description: 'loglevel used for the systemtests'
+      log_level:
+        description: 'Logging verbosity level used for the systemtests'
         default: 'INFO'
         required: true
         type: string
@@ -22,7 +22,7 @@ jobs:
     - name: Display a quick job summary
       run: |
         echo "Initiated by: ${{ github.actor }}"
-        echo "Running generate_reference_results.py --log-level ${{inputs.loglevel}}"
+        echo "Running generate_reference_results.py --log-level ${{inputs.log_level}}"
         echo "Using Ref: ${{ inputs.from_ref }}"
         echo "Commit message on success:  ${{ inputs.commit_msg }}"
     - name: Move LFS URL to local LFS server
@@ -36,7 +36,7 @@ jobs:
         rm -rf ./*
         rm -rf ./.??*
         ls -la ./
-    - name: Check out Tutorials for systest
+    - name: Check out Tutorials for the system tests (tools/tests/)
       uses: actions/checkout@v4
       with:
         ref: ${{ inputs.from_ref }}
@@ -45,13 +45,18 @@ jobs:
     - name: Install Python dependencies
       run: |
         pip install --user -r tools/tests/requirements.txt
+    - name: Cleanup Docker cache
+      # Remove all Docker containers, images, and build caches
+      # to ensure consistent results and as storage cleanup
+      run: |
+        docker system prune --all --force
     - name: Run tests
       run: |
         cd tools/tests
         test -f generate_reference_results.py && export GENERATE_REF_RESULTS=generate_reference_results.py
         test -f generate_reference_data.py && export GENERATE_REF_RESULTS=generate_reference_data.py
         echo "Selected $GENERATE_REF_RESULTS to run"
-        python $GENERATE_REF_RESULTS --log-level=${{inputs.loglevel}}
+        python $GENERATE_REF_RESULTS --log-level=${{inputs.log_level}}
         cd ../../
     - name: Create commit
       if: success()
@@ -64,8 +69,8 @@ jobs:
         git push
     - name: Upload artifacts for debugging
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: runs
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference
         path: |
           runs/*

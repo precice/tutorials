@@ -31,7 +31,7 @@ writeInterval 50;
 
 adjustTimeStep no;
 
-endTime 2000.0;
+endTime 500;
 
 writeControl timeStep;
 

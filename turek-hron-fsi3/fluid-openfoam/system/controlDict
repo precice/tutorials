@@ -9,8 +9,6 @@ FoamFile
 application     pimpleFoam;       // latest OpenFOAM
 // application     pimpleDyMFoam; // OpenFOAM v1712, OpenFOAM 5.x, or older
 
-libs ( "libgroovyBC.so" ) ;
-
 startFrom           startTime;
 
 startTime           0;

@@ -10,8 +10,6 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as manimation
 from output import writeOutputToVTK
 import precice
-from precice import action_write_initial_data, action_write_iteration_checkpoint, \
-    action_read_iteration_checkpoint
 
 # physical properties of the tube
 r0 = 1 / np.sqrt(np.pi)  # radius of the tube
@@ -68,10 +66,14 @@ print("Starting Fluid Solver...")
 print("N: " + str(N))
 
 print("Configure preCICE...")
-interface = precice.Interface("Fluid", args.configurationFileName, 0, 1)
+interface = precice.Participant("Fluid", args.configurationFileName, 0, 1)
 print("preCICE configured...")
 
-dimensions = interface.get_dimensions()
+meshName = "Fluid-Nodes-Mesh"
+crossSectionLengthName = "CrossSectionLength"
+pressureName = "Pressure"
+
+dimensions = interface.get_mesh_dimensions(meshName)
 
 velocity = velocity_in(0) * np.ones(N + 1)
 velocity_old = velocity_in(0) * np.ones(N + 1)
@@ -88,33 +90,24 @@ if plotting_mode == config.PlottingModes.VIDEO:
         writer = FFMpegWriter(fps=15, metadata=metadata)
         writer.setup(fig, "writer_test.mp4", 100)
 
-meshID = interface.get_mesh_id("Fluid-Nodes-Mesh")
-crossSectionLengthID = interface.get_data_id("CrossSectionLength", meshID)
-pressureID = interface.get_data_id("Pressure", meshID)
-
-vertexIDs = np.zeros(N + 1)
 grid = np.zeros([N + 1, dimensions])
-
 grid[:, 0] = np.linspace(0, L, N + 1)  # x component
 grid[:, 1] = 0  # y component, leave blank
 
-vertexIDs = interface.set_mesh_vertices(meshID, grid)
+vertexIDs = interface.set_mesh_vertices(meshName, grid)
+
+if interface.requires_initial_data():
+    interface.write_data(meshName, pressureName, vertexIDs, pressure)
 
 t = 0
 
+
 print("Fluid: init precice...")
 # preCICE defines timestep size of solver via precice-config.xml
-precice_dt = interface.initialize()
+interface.initialize()
 
-if interface.is_action_required(action_write_initial_data()):
-    interface.write_block_scalar_data(pressureID, vertexIDs, pressure)
-    interface.mark_action_fulfilled(action_write_initial_data())
-
-interface.initialize_data()
-
-if interface.is_read_data_available():
-    crossSectionLength = interface.read_block_scalar_data(
-        crossSectionLengthID, vertexIDs)
+crossSectionLength = interface.read_data(
+    meshName, crossSectionLengthName, vertexIDs, 0)
 
 crossSectionLength_old = np.copy(crossSectionLength)
 # initialize such that mass conservation is fulfilled
@@ -126,20 +119,22 @@ print(crossSectionLength_old)
 time_it = 0
 while interface.is_coupling_ongoing():
     # When an implicit coupling scheme is used, checkpointing is required
-    if interface.is_action_required(action_write_iteration_checkpoint()):
-        interface.mark_action_fulfilled(action_write_iteration_checkpoint())
+    if interface.requires_writing_checkpoint():
+        pass
 
+    precice_dt = interface.get_max_time_step_size()
+
+    crossSectionLength = interface.read_data(
+        meshName, crossSectionLengthName, vertexIDs, precice_dt)
     velocity, pressure, success = perform_partitioned_implicit_euler_step(
         velocity_old, pressure_old, crossSectionLength_old, crossSectionLength, dx, precice_dt, velocity_in(
             t + precice_dt), custom_coupling=True)
-    interface.write_block_scalar_data(pressureID, vertexIDs, pressure)
+    interface.write_data(meshName, pressureName, vertexIDs, pressure)
     interface.advance(precice_dt)
-    crossSectionLength = interface.read_block_scalar_data(
-        crossSectionLengthID, vertexIDs)
 
     # i.e. not yet converged
-    if interface.is_action_required(action_read_iteration_checkpoint()):
-        interface.mark_action_fulfilled(action_read_iteration_checkpoint())
+    if interface.requires_reading_checkpoint():
+        pass
     else:  # converged, timestep complete
         t += precice_dt
         if plotting_mode is config.PlottingModes.VIDEO:
@@ -159,5 +154,3 @@ print("Exiting FluidSolver")
 
 if plotting_mode is config.PlottingModes.VIDEO and writeVideoToFile:
     writer.finish()
-
-interface.finalize()

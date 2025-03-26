@@ -1,7 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e -u
 
-touch fluid-outer-openfoam.foam
+. ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
 ../../tools/run-openfoam.sh "$@"
 . ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
+
+close_log

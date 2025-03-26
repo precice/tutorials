@@ -15,8 +15,6 @@ def main():
     """
     is_coupled_case = True  # If False, single-physics problem is solved
 
-    # Original case from Bastidas et al.
-    # topo, geom = mesh.rectilinear([np.linspace(0, 1.0, 9), np.linspace(0, 0.5, 5)])
     topo, geom = mesh.rectilinear([np.linspace(0, 1.0, 5), np.linspace(0, 0.5, 4)])
 
     ns = function.Namespace(fallback_length=2)
@@ -73,7 +71,7 @@ def main():
             participant.write_data(mesh_name, "concentration", vertex_ids, concentrations)
 
         participant.initialize()
-        dt = participant.get_max_time_step_size()
+        dt = solver_dt = participant.get_max_time_step_size()
     else:
         dt = 1.0E-2
 
@@ -105,6 +103,9 @@ def main():
                 t_checkpoint = t
                 n_checkpoint = n
 
+            precice_dt = participant.get_max_time_step_size()
+            dt = min(precice_dt, solver_dt)
+
             # Read porosity and apply it to the existing solution
             poro_data = participant.read_data(mesh_name, "porosity", vertex_ids, dt)
             poro_coupledata = couplingsample.asfunction(poro_data)
@@ -130,8 +131,6 @@ def main():
             participant.write_data(mesh_name, "concentration", vertex_ids, concentration)
 
             participant.advance(dt)
-            precice_dt = participant.get_max_time_step_size()
-            dt = min(precice_dt, dt)
 
         n += 1
         t += dt

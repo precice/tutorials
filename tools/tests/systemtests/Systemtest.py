@@ -19,7 +19,7 @@ import logging
 import os
 
 
-GLOBAL_TIMEOUT = 360
+GLOBAL_TIMEOUT = 600
 SHORT_TIMEOUT = 10
 
 
@@ -84,17 +84,36 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
     max_name_length = _get_length_of_name(results)
 
     header = f"| {'systemtest':<{max_name_length + 2}} | {'success':^7} | {'building time [s]':^17} | {'solver time [s]':^15} | {'fieldcompare time [s]':^21} |"
-    separator = "+-" + "-" * (max_name_length + 2) + \
+    separator_plaintext = "+-" + "-" * (max_name_length + 2) + \
         "-+---------+-------------------+-----------------+-----------------------+"
+    separator_markdown = "| --- | --- | --- | --- | --- |"
 
-    print(separator)
+    print(separator_plaintext)
     print(header)
-    print(separator)
+    print(separator_plaintext)
+
+    if "GITHUB_STEP_SUMMARY" in os.environ:
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+            print(header, file=f)
+            print(separator_markdown, file=f)
 
     for result in results:
-        row = f"| {str(result.systemtest):<{max_name_length + 2}} | {result.success:^7} | {result.build_time:^17.2f} | {result.solver_time:^15.2f} | {result.fieldcompare_time:^21.2f} |"
+        row = f"| {str(result.systemtest):<{max_name_length + 2}} | {result.success:^7} | {result.build_time:^17.1f} | {result.solver_time:^15.1f} | {result.fieldcompare_time:^21.1f} |"
         print(row)
-        print(separator)
+        print(separator_plaintext)
+        if "GITHUB_STEP_SUMMARY" in os.environ:
+            with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+                print(row, file=f)
+
+    if "GITHUB_STEP_SUMMARY" in os.environ:
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+            print("\n\n", file=f)
+            print(
+                "In case a test fails, download the archive from the bottom of this page and look into each `stdout.log` and `stderr.log`. The time spent in each step might already give useful hints.",
+                file=f)
+            print(
+                "See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).",
+                file=f)
 
 
 @dataclass
@@ -286,8 +305,10 @@ class Systemtest:
         src = PRECICE_TOOLS_DIR
         try:
             shutil.copytree(src, destination)
+        except FileExistsError as e:
+            logging.debug(f"Tools directory has already been copied to the workspace - skipping.")
         except Exception as e:
-            logging.debug(f"tools are already copied: {e} ")
+            logging.warning(f"Something went wrong while copying the tools directory to the workspace: {e}")
 
     def __put_gitignore(self, run_directory: Path):
         # Create the .gitignore file with a single asterisk

@@ -1,0 +1,45 @@
+[Component]
+SolidDensity = 1.0 
+SolidThermalConductivity = 1.0 
+SolidHeatCapacity = 1.0
+LiquidDensity = 1.0 
+LiquidThermalConductiviy = 1.0 #not used, conductivity tensor K communicated
+LiquidHeatCapacity = 1.0
+LiquidReferenceTemperature = 0.5
+LiquidViscosity = 1.0
+
+[Grid]
+LowerLeft = 0.0 0.0 #not used! 
+UpperRight = 1 0.5
+Cells = 8 4
+
+[TimeLoop]
+TEnd = 0.25 
+OutputInterval = 1 # output after every n timesteps 
+MaxDt = 0.01 
+InitialDt = 0.01
+
+[Problem]
+Name = macro-heat
+EnableGravity = false
+Permeability = 1.0
+DefaultPorosity = 0.5
+
+[BoundaryConditions]
+BcTypeLeft = neumann
+BcTypeRight = neumann
+BcTypeTop = neumann 
+BcTypeBottom = neumann
+BcLeft = 0.0
+BcRight = 0.0
+BcTop = 0.0
+BcBottom = 0.0
+UseHeatSourceBottomLeft = true
+HeatSourceBottomLeft = 0.0
+
+[InitialConditions]
+Temperature = 0.5
+Pressure = 0.0
+
+[Precice]
+RunWithCoupling = true

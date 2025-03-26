@@ -1,0 +1,12 @@
+[package]
+name = "fluid-rust"
+version = "0.1.0"
+edition = "2021"
+publish = false
+repository = "https://github.com/precice/tutorials"
+description = "The fluid participant of the elastic-tube 1D tutorial"
+license = "LGPL-3.0-or-later"
+
+[dependencies]
+"precice" =  "3"
+"nalgebra" = "0.31"

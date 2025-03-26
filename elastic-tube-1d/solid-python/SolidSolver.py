@@ -5,9 +5,6 @@ import sys
 import argparse
 import numpy as np
 import precice
-from precice import action_write_initial_data, action_read_iteration_checkpoint, \
-    action_write_iteration_checkpoint
-
 
 r0 = 1 / np.sqrt(np.pi)  # radius of the tube
 a0 = r0**2 * np.pi  # cross sectional area
@@ -40,62 +37,62 @@ except SystemExit:
 print("N: " + str(N))
 
 print("Configure preCICE...")
-interface = precice.Interface("Solid", args.configurationFileName, 0, 1)
+interface = precice.Participant("Solid", args.configurationFileName, 0, 1)
 print("preCICE configured...")
 
-dimensions = interface.get_dimensions()
+meshName = "Solid-Nodes-Mesh"
+crossSectionLengthName = "CrossSectionLength"
+pressureName = "Pressure"
+
+dimensions = interface.get_mesh_dimensions(meshName)
 
 pressure = p0 * np.ones(N + 1)
 crossSectionLength = a0 * np.ones(N + 1)
 
-meshID = interface.get_mesh_id("Solid-Nodes-Mesh")
-crossSectionLengthID = interface.get_data_id("CrossSectionLength", meshID)
-pressureID = interface.get_data_id("Pressure", meshID)
-
-vertexIDs = np.zeros(N + 1)
+# Define mesh coordinates and register coordinates
 grid = np.zeros([N + 1, dimensions])
-
 grid[:, 0] = np.linspace(0, L, N + 1)  # x component
 grid[:, 1] = 0  # np.linspace(0, config.L, N+1)  # y component, leave blank
 
-vertexIDs = interface.set_mesh_vertices(meshID, grid)
+vertexIDs = interface.set_mesh_vertices(meshName, grid)
 
-t = 0
+if interface.requires_initial_data():
+    interface.write_data(meshName, crossSectionLengthName,
+                         vertexIDs, crossSectionLength)
 
 print("Solid: init precice...")
 
-# preCICE defines timestep size of solver via precice-config.xml
-precice_dt = interface.initialize()
+interface.initialize()
 
-if interface.is_action_required(action_write_initial_data()):
-    interface.write_block_scalar_data(crossSectionLengthID, vertexIDs, crossSectionLength)
-    interface.mark_action_fulfilled(action_write_initial_data())
-
-interface.initialize_data()
-
-if interface.is_read_data_available():
-    pressure = interface.read_block_scalar_data(pressureID, vertexIDs)
+# Calculate initial crossSection and local pressure from initial received pressure
+pressure = interface.read_data(meshName, pressureName, vertexIDs, 0)
 
 crossSection0 = crossSection0(pressure.shape[0] - 1)
 pressure0 = p0 * np.ones_like(pressure)
 
+
+def solve(pressure):
+    return crossSection0 * ((pressure0 - 2.0 * c_mk ** 2) ** 2 / (pressure - 2.0 * c_mk ** 2) ** 2)
+
+
 while interface.is_coupling_ongoing():
     # When an implicit coupling scheme is used, checkpointing is required
-    if interface.is_action_required(action_write_iteration_checkpoint()):
-        interface.mark_action_fulfilled(action_write_iteration_checkpoint())
+    if interface.requires_writing_checkpoint():
+        pass
 
-    crossSectionLength = crossSection0 * (
-        (pressure0 - 2.0 * c_mk ** 2) ** 2 / (pressure - 2.0 * c_mk ** 2) ** 2)
+    precice_dt = interface.get_max_time_step_size()
 
-    interface.write_block_scalar_data(crossSectionLengthID, vertexIDs, crossSectionLength)
-    precice_dt = interface.advance(precice_dt)
-    pressure = interface.read_block_scalar_data(pressureID, vertexIDs)
+    # Read data, solve timestep, and write data
+    pressure = interface.read_data(
+        meshName, pressureName, vertexIDs, precice_dt)
+    crossSectionLength = solve(pressure)
+    interface.write_data(meshName, crossSectionLengthName,
+                         vertexIDs, crossSectionLength)
 
-    if interface.is_action_required(action_read_iteration_checkpoint()):  # i.e. not yet converged
-        interface.mark_action_fulfilled(action_read_iteration_checkpoint())
-    else:
-        t += precice_dt
+    # Advance the coupling
+    interface.advance(precice_dt)
+
+    if interface.requires_reading_checkpoint():
+        pass
 
 print("Exiting SolidSolver")
-
-interface.finalize()

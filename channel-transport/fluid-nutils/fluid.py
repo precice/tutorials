@@ -66,10 +66,11 @@ def main():
     data_name = "Velocity"
 
     participant.initialize()
-    precice_dt = participant.get_max_time_step_size()
 
     timestep = 0
-    dt = 0.005
+    solver_dt = 0.005
+    precice_dt = participant.get_max_time_step_size()
+    dt = min(precice_dt, solver_dt)
 
     state = solver.solve_linear(("u", "p"), (ures, pres), constrain=cons)  # initial condition
 
@@ -87,7 +88,7 @@ def main():
         precice_dt = participant.get_max_time_step_size()
 
         # potentially adjust non-matching timestep sizes
-        dt = min(dt, precice_dt)
+        dt = min(solver_dt, precice_dt)
 
         # solve Nutils timestep
         state["u0"] = state["u"]

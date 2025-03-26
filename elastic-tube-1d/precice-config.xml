@@ -4,6 +4,8 @@
     <sink filter="%Severity% > debug" />
   </log>
 
+  <profiling mode="fundamental" synchronize="false" />
+
   <data:scalar name="Pressure" />
   <data:scalar name="CrossSectionLength" />
 
@@ -27,6 +29,7 @@
       from="Solid-Nodes-Mesh"
       to="Fluid-Nodes-Mesh"
       constraint="consistent" />
+    <watch-point mesh="Fluid-Nodes-Mesh" name="Middle" coordinate="5; 0" />
   </participant>
 
   <participant name="Solid">
@@ -46,7 +49,7 @@
   <coupling-scheme:serial-implicit>
     <participants first="Fluid" second="Solid" />
     <max-time value="1.0" />
-    <time-window-size value="0.01" valid-digits="8" />
+    <time-window-size value="0.01" />
     <max-iterations value="40" />
     <exchange data="Pressure" mesh="Fluid-Nodes-Mesh" from="Fluid" to="Solid" />
     <exchange
@@ -60,6 +63,7 @@
     <acceleration:IQN-ILS>
       <data name="CrossSectionLength" mesh="Solid-Nodes-Mesh" />
       <initial-relaxation value="0.01" />
+      <preconditioner type="residual-sum" update-on-threshold="false" />
       <max-used-iterations value="50" />
       <time-windows-reused value="8" />
       <filter type="QR2" limit="1e-3" />

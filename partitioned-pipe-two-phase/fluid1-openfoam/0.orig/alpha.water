@@ -1,0 +1,57 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      alpha.water;
+}
+
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    inlet
+    {
+        type            codedFixedValue;
+        value           uniform 1;
+    
+        // Name of generated boundary condition
+        name    halvedFixedValue;
+
+        // Split the inlet in half water / half air across the y-axis.
+        code
+        #{
+            const vectorField &faceCenters = this->patch().Cf();
+            scalarField &alphaIn = *this;
+            forAll(faceCenters, faceID)
+            {
+                if (faceCenters[faceID].y() < 0.0)
+                {
+                    alphaIn[faceID] = 1.0;
+                }
+                else
+                {
+                    alphaIn[faceID] = 0.0;
+                }
+            }
+        #};
+    }
+
+    outlet
+    {
+        type            fixedGradient;
+        gradient        uniform 0;
+    }
+
+    fixedWalls
+    {
+        type            zeroGradient;
+    }
+
+    defaultFaces
+    {
+        type            empty;
+    }
+}
