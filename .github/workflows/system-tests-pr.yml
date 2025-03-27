@@ -130,5 +130,5 @@ jobs:
         SU2_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-su2-adapter }},\
         TUTORIALS_PR:${{ github.event.number }},\
         TUTORIALS_REF:${{ github.event.pull_request.head.sha }}"
-      system_tests_branch: test-forks
-      log_level: "DEBUG"
+      system_tests_branch: develop
+      log_level: "INFO"
