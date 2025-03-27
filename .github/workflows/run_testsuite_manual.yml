@@ -10,13 +10,13 @@ on:
         description: 'Build arguments, if not specified defaults will be taken'
         required: false
         type: string
-      systests_branch:
-        description: 'Branch to take the systest from'
+      system_tests_branch:
+        description: 'Branch to take the system tests from (tools/tests/)'
         default: 'develop'
         required: true
         type: string
-      loglevel:
-        description: 'loglevel used for the systemtests'
+      log_level:
+        description: 'Logging verbosity level used for the systemtests'
         default: 'INFO'
         required: true
         type: choice
@@ -40,6 +40,6 @@ jobs:
     with: 
       suites: ${{ inputs.suites }}
       build_args: ${{ inputs.build_args }}
-      systests_branch: ${{ inputs.systests_branch }}
-      loglevel: ${{ inputs.loglevel }}
+      system_tests_branch: ${{ inputs.system_tests_branch }}
+      log_level: ${{ inputs.log_level }}
       upload_artifacts: ${{ inputs.upload_artifacts }}

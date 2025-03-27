@@ -34,7 +34,7 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     | Debian 12 "bookworm"          | [`libprecice3_3.1.2_bookworm.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_bookworm.deb) |
     | Something else                | See an [overview of options](https://precice.org/installation-overview.html) |
 
-    - Facing any problems? [Ask for help](https://precice.org/community-channels.html).
+    Facing any problems? [Ask for help](https://precice.org/community-channels.html).
 2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](https://precice.org/adapter-openfoam-support.html):
 
     ```bash

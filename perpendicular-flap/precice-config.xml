@@ -56,7 +56,7 @@
     <acceleration:IQN-ILS>
       <data name="Displacement" mesh="Solid-Mesh" />
       <data name="Force" mesh="Solid-Mesh" />
-      <preconditioner type="residual-sum" />
+      <preconditioner type="residual-sum" update-on-threshold="false" />
       <filter type="QR2" limit="1e-2" />
       <initial-relaxation value="0.5" />
       <max-used-iterations value="100" />

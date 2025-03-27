@@ -1,10 +1,10 @@
-PRECICE_REF: "9b37b18" # develop, February 18, 2025
+PRECICE_REF: "aeb0f6f" # develop, February 22, 2025
 PRECICE_PRESET: "production-audit"
 OPENFOAM_EXECUTABLE: "openfoam2312"
 OPENFOAM_ADAPTER_REF: "v1.3.1"
 PYTHON_BINDINGS_REF: "v3.1.2"
 FENICS_ADAPTER_REF: "v2.2.0"
-TUTORIALS_REF: "f5ecfb3" # develop, February 18, 2025
+TUTORIALS_REF: "3936aa6" # develop, February 21, 2025
 PLATFORM: "ubuntu_2404"
 CALCULIX_VERSION: "2.20"
 CALCULIX_ADAPTER_REF: "v2.20.1"

@@ -146,30 +146,26 @@ class Systemtest:
 
     def __init_args_to_use(self):
         """
-        Checks if all required parameters for the realisation of the cases are supplied in the cmdline arguments.
-        If a parameter is missing and it's required, an exception is raised.
-        Otherwise, the default value is used if available.
+        Forwards the command-line arguments to the params_to_use dictionary, substituting any missing arguments with their defaults.
 
-        In the end it populates the args_to_use dict
-
-        Raises:
-            Exception: If a required parameter is missing.
+        Previously, this function was also checking if all required parameters were provided, and was raising exceptions for parameters not provided and not having a default value. This check made adding optional parameters with empty defaults (e.g., the TUTORIALS_PR) complicated, and it was removed.
         """
-        self.params_to_use = {}
+
+        # Forward all provided arguments to params_to_use
+        provided_arguments = self.arguments.arguments
+        self.params_to_use = provided_arguments
+
+        # Find out which parameters are needed
         needed_parameters = set()
         for case in self.case_combination.cases:
             needed_parameters.update(case.component.parameters)
 
+        # Substitute defaults for non-provided, needed arguments
         for needed_param in needed_parameters:
-            if self.arguments.contains(needed_param.key):
-                self.params_to_use[needed_param.key] = self.arguments.get(
-                    needed_param.key)
-            else:
-                if needed_param.required:
-                    raise Exception(
-                        f"{needed_param} is needed to be given via --params to instantiate the systemtest for {self.tutorial.name}")
-                else:
-                    self.params_to_use[needed_param.key] = needed_param.default
+            if not needed_param.key in provided_arguments:
+                logging.warning(
+                    f"No argument provided for needed parameter {needed_param.key}. Substituting with {needed_param.default}")
+                self.params_to_use[needed_param.key] = needed_param.default
 
     def __get_docker_services(self) -> Dict[str, str]:
         """
@@ -249,6 +245,19 @@ class Systemtest:
         except Exception as e:
             raise RuntimeError(f"An error occurred while getting the current Git ref: {e}") from e
 
+    def _fetch_pr(self, repository: Path, pr: str):
+        try:
+            result = subprocess.run([
+                "git",
+                "-C", os.fspath(repository.resolve()),
+                "fetch",
+                "origin",
+                "pull/" + pr + "/head"
+            ], check=True, timeout=60)
+
+        except Exception as e:
+            raise RuntimeError(f"git command returned code {result.returncode}")
+
     def _fetch_ref(self, repository: Path, ref: str):
         try:
             result = subprocess.run([
@@ -282,6 +291,10 @@ class Systemtest:
         """
         current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.run_directory = run_directory
+        pr_requested = self.params_to_use.get("TUTORIALS_PR")
+        if pr_requested:
+            logging.debug(f"Fetching the PR {pr_requested} HEAD reference")
+            self._fetch_pr(PRECICE_TUTORIAL_DIR, pr_requested)
         current_ref = self._get_git_ref(PRECICE_TUTORIAL_DIR)
         ref_requested = self.params_to_use.get("TUTORIALS_REF")
         if ref_requested:
