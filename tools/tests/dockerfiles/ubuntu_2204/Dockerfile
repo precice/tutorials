@@ -57,7 +57,7 @@ RUN git clone https://github.com/precice/precice.git precice && \
     if [ -n "${PRECICE_PR}" ]; then git fetch origin pull/${PRECICE_PR}/head; fi && \
     git checkout ${PRECICE_REF} && \
     mkdir build && cd build &&\
-    cmake .. --preset=${PRECICE_PRESET} -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DPRECICE_PETScMapping=OFF -DBUILD_TESTING=OFF && \
+    cmake .. --preset=${PRECICE_PRESET} -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DBUILD_TESTING=OFF && \
     make all install -j $(nproc)
 
 FROM precice_dependecies AS openfoam_adapter
