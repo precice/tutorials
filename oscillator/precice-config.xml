@@ -4,6 +4,8 @@
     <sink filter="%Severity% > debug" />
   </log>
 
+  <profiling mode="fundamental" synchronize="false" />
+
   <data:scalar name="Force-Left" waveform-degree="3" />
   <data:scalar name="Force-Right" waveform-degree="3" />
 

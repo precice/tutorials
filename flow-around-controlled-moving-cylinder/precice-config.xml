@@ -7,6 +7,8 @@
       enabled="true" />
   </log>
 
+  <profiling mode="fundamental" synchronize="false" />
+
   <data:vector name="Displacement-Cylinder" />
   <data:vector name="Displacement-Spring" />
   <data:vector name="Force" />

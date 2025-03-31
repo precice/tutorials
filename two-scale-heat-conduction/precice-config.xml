@@ -4,6 +4,8 @@
     <sink type="stream" output="stdout" filter="%Severity% > debug" enabled="true" />
   </log>
 
+  <profiling mode="fundamental" synchronize="false" />
+
   <data:scalar name="k_00" />
   <data:scalar name="k_01" />
   <data:scalar name="k_10" />

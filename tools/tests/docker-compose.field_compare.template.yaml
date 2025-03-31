@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   field-compare:
     build: https://github.com/dglaeser/fieldcompare-action.git # use the docker container provided by fieldcompare
