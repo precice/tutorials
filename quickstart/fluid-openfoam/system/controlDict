@@ -53,5 +53,6 @@ functions
     {
         type preciceAdapterFunctionObject;
         libs ("libpreciceAdapterFunctionObject.so");
+        errors strict; // Available since OpenFOAM v2012
     }
 }
