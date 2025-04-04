@@ -20,6 +20,9 @@ divSchemes
 {
     default         none;
     div(phi,U)      bounded Gauss upwind;
+    div(phi,k)      bounded Gauss limitedLinear 1;
+    div(phi,omega)  bounded Gauss upwind;
+
     div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 
@@ -37,3 +40,10 @@ snGradSchemes
 {
     default         corrected;
 }
+
+wallDist
+{
+    method          meshWave; // Recommended method
+}
+
+// ************************************************************************* //
