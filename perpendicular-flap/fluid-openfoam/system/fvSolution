@@ -54,37 +54,36 @@ solvers
         $U;
         relTol          0;
     }
-
-"(U|epsilon|k|omega)"
-{
-    solver smoothSolver;
-    smoother symGaussSeidel;
-    tolerance 1e-6;
-    relTol 1e-3;
-    // minIter 100;
-}
-"(U|k|epsilon|omega)Final"
-{
-    $U;
-    tolerance 1e-6;
-    relTol 0;
-    minIter 2;
-}
-
-yPsi
-{
-    solver PBiCGStab;
-    preconditioner DILU;
-    tolerance 1e-5;
-    relTol 0;
-}
-
-yPsiFinal
-{
-    $yPsi
-    relTol 0;
-}
-
+    
+    "(U|epsilon|k|omega)"
+    {
+        solver smoothSolver;
+        smoother symGaussSeidel;
+        tolerance 1e-6;
+        relTol 1e-3;
+        // minIter 100;
+    }
+    "(U|k|epsilon|omega)Final"
+    {
+        $U;
+        tolerance 1e-6;
+        relTol 0;
+        minIter 2;
+    }
+    
+    yPsi
+    {
+        solver PBiCGStab;
+        preconditioner DILU;
+        tolerance 1e-5;
+        relTol 0;
+    }
+    
+    yPsiFinal
+    {
+        $yPsi
+        relTol 0;
+    }
 }
 
 PIMPLE
