@@ -43,5 +43,5 @@ snGradSchemes
 
 wallDist
 {
-    method          meshWave; // Recommended method
+    method          Poisson;
 }
