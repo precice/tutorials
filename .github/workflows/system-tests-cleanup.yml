@@ -1,0 +1,15 @@
+name: System tests cleanup
+
+on:
+  schedule:
+    - cron: "0 3 1 * *"
+  workflow_dispatch:
+
+jobs:
+ cleanup-system-tests-runner:
+    name: Cleanup system tests runner
+    runs-on: [self-hosted, linux, x64, precice-tests-vm]
+    steps:
+      - name: Run docker system prune
+        run: |
+          docker system prune --all --force
