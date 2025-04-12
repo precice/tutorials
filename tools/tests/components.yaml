@@ -147,3 +147,23 @@ su2-adapter:
     SU2_ADAPTER_REF:
       description: Version of SU2-Adapter to use
       default: "master"
+
+dealii-adapter:
+  repository: https://github.com/precice/dealii-adapter
+  template: component-templates/dealii-adapter.yaml
+  build_arguments:
+    PLATFORM:
+      description: Dockerfile platform used
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      description: Version of preCICE to use
+      default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: "master"
+    DEALII_ADAPTER_REF:
+      description: Version of deal.ii-adapter to use
+      default: "master"
