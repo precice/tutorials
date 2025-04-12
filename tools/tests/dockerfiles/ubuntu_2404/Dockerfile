@@ -181,6 +181,7 @@ ARG DEALII_ADAPTER_REF
 # Build the deal.II adapter 
 USER precice
 WORKDIR /home/precice
+ENV PATH="/home/precice/dealii-adapter/:$PATH"
 RUN git clone https://github.com/precice/dealii-adapter.git &&\
     cd dealii-adapter && \
     if [ -n "${DEALII_ADAPTER_PR}" ]; then git fetch origin pull/${DEALII_ADAPTER_PR}/head; fi && \
