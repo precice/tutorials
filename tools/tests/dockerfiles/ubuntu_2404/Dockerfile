@@ -173,7 +173,7 @@ RUN cd "${SU2_HOME}" &&\
 FROM precice_dependecies AS dealii_adapter
 USER root
 RUN apt-get update &&\
-    ibdeal.ii-dev libdeal.ii-doc cmake make g++
+    libdeal.ii-dev libdeal.ii-doc cmake make g++
 USER precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DEALII_ADAPTER_PR
