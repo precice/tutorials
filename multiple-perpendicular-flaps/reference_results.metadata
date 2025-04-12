@@ -11,9 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-cpp_solid-cpp.tar.gz | 2025-04-12 18:50:03 | 36367717d628d2869d345f4c639aa6da03931cd6809f9578a4b62eac5da7efbf |
-| fluid-cpp_solid-python.tar.gz | 2025-04-12 18:50:03 | 08f718f78778ed086dd1200be9e99ec45229ec65eee88c2e96777ade9959362d |
-| fluid-python_solid-python.tar.gz | 2025-04-12 18:50:03 | 38828828f749a950d6aa8449cd6d0ceac438297aad5953b1eca95012c90c4667 |
+| fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz | 2025-04-12 18:50:03 | de9d2302a2a4f978203f556b90c8dd6544df1bc0bc542a36c9fe893a53790e33 |
 
 ## List of arguments used to generate the files
 
