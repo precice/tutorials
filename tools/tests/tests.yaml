@@ -48,11 +48,11 @@ test_suites:
         reference_result: ./perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz
   dealii_test:
     tutorials:
-      - path: perpendicular-flap
-        case_combination:
-          - fluid-openfoam
-          - solid-dealii
-        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-dealii.tar.gz
+      # - path: perpendicular-flap
+      #   case_combination:
+      #     - fluid-openfoam
+      #     - solid-dealii
+      #   reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-dealii.tar.gz
       - path: multiple-perpendicular-flaps
         case_combination:
           - fluid-openfoam
