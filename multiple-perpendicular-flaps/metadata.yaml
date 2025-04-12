@@ -15,11 +15,11 @@ cases:
     component: openfoam-adapter
   solid-upstream-dealii:
     participant: Solid-Upstream
-    directory: ./solid-upstream
+    directory: ./solid-upstream-dealii
     run: ./run.sh
     component: dealii-adapter
   solid-downstream-dealii:
     participant: Solid-Downstream
-    directory: ./solid-downstream
+    directory: ./solid-downstream-dealii
     run: ./run.sh
     component: dealii-adapter
