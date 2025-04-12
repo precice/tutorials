@@ -53,6 +53,12 @@ test_suites:
           - fluid-openfoam
           - solid-dealii
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-dealii.tar.gz
+      - path: multiple-perpendicular-flaps
+        case_combination:
+          - fluid-openfoam
+          - solid-upstream-dealii
+          - solid-downstream-dealii
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz
   elastic_tube_1d_test:
     tutorials:
       - path: elastic-tube-1d
@@ -117,3 +123,9 @@ test_suites:
           - fluid-openfoam
           - solid-dealii
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-dealii.tar.gz
+      - path: multiple-perpendicular-flaps
+        case_combination:
+          - fluid-openfoam
+          - solid-upstream-dealii
+          - solid-downstream-dealii
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz
