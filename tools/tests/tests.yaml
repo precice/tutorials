@@ -112,3 +112,8 @@ test_suites:
           - fluid-su2
           - solid-fenics
         reference_result: ./perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-dealii
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-dealii.tar.gz
