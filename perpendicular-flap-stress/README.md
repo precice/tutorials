@@ -1,12 +1,12 @@
 ---
 title: Perpendicular flap with stresses
-permalink: tutorials-perpendicular-flap-stresses.html
+permalink: tutorials-perpendicular-flap-stress.html
 keywords: G+Smo, fluid-structure interaction, FSI, OpenFOAM
-summary: This tutorial is a modified version of the “perpendicular flap” tutorial using stresses instead of forces.
+summary: This tutorial is a modified version of the “perpendicular flap” tutorial coupling stress instead of force.
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/perpendicular-flap-stresses). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/perpendicular-flap-stress). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
