@@ -4,7 +4,41 @@ on:
   schedule:
     - cron: "0 4 * * *"
   workflow_dispatch:
-    
+  workflow_call:
+    inputs:
+      ref-precice:
+        description: 'Git reference of precice'
+        required: false
+        type: string
+      ref-python-bindings:
+        description: 'Git reference of python-bindings'
+        required: false
+        type: string
+      ref-calculix-adapter:
+        description: 'Git reference of calculix-adapter'
+        required: false
+        type: string
+      ref-fenics-adapter:
+        description: 'Git reference of fenics-adapter'
+        required: false
+        type: string
+      ref-openfoam-adapter:
+        description: 'Git reference of openfoam-adapter'
+        required: false
+        type: string
+      ref-su2-adapter:
+        description: 'Git reference of su2-adapter'
+        required: false
+        type: string
+      ref-dealii-adapter:
+        description: 'Git reference of dealii-adapter'
+        required: false
+        type: string
+      ref-tutorials:
+        description: 'Git reference of tutorials'
+        required: false
+        type: string
+
 jobs:
   gather-refs:
     name: Map Git branches to latest refs
@@ -16,6 +50,7 @@ jobs:
       ref-fenics-adapter: ${{ steps.ref-fenics-adapter.outputs.shorthash }}
       ref-openfoam-adapter: ${{ steps.ref-openfoam-adapter.outputs.shorthash }}
       ref-su2-adapter: ${{ steps.ref-su2-adapter.outputs.shorthash }}
+      ref-dealii-adapter: ${{ steps.ref-dealii-adapter.outputs.shorthash }}
       ref-tutorials: ${{ steps.ref-tutorials.outputs.shorthash }}
     steps:
       - id: ref-precice
@@ -60,6 +95,13 @@ jobs:
           owner: precice
           repo: su2-adapter
           branch: develop
+      - id: ref-dealii-adapter
+        name: Get deal.II adapter ref
+        uses: nmbgeek/github-action-get-latest-commit@main
+        with:
+          owner: precice
+          repo: dealii-adapter
+          branch: develop
       - id: ref-tutorials
         name: Get tutorials ref
         uses: nmbgeek/github-action-get-latest-commit@main
@@ -76,6 +118,7 @@ jobs:
           printf 'FEniCS adapter: ${{ steps.ref-fenics-adapter.outputs.shorthash }}\n ${{ steps.ref-fenics-adapter.outputs.description }}\n----------\n'
           printf 'OpenFOAM adapter: ${{ steps.ref-openfoam-adapter.outputs.shorthash }} ${{ steps.ref-openfoam-adapter.outputs.description }}\n----------\n'
           printf 'SU2 adapter: ${{ steps.ref-su2-adapter.outputs.shorthash }}\n ${{ steps.ref-su2-adapter.outputs.description }}\n----------\n'
+          printf 'deal.II adapter: ${{ steps.ref-dealii-adapter.outputs.shorthash }}\n ${{ steps.ref-dealii-adapter.outputs.description }}\n----------\n'
           printf 'Tutorials: ${{ steps.ref-tutorials.outputs.shorthash }} ${{ steps.ref-tutorials.outputs.description }}\n----------\n'
       - id: summary
         name: Prepare Markdown summary
@@ -117,12 +160,22 @@ jobs:
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.ref-su2-adapter.outputs.description }}" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "### deal.II adapter" >> $GITHUB_STEP_SUMMARY
+          echo "Reference: [\`${{ steps.ref-dealii-adapter.outputs.shorthash }}\`](https://github.com/precice/dealii-adapter/commit/${{ steps.ref-dealii-adapter.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
+          echo "Description:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.ref-su2-adapter.outputs.description }}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "### Tutorials" >> $GITHUB_STEP_SUMMARY
           echo "Reference: [\`${{ steps.ref-tutorials.outputs.shorthash }}\`](https://github.com/precice/tutorials/commit/${{ steps.ref-tutorials.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
           echo "Description:" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.ref-tutorials.outputs.description }}" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+      - id: inputs
+        run: |
+          echo "## Workflow inputs (will override the above reported latest components):" >> $GITHUB_STEP_SUMMARY
+          echo "{{ inputs }}" >> $GITHUB_STEP_SUMMARY
 
   run-system-tests:
     name: Trigger system tests
@@ -131,15 +184,16 @@ jobs:
     with:
       suites: release_test
       build_args: "PLATFORM:ubuntu_2404,\
-        PRECICE_REF:${{ needs.gather-refs.outputs.ref-precice }},\
-        PYTHON_BINDINGS_REF:${{ needs.gather-refs.outputs.ref-python-bindings }},\
+        PRECICE_REF:${{ inputs.ref-precice || needs.gather-refs.outputs.ref-precice }},\
+        PYTHON_BINDINGS_REF:${{ inputs.ref-python-bindings || needs.gather-refs.outputs.ref-python-bindings }},\
         CALCULIX_VERSION:2.20,\
-        CALCULIX_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-calculix-adapter }},\
-        FENICS_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-fenics-adapter }},\
+        CALCULIX_ADAPTER_REF:${{ inputs.ref-calculix-adapter || needs.gather-refs.outputs.ref-calculix-adapter }},\
+        FENICS_ADAPTER_REF:${{ inputs.ref-fenics-adapter || needs.gather-refs.outputs.ref-fenics-adapter }},\
         OPENFOAM_EXECUTABLE:openfoam2312,\
-        OPENFOAM_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-openfoam-adapter }},\
+        OPENFOAM_ADAPTER_REF:${{ inputs.ref-openfoam-adapter || needs.gather-refs.outputs.ref-openfoam-adapter }},\
         SU2_VERSION:7.5.1,\
-        SU2_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-su2-adapter }},\
-        TUTORIALS_REF:${{ needs.gather-refs.outputs.ref-tutorials }}"
+        SU2_ADAPTER_REF:${{ inputs.ref-su2-adapter || needs.gather-refs.outputs.ref-su2-adapter }},\
+        DEALII_ADAPTER_REF:${{ inputs.ref-dealii-adapter || needs.gather-refs.outputs.ref-dealii-adapter }},\
+        TUTORIALS_REF:${{ inputs.ref-tutorials || needs.gather-refs.outputs.ref-tutorials }}"
       system_tests_branch: develop
       log_level: "INFO"
