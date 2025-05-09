@@ -70,7 +70,7 @@ def main():
 
     results = []
     for number, systemtest in enumerate(systemtests_to_run):
-        logging.info(f"Started running {systemtest},  {number}/{len(systemtests_to_run)}")
+        logging.info(f"Started running {systemtest},  {number+1}/{len(systemtests_to_run)}")
         t = time.perf_counter()
         result = systemtest.run(run_directory)
         elapsed_time = time.perf_counter() - t
