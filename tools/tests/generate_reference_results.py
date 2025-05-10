@@ -119,7 +119,7 @@ def main():
 
     logging.info(f"About to run the following tests {systemtests_to_run}")
     for number, systemtest in enumerate(systemtests_to_run):
-        logging.info(f"Started running {systemtest},  {number}/{len(systemtests_to_run)}")
+        logging.info(f"Started running {systemtest},  {number+1}/{len(systemtests_to_run)}")
         t = time.perf_counter()
         result = systemtest.run_for_reference_results(run_directory)
         elapsed_time = time.perf_counter() - t
