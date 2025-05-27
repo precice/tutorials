@@ -88,18 +88,21 @@ solvers
 
 PIMPLE
 {
-    nCorrectors 4;
+    nCorrectors 2;
     nNonOrthogonalCorrectors 1;
     // tolerance 1.0e-14;
     // relTol 5e-3;
     consistent  true;
     correctPhi  true;
     momentumPredictor true; 
-    nOuterCorrectors	1;
+    nOuterCorrectors	2;
 }
 
-
-potentialFlow
+relaxationFactors
 {
-    nNonOrthogonalCorrectors 10;
+    equations
+    {
+        "k.*"           0.4;
+        "omega.*"       0.4;
+    }
 }

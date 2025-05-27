@@ -37,6 +37,18 @@ timePrecision   6;
 
 functions
 {
+    limitKOmega
+    {
+        // Mandatory entries (unmodifiable)
+        type            limitFields;
+        libs            (fieldFunctionObjects);
+
+        // Mandatory entries (runtime modifiable)
+        fields          (omega k);
+        limit           max;
+        max             1e7;
+    }
+    
     preCICE_Adapter
     {
         type preciceAdapterFunctionObject;
