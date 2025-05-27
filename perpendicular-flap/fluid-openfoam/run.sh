@@ -5,6 +5,8 @@ set -e -u
 exec > >(tee --append "$LOGFILE") 2>&1
 
 blockMesh
+topoSet
+refineMesh -overwrite
 
 ../../tools/run-openfoam.sh "$@"
 . ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs

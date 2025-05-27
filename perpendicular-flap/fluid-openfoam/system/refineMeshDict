@@ -1,0 +1,32 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      refineMeshDict;
+}
+
+set refinementZoneVer;
+
+globalCoeffs
+{
+    tan1 (1 0 0);
+    tan2 (0 1 0);
+}
+
+directions
+(
+    tan1
+    // tan2
+);
+
+coordinateSystem global;
+geometricCut    false;
+
+// Whether to refine cells attached to a patch
+// in the normal direction into the domain.
+// refineBoundaryCells false;
+
+writeMesh false;
+useHexTopology true;
