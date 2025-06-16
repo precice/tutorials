@@ -1,0 +1,13 @@
+{
+    "micro_file_name": "PyFANS",
+    "coupling_params": {
+        "precice_config_file_name": "../precice-config-for-fans.xml",
+        "macro_mesh_name": "meso-mesh",
+        "read_data_names": ["strains1to3", "strains4to6"],
+        "write_data_names": ["stresses1to3", "stresses4to6", "cmat1", "cmat2", "cmat3", "cmat4", "cmat5", "cmat6", "cmat7"]
+    },
+    "simulation_params": {
+        "micro_dt": 1e-1,
+        "macro_domain_bounds": [-15, 15, -55, 55, 0, 5]
+    }
+}

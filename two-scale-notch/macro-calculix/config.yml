@@ -1,0 +1,9 @@
+participants:
+    Meso-structure:
+        interfaces:
+        - elements: meso-mesh
+          patch: Eall
+          read-data: [stresses1to3, stresses4to6, cmat1, cmat2, cmat3, cmat4, cmat5, cmat6, cmat7]
+          write-data: [strains1to3, strains4to6]
+          
+precice-config-file: ../precice-config-for-fans.xml
