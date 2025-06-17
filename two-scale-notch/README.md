@@ -27,8 +27,8 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 ## Available solvers and dependencies
 
-* The macro notch problem is solved using [CalculiX](), so it required the [CalculiX adapter]().
-* The micro problem is solved using [FANS](). FANS needs to be compiled in a Python-wrapped library form, check the [documentation]() on how to do this.
+* The macro notch problem is solved using [CalculiX](https://www.calculix.de/), so it required the [CalculiX adapter](https://github.com/precice/calculix-adapter).
+* The micro problem is solved using [FANS](https://github.com/DataAnalyticsEngineering/FANS/tree/develop). FANS needs to be compiled in a Python-wrapped library form, check the [documentation](https://github.com/DataAnalyticsEngineering/FANS/blob/develop/pyfans/README.md) on how to do this.
 * The [Micro Manager](https://precice.org/tooling-micro-manager-installation.html) controls all micro-simulations and facilitates coupling via preCICE. Use the [develop](https://github.com/precice/micro-manager/tree/develop) branch of the Micro Manager.
 
 ## Running the simulation
@@ -56,12 +56,14 @@ cd micro-fans
 ./run.sh -p <num_procs>
 ```
 
-The `num_procs` needs to fit the decomposition specified in the `micro-manager-config.json` (default is serial). See the documentation on [how to set domain decomposition]().
+The `num_procs` needs to fit the decomposition specified in the `micro-manager-config.json` (default is serial). See the documentation on [how to set domain decomposition](https://precice.org/tooling-micro-manager-configuration.html#domain-decomposition) in the Micro Manager configuration.
 
-**NOTE**: When running `micro-fans`, even though the case setup and involved physics is simple, each micro simulation is a FANS simulation with a mesh of 32x32x32 nodes, which usually has a moderately high computation time. If the Micro Manager is run in serial, the total runtime is approximately 60 minutes.
+**NOTE**: When running `micro-fans`, even though the case setup and involved physics is simple, each micro simulation is a FANS simulation with a mesh of 32x32x32 nodes, which usually has a moderately high computation time. If the Micro Manager is run in serial, the total runtime is approximately 35 minutes.
 
 ## Post-processing
 
-The final von Mises stress on the macro scale look like:
+The final von Mises stress on the macro scale look like
 
-<img class="img-responsive" src="images/tutorials-two-scale-notch-von-mises-stress.png" alt="Von Mises stress on macro scale" width=50% height=10%/>
+<img class="img-responsive" src="images/tutorials-two-scale-notch-von-mises-stress.png" alt="Von Mises stress on macro scale" width=30% height=10%/>
+
+The result is generated in ParaView, using the CalculiX output file.
