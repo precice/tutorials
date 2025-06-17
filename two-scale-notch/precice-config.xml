@@ -1,85 +1,92 @@
-<?xml version="1.0"?>
-
+<?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration experimental="true">
+  <log>
+    <sink type="stream" output="stdout" filter="%Severity% > debug" enabled="true" />
+  </log>
 
-    <log>
-	<sink type="stream" output="stdout"  filter= "%Severity% > debug" enabled="true" />
-    </log>  
-    
-    <data:vector name="stresses1to3"/>
-    <data:vector name="stresses4to6"/>
-    <data:vector name="strains1to3"/>
-    <data:vector name="strains4to6"/>
-    <data:vector name="cmat1"/>
-    <data:vector name="cmat2"/>
-    <data:vector name="cmat3"/>
-    <data:vector name="cmat4"/>
-    <data:vector name="cmat5"/>
-    <data:vector name="cmat6"/>
-    <data:vector name="cmat7"/>
+  <data:vector name="stresses1to3" />
+  <data:vector name="stresses4to6" />
+  <data:vector name="strains1to3" />
+  <data:vector name="strains4to6" />
+  <data:vector name="cmat1" />
+  <data:vector name="cmat2" />
+  <data:vector name="cmat3" />
+  <data:vector name="cmat4" />
+  <data:vector name="cmat5" />
+  <data:vector name="cmat6" />
+  <data:vector name="cmat7" />
 
-    <mesh name="notch-mesh" dimensions="3">
-       <use-data name="stresses1to3"/>
-       <use-data name="stresses4to6"/>
-       <use-data name="strains1to3"/>
-       <use-data name="strains4to6"/>
-       <use-data name="cmat1"/>
-       <use-data name="cmat2"/>
-       <use-data name="cmat3"/>
-       <use-data name="cmat4"/>
-       <use-data name="cmat5"/>
-       <use-data name="cmat6"/>
-       <use-data name="cmat7"/>
-    </mesh>
+  <mesh name="notch-mesh" dimensions="3">
+    <use-data name="stresses1to3" />
+    <use-data name="stresses4to6" />
+    <use-data name="strains1to3" />
+    <use-data name="strains4to6" />
+    <use-data name="cmat1" />
+    <use-data name="cmat2" />
+    <use-data name="cmat3" />
+    <use-data name="cmat4" />
+    <use-data name="cmat5" />
+    <use-data name="cmat6" />
+    <use-data name="cmat7" />
+  </mesh>
 
-    <participant name="Notch">
-      <provide-mesh name="notch-mesh"/>
-      <read-data name="stresses1to3" mesh="notch-mesh"/>
-      <read-data name="stresses4to6" mesh="notch-mesh"/>
-      <read-data name="cmat1" mesh="notch-mesh"/>
-      <read-data name="cmat2" mesh="notch-mesh"/>
-      <read-data name="cmat3" mesh="notch-mesh"/>
-      <read-data name="cmat4" mesh="notch-mesh"/>
-      <read-data name="cmat5" mesh="notch-mesh"/>
-      <read-data name="cmat6" mesh="notch-mesh"/>
-      <read-data name="cmat7" mesh="notch-mesh"/>
-      <write-data name="strains1to3" mesh="notch-mesh"/>
-      <write-data name="strains4to6" mesh="notch-mesh"/>
-    </participant>
+  <participant name="Notch">
+    <provide-mesh name="notch-mesh" />
+    <read-data name="stresses1to3" mesh="notch-mesh" />
+    <read-data name="stresses4to6" mesh="notch-mesh" />
+    <read-data name="cmat1" mesh="notch-mesh" />
+    <read-data name="cmat2" mesh="notch-mesh" />
+    <read-data name="cmat3" mesh="notch-mesh" />
+    <read-data name="cmat4" mesh="notch-mesh" />
+    <read-data name="cmat5" mesh="notch-mesh" />
+    <read-data name="cmat6" mesh="notch-mesh" />
+    <read-data name="cmat7" mesh="notch-mesh" />
+    <write-data name="strains1to3" mesh="notch-mesh" />
+    <write-data name="strains4to6" mesh="notch-mesh" />
+  </participant>
 
-    <participant name="Micro-Manager">
-      <receive-mesh name="notch-mesh" from="Notch" api-access="true" safety-factor="0.0"/>
-      <read-data name="strains1to3" mesh="notch-mesh"/>
-      <read-data name="strains4to6" mesh="notch-mesh"/>
-      <write-data name="stresses1to3" mesh="notch-mesh"/>
-      <write-data name="stresses4to6" mesh="notch-mesh"/>
-      <write-data name="cmat1" mesh="notch-mesh"/>
-      <write-data name="cmat2" mesh="notch-mesh"/>
-      <write-data name="cmat3" mesh="notch-mesh"/>
-      <write-data name="cmat4" mesh="notch-mesh"/>
-      <write-data name="cmat5" mesh="notch-mesh"/>
-      <write-data name="cmat6" mesh="notch-mesh"/>
-      <write-data name="cmat7" mesh="notch-mesh"/>
-      <export:vtu directory="precice-exports" />
-    </participant>
+  <participant name="Micro-Manager">
+    <receive-mesh name="notch-mesh" from="Notch" api-access="true" safety-factor="0.0" />
+    <read-data name="strains1to3" mesh="notch-mesh" />
+    <read-data name="strains4to6" mesh="notch-mesh" />
+    <write-data name="stresses1to3" mesh="notch-mesh" />
+    <write-data name="stresses4to6" mesh="notch-mesh" />
+    <write-data name="cmat1" mesh="notch-mesh" />
+    <write-data name="cmat2" mesh="notch-mesh" />
+    <write-data name="cmat3" mesh="notch-mesh" />
+    <write-data name="cmat4" mesh="notch-mesh" />
+    <write-data name="cmat5" mesh="notch-mesh" />
+    <write-data name="cmat6" mesh="notch-mesh" />
+    <write-data name="cmat7" mesh="notch-mesh" />
+    <export:vtu directory="precice-exports" />
+  </participant>
 
-    <m2n:sockets acceptor="Notch" connector="Micro-Manager" exchange-directory=".."/>
+  <m2n:sockets acceptor="Notch" connector="Micro-Manager" exchange-directory=".." />
 
-    <coupling-scheme:serial-explicit>
-      <participants first="Micro-Manager" second="Notch"/>
-      <max-time value="0.1"/>
-      <time-window-size value="0.1"/>
-      <exchange data="stresses1to3" mesh="notch-mesh" from="Micro-Manager" to="Notch"/>
-      <exchange data="stresses4to6" mesh="notch-mesh" from="Micro-Manager" to="Notch"/>
-      <exchange data="cmat1" mesh="notch-mesh" from="Micro-Manager" to="Notch"/>
-      <exchange data="cmat2" mesh="notch-mesh" from="Micro-Manager" to="Notch"/>
-      <exchange data="cmat3" mesh="notch-mesh" from="Micro-Manager" to="Notch"/>
-      <exchange data="cmat4" mesh="notch-mesh" from="Micro-Manager" to="Notch"/>
-      <exchange data="cmat5" mesh="notch-mesh" from="Micro-Manager" to="Notch"/>
-      <exchange data="cmat6" mesh="notch-mesh" from="Micro-Manager" to="Notch"/>
-      <exchange data="cmat7" mesh="notch-mesh" from="Micro-Manager" to="Notch"/>
-      <exchange data="strains1to3" mesh="notch-mesh" from="Notch" to="Micro-Manager" initialize="yes"/>
-      <exchange data="strains4to6" mesh="notch-mesh" from="Notch" to="Micro-Manager" initialize="yes"/>
-    </coupling-scheme:serial-explicit>
-
+  <coupling-scheme:serial-explicit>
+    <participants first="Micro-Manager" second="Notch" />
+    <max-time value="0.1" />
+    <time-window-size value="0.1" />
+    <exchange data="stresses1to3" mesh="notch-mesh" from="Micro-Manager" to="Notch" />
+    <exchange data="stresses4to6" mesh="notch-mesh" from="Micro-Manager" to="Notch" />
+    <exchange data="cmat1" mesh="notch-mesh" from="Micro-Manager" to="Notch" />
+    <exchange data="cmat2" mesh="notch-mesh" from="Micro-Manager" to="Notch" />
+    <exchange data="cmat3" mesh="notch-mesh" from="Micro-Manager" to="Notch" />
+    <exchange data="cmat4" mesh="notch-mesh" from="Micro-Manager" to="Notch" />
+    <exchange data="cmat5" mesh="notch-mesh" from="Micro-Manager" to="Notch" />
+    <exchange data="cmat6" mesh="notch-mesh" from="Micro-Manager" to="Notch" />
+    <exchange data="cmat7" mesh="notch-mesh" from="Micro-Manager" to="Notch" />
+    <exchange
+      data="strains1to3"
+      mesh="notch-mesh"
+      from="Notch"
+      to="Micro-Manager"
+      initialize="yes" />
+    <exchange
+      data="strains4to6"
+      mesh="notch-mesh"
+      from="Notch"
+      to="Micro-Manager"
+      initialize="yes" />
+  </coupling-scheme:serial-explicit>
 </precice-configuration>
