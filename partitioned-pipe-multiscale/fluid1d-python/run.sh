@@ -4,6 +4,10 @@ set -e -u
 . ../../tools/log.sh
 exec > >(tee --append "$LOGFILE") 2>&1
 
-./Fluid1D.py
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt && pip freeze > pip-installed-packages.log
+
+NUTILS_RICHOUTPUT=no python3 Fluid1D.py
 
 close_log
