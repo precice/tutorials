@@ -1,0 +1,28 @@
+{
+    "simulation_params": {
+        "fmu_file_name": "./PIDcontroller.fmu",
+        "output_file_name": "./output/controller-output.csv",
+        "output": ["e", "P", "I", "D", "u_1", "u_2", "y_1", "y_2"],
+        "fmu_read_data_names": ["y_1", "y_2"],
+        "fmu_write_data_names":["u_1", "u_2"],
+        "fmu_instance_name": "pid_controller"
+    },
+    "model_params": {
+        "r":                    0.0,
+        "use_implicit_method":  true,
+        "compute_u_1":          false
+    },
+    "initial_conditions": {
+        "kp":   0,
+        "ki":   0,
+        "kd":   0
+    
+    },
+    "input_signals": {
+        "names":    ["time",    "kp",   "ki",   "kd"],
+        "data":     [
+                    [0.0,       0.0,    0.0,    0.0],
+                    [2.0,      0.02,   0.02,   0.01]
+                    ]
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "coupling_params": {
+        "participant_name": "Mass-Left",
+        "config_file_name": "../precice-config.xml",
+        "mesh_name": "Mass-Left-Mesh",
+        "write_data_name": "Force-Left",
+        "read_data_name": "Force-Right"
+    }
+}

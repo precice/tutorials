@@ -1,0 +1,89 @@
+name: Run Testsuite reusable workflow 
+on:
+  workflow_call:
+    inputs:
+      suites:
+        description: 'Comma seperated testsuites to execute'
+        required: true
+        type: string
+      build_args:
+        description: 'Build arguments'
+        required: false
+        type: string
+      system_tests_branch:
+        description: 'Branch to take the system tests from'
+        default: 'develop'
+        required: true
+        type: string
+      log_level:
+        description: 'Logging verbosity level used for the systemtests'
+        default: 'INFO'
+        required: false
+        type: string
+      upload_artifacts:
+          description: 'TRUE or FALSE (FALSE -> Upload only when the workflow fails)'
+          default: 'TRUE'
+          type: string
+jobs:
+  run_testsuite:
+    runs-on: [self-hosted, linux, x64, precice-tests-vm]
+    steps:
+    - name: Display a quick job summary
+      run: |
+        echo "Initiated by: ${{ github.actor }}"
+        echo "Test suites: ${{ inputs.suites}}"
+        echo "System tests branch (tools/): ${{ inputs.system_tests_branch }}"
+        echo "System tests log level: ${{ inputs.log_level }}"
+        echo "Uploading the runs folder on success: ${{ inputs.upload_artifacts }}"
+        echo "Running the following command inside tutorials/tools/:"
+        echo "python3 systemtests.py --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}"
+    - name: Prepare the Markdown step summary
+      run: |
+        echo "Job inputs:" >> $GITHUB_STEP_SUMMARY
+        echo "- Initiated by: @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Test suites: \`${{ inputs.suites}}\`" >> $GITHUB_STEP_SUMMARY
+        echo "- System tests branch (\`tools/\`): [\`${{ inputs.system_tests_branch }}\`](https://github.com/precice/tutorials/tree/${{ inputs.system_tests_branch }})" >> $GITHUB_STEP_SUMMARY
+        echo "- System tests log level: \`${{ inputs.log_level }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "- Uploading the runs folder on success: \`${{ inputs.upload_artifacts }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Running the following command inside \`tutorials/tools/\`:" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        echo "python3 systemtests.py --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+    - name: Move LFS URL to local LFS server
+      run: |
+        /home/precice/runners_root/scripts/make_lfs_local.sh
+    - name: 'Cleanup the folder'
+      run: |
+        ls -la ./
+        rm -rf ./*
+        rm -rf ./.??*
+        ls -la ./
+    - name: Check out Tutorials for the system tests (tools/tests/)
+      uses: actions/checkout@v4
+      with:
+        repository: precice/tutorials
+        ref: ${{ inputs.system_tests_branch }}
+        lfs: true
+        fetch-depth: 0
+    - name: Map remote branches to local ones
+      run: |
+        /home/precice/runners_root/scripts/map_origin_to_local.sh ./
+    - name: Install Python dependencies
+      run: |
+        pip install --user -r tools/tests/requirements.txt
+    - name: Run tests
+      run: |
+        cd tools/tests
+        python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log-level=${{ inputs.log_level}}
+        cd ../../
+    - name: Archive run files
+      if: ${{  failure() || inputs.upload_artifacts == 'TRUE' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}
+        path: |
+          runs/*
+    - name: tidy up the docker
+      run: |
+        docker network prune -f

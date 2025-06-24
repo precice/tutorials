@@ -31,15 +31,16 @@ writeInterval 50;
 
 adjustTimeStep no;
 
-endTime 2000.0;
+endTime 500;
 
 writeControl timeStep;
 
+libs ("libpreciceAdapterFunctionObject.so");
 functions
 {
     preCICE_Adapter
     {
         type preciceAdapterFunctionObject;
-        libs ("libpreciceAdapterFunctionObject.so");
+        errors strict; // Available since OpenFOAM v2012
     }
 }

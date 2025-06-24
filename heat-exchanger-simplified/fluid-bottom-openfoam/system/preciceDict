@@ -1,0 +1,33 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      preciceDict;
+}
+
+preciceConfig "../precice-config.xml";
+
+participant Fluid-Bottom;
+
+modules (CHT);
+
+interfaces
+{
+  Interface
+  {
+    mesh              Fluid-Bottom-Mesh;
+    patches           (interface);
+    
+    readData
+    (
+      Heat-Flux-Bottom
+    );
+    
+    writeData
+    (
+      Temperature-Bottom
+    );
+  };
+};

@@ -1,0 +1,5 @@
+setuptools # required by nutils
+nutils==7
+numpy >1, <2
+pyprecice~=3.0
+micro-manager-precice

@@ -14,9 +14,9 @@ modules (FSI);
 
 interfaces
 {
-  Interface1
+  Upstream-Centers
   {
-    mesh              Fluid1-Mesh-Centers;
+    mesh              Fluid-Upstream-Mesh-Centers;
     patches           (flap1);
     locations         faceCenters;
     
@@ -26,19 +26,19 @@ interfaces
     
     writeData
     (
-      Stress1
+      Stress-Upstream
     );
   };
   
-  Interface2
+  Upstream-Nodes
   {
-    mesh              Fluid1-Mesh-Nodes;
+    mesh              Fluid-Upstream-Mesh-Nodes;
     patches           (flap1);
     locations         faceNodes;
     
     readData
     (
-      Displacement1
+      Displacement-Upstream
     );
     
     writeData
@@ -46,9 +46,9 @@ interfaces
     );
   };
   
-  Interface3
+  Downstream-Centers
   {
-    mesh              Fluid2-Mesh-Centers;
+    mesh              Fluid-Downstream-Mesh-Centers;
     patches           (flap2);
     locations         faceCenters;
     
@@ -58,19 +58,19 @@ interfaces
     
     writeData
     (
-      Stress2
+      Stress-Downstream
     );
   };
   
-  Interface4
+  Downstream-Nodes
   {
-    mesh              Fluid2-Mesh-Nodes;
+    mesh              Fluid-Downstream-Mesh-Nodes;
     patches           (flap2);
     locations         faceNodes;
     
     readData
     (
-      Displacement2
+      Displacement-Downstream
     );
     
     writeData

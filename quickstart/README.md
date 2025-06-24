@@ -14,28 +14,34 @@ toc: false
 
 This is the first step you may want to try if you are new to preCICE: install preCICE and some solvers, and run a simple coupled case.
 
-To get a feeling what preCICE does, watch a [short presentation](https://www.youtube.com/watch?v=FCv2FNUvKA8), a [longer talk on the fundamentals](https://www.youtube.com/watch?v=9EDFlgfpGBs), or [click through a tutorial in your browser](http://run.precice.org/).
+To get a feeling what preCICE does, watch a [short presentation](https://www.youtube.com/watch?v=FCv2FNUvKA8) or a [longer talk on the fundamentals](https://www.youtube.com/watch?v=9EDFlgfpGBs).
 
 ## Installation
 
-1. Get and install preCICE. For Ubuntu 20.04 (Focal Fossa), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
+1. Get and install preCICE. For Ubuntu 24.04 (Noble Numbat), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v2.3.0/libprecice2_2.3.0_focal.deb
-    sudo apt install ./libprecice2_2.3.0_focal.deb
+    wget https://github.com/precice/precice/releases/download/v3.2.0/libprecice3_3.2.0_noble.deb
+    sudo apt install ./libprecice3_3.2.0_noble.deb
     ```
 
-    - Are you using something else? Just pick what suits you best on [this overview page](https://precice.org/installation-overview.html).
-    - Facing any problems? [Ask for help](https://precice.org/community-channels.html).
+    | OS                            | Package |
+    | ---                           | ---     |
+    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.2.0_jammy.deb`](https://github.com/precice/precice/releases/download/v3.2.0/libprecice3_3.2.0_jammy.deb) |
+    | Ubuntu 24.04 Noble Numbat  | [`libprecice3_3.2.0_noble.deb`](https://github.com/precice/precice/releases/download/v3.2.0/libprecice3_3.2.0_noble.deb) |
+    | Debian 12 "bookworm"          | [`libprecice3_3.2.0_bookworm.deb`](https://github.com/precice/precice/releases/download/v3.2.0/libprecice3_3.2.0_bookworm.deb) |
+    | Something else                | See an [overview of options](https://precice.org/installation-overview.html) |
+
+    Facing any problems? [Ask for help](https://precice.org/community-channels.html).
 2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](https://precice.org/adapter-openfoam-support.html):
 
     ```bash
     # Add the signing key, add the repository, update (check this):
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash
-    # Install OpenFOAM v2112:
-    sudo apt install openfoam2112-dev
+    # Install OpenFOAM v2412:
+    sudo apt install openfoam2412-dev
     # Enable OpenFOAM by default in your system and apply now:
-    echo "source /usr/lib/openfoam/openfoam2112/etc/bashrc" >> ~/.bashrc
+    echo "source /usr/lib/openfoam/openfoam2412/etc/bashrc" >> ~/.bashrc
     source ~/.bashrc
     ```
 
@@ -48,8 +54,9 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 4. Download and install the [OpenFOAM-preCICE adapter](https://precice.org/adapter-openfoam-get.html):
 
     ```bash
-     git clone --branch=master --depth 1 https://github.com/precice/openfoam-adapter
-     cd openfoam-adapter
+     wget https://github.com/precice/openfoam-adapter/archive/refs/tags/v1.3.1.tar.gz
+     tar -xzf v1.3.1.tar.gz 
+     cd openfoam-adapter-1.3.1/
      ./Allwmake
      cd ..
     ```
@@ -57,8 +64,9 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 5. Get the quickstart tutorial case:
 
     ```bash
-    git clone --branch=master --depth 1 https://github.com/precice/tutorials.git
-    cd tutorials/quickstart
+    wget https://github.com/precice/tutorials/archive/refs/tags/v202404.0.tar.gz
+    tar -xzf v202404.0.tar.gz
+    cd tutorials-202404.0/quickstart
     ```
 
 If you prefer to easily try everything in an isolated environment, you may prefer using our [demo virtual machine](https://precice.org/installation-vm.html).
@@ -70,6 +78,12 @@ We will couple OpenFOAM with a C++ rigid body solver for fluid-structure interac
 In order to gain more control over the rigid body oscillation, a rotational spring is applied at the rigid body origin. After 1.5 seconds we increase the spring constant by a factor of 8 to stabilize the coupled problem. Feel free to modify these parameters (directly in `rigid_body_solver.cpp`) and increase the simulation time (in `precice-config.xml`).
 
 ![overview](images/quickstart-setup.png)
+
+## Configuration
+
+preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
+
+![preCICE configuration visualization](images/quickstart-precice-config.png)
 
 ## Building the rigid body solver
 
@@ -105,7 +119,7 @@ In serial, the simulation should take less than a minute to compute (simulated t
 
 You can visualize the simulation results of the `Fluid` participant using ParaView and loading the (empty) file `fluid-openfoam/fluid-openfoam.foam`. The rigid body does not generate any readable output files, but the OpenFOAM data should be enough for now: click "play" in ParaView, the flap should already be moving! 🎉
 
-You may be curious what displacements OpenFOAM received from the rigid body solver. We can actually easily visualize the coupling meshes, including the exchanged coupling data: preCICE generates the relevant files during the simulation and stores them in the directory `solid-cpp/coupling-meshes`. Load these VTK files in ParaView and apply a `Glyph` filter with `Glyph Type: Arrow`,`Orientation Array: Displacement`, and `Scale Array: No scale array`. You can further add a `Warp By Vector` filter with `Displacement` to deform the coupling data. The result should look as follows:
+You may be curious what displacements OpenFOAM received from the rigid body solver. We can actually easily visualize the coupling meshes, including the exchanged coupling data: preCICE generates the relevant files during the simulation and stores them in the directory `solid-cpp/precice-exports`. Load these VTK files in ParaView and apply a `Glyph` filter with `Glyph Type: Arrow`,`Orientation Array: Displacement`, and `Scale Array: No scale array`. You can further add a `Warp By Vector` filter with `Displacement` to deform the coupling data. The result should look as follows:
 
 ![result](images/quickstart-result.png)
 
@@ -130,3 +144,9 @@ To become a preCICE pro:
 - Meet our [community](https://precice.org/community.html).
 - Find out how to [couple your own solver](https://precice.org/couple-your-code-overview.html).
 - Tell us [your story](https://precice.org/community-projects.html).
+
+Are you just starting with simulation software on Linux? Note that much of the complexity for partitioned simulations comes from working with multiple software packages and some new tools. These resources may help your first steps:
+
+- E-book [Research Software Engineering with Python](http://third-bit.com/py-rse/).
+- Material of the course [Simulation Software Engineering](https://simulation-software-engineering.github.io/) (University of Stuttgart).
+- Material of the course [The Missing Semester of Your CS Education](https://missing.csail.mit.edu/) (MIT).

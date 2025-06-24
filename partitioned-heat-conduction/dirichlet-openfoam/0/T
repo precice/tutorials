@@ -1,0 +1,84 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      T;
+}
+
+dimensions      [0 0 0 1 0 0 0];
+
+
+internalField   #codeStream
+{
+    codeInclude
+    #{
+        #include "fvCFD.H"
+    #};
+
+    codeOptions
+    #{
+        -I$(LIB_SRC)/finiteVolume/lnInclude \
+        -I$(LIB_SRC)/meshTools/lnInclude
+    #};
+
+    codeLibs
+    #{
+        -lmeshTools \
+        -lfiniteVolume
+    #};
+
+    code
+
+    #{
+        const IOdictionary& d = static_cast<const IOdictionary&>(dict);
+        const fvMesh& mesh = refCast<const fvMesh>(d.db());
+        const vectorField& CC = mesh.C(); // cell center
+
+        // assign values
+        scalarField T(mesh.nCells());
+        forAll(CC, cellI)
+        {
+            scalar x = CC[cellI].x();
+            scalar y = CC[cellI].y();
+
+            T[cellI] = 1 + pow(x, 2) + (3 * pow(y, 2)); // t is zero for initial conditions
+        }
+        T.writeEntry("", os);
+    #};
+};
+
+boundaryField
+{
+    interface
+    {
+        type            fixedValue;
+        value           uniform 2;
+    }
+
+    DirichletBoundary
+    {
+        type            codedFixedValue;
+        value           uniform 1;
+        name            DirichletBoundary;
+        code
+        #{
+            const vectorField& Cf = patch().Cf();
+            const scalar t = this->db().time().value();
+
+            scalarField& field = *this;
+            forAll(Cf, faceI)
+            {
+                const scalar x = Cf[faceI].x();
+                const scalar y = Cf[faceI].y();
+
+                field[faceI] = 1 + pow(x, 2) + (3 * pow(y, 2)) + 1.2 * t;
+            }
+        #};
+    }
+
+    defaultFaces
+    {
+        type            empty;
+    }
+}

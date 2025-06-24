@@ -1,0 +1,98 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+
+scale 0.01;	//This is an scaling operation. Done at the end.
+
+xmin 0;
+xmax 1;
+ymin 0;
+ymid 1;
+ymax 2;
+zmin 0;
+zmid 7;
+zmax 15;
+
+xcells 1;
+ycells 20;
+zcells 40;
+
+vertices
+(
+    ($xmin  $ymid  $zmin)
+    ($xmax  $ymid  $zmin)
+    ($xmax  $ymax  $zmin)
+    ($xmin  $ymax  $zmin)
+    ($xmin  $ymid  $zmid)
+    ($xmax  $ymid  $zmid)
+    ($xmax  $ymax  $zmid)
+    ($xmin  $ymax  $zmid)
+    ($xmin  $ymid  $zmax)
+    ($xmax  $ymid  $zmax)
+    ($xmax  $ymax  $zmax)
+    ($xmin  $ymax  $zmax)
+    ($xmin  $ymin  $zmid)
+    ($xmax  $ymin  $zmid)
+    ($xmin  $ymin  $zmax)
+    ($xmax  $ymin  $zmax)
+);
+
+blocks
+(
+    hex (4 5 6 7 8 9 10 11) ($xcells 16 64) simpleGrading (1 1 1)
+    hex (12 13 5 4 14 15 9 8) ($xcells 16 64) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    fixedWalls
+    {
+        type wall;
+        faces
+        (
+            (7 6 10 11)
+            (13 12 14 15)
+        );
+    }
+    cplInlet
+    {
+        type patch;
+        faces
+        (
+            (4 5 6 7)
+            (4 12 13 5)
+        );
+    }
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (11 10 9 8)
+            (8 9 15 14)
+        );
+    }
+    frontAndBack
+    {
+        type empty;
+        faces
+        (
+            (6 5 9 10)
+            (5 13 15 9)
+            (12 4 8 14)
+            (4 7 11 8)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);

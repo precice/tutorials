@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<fmiModelDescription
+  fmiVersion="2.0"
+  modelName="PIDcontroller"
+  description="This model implements a simple PID controller. It takes two input variables, y_1 and y_2. One of these can be used for the PID calculation. It has two output variables, u_1 and u_2. One is calculated, the other is set to 0 as default. The calculation can be set with the respective flag compute_u_1. By this, the model can be used for 1D and 2D problems."
+  generationTool="Reference FMUs (development build)"
+  guid="{1AE5E10D-9521-4DE3-80B9-D0EAAA7D5AF1}"
+  numberOfEventIndicators="1">
+  <ModelExchange
+    modelIdentifier="PIDcontroller"
+    canNotUseMemoryManagementFunctions="true"
+    canGetAndSetFMUstate="true"
+    canSerializeFMUstate="false">
+    <SourceFiles>
+      <File name="all.c" />
+    </SourceFiles>
+  </ModelExchange>
+
+  <CoSimulation
+    modelIdentifier="PIDcontroller"
+    canHandleVariableCommunicationStepSize="true"
+    canNotUseMemoryManagementFunctions="true"
+    canGetAndSetFMUstate="true"
+    canSerializeFMUstate="false">
+    <SourceFiles>
+      <File name="all.c" />
+    </SourceFiles>
+  </CoSimulation>
+
+  <UnitDefinitions>
+    <Unit name="m">
+      <BaseUnit m="1" />
+    </Unit>
+  </UnitDefinitions>
+
+  <TypeDefinitions>
+    <SimpleType name="ControlVariable">
+      <Real quantity="ControlVariable" />
+    </SimpleType>
+    <SimpleType name="ControlParameter">
+      <Real quantity="ControlParameter" />
+    </SimpleType>
+  </TypeDefinitions>
+
+  <LogCategories>
+    <Category name="logEvents" description="Log events" />
+    <Category name="logStatusError" description="Log error messages" />
+  </LogCategories>
+
+  <DefaultExperiment startTime="0" stopTime="3" stepSize="1e-2" />
+
+  <ModelVariables>
+    <ScalarVariable
+      name="time"
+      valueReference="0"
+      causality="independent"
+      variability="continuous"
+      description="Simulation time">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable
+      name="r"
+      valueReference="1"
+      causality="parameter"
+      variability="tunable"
+      initial="exact"
+      description="Control reference value">
+      <Real start="0" declaredType="ControlParameter" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="e"
+      valueReference="2"
+      causality="local"
+      variability="continuous"
+      initial="calculated"
+      description="Error between control input y and reference value r">
+      <Real declaredType="ControlVariable" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="e_ls"
+      valueReference="3"
+      causality="local"
+      variability="continuous"
+      initial="calculated"
+      description="Error between control input y and reference value r from last time step">
+      <Real declaredType="ControlVariable" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="kp"
+      valueReference="4"
+      causality="parameter"
+      variability="tunable"
+      initial="exact"
+      description="Proportional gain">
+      <Real start="0" declaredType="ControlParameter" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="ki"
+      valueReference="5"
+      causality="parameter"
+      variability="tunable"
+      initial="exact"
+      description="Integral gain">
+      <Real start="0" declaredType="ControlParameter" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="kd"
+      valueReference="6"
+      causality="parameter"
+      variability="tunable"
+      initial="exact"
+      description="Derivative gain">
+      <Real start="0" declaredType="ControlParameter" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="P"
+      valueReference="7"
+      causality="local"
+      variability="continuous"
+      initial="exact"
+      description="Proportional term">
+      <Real start="0" declaredType="ControlVariable" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="I"
+      valueReference="8"
+      causality="local"
+      variability="continuous"
+      initial="exact"
+      description="Integral term">
+      <Real start="0" declaredType="ControlVariable" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="D"
+      valueReference="9"
+      causality="local"
+      variability="continuous"
+      initial="exact"
+      description="Derivative term">
+      <Real start="0" declaredType="ControlVariable" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="y_1"
+      valueReference="10"
+      causality="input"
+      variability="continuous"
+      description="Control input value 1, e.g. x from vector (x,y)">
+      <Real start="0" declaredType="ControlVariable" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="y_2"
+      valueReference="11"
+      causality="input"
+      variability="continuous"
+      description="Control input value 2, e.g. y from vector (x,y)">
+      <Real start="0" declaredType="ControlVariable" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="u_1"
+      valueReference="12"
+      causality="output"
+      variability="continuous"
+      initial="exact"
+      description="Control output value 1, e.g. x from vector (x,y)">
+      <Real start="0" declaredType="ControlVariable" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="u_2"
+      valueReference="13"
+      causality="output"
+      variability="continuous"
+      initial="exact"
+      description="Control output value 2, e.g. y from vector (x,y)">
+      <Real start="0" declaredType="ControlVariable" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="I_max"
+      valueReference="14"
+      causality="parameter"
+      variability="tunable"
+      initial="exact"
+      description="Maximum integral term. The integral term is limited to I_max >= I to avoid integrator windup. The best value for I_max will depend on the system you are controlling.">
+      <Real start="100" declaredType="ControlParameter" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="use_implicit_method"
+      valueReference="15"
+      causality="parameter"
+      variability="fixed"
+      description="Boolean flag to choose the integration method: false = explicit-euler, true = implicit-trapezoid">
+      <Boolean start="false" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="compute_u_1"
+      valueReference="16"
+      causality="parameter"
+      variability="fixed"
+      description="Boolean flag to choose which output is calculated. The other output is set to a default value of 0. false = { u_1 = 0, u_2 is calculated with PID algorithm with y = y_2}  true ==> { u_1 is calculated with PID algorithm with y = y_1, u_2 = 0}">
+      <Boolean start="true" />
+    </ScalarVariable>
+  </ModelVariables>
+
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="12" />
+      <Unknown index="13" />
+    </Outputs>
+    <InitialUnknowns>
+      <Unknown index="2" dependencies="10" dependenciesKind="constant" />
+      <Unknown index="2" dependencies="11" dependenciesKind="constant" />
+      <Unknown index="2" dependencies="1" dependenciesKind="constant" />
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

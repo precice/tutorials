@@ -1,0 +1,8 @@
+{
+    "participant_name": "Chemical",
+    "config_file_name": "../precice-config.xml",
+    "interface": {
+        "coupling_mesh_name": "Chemical-Mesh",
+        "read_data_name": "Velocity"
+    }
+}

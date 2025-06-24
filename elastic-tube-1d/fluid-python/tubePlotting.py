@@ -44,7 +44,7 @@ def plotVar(ax, crossSection, dx, t):
 
 def doPlotting(ax, crossSection0, velocity0, pressure0, dx, t):
     plotTube(ax, crossSection0, velocity0, pressure0, dx, t)
-    #plotVar(ax[1], crossSection0, dx, t)
+    # plotVar(ax[1], crossSection0, dx, t)
     plt.title(t)
     plt.pause(0.1)
     # ax[1].cla()

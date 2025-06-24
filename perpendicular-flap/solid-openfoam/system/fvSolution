@@ -1,0 +1,30 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+
+solvers
+{
+    "(D|T)"
+    {
+        solver          GAMG;
+        tolerance       1e-06;
+        relTol          0.9;
+        smoother        GaussSeidel;
+        nCellsInCoarsestLevel 20;
+    }
+}
+
+stressAnalysis
+{
+    compactNormalStress yes;
+    // Note: The accuracy of the solution can be significantly improved
+    // by increasing this number of iterations, but this will impact the runtime.
+    nCorrectors     30;
+    D               1e-06;
+}
+

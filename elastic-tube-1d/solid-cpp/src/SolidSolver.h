@@ -2,4 +2,4 @@
 
 #include <vector>
 
-void SolidComputeSolution(int chunkLength, double const * const pressure, double *crossSectionLength);
+void SolidComputeSolution(int chunkLength, double const *const pressure, double *crossSectionLength);

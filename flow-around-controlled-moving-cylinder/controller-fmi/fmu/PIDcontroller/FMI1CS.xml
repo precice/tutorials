@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<fmiModelDescription
+  fmiVersion="1.0"
+  modelName="PIDcontroller"
+  modelIdentifier="PIDcontroller"
+  description="This model implements a simple PID controller. It takes two input variables, y_1 and y_2. One of these can be used for the PID calculation. It has two output variables, u_1 and u_2. One is calculated, the other is set to 0 as default. The calculation can be set with the respective flag compute_u_1. By this, the model can be used for 1D and 2D problems."
+  generationTool="Reference FMUs (development build)"
+  guid="{1AE5E10D-9521-4DE3-80B9-D0EAAA7D5AF1}"
+  numberOfContinuousStates="7"
+  numberOfEventIndicators="0">
+  <DefaultExperiment startTime="0" stopTime="3" />
+
+  <ModelVariables>
+    <ScalarVariable
+      name="time"
+      valueReference="0"
+      causality="internal"
+      variability="continuous"
+      description="Simulation time">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable
+      name="r"
+      valueReference="1"
+      causality="internal"
+      variability="discrete"
+      description="Control reference value">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="e"
+      valueReference="2"
+      causality="internal"
+      variability="parameter"
+      description="Error between control input y and reference value r">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable
+      name="e_ls"
+      valueReference="3"
+      causality="internal"
+      variability="parameter"
+      description="Error between control input y and reference value r from last time step">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable
+      name="kp"
+      valueReference="4"
+      causality="input"
+      variability="discrete"
+      description="Proportional gain">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="ki"
+      valueReference="5"
+      causality="input"
+      variability="discrete"
+      description="Integral gain">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="kd"
+      valueReference="6"
+      causality="input"
+      variability="discrete"
+      description="Derivative gain">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="P"
+      valueReference="7"
+      causality="internal"
+      variability="parameter"
+      description="Proportional term">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="I"
+      valueReference="8"
+      causality="internal"
+      variability="parameter"
+      description="Integral term">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="D"
+      valueReference="9"
+      causality="internal"
+      variability="parameter"
+      description="Derivative term">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="y_1"
+      valueReference="10"
+      causality="input"
+      variability="continuous"
+      description="Control input value 1, e.g. x from a vector (x,y)">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="y_2"
+      valueReference="11"
+      causality="input"
+      variability="continuous"
+      description="Control input value 2, e.g. y from a vector (x,y)">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="u_1"
+      valueReference="12"
+      causality="output"
+      variability="continuous"
+      description="Control output value 1, e.g. x from a vector (x,y)">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="u_2"
+      valueReference="13"
+      causality="output"
+      variability="continuous"
+      description="Control output value 2, e.g. y from a vector (x,y)">
+      <Real start="0" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="I_max"
+      valueReference="14"
+      causality="input"
+      variability="discrete"
+      description="Maximum integral term. The integral term is limited to I_max >= I to avoid integrator windup. The best value for I_max will depend on the system you are controlling.">
+      <Real start="100" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="use_implicit_method"
+      valueReference="15"
+      causality="input"
+      variability="discrete"
+      description="Boolean flag to choose the integration method: false = explicit-euler, true = implicit-trapezoid">
+      <Boolean start="false" />
+    </ScalarVariable>
+    <ScalarVariable
+      name="compute_u_1"
+      valueReference="16"
+      causality="input"
+      variability="discrete"
+      description="Boolean flag to choose which output is calculated. The other output is set to a default value of 0. false = { u_1 = 0, u_2 is calculated with PID algorithm with y = y_2}  true ==> { u_1 is calculated with PID algorithm with y = y_1, u_2 = 0}">
+      <Boolean start="true" />
+    </ScalarVariable>
+  </ModelVariables>
+
+  <Implementation>
+    <CoSimulation_StandAlone>
+      <Capabilities canHandleVariableCommunicationStepSize="true" canHandleEvents="false" />
+    </CoSimulation_StandAlone>
+  </Implementation>
+</fmiModelDescription>

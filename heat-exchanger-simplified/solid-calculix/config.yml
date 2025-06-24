@@ -1,0 +1,17 @@
+participants:
+    Solid:
+        interfaces:
+        - nodes-mesh: Solid-Top-Mesh-Nodes
+          patch: yend
+          read-data: [Temperature-Top]
+        - faces-mesh: Solid-Top-Mesh-Faces
+          patch: flux_interface_top
+          write-data: [Heat-Flux-Top]
+        - nodes-mesh: Solid-Bottom-Mesh-Nodes
+          patch: ybegin
+          read-data: [Temperature-Bottom]
+        - faces-mesh: Solid-Bottom-Mesh-Faces
+          patch: flux_interface_bottom
+          write-data: [Heat-Flux-Bottom]
+          
+precice-config-file: ../precice-config.xml

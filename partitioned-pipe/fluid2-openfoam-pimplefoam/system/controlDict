@@ -15,7 +15,7 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         10.0;
+endTime         1.0;
 
 deltaT          0.01;
 
@@ -35,11 +35,12 @@ timeFormat      general;
 
 timePrecision   6;
 
+libs ("libpreciceAdapterFunctionObject.so");
 functions
 {
     preCICE_Adapter
     {
         type preciceAdapterFunctionObject;
-        libs ("libpreciceAdapterFunctionObject.so");
+        errors strict; // Available since OpenFOAM v2012
     }
 }

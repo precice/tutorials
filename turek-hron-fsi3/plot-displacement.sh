@@ -1,4 +1,4 @@
-#!/bin/sh                                                                    
+#!/usr/bin/env sh                                                                    
 gnuplot -p << EOF                                                               
 	set grid                                                                        
 	set title 'y-displacement of the flap tip'                                        

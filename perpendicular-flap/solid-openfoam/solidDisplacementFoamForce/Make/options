@@ -1,0 +1,15 @@
+VERSION_SPECIFIC_INC = -DOPENFOAMESIORFOUNDATION
+ifneq (,$(findstring v,$(WM_PROJECT_VERSION)))
+    VERSION_SPECIFIC_INC += -DOPENFOAMESI
+else
+    VERSION_SPECIFIC_INC += -DOPENFOAMFOUNDATION
+endif
+
+EXE_INC = \
+    $(VERSION_SPECIFIC_INC) \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+LIB_LIBS = \
+    -lfiniteVolume \
+    -lmeshTools

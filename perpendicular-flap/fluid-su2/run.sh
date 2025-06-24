@@ -1,8 +1,13 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e -u
 
-if [ "${1:-}" = "-parallel" ]; then
-    mpirun -n 2 SU2_CFD euler_config_coupled.cfg
-else
-    SU2_CFD euler_config_coupled.cfg
-fi
+. ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
+
+python3 -m venv --system-site-packages .venv
+. .venv/bin/activate
+pip install -r requirements.txt && pip freeze > pip-installed-packages.log
+
+SU2_preCICE_FSI.py -f euler_config_unsteady.cfg --parallel
+
+close_log
