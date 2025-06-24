@@ -26,16 +26,14 @@ def main(nelems: int, etype: str, degree: int, reynolds: float):
     config_file_name = "../precice-config.xml"
     solver_process_index = 0
     solver_process_size = 1
-    interface = precice.Interface(participant_name, config_file_name, solver_process_index, solver_process_size)
+    participant = precice.Participant(participant_name, config_file_name, solver_process_index, solver_process_size)
     mesh_name = "Fluid1D-Mesh"
-    mesh_id = interface.get_mesh_id(mesh_name)
     velocity_name = "Velocity"
-    velocity_id = interface.get_data_id(velocity_name, mesh_id)
     pressure_name = "Pressure"
-    pressure_id = interface.get_data_id(pressure_name, mesh_id)
-    positions = [0, 0, 0]
-    vertex_ids = interface.set_mesh_vertex(mesh_id, positions)
-    precice_dt = interface.initialize()
+    positions = numpy.zeros((1, 3))  # one vertex of three dimensions
+    vertex_ids = participant.set_mesh_vertices(mesh_name, positions)
+    participant.initialize()
+    precice_dt = participant.get_max_time_step_size()
 
     # problem definition
     domain, geom = mesh.rectilinear([numpy.linspace(0, 1, nelems + 1)])
@@ -53,12 +51,12 @@ def main(nelems: int, etype: str, degree: int, reynolds: float):
     ures = domain.integral('∇_j(ubasis_ni) stress_ij dV' @ ns, degree=4)
     pres = domain.integral('pbasis_n ∇_k(u_k) dV' @ ns, degree=4)
 
-    while interface.is_coupling_ongoing():
-        if interface.is_read_data_available():  # get dirichlet pressure outlet value from 3D solver
-            p_read = interface.read_scalar_data(pressure_id, vertex_ids)
-            p_read = numpy.maximum(0, p_read)     # filter out unphysical negative pressure values
-        else:
-            p_read = 0
+    while participant.is_coupling_ongoing():
+        # get dirichlet pressure outlet value from 3D solver
+        p_read = participant.read_data(mesh_name, pressure_name, vertex_ids, precice_dt)
+        # filter out unphysical negative pressure values
+        p_read = numpy.maximum(0, p_read)
+
         usqr = domain.boundary['left'].integral('(u_0 - 1)^2 dS' @ ns, degree=2)
         diricons = solver.optimize('u', usqr, droptol=1e-15)
         ucons = diricons
@@ -70,26 +68,21 @@ def main(nelems: int, etype: str, degree: int, reynolds: float):
             state0 = solver.solve_linear(('u', 'p'), (ures, pres), constrain=cons)
             x, u, p = postprocess(domain, ns, precice_dt, **state0)
 
-        if interface.is_action_required(
-                precice.action_write_iteration_checkpoint()):
+        if participant.requires_writing_checkpoint():
             u_iter = u
             p_iter = p
-            interface.mark_action_fulfilled(
-                precice.action_write_iteration_checkpoint())
 
         write_vel = [0, 0, u[-1]]
-        if interface.is_write_data_required(precice_dt):    # write new velocities to 3D solver
-            interface.write_vector_data(velocity_id, vertex_ids, write_vel)
-        precice_dt = interface.advance(precice_dt)
+        # write new velocities to 3D solver
+        participant.write_data(mesh_name, velocity_name, vertex_ids, write_vel)
+        participant.advance(precice_dt)
+        precice_dt = participant.get_max_time_step_size()
 
-        if interface.is_action_required(
-                precice.action_read_iteration_checkpoint()):
+        if participant.requires_reading_checkpoint():
             u = u_iter
             p = p_iter
-            interface.mark_action_fulfilled(
-                precice.action_read_iteration_checkpoint())
 
-    interface.finalize()
+    participant.finalize()
     return state0
 
 
