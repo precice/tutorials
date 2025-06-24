@@ -72,7 +72,7 @@ def main(nelems: int, etype: str, degree: int, reynolds: float):
             u_iter = u
             p_iter = p
 
-        write_vel = [0, 0, u[-1]]
+        write_vel = [[0, 0, u[-1][0]]]
         # write new velocities to 3D solver
         participant.write_data(mesh_name, velocity_name, vertex_ids, write_vel)
         participant.advance(precice_dt)
