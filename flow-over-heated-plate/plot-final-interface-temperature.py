@@ -6,17 +6,15 @@ import os
 
 
 def vtk_to_dict(case):
-    vtkFileName = "solid-{}/precice-exports/Fluid-Mesh-Solid.dt100.vtk".format(
+    vtkFileName = "solid-{}/precice-exports/Fluid-Mesh-Solid.dt100.vtu".format(
         case)
     if not os.path.exists(vtkFileName):
         print("No file found for " + vtkFileName)
         return {}  # return empty dict if file not found
 
     # read the vtk file as an unstructured grid
-    reader = vtk.vtkUnstructuredGridReader()
+    reader = vtk.vtkXMLUnstructuredGridReader()
     reader.SetFileName(vtkFileName)
-    reader.ReadAllVectorsOn()
-    reader.ReadAllScalarsOn()
     reader.Update()
 
     # obtain the data
