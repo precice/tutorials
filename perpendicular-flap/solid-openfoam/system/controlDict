@@ -7,8 +7,6 @@ FoamFile
     object      controlDict;
 }
 
-libs            ("libsolidDisplacementFoamForce.so");
-
 application     solidDisplacementFoam;
 
 startFrom       startTime;
@@ -37,12 +35,14 @@ timeFormat      general;
 
 timePrecision   6;
 
+libs ("libpreciceAdapterFunctionObject.so" "libsolidDisplacementFoamForce.so");
+
 functions
 {
     preCICE_Adapter
     {
         type preciceAdapterFunctionObject;
-        libs ("libpreciceAdapterFunctionObject.so");
+        errors strict; // Available since OpenFOAM v2012
     }
 }
 

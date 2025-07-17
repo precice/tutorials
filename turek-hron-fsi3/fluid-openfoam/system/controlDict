@@ -35,6 +35,7 @@ timeFormat          general;
 
 timePrecision       8;
 
+libs ("libpreciceAdapterFunctionObject.so");
 functions
 {
     forces
@@ -51,6 +52,6 @@ functions
     preCICE_Adapter
     {
         type preciceAdapterFunctionObject;
-        libs ("libpreciceAdapterFunctionObject.so");
+        errors strict; // Available since OpenFOAM v2012
     }
 }

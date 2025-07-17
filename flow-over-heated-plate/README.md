@@ -86,7 +86,7 @@ First generate the output for each run by adding export to the participant `Soli
 
 ```xml
 <participant name="Solid">
-  <export:vtk directory="precice-exports" />
+  <export:vtu directory="precice-exports" />
   <receive-mesh name="Fluid-Mesh" from="Fluid" />
   <provide-mesh name="Solid-Mesh" />
   ...

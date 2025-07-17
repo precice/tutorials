@@ -1,3 +1,4 @@
+setuptools # required by nutils
 nutils>=8.5
 numpy >1, <2
 pyprecice~=3.0

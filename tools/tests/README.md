@@ -21,7 +21,7 @@ Workflow for the preCICE v3 release testing:
 3. Trigger the GitHub Actions Workflow. Until we merge the workflow to develop, this can only happen via the [GitHub CLI](https://cli.github.com/):
 
     ```bash
-    gh workflow run run_testsuite_manual.yml -f suites=release_test -f build_args="PRECICE_REF:v3.1.1,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,TUTORIALS_REF:340b447" --ref=develop
+    gh workflow run run_testsuite_manual.yml -f suites=release_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" --ref=develop
     ```
 
 4. Go to the tutorials [Actions](https://github.com/precice/tutorials/actions) page and find the running workflow
@@ -61,7 +61,7 @@ gh workflow run run_testsuite_manual.yml -f suites=fenics_test --ref=develop
 Another example, to use the latest releases and enable debug information of the tests:
 
 ```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v3.1.1,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,TUTORIALS_REF:340b447" -f loglevel=DEBUG --ref=develop
+gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" -f log_level=DEBUG --ref=develop
 ```
 
 where the `*_REF` should be a specific [commit-ish](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefcommit-ishacommit-ishalsocommittish).
@@ -71,7 +71,7 @@ Example output:
 ```text
 Run cd tools/tests
   cd tools/tests
-  python systemtests.py --build_args=PRECICE_REF:v3.1.1,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0 --suites=fenics_test --log-level=DEBUG
+  python systemtests.py --build_args=PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0 --suites=fenics_test --log-level=DEBUG
   cd ../../
   shell: /usr/bin/bash -e {0}
 INFO: About to run the following systemtest in the directory /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs:
@@ -100,7 +100,7 @@ In this case, building and running seems to work out, but the tests fail because
 ## Understanding what went wrong
 
 The easiest way to debug a systemtest run is first to have a look at the output written into the action on GitHub.
-If this does not provide enough hints, the next step is to download the generated `runs` artifact. Note that by default this will only be generated if the systemtests fail.
+If this does not provide enough hints, the next step is to download the generated `system_tests_run_<run_id>_<run_attempt>` artifact. Note that by default this will only be generated if the systemtests fail.
 Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains two log files: a `stderr.log` and `stdout.log`. This can be a starting point for a further investigation.
 
 ## Adding new tests
@@ -161,8 +161,8 @@ Metadata and workflow/script files:
     - `fenics-adapter.yaml`
     - `openfoam-adapter.yaml`
     - ...
-  - `dockerfiles/ubuntu_2204/`
-    - Dockerfile: a multi-stage build Dockerfile that defines how to build each component, in a layered approach
+  - `dockerfiles/`
+    - Multi-stage build Dockerfiles that define how to build each component, in a layered approach
   - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Componse service template)
   - `docker-compose.field_compare.template.yaml`: Describes how to compare results with fieldcompare (Docker Compose service template)
   - `components.yaml`: Declares the available components and their parameters/options
@@ -248,16 +248,18 @@ openfoam-adapter:
     PRECICE_REF:
       description: Version of preCICE to use
       default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
     PLATFORM:
       description: Dockerfile platform used
-      default: "ubuntu_2204"
+      default: "ubuntu_2404"
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
     OPENFOAM_EXECUTABLE:
-      options: ["openfoam2306","openfoam2212","openfoam2112"]
       description: exectuable of openfoam to use
-      default: "openfoam2306"
+      default: "openfoam2312"
     OPENFOAM_ADAPTER_REF:
       description: Reference/tag of the actual OpenFOAM adapter
       default: "master"

@@ -28,6 +28,10 @@ This variant of this tutorial example uses the open-source library pySDC for tim
 pySDC can be installed via `pip install pySDC`.
 If you want to use the developer version, the source code repository can be cloned from "https://github.com/Parallel-in-Time/pySDC".
 For more information on pySDC, see also "https://parallel-in-time.org/pySDC/"
+
+For information on the partitioned heat conduction problem using pySDC methods see
+* "Eppacher, Tobias. Parallel-in-Time Integration with preCICE. Bachelor's thesis at Technical University of Munich, 2024. URL: https://mediatum.ub.tum.de/1755012"
+
 """
 
 from __future__ import print_function, division

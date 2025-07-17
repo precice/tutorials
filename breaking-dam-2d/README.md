@@ -39,7 +39,7 @@ You can start the simulation by running the script `./run.sh` located in each pa
 
 ## Post-processing
 
-You can visualize the results using ParaView or `cgx` (for native CalculiX results files) as usual. See some [visualization hints for CalculiX results](https://precice.org/tutorials.html#visualizing-calculix-results).
+You can visualize the results using ParaView or `cgx` (for native CalculiX results files) as usual. See some [visualization hints for CalculiX results](https://precice.org/tutorials-visualization.html#visualizing-calculix-results).
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM® and OpenCFD® trade marks.

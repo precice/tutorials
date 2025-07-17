@@ -23,3 +23,17 @@ if [ -n "$(ls -A ./fluid-rust/output/*.vtk 2>/dev/null)" ]; then
 else
     echo "No results to plot from fluid-python."
 fi
+
+# Plot diameter from fluid-fortran
+if [ -n "$(ls -A ./fluid-fortran/output/*.vtk 2>/dev/null)" ]; then
+    python3 plot-vtk.py diameter fluid-fortran/output/out_fluid_ &
+else
+    echo "No results to plot from fluid-fortran."
+fi
+
+# Plot diameter from fluid-fortran-module
+if [ -n "$(ls -A ./fluid-fortran-module/output/*.vtk 2>/dev/null)" ]; then
+    python3 plot-vtk.py diameter fluid-fortran-module/output/out_fluid_ &
+else
+    echo "No results to plot from fluid-fortran-module."
+fi
