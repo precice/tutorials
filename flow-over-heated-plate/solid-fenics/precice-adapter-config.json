@@ -4,7 +4,6 @@
   "interface": {
       "coupling_mesh_name": "Solid-Mesh",
       "write_data_name": "Heat-Flux",
-      "read_data_name": "Temperature",
-      "interpolation_type": "rbf"
-    }
+      "read_data_name": "Temperature"
+  }
 }

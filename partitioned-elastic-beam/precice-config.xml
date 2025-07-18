@@ -7,6 +7,8 @@
       enabled="true" />
   </log>
 
+  <profiling mode="fundamental" synchronize="false" />
+
   <data:vector name="Force0" />
   <data:vector name="Displacement0" />
 

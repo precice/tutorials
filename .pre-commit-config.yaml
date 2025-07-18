@@ -8,17 +8,9 @@ repos:
   rev: v0.30.0
   hooks:
     - id: markdownlint
-      exclude:  |
-            (?x)^(
-                changelog-entries|
-                .github/pull_request_template.md
-            )$
+      exclude: ^(.github/pull_request_template.md|changelog-entries)
     - id: markdownlint-fix
-      exclude:  |
-            (?x)^(
-                changelog-entries|
-                .github/pull_request_template.md
-            )$
+      exclude: ^(.github/pull_request_template.md|changelog-entries)
 - repo: https://github.com/hhatto/autopep8
   rev: v2.0.4
   hooks:
@@ -28,7 +20,7 @@ repos:
   rev: 'v14.0.6'
   hooks:
   - id: clang-format
-    exclude: '\.json$'
+    exclude: '\.(json|m|mm)$'
 - repo: https://github.com/koalaman/shellcheck-precommit
   rev: v0.10.0
   hooks:

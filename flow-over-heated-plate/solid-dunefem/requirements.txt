@@ -1,2 +1,2 @@
 dune-fem>=2.8
-pyprecice==3
+pyprecice~=3.0

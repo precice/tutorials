@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<precice-configuration>
+  <data:scalar name="Current" waveform-degree="3" />
+  <data:scalar name="Voltage" waveform-degree="3" />
+
+  <mesh name="Coil-Mesh" dimensions="2">
+    <use-data name="Current" />
+    <use-data name="Voltage" />
+  </mesh>
+
+  <mesh name="Capacitor-Mesh" dimensions="2">
+    <use-data name="Current" />
+    <use-data name="Voltage" />
+  </mesh>
+
+  <participant name="Coil">
+    <provide-mesh name="Coil-Mesh" />
+    <write-data name="Current" mesh="Coil-Mesh" />
+    <read-data name="Voltage" mesh="Coil-Mesh" />
+  </participant>
+
+  <participant name="Capacitor">
+    <provide-mesh name="Capacitor-Mesh" />
+    <receive-mesh name="Coil-Mesh" from="Coil" />
+    <write-data name="Voltage" mesh="Capacitor-Mesh" />
+    <read-data name="Current" mesh="Capacitor-Mesh" />
+    <mapping:nearest-neighbor
+      direction="write"
+      from="Capacitor-Mesh"
+      to="Coil-Mesh"
+      constraint="consistent" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Coil-Mesh"
+      to="Capacitor-Mesh"
+      constraint="consistent" />
+    <watch-point mesh="Capacitor-Mesh" name="VoltageCurrent" coordinate="0.0;0.0" />
+  </participant>
+
+  <m2n:sockets acceptor="Coil" connector="Capacitor" exchange-directory=".." />
+
+  <coupling-scheme:serial-implicit>
+    <participants first="Coil" second="Capacitor" />
+    <max-time value="10" />
+    <time-window-size value="1" />
+    <max-iterations value="100" />
+    <exchange data="Current" mesh="Coil-Mesh" from="Coil" to="Capacitor" substeps="true" />
+    <exchange data="Voltage" mesh="Coil-Mesh" from="Capacitor" to="Coil" substeps="true" />
+    <relative-convergence-measure limit="1e-3" data="Current" mesh="Coil-Mesh" />
+    <relative-convergence-measure limit="1e-3" data="Voltage" mesh="Coil-Mesh" />
+  </coupling-scheme:serial-implicit>
+</precice-configuration>

@@ -43,5 +43,6 @@ functions
     preCICE_Adapter
     {
         type preciceAdapterFunctionObject;
+        errors strict; // Available since OpenFOAM v2012
     }
 }
