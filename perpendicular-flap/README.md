@@ -119,3 +119,8 @@ Combinations (excerpt) using the dummy `fluid-fake` case:
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
 {% enddisclaimer %}
+
+## Try the case with a stronger coupling
+In this case, the coupling between the fluid flow and the flap becomes stronger when the fluid is heavier relative to the flap. We can try out this setting by deceasing the density of the solid participant.
+
+With $$ \rho_s= 3.0·10^{3}kg/m^{3} $$, the simulation will converge with explicit coupling scheme. With $$ \rho_s= 42kg/m^{3} $$, it requires implicit coupling to converge and no acceleration methods are needed. With $$ \rho_s= 1kg/m^{3} $$, the simulation will only converge with implicit coupling and proper acceleration method, such as the IQN-ILS method in current configruation, is configured.
