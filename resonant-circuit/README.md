@@ -1,7 +1,7 @@
 ---
 title: Resonant Circuit
 permalink: tutorials-resonant-circuit.html
-keywords: MATLAB, Python
+keywords: MATLAB, Python, Julia
 summary: We simulate a two-element LC circuit (one inductor and one capacitor).
 ---
 
@@ -33,6 +33,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 * *MATLAB* A solver using the [MATLAB bindings](https://precice.org/installation-bindings-matlab.html).
  Before running this tutorial, follow the [instructions](https://precice.org/installation-bindings-matlab.html) to correctly install the MATLAB bindings.
 * *Python* A solver using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html).
+* *Julia* A solver using the preCICE [Julia bindings](https://precice.org/installation-bindings-julia.html).
 
 ## Running the simulation
 
