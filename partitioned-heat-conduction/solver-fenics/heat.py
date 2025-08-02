@@ -8,7 +8,7 @@ coupling of two separate heat equations.
 The original source code can be found on https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py.
 
 Heat equation with Dirichlet conditions. (Dirichlet problem)
-  u'= Laplace(u) + f  in the unit square [0,1] x [0,1]
+  u'= Laplace(u) + f  in the unit square [0,1] x [1,1]
   u = u_C             on the coupling boundary at x = 1
   u = u_D             on the remaining boundary
   u = u_0             at t = 0
@@ -16,7 +16,7 @@ Heat equation with Dirichlet conditions. (Dirichlet problem)
   f = beta - 2 - 2*alpha
 
 Heat equation with mixed boundary conditions. (Neumann problem)
-  u'= Laplace(u) + f  in the shifted unit square [1,2] x [0,1]
+  u'= Laplace(u) + f  in the shifted unit square [1,0] x [2,1]
   du/dn = f_N         on the coupling boundary at x = 1
   u = u_D             on the remaining boundary
   u = u_0             at t = 0
