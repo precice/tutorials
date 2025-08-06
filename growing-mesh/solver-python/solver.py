@@ -8,6 +8,7 @@ from mpi4py import MPI
 
 import argparse
 
+
 def split(num):
     for a in range(math.isqrt(num), 0, -1):
         if num % a == 0:
@@ -53,14 +54,17 @@ def main():
     py = rank // xr
     print(f"Rank {rank}/{size} has partition ({px}, {py})/({xr}, {yr})")
     if rank == 0:
-        print(f"Each of {size} partitions has node size {pnx}x{pny} = {pnx*pny} for a total of {nx*ny} nodes on the base")
-
+        print(
+            f"Each of {size} partitions has node size {pnx}x{pny} = {pnx*pny} for a total of {nx*ny} nodes on the base"
+        )
 
     def getMesh(nz):
-        basex = np.linspace(0, 1, nx)[px*pnx:(px+1)*pnx]
-        basey = np.linspace(0, 1, ny)[py*pny:(py+1)*pny]
+        basex = np.linspace(0, 1, nx)[px * pnx : (px + 1) * pnx]
+        basey = np.linspace(0, 1, ny)[py * pny : (py + 1) * pny]
         z = np.array(range(nz)) * dz
-        return np.stack(np.meshgrid(basex, basey, z, indexing="ij"), axis=-1).reshape(-1, 3)
+        return np.stack(np.meshgrid(basex, basey, z, indexing="ij"), axis=-1).reshape(
+            -1, 3
+        )
 
     def requiresEvent(tw):
         return tw % eventFrequency == 0
@@ -110,19 +114,23 @@ def main():
             coords = getMeshAtTimeWindow(tw)
             if rank == 0:
                 print(
-                        f"{participant_name}: Event grows local mesh from {oldCount} to {
+                    f"{participant_name}: Event grows local mesh from {oldCount} to {
                         len(coords)} and global mesh from {
                         oldCount *
                         size} to {
                         len(coords) *
-                        size}")
+                        size}"
+                )
             participant.reset_mesh(mesh_name)
             vertex_ids = participant.set_mesh_vertices(mesh_name, coords)
 
-        participant.write_data(mesh_name, write_data_name, vertex_ids, dataAtTimeWindow(tw))
+        participant.write_data(
+            mesh_name, write_data_name, vertex_ids, dataAtTimeWindow(tw)
+        )
 
         participant.advance(dt)
         tw += 1
+
 
 if __name__ == "__main__":
     try:
