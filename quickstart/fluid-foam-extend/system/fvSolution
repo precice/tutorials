@@ -84,5 +84,7 @@ potentialFlow
 
 fieldBounds
 {
-
+    p -1e5 1e5;
+    U 100;
 }
+
