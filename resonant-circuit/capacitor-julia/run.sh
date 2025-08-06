@@ -4,7 +4,7 @@ set -e -u
 . ../../tools/log.sh
 exec > >(tee --append "$LOGFILE") 2>&1
 
-julia --project=Project.toml -e "using Pkg; Pkg.instantiate();"
+julia --project=Project.toml -e 'using Pkg; Pkg.add("DifferentialEquations"); Pkg.add("PreCICE"); Pkg.instantiate();'
 julia --project=Project.toml capacitor.jl
 
 close_log

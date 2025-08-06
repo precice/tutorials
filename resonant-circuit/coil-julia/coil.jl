@@ -1,5 +1,5 @@
 using PreCICE
-using OrdinaryDiffEq
+using DifferentialEquations
 
 # Initialize and configure preCICE
 participant = PreCICE.createParticipant("Coil", "../precice-config.xml", 0, 1)
