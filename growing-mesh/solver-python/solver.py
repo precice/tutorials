@@ -55,12 +55,16 @@ def main():
     print(f"Rank {rank}/{size} has partition ({px}, {py})/({xr}, {yr})")
     if rank == 0:
         print(
-            f"Each of {size} partitions has node size {pnx}x{pny} = {pnx*pny} for a total of {nx*ny} nodes on the base"
+            f"Each of {size} partitions has node size {pnx}x{pny} = {
+                pnx *
+                pny} for a total of {
+                nx *
+                ny} nodes on the base"
         )
 
     def getMesh(nz):
-        basex = np.linspace(0, 1, nx)[px * pnx : (px + 1) * pnx]
-        basey = np.linspace(0, 1, ny)[py * pny : (py + 1) * pny]
+        basex = np.linspace(0, 1, nx)[px * pnx: (px + 1) * pnx]
+        basey = np.linspace(0, 1, ny)[py * pny: (py + 1) * pny]
         z = np.array(range(nz)) * dz
         return np.stack(np.meshgrid(basex, basey, z, indexing="ij"), axis=-1).reshape(
             -1, 3
