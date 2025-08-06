@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def load_and_filter_1d(filename, tmin=6.8, tmax=8.2):
     data = np.loadtxt(filename, delimiter=';')
     time = data[:, 0]
@@ -8,12 +9,14 @@ def load_and_filter_1d(filename, tmin=6.8, tmax=8.2):
     mask = (time >= tmin) & (time <= tmax)
     return time[mask], pressure[mask]
 
+
 def load_and_filter_1d_1d(filename, tmin=6.8, tmax=8.2):
     data = np.loadtxt(filename, delimiter=';')
     time = data[:, 0]
     pressure = data[:, 3]
     mask = (time >= tmin) & (time <= tmax)
     return time[mask], pressure[mask]
+
 
 def load_and_filter_openfoam(filepath, tmin=6.8, tmax=8.2):
     with open(filepath, 'r') as f:
@@ -26,11 +29,12 @@ def load_and_filter_openfoam(filepath, tmin=6.8, tmax=8.2):
     mask = (time >= tmin) & (time <= tmax)
     return time[mask], value[mask]
 
+
 # Load and filter each file
 t1, p1 = load_and_filter_openfoam('../I/p')                   # 1D-3D
 t2, p2 = load_and_filter_1d('../II/watchpoint.txt')           # 1D, θ = 0.5
 t3, p3 = load_and_filter_1d('../III/watchpoint.txt')          # 1D, θ = 0.55
-t4, p4 = load_and_filter_1d('../IV/watchpoint.txt')           # 1D, θ = 1  
+t4, p4 = load_and_filter_1d('../IV/watchpoint.txt')           # 1D, θ = 1
 t5, p5 = load_and_filter_openfoam('../V/p')                   # 3D
 t6, p6 = load_and_filter_1d_1d('../VI/watchpointright.txt')   # 1D-1D
 t7, p7 = load_and_filter_openfoam('../VII/pright')            # 3D-3D

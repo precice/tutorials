@@ -5,4 +5,3 @@ IV: 1D, theta=1
 V: 3D, dt=0.005, CN=0.45
 VI: 1D-1D, serial implicit, aitken
 VII: 3D-3D, serial explicit
-

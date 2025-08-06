@@ -57,5 +57,4 @@
     <exchange data="Velocity" mesh="Fluid3DRight-Mesh" from="Fluid3DRight" to="Fluid3DLeft" />
     <exchange data="Pressure" mesh="Fluid3DLeft-Mesh" from="Fluid3DLeft" to="Fluid3DRight" />
   </coupling-scheme:serial-explicit>
-
 </precice-configuration>

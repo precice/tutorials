@@ -4,6 +4,7 @@ import treelog
 from nutils import mesh, function, solver, cli
 import precice
 
+
 def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, viscosity=1e-3, theta=0.5):
 
     # --- preCICE initialization ---
@@ -34,7 +35,7 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
     ns.pref = refpressure
     ns.pin = 98100  # Inlet pressure (Pa)
     ns.μ = viscosity
-    ns.ψ = psi 
+    ns.ψ = psi
 
     # Define basis functions: velocity (vector, degree 2), density (scalar, degree 1)
     ns.ubasis, ns.ρbasis = function.chain([
@@ -110,7 +111,7 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
             ).solve(1e-08)
 
             # Evaluate fields for visualization/debugging
-            x, p, u, ρ = bezier.eval(['x_i','p', 'u_i', 'ρ'] @ ns, arguments=dict(lhs=lhs))
+            x, p, u, ρ = bezier.eval(['x_i', 'p', 'u_i', 'ρ'] @ ns, arguments=dict(lhs=lhs))
 
         # Send pressure at the right boundary to the other solver
         write_press = [[p[-1]]]
@@ -128,7 +129,9 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
             lhs0 = lhs
             timestep += timestep
 
-            # Save probe values (time, inlet pressure, inlet velocity, outlet pressure, outlet velocity, pressure at the middle, velocity at the middle)
+            # Save probe values (time, inlet pressure, inlet velocity, outlet
+            # pressure, outlet velocity, pressure at the middle, velocity at the
+            # middle)
             x, p, ρ, u = bezier.eval(['x_i', 'p', 'ρ', 'u_i'] @ ns, lhs=lhs)
             f.write("%e; %e; %e; %e; %e; %e; %e\n" % (t, p[0], u[0], p[-1], u[-1], p[199], u[199]))
             f.flush()
@@ -138,6 +141,7 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
     # Finalize preCICE
     participant.finalize()
     f.close()
+
 
 if __name__ == '__main__':
     cli.run(main)

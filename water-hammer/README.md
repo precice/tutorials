@@ -9,11 +9,13 @@ summary: The Partitioned Water Hammer tutorial simulates unsteady pressure wave 
 This tutorial demonstrates how to model the **water hammer phenomenon** — a transient pressure surge caused by a rapid change in flow — using **partitioned coupling** with [preCICE](https://precice.org).
 
 It supports multiple configurations:
+
 - **1D–1D**: Python solvers on both sides
 - **1D–3D**: Python 1D solver coupled to OpenFOAM
 - **3D–3D**: OpenFOAM solvers on both sides
 
 We exchange:
+
 - **Velocity** from downstream to upstream
 - **Pressure** from upstream to downstream
 

@@ -4,6 +4,7 @@ import treelog
 from nutils import mesh, function, solver, cli
 import precice
 
+
 def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, viscosity=1e-3, theta=0.5):
 
     # Initialize preCICE
@@ -15,12 +16,12 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
     mesh_name = "Fluid1DLeft-Mesh"
     velocity_name = "Velocity"
     pressure_name = "Pressure"
-    positions = [[0,500.0,0]]  # one vertex of 1 dimension
+    positions = [[0, 500.0, 0]]  # one vertex of 1 dimension
     vertex_ids = participant.set_mesh_vertices(mesh_name, positions)
     participant.initialize()
     precice_dt = participant.get_max_time_step_size()
 
-    domain, geom = mesh.rectilinear([np.linspace(0,500,nelems+1)])
+    domain, geom = mesh.rectilinear([np.linspace(0, 500, nelems + 1)])
 
     ns = function.Namespace()
     ns.x = geom
@@ -32,8 +33,8 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
     ns.μ = viscosity
     ns.ψ = psi
 
-    
-    ns.ubasis, ns.ρbasis = function.chain([domain.basis('std', degree=2).vector(domain.ndims), domain.basis('std', degree=1)])
+    ns.ubasis, ns.ρbasis = function.chain(
+        [domain.basis('std', degree=2).vector(domain.ndims), domain.basis('std', degree=1)])
 
     ns.u_i = 'ubasis_ni ?lhs_n'
     ns.u0_i = 'ubasis_ni ?lhs0_n'
@@ -42,26 +43,26 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
     ns.p = 'pref + (ρ - ρref) / ψ'
     ns.utheta_i = 'θ u_i + (1 - θ) u0_i'
     ns.ρtheta = 'θ ρ + (1 - θ) ρ0'
-    ns.σ_ij = 'μ (utheta_i,j + utheta_j,i) - p δ_ij' # diffusive term and pressure gradient
+    ns.σ_ij = 'μ (utheta_i,j + utheta_j,i) - p δ_ij'  # diffusive term and pressure gradient
 
     ns.h = 1 / nelems
-    ns.k = 'ρ h / μ' # needs work, stabilization coeff
-
+    ns.k = 'ρ h / μ'  # needs work, stabilization coeff
 
     # Residuals
     res = domain.integral('ρbasis_n ((ρ - ρ0) / dt + (ρtheta utheta_k)_,k) d:x' @ ns, degree=4)
     res += domain.integral('(ubasis_ni (((ρ u_i - ρ0 u0_i) / dt) + (ρtheta utheta_i utheta_j)_,j) + ubasis_ni,j σ_ij) d:x' @ ns, degree=4)
     res += domain.boundary['left'].integral('pin ubasis_ni n_i d:x' @ ns, degree=4)
-    # res += domain.integral('k ubasis_ni,j (u_j / sqrt(u_k u_k + 1e-12)) (ρ (u_i - u0_i) / dt + (ρ u_i u_j - σ_ij)_,j) d:x' @ ns, degree=4) # SUPG stabilization
-    
+    # res += domain.integral('k ubasis_ni,j (u_j / sqrt(u_k u_k + 1e-12)) (ρ
+    # (u_i - u0_i) / dt + (ρ u_i u_j - σ_ij)_,j) d:x' @ ns, degree=4) # SUPG
+    # stabilization
 
     lhs0 = np.zeros(res.shape)
 
     # Time loop
     t = 0.0
     timestep = 0
-    bezier = domain.sample('bezier', 2) 
-    
+    bezier = domain.sample('bezier', 2)
+
     f = open("watchpoint.txt", "w")
 
     while participant.is_coupling_ongoing():
@@ -79,7 +80,7 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
         with treelog.context('stokes'):
             lhs = solver.newton('lhs', residual=res, constrain=cons, arguments=dict(lhs0=lhs0), lhs0=lhs0).solve(1e-08)
             treelog.info(f"lhs shape: {np.shape(lhs)}, type: {type(lhs)}")
-            x, p, u, ρ = bezier.eval(['x_i','p', 'u_i', 'ρ'] @ ns, arguments=dict(lhs=lhs))
+            x, p, u, ρ = bezier.eval(['x_i', 'p', 'u_i', 'ρ'] @ ns, arguments=dict(lhs=lhs))
 
         treelog.info(f"pressure shape: {np.shape(p)}")
         treelog.info(f"pressure: {p}")
@@ -99,9 +100,10 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
             x, p, ρ, u = bezier.eval(['x_i', 'p', 'ρ', 'u_i'] @ ns, lhs=lhs)
             f.write("%e; %e; %e; %e; %e; %e; %e\n" % (t, p[0], u[0], p[-1], u[-1], p[199], u[199]))
             f.flush()
-            t += precice_dt   
-    participant.finalize()              
+            t += precice_dt
+    participant.finalize()
     f.close()
+
 
 if __name__ == '__main__':
     cli.run(main)

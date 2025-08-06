@@ -4,11 +4,12 @@ import treelog
 from nutils import mesh, function, solver, cli
 import os
 
+
 def main(nelems=200, dt=.005, tmax=20.0, refdensity=1e3, refpressure=101325.0, psi=1e-6, viscosity=1e-3, theta=0.55):
     """
-    Simulates 1D unsteady compressible flow discretized using Nutils. 
+    Simulates 1D unsteady compressible flow discretized using Nutils.
     Solves the momentum and mass equations with a theta time integration scheme.
-    
+
     Parameters:
         nelems (int): Number of 1D elements in the domain.
         dt (float): Time step size.
@@ -35,7 +36,7 @@ def main(nelems=200, dt=.005, tmax=20.0, refdensity=1e3, refpressure=101325.0, p
     ns.pref = refpressure
     ns.pin = 98100             # Inlet pressure [Pa]
     ns.μ = viscosity
-    ns.ψ = psi                 
+    ns.ψ = psi
 
     # Define basis functions: quadratic for velocity, linear for density
     ns.ubasis, ns.ρbasis = function.chain([
@@ -70,7 +71,7 @@ def main(nelems=200, dt=.005, tmax=20.0, refdensity=1e3, refpressure=101325.0, p
 
     # Outlet velocity constraint
     sqr = domain.boundary['right'].integral('(u_0 - 1)^2' @ ns, degree=4)
-    cons0 = solver.optimize('lhs', sqr, droptol=1e-14) 
+    cons0 = solver.optimize('lhs', sqr, droptol=1e-14)
 
     # Initial guess of lhs (left hand side)
     lhs0 = np.zeros(res.shape)
@@ -129,6 +130,7 @@ def main(nelems=200, dt=.005, tmax=20.0, refdensity=1e3, refpressure=101325.0, p
 
     # Close output file
     f.close()
+
 
 if __name__ == '__main__':
     cli.run(main)

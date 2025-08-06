@@ -4,62 +4,64 @@ import treelog
 from nutils import mesh, function, solver, cli
 import precice
 
+
 def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, viscosity=1e-3, theta=0.5):
 
     # --- preCICE initialization ---
 
-    participant_name = "Fluid1DRight"                    
-    config_file_name = "../precice-config.xml"           
-    solver_process_index = 0                              
+    participant_name = "Fluid1DRight"
+    config_file_name = "../precice-config.xml"
+    solver_process_index = 0
     solver_process_size = 1
     participant = precice.Participant(participant_name, config_file_name, solver_process_index, solver_process_size)
-    mesh_name = "Fluid1DRight-Mesh"                      
-    velocity_name = "Velocity"                           
-    pressure_name = "Pressure"                           
-    positions = [[0, 500.0, 0]]                          
-    vertex_ids = participant.set_mesh_vertices(mesh_name, positions)  
+    mesh_name = "Fluid1DRight-Mesh"
+    velocity_name = "Velocity"
+    pressure_name = "Pressure"
+    positions = [[0, 500.0, 0]]
+    vertex_ids = participant.set_mesh_vertices(mesh_name, positions)
 
-    participant.initialize()                            
-    precice_dt = participant.get_max_time_step_size()  
+    participant.initialize()
+    precice_dt = participant.get_max_time_step_size()
 
     # --- Nutils domain setup ---
 
-    domain, geom = mesh.rectilinear([np.linspace(500, 1000, nelems + 1)])  # 1D domain from 500 to 1000 with nelems elements
+    # 1D domain from 500 to 1000 with nelems elements
+    domain, geom = mesh.rectilinear([np.linspace(500, 1000, nelems + 1)])
 
     ns = function.Namespace()
-    ns.x = geom                 
-    ns.dt = dt                   
-    ns.θ = theta                
-    ns.ρref = refdensity         
-    ns.pref = refpressure        
-    ns.μ = viscosity             
-    ns.ψ = psi                  
+    ns.x = geom
+    ns.dt = dt
+    ns.θ = theta
+    ns.ρref = refdensity
+    ns.pref = refpressure
+    ns.μ = viscosity
+    ns.ψ = psi
 
     # Define basis functions: velocity (vector, degree 2), density (scalar, degree 1)
     ns.ubasis, ns.ρbasis = function.chain([
-        domain.basis('std', degree=2).vector(domain.ndims),   
-        domain.basis('std', degree=1)                          
+        domain.basis('std', degree=2).vector(domain.ndims),
+        domain.basis('std', degree=1)
     ])
 
     # Define trial and previous-step functions
-    ns.u_i = 'ubasis_ni ?lhs_n'               
-    ns.u0_i = 'ubasis_ni ?lhs0_n'            
-    ns.ρ = 'ρref + ρbasis_n ?lhs_n'          
-    ns.ρ0 = 'ρref + ρbasis_n ?lhs0_n'         
-    ns.p = 'pref + (ρ - ρref) / ψ'            
-    ns.utheta_i = 'θ u_i + (1 - θ) u0_i'      
-    ns.ρtheta = 'θ ρ + (1 - θ) ρ0'           
+    ns.u_i = 'ubasis_ni ?lhs_n'
+    ns.u0_i = 'ubasis_ni ?lhs0_n'
+    ns.ρ = 'ρref + ρbasis_n ?lhs_n'
+    ns.ρ0 = 'ρref + ρbasis_n ?lhs0_n'
+    ns.p = 'pref + (ρ - ρref) / ψ'
+    ns.utheta_i = 'θ u_i + (1 - θ) u0_i'
+    ns.ρtheta = 'θ ρ + (1 - θ) ρ0'
 
     # Cauchy stress tensor: viscous + pressure
-    ns.σ_ij = 'μ (utheta_i,j + utheta_j,i) - p δ_ij'  
+    ns.σ_ij = 'μ (utheta_i,j + utheta_j,i) - p δ_ij'
 
     # Estimate mesh size and stabilization parameter (optional)
-    ns.h = 1 / nelems          
-    ns.k = 'ρ h / μ'                
+    ns.h = 1 / nelems
+    ns.k = 'ρ h / μ'
 
     # --- Weak form residuals ---
 
-    # Mass conservation 
+    # Mass conservation
     res = domain.integral(
         'ρbasis_n ((ρ - ρ0) / dt + (ρtheta utheta_k)_,k) d:x' @ ns,
         degree=4
@@ -73,19 +75,19 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
 
     # Outlet velocity boundary condition
     sqr = domain.boundary['right'].integral('(u_0 - 1)^2' @ ns, degree=4)
-    cons0 = solver.optimize('lhs', sqr, droptol=1e-14)  
+    cons0 = solver.optimize('lhs', sqr, droptol=1e-14)
 
     res0 = res                          # Save base residual (without inlet BC)
-    
+
     # Initial condition
-    lhs0 = np.zeros(res.shape)       
+    lhs0 = np.zeros(res.shape)
 
     # Time-stepping
     t = 0.0
     timestep = 0
     bezier = domain.sample('bezier', 2)
 
-    f = open("watchpoint.txt", "w")    
+    f = open("watchpoint.txt", "w")
 
     # --- Time loop with preCICE coupling ---
     while participant.is_coupling_ongoing():
@@ -120,7 +122,7 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
             x, p, ρ, u = bezier.eval(['x_i', 'p', 'ρ', 'u_i'] @ ns, arguments=dict(lhs=lhs))
 
         # Send velocity at the left boundary to the other solver
-        write_vel = [[0, u[0][0], 0]] 
+        write_vel = [[0, u[0][0], 0]]
         participant.write_data(mesh_name, velocity_name, vertex_ids, write_vel)
 
         # Advance in pseudo-time
@@ -135,7 +137,9 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
             lhs0 = lhs
             timestep += timestep
 
-            # Save probe values (time, inlet pressure, inlet velocity, outlet pressure, outlet velocity, pressure at the middle, velocity at the middle)
+            # Save probe values (time, inlet pressure, inlet velocity, outlet
+            # pressure, outlet velocity, pressure at the middle, velocity at the
+            # middle)
             x, p, ρ, u = bezier.eval(['x_i', 'p', 'ρ', 'u_i'] @ ns, lhs=lhs)
             f.write("%e; %e; %e; %e; %e; %e; %e\n" % (t, p[0], u[0], p[-1], u[-1], p[199], u[199]))
             f.flush()
@@ -145,6 +149,7 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
     # Finalize preCICE
     participant.finalize()
     f.close()
+
 
 if __name__ == '__main__':
     cli.run(main)
