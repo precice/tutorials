@@ -81,3 +81,8 @@ potentialFlow
 {
     nNonOrthogonalCorrectors 1;
 }
+
+fieldBounds
+{
+
+}
