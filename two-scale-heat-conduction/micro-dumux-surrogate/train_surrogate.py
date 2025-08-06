@@ -1,7 +1,21 @@
+import os
 from bayesvalidrox import PyLinkForwardModel, Input, PCE, ExpDesigns, Engine
 import h5py
 import joblib
 import numpy as np
+
+
+def create_snapshots() -> None:
+    """
+    Create snapshots of the DuMuX model in micro-dumux/ using the Micro Manager.
+    The snapshots are saved in the specified directory.
+    """
+    concentration_samples = np.linspace(0.0, 0.5, 50)
+
+    with h5py.File("input_samples.hdf5", "w") as f:
+        f.create_dataset("concentration", data=concentration_samples)
+
+    os.subprocess.run(["./create-snapshots.sh", "-s"], check=True)
 
 
 def read_snapshots(snapshots_dir: str) -> np.array, dict:
@@ -38,3 +52,17 @@ def create_surrogate(snapshots_dir: str) -> None:
 
     with open(f'{model.name}.pkl', 'wb') as output:
         joblib.dump(engine, output, 2)
+
+
+def main():
+    snapshots_dir = "snapshots"
+    if not os.path.exists(snapshots_dir):
+        os.makedirs(snapshots_dir)
+
+    os.chdir(snapshots_dir)
+    create_snapshots()
+    create_surrogate(snapshots_dir)
+
+
+if __name__ == "__main__":
+    main()

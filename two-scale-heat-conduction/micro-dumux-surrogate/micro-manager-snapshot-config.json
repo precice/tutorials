@@ -1,0 +1,11 @@
+{
+    "micro_file_name": "micro_sim",
+    "coupling_params": {
+            "parameter_file_name": "input_samples.hdf5",
+            "read_data_names": ["concentration"],
+            "write_data_names": ["k_00", "k_01", "k_10", "k_11", "porosity"]
+    },
+    "simulation_params": {
+      "micro_dt": 0.01
+    }
+}
