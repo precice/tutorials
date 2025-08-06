@@ -7,5 +7,8 @@
     },
     "simulation_params": {
       "micro_dt": 0.01
+    },
+    "snapshot_params": {
+      "initialize_once": true
     }
 }

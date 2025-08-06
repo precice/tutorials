@@ -1,0 +1,3 @@
+numpy
+bayesvalidrox
+micro-manager-precice
