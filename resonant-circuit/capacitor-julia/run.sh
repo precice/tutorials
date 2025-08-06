@@ -1,3 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -e -u
 
-julia --project=. capacitor.jl
+. ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
+
+julia --project=Project.toml -e "using Pkg; Pkg.instantiate();"
+julia --project=Project.toml capacitor.jl
+
+close_log

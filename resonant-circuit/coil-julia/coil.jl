@@ -1,7 +1,5 @@
 using PreCICE
 using OrdinaryDiffEq
-using Plots
-using JLD2
 
 # Initialize and configure preCICE
 participant = PreCICE.createParticipant("Coil", "../precice-config.xml", 0, 1)
@@ -11,7 +9,7 @@ mesh_name = "Coil-Mesh"
 
 dimensions = PreCICE.getMeshDimensions(mesh_name)
 
-vertex_ids = PreCICE.setMeshVertices(mesh_name, [0. 0.])
+vertex_ids = PreCICE.setMeshVertices(mesh_name, zeros((1,dimensions)))
 
 let
     # Data IDs
@@ -40,7 +38,6 @@ let
 
     # Initialize simulation
     if PreCICE.requiresInitialData()
-        @show I0
         PreCICE.writeData(mesh_name, write_data_name, vertex_ids, I0)
     end
     PreCICE.initialize()
@@ -51,7 +48,6 @@ let
     t = t0
     I0_checkpoint = I0
     t_checkpoint = t
-    I_store = [[t, I0]]
     while PreCICE.isCouplingOngoing()
 
         # Record checkpoint if necessary
@@ -83,25 +79,7 @@ let
             I0 = I0_checkpoint
             t = t_checkpoint
         end
-        if PreCICE.isTimeWindowComplete()
-            push!(I_store, [t, I0])
-        end
     end
-    jldsave("coil.jld2", U=I_store)
     # Stop coupling
     PreCICE.finalize()
-
-    # solutions
-    I_analytical(t) = Io * cos(t * w0 + phi)
-    U_analytical(t) = -w0 * L * Io * sin(w0 * t + phi);
-
-    # plot
-    time = getindex.(I_store,1); I_num = getindex.(I_store,2)
-    plot(time, [I_num, I_analytical.(time), U_analytical.(time)],
-         label=["Simulated Current" "Analytical Current" "Analytical Voltage"],
-         xlabel="Time", title="Resonant Circuit Simulation")
-    U_store = jldopen(joinpath(@__DIR__,"../capacitor-julia/capacitor.jld2"))
-    time = getindex.(U_store["U"],1); U_num = getindex.(U_store["U"],2)
-    plot!(time, U_num, label="Simulated Voltage")
-    savefig("resonant_circuit.png")
 end

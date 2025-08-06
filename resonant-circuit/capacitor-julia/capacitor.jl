@@ -1,6 +1,5 @@
 using PreCICE
 using OrdinaryDiffEq
-using JLD2
 
 # Initialize and configure preCICE
 participant = PreCICE.createParticipant("Capacitor", "../precice-config.xml", 0, 1)
@@ -10,7 +9,7 @@ mesh_name = "Capacitor-Mesh"
 
 dimensions = PreCICE.getMeshDimensions(mesh_name)
 
-vertex_ids = PreCICE.setMeshVertices(mesh_name, [0. 0.])
+vertex_ids = PreCICE.setMeshVertices(mesh_name, zeros((1,dimensions)))
 
 let
     # Data IDs
@@ -36,7 +35,6 @@ let
 
     # Initialize simulation
     if PreCICE.requiresInitialData()
-        @show I0
         PreCICE.writeData(mesh_name, write_data_name, vertex_ids, I0)
     end
     PreCICE.initialize()
@@ -47,9 +45,7 @@ let
     t = t0
     U0_checkpoint = U0
     t_checkpoint = t
-    U_store = [[t, U0]]
     while PreCICE.isCouplingOngoing()
-
 
         # Record checkpoint if necessary
         if PreCICE.requiresWritingCheckpoint()
@@ -80,11 +76,7 @@ let
             U0 = U0_checkpoint
             t = t_checkpoint
         end
-        if PreCICE.isTimeWindowComplete()
-            push!(U_store, [t, U0])
-        end
     end
-    jldsave("capacitor.jld2", U=U_store)
     # Stop coupling
     PreCICE.finalize()
 end
