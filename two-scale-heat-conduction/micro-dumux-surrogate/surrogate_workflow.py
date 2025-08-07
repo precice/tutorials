@@ -118,7 +118,7 @@ def create_surrogate(snapshots_dir: str) -> tuple:
     x, y = read_snapshots(snapshots_dir)
 
     # Split the samples into training and validation sets
-    n_valid = 10
+    n_valid = 20
     x_train, y_train, x_valid, y_valid = split_samples(x, y, n_valid)
 
     inputs = Input()
@@ -141,7 +141,7 @@ def create_surrogate(snapshots_dir: str) -> tuple:
     with open(f'{model.name}.pkl', 'wb') as output:
         joblib.dump(engine, output, 2)
 
-    return x_train, y_train
+    return x_valid, y_valid
 
 
 def validate_surrogate(x_valid, y_valid, model_name="micro-dumux-surrogate.pkl"):
@@ -166,19 +166,13 @@ def validate_surrogate(x_valid, y_valid, model_name="micro-dumux-surrogate.pkl")
 
     # Compare predictions with true values
     plt.figure()
-    # plt.scatter(y_valid["porosity"], y_metamod["porosity"])
-    # plt.xlabel("True Values")
-    # plt.ylabel("Predictions")
-    # plt.title(f"Validation: porosity")
-    # plt.plot([0.5, 1], [0.5, 1], "k--")
-    plt.scatter(x_valid[:, 0], y_valid["porosity"])
-    plt.scatter(x_valid[:, 0], y_metamod["porosity"], marker='x', color='red')
-    plt.xlabel("Concentration")
-    plt.ylabel("Porosity")
-    plt.title(f"Model vs. Surrogate: porosity")
-
-    plt.xlim(0.0, 0.6)
-    plt.ylim(0.0, 1.2)
+    plt.scatter(y_valid["porosity"], y_metamod["porosity"])
+    plt.xlabel("True Values")
+    plt.ylabel("Predictions")
+    plt.title(f"Validation: porosity")
+    plt.plot([0.4, 1.1], [0.4, 1.1], "k--")
+    plt.xlim(0.4, 1.1)
+    plt.ylim(0.4, 1.1)
     plt.show()
 
 
@@ -188,7 +182,7 @@ def main():
         os.makedirs(snapshots_dir)
 
     # os.chdir(snapshots_dir)
-    # create_snapshots()
+    create_snapshots()
     x_valid, y_valid = create_surrogate(snapshots_dir)
     validate_surrogate(x_valid, y_valid)
 
