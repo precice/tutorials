@@ -85,9 +85,7 @@ potentialFlow
 relaxationFactors
 {
     U          0.7;
-    p          0.3;
-    k          0.6;
-    epsilon    0.6;
+    Ufinal     1;
 }
 
 fieldBounds
