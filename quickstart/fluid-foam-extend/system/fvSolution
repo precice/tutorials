@@ -82,6 +82,14 @@ potentialFlow
     nNonOrthogonalCorrectors 1;
 }
 
+relaxationFactors
+{
+    U          0.7;
+    p          0.3;
+    k          0.6;
+    epsilon    0.6;
+}
+
 fieldBounds
 {
     p -1e5 1e5;
