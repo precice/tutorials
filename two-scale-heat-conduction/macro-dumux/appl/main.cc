@@ -24,6 +24,7 @@
 #include <dune/common/timer.hh>
 #include <dune/grid/io/file/vtk.hh>
 #include <dune/istl/io.hh>
+#include <dune/grid/common/gridenums.hh>
 
 #include "properties.hh"
 
@@ -114,6 +115,8 @@ int main(int argc, char **argv)
   // get mesh coordinates
   std::vector<double> coords;
   std::vector<int>    coupledElementIdxs;
+  std::vector<double> overlapCoords;
+  std::vector<int>    overlapElementIdxs;
 
   // coordinate loop (created vectors are 1D)
   // these positions of cell centers are later communicated to precice
@@ -122,15 +125,23 @@ int main(int argc, char **argv)
     auto fvGeometry = localView(*gridGeometry);
     fvGeometry.bindElement(element);
     for (const auto &scv : scvs(fvGeometry)) {
-      coupledElementIdxs.push_back(scv.elementIndex());
+      if (element.partitionType() != Dune::OverlapEntity)
+        coupledElementIdxs.push_back(scv.elementIndex());
+      else
+        overlapElementIdxs.push_back(scv.elementIndex());
       const auto &pos = scv.center();
       for (const auto p : pos) {
-        coords.push_back(p);
+        if (element.partitionType() != Dune::OverlapEntity)
+          coords.push_back(p);
+        else
+          overlapCoords.push_back(p);
         std::cout << p << "  ";
       }
       std::cout << " ;" << std::endl;
     }
   }
+  coupledElementIdxs.insert(coupledElementIdxs.end(), overlapElementIdxs.begin(),
+          overlapElementIdxs.end());
   std::cout << "Number of Coupled Cells:" << coupledElementIdxs.size()
             << std::endl;
 
@@ -138,7 +149,7 @@ int main(int argc, char **argv)
   auto numberOfElements =
       coords.size() / couplingParticipant.getMeshDimensions(meshName);
   if (getParam<bool>("Precice.RunWithCoupling") == true) {
-    couplingParticipant.setMesh(meshName, coords);
+    couplingParticipant.setMesh(meshName, coords, overlapCoords);
 
     // couples between dumux element indices and preciceIndices;
     couplingParticipant.createIndexMapping(coupledElementIdxs);
