@@ -22,9 +22,9 @@
 
 #include <dune/common/parallel/mpihelper.hh>
 #include <dune/common/timer.hh>
+#include <dune/grid/common/gridenums.hh>
 #include <dune/grid/io/file/vtk.hh>
 #include <dune/istl/io.hh>
-#include <dune/grid/common/gridenums.hh>
 
 #include "properties.hh"
 
@@ -141,7 +141,7 @@ int main(int argc, char **argv)
     }
   }
   coupledElementIdxs.insert(coupledElementIdxs.end(), overlapElementIdxs.begin(),
-          overlapElementIdxs.end());
+                            overlapElementIdxs.end());
   std::cout << "Number of Coupled Cells:" << coupledElementIdxs.size()
             << std::endl;
 
