@@ -278,6 +278,8 @@ int main(int argc, char **argv)
                                                       dt);
       couplingParticipant.readQuantityFromOtherSolver(meshName,
                                                       readDataPorosity, dt);
+      // store coupling data in problem
+      problem->spatialParams().updateCouplingData();
     }
     std::cout << "Solver starts" << std::endl;
 

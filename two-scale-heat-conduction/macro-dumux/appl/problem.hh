@@ -249,6 +249,7 @@ public:
     }
   }
 
+
 private:
   Dumux::Precice::CouplingAdapter &couplingParticipant_;
 
