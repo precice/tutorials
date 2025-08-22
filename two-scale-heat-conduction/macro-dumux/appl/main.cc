@@ -115,33 +115,25 @@ int main(int argc, char **argv)
   // get mesh coordinates
   std::vector<double> coords;
   std::vector<int>    coupledElementIdxs;
-  std::vector<double> overlapCoords;
-  std::vector<int>    overlapElementIdxs;
 
   // coordinate loop (created vectors are 1D)
   // these positions of cell centers are later communicated to precice
   std::cout << "Coordinates: " << std::endl;
   for (const auto &element : elements(leafGridView)) {
+    if (element.partitionType() == Dune::OverlapEntity)
+      continue;
     auto fvGeometry = localView(*gridGeometry);
     fvGeometry.bindElement(element);
     for (const auto &scv : scvs(fvGeometry)) {
-      if (element.partitionType() != Dune::OverlapEntity)
-        coupledElementIdxs.push_back(scv.elementIndex());
-      else
-        overlapElementIdxs.push_back(scv.elementIndex());
+      coupledElementIdxs.push_back(scv.elementIndex());
       const auto &pos = scv.center();
       for (const auto p : pos) {
-        if (element.partitionType() != Dune::OverlapEntity)
-          coords.push_back(p);
-        else
-          overlapCoords.push_back(p);
+        coords.push_back(p);
         std::cout << p << "  ";
       }
       std::cout << " ;" << std::endl;
     }
   }
-  coupledElementIdxs.insert(coupledElementIdxs.end(), overlapElementIdxs.begin(),
-                            overlapElementIdxs.end());
   std::cout << "Number of Coupled Cells:" << coupledElementIdxs.size()
             << std::endl;
 
@@ -149,7 +141,7 @@ int main(int argc, char **argv)
   auto numberOfElements =
       coords.size() / couplingParticipant.getMeshDimensions(meshName);
   if (getParam<bool>("Precice.RunWithCoupling") == true) {
-    couplingParticipant.setMesh(meshName, coords, overlapCoords);
+    couplingParticipant.setMesh(meshName, coords);
 
     // couples between dumux element indices and preciceIndices;
     couplingParticipant.createIndexMapping(coupledElementIdxs);
