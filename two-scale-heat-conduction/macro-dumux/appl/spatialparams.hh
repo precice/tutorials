@@ -51,11 +51,9 @@ public:
   using PermeabilityType = Scalar;
 
   OnePNISpatialParams(std::shared_ptr<const GridGeometry> gridGeometry)
-      : ParentType(gridGeometry)
-      , couplingParticipant_(Dumux::Precice::CouplingAdapter::getInstance())
-      , couplingData_(gridGeometry->numDofs())
-      , couplingDataHandle_(this->gridGeometry().elementMapper(), couplingData_)
-  {}
+      : ParentType(gridGeometry), couplingParticipant_(Dumux::Precice::CouplingAdapter::getInstance()), couplingData_(gridGeometry->numDofs()), couplingDataHandle_(this->gridGeometry().elementMapper(), couplingData_)
+  {
+  }
 
   /*!
    * \brief Defines the intrinsic permeability \f$\mathrm{[m^2]}\f$.
