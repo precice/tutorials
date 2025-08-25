@@ -22,6 +22,7 @@
 
 #include <dune/common/parallel/mpihelper.hh>
 #include <dune/common/timer.hh>
+#include <dune/grid/common/partitionset.hh>
 #include <dune/grid/io/file/vtk.hh>
 #include <dune/istl/io.hh>
 
@@ -118,7 +119,7 @@ int main(int argc, char **argv)
   // coordinate loop (created vectors are 1D)
   // these positions of cell centers are later communicated to precice
   std::cout << "Coordinates: " << std::endl;
-  for (const auto &element : elements(leafGridView)) {
+  for (const auto &element : elements(leafGridView, Dune::Partitions::interior)) {
     auto fvGeometry = localView(*gridGeometry);
     fvGeometry.bindElement(element);
     for (const auto &scv : scvs(fvGeometry)) {
@@ -275,6 +276,8 @@ int main(int argc, char **argv)
                                                       dt);
       couplingParticipant.readQuantityFromOtherSolver(meshName,
                                                       readDataPorosity, dt);
+      // store coupling data in problem
+      problem->spatialParams().updateCouplingData();
     }
     std::cout << "Solver starts" << std::endl;
 
