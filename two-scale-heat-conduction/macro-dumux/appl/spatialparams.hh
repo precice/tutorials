@@ -122,7 +122,7 @@ public:
             couplingParticipant_.getScalarQuantityOnFace("macro-mesh", "k_11", elementIdx);
       }
     }
-    // exchange coupling data with other ranks
+    // Trigger exchange of coupling data between neighboring ranks, if the domain is partitioned
     if (this->gridGeometry().gridView().comm().size() > 1) {
       this->gridGeometry().gridView().communicate(couplingDataHandle_,
                                                   Dune::InteriorBorder_All_Interface, Dune::ForwardCommunication);
