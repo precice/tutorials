@@ -238,6 +238,7 @@ int main(int argc, char **argv)
 
   // instantiate time loop
   auto timeLoop = std::make_shared<TimeLoop<Scalar>>(0.0, dt, tEnd);
+  timeLoop->setMaxTimeStepSize(getParam<Scalar>("TimeLoop.MaxDt"));
 
   // the assembler with time loop for instationary problem
   using Assembler = FVAssembler<TypeTag, DiffMethod::numeric>;
@@ -268,10 +269,6 @@ int main(int argc, char **argv)
       if (couplingParticipant.requiresToWriteCheckpoint()) {
         xOld = x;
       }
-
-      preciceDt = couplingParticipant.getMaxTimeStepSize();
-      solverDt  = std::min(nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()), getParam<Scalar>("TimeLoop.MaxDt"));
-      dt        = std::min(preciceDt, solverDt);
 
       // read porosity and conductivity data from other solver
       couplingParticipant.readQuantityFromOtherSolver(meshName, readDatak00,
@@ -304,7 +301,12 @@ int main(int argc, char **argv)
 
     // advance precice
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
-      couplingParticipant.advance(dt);
+      couplingParticipant.advance(timeLoop->timeStepSize());
+
+      preciceDt = couplingParticipant.getMaxTimeStepSize();
+      solverDt  = std::min(nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()), timeLoop->maxTimeStepSize());
+      dt        = std::min(preciceDt, solverDt);
+
       if ((!fabs(preciceDt - dt)) < 1e-14) {
         std::cout << "dt from preCICE is different than dt from DuMuX. "
                      "preCICE dt = "
