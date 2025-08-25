@@ -223,14 +223,18 @@ int main(int argc, char **argv)
   // initialize
   couplingParticipant.initialize();
 
-  // get some time loop parameters
+  // time loop parameters
   const auto tEnd      = getParam<Scalar>("TimeLoop.TEnd");
   double     preciceDt = couplingParticipant.getMaxTimeStepSize();
+  double     solverDt;
   double     dt;
-  if (getParam<bool>("Precice.RunWithCoupling") == true)
-    dt = preciceDt;
-  else
+
+  if (getParam<bool>("Precice.RunWithCoupling") == true) {
+    solverDt = getParam<Scalar>("TimeLoop.InitialDt");
+    dt       = std::min(preciceDt, solverDt);
+  } else {
     dt = getParam<Scalar>("TimeLoop.InitialDt");
+  }
 
   // instantiate time loop
   auto timeLoop = std::make_shared<TimeLoop<Scalar>>(0.0, dt, tEnd);
@@ -265,6 +269,10 @@ int main(int argc, char **argv)
         xOld = x;
       }
 
+      preciceDt = couplingParticipant.getMaxTimeStepSize();
+      solverDt  = std::min(nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()), getParam<Scalar>("TimeLoop.MaxDt"));
+      dt        = std::min(preciceDt, solverDt);
+
       // read porosity and conductivity data from other solver
       couplingParticipant.readQuantityFromOtherSolver(meshName, readDatak00,
                                                       dt);
@@ -297,22 +305,17 @@ int main(int argc, char **argv)
     // advance precice
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
       couplingParticipant.advance(dt);
-      preciceDt = couplingParticipant.getMaxTimeStepSize();
-      dt        = std::min(preciceDt, std::min(nonLinearSolver.suggestTimeStepSize(
-                                                   timeLoop->timeStepSize()),
-                                               getParam<Scalar>("TimeLoop.MaxDt")));
-      if (preciceDt != dt) {
-        std::cout << "preciceDt too large. We currently assume fixed timestep "
-                     "size but timesteps no longer correspond: preciceDt = "
-                  << preciceDt << " and dt =" << dt << std::endl;
-        // exit(1);
+      if ((!fabs(preciceDt - dt)) < 1e-14) {
+        std::cout << "dt from preCICE is different than dt from DuMuX. "
+                     "preCICE dt = "
+                  << preciceDt << " and DuMuX dt =" << solverDt << std::endl;
       }
     } else
       dt = std::min(
           nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()),
           getParam<Scalar>("TimeLoop.MaxDt"));
 
-    std::cout << "dt: " << dt << std::endl;
+    std::cout << "Using dt: " << dt << std::endl;
 
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
       if (couplingParticipant.requiresToReadCheckpoint()) {
@@ -350,7 +353,7 @@ int main(int argc, char **argv)
         n = 0;
       }
     }
-    // set new dt as suggested by the newton solver or by precice
+    // set new dt as suggested by the newton solver or by preCICE
     timeLoop->setTimeStepSize(dt);
 
     std::cout << "Time: " << timeLoop->time() << std::endl;
