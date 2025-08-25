@@ -22,7 +22,7 @@
 
 #include <dune/common/parallel/mpihelper.hh>
 #include <dune/common/timer.hh>
-#include <dune/grid/common/gridenums.hh>
+#include <dune/grid/common/partitionset.hh>
 #include <dune/grid/io/file/vtk.hh>
 #include <dune/istl/io.hh>
 
@@ -119,9 +119,7 @@ int main(int argc, char **argv)
   // coordinate loop (created vectors are 1D)
   // these positions of cell centers are later communicated to precice
   std::cout << "Coordinates: " << std::endl;
-  for (const auto &element : elements(leafGridView)) {
-    if (element.partitionType() == Dune::OverlapEntity)
-      continue;
+  for (const auto &element : elements(leafGridView, Dune::Partitions::interior)) {
     auto fvGeometry = localView(*gridGeometry);
     fvGeometry.bindElement(element);
     for (const auto &scv : scvs(fvGeometry)) {

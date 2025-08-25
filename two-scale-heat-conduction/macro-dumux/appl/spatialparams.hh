@@ -18,7 +18,7 @@
 #ifndef DUMUX_TEST_1PNI_SPATIAL_PARAMS_HH
 #define DUMUX_TEST_1PNI_SPATIAL_PARAMS_HH
 
-#include <dune/grid/common/gridenums.hh>
+#include <dune/grid/common/partitionset.hh>
 
 #include <dumux/parallel/vectorcommdatahandle.hh>
 #include <dumux/porousmediumflow/fvspatialparams1p.hh>
@@ -105,9 +105,7 @@ public:
 
   void updateCouplingData()
   {
-    for (const auto &element : elements(this->gridGeometry().gridView())) {
-      if (element.partitionType() == Dune::OverlapEntity)
-        continue;
+    for (const auto &element : elements(this->gridGeometry().gridView(), Dune::Partitions::interior)) {
       auto fvGeometry = localView(this->gridGeometry());
       fvGeometry.bindElement(element);
       for (const auto &scv : scvs(fvGeometry)) {
