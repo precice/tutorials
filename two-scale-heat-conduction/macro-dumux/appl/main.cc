@@ -295,7 +295,7 @@ int main(int argc, char **argv)
       fvGeometry.bindElement(element);
       for (const auto &scv : scvs(fvGeometry)) {
         temperatures[solIdx++] =
-                 x[scv.elementIndex()][problem->returnTemperatureIdx()];
+            x[scv.elementIndex()][problem->returnTemperatureIdx()];
       }
     }
 
