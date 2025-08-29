@@ -7,6 +7,7 @@ exec > >(tee --append "$LOGFILE") 2>&1
 python3 -m venv .venv
 . .venv/bin/activate
 pip install ../solver-python
+pip freeze ../solver-python/ > ../solver-python/pip-installed-packages.log
 
 if [ $# -eq 0 ]; then
   growing A
