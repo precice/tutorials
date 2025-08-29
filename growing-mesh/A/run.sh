@@ -1,5 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e -u
+
+. ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
 python3 -m venv .venv
 . .venv/bin/activate
@@ -10,3 +13,5 @@ if [ $# -eq 0 ]; then
 else
   mpirun -n "$@" growing A
 fi
+
+close_log
