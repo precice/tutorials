@@ -96,8 +96,8 @@ class OverlapDomain(SubDomain):
     def inside(self, x, on_boundary):
         tol = 1E-14
         if (x[0] <= x_coupling + hx * (overlap_cells * 0.5) + tol) and (x[0] >= x_coupling -
-                                                                        # Point lies inside of overlapping domain
                                                                         hx * (overlap_cells - 0.5) - tol):
+            # Point lies inside of overlapping domain
             return True
         else:
             return False
