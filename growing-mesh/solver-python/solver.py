@@ -55,11 +55,8 @@ def main():
     print(f"Rank {rank}/{size} has partition ({px}, {py})/({xr}, {yr})")
     if rank == 0:
         print(
-            f"Each of {size} partitions has node size {pnx}x{pny} = {
-                pnx *
-                pny} for a total of {
-                nx *
-                ny} nodes on the base"
+            f"Each of {size} partitions has node size {pnx}x{pny} = {pnx * pny}"
+            "for a total of {nx * ny} nodes on the base"
         )
 
     def getMesh(nz):
@@ -118,12 +115,8 @@ def main():
             coords = getMeshAtTimeWindow(tw)
             if rank == 0:
                 print(
-                    f"{participant_name}: Event grows local mesh from {oldCount} to {
-                        len(coords)} and global mesh from {
-                        oldCount *
-                        size} to {
-                        len(coords) *
-                        size}"
+                    f"{participant_name}: Event grows local mesh from {oldCount} to {len(coords)}"
+                    "and global mesh from {oldCount * size} to {len(coords) * size}"
                 )
             participant.reset_mesh(mesh_name)
             vertex_ids = participant.set_mesh_vertices(mesh_name, coords)
