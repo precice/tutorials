@@ -100,7 +100,8 @@ int main(int argc, char **argv)
 
   auto &couplingParticipant = Dumux::Precice::CouplingAdapter::getInstance();
 
-  if (getParam<bool>("Precice.RunWithCoupling") == true) {
+  const auto runWithCoupling = getParam<bool>("Precice.RunWithCoupling");
+  if (runWithCoupling) {
     couplingParticipant.announceSolver("macro-heat", preciceConfigFilename,
                                        mpiHelper.rank(), mpiHelper.size());
     // verify that dimensions match
@@ -138,7 +139,7 @@ int main(int argc, char **argv)
   // initialize preCICE
   auto numberOfElements =
       coords.size() / couplingParticipant.getMeshDimensions(meshName);
-  if (getParam<bool>("Precice.RunWithCoupling") == true) {
+  if (runWithCoupling) {
     couplingParticipant.setMesh(meshName, coords);
 
     // couples between dumux element indices and preciceIndices;
@@ -154,7 +155,7 @@ int main(int argc, char **argv)
   const std::string writeDataConcentration = "concentration";
   // const std::string writeDataTemperature = "temperature";
 
-  if (getParam<bool>("Precice.RunWithCoupling") == true) {
+  if (runWithCoupling) {
     couplingParticipant.announceQuantity(meshName, readDatak00);
     couplingParticipant.announceQuantity(meshName, readDatak01);
     couplingParticipant.announceQuantity(meshName, readDatak10);
@@ -181,7 +182,7 @@ int main(int argc, char **argv)
     temperatures.push_back(x[solIdx][problem->returnTemperatureIdx()]);
   };
 
-  if (getParam<bool>("Precice.RunWithCoupling") == true) {
+  if (runWithCoupling) {
     couplingParticipant.writeQuantityVector(meshName, writeDataConcentration,
                                             temperatures);
     if (couplingParticipant
@@ -233,7 +234,7 @@ int main(int argc, char **argv)
   double     solverDt;
   double     dt;
 
-  if (getParam<bool>("Precice.RunWithCoupling") == true) {
+  if (runWithCoupling) {
     solverDt = getParam<Scalar>("TimeLoop.InitialDt");
     dt       = std::min(preciceDt, solverDt);
   } else {
@@ -265,7 +266,7 @@ int main(int argc, char **argv)
   std::cout << "Time Loop starts" << std::endl;
   timeLoop->start();
   do {
-    if (getParam<bool>("Precice.RunWithCoupling") == true) {
+    if (runWithCoupling) {
       if (couplingParticipant.isCouplingOngoing() == false)
         break;
 
@@ -277,11 +278,13 @@ int main(int argc, char **argv)
       }
 
       preciceDt = couplingParticipant.getMaxTimeStepSize();
-      solverDt  = std::min(nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()), timeLoop->maxTimeStepSize());
+      solverDt  = std::min(nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()),
+                           timeLoop->maxTimeStepSize());
       dt        = std::min(preciceDt, solverDt);
-      timeLoop->setTimeStepSize(dt);
 
       // read porosity and conductivity data from other solver
+      // TODO: data needs to be updated if Newton solver adapts time-step size
+      // and coupling data is interpolated in time
       couplingParticipant.readQuantityFromOtherSolver(meshName, readDatak00,
                                                       dt);
       couplingParticipant.readQuantityFromOtherSolver(meshName, readDatak01,
@@ -292,80 +295,71 @@ int main(int argc, char **argv)
                                                       dt);
       couplingParticipant.readQuantityFromOtherSolver(meshName,
                                                       readDataPorosity, dt);
-      // store coupling data in problem
+      // store coupling data in spatial params, exchange with MPI
       problem->spatialParams().updateCouplingData();
     } else {
       dt = std::min(
           nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()),
-          getParam<Scalar>("TimeLoop.MaxDt"));
-      timeLoop->setTimeStepSize(dt);
+          timeLoop->maxTimeStepSize());
     }
+    // set new dt as suggested by the newton solver or by preCICE
+    timeLoop->setTimeStepSize(dt);
 
-    std::cout << "Solver starts" << std::endl;
+    std::cout << "Solver starts with Target dt: " << dt << std::endl;
 
-    std::cout << "Using dt: " << dt << std::endl;
     // linearize & solve
     nonLinearSolver.solve(x, *timeLoop);
     // save actual time-step size
     dt = timeLoop->timeStepSize();
+
     // DuMux advance + report
     gridVariables->advanceTimeStep();
     timeLoop->advanceTimeStep();
     timeLoop->reportTimeStep();
+    xOld = x;
 
-    for (int solIdx = 0; solIdx < numberOfElements; ++solIdx)
-      temperatures[solIdx] = x[solIdx][problem->returnTemperatureIdx()];
+    // Vtk output
+    // TODO: output interval doesn't work easily with subcycling
+    n += 1;
+    if (n == vtkOutputInterval) {
+      problem->updateVtkOutput(x);
+      vtkWriter.write(timeLoop->time());
+      n = 0;
+    }
 
-    if (getParam<bool>("Precice.RunWithCoupling") == true) {
+    if (runWithCoupling) {
+      // write coupling data to preCICE
+      for (int solIdx = 0; solIdx < numberOfElements; ++solIdx)
+        temperatures[solIdx] = x[solIdx][problem->returnTemperatureIdx()];
+
       couplingParticipant.writeQuantityVector(meshName,
                                               writeDataConcentration, temperatures);
       couplingParticipant.writeQuantityToOtherSolver(meshName,
                                                      writeDataConcentration);
-    }
 
-    // advance precice
-    if (getParam<bool>("Precice.RunWithCoupling") == true) {
-
+      // advance precice
       if ((!fabs(preciceDt - dt)) < 1e-14) {
         std::cout << "dt from preCICE is different than dt from DuMuX."
                   << " preCICE dt = " << preciceDt
-                  << " and DuMuX dt =" << solverDt
+                  << " and DuMuX dt = " << solverDt
                   << " resulted in dt = " << dt
                   << std::endl;
       }
+      std::flush(std::cout);
       couplingParticipant.advance(dt);
-    }
 
-    if (getParam<bool>("Precice.RunWithCoupling") == true) {
+      // reset to checkpoint if not converged
       if (couplingParticipant.requiresToReadCheckpoint()) {
         x    = xCheckpoint;
         xOld = x;
         timeLoop->setTime(timeCheckpoint, timeStepCheckpoint);
+        // TODO: previousTimeStep might be more appropriate, last one could be small
         timeLoop->setTimeStepSize(dt);
         gridVariables->update(x);
         gridVariables->advanceTimeStep();
-      } else // coupling successful OR not at time window!!
-      {
-        xOld = x;
-        n += 1;
-        if (n == vtkOutputInterval) {
-          problem->updateVtkOutput(x);
-          vtkWriter.write(timeLoop->time());
-          n = 0;
-        }
-      }
-    } else {
-      xOld = x;
-      // output every outputinterval steps
-      n += 1;
-      if (n == vtkOutputInterval) {
-        problem->updateVtkOutput(x);
-        vtkWriter.write(timeLoop->time());
-        n = 0;
+        continue;
       }
     }
-    // set new dt as suggested by the newton solver or by preCICE
-    timeLoop->setTimeStepSize(dt);
 
     std::cout << "Time: " << timeLoop->time() << std::endl;
 
@@ -376,7 +370,7 @@ int main(int argc, char **argv)
   ////////////////////////////////////////////////////////////
   // finalize, print dumux message to say goodbye
   ////////////////////////////////////////////////////////////
-  if (getParam<bool>("Precice.RunWithCoupling") == true) {
+  if (runWithCoupling) {
     couplingParticipant.finalize();
   }
   // print dumux end message
