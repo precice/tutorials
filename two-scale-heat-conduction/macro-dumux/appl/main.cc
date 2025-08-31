@@ -306,7 +306,12 @@ int main(int argc, char **argv)
     std::cout << "Using dt: " << dt << std::endl;
     // linearize & solve
     nonLinearSolver.solve(x, *timeLoop);
+    // save actual time-step size
     dt = timeLoop->timeStepSize();
+    // DuMux advance + report
+    gridVariables->advanceTimeStep();
+    timeLoop->advanceTimeStep();
+    timeLoop->reportTimeStep();
 
     for (int solIdx = 0; solIdx < numberOfElements; ++solIdx)
       temperatures[solIdx] = x[solIdx][problem->returnTemperatureIdx()];
@@ -320,21 +325,19 @@ int main(int argc, char **argv)
 
     // advance precice
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
-      couplingParticipant.advance(timeLoop->timeStepSize());
 
       if ((!fabs(preciceDt - dt)) < 1e-14) {
-        std::cout << "dt from preCICE is different than dt from DuMuX. "
-                     "preCICE dt = "
-                  << preciceDt << " and DuMuX dt =" << solverDt << std::endl;
+        std::cout << "dt from preCICE is different than dt from DuMuX."
+                  << " preCICE dt = " << preciceDt
+                  << " and DuMuX dt =" << solverDt
+                  << " resulted in dt = " << dt
+                  << std::endl;
       }
+      couplingParticipant.advance(dt);
     }
 
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
       if (couplingParticipant.requiresToReadCheckpoint()) {
-        // make the new solution the old solution
-        gridVariables->advanceTimeStep();
-        timeLoop->advanceTimeStep();
-        timeLoop->reportTimeStep();
         x    = xCheckpoint;
         xOld = x;
         timeLoop->setTime(timeCheckpoint, timeStepCheckpoint);
@@ -350,20 +353,9 @@ int main(int argc, char **argv)
           vtkWriter.write(timeLoop->time());
           n = 0;
         }
-        gridVariables->advanceTimeStep();
-        // advance the time loop to the next step
-        timeLoop->advanceTimeStep();
-        // report statistics of this time step
-        timeLoop->reportTimeStep();
       }
     } else {
       xOld = x;
-      gridVariables->advanceTimeStep();
-      // advance the time loop to the next step
-      timeLoop->advanceTimeStep();
-      // report statistics of this time step
-      timeLoop->reportTimeStep();
-
       // output every outputinterval steps
       n += 1;
       if (n == vtkOutputInterval) {
