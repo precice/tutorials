@@ -292,8 +292,10 @@ int main(int argc, char **argv)
     }
     std::cout << "Solver starts" << std::endl;
 
+    std::cout << "Using dt: " << dt << std::endl;
     // linearize & solve
     nonLinearSolver.solve(x, *timeLoop);
+    dt = timeLoop->timeStepSize();
 
     for (int solIdx = 0; solIdx < numberOfElements; ++solIdx)
       temperatures[solIdx] = x[solIdx][problem->returnTemperatureIdx()];
@@ -309,21 +311,22 @@ int main(int argc, char **argv)
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
       couplingParticipant.advance(timeLoop->timeStepSize());
 
-      preciceDt = couplingParticipant.getMaxTimeStepSize();
-      solverDt  = std::min(nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()), timeLoop->maxTimeStepSize());
-      dt        = std::min(preciceDt, solverDt);
-
       if ((!fabs(preciceDt - dt)) < 1e-14) {
         std::cout << "dt from preCICE is different than dt from DuMuX. "
                      "preCICE dt = "
                   << preciceDt << " and DuMuX dt =" << solverDt << std::endl;
       }
+    }
+
+    if (getParam<bool>("Precice.RunWithCoupling") == true) {
+      preciceDt = couplingParticipant.getMaxTimeStepSize();
+      solverDt  = std::min(nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()), timeLoop->maxTimeStepSize());
+      dt        = std::min(preciceDt, solverDt);
+
     } else
       dt = std::min(
           nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()),
           getParam<Scalar>("TimeLoop.MaxDt"));
-
-    std::cout << "Using dt: " << dt << std::endl;
 
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
       if (couplingParticipant.requiresToReadCheckpoint()) {
