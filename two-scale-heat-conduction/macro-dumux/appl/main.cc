@@ -171,6 +171,10 @@ int main(int argc, char **argv)
   problem->applyInitialSolution(x);
   auto xOld = x;
 
+  auto   xCheckpoint        = x;
+  double timeCheckpoint     = 0.0;
+  int    timeStepCheckpoint = 0;
+
   // initialize the coupling data
   std::vector<double> temperatures;
   for (int solIdx = 0; solIdx < numberOfElements; ++solIdx) {
@@ -267,7 +271,9 @@ int main(int argc, char **argv)
 
       // write checkpoint
       if (couplingParticipant.requiresToWriteCheckpoint()) {
-        xOld = x;
+        xCheckpoint        = x;
+        timeCheckpoint     = timeLoop->time();
+        timeStepCheckpoint = timeLoop->timeStepIndex();
       }
 
       // read porosity and conductivity data from other solver
@@ -322,11 +328,18 @@ int main(int argc, char **argv)
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
       if (couplingParticipant.requiresToReadCheckpoint()) {
         // make the new solution the old solution
-        x = xOld;
+        gridVariables->advanceTimeStep();
+        timeLoop->advanceTimeStep();
+        timeLoop->reportTimeStep();
+        x    = xCheckpoint;
+        xOld = x;
+        timeLoop->setTime(timeCheckpoint, timeStepCheckpoint);
+        timeLoop->setTimeStepSize(dt);
         gridVariables->update(x);
         gridVariables->advanceTimeStep();
-      } else // coupling successful
+      } else // coupling successful OR not at time window!!
       {
+        xOld = x;
         n += 1;
         if (n == vtkOutputInterval) {
           problem->updateVtkOutput(x);
