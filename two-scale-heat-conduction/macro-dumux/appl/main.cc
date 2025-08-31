@@ -276,6 +276,11 @@ int main(int argc, char **argv)
         timeStepCheckpoint = timeLoop->timeStepIndex();
       }
 
+      preciceDt = couplingParticipant.getMaxTimeStepSize();
+      solverDt  = std::min(nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()), timeLoop->maxTimeStepSize());
+      dt        = std::min(preciceDt, solverDt);
+      timeLoop->setTimeStepSize(dt);
+
       // read porosity and conductivity data from other solver
       couplingParticipant.readQuantityFromOtherSolver(meshName, readDatak00,
                                                       dt);
@@ -289,7 +294,13 @@ int main(int argc, char **argv)
                                                       readDataPorosity, dt);
       // store coupling data in problem
       problem->spatialParams().updateCouplingData();
+    } else {
+      dt = std::min(
+          nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()),
+          getParam<Scalar>("TimeLoop.MaxDt"));
+      timeLoop->setTimeStepSize(dt);
     }
+
     std::cout << "Solver starts" << std::endl;
 
     std::cout << "Using dt: " << dt << std::endl;
@@ -317,16 +328,6 @@ int main(int argc, char **argv)
                   << preciceDt << " and DuMuX dt =" << solverDt << std::endl;
       }
     }
-
-    if (getParam<bool>("Precice.RunWithCoupling") == true) {
-      preciceDt = couplingParticipant.getMaxTimeStepSize();
-      solverDt  = std::min(nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()), timeLoop->maxTimeStepSize());
-      dt        = std::min(preciceDt, solverDt);
-
-    } else
-      dt = std::min(
-          nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()),
-          getParam<Scalar>("TimeLoop.MaxDt"));
 
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
       if (couplingParticipant.requiresToReadCheckpoint()) {
