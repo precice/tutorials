@@ -101,6 +101,7 @@ int main(int argc, char **argv)
   auto &couplingParticipant = Dumux::Precice::CouplingAdapter::getInstance();
 
   const auto runWithCoupling = getParam<bool>("Precice.RunWithCoupling");
+
   if (runWithCoupling) {
     couplingParticipant.announceSolver("macro-heat", preciceConfigFilename,
                                        mpiHelper.rank(), mpiHelper.size());
@@ -133,10 +134,10 @@ int main(int argc, char **argv)
       std::cout << " ;" << std::endl;
     }
   }
+
   std::cout << "Number of Coupled Cells:" << coupledElementIdxs.size()
             << std::endl;
 
-  // initialize preCICE
   auto numberOfElements =
       coords.size() / couplingParticipant.getMeshDimensions(meshName);
   if (runWithCoupling) {
@@ -208,7 +209,7 @@ int main(int argc, char **argv)
   auto gridVariables  = std::make_shared<GridVariables>(problem, gridGeometry);
   gridVariables->init(x);
 
-  // intialize the vtk output module
+  // initialize the vtk output module
   using IOFields = GetPropType<TypeTag, Properties::IOFields>;
   VtkOutputModule<GridVariables, SolutionVector> vtkWriter(*gridVariables, x,
                                                            problem->name());
@@ -225,7 +226,7 @@ int main(int argc, char **argv)
   // output every vtkOutputInterval time step
   const int vtkOutputInterval = getParam<int>("TimeLoop.OutputInterval");
 
-  // initialize
+  // initialize preCICE
   couplingParticipant.initialize();
 
   // time loop parameters
@@ -302,14 +303,15 @@ int main(int argc, char **argv)
           nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()),
           timeLoop->maxTimeStepSize());
     }
-    // set new dt as suggested by the newton solver or by preCICE
+    // set new dt as suggested by the Newton solver or by preCICE
     timeLoop->setTimeStepSize(dt);
 
-    std::cout << "Solver starts with Target dt: " << dt << std::endl;
+    std::cout << "Solver starts with target dt: " << dt << std::endl;
 
     // linearize & solve
     nonLinearSolver.solve(x, *timeLoop);
-    // save actual time-step size
+
+    // save dt value that was actually used by the non-linear solver
     dt = timeLoop->timeStepSize();
 
     // DuMux advance + report
@@ -319,7 +321,7 @@ int main(int argc, char **argv)
     xOld = x;
 
     // Vtk output
-    // TODO: output interval doesn't work easily with subcycling
+    // TODO: output interval does not work seamlessly when subcycling
     n += 1;
     if (n == vtkOutputInterval) {
       problem->updateVtkOutput(x);
@@ -343,7 +345,7 @@ int main(int argc, char **argv)
       couplingParticipant.writeQuantityToOtherSolver(meshName,
                                                      writeDataConcentration);
 
-      // advance precice
+      // advance preCICE
       if ((!fabs(preciceDt - dt)) < 1e-14) {
         std::cout << "dt from preCICE is different than dt from DuMuX."
                   << " preCICE dt = " << preciceDt
@@ -359,6 +361,7 @@ int main(int argc, char **argv)
         x    = xCheckpoint;
         xOld = x;
         timeLoop->setTime(timeCheckpoint, timeStepCheckpoint);
+
         // TODO: previousTimeStep might be more appropriate, last one could be small
         timeLoop->setTimeStepSize(dt);
         gridVariables->update(x);
