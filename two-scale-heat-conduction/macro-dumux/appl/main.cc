@@ -328,9 +328,15 @@ int main(int argc, char **argv)
     }
 
     if (runWithCoupling) {
-      // write coupling data to preCICE
-      for (int solIdx = 0; solIdx < numberOfElements; ++solIdx)
-        temperatures[solIdx] = x[solIdx][problem->returnTemperatureIdx()];
+      int solIdx = 0;
+      for (const auto &element : elements(leafGridView, Dune::Partitions::interior)) {
+        auto fvGeometry = localView(*gridGeometry);
+        fvGeometry.bindElement(element);
+        for (const auto &scv : scvs(fvGeometry)) {
+          temperatures[solIdx++] =
+              x[scv.elementIndex()][problem->returnTemperatureIdx()];
+        }
+      }
 
       couplingParticipant.writeQuantityVector(meshName,
                                               writeDataConcentration, temperatures);
