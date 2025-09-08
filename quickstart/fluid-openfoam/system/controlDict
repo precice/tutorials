@@ -3,12 +3,12 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
+    location    "system";
     object      controlDict;
 }
 
 application     pimpleFoam;       // latest OpenFOAM
 // application     pimpleDyMFoam; // OpenFOAM v1712, OpenFOAM 5.x, or older
-
 
 startFrom           startTime;
 
@@ -36,14 +36,23 @@ timeFormat          general;
 
 timePrecision       8;
 
-libs ("libpreciceAdapterFunctionObject.so");
+libs
+(
+    "libpreciceAdapterFunctionObject.so"
+);
 functions
 {
     forces
     {
         type                forces;
         libs                ( "libforces.so" );
+        functionObjectLibs  ( "libforces.so" );
+        outputControl       timeStep;
+        outputInterval      1;
         patches             (flap);
+        pName               p;
+        UName               U;
+        rhoName             rhoInf;
         rho                 rhoInf;
         log                 true;
         rhoInf              10;
