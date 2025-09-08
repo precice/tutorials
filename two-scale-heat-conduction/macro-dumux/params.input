@@ -14,9 +14,9 @@ UpperRight = 1 0.5
 Cells = 8 4
 
 [TimeLoop]
-TEnd = 0.25 
+TEnd = 0.025
 OutputInterval = 1 # output after every n timesteps 
-MaxDt = 0.01 
+MaxDt = 0.004
 InitialDt = 0.01
 
 [Problem]
