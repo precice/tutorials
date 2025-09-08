@@ -6,8 +6,6 @@ CASENAME="$(pwd | xargs basename)"
 touch "$CASENAME.foam"
 
 # Modify code for foam-extend
-mkdir constant/polyMesh
-cp system/blockMeshDict constant/polyMesh 
 sed -i "s/noSlip;/noSlipWall;/g" 0/U
 sed -i "s,application     pimpleFoam;,//application     pimpleFoam;,g" system/controlDict
 sed -i "s,// application     pimpleDyMFoam;,application     pimpleDyMFoam;,g" system/controlDict
