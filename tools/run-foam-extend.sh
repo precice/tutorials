@@ -31,12 +31,12 @@ else
 fi
 
 # Reverse code for OpenFOAM
-rm -rf constant/polyMesh
-sed -i "s/noSlipWall;/noSlip;/g" 0/U
-sed -i "s,application     pimpleDyMFoam;,// application     pimpleDyMFoam;,g" system/controlDict
-sed -i "s,//application     pimpleFoam;,application     pimpleFoam;,g" system/controlDict
-sed -i '/   "liblduSolvers.so"/d' system/controlDict
-sed -i '/   "libforces.so/d' system/controlDict
-sed -i "s,writeCompression    uncompressed,writeCompression    off,g" system/controlDict
-
-sed -i "s/libfvMotionSolver\./libfvMotionSolvers\./g" constant/dynamicMeshDict
+#rm -rf constant/polyMesh
+#sed -i "s/noSlipWall;/noSlip;/g" 0/U
+#sed -i "s,application     pimpleDyMFoam;,// application     pimpleDyMFoam;,g" system/controlDict
+#sed -i "s,//application     pimpleFoam;,application     pimpleFoam;,g" system/controlDict
+#sed -i '/   "liblduSolvers.so"/d' system/controlDict
+#sed -i '/   "libforces.so/d' system/controlDict
+#sed -i "s,writeCompression    uncompressed,writeCompression    off,g" system/controlDict
+#
+#sed -i "s/libfvMotionSolver\./libfvMotionSolvers\./g" constant/dynamicMeshDict
