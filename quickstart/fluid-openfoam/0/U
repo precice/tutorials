@@ -22,11 +22,13 @@ boundaryField
     top
     {
         type            noSlip;
+        value           uniform (0 0 0);
     }
 
     bottom
     {
         type            noSlip;
+        value           uniform (0 0 0);
     }
 
     inlet
