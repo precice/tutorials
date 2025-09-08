@@ -6,6 +6,7 @@ CASENAME="$(pwd | xargs basename)"
 touch "$CASENAME.foam"
 
 # Modify code for foam-extend
+echo "modifying everything now"
 sed -i "s/noSlip;/noSlipWall;/g" 0/U
 sed -i "s,application     pimpleFoam;,//application     pimpleFoam;,g" system/controlDict
 sed -i "s,// application     pimpleDyMFoam;,application     pimpleDyMFoam;,g" system/controlDict
@@ -18,7 +19,7 @@ sed -i "s/libfvMotionSolvers\./libfvMotionSolver\./g" constant/dynamicMeshDict
 # OpenFOAM run functions: getApplication, getNumberOfProcessors
 # shellcheck disable=SC1090 # This is an OpenFOAM file which we don't need to check
 . "${WM_PROJECT_DIR}/bin/tools/RunFunctions"
-solver=$(getApplication)
+solver=$(getApplication | cut -f 1 -d " " | sed '\~//~d')
 if [ "${1:-}" = "-parallel" ]; then
     procs=$(getNumberOfProcessors)
     decomposePar -force
