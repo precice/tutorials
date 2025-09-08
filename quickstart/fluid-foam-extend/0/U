@@ -21,12 +21,12 @@ boundaryField
 
     top
     {
-        type            zeroGradient;
+        type            noSlipWall;
     }
 
     bottom
     {
-        type            zeroGradient;
+        type            noSlipWall;
     }
 
     inlet
