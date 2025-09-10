@@ -1,0 +1,25 @@
+name: Multiple perpendicular flaps
+path: multiple-perpendicular-flaps
+url: https://precice.org/tutorials-multiple-perpendicular-flaps.html
+
+participants:
+  - Fluid 
+  - Solid-Upstream
+  - Solid-Downstream
+
+cases:
+  fluid-openfoam:
+    participant: Fluid
+    directory: ./fluid-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+  solid-upstream-dealii:
+    participant: Solid-Upstream
+    directory: ./solid-upstream-dealii
+    run: ./run.sh
+    component: dealii-adapter
+  solid-downstream-dealii:
+    participant: Solid-Downstream
+    directory: ./solid-downstream-dealii
+    run: ./run.sh
+    component: dealii-adapter

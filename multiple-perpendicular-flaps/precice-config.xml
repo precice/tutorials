@@ -7,6 +7,8 @@
       enabled="true" />
   </log>
 
+  <profiling mode="fundamental" synchronize="false" />
+
   <data:vector name="Stress-Upstream" />
   <data:vector name="Displacement-Upstream" />
   <data:vector name="Stress-Downstream" />

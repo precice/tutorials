@@ -116,6 +116,12 @@ Combinations (excerpt) using the dummy `fluid-fake` case:
 
 ![Flap watchpoints using fluid-fake](images/tutorials-perpendicular-flap-displacement-fake-watchpoints.png)
 
+## Try the case with a stronger coupling
+
+In this case, the coupling between the fluid flow and the flap becomes stronger when the fluid is heavier relative to the flap. We can try out this setting by decreasing the density of the solid participant.
+
+With the default value of $$ \rho_s= 3.0·10^{3}kg/m^{3} $$, the simulation will also converge with an explicit coupling scheme. With $$ \rho_s= 1kg/m^{3} $$, the simulation will only converge with implicit coupling, with an acceleration method such as the IQN-ILS in the current configuration.
+
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
 {% enddisclaimer %}

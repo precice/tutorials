@@ -74,7 +74,7 @@ def main():
         t = time.perf_counter()
         result = systemtest.run_only_build(run_directory)
         elapsed_time = time.perf_counter() - t
-        logging.info(f"Building image for {systemtest} took {elapsed_time} seconds")
+        logging.info(f"Building image for {systemtest} took {elapsed_time:^.1f} seconds")
         results.append(result)
 
     build_docker_success = True

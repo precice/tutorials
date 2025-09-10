@@ -189,10 +189,20 @@ clean_fmi() {
 
 clean_matlab(){
     (
-	set -e -u
-	cd "$1"
-	echo "- Cleaning up MATLAB case in $(pwd)"
-	clean_precice_logs .
-	clean_case_logs .
+        set -e -u
+        cd "$1"
+        echo "- Cleaning up MATLAB case in $(pwd)"
+        clean_precice_logs .
+        clean_case_logs .
     )	
+}
+clean_gismo(){
+    (
+        set -e -u
+        cd "$1"
+        echo "- Cleaning up G+Smo case in $(pwd)"
+        rm -rfv ./output/
+        clean_precice_logs .
+        clean_case_logs .
+    )
 }

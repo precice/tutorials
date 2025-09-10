@@ -39,11 +39,12 @@ runTimeModifiable false;
 
 adjustTimeStep no;
 
+libs ("libpreciceAdapterFunctionObject.so");
 functions
 {
     preCICE_Adapter
     {
         type preciceAdapterFunctionObject;
-        libs ("libpreciceAdapterFunctionObject.so");
+        errors strict; // Available since OpenFOAM v2012
     }
 }

@@ -1,5 +1,7 @@
 # preCICE tutorials
 
+[![System tests (latest components)](https://github.com/precice/tutorials/actions/workflows/system-tests-latest-components.yml/badge.svg)](https://github.com/precice/tutorials/actions/workflows/system-tests-latest-components.yml)
+
 > [!IMPORTANT]  
 > This repository is aimed for development purposes and the default branch is `develop`. If you want to use the tutorials, switch to the [`master` branch](https://github.com/precice/tutorials/tree/master) or download the latest [release](https://github.com/precice/tutorials/releases).
 

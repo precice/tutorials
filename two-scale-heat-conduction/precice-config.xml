@@ -4,6 +4,8 @@
     <sink type="stream" output="stdout" filter="%Severity% > debug" enabled="true" />
   </log>
 
+  <profiling mode="fundamental" synchronize="false" />
+
   <data:scalar name="k_00" />
   <data:scalar name="k_01" />
   <data:scalar name="k_10" />
@@ -61,7 +63,7 @@
 
   <coupling-scheme:serial-implicit>
     <participants first="macro-heat" second="Micro-Manager" />
-    <max-time value="0.02" />
+    <max-time value="0.025" />
     <time-window-size value="1.0e-2" />
     <max-iterations value="30" />
     <exchange data="k_00" mesh="macro-mesh" from="Micro-Manager" to="macro-heat" />

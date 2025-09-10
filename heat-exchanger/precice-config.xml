@@ -7,6 +7,8 @@
       enabled="true" />
   </log>
 
+  <profiling mode="fundamental" synchronize="false" />
+
   <data:scalar name="Heat-Transfer-Coefficient-Solid" />
   <data:scalar name="Sink-Temperature-Solid" />
   <data:scalar name="Heat-Transfer-Coefficient-Fluid-Inner" />

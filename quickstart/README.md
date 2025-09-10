@@ -21,29 +21,27 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 1. Get and install preCICE. For Ubuntu 24.04 (Noble Numbat), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_noble.deb
-    sudo apt install ./libprecice3_3.1.2_noble.deb
+    wget https://github.com/precice/precice/releases/download/v3.2.0/libprecice3_3.2.0_noble.deb
+    sudo apt install ./libprecice3_3.2.0_noble.deb
     ```
 
     | OS                            | Package |
     | ---                           | ---     |
-    | Ubuntu 20.04 Focal Fossa      | [`libprecice3_3.1.2_focal.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_focal.deb) |
-    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.1.2_jammy.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_jammy.deb) |
-    | Ubuntu 24.04 Noble Numbat  | [`libprecice3_3.1.2_noble.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_noble.deb) |
-    | Debian 11 "bullseye"          | [`libprecice3_3.1.2_bullseye.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_bullseye.deb) |
-    | Debian 12 "bookworm"          | [`libprecice3_3.1.2_bookworm.deb`](https://github.com/precice/precice/releases/download/v3.1.2/libprecice3_3.1.2_bookworm.deb) |
+    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.2.0_jammy.deb`](https://github.com/precice/precice/releases/download/v3.2.0/libprecice3_3.2.0_jammy.deb) |
+    | Ubuntu 24.04 Noble Numbat  | [`libprecice3_3.2.0_noble.deb`](https://github.com/precice/precice/releases/download/v3.2.0/libprecice3_3.2.0_noble.deb) |
+    | Debian 12 "bookworm"          | [`libprecice3_3.2.0_bookworm.deb`](https://github.com/precice/precice/releases/download/v3.2.0/libprecice3_3.2.0_bookworm.deb) |
     | Something else                | See an [overview of options](https://precice.org/installation-overview.html) |
 
-    - Facing any problems? [Ask for help](https://precice.org/community-channels.html).
+    Facing any problems? [Ask for help](https://precice.org/community-channels.html).
 2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](https://precice.org/adapter-openfoam-support.html):
 
     ```bash
     # Add the signing key, add the repository, update (check this):
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash
-    # Install OpenFOAM v2406:
-    sudo apt install openfoam2406-dev
+    # Install OpenFOAM v2412:
+    sudo apt install openfoam2412-dev
     # Enable OpenFOAM by default in your system and apply now:
-    echo "source /usr/lib/openfoam/openfoam2406/etc/bashrc" >> ~/.bashrc
+    echo "source /usr/lib/openfoam/openfoam2412/etc/bashrc" >> ~/.bashrc
     source ~/.bashrc
     ```
 
@@ -149,6 +147,6 @@ To become a preCICE pro:
 
 Are you just starting with simulation software on Linux? Note that much of the complexity for partitioned simulations comes from working with multiple software packages and some new tools. These resources may help your first steps:
 
-- E-book [Research Software Engineering with Python](https://merely-useful.tech/py-rse/).
+- E-book [Research Software Engineering with Python](http://third-bit.com/py-rse/).
 - Material of the course [Simulation Software Engineering](https://simulation-software-engineering.github.io/) (University of Stuttgart).
 - Material of the course [The Missing Semester of Your CS Education](https://missing.csail.mit.edu/) (MIT).

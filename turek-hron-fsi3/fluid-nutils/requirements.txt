@@ -1,0 +1,7 @@
+setuptools # required by nutils
+nutils==9
+numpy >1, <2
+pyprecice~=3.0
+meshio
+gmsh
+matplotlib

@@ -41,12 +41,13 @@ adjustTimeStep  no;
 
 maxCo           0.75;
 
+libs ("libpreciceAdapterFunctionObject.so");
 functions
 {
    #includeFunc forces
    preCICE_Adapter
     {
         type preciceAdapterFunctionObject;
-        libs ("libpreciceAdapterFunctionObject.so");
+        errors strict; // Available since OpenFOAM v2012
     }
 }
