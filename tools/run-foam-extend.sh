@@ -5,6 +5,12 @@ set -e # Not setting -u as it gets triggered by the OpenFOAM RunFunctions
 CASENAME="$(pwd | xargs basename)"
 touch "$CASENAME.foam"
 
+# Keep a backup of the files to modify
+echo "backing up the original files (copies: 0/U.orig, system/controlDict.orig, constant/dynamicMeshDict.orig)"
+cp 0/U 0/U.orig
+cp system/controlDict system/controlDict.orig
+cp constant/dynamicMeshDict constant/dynamicMeshDict.orig
+
 # Modify code for foam-extend
 echo "modifying everything now"
 sed -i "s/noSlip;/noSlipWall;/g" 0/U
