@@ -115,6 +115,12 @@ You can also run OpenFOAM in parallel: `./run.sh -parallel`.
 
 In serial, the simulation should take less than a minute to compute (simulated time: 2.5s).
 
+{% note %}
+While we recommend starting with the latest OpenFOAM version from openfoam.com,
+this case can alternatively be executed with foam-extend.
+For that, replace `run-openfoam.sh` with `run-foam-extend.sh` in the `run.sh` script.
+{% endnote %}
+
 ## Visualizing the results
 
 You can visualize the simulation results of the `Fluid` participant using ParaView and loading the (empty) file `fluid-openfoam/fluid-openfoam.foam`. The rigid body does not generate any readable output files, but the OpenFOAM data should be enough for now: click "play" in ParaView, the flap should already be moving! 🎉
