@@ -6,7 +6,9 @@ FoamFile
     object      controlDict;
 }
 
-application     pimpleFoam;
+application     foamRun;
+
+solver          incompressibleFluid; // pimpleFoam;
 
 startFrom       startTime;
 

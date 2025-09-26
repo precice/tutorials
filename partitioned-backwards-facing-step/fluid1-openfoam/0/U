@@ -28,6 +28,7 @@ boundaryField
     {
         type            coupledVelocity;
         refValue        uniform (0 0 0);
+		phi				phi;
     }
 
     frontAndBack

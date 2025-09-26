@@ -11,13 +11,25 @@ solvers
 {
     "alpha.water.*"
     {
+        nCorrectors     2;
+        nSubCycles      1;
+
+        MULESCorr       yes;
+
+        MULES
+        {
+            nIter           10;
+            tolerance       1e-2;
+        }
+
+/*
         nAlphaCorr      1;
         nAlphaSubCycles 1;
         cAlpha          1;
 
         MULESCorr       yes;
         nLimiterIter    5;
-
+*/
         solver          smoothSolver;
         smoother        symGaussSeidel;
         tolerance       1e-8;

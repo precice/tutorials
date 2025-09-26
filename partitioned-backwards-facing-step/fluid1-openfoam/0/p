@@ -25,6 +25,8 @@ boundaryField
     {
         type            coupledPressure;
         refValue        uniform 0;
+		phi				phi;
+		U				U;
     }
 
     frontAndBack

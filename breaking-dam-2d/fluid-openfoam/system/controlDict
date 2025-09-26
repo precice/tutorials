@@ -7,7 +7,9 @@ FoamFile
     object      controlDict;
 }
 
-application     interFoam;
+application		foamRun;
+
+solver     		incompressibleVoF;
 
 startFrom       startTime;
 
