@@ -1,0 +1,8 @@
+numpy
+scipy
+matplotlib
+pyprecice
+
+# Optional: PyTorch for neural surrogate solver
+# Uncomment if using surrogate-burgers/solver.py
+# torch

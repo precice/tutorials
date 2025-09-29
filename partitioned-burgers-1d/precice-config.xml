@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<precice-configuration>
+  <log>
+    <sink filter="%Severity% > info" format="---[ %Severity% ] %Message%" enabled="true" />
+  </log>
+
+  <data:scalar name="Gradient" />
+  <data:scalar name="Velocity" />
+
+  <mesh name="Dirichlet-Mesh" dimensions="2">
+    <use-data name="Velocity" />
+    <use-data name="Gradient" />
+  </mesh>
+
+  <mesh name="Neumann-Mesh" dimensions="2">
+    <use-data name="Velocity" />
+    <use-data name="Gradient" />
+  </mesh>
+
+  <participant name="Dirichlet">
+    <provide-mesh name="Dirichlet-Mesh" />
+    <receive-mesh name="Neumann-Mesh" from="Neumann" />
+    <write-data name="Gradient" mesh="Dirichlet-Mesh" />
+    <read-data name="Velocity" mesh="Dirichlet-Mesh" />
+    <mapping:nearest-neighbor direction="read" from="Neumann-Mesh" to="Dirichlet-Mesh" constraint="consistent" />
+  </participant>
+
+  <participant name="Neumann">
+    <provide-mesh name="Neumann-Mesh" />
+    <receive-mesh name="Dirichlet-Mesh" from="Dirichlet" />
+    <write-data name="Velocity" mesh="Neumann-Mesh" />
+    <read-data name="Gradient" mesh="Neumann-Mesh" />
+    <mapping:nearest-neighbor direction="read" from="Dirichlet-Mesh" to="Neumann-Mesh" constraint="consistent" />
+  </participant>
+
+  <m2n:sockets acceptor="Dirichlet" connector="Neumann" exchange-directory=".."/>
+
+  <coupling-scheme:serial-implicit>
+    <participants first="Dirichlet" second="Neumann" />
+    <max-time value="0.1" />
+    <time-window-size value="0.01" />
+    <max-iterations value="10" />
+    <exchange data="Gradient" mesh="Dirichlet-Mesh" from="Dirichlet" to="Neumann" initialize="false" substeps="false" />
+    <exchange data="Velocity" mesh="Neumann-Mesh" from="Neumann" to="Dirichlet" initialize="false" substeps="false" />
+    <relative-convergence-measure data="Gradient" mesh="Dirichlet-Mesh" limit="1e-3" />
+    <relative-convergence-measure data="Velocity" mesh="Neumann-Mesh" limit="1e-3" />
+    <acceleration:aitken>
+      <data name="Velocity" mesh="Neumann-Mesh" />
+      <initial-relaxation value="0.5" />
+    </acceleration:aitken>
+    <!-- <acceleration:constant>
+    <relaxation value="0.1" />
+    </acceleration:constant> -->
+  </coupling-scheme:serial-implicit>
+
+</precice-configuration>
