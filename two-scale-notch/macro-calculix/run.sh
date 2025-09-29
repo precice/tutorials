@@ -5,3 +5,5 @@ set -e -u
 exec > >(tee --append "$LOGFILE") 2>&1
 
 ccx_preCICE -i notch -precice-participant Notch
+
+close_log

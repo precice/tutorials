@@ -31,7 +31,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 ## Available solvers and dependencies
 
-* The macro notch problem is solved using [CalculiX](https://www.calculix.de/), so it required the [CalculiX adapter](https://github.com/precice/calculix-adapter).
+* The macro notch problem is solved using [CalculiX](https://www.calculix.de/), so it required the [CalculiX adapter](https://precice.org/adapter-calculix-overview.html).
 * The micro problem is solved using [FANS](https://github.com/DataAnalyticsEngineering/FANS/tree/develop). FANS needs to be compiled in a Python-wrapped library form, check the [documentation](https://github.com/DataAnalyticsEngineering/FANS/blob/develop/pyfans/README.md) on how to do this.
 * The [Micro Manager](https://precice.org/tooling-micro-manager-installation.html) controls all micro-simulations and facilitates coupling via preCICE. Use the [develop](https://github.com/precice/micro-manager/tree/develop) branch of the Micro Manager.
 
