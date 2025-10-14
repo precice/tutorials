@@ -128,7 +128,7 @@ class BoundaryWrapper:
         bc_right = self.bc_right(u_new)
         return burgers_jacobian_residual(u_new, u_old, dt, self.dx, self.C, bc_left, bc_right)
 
-def main(participant_name: str):
+def main(participant_name: str, savefile_path: str = None):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     case_dir = os.path.abspath(os.path.join(script_dir, '..'))
     run_dir = os.getcwd()
@@ -218,9 +218,11 @@ def main(participant_name: str):
                 # print(f"[Dirichlet] Writing checkpoint at t={t:.4f}")
                 saved_u = u.copy()
                 saved_t = t
+                saved_t_index = t_index
             if participant.requires_reading_checkpoint():
                 u = saved_u.copy()
                 t = saved_t
+                t_index = saved_t_index
                 # print(f"[Dirichlet] Reading checkpoint at t={t:.4f}")
 
             u_from_neumann = participant.read_data(mesh_name, read_data_name, vertex_id, dt)[0]
@@ -246,7 +248,7 @@ def main(participant_name: str):
             print(f"[{participant_name:9s}] t={t:6.4f} | u_coupling={u_interface:8.4f} | du_dx={du_dx_send:8.4f} | flux_across={flux_across_interface:8.4f}")
 
             t = saved_t + dt
-            t_index = int(t/dt)
+            t_index += 1
             solution_history[t_index] = u.copy()
             participant.advance(dt)
 
@@ -256,9 +258,11 @@ def main(participant_name: str):
                 # print(f"[Neumann] Writing checkpoint at t={t:.4f}")
                 saved_u = u.copy()
                 saved_t = t
+                saved_t_index = t_index
             if participant.requires_reading_checkpoint():
                 u = saved_u.copy()
                 t = saved_t
+                t_index = saved_t_index
                 # print(f"[Neumann] Reading checkpoint at t={t:.4f}")
                             
             du_dx_recv = participant.read_data(mesh_name, read_data_name, vertex_id, dt)[0]
@@ -282,7 +286,7 @@ def main(participant_name: str):
             print(f"[{participant_name:9s}] t={t:6.4f} | u_coupling={u_interface:8.4f} | du_dx={du_dx:8.4f} | flux_across={flux_across_interface:8.4f}")
 
             t = saved_t + dt
-            t_index = int(t/dt)
+            t_index += 1
             solution_history[t_index] = u.copy()
             participant.advance(dt)
 
@@ -291,13 +295,16 @@ def main(participant_name: str):
         participant.finalize()
         output_filename = os.path.join(run_dir, f"{participant_name.lower()}.npz")
     else:
-        output_filename = os.path.join(script_dir, "full_domain.npz")
-        print("Starting standalone simulation without preCICE")
+        if savefile_path:
+            output_filename = savefile_path
+        else:
+            output_filename = os.path.join(script_dir, "full_domain.npz")
+        print("Starting monolithic simulation without preCICE")
         bc_left, bc_right = 0, 0
 
-        while t + dt < t_final:
+        while t < t_final:
 
-            print(f"[Standalone ] t={t:6.4f}")
+            print(f"[Monolithic ] t={t:6.4f}")
             t_end = t + dt
             wrapper = BoundaryWrapper(dx, C_viscosity, "None")
             # sol = solve_ivp(wrapper.rhs, (t, t_end), u, method='BDF', t_eval=[t_end], jac=wrapper.jac) # BDF higher order implicit timestepping
@@ -308,7 +315,7 @@ def main(participant_name: str):
             u = sol.x
             
             t = t + dt
-            t_index = int(t/dt)
+            t_index += 1
             solution_history[t_index] = u.copy()
 
     if not aborted:
@@ -331,5 +338,8 @@ def main(participant_name: str):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("participant", help="Name of the participant", choices=['Dirichlet', 'Neumann', 'None'])
+    parser.add_argument("--savefile", help="Path to save the output npz file")
     args = parser.parse_args()
-    main(args.participant)
+
+
+    main(args.participant, savefile_path=args.savefile)

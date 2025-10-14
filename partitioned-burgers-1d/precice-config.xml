@@ -37,16 +37,16 @@
 
   <coupling-scheme:serial-implicit>
     <participants first="Dirichlet" second="Neumann" />
-    <max-time value="0.1" />
-    <time-window-size value="0.001" />
-    <max-iterations value="10" />
+    <max-time value="0.5" />
+    <time-window-size value="0.005" />
+    <max-iterations value="50" />
     <exchange data="Gradient" mesh="Dirichlet-Mesh" from="Dirichlet" to="Neumann" initialize="true" substeps="false" />
     <exchange data="Velocity" mesh="Neumann-Mesh" from="Neumann" to="Dirichlet" initialize="true" substeps="false" />
     <relative-convergence-measure data="Gradient" mesh="Dirichlet-Mesh" limit="1e-3" />
     <relative-convergence-measure data="Velocity" mesh="Neumann-Mesh" limit="1e-3" />
     <acceleration:aitken>
       <data name="Velocity" mesh="Neumann-Mesh" />
-      <initial-relaxation value="0.5" />
+      <initial-relaxation value="0.1" />
     </acceleration:aitken>
     <!-- <acceleration:constant>
     <relaxation value="0.01" />
