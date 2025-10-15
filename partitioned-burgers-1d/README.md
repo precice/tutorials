@@ -11,19 +11,29 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-We solve the 1D viscous Burgers' equation on the domain $[0,2]$ using a partitioned approach. The domain is split at $x=1$ into two participants:
+We solve the 1D viscous Burgers' equation on the domain $[0,2]$:
+
+
+$$
+\frac{\partial u}{\partial t} = \nu \frac{\partial^2 u}{\partial x^2} - u \frac{\partial u}{\partial x},
+$$
+
+where $u(x,t)$ is the scalar velocity field and $\nu$ is the viscosity. In this tutorial by default $\nu$ is very small ($10^{-12}$), but can be changed in the solver.
+
+
+The domain is partitioned into participants at $x=1$:
 
 - **Dirichlet**: Solves the left half $[0,1]$ and receives Dirichlet boundary conditions at the interface.
 - **Neumann**: Solves the right half $[1,2]$ and receives Neumann boundary conditions at the interface.
 
-Both outer boundaries use zero-gradient conditions. The problem is solved for different initial conditions of superimposed sine waves, which can be generated using the provided script.
+Both outer boundaries use zero-gradient conditions $\frac{\partial u}{\partial x} = 0$. The problem is solved for different initial conditions of superimposed sine waves, which can be generated using the provided script.
 
 <p align="center">
   <img src="images/tutorials-partitioned-burgers-1d-initial-condition.png" alt="Initial Condition" width="400"/>
   <br><em>Initial condition used for the simulation (seed 0, see <code>generate_ic.py</code>)</em>
 </p>
 
-The Burgers' equation `solver-scipy` is implemented in a first-order finite volume code using Lax-Friedrichs fluxes and implicit Euler time stepping.
+The conservative formulation of the Burgers' equation `solver-scipy` is implemented in a first-order finite volume code using Lax-Friedrichs fluxes and implicit Euler time stepping.
 
 This tutorial includes two versions for the Neumann participant:
 - A standard finite volume solver (`neumann-scipy`).
