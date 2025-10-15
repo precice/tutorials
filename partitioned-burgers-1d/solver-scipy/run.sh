@@ -9,7 +9,7 @@ else
 	exit 1
 fi
 
-if [ -d ".venv" ]; then
+if [ -d .venv ]; then
 	echo "Using existing virtual environment"
 	. .venv/bin/activate
 else
@@ -19,10 +19,4 @@ else
 	pip install -r requirements.txt && pip freeze > pip-installed-packages.log
 fi
 
-. ../../tools/log.sh
-exec > >(tee --append "$LOGFILE") 2>&1
-
-echo "[preCICE] Waiting for Dirichlet participant..."
-python3 solver.py
-
-close_log
+python3 solver.py None # run monolithic reference solution

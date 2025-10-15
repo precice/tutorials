@@ -10,15 +10,15 @@ args = parser.parse_args()
 TIMESTEP_TO_PLOT = args.TIMESTEP_TO_PLOT
 
 CASE_DIR = os.path.dirname(os.path.abspath(__file__))
+IMAGES_DIR = os.path.join(CASE_DIR, "images")
 DIRICHLET_DATA_PATH = os.path.join(CASE_DIR, "dirichlet-scipy", "dirichlet.npz")
 NEUMANN_DATA_PATH = os.path.join(CASE_DIR, args.neumann)
 
-MONOLITHIC_DATA_PATH = os.path.join(CASE_DIR, "solver-scipy-fvolumes", "full_domain.npz")
+MONOLITHIC_DATA_PATH = os.path.join(CASE_DIR, "solver-scipy", "full_domain.npz")
 if os.path.exists(MONOLITHIC_DATA_PATH):
-    print(f"Found Monolithic data at {MONOLITHIC_DATA_PATH}")
     gt_exists = True
 else:
-    print(f"Monolithic data not found at {MONOLITHIC_DATA_PATH}.\nPlease run python3 solver-scipy-fvolumes/solver.py None.")
+    print(f"Monolithic data not found at {MONOLITHIC_DATA_PATH}.\nPlease run python3 solver-scipy/solver.py None.")
     gt_exists = False
 
 print(f"Loading data from {DIRICHLET_DATA_PATH}")
@@ -63,8 +63,8 @@ plt.vlines(x=1, ymin=u_min-u_offset, ymax=u_interface-u_offset, color='gray', li
 plt.vlines(x=1, ymin=u_interface+u_offset, ymax=u_max+u_offset*2, color='gray', linestyle='--')
 
 plt.legend(loc='upper left')
-plt.savefig(os.path.join(CASE_DIR, f'full_domain_timestep_slice.png'))
-print(f"Saved plot to full_domain_timestep_slice.png")
+plt.savefig(os.path.join(IMAGES_DIR, f'full_domain_timestep_slice.png'))
+print(f"Saved plot to images/full_domain_timestep_slice.png")
 
 if gt_exists:
     # residual
@@ -88,7 +88,7 @@ if gt_exists:
     grad_at_interface_plot = (u_plot_gt[interface_idx + 1] - u_plot_gt[interface_idx]) / dx
 
     print("---")
-    print("Monolithic u at interface:")
+    print("Monolithic solution u at interface:")
     print(f"  t=0: u = {val_at_interface_t0:8.4f}, du/dx = {grad_at_interface_t0:8.4f}")
     print(f"  t={TIMESTEP_TO_PLOT}: u = {val_at_interface_plot:8.4f}, du/dx = {grad_at_interface_plot:8.4f}")
     print()
@@ -122,8 +122,8 @@ plt.vlines(x=1, ymin=u_min-u_offset, ymax=u_interface-u_offset, color='gray', li
 plt.vlines(x=1, ymin=u_interface+u_offset, ymax=u_max+u_offset, color='gray', linestyle='--')
 
 plt.legend(loc='upper left')
-plt.savefig(os.path.join(CASE_DIR, f'gradient_timestep_slice.png'))
-print(f"Saved plot to gradient_timestep_slice.png")
+plt.savefig(os.path.join(IMAGES_DIR, f'gradient_timestep_slice.png'))
+print(f"Saved plot to images/gradient_timestep_slice.png")
 plt.close()
 
 # --- plot time evolution ---
@@ -136,6 +136,6 @@ plt.xlabel('Timestep')
 plt.ylabel('Spatial Coordinate (x)')
 plt.xticks(np.arange(0, full_solution_history.shape[0], step=max(1, full_solution_history.shape[0]//10)))
 plt.tight_layout()
-plt.savefig(os.path.join(CASE_DIR, 'full_domain_evolution.png'))
-print("Saved plot to full_domain_evolution.png")
+plt.savefig(os.path.join(IMAGES_DIR, 'full_domain_evolution.png'))
+print("Saved plot to images/full_domain_evolution.png")
 plt.close()

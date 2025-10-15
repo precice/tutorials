@@ -37,8 +37,10 @@ if __name__ == "__main__":
     parser.add_argument("--epoch", type=int, default=0, help="Seed for the random number generator to ensure reproducibility.")
     args = parser.parse_args()
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    with open(os.path.join(script_dir, "ic_params.json"), 'r') as f:
+    CASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    IMAGES_DIR = os.path.join(CASE_DIR, "images")
+
+    with open(os.path.join(CASE_DIR, "ic_params.json"), 'r') as f:
         config = json.load(f)
     
     ic_config = config["initial_conditions"]
@@ -52,7 +54,7 @@ if __name__ == "__main__":
     # Generate IC
     initial_condition = project_initial_condition(full_domain_min, full_domain_max, nelems_total, ic_config, args.epoch)
 
-    output_path = os.path.join(script_dir, "initial_condition.npz")
+    output_path = os.path.join(CASE_DIR, "initial_condition.npz")
     np.savez(output_path, initial_condition=initial_condition)
 
     plt.figure(figsize=(8, 4))
@@ -62,6 +64,6 @@ if __name__ == "__main__":
     plt.xlabel('Spatial Coordinate (x)')
     plt.ylabel('Solution Value (u)')
     plt.grid(True)
-    plt.savefig(os.path.join(script_dir, "initial_condition.png"))
+    plt.savefig(os.path.join(IMAGES_DIR, "initial_condition.png"))
     print(f"Initial condition and plot saved to {output_path}")
     plt.close()
