@@ -89,7 +89,7 @@ You should get results similar to this one:
 
 Reasons for the differences:
 
-* The CalculiX adapter only supports linear finite elements (deal.II uses 4th order, FEniCS 2nd order).
+* The CalculiX mesh uses the linear element [C3D8I](https://web.mit.edu/calculix_v2.7/CalculiX/ccx_2.7/doc/ccx/node28.html), as opposed to FEniCS using a quadratic element, and deal.II using a 4th order element.
 * SU2 models a compressible fluid, OpenFOAM and Nutils an incompressible one.  
 
 ### Looking closer
