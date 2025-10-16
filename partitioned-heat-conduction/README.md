@@ -37,7 +37,7 @@ You can either couple a solver with itself or different solvers with each other.
 
 * OpenFOAM. This case uses the custom [heatTransfer](https://github.com/precice/tutorials/blob/master/partitioned-heat-conduction/solver-openfoam/heatTransfer.C) solver (find it in `solver-openfoam` and build with `wmake`). Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
 
-* G+Smo. Inatsll [G+Smo](https://github.com/gismo/gismo).
+* G+Smo. Install the [G+Smo adapter](https://precice.org/adapter-gismo.html).
 
 ## Running the simulation
 
