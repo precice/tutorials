@@ -119,7 +119,7 @@ For FEniCS you can visualize the content with paraview by opening the `*.pvd` fi
 
 For Nutils, please use the files `Dirichlet-*.vtk` or `Neumann-*.vtk`. Please note that these files contain the temperature as well as the reference solution.
 
-For G+Smo, please use the file `solution.pvd` in both dirichlet-gismo and neumann-gismo directories. 
+For G+Smo, please use the generated `solution.pvd` files in the dirichlet-gismo and neumann-gismo directories. 
 
 ![Animation of the partitioned heat equation](images/tutorials-partitioned-heat-conduction-FEniCS-movie.gif)
 
