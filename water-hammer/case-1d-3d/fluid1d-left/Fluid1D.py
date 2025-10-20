@@ -9,12 +9,12 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
 
     # --- preCICE initialization ---
 
-    participant_name = "Fluid1D"
+    participant_name = "Fluid1DLeft"
     config_file_name = "../precice-config.xml"
     solver_process_index = 0
     solver_process_size = 1
     participant = precice.Participant(participant_name, config_file_name, solver_process_index, solver_process_size)
-    mesh_name = "Fluid1D-Mesh"
+    mesh_name = "Fluid1DLeft-Mesh"
     velocity_name = "Velocity"
     pressure_name = "Pressure"
     positions = [[0.0, 500.0, 0.0]]     # Define a single coupling point (3D format required by preCICE)
