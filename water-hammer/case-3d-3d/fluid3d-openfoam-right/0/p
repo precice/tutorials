@@ -22,8 +22,8 @@ boundaryField
     outlet
     {
         type            zeroGradient;
-        value           uniform 98100;
     }
+
 
     xEmpty1
     {

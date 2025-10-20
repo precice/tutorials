@@ -36,6 +36,12 @@ timeFormat      general;
 
 timePrecision   6;
 
-functions{#includeFunc  probes}
-
-
+functions
+{
+    preCICE_Adapter
+    {
+        type preciceAdapterFunctionObject;
+        libs ("libpreciceAdapterFunctionObject.so");
+    }
+    #includeFunc  probes
+}

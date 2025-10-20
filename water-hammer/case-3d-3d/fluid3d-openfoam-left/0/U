@@ -20,15 +20,10 @@ boundaryField
     }
     outlet
     {
-        outOfBounds     clamp;
+        // outOfBounds     clamp;
         // Time-varying outlet velocity
-        type            uniformFixedValue;
-        uniformValue    table
-                        (
-                            ( 0   ( 0 0 0 ) )
-                            ( 5   ( 0 1 0 ) )
-                            ( 100 ( 0 1 0 ) )
-                        );
+        type            fixedValue;
+        value           uniform (0 0 0);
     }
     xEmpty1
     {
