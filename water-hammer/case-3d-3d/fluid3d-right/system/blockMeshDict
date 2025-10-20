@@ -9,8 +9,8 @@ FoamFile
 
 scale 1;
 
-ymin  20;
-ymax  40;
+ymin  500;
+ymax  1000;
 
 xcells 10; // per block (5 blocks)
 ycells 10; // per block (5 blocks)
