@@ -7,102 +7,94 @@ FoamFile
     object      blockMeshDict;
 }
 
-convertToMeters 1;
+scale 1;
+
+ymin  0;
+ymax  1000;
+
+xcells 10; // cross-section (x)
+ycells 10; // cross-section (z)
+zcells 200; // axial along +y (k-direction)
 
 vertices
- (
-     ( -0.5  0  -0.5 )  //0
-     ( 0.5  0  -0.5 )   //1
-     ( 0.5 1000 -0.5 )   //2
-     ( -0.5 1000 -0.5 )  //3
-     ( -0.5  0  0.5 )  //4
-     ( 0.5  0  0.5 )    //5
-     ( 0.5 1000 0.5 )   //6
-     ( -0.5 1000 0.5 )  //7
- );
-
- blocks
 (
-     hex (0 1 2 3 4 5 6 7) (10 200 10) simpleGrading (1 1 1)  //1
+    (-0.707107  $ymin -0.707107) // 0
+    ( 0.707107  $ymin -0.707107) // 1
+    ( 0.707107  $ymin  0.707107) // 2
+    (-0.707107  $ymin  0.707107) // 3
+    (-0.282843  $ymin -0.282843) // 4
+    ( 0.282843  $ymin -0.282843) // 5
+    ( 0.282843  $ymin  0.282843) // 6
+    (-0.282843  $ymin  0.282843) // 7
+
+    (-0.707107  $ymax -0.707107) // 8
+    ( 0.707107  $ymax -0.707107) // 9
+    ( 0.707107  $ymax  0.707107) // 10
+    (-0.707107  $ymax  0.707107) // 11
+    (-0.282843  $ymax -0.282843) // 12
+    ( 0.282843  $ymax -0.282843) // 13
+    ( 0.282843  $ymax  0.282843) // 14
+    (-0.282843  $ymax  0.282843) // 15
 );
 
-
-  edges
-  (
-  );
-
-boundary
+blocks
 (
-    outlet
-     {
-         type patch;
-             faces
-             (
-             (3 7 6 2)
-             );
-     }
-
-    inlet
-     {
-        type patch;
-             faces
-             (
-             (0 1 5 4)
-             );
-    }
-
-     xEmpty1
-     {
-     //   type empty;
-        //type wall;
-        type symmetryPlane;
-
-             faces
-             (
-             (4 7 3 0)
-             );
-     }
-
-     xEmpty2
-     {
-      //        type empty;
-        //type wall;
-        type symmetryPlane;
-
-             faces
-             (
-             (1 2 6 5)
-             );
-     }
-     yEmpty1
-     {
-        //  type empty;
-        //type wall;
-        type symmetryPlane;
-             faces
-             (
-             (0 3 2 1)
-             );
-     }
-
-     yEmpty2
-     {
-     // type empty;
-        //type wall;
-        type symmetryPlane;
-             faces
-             (
-             (5 6 7 4)
-             );
-     }
-
+    // right-handed along +y
+    hex (8 9 13 12 0 1 5 4)     pipe ($xcells $ycells $zcells) edgeGrading (1 1 1 1 1 1 1 1 1 1 1 1)
+    hex (9 10 14 13 1 2 6 5)    pipe ($xcells $ycells $zcells) edgeGrading (1 1 1 1 1 1 1 1 1 1 1 1)
+    hex (10 11 15 14 2 3 7 6)   pipe ($xcells $ycells $zcells) edgeGrading (1 1 1 1 1 1 1 1 1 1 1 1)
+    hex (11 8 12 15 3 0 4 7)    pipe ($xcells $ycells $zcells) edgeGrading (1 1 1 1 1 1 1 1 1 1 1 1)
+    hex (12 13 14 15 4 5 6 7)   pipe ($xcells $ycells $zcells) edgeGrading (1 1 1 1 1 1 1 1 1 1 1 1)
 );
 
- mergePatchPairs
- (
- );
+edges
+(
+    // y = ymin (outer R=1, inner r=0.3)
+    arc 0 1   ( 0     $ymin  -1)
+    arc 1 2   ( 1     $ymin   0)
+    arc 2 3   ( 0     $ymin   1)
+    arc 3 0   (-1     $ymin   0)
+    arc 4 5   ( 0     $ymin  -0.3)
+    arc 5 6   ( 0.3   $ymin   0)
+    arc 6 7   ( 0     $ymin   0.3)
+    arc 7 4   (-0.3   $ymin   0)
 
- // ************************************************************************* //
+    // y = ymax
+    arc 8 9   ( 0     $ymax  -1)
+    arc 9 10  ( 1     $ymax   0)
+    arc 10 11 ( 0     $ymax   1)
+    arc 11 8  (-1     $ymax   0)
+    arc 12 13 ( 0     $ymax  -0.3)
+    arc 13 14 ( 0.3   $ymax   0)
+    arc 14 15 ( 0     $ymax   0.3)
+    arc 15 12 (-0.3   $ymax   0)
+);
 
+patches
+(
+    patch fixedWalls
+    (
+        (0 1 9  8)
+        (1 2 10 9)
+        (2 3 11 10)
+        (3 0 8  11)
+    )
 
+    patch inlet
+    (
+        (0 1 5 4)
+        (1 2 6 5)
+        (2 3 7 6)
+        (3 0 4 7)
+        (4 5 6 7)
+    )
 
+    patch outlet
+    (
+        (8  9 13 12)
+        (9 10 14 13)
+        (10 11 15 14)
+        (11  8 12 15)
+        (12 13 14 15)
+    )
+);

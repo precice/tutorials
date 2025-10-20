@@ -53,13 +53,13 @@
   <coupling-scheme:serial-implicit>
     <time-window-size value="0.005" />
     <max-time value="20.0" />
-    <participants first="Fluid3DLeft" second="Fluid3DRight" />
+    <participants first="Fluid3DRight" second="Fluid3DLeft" />
     <exchange data="Velocity" mesh="Fluid3DRight-Mesh" from="Fluid3DRight" to="Fluid3DLeft" />
     <exchange data="Pressure" mesh="Fluid3DLeft-Mesh" from="Fluid3DLeft" to="Fluid3DRight" />
-    <max-iterations value="100" />
-    <relative-convergence-measure limit="1.0e-3" data="Velocity" mesh="Fluid3DRight-Mesh" />
+    <max-iterations value="30" />
+    <relative-convergence-measure limit="1.0e-3" data="Pressure" mesh="Fluid3DLeft-Mesh" />
     <acceleration:aitken>
-      <data mesh="Fluid3DRight-Mesh" name="Velocity" />
+      <data mesh="Fluid3DLeft-Mesh" name="Pressure" />
       <initial-relaxation value="1.0" />
     </acceleration:aitken>
   </coupling-scheme:serial-implicit>
