@@ -173,7 +173,6 @@ int main(int argc, char **argv)
   problem->applyInitialSolution(x);
   auto xOld = x;
 
-  auto   xCheckpoint        = x;
   double timeCheckpoint     = 0.0;
   int    timeStepCheckpoint = 0;
 
@@ -226,8 +225,11 @@ int main(int argc, char **argv)
   // output every vtkOutputInterval time step
   const int vtkOutputInterval = getParam<int>("TimeLoop.OutputInterval");
 
-  // initialize preCICE
-  couplingParticipant.initialize();
+  // initialize preCICE and the adapter checkpointing
+  if (runWithCoupling) {
+    couplingParticipant.initialize();
+    couplingParticipant.initializeCheckpoint(x, *gridVariables);
+  }
 
   // time loop parameters
   const auto tEnd      = getParam<Scalar>("TimeLoop.TEnd");
@@ -272,8 +274,7 @@ int main(int argc, char **argv)
         break;
 
       // write checkpoint
-      if (couplingParticipant.requiresToWriteCheckpoint()) {
-        xCheckpoint        = x;
+      if (couplingParticipant.writeCheckpointIfRequired()) {
         timeCheckpoint     = timeLoop->time();
         timeStepCheckpoint = timeLoop->timeStepIndex();
       }
@@ -357,9 +358,7 @@ int main(int argc, char **argv)
       couplingParticipant.advance(dt);
 
       // reset to checkpoint if not converged
-      if (couplingParticipant.requiresToReadCheckpoint()) {
-        x    = xCheckpoint;
-        xOld = x;
+      if (couplingParticipant.readCheckpointIfRequired()) {
         timeLoop->setTime(timeCheckpoint, timeStepCheckpoint);
 
         // TODO: previousTimeStep might be more appropriate, last one could be small
