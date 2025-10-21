@@ -173,8 +173,7 @@ int main(int argc, char **argv)
   problem->applyInitialSolution(x);
   auto xOld = x;
 
-  double timeCheckpoint     = 0.0;
-  int    timeStepCheckpoint = 0;
+  int timeStepCheckpoint = 0;
 
   // initialize the coupling data
   std::vector<double> temperatures;
@@ -275,7 +274,6 @@ int main(int argc, char **argv)
 
       // write checkpoint
       if (couplingParticipant.writeCheckpointIfRequired()) {
-        timeCheckpoint     = timeLoop->time();
         timeStepCheckpoint = timeLoop->timeStepIndex();
       }
 
@@ -359,11 +357,8 @@ int main(int argc, char **argv)
 
       // reset to checkpoint if not converged
       if (couplingParticipant.readCheckpointIfRequired()) {
-        timeLoop->setTime(timeCheckpoint, timeStepCheckpoint);
-
         // TODO: previousTimeStep might be more appropriate, last one could be small
         timeLoop->setTimeStepSize(dt);
-        gridVariables->update(x);
         gridVariables->advanceTimeStep();
         continue;
       }
