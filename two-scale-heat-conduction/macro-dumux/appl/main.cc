@@ -222,6 +222,11 @@ int main(int argc, char **argv)
   // output every vtkOutputInterval time step
   const int vtkOutputInterval = getParam<int>("TimeLoop.OutputInterval");
 
+  // initialize preCICE
+  if (runWithCoupling) {
+    couplingParticipant.initialize();
+  }
+
   // time loop parameters
   const auto tEnd      = getParam<Scalar>("TimeLoop.TEnd");
   double     preciceDt = couplingParticipant.getMaxTimeStepSize();
@@ -239,10 +244,9 @@ int main(int argc, char **argv)
   auto timeLoop = std::make_shared<TimeLoop<Scalar>>(0.0, dt, tEnd);
   timeLoop->setMaxTimeStepSize(getParam<Scalar>("TimeLoop.MaxDt"));
 
-  // initialize preCICE and the adapter checkpointing
+  // initialize adapter checkpointing
   if (runWithCoupling) {
-    couplingParticipant.initialize();
-    couplingParticipant.initializeCheckpoint(x, *gridVariables, timeLoop);
+    couplingParticipant.initializeCheckpoint(x, *gridVariables, *timeLoop);
   }
 
   // the assembler with time loop for instationary problem
