@@ -173,8 +173,6 @@ int main(int argc, char **argv)
   problem->applyInitialSolution(x);
   auto xOld = x;
 
-  int timeStepCheckpoint = 0;
-
   // initialize the coupling data
   std::vector<double> temperatures;
   for (int solIdx = 0; solIdx < numberOfElements; ++solIdx) {
@@ -224,12 +222,6 @@ int main(int argc, char **argv)
   // output every vtkOutputInterval time step
   const int vtkOutputInterval = getParam<int>("TimeLoop.OutputInterval");
 
-  // initialize preCICE and the adapter checkpointing
-  if (runWithCoupling) {
-    couplingParticipant.initialize();
-    couplingParticipant.initializeCheckpoint(x, *gridVariables);
-  }
-
   // time loop parameters
   const auto tEnd      = getParam<Scalar>("TimeLoop.TEnd");
   double     preciceDt = couplingParticipant.getMaxTimeStepSize();
@@ -246,6 +238,12 @@ int main(int argc, char **argv)
   // instantiate time loop
   auto timeLoop = std::make_shared<TimeLoop<Scalar>>(0.0, dt, tEnd);
   timeLoop->setMaxTimeStepSize(getParam<Scalar>("TimeLoop.MaxDt"));
+
+  // initialize preCICE and the adapter checkpointing
+  if (runWithCoupling) {
+    couplingParticipant.initialize();
+    couplingParticipant.initializeCheckpoint(x, *gridVariables, timeLoop);
+  }
 
   // the assembler with time loop for instationary problem
   using Assembler = FVAssembler<TypeTag, DiffMethod::numeric>;
@@ -273,9 +271,7 @@ int main(int argc, char **argv)
         break;
 
       // write checkpoint
-      if (couplingParticipant.writeCheckpointIfRequired()) {
-        timeStepCheckpoint = timeLoop->timeStepIndex();
-      }
+      couplingParticipant.writeCheckpointIfRequired();
 
       preciceDt = couplingParticipant.getMaxTimeStepSize();
       solverDt  = std::min(nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()),
@@ -357,9 +353,8 @@ int main(int argc, char **argv)
 
       // reset to checkpoint if not converged
       if (couplingParticipant.readCheckpointIfRequired()) {
-        // TODO: previousTimeStep might be more appropriate, last one could be small
-        timeLoop->setTimeStepSize(dt);
         gridVariables->advanceTimeStep();
+        xOld = x;
         continue;
       }
     }
