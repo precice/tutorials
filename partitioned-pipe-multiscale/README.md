@@ -1,6 +1,6 @@
 ---
 title: Partitioned Pipe — Geometric Axial Multiscale
-keywords: OpenFOAM, Nutils, preCICE, multiscale, 1D–3D coupling
+keywords: OpenFOAM, Nutils, preCICE, geometric multiscale, fluid
 summary: The Partitioned Pipe — Geometric Axial Multiscale tutorial couples a 1D pipe model with a 3D CFD pipe using preCICE.
 ---
 
@@ -10,35 +10,69 @@ We solve a simple **partitioned pipe problem** using a 1D–3D coupling approach
 In this tutorial, the computational domain is split into two coupled regions: a 1D pipe section and a 3D pipe section.  
 The coupling is performed using **preCICE**.
 
-`1D` denotes the reduced-order domain (e.g., a Nutils solver) and `3D` denotes the full 3D CFD domain (e.g., OpenFOAM).
+In the following, `1D` denotes the reduced-order domain (e.g., a Nutils solver) and `3D` denotes the full 3D CFD domain (e.g., OpenFOAM).
 
-The problem consists of a straight pipe of length `L = 40 m` and diameter `D = 10 m`.  
-We partition the domain at `y_c = 20 m`, where the coupling interface is located.  
-The **1D domain** solves the unsteady incompressible flow equations using Nutils, while the **3D domain** is solved using OpenFOAM.  
+The problem consists of a straight pipe of length
+
+$$
+L = 40~\text{m}
+$$
+
+and diameter
+
+$$
+D = 10~\text{m}.
+$$
+
+We partition the domain at
+
+$$
+y_c = 20~\text{m},
+$$
+
+where the coupling interface is located.  
+The **1D domain** solves the flow equations using Nutils, while the **3D domain** is solved using OpenFOAM.  
 Both solvers are coupled via preCICE by exchanging the **pressure** and **axial velocity** at the interface.
 
 Two coupling directions are possible:  
+
 - **1D → 3D**: The 1D solver provides the interface velocity to the 3D solver, which responds with pressure.  
 - **3D → 1D**: The 3D solver provides the velocity, and the 1D solver returns the pressure.
 
-The outlet pressure is set to `p_out = 0 Pa`.
-For the **3D → 1D** coupling, the 3D inlet velocity is prescribed as a **parabolic (Poiseuille)** profile with a bulk velocity of `u_in = 0.1 m/s`, implemented using a `codedFixedValue` boundary condition. This ensures a physically realistic velocity distribution consistent with the 1D model.
-For the **1D → 3D** coupling, the inlet velocity is set to 0.1 m/s.
+The outlet pressure is set to
+
+$$
+p_\text{in} = 98100~\text{Pa}.
+$$
+
+For the **3D → 1D** coupling, the 3D inlet velocity is prescribed as a **parabolic (Poiseuille)** profile with a bulk velocity of
+
+$$
+u_\text{in} = 0.1~\text{m/s}.
+$$
+
+implemented using a `codedFixedValue` boundary condition. This ensures a physically realistic velocity distribution consistent with the 1D model.
+
+For the **1D → 3D** coupling, the inlet velocity is set to
+
+$$
+u_\text{in} = 0.1~\text{m/s}.
+$$
 
 ## Configuration
 
-preCICE configuration for the 1D-3D simulation (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html))
+preCICE configuration for the 1D-3D simulation (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
 ![preCICE configuration visualization 1D-3D](images/tutorials-partitioned-pipe-multiscale-1d3d-config.png)
 
-preCICE configuration for the 3D-1D simulation (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html))
+preCICE configuration for the 3D-1D simulation:
 
 ![preCICE configuration visualization 3D-1D](images/tutorials-partitioned-pipe-multiscale-3d1d-config.png)
 
 ## Available solvers
 
-* OpenFOAM (**pimpleFoam**). An incompressible/transient OpenFOAM solver. See the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
-* Nutils v9. A Python-based finite element framework. For more information, see the [Nutils adapter documentation](https://precice.org/adapter-nutils.html)
+- OpenFOAM (**pimpleFoam**). An incompressible/transient OpenFOAM solver. See the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
+- Nutils. A Python-based finite element framework. For more information, see the [Nutils adapter documentation](https://precice.org/adapter-nutils.html)
 
 ## Running the Simulation
 
@@ -56,12 +90,14 @@ Open **two terminals** and start the corresponding participants for your chosen 
 ### Example A — 1D → 3D coupling
 
 Terminal 1:
+
 ```bash
 cd fluid1d-left
 ./run.sh
 ```
 
 Terminal 2:
+
 ```bash
 cd fluid3d-right
 ./run.sh
@@ -70,12 +106,14 @@ cd fluid3d-right
 ### Example B — 3D → 1D coupling
 
 Terminal 1:
+
 ```bash
 cd fluid3d-left
 ./run.sh
 ```
 
 Terminal 2:
+
 ```bash
 cd fluid1d-right
 ./run.sh
@@ -103,12 +141,14 @@ paraview fluid3d-left/fluid3d-left.foam
 ```
 
 Typical fields to inspect include:  
+
 - `p` – pressure
 - `U` – velocity
 
 We also record pressure and velocity at fixed points each time step using the OpenFOAM `probes` function object.
 
 **Probe setup (excerpt):**
+
 ```c
 #includeEtc "caseDicts/postProcessing/probes/probes.cfg"
 
@@ -123,19 +163,30 @@ probeLocations
 ```
 
 **Output location:**  
+
 - `fluid3d-right/postProcessing/probes/0/p`  
 - `fluid3d-right/postProcessing/probes/0/U`
 
 ### 1D domain (Nutils)
 
 The 1D solver writes a `watchpoint.txt` with semicolon-separated time series:
-```
+
+```text
 time; p_in; u_in; p_out; u_out; p_mid; u_mid
 ```
+
+where:
+
+- `p_in`, `u_in` → pressure and velocity at the inlet of the 1D domain  
+- `p_out`, `u_out` → pressure and velocity at the outlet of the 1D domain  
+- `p_mid`, `u_mid` → pressure and velocity at the midpoint of the 1D domain
+
 The 1D solver also writes a `final_fields.txt with space-separated values:
-```
+
+```text
 x u p
 ```
+
 They correspond to the axial position, velocity and pressure at the last time-step, it is, at a time of 20 s.
 
 ### Example visualization
