@@ -32,3 +32,6 @@ CouplingMode = ReconstructFreeFlowNormalStress
 
 [Vtk]
 AddVelocity = 1
+
+[Output]
+EnableCSVWriter = false

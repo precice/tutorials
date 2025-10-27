@@ -427,6 +427,9 @@ int main(int argc, char **argv)
   momentumGridVariables->init(sol[momentumIdx]);
   massGridVariables->init(sol[massIdx]);
 
+  bool writeInterfaceDataToFile =
+      getParamFromGroup<bool>("Output", "EnableCSVWriter", false);
+
   // intialize the vtk output module
   using IOFields = GetPropType<MassTypeTag, Properties::IOFields>;
   VtkOutputModule freeFlowVtkWriter(*massGridVariables, sol[massIdx],
@@ -482,12 +485,14 @@ int main(int argc, char **argv)
     // solve the non-linear system
     nonLinearSolver.solve(sol);
 
-    writeVelocitiesOnInterfaceToFile(
-        meshName, Dumux::Fmt::format("ff_interface_velocities_{}", vtkTime),
-        momentumProblem, *momentumGridVariables, sol[momentumIdx]);
-    writePressuresOnInterfaceToFile<MomentumTypeTag>(
-        meshName, Dumux::Fmt::format("ff_interface_pressures_{}", vtkTime),
-        momentumProblem, *momentumGridVariables, sol[momentumIdx]);
+    if (writeInterfaceDataToFile) {
+      writeVelocitiesOnInterfaceToFile(
+          meshName, Dumux::Fmt::format("ff_interface_velocities_{}", vtkTime),
+          momentumProblem, *momentumGridVariables, sol[momentumIdx]);
+      writePressuresOnInterfaceToFile<MomentumTypeTag>(
+          meshName, Dumux::Fmt::format("ff_interface_pressures_{}", vtkTime),
+          momentumProblem, *momentumGridVariables, sol[momentumIdx]);
+    }
 
     setInterfacePressures<MomentumTypeTag>(
         momentumProblem, *momentumGridVariables, sol[momentumIdx], meshName,
