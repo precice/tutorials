@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e -u
 
 if [ "$1" = "1d3d" ]; then
     ln -sf precice-config-1d-3d.xml precice-config.xml

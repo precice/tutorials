@@ -14,7 +14,6 @@ solvers
     {
         solver          PBiCG;
         preconditioner  DILU
-        //smoother        symGaussSeidel;
         tolerance       1e-06;
         relTol          0.01;
     }

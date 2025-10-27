@@ -13,8 +13,7 @@ solvers
     "p.*"
     {
         solver          PBiCG;
-        preconditioner  DILU
-        //smoother        symGaussSeidel;
+        preconditioner  DILU;
         tolerance       1e-06;
         relTol          0.01;
     }
