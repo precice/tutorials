@@ -1,8 +1,8 @@
 ---
-title: Free flow over porous medium 2D
-permalink: tutorials-free-flow-over-porous-medium-2d.html
-keywords: DuMux, porous medium
-summary: Flow-flow coupling example with porous medium field and free flow field.
+title: Free flow over porous media 2D
+permalink: tutorials-free-flow-over-porous-media-2d.html
+keywords: DuMux, porous media
+summary: Flow-flow coupling example with porous media field and free flow field.
 ---
 
 {% note %}
@@ -11,9 +11,9 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-This tutorial solves a simple coupled system consisting of a one-phase free flow and a one-phase flow in a porous medium.
+This tutorial solves a simple coupled system consisting of a one-phase free flow and a one-phase flow in a porous media.
 
-A pressure gradient is applied to the free flow domain from left to right, while at the top of the free-flow we have a non-permeable wall with no-slip boundary conditions. In the porous medium, we assume no-flow across the domain boundaries (left, bottom and right boundary). At the interface we assume a no-slip condition.
+A pressure gradient is applied to the free flow domain from left to right, while at the top of the free-flow we have a non-permeable wall with no-slip boundary conditions. In the porous media, we assume no-flow across the domain boundaries (left, bottom and right boundary). At the interface we assume a no-slip condition.
 
  <!-- TODO: Add images of the setting-->
 
@@ -25,7 +25,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 ## Available solvers
 
-Both the flow in free flow and porous medium can be solved using the simulation framework [DuMu<sup>x</sup>](https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/).
+Both the flow in free flow and porous media can be solved using the simulation framework [DuMu<sup>x</sup>](https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/).
 
 ## Solver setup
 
@@ -48,10 +48,10 @@ cd free-flow-dumux
 ./run.sh
 ```
 
-To run the porous-medium participant, run:
+To run the porous-media participant, run:
 
 ```bash
-cd porous-medium-dumux
+cd porous-media-dumux
 ./run.sh
 ```
 
