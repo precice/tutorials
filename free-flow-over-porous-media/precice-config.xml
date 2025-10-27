@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<precice-configuration>
+  <log>
+    <sink
+      type="stream"
+      output="stdout"
+      filter="(%Severity% > debug) or (%Severity% >= trace and %Module% contains SolverInterfaceImpl)"
+      enabled="false" />
+  </log>
+
+  <data:scalar name="Velocity" />
+  <data:scalar name="Pressure" />
+
+  <mesh name="FreeFlowMesh" dimensions="2">
+    <use-data name="Velocity" />
+    <use-data name="Pressure" />
+  </mesh>
+
+  <mesh name="DarcyMesh" dimensions="2">
+    <use-data name="Velocity" />
+    <use-data name="Pressure" />
+  </mesh>
+
+  <participant name="FreeFlow">
+    <provide-mesh name="FreeFlowMesh" />
+    <receive-mesh name="DarcyMesh" from="Darcy" />
+    <read-data name="Velocity" mesh="FreeFlowMesh" />
+    <write-data name="Pressure" mesh="FreeFlowMesh" />
+    <mapping:nearest-neighbor
+      direction="write"
+      from="FreeFlowMesh"
+      to="DarcyMesh"
+      constraint="consistent" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="DarcyMesh"
+      to="FreeFlowMesh"
+      constraint="consistent" />
+  </participant>
+
+  <participant name="Darcy">
+    <provide-mesh name="DarcyMesh" />
+    <read-data name="Pressure" mesh="DarcyMesh" />
+    <write-data name="Velocity" mesh="DarcyMesh" />
+  </participant>
+
+  <m2n:sockets acceptor="FreeFlow" connector="Darcy" network="lo" exchange-directory=".." />
+
+  <coupling-scheme:parallel-implicit>
+    <max-time value="1" />
+    <time-window-size value="1" />
+    <max-iterations value="100" />
+    <participants first="FreeFlow" second="Darcy" />
+    <exchange data="Pressure" mesh="DarcyMesh" from="FreeFlow" to="Darcy" initialize="false" />
+    <exchange data="Velocity" mesh="DarcyMesh" from="Darcy" to="FreeFlow" initialize="true" />
+    <relative-convergence-measure limit="1e-6" data="Pressure" mesh="DarcyMesh" />
+    <relative-convergence-measure limit="1e-6" data="Velocity" mesh="DarcyMesh" />
+    <absolute-convergence-measure limit="1e-8" data="Pressure" mesh="DarcyMesh" />
+    <absolute-convergence-measure limit="1e-8" data="Velocity" mesh="DarcyMesh" />
+    <!--
+      <relative-convergence-measure limit="1.0e-2" data="Velocity" mesh="FreeFlowMesh"/>
+      -->
+    <acceleration:IQN-ILS>
+      <data mesh="DarcyMesh" name="Pressure" />
+      <data mesh="DarcyMesh" name="Velocity" />
+      <preconditioner type="residual-sum" />
+      <initial-relaxation value="0.1" />
+      <max-used-iterations value="40" />
+      <time-windows-reused value="10" />
+      <filter type="QR2" limit="1e-3" />
+    </acceleration:IQN-ILS>
+  </coupling-scheme:parallel-implicit>
+</precice-configuration>
