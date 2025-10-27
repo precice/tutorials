@@ -364,7 +364,7 @@ int main(int argc, char **argv)
   couplingParticipant.announceSolver("FreeFlow", preciceConfigFilename,
                                      mpiHelper.rank(), mpiHelper.size());
 
-  const std::string meshName("FreeFlowMesh"); // mesh name
+  const std::string meshName("Free-Flow-Mesh"); // mesh name
   const int         dim = couplingParticipant.getMeshDimensions(meshName);
   std::cout << dim << "  " << int(MassGridGeometry::GridView::dimension)
             << std::endl;

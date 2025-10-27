@@ -78,4 +78,9 @@ The VTU files from both solvers could be rendered and inspected with ParaView.
 
 ## Further information
 
+The simulation is stationary and the results of the pressure and the velocity fields are as follows:
+
+![Free flow over porous media results - pressure](images/tutorials-free-flow-over-porous-media-result-pressure.png)
+![Free flow over porous media results - velocity](images/tutorials-free-flow-over-porous-media-result-ux.png)
+
 Each solver folder contains an input file (`params.input`) that will be passed to the solver executables. This is a DuMUX input file describing the simulation setting, e.g., pressure, mesh size, time stepping, etc.

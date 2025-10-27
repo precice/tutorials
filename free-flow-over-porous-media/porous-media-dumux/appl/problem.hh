@@ -108,7 +108,7 @@ public:
     const auto faceId = scvf.index();
     if (couplingParticipant_.isCoupledEntity(faceId))
       values = couplingParticipant_.getScalarQuantityOnFace(
-          "DarcyMesh", "Pressure", faceId);
+          "Porous-Media-Mesh", "Pressure", faceId);
 
     return values;
   }

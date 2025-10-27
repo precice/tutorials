@@ -164,7 +164,7 @@ public:
       if (couplingParticipant_.isCoupledEntity(faceId)) {
         values[Indices::velocityYIdx] =
             couplingParticipant_.getScalarQuantityOnFace(
-                "FreeFlowMesh", "Velocity", faceId);
+                "Free-Flow-Mesh", "Velocity", faceId);
       }
     } else {
       auto pressure                = onLeftBoundary_(scvf.ipGlobal()) ? deltaP_ : 0.0;
@@ -307,7 +307,7 @@ public:
       if (couplingParticipant_.isCoupledEntity(faceId)) {
         velocity[Indices::velocityYIdx] =
             couplingParticipant_.getScalarQuantityOnFace(
-                "FreeFlowMesh", "Velocity", faceId);
+                "Free-Flow-Mesh", "Velocity", faceId);
       }
     }
     return velocity;

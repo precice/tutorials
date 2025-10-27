@@ -174,7 +174,7 @@ int main(int argc, char **argv)
   couplingParticipant.announceSolver("Darcy", preciceConfigFilename,
                                      mpiHelper.rank(), mpiHelper.size());
 
-  const std::string meshName("DarcyMesh");
+  const std::string meshName("Porous-Media-Mesh");
   const int         dim = couplingParticipant.getMeshDimensions(meshName);
   std::cout << dim << "  " << int(DarcyGridGeometry::GridView::dimension)
             << std::endl;
