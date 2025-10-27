@@ -5,18 +5,26 @@ from nutils import mesh, function, solver, cli
 import precice
 
 
-def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, viscosity=1e-3, theta=0.5):
+def main(nelems=400, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, viscosity=1e-3, theta=0.5, side='Left'):
 
     # --- preCICE initialization ---
 
-    participant_name = "Fluid1DLeft"
+    if side == "Left":
+        participant_name = "Fluid1DLeft"
+        mesh_name = "Fluid1DLeft-Mesh"
+        read_data = "Velocity"
+        write_data = "Pressure"
+    elif side == "Right":
+        participant_name = "Fluid1DRight"
+        mesh_name = "Fluid1DRight-Mesh"
+        read_data = "Pressure"
+        write_data = "Velocity"
+    else:
+        raise Exception('invalid side {!r}'.format(side))
     config_file_name = "../precice-config.xml"
     solver_process_index = 0
     solver_process_size = 1
     participant = precice.Participant(participant_name, config_file_name, solver_process_index, solver_process_size)
-    mesh_name = "Fluid1DLeft-Mesh"
-    velocity_name = "Velocity"
-    pressure_name = "Pressure"
     positions = [[0.0, 500.0, 0.0]]     # Define a single coupling point (3D format required by preCICE)
     vertex_ids = participant.set_mesh_vertices(mesh_name, positions)
 
@@ -25,7 +33,14 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
 
     # --- Nutils domain setup ---
 
-    domain, geom = mesh.rectilinear([np.linspace(0, 500, nelems + 1)])    # 1D domain from 0 to 500 with nelems elements
+    domain, geom = mesh.rectilinear([np.linspace(0, 1000, nelems + 1)])
+
+    if side == "Left":
+        domain = domain[:nelems // 2]
+    elif side == "Right":
+        domain = domain[nelems // 2:]
+    else:
+        raise Exception('invalid side {!r}'.format(side))
 
     ns = function.Namespace()
     ns.x = geom
@@ -33,7 +48,7 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
     ns.θ = theta
     ns.ρref = refdensity
     ns.pref = refpressure
-    ns.pin = 98100  # Inlet pressure (Pa)
+    ns.pin = 98100
     ns.μ = viscosity
     ns.ψ = psi
 
@@ -69,11 +84,12 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
         degree=4
     )
 
-    # Weakly enforced inlet pressure boundary condition
-    res += domain.boundary['left'].integral(
-        'pin ubasis_ni n_i d:x' @ ns,
-        degree=4
-    )
+    if side == "Left":    # Weakly enforced inlet pressure boundary condition
+        res += domain.boundary['left'].integral('pin ubasis_ni n_i d:x' @ ns, degree=4)
+    elif side == "Right":  # Outlet velocity boundary condition
+        sqr = domain.boundary['right'].integral('(u_0 - 1)^2' @ ns, degree=4)
+        cons0 = solver.optimize('lhs', sqr, droptol=1e-14)
+        res0 = res        # Save base residual (without inlet BC)
 
     # Initial condition
     lhs0 = np.zeros(res.shape)
@@ -88,13 +104,17 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
     # --- Time loop with preCICE coupling ---
     while participant.is_coupling_ongoing():
 
-        # Read velocity data from other solver via preCICE
-        u_read = participant.read_data(mesh_name, velocity_name, vertex_ids, precice_dt)
+        # Read data from other solver via preCICE
+        data_read = participant.read_data(mesh_name, read_data, vertex_ids, precice_dt)
 
-        # Constrain outlet velocity to match coupled value
-        stringintegral = f'(u_0 - ({u_read[0][1]}))^2 d:x'
-        sqr = domain.boundary['right'].integral(stringintegral @ ns, degree=4)
-        cons = solver.optimize('lhs', sqr, droptol=1e-14)
+        if side == "Left":
+            ns.uOut = data_read[0][1]
+            sqr = domain.boundary['right'].integral('(u_0 - uOut)^2 d:x' @ ns, degree=4)
+            cons = solver.optimize('lhs', sqr, droptol=1e-14)
+        elif side == "Right":
+            ns.pIn = data_read[0]
+            res = res0 + domain.boundary['left'].integral('pIn ubasis_ni n_i d:x' @ ns, degree=4)
+            cons = min(0.2 * t, 1) * cons0
 
         # Write checkpoint if required by preCICE
         if participant.requires_writing_checkpoint():
@@ -114,8 +134,11 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
             x, p, u, ρ = bezier.eval(['x_i', 'p', 'u_i', 'ρ'] @ ns, arguments=dict(lhs=lhs))
 
         # Send pressure at the right boundary to the other solver
-        write_press = [[p[-1]]]
-        participant.write_data(mesh_name, pressure_name, vertex_ids, write_press)
+        if side == "Left":
+            value_written = [[p[-1]]]
+        elif side == "Right":
+            value_written = [[0, u[0][0], 0]]
+        participant.write_data(mesh_name, write_data, vertex_ids, value_written)
 
         # Advance in pseudo-time
         participant.advance(precice_dt)
@@ -127,13 +150,14 @@ def main(nelems=200, dt=.005, refdensity=1e3, refpressure=101325.0, psi=1e-6, vi
         else:
             # Update old solution
             lhs0 = lhs
-            timestep += timestep
+            timestep += 1
 
             # Save probe values (time, inlet pressure, inlet velocity, outlet
             # pressure, outlet velocity, pressure at the middle, velocity at the
             # middle)
             x, p, ρ, u = bezier.eval(['x_i', 'p', 'ρ', 'u_i'] @ ns, lhs=lhs)
-            f.write("%e; %e; %e; %e; %e; %e; %e\n" % (t, p[0], u[0], p[-1], u[-1], p[199], u[199]))
+            mid = len(p) // 2
+            f.write("%e; %e; %e; %e; %e; %e; %e\n" % (t, p[0], u[0], p[-1], u[-1], p[mid], u[mid]))
             f.flush()
 
             t += precice_dt  # advance pseudo-time
