@@ -294,7 +294,7 @@ void writePressuresOnInterfaceToFile(const std::string             &meshName,
 }
 
 int main(int argc, char **argv)
-try {
+{
   using namespace Dumux;
 
   // initialize MPI, finalize is done automatically on exit
@@ -493,13 +493,12 @@ try {
         momentumProblem, *momentumGridVariables, sol[momentumIdx], meshName,
         dataNameP);
     couplingParticipant.writeQuantityToOtherSolver(meshName, dataNameP);
-    freeFlowVtkWriter.write(vtkTime);
-    vtkTime += 1.;
     couplingParticipant.advance(dt);
     preciceDt = couplingParticipant.getMaxTimeStepSize();
     dt        = std::min(preciceDt, dt);
 
     if (!couplingParticipant.readCheckpointIfRequired()) {
+      vtkTime += 1.;
       freeFlowVtkWriter.write(vtkTime);
     }
   }
@@ -516,23 +515,4 @@ try {
   }
 
   return 0;
-} // end main
-catch (Dumux::ParameterException &e) {
-  std::cerr << std::endl
-            << e << " ---> Abort!" << std::endl;
-  return 1;
-} catch (Dune::DGFException &e) {
-  std::cerr << "DGF exception thrown (" << e
-            << "). Most likely, the DGF file name is wrong "
-               "or the DGF file is corrupted, "
-               "e.g. missing hash at end of file or wrong number "
-               "(dimensions) of entries."
-            << " ---> Abort!" << std::endl;
-  return 2;
-} catch (Dune::Exception &e) {
-  std::cerr << "Dune reported error: " << e << " ---> Abort!" << std::endl;
-  return 3;
-} catch (...) {
-  std::cerr << "Unknown exception thrown! ---> Abort!" << std::endl;
-  return 4;
 }

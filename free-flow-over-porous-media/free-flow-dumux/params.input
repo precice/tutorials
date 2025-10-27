@@ -16,16 +16,9 @@ Cells = 40 40
 Grading1 = 1
 
 [FreeFlow.Problem]
-Name = ff-pm-2d-precice-stokes
+Name = free-flow-dumux
 EnableInertiaTerms = false
-#Name = ff-pm-2d-precice-navierstokes
-#EnableInertiaTerms = true
 PressureDifference = 1e-2
-
-
-[Darcy.Problem]
-Name = ff-pm-2d-precice-darcy
-InitialP = 0.0e-9
 
 [Darcy.SpatialParams]
 Permeability = 1e-6 # m^2
