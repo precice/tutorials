@@ -15,13 +15,14 @@ This tutorial solves a simple coupled system consisting of a one-phase free flow
 
 A pressure gradient is applied to the free flow domain from left to right, while at the top of the free-flow we have a non-permeable wall with no-slip boundary conditions. In the porous media, we assume no-flow across the domain boundaries (left, bottom and right boundary). At the interface we assume a no-slip condition.
 
- <!-- TODO: Add images of the setting-->
+The setting is illustrated in the following figure:
+![Free flow over porous media setup](images/tutorial-free-flow-over-porous-media-setup.png)
 
 ## Configuration
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/precice-config-visualization.png)
+![preCICE configuration visualization](images/tutorial-free-flow-over-porous-media-precice-config-visualization.png)
 
 ## Available solvers
 
