@@ -51,7 +51,7 @@
 
 #include <dumux/multidomain/newtonsolver.hh>
 
-#include "ffproperties.hh"
+#include "properties.hh"
 
 #include "dumux-precice/couplingadapter.hh"
 

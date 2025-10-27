@@ -41,7 +41,7 @@
 #include <dumux/multidomain/freeflow/couplingmanager.hh>
 #include <dumux/multidomain/traits.hh>
 
-#include "ffproblem-reversed.hh"
+#include "problem.hh"
 
 namespace Dumux {
 

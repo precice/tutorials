@@ -6,7 +6,7 @@ summary: Flow-flow coupling example with porous medium field and free flow field
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/free-flow-over-porous-medium-2d). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/free-flow-over-porous-media-2d). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
