@@ -41,8 +41,6 @@ To recompile only the simulation, run `sh compile-dumux-cases.sh` in the tutoria
 
 You can find the corresponding `run.sh`script for running the case in the folders corresponding to the solvers you want to use.
 
-### In serial
-
 To run the free-flow participant, run:
 
 ```bash
@@ -57,20 +55,7 @@ cd porous-media-dumux
 ./run.sh
 ```
 
-A serial simulation takes approximately 2 minutes to finish.
-
-### In parallel
-
-All participants can be run in parallel.
-
-To run a participant in parallel, e.g. `free-flow-dumux`, run:
-
-```bash
-cd free-flow-dumux
-./run.sh -p <num_procs>
-```
-
-where `<num_procs>` is the number of processes you want to use for the participant.
+So far only serial execution is supported for this tutorial, which takes less than two minutes to finish.
 
 ## Post-processing
 

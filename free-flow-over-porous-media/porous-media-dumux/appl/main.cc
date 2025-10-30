@@ -28,8 +28,6 @@
 #include <iostream>
 #include <string>
 
-bool printstuff = false;
-
 #include <dune/common/parallel/mpihelper.hh>
 #include <dune/common/timer.hh>
 #include <dune/grid/io/file/dgfparser/dgfexception.hh>
@@ -165,9 +163,6 @@ int main(int argc, char **argv)
   sol.resize(darcyGridGeometry->numDofs());
 
   // Initialize preCICE.Tell preCICE about:
-  // - Name of solver
-  // - What rank of how many ranks this instance is
-  // Configure preCICE. For now the config file is hardcoded.
   std::string preciceConfigFilename = "../precice-config.xml";
 
   auto &couplingParticipant = Dumux::Precice::CouplingAdapter::getInstance();

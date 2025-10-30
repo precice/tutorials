@@ -16,14 +16,13 @@ while getopts ":sp" opt; do
   case ${opt} in
   s)
     ./porous_media_dumux params.input
+    close_log
     ;;
   p)
-    mpiexec -n "$2" porous_media_dumux params.input
+    echo "Participant is not started, only serial execution is available."
     ;;
   *)
     usage
     ;;
   esac
 done
-
-close_log

@@ -350,15 +350,7 @@ int main(int argc, char **argv)
   SolutionVector sol;
 
   // Initialize preCICE.Tell preCICE about:
-  // - Name of solver
-  // - What rank of how many ranks this instance is
-  // Configure preCICE. For now the config file is hardcoded.
-  // couplingParticipant.createInstance( "FreeFlow", mpiHelper.rank(), mpiHelper.size() );
   std::string preciceConfigFilename = "../precice-config.xml";
-  //    if (argc == 3)
-  //      preciceConfigFilename = argv[2];
-  if (argc > 2)
-    preciceConfigFilename = argv[argc - 1];
 
   auto &couplingParticipant = Dumux::Precice::CouplingAdapter::getInstance();
   couplingParticipant.announceSolver("FreeFlow", preciceConfigFilename,

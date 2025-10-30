@@ -30,7 +30,7 @@
       direction="write"
       from="Free-Flow-Mesh"
       to="Porous-Media-Mesh"
-      constraint="consistent" />
+      constraint="conservative" />
     <mapping:nearest-neighbor
       direction="read"
       from="Porous-Media-Mesh"
@@ -65,11 +65,6 @@
       initialize="true" />
     <relative-convergence-measure limit="1e-6" data="Pressure" mesh="Porous-Media-Mesh" />
     <relative-convergence-measure limit="1e-6" data="Velocity" mesh="Porous-Media-Mesh" />
-    <absolute-convergence-measure limit="1e-8" data="Pressure" mesh="Porous-Media-Mesh" />
-    <absolute-convergence-measure limit="1e-8" data="Velocity" mesh="Porous-Media-Mesh" />
-    <!--
-      <relative-convergence-measure limit="1.0e-2" data="Velocity" mesh="Free-Flow-Mesh"/>
-      -->
     <acceleration:IQN-ILS>
       <data mesh="Porous-Media-Mesh" name="Pressure" />
       <data mesh="Porous-Media-Mesh" name="Velocity" />
