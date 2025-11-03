@@ -44,7 +44,7 @@
     <write-data name="Velocity" mesh="Porous-Media-Mesh" />
   </participant>
 
-  <m2n:sockets acceptor="FreeFlow" connector="Darcy" network="lo" exchange-directory=".." />
+  <m2n:sockets acceptor="FreeFlow" connector="Darcy" exchange-directory=".." />
 
   <coupling-scheme:parallel-implicit>
     <max-time value="1" />

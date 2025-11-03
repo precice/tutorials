@@ -11,9 +11,9 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-This tutorial solves a simple coupled system consisting of a one-phase free flow and a one-phase flow in a porous media.
+This tutorial solves a coupled system consisting of a one-phase free flow and a one-phase flow in a porous media.
 
-A pressure gradient is applied to the free flow domain from left to right, while at the top of the free-flow we have a non-permeable wall with no-slip boundary conditions. In the porous media, we assume no-flow across the domain boundaries (left, bottom and right boundary). At the interface we assume a no-slip condition.
+A pressure gradient is applied to the free flow domain from left to right. The top edge of the free-flow is a non-permeable wall with no-slip boundary conditions. In the porous media, there is a no-flow condition across the domain boundaries (left, bottom, and right boundaries). At the interface, a no-slip condition applies. The case is stationary (solved to a steady-state solution).
 
 The setting is illustrated in the following figure:
 
@@ -27,19 +27,19 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 ## Available solvers
 
-Both the flow in free flow and porous media can be solved using the simulation framework [DuMu<sup>x</sup>](https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/).
+Both the participants are computed using the simulation code [DuMu<sup>x</sup>](https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/).
 
 ## Solver setup
 
 To solve the flows with the DuMux framework, the necessary DUNE modules need to be downloaded and set up. This is done by running `sh setup-dumux.sh` in the tutorial folder.
 
-Note that if an existing installation of DUNE modules is detected in a default location, this may lead to problems in running the `setup-dumux.sh` script. The environment variable DUNE_CONTROL_PATH is suppressed by the script.
+Note that if an existing installation of DUNE modules is detected in a default location, this may lead to problems in running the `setup-dumux.sh` script. The script suppresses the environment variable `DUNE_CONTROL_PATH`.
 
-To recompile only the simulation, run `sh compile-dumux-cases.sh` in the tutorial folder.
+To only recompile the participants, run `sh compile-dumux-cases.sh` in the tutorial folder.
 
 ## Running the simulation
 
-You can find the corresponding `run.sh`script for running the case in the folders corresponding to the solvers you want to use.
+Each participant has a `run.sh` script.
 
 To run the free-flow participant, run:
 
@@ -55,15 +55,15 @@ cd porous-media-dumux
 ./run.sh
 ```
 
-So far only serial execution is supported for this tutorial, which takes less than two minutes to finish.
+Participants can be executed only in serial. Parallel execution is not supported. The case takes approximately two minutes to finish.
 
 ## Post-processing
 
-The VTU files from both solvers could be rendered and inspected with ParaView.
+Both participants write VTU outputs, which can be viewed using ParaView.
 
 ## Further information
 
-The simulation is stationary and the results of the pressure and the velocity fields are as follows:
+The results of the pressure and the velocity fields are as follows:
 
 ![Free flow over porous media results - pressure](images/tutorials-free-flow-over-porous-media-result-pressure.png)
 ![Free flow over porous media results - velocity](images/tutorials-free-flow-over-porous-media-result-ux.png)
