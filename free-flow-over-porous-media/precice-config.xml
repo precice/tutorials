@@ -47,10 +47,10 @@
   <m2n:sockets acceptor="FreeFlow" connector="Darcy" exchange-directory=".." />
 
   <coupling-scheme:parallel-implicit>
+    <participants first="FreeFlow" second="Darcy" />
     <max-time value="1" />
     <time-window-size value="1" />
     <max-iterations value="100" />
-    <participants first="FreeFlow" second="Darcy" />
     <exchange
       data="Pressure"
       mesh="Porous-Media-Mesh"
