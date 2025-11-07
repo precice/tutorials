@@ -13,7 +13,7 @@ def create_snapshots() -> None:
     The snapshots are saved in the specified directory.
     """
     # What effect do uniformly distributed concentration samples have on the quality of the surrogate model?
-    concentration_samples = np.linspace(0.0, 0.5, 50)
+    concentration_samples = np.linspace(0.0, 0.9, 500)
 
     with h5py.File("input_samples.hdf5", "w") as f:
         f.create_dataset("concentration", data=concentration_samples)
@@ -118,9 +118,9 @@ def create_surrogate(snapshots_dir: str) -> tuple:
     x, y = read_snapshots(snapshots_dir)
 
     # Split the samples into training and validation sets
-    n_valid = 20
+    n_valid = 200
     x_train, y_train, x_valid, y_valid = split_samples(x, y, n_valid)
-
+    
     inputs = Input()
     inputs.add_marginals(name="concentration", dist_type="unif", parameters=[0, 0.5])
 
@@ -175,6 +175,12 @@ def validate_surrogate(x_valid, y_valid, model_name="micro-dumux-surrogate.pkl")
     plt.ylim(0.4, 1.1)
     plt.show()
 
+    plt.figure()
+    plt.scatter(x_valid, y_valid["porosity"])
+    plt.xlabel("valid concentration")
+    plt.ylabel("valid porosity")
+    plt.title("IO: con to poro")
+    plt.show()
 
 def main():
     snapshots_dir = "output"
