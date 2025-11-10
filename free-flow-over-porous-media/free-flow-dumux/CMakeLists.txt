@@ -20,7 +20,7 @@ dune_project()
 
 dune_enable_all_packages()
 
-add_subdirectory(appl)
+add_subdirectory(solver-dumux)
 
 # finalize the dune project, e.g. generating config.h etc.
 finalize_dune_project(GENERATE_CONFIG_H_CMAKE)
