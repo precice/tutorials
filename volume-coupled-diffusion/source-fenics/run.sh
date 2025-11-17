@@ -10,15 +10,6 @@ then
     python3 -m venv --system-site-packages .venv
     . .venv/bin/activate
     pip install -r ../solver-fenics/requirements.txt
-else
-    case "$1" in
-        -[s]|--skip-setup)
-            echo "Skipping setup: Assuming an already prepared Python environment."
-            ;;
-        *)
-            echo "Usage: $0 [-s|--skip-setup]"
-            ;;
-    esac
 fi
 
 python3 ../solver-fenics/volume-coupled-diffusion.py --source

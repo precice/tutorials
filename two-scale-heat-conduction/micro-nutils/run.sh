@@ -6,21 +6,11 @@ exec > >(tee --append "$LOGFILE") 2>&1
 
 usage() { echo "Usage: cmd [-s] [-p n]" 1>&2; exit 1; }
 
-if [ $# -eq 0 ] 
+if [ "${PRECICE_TUTORIALS_VENV:-true}" = true ]
 then
-    echo "Installing dependencies in a Python virtual environment"
     python3 -m venv .venv
     . .venv/bin/activate
     pip install -r requirements.txt && pip freeze > pip-installed-packages.log
-else
-    case "$1" in
-        -[s]|--skip-setup)
-            echo "Skipping setup: Assuming an already prepared Python environment."
-            ;;
-        *)
-            echo "Usage: $0 [-s|--skip-setup]"
-            ;;
-    esac
 fi
 
 # Check if no input argument was provided
