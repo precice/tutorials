@@ -16,7 +16,7 @@ if [ ! -f ../solver-fmi/Oscillator.fmu ]; then
   cd ../../../mass-right-fmi
 fi
 
-if [ "${PRECICE_TUTORIALS_VENV:-true}" = true ]
+if [ -z "${PRECICE_TUTORIALS_NO_VENV:-}" ]
 then
     python3 -m venv .venv
     . .venv/bin/activate

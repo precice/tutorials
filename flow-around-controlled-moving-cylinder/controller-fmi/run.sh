@@ -15,7 +15,7 @@ if [ ! -f PIDcontroller.fmu ]; then
   cd ../../
 fi
 
-if [ "${PRECICE_TUTORIALS_VENV:-true}" = true ]
+if [ -z "${PRECICE_TUTORIALS_NO_VENV:-}" ]
 then
     python3 -m venv .venv
     . .venv/bin/activate
