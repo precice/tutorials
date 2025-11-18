@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e -u
 
-if [ -v PRECICE_TUTORIALS_NO_VENV ]
+if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
 then
     python3 -m venv --system-site-packages .venv
     . .venv/bin/activate
