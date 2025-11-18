@@ -6,7 +6,7 @@ exec > >(tee --append "$LOGFILE") 2>&1
 
 usage() { echo "Usage: cmd [-s] [-p n]" 1>&2; exit 1; }
 
-if [ -z "${PRECICE_TUTORIALS_NO_VENV:-}" ]
+if [ -v PRECICE_TUTORIALS_NO_VENV ]
 then
     python3 -m venv .venv
     . .venv/bin/activate
