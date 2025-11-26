@@ -10,8 +10,8 @@ on:
         description: 'Commit msg for commit that adds the reference results'
         default: "Adding reference results"
         type: string
-      loglevel:
-        description: 'loglevel used for the systemtests'
+      log_level:
+        description: 'Logging verbosity level used for the systemtests'
         default: 'INFO'
         required: true
         type: choice
@@ -28,4 +28,4 @@ jobs:
     with: 
       from_ref: ${{ inputs.from_ref }}
       commit_msg: ${{ inputs.commit_msg }}
-      loglevel: ${{ inputs.loglevel }}
+      log_level: ${{ inputs.log_level }}

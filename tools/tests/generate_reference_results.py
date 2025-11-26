@@ -53,8 +53,14 @@ def render_reference_results_info(
         arguments_used: SystemtestArguments,
         time: str):
     def sha256sum(filename):
+        # Implementation from https://stackoverflow.com/a/44873382/2254346,
+        # compatible with Python 3.10.
+        h = hashlib.sha256()
+        mv = memoryview(bytearray(128 * 1024))
         with open(filename, 'rb', buffering=0) as f:
-            return hashlib.file_digest(f, 'sha256').hexdigest()
+            while n := f.readinto(mv):
+                h.update(mv[:n])
+        return h.hexdigest()
 
     files = []
     for reference_result in reference_results:
@@ -117,7 +123,7 @@ def main():
         t = time.perf_counter()
         result = systemtest.run_for_reference_results(run_directory)
         elapsed_time = time.perf_counter() - t
-        logging.info(f"Running {systemtest} took {elapsed_time} seconds")
+        logging.info(f"Running {systemtest} took {elapsed_time:^.1f} seconds")
         if not result.success:
             raise RuntimeError(f"Failed to execute {systemtest}")
         reference_result_per_tutorial[systemtest.tutorial] = []

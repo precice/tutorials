@@ -51,6 +51,8 @@ Solid participant:
 
 * OpenFOAM (solidDisplacementFoam). For more information, have a look at the [OpenFOAM plateHole tutorial](https://www.openfoam.com/documentation/tutorial-guide/5-stress-analysis/5.1-stress-analysis-of-a-plate-with-a-hole). The solidDisplacementFoam solver only supports linear geometry and this case is only provided for quick testing purposes, leading to outlier results. For general solid mechanics procedures in OpenFOAM, see solids4foam.
 
+* Fake. A simple Python script that acts as a fake solver and provides an arbitrary time-dependent flap displacement in the x-direction, i.e., it performs a shear mapping on the resting flap. This solver can be used for debugging of the fluid participant and its adapter. It also technically works with implicit coupling, thus no changes to the preCICE configuration are necessary. Note that [ASTE's replay mode](https://precice.org/tooling-aste.html#replay-mode) has a similar use case and could also feed artificial or previously recorded real data, replacing an actual solver.
+
 ## Running the Simulation
 
 All listed solvers can be used in order to run the simulation. OpenFOAM can be executed in parallel using `run.sh -parallel`. The default setting uses 4 MPI ranks. Open two separate terminals and start the desired fluid and solid participant by calling the respective run script `run.sh` located in the participant directory. For example:
@@ -87,7 +89,7 @@ You should get results similar to this one:
 
 Reasons for the differences:
 
-* The CalculiX adapter only supports linear finite elements (deal.II uses 4th order, FEniCS 2nd order).
+* The CalculiX mesh uses the linear element [C3D8I](https://web.mit.edu/calculix_v2.7/CalculiX/ccx_2.7/doc/ccx/node28.html), as opposed to FEniCS using a quadratic element, and deal.II using a 4th order element.
 * SU2 models a compressible fluid, OpenFOAM and Nutils an incompressible one.  
 
 ### Looking closer
@@ -113,6 +115,12 @@ Combinations (excerpt) using the compressible `fluid-su2` case:
 Combinations (excerpt) using the dummy `fluid-fake` case:
 
 ![Flap watchpoints using fluid-fake](images/tutorials-perpendicular-flap-displacement-fake-watchpoints.png)
+
+## Try the case with a stronger coupling
+
+In this case, the coupling between the fluid flow and the flap becomes stronger when the fluid is heavier relative to the flap. We can try out this setting by decreasing the density of the solid participant.
+
+With the default value of $$ \rho_s= 3.0·10^{3}kg/m^{3} $$, the simulation will also converge with an explicit coupling scheme. With $$ \rho_s= 1kg/m^{3} $$, the simulation will only converge with implicit coupling, with an acceleration method such as the IQN-ILS in the current configuration.
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.

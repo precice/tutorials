@@ -13,6 +13,7 @@ out
 *.vtk
 *.vtu
 *.pvd
+*.series
 
 # preCICE
 precice-profiling/
@@ -73,7 +74,7 @@ REPE_OUT/
 restart_flow_*.dat
 forces_breakdown.dat
 surface_flow_*.csv
-history_*.csv
+history*.csv
 
 # ASTE
 result.stats.json
@@ -95,6 +96,9 @@ dumux-adapter/
 dune-*
 */build-cmake/
 install*
+
+# G+smo
+pointData.csv
 
 # FEniCS covered by .vtk
 # Nutils covered by .vtk

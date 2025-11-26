@@ -7,6 +7,8 @@
       enabled="true" />
   </log>
 
+  <profiling mode="fundamental" synchronize="false" />
+
   <data:scalar name="Temperature-Top" />
   <data:scalar name="Heat-Flux-Top" />
   <data:scalar name="Temperature-Bottom" />

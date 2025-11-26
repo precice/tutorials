@@ -74,7 +74,7 @@ def main():
         t = time.perf_counter()
         result = systemtest.run(run_directory)
         elapsed_time = time.perf_counter() - t
-        logging.info(f"Running {systemtest} took {elapsed_time} seconds")
+        logging.info(f"Running {systemtest} took {elapsed_time:^.1f} seconds")
         results.append(result)
 
     system_test_success = True
