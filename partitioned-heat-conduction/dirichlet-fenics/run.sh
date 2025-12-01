@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 set -e -u
 
-python3 -m venv --system-site-packages .venv
-. .venv/bin/activate
-pip install -r ../solver-fenics/requirements.txt
-
 . ../../tools/log.sh
 exec > >(tee --append "$LOGFILE") 2>&1
+
+if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
+then
+    python3 -m venv --system-site-packages .venv
+    . .venv/bin/activate
+    pip install -r ../solver-fenics/requirements.txt
+fi
 
 if [ $# -eq 0 ] 
 then
@@ -27,9 +30,12 @@ else
             python3 ../solver-fenics/heatHigherOrder.py Dirichlet
             ;;
         sdc)
-            # install pySDC + its dependencies only if needed
-            pip install git+https://github.com/Parallel-in-Time/pySDC@5.5.0
-            pip install pySDC~=5.5
+            if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
+            then
+                # install pySDC + its dependencies only if needed
+                pip install git+https://github.com/Parallel-in-Time/pySDC@5.5.0
+                pip install pySDC~=5.5
+            fi
             echo "Running simulation with pySDC+FEniCS implementation"
             python3 ../solver-fenics/heat_pySDC.py Dirichlet
             ;;

@@ -89,7 +89,7 @@ You should get results similar to this one:
 
 Reasons for the differences:
 
-* The CalculiX adapter only supports linear finite elements (deal.II uses 4th order, FEniCS 2nd order).
+* The CalculiX mesh uses the linear element [C3D8I](https://web.mit.edu/calculix_v2.7/CalculiX/ccx_2.7/doc/ccx/node28.html), as opposed to FEniCS using a quadratic element, and deal.II using a 4th order element.
 * SU2 models a compressible fluid, OpenFOAM and Nutils an incompressible one.  
 
 ### Looking closer
@@ -115,6 +115,12 @@ Combinations (excerpt) using the compressible `fluid-su2` case:
 Combinations (excerpt) using the dummy `fluid-fake` case:
 
 ![Flap watchpoints using fluid-fake](images/tutorials-perpendicular-flap-displacement-fake-watchpoints.png)
+
+## Try the case with a stronger coupling
+
+In this case, the coupling between the fluid flow and the flap becomes stronger when the fluid is heavier relative to the flap. We can try out this setting by decreasing the density of the solid participant.
+
+With the default value of $$ \rho_s= 3.0·10^{3}kg/m^{3} $$, the simulation will also converge with an explicit coupling scheme. With $$ \rho_s= 1kg/m^{3} $$, the simulation will only converge with implicit coupling, with an acceleration method such as the IQN-ILS in the current configuration.
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.

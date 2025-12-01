@@ -12,7 +12,7 @@ repos:
     - id: markdownlint-fix
       exclude: ^(.github/pull_request_template.md|changelog-entries)
 - repo: https://github.com/hhatto/autopep8
-  rev: v2.0.4
+  rev: v2.3.2
   hooks:
     - id: autopep8
       args: [ --in-place, --exit-code, --aggressive, --ignore=E402, --max-line-length=120 ]
