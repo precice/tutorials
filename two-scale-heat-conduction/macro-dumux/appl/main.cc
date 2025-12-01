@@ -108,8 +108,7 @@ int main(int argc, char **argv)
     // verify that dimensions match
     const int preciceDim = couplingParticipant.getMeshDimensions(meshName);
     const int dim        = int(leafGridView.dimension);
-    std::cout << "coupling Dims = " << dim << " , leafgrid dims = " << dim
-              << std::endl;
+    std::cout << " coupling Dims = " << preciceDim << " , leafgrid dims = " << dim << std::endl;
     if (preciceDim != dim)
       DUNE_THROW(Dune::InvalidStateException, "Dimensions do not match");
   }
@@ -120,7 +119,7 @@ int main(int argc, char **argv)
 
   // coordinate loop (created vectors are 1D)
   // these positions of cell centers are later communicated to precice
-  std::cout << "Coordinates: " << std::endl;
+  std::cout << " Coordinates: " << std::endl;
   for (const auto &element : elements(leafGridView, Dune::Partitions::interior)) {
     auto fvGeometry = localView(*gridGeometry);
     fvGeometry.bindElement(element);
@@ -135,11 +134,15 @@ int main(int argc, char **argv)
     }
   }
 
-  std::cout << "Number of Coupled Cells:" << coupledElementIdxs.size()
-            << std::endl;
+  std::cout << " Number of Coupled Cells:" << coupledElementIdxs.size() << std::endl;
 
-  auto numberOfElements =
-      coords.size() / couplingParticipant.getMeshDimensions(meshName);
+  int numberOfElements;
+  if (runWithCoupling) {
+    numberOfElements = coords.size() / couplingParticipant.getMeshDimensions(meshName);
+  } else {
+    numberOfElements = coupledElementIdxs.size();
+  }
+
   if (runWithCoupling) {
     couplingParticipant.setMesh(meshName, coords);
 
@@ -228,14 +231,15 @@ int main(int argc, char **argv)
   }
 
   // time loop parameters
-  const auto tEnd      = getParam<Scalar>("TimeLoop.TEnd");
-  double     preciceDt = couplingParticipant.getMaxTimeStepSize();
+  const auto tEnd = getParam<Scalar>("TimeLoop.TEnd");
+  double     preciceDt;
   double     solverDt;
   double     dt;
 
   if (runWithCoupling) {
-    solverDt = getParam<Scalar>("TimeLoop.InitialDt");
-    dt       = std::min(preciceDt, solverDt);
+    preciceDt = couplingParticipant.getMaxTimeStepSize();
+    solverDt  = getParam<Scalar>("TimeLoop.InitialDt");
+    dt        = std::min(preciceDt, solverDt);
   } else {
     dt = getParam<Scalar>("TimeLoop.InitialDt");
   }
@@ -266,7 +270,7 @@ int main(int argc, char **argv)
   NewtonSolver nonLinearSolver(assembler, linearSolver);
 
   // time loop
-  int n = 0; // counts timesteps for the output interval
+  int n_out = 0; // counts timesteps for the output interval
   std::cout << "Time Loop starts" << std::endl;
   timeLoop->start();
   do {
@@ -305,7 +309,7 @@ int main(int argc, char **argv)
     // set new dt as suggested by the Newton solver or by preCICE
     timeLoop->setTimeStepSize(dt);
 
-    std::cout << "Solver starts with target dt: " << dt << std::endl;
+    std::cout << " nonLinearSolver starts with target dt: " << dt << std::endl;
 
     // linearize & solve
     nonLinearSolver.solve(x, *timeLoop);
@@ -318,15 +322,6 @@ int main(int argc, char **argv)
     timeLoop->advanceTimeStep();
     timeLoop->reportTimeStep();
     xOld = x;
-
-    // Vtk output
-    // TODO: output interval does not work seamlessly when subcycling
-    n += 1;
-    if (n == vtkOutputInterval) {
-      problem->updateVtkOutput(x);
-      vtkWriter.write(timeLoop->time());
-      n = 0;
-    }
 
     if (runWithCoupling) {
       int solIdx = 0;
@@ -346,7 +341,7 @@ int main(int argc, char **argv)
 
       // advance preCICE
       if ((!fabs(preciceDt - dt)) < 1e-14) {
-        std::cout << "dt from preCICE is different than dt from DuMuX."
+        std::cout << " dt from preCICE is different than dt from DuMuX."
                   << " preCICE dt = " << preciceDt
                   << " and DuMuX dt = " << solverDt
                   << " resulted in dt = " << dt
@@ -360,6 +355,25 @@ int main(int argc, char **argv)
         gridVariables->advanceTimeStep();
         xOld = x;
         continue;
+      }
+    }
+
+    if (runWithCoupling) {
+      // if coupling, write VTK output only when time window is complete
+      if (couplingParticipant.isTimeWindowComplete()) {
+        n_out += 1;
+        if (n_out == vtkOutputInterval) {
+          problem->updateVtkOutput(x);
+          vtkWriter.write(timeLoop->time());
+          n_out = 0;
+        }
+      }
+    } else {
+      n_out += 1;
+      if (n_out == vtkOutputInterval) {
+        problem->updateVtkOutput(x);
+        vtkWriter.write(timeLoop->time());
+        n_out = 0;
       }
     }
 
