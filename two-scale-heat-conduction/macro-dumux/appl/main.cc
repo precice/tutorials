@@ -108,7 +108,7 @@ int main(int argc, char **argv)
     // verify that dimensions match
     const int preciceDim = couplingParticipant.getMeshDimensions(meshName);
     const int dim        = int(leafGridView.dimension);
-    std::cout << " coupling Dims = " << preciceDim << " , leafgrid dims = " << dim << std::endl;
+    std::cout << "Coupling dims = " << preciceDim << " , leafgrid dims = " << dim << std::endl;
     if (preciceDim != dim)
       DUNE_THROW(Dune::InvalidStateException, "Dimensions do not match");
   }
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
 
   // coordinate loop (created vectors are 1D)
   // these positions of cell centers are later communicated to precice
-  std::cout << " Coordinates: " << std::endl;
+  std::cout << "Coordinates: " << std::endl;
   for (const auto &element : elements(leafGridView, Dune::Partitions::interior)) {
     auto fvGeometry = localView(*gridGeometry);
     fvGeometry.bindElement(element);
@@ -134,7 +134,7 @@ int main(int argc, char **argv)
     }
   }
 
-  std::cout << " Number of Coupled Cells:" << coupledElementIdxs.size() << std::endl;
+  std::cout << "Number of Coupled Cells:" << coupledElementIdxs.size() << std::endl;
 
   int numberOfElements;
   if (runWithCoupling) {
@@ -309,7 +309,7 @@ int main(int argc, char **argv)
     // set new dt as suggested by the Newton solver or by preCICE
     timeLoop->setTimeStepSize(dt);
 
-    std::cout << " nonLinearSolver starts with target dt: " << dt << std::endl;
+    std::cout << "nonLinearSolver starts with target dt: " << dt << std::endl;
 
     // linearize & solve
     nonLinearSolver.solve(x, *timeLoop);
@@ -341,7 +341,7 @@ int main(int argc, char **argv)
 
       // advance preCICE
       if ((!fabs(preciceDt - dt)) < 1e-14) {
-        std::cout << " dt from preCICE is different than dt from DuMuX."
+        std::cout << "dt from preCICE is different than dt from DuMuX."
                   << " preCICE dt = " << preciceDt
                   << " and DuMuX dt = " << solverDt
                   << " resulted in dt = " << dt
