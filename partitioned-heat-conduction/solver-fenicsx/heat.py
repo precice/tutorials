@@ -80,7 +80,7 @@ class GradientSolver:
 # Parse arguments
 parser = argparse.ArgumentParser(description="Solving heat equation for simple or complex interface case")
 parser.add_argument("participantName", help="Name of the solver.", type=str, choices=[p.value for p in ProblemType])
-parser.add_argument("-e", "--error-tol", help="set error tolerance", type=float, default=10**-8,)
+parser.add_argument("-e", "--error-tol", help="set error tolerance", type=float, default=10**-9,)
 args = parser.parse_args()
 # Init variables with arguments
 participant_name = args.participantName
@@ -301,7 +301,7 @@ while precice.is_coupling_ongoing():
     if precice.is_time_window_complete():
         u_ref = fem.Function(V)
         u_ref.interpolate(u_D)
-        error, error_pointwise = compute_errors(u_n, u_ref, total_error_tol=1e-9)
+        error, error_pointwise = compute_errors(u_n, u_ref, total_error_tol=error_tol)
         print("t = %.2f: L2 error on domain = %.3g" % (t, error))
         # Update Dirichlet BC
         u_exact.t += dt
