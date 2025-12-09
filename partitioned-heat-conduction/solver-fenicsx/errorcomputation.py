@@ -7,9 +7,6 @@ import ufl
 def compute_errors(u_approx, u_ref, total_error_tol=10 ** -9):
     mesh = u_ref.function_space.mesh
     # Compute L2 error and error at nodes
-    # V_ex = fem.functionspace(mesh, ("Lagrange", 2))
-    # u_ex = fem.Function(V_ex)
-    # u_ex.interpolate(u_ref)
     error_L2 = np.sqrt(mesh.comm.allreduce(fem.assemble_scalar(fem.form((u_approx - u_ref)**2 * ufl.dx)), op=MPI.SUM))
     if mesh.comm.rank == 0:
         print(f"L2-error: {error_L2:.2e}")
