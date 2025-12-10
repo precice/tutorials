@@ -12,7 +12,7 @@ import pathlib
 x0 = 0
 x1 = 2
 x2 = 3
-x3 = 5
+x3 = 5.5
 x4 = 6
 
 y0 = 0
@@ -67,19 +67,19 @@ for b in [lb, lt, mt, rt1, rt2, rb1, rb2]:
 def chop(x, *items):
     for i in items:
         i.chop(0, count=x)
-        i.chop(1, count=16)
+        i.chop(1, count=5)
         i.chop(2, count=1)
 
 
-chop(20, lb, lt, rb1, rt1)
-chop(10, mt)
+chop(10, lb, lt, rb1, rt1)
+chop(5, mt)
 
-rb2.chop(0, count=20, start_size=0.1)
-rb2.chop(1, count=16)
+rb2.chop(0, count=10, start_size=0.1)
+rb2.chop(1, count=5)
 rb2.chop(2, count=1)
 
-rt2.chop(0, count=20, start_size=0.1)
-rt2.chop(1, count=16)
+rt2.chop(0, count=10, start_size=0.1)
+rt2.chop(1, count=5)
 rt2.chop(2, count=1)
 
 # Mesh
