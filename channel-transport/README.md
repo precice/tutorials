@@ -45,7 +45,7 @@ Transport participant:
 
 * Nutils with support for [adaptive mesh refinement](https://precice.org/couple-your-code-moving-or-changing-meshes.html#pseudo-reference-domain). For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0 and a preCICE release with [remeshing support](couple-your-code-moving-or-changing-meshes.html#remeshing-using-precice).
 
-* OpenFOAM. This case uses a modified version of scalarTransportFoam, which recomputes `phi` after the preCICE adapter reads the velocity field. Build it with `wmake`. Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html). Note that T accumulates in front of the outlet as this case conserves overall T.
+* OpenFOAM. This case uses a modified version of scalarTransportFoam, which recomputes `phi` after the preCICE adapter reads the velocity field. Build it with `wmake`. Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
 
 ## Running the simulation
 
