@@ -6,6 +6,8 @@ FoamFile
     object      setExprFieldsDict;
 }
 
+// Initializes the blob at coordinates (bx,by) with given radius.
+// The formula is consistent with the one used in the original nutils case.
 expressions
 (
     T
