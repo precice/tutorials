@@ -26,7 +26,7 @@ The domain is partitioned into participants at $x=1$:
 - **Dirichlet**: Solves the left half $[0,1]$ and receives Dirichlet boundary conditions at the interface.
 - **Neumann**: Solves the right half $[1,2]$ and receives Neumann boundary conditions at the interface.
 
-Both outer boundaries use zero-gradient conditions $\frac{\partial u}{\partial x} = 0$. The problem is solved for different initial conditions of superimposed sine waves, which can be generated using the provided script.
+Both outer boundaries use zero-gradient conditions $\frac{\partial u}{\partial x} = 0$. The problem can be solved for different initial conditions of superimposed sine waves, which can be generated using the provided script `utils/generate_ic.py`.
 
 <p align="center">
   <img src="images/tutorials-partitioned-burgers-1d-full-domain-diagram.png" alt="Domain Diagram" width="500"/>
