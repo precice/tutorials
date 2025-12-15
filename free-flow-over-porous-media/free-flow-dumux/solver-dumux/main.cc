@@ -353,7 +353,7 @@ int main(int argc, char **argv)
   std::string preciceConfigFilename = "../precice-config.xml";
 
   auto &couplingParticipant = Dumux::Precice::CouplingAdapter::getInstance();
-  couplingParticipant.announceSolver("FreeFlow", preciceConfigFilename,
+  couplingParticipant.announceSolver("Free-Flow", preciceConfigFilename,
                                      mpiHelper.rank(), mpiHelper.size());
 
   const std::string meshName("Free-Flow-Mesh"); // mesh name

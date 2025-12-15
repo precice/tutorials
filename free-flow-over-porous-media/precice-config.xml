@@ -21,9 +21,9 @@
     <use-data name="Pressure" />
   </mesh>
 
-  <participant name="FreeFlow">
+  <participant name="Free-Flow">
     <provide-mesh name="Free-Flow-Mesh" />
-    <receive-mesh name="Porous-Media-Mesh" from="Darcy" />
+    <receive-mesh name="Porous-Media-Mesh" from="Porous-Media" />
     <read-data name="Velocity" mesh="Free-Flow-Mesh" />
     <write-data name="Pressure" mesh="Free-Flow-Mesh" />
     <mapping:nearest-neighbor
@@ -38,30 +38,30 @@
       constraint="consistent" />
   </participant>
 
-  <participant name="Darcy">
+  <participant name="Porous-Media">
     <provide-mesh name="Porous-Media-Mesh" />
     <read-data name="Pressure" mesh="Porous-Media-Mesh" />
     <write-data name="Velocity" mesh="Porous-Media-Mesh" />
   </participant>
 
-  <m2n:sockets acceptor="FreeFlow" connector="Darcy" exchange-directory=".." />
+  <m2n:sockets acceptor="Free-Flow" connector="Porous-Media" exchange-directory=".." />
 
   <coupling-scheme:parallel-implicit>
-    <participants first="FreeFlow" second="Darcy" />
+    <participants first="Free-Flow" second="Porous-Media" />
     <max-time value="1" />
     <time-window-size value="1" />
     <max-iterations value="100" />
     <exchange
       data="Pressure"
       mesh="Porous-Media-Mesh"
-      from="FreeFlow"
-      to="Darcy"
+      from="Free-Flow"
+      to="Porous-Media"
       initialize="false" />
     <exchange
       data="Velocity"
       mesh="Porous-Media-Mesh"
-      from="Darcy"
-      to="FreeFlow"
+      from="Porous-Media"
+      to="Free-Flow"
       initialize="true" />
     <relative-convergence-measure limit="1e-6" data="Pressure" mesh="Porous-Media-Mesh" />
     <relative-convergence-measure limit="1e-6" data="Velocity" mesh="Porous-Media-Mesh" />
