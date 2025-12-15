@@ -1,5 +1,5 @@
-numpy
-pyprecice
-scipy
-torch
-matplotlib
+numpy==2.3.5
+pyprecice==3.3.1
+scipy==1.16.3
+matplotlib==3.10.8
+torch==2.9.1

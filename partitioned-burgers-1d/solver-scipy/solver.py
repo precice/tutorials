@@ -152,7 +152,7 @@ def main(participant_name: str, savefile_path: str = None):
         participant = precice.Participant(participant_name, config_path, 0, 1)
 
     # Read initial condition
-    with open(os.path.join(case_dir, "ic_params.json"), 'r') as f:
+    with open(os.path.join(case_dir, "utils", "ic_params.json"), 'r') as f:
         domain_config = json.load(f)["domain"]
 
     nelems_total = domain_config["nelems_total"]
@@ -215,7 +215,6 @@ def main(participant_name: str, savefile_path: str = None):
     if participant_name == "Dirichlet":
         while participant.is_coupling_ongoing():
             if participant.requires_writing_checkpoint():
-                # print(f"[Dirichlet] Writing checkpoint at t={t:.4f}")
                 saved_u = u.copy()
                 saved_t = t
                 saved_t_index = t_index
@@ -223,16 +222,11 @@ def main(participant_name: str, savefile_path: str = None):
                 u = saved_u.copy()
                 t = saved_t
                 t_index = saved_t_index
-                # print(f"[Dirichlet] Reading checkpoint at t={t:.4f}")
 
             u_from_neumann = participant.read_data(mesh_name, read_data_name, vertex_id, dt)[0]
 
             t_end = t + dt
             wrapper = BoundaryWrapper(dx, C_viscosity, "Dirichlet", u_from_neumann=u_from_neumann)
-
-            # sol = solve_ivp(wrapper.rhs, (t, t_end), u, method='BDF', t_eval=[t_end], jac=wrapper.jac) # BDF higher order implicit timestepping
-            # u = sol.y[:, -1]
-            # u = u + dt * burgers_rhs(t, u, dx,  C_viscosity, wrapper.bc_left(u), wrapper.bc_right(u)) # Explicit Euler
 
             sol = root(wrapper.rhs_residual, u, args=(u, dt), jac=wrapper.jac_residual, method='hybr')
             u = sol.x
@@ -255,7 +249,6 @@ def main(participant_name: str, savefile_path: str = None):
     elif participant_name == "Neumann":
         while participant.is_coupling_ongoing():
             if participant.requires_writing_checkpoint():
-                # print(f"[Neumann] Writing checkpoint at t={t:.4f}")
                 saved_u = u.copy()
                 saved_t = t
                 saved_t_index = t_index
@@ -263,15 +256,11 @@ def main(participant_name: str, savefile_path: str = None):
                 u = saved_u.copy()
                 t = saved_t
                 t_index = saved_t_index
-                # print(f"[Neumann] Reading checkpoint at t={t:.4f}")
                             
             du_dx_recv = participant.read_data(mesh_name, read_data_name, vertex_id, dt)[0]
             
             t_end = t + dt
             wrapper = BoundaryWrapper(dx, C_viscosity, "Neumann", du_dx_recv=du_dx_recv)
-            # sol = solve_ivp(wrapper.rhs, (t, t_end), u, method='BDF', t_eval=[t_end], jac=wrapper.jac) # BDF higher order implicit timestepping
-            # u = sol.y[:, -1]
-            # u = u + dt * burgers_rhs(t, u, dx,  C_viscosity, wrapper.bc_left(u), wrapper.bc_right(u)) # Explicit Euler
 
             sol = root(wrapper.rhs_residual, u, args=(u, dt), jac=wrapper.jac_residual, method='hybr')
             u = sol.x
@@ -307,9 +296,6 @@ def main(participant_name: str, savefile_path: str = None):
             print(f"[Monolithic ] t={t:6.4f}")
             t_end = t + dt
             wrapper = BoundaryWrapper(dx, C_viscosity, "None")
-            # sol = solve_ivp(wrapper.rhs, (t, t_end), u, method='BDF', t_eval=[t_end], jac=wrapper.jac) # BDF higher order implicit timestepping
-            # u = sol.y[:, -1]
-            # u = u + dt * burgers_rhs(t, u, dx,  C_viscosity, wrapper.bc_left(u), wrapper.bc_right(u)) # Explicit Euler
 
             sol = root(wrapper.rhs_residual, u, args=(u, dt), jac=wrapper.jac_residual, method='hybr')
             u = sol.x

@@ -36,7 +36,7 @@ def main():
     print("Neural surrogate model loaded successfully.")
 
     # Read initial condition
-    with open(os.path.join(case_dir, "ic_params.json"), 'r') as f:
+    with open(os.path.join(case_dir, "utils", "ic_params.json"), 'r') as f:
         domain_config = json.load(f)["domain"]
 
     nelems_total = domain_config["nelems_total"]
