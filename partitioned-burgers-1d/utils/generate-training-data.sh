@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e -u
 
+# Move to the tutorial root directory
+cd "$(dirname "$0")/.."
+
 mkdir -p solver-scipy/data-training
 
 # Number of training runs to generate
@@ -13,7 +16,7 @@ do
   echo "--- Generating epoch ${i} ---"
   
   # Generate IC
-  python3 generate_ic.py --epoch ${i}
+  python3 utils/generate_ic.py --epoch ${i}
 
   SAVE_PATH="data-training/burgers_data_epoch_${i}.npz"
 

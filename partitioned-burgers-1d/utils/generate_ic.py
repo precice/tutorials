@@ -38,7 +38,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     CASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    IMAGES_DIR = os.path.join(CASE_DIR, "images")
+    IMAGES_DIR = os.path.join(CASE_DIR, "../output")
 
     with open(os.path.join(CASE_DIR, "ic_params.json"), 'r') as f:
         config = json.load(f)
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     # Generate IC
     initial_condition = project_initial_condition(full_domain_min, full_domain_max, nelems_total, ic_config, args.epoch)
 
-    output_path = os.path.join(CASE_DIR, "initial_condition.npz")
+    output_path = os.path.join(CASE_DIR, "../initial_condition.npz")
     np.savez(output_path, initial_condition=initial_condition)
 
     plt.figure(figsize=(8, 4))

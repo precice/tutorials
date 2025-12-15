@@ -10,11 +10,11 @@ args = parser.parse_args()
 TIMESTEP_TO_PLOT = args.TIMESTEP_TO_PLOT
 
 CASE_DIR = os.path.dirname(os.path.abspath(__file__))
-IMAGES_DIR = os.path.join(CASE_DIR, "images")
-DIRICHLET_DATA_PATH = os.path.join(CASE_DIR, "dirichlet-scipy", "dirichlet.npz")
-NEUMANN_DATA_PATH = os.path.join(CASE_DIR, args.neumann)
+IMAGES_DIR = os.path.join(CASE_DIR, "../output")
+DIRICHLET_DATA_PATH = os.path.join(CASE_DIR, "../dirichlet-scipy", "dirichlet.npz")
+NEUMANN_DATA_PATH = os.path.join(CASE_DIR, "..", args.neumann)
 
-MONOLITHIC_DATA_PATH = os.path.join(CASE_DIR, "solver-scipy", "full_domain.npz")
+MONOLITHIC_DATA_PATH = os.path.join(CASE_DIR, "../solver-scipy", "full_domain.npz")
 if os.path.exists(MONOLITHIC_DATA_PATH):
     gt_exists = True
 else:
@@ -64,7 +64,7 @@ plt.vlines(x=1, ymin=u_interface+u_offset, ymax=u_max+u_offset*2, color='gray', 
 
 plt.legend(loc='upper left')
 plt.savefig(os.path.join(IMAGES_DIR, f'full_domain_timestep_slice.png'))
-print(f"Saved plot to images/full_domain_timestep_slice.png")
+print(f"Saved plot to output/full_domain_timestep_slice.png")
 
 if gt_exists:
     # residual
@@ -123,7 +123,7 @@ plt.vlines(x=1, ymin=u_interface+u_offset, ymax=u_max+u_offset, color='gray', li
 
 plt.legend(loc='upper left')
 plt.savefig(os.path.join(IMAGES_DIR, f'gradient_timestep_slice.png'))
-print(f"Saved plot to images/gradient_timestep_slice.png")
+print(f"Saved plot to output/gradient_timestep_slice.png")
 plt.close()
 
 # --- plot time evolution ---
@@ -137,5 +137,5 @@ plt.ylabel('Spatial Coordinate (x)')
 plt.xticks(np.arange(0, full_solution_history.shape[0], step=max(1, full_solution_history.shape[0]//10)))
 plt.tight_layout()
 plt.savefig(os.path.join(IMAGES_DIR, 'full_domain_evolution.png'))
-print("Saved plot to images/full_domain_evolution.png")
+print("Saved plot to output/full_domain_evolution.png")
 plt.close()

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e -u
 
+cd "$(dirname "$0")/.."
+
 ./clean-tutorial.sh
 
 solver_path="./solver-scipy"
@@ -15,13 +17,13 @@ else
 	pip install -r $solver_path/requirements.txt && pip freeze > $solver_path/pip-installed-packages.log
 fi
 
-python3 generate_ic.py --epoch ${1:-0}
+python3 utils/generate_ic.py --epoch ${1:-0}
 
 # full domain reference solution
 echo "Running monolithic reference solution..."
-cd solver-scipy; ./run.sh; cd ..
+(cd solver-scipy && ./run.sh)
 
-cd dirichlet-scipy; pwd; ./run.sh &
-cd ../neumann-scipy; pwd; ./run.sh && cd ..
+(cd dirichlet-scipy && ./run.sh) &
+(cd neumann-surrogate && ./run.sh)
 
-python3 visualize_partitioned_domain.py
+python3 utils/visualize_partitioned_domain.py --neumann neumann-surrogate/surrogate.npz
