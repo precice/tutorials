@@ -48,9 +48,6 @@
       <data name="Velocity" mesh="Neumann-Mesh" />
       <initial-relaxation value="0.1" />
     </acceleration:aitken>
-    <!-- <acceleration:constant>
-    <relaxation value="0.01" />
-    </acceleration:constant> -->
   </coupling-scheme:serial-implicit>
 
 </precice-configuration>
