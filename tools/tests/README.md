@@ -261,7 +261,7 @@ openfoam-adapter:
       default: "master"
     OPENFOAM_EXECUTABLE:
       description: exectuable of openfoam to use
-      default: "openfoam2312"
+      default: "openfoam2512"
     OPENFOAM_ADAPTER_REF:
       description: Reference/tag of the actual OpenFOAM adapter
       default: "master"
