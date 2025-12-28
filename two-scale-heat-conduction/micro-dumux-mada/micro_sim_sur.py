@@ -18,7 +18,7 @@ class MicroSimulation:
         """
         self._sim_id = sim_id
         self._state = None
-       
+
         self._model = None
         with open('micro-dumux-surrogate.pkl', 'rb') as input:
             self._model = joblib.load(input)
@@ -38,7 +38,7 @@ class MicroSimulation:
         return output_data
 
     def get_state(self):
-        return self._state;
+        return self._state
 
     def set_state(self, state):
         self._state = state
@@ -54,6 +54,3 @@ class MicroSimulation:
         output_data["grain_size"] = math.sqrt((1 - model_eval["porosity"][0][0]) / math.pi)
 
         return output_data
-
-
-

@@ -120,7 +120,7 @@ def create_surrogate(snapshots_dir: str) -> tuple:
     # Split the samples into training and validation sets
     n_valid = 200
     x_train, y_train, x_valid, y_valid = split_samples(x, y, n_valid)
-    
+
     inputs = Input()
     inputs.add_marginals(name="concentration", dist_type="unif", parameters=[0, 0.5])
 
@@ -181,6 +181,7 @@ def validate_surrogate(x_valid, y_valid, model_name="micro-dumux-surrogate.pkl")
     plt.ylabel("valid porosity")
     plt.title("IO: con to poro")
     plt.show()
+
 
 def main():
     snapshots_dir = "output"
