@@ -14,6 +14,8 @@ toc: false
 
 This is the first step you may want to try if you are new to preCICE: install preCICE and some solvers, and run a simple coupled case.
 
+[![asciicast](https://asciinema.org/a/RqGhiiS8jf2fKTaXgiNn73B1G.svg)](https://asciinema.org/a/RqGhiiS8jf2fKTaXgiNn73B1G)
+
 To get a feeling what preCICE does, watch a [short presentation](https://www.youtube.com/watch?v=FCv2FNUvKA8) or a [longer talk on the fundamentals](https://www.youtube.com/watch?v=9EDFlgfpGBs).
 
 ## Installation
