@@ -122,6 +122,11 @@ In this case, the coupling between the fluid flow and the flap becomes stronger 
 
 With the default value of $$ \rho_s= 3.0·10^{3}kg/m^{3} $$, the simulation will also converge with an explicit coupling scheme. With $$ \rho_s= 1kg/m^{3} $$, the simulation will only converge with implicit coupling, with an acceleration method such as the IQN-ILS in the current configuration.
 
+See [how this tutorial behaves with different coupling algorithms](https://makish.github.io/vki-training/#/17).
+This talk varies the [coupling scheme configuration](https://precice.org/configuration-coupling.html) and demonstrates explicit and implicit coupling schemes, the latter with constant, Aitken, and Anderson acceleration.
+Even though this is not a rigorous study, it demonstrates the effect that different coupling algorithms can have.
+Find more thorough studies in the [literature guide](https://precice.org/fundamentals-literature-guide.html#precice-features).
+
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
 {% enddisclaimer %}
