@@ -40,7 +40,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 Both fluid and solid participant are supported in:
 
 - *C++*: example solvers using the intrinsic [C++ API of preCICE](https://precice.org/couple-your-code-api.html). The fluid solver also depends on LAPACK (e.g. on Ubuntu `sudo apt-get install liblapack-dev`)
-- *Python*: example solvers using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html). Both solvers depend on `numpy`. The fluid solver additionally depends on the Python libraries `scipy matplotlib`. You can get these libraries from your system package manager or with `pip3 install --user <package>`.
+- *Python*: example solvers using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html). The run script installs these automatically via pip in a virtual environment.
 - *Rust*: example solvers using the preCICE [Rust bindings](https://precice.org/installation-bindings-rust.html). They need `cargo` to be installed.
 
 ## Running the Simulation
