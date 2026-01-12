@@ -14,6 +14,8 @@ toc: false
 
 This is the first step you may want to try if you are new to preCICE: install preCICE and some solvers, and run a simple coupled case.
 
+[![asciicast](https://asciinema.org/a/RqGhiiS8jf2fKTaXgiNn73B1G.svg)](https://asciinema.org/a/RqGhiiS8jf2fKTaXgiNn73B1G)
+
 To get a feeling what preCICE does, watch a [short presentation](https://www.youtube.com/watch?v=FCv2FNUvKA8) or a [longer talk on the fundamentals](https://www.youtube.com/watch?v=9EDFlgfpGBs).
 
 ## Installation
@@ -21,15 +23,16 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 1. Get and install preCICE. For Ubuntu 24.04 (Noble Numbat), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v3.2.0/libprecice3_3.2.0_noble.deb
-    sudo apt install ./libprecice3_3.2.0_noble.deb
+    wget https://github.com/precice/precice/releases/download/v3.3.0/libprecice3_3.3.0_noble.deb
+    sudo apt install ./libprecice3_3.3.0_noble.deb
     ```
 
     | OS                            | Package |
     | ---                           | ---     |
-    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.2.0_jammy.deb`](https://github.com/precice/precice/releases/download/v3.2.0/libprecice3_3.2.0_jammy.deb) |
-    | Ubuntu 24.04 Noble Numbat  | [`libprecice3_3.2.0_noble.deb`](https://github.com/precice/precice/releases/download/v3.2.0/libprecice3_3.2.0_noble.deb) |
-    | Debian 12 "bookworm"          | [`libprecice3_3.2.0_bookworm.deb`](https://github.com/precice/precice/releases/download/v3.2.0/libprecice3_3.2.0_bookworm.deb) |
+    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.3.0_jammy.deb`](https://github.com/precice/precice/releases/download/v3.3.0/libprecice3_3.3.0_jammy.deb) |
+    | Ubuntu 24.04 Noble Numbat     | [`libprecice3_3.3.0_noble.deb`](https://github.com/precice/precice/releases/download/v3.3.0/libprecice3_3.3.0_noble.deb) |
+    | Ubuntu 25.10 Questing Quokka  | [`libprecice3_3.3.0_questing.deb`](https://github.com/precice/precice/releases/download/v3.3.0/libprecice3_3.3.0_questing.deb) |
+    | Debian 13 Trixie              | [`libprecice3_3.3.0_trixie.deb`](https://github.com/precice/precice/releases/download/v3.3.0/libprecice3_3.3.0_trixie.deb) |
     | Something else                | See an [overview of options](https://precice.org/installation-overview.html) |
 
     Facing any problems? [Ask for help](https://precice.org/community-channels.html).
