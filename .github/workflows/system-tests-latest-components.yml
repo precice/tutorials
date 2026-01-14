@@ -85,43 +85,43 @@ jobs:
           printf '%q\n' "Reference: [\`${{ steps.ref-precice.outputs.shorthash }}\`](https://github.com/precice/precice/commit/${{ steps.ref-precice.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "Description:" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          printf '%q\n' '${{ steps.ref-precice.outputs.description }}' >> $GITHUB_STEP_SUMMARY
+          printf '%q\n' "${{ steps.ref-precice.outputs.description }}" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "### Python bindings" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "Reference: [\`${{ steps.ref-python-bindings.outputs.shorthash }}\`](https://github.com/precice/python-bindings/commit/${{ steps.ref-python-bindings.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "Description:" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          printf '%q\n' '${{ steps.ref-python-bindings.outputs.description }}' >> $GITHUB_STEP_SUMMARY
+          printf '%q\n' "${{ steps.ref-python-bindings.outputs.description }}" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "### CalculiX adapter" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "Reference: [\`${{ steps.ref-calculix-adapter.outputs.shorthash }}\`](https://github.com/precice/calculix-adapter/commit/${{ steps.ref-calculix-adapter.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "Description:" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          printf '%q\n' '${{ steps.ref-calculix-adapter.outputs.description }}' >> $GITHUB_STEP_SUMMARY
+          printf '%q\n' "${{ steps.ref-calculix-adapter.outputs.description }}" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "### FEniCS adapter" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "Reference: [\`${{ steps.ref-fenics-adapter.outputs.shorthash }}\`](https://github.com/precice/fenics-adapter/commit/${{ steps.ref-fenics-adapter.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "Description:" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          printf '%q\n' '${{ steps.ref-fenics-adapter.outputs.description }}' >> $GITHUB_STEP_SUMMARY
+          printf '%q\n' "${{ steps.ref-fenics-adapter.outputs.description }}" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "### OpenFOAM adapter" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "Reference: [\`${{ steps.ref-openfoam-adapter.outputs.shorthash }}\`](https://github.com/precice/openfoam-adapter/commit/${{ steps.ref-openfoam-adapter.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "Description:" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          printf '%q\n' '${{ steps.ref-openfoam-adapter.outputs.description }}' >> $GITHUB_STEP_SUMMARY
+          printf '%q\n' "${{ steps.ref-openfoam-adapter.outputs.description }}" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "### SU2 adapter" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "Reference: [\`${{ steps.ref-su2-adapter.outputs.shorthash }}\`](https://github.com/precice/su2-adapter/commit/${{ steps.ref-su2-adapter.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "Description:" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          printf '%q\n' '${{ steps.ref-su2-adapter.outputs.description }}' >> $GITHUB_STEP_SUMMARY
+          printf '%q\n' "${{ steps.ref-su2-adapter.outputs.description }}" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "### Tutorials" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "Reference: [\`${{ steps.ref-tutorials.outputs.shorthash }}\`](https://github.com/precice/tutorials/commit/${{ steps.ref-tutorials.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "Description:" >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          printf '%q\n' '${{ steps.ref-tutorials.outputs.description }}'' >> $GITHUB_STEP_SUMMARY
+          printf '%q\n' "${{ steps.ref-tutorials.outputs.description }}"' >> $GITHUB_STEP_SUMMARY
           printf '%q\n' "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
   run-system-tests:
