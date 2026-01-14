@@ -61,12 +61,12 @@ jobs:
       - id: report-refs
         name: Report Git refs
         run: |
-          printf 'preCICE: ${{ steps.ref-precice.outputs.shorthash }}\n ${{ steps.ref-precice.outputs.description }}\n----------\n'
-          printf 'Python bindings: ${{ steps.ref-python-bindings.outputs.shorthash }}\n ${{ steps.ref-python-bindings.outputs.description }}\n----------\n'
-          printf 'CalculiX adapter: ${{ steps.ref-calculix-adapter.outputs.shorthash }}\n ${{ steps.ref-calculix-adapter.outputs.description }}\n----------\n'
-          printf 'FEniCS adapter: ${{ steps.ref-fenics-adapter.outputs.shorthash }}\n ${{ steps.ref-fenics-adapter.outputs.description }}\n----------\n'
-          printf 'OpenFOAM adapter: ${{ steps.ref-openfoam-adapter.outputs.shorthash }} ${{ steps.ref-openfoam-adapter.outputs.description }}\n----------\n'
-          printf 'SU2 adapter: ${{ steps.ref-su2-adapter.outputs.shorthash }}\n ${{ steps.ref-su2-adapter.outputs.description }}\n----------\n'
+          printf '%q\n' "preCICE: ${{ steps.ref-precice.outputs.shorthash }}\n ${{ steps.ref-precice.outputs.description }}\n----------\n"
+          printf '%q\n' "Python bindings: ${{ steps.ref-python-bindings.outputs.shorthash }}\n ${{ steps.ref-python-bindings.outputs.description }}\n----------\n"
+          printf '%q\n' "CalculiX adapter: ${{ steps.ref-calculix-adapter.outputs.shorthash }}\n ${{ steps.ref-calculix-adapter.outputs.description }}\n----------\n"
+          printf '%q\n' "FEniCS adapter: ${{ steps.ref-fenics-adapter.outputs.shorthash }}\n ${{ steps.ref-fenics-adapter.outputs.description }}\n----------\n"
+          printf '%q\n' "OpenFOAM adapter: ${{ steps.ref-openfoam-adapter.outputs.shorthash }} ${{ steps.ref-openfoam-adapter.outputs.description }}\n----------\n"
+          printf '%q\n' "SU2 adapter: ${{ steps.ref-su2-adapter.outputs.shorthash }}\n ${{ steps.ref-su2-adapter.outputs.description }}\n----------\n"
       - id: summary
         name: Prepare Markdown summary
         run: |
