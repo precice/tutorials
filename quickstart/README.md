@@ -23,16 +23,15 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 1. Get and install preCICE. For Ubuntu 24.04 (Noble Numbat), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v3.3.0/libprecice3_3.3.0_noble.deb
-    sudo apt install ./libprecice3_3.3.0_noble.deb
+    wget https://github.com/precice/precice/releases/download/v3.3.1/libprecice3_3.3.1_noble.deb
+    sudo apt install ./libprecice3_3.3.1_noble.deb
     ```
 
     | OS                            | Package |
     | ---                           | ---     |
-    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.3.0_jammy.deb`](https://github.com/precice/precice/releases/download/v3.3.0/libprecice3_3.3.0_jammy.deb) |
-    | Ubuntu 24.04 Noble Numbat     | [`libprecice3_3.3.0_noble.deb`](https://github.com/precice/precice/releases/download/v3.3.0/libprecice3_3.3.0_noble.deb) |
-    | Ubuntu 25.10 Questing Quokka  | [`libprecice3_3.3.0_questing.deb`](https://github.com/precice/precice/releases/download/v3.3.0/libprecice3_3.3.0_questing.deb) |
-    | Debian 13 Trixie              | [`libprecice3_3.3.0_trixie.deb`](https://github.com/precice/precice/releases/download/v3.3.0/libprecice3_3.3.0_trixie.deb) |
+    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.3.1_jammy.deb`](https://github.com/precice/precice/releases/download/v3.3.1/libprecice3_3.3.1_jammy.deb) |
+    | Ubuntu 24.04 Noble Numbat     | [`libprecice3_3.3.1_noble.deb`](https://github.com/precice/precice/releases/download/v3.3.1/libprecice3_3.3.1_noble.deb) |
+    | Debian 13 Trixie              | [`libprecice3_3.3.1_trixie.deb`](https://github.com/precice/precice/releases/download/v3.3.1/libprecice3_3.3.1_trixie.deb) |
     | Something else                | See an [overview of options](https://precice.org/installation-overview.html) |
 
     Facing any problems? [Ask for help](https://precice.org/community-channels.html).
@@ -41,10 +40,10 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
     ```bash
     # Add the signing key, add the repository, update (check this):
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash
-    # Install OpenFOAM v2412:
-    sudo apt install openfoam2412-dev
+    # Install OpenFOAM v2512:
+    sudo apt install openfoam2512-dev
     # Enable OpenFOAM by default in your system and apply now:
-    echo "source /usr/lib/openfoam/openfoam2412/etc/bashrc" >> ~/.bashrc
+    echo "source /usr/lib/openfoam/openfoam2512/etc/bashrc" >> ~/.bashrc
     source ~/.bashrc
     ```
 
