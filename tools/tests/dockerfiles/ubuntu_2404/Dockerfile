@@ -22,25 +22,25 @@ USER root
 # Installing necessary dependecies for preCICE
 RUN apt-get -qq update && \
     apt-get -qq -y install \
-        build-essential \
-        software-properties-common \
-        cmake \
-        curl \
-        g++ \
-        gfortran \
-        git \
-        libbenchmark-dev \
-        libboost-all-dev \
-        libeigen3-dev \
-        libxml2-dev \
-        lsb-release \
-        petsc-dev \
-        python3-dev \
-        python3-numpy \
-        python3-pip \
-        python3-venv \
-        pkg-config \
-        wget
+    build-essential \
+    software-properties-common \
+    cmake \
+    curl \
+    g++ \
+    gfortran \
+    git \
+    libbenchmark-dev \
+    libboost-all-dev \
+    libeigen3-dev \
+    libxml2-dev \
+    lsb-release \
+    petsc-dev \
+    python3-dev \
+    python3-numpy \
+    python3-pip \
+    python3-venv \
+    pkg-config \
+    wget
 USER precice
 
 FROM precice_dependecies AS precice
@@ -188,3 +188,28 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
     git checkout ${DEALII_ADAPTER_REF} && \
     cmake . && \
     make -j $(nproc)
+
+FROM precice_dependecies AS dumux
+USER root
+RUN apt-get update
+USER precice
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
+ARG DUNEVERSION
+ARG DUMUXVERSION
+RUN mkdir dumux&&\
+    cd dumux&&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/$DUNEVERSION &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/$DUNEVERSION &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/$DUNEVERSION &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/$DUNEVERSION &&\
+    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/$DUNEVERSION &&\
+    git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/$DUMUXVERSION &&\
+    git clone -b cell_problems https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git &&\
+    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/$DUNEVERSION &&\
+    git clone --depth 1 https://github.com/precice/dumux-adapter.git -b develop
+USER precice
+WORKDIR /home/precice/dumux
+ENV PATH ${WORKDIR}/dune-common/bin:${PATH}
+# build core DUNE, DuMuX and the adapter
+RUN dunecontrol --opts=cmake-test.opts all
+ENV DUNE_CONTROL_PATH=${WORKDIR}/dune-common/dune.module:${WORKDIR}/dune-geometry/dune.module:${WORKDIR}/dune-grid/dune.module:${WORKDIR}/dune-localfunctions/dune.module:${WORKDIR}/dune-istl/dune.module:${WORKDIR}/dune-subgrid/dune.module:${WORKDIR}/dumux/dune.module

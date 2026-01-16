@@ -1,0 +1,20 @@
+name: Two-scale heat conduction
+path: two-scale-heat-conduction
+url: https://precice.org/tutorials-two-scale-heat-conduction.html
+
+participants:
+  - macro-heat
+  - Micro-Manager
+
+cases:
+  macro-dumux:
+    participant: macro-heat
+    directory: ./macro-dumux
+    run: ./run.sh
+    component: dumux-adapter
+
+  micro-dumux:
+    participant: Micro-Manager
+    directory: ./micro-dumux
+    run: ./run.sh
+    component: dumux-adapter
