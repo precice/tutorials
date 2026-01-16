@@ -166,3 +166,24 @@ dealii-adapter:
     DEALII_ADAPTER_REF:
       description: Version of deal.ii-adapter to use
       default: "master"
+
+dumux-adapter:
+  repository: https://github.com/precice/dumux-adapter
+  template: component-templates/dumux-adapter.yaml
+  build_arguments:
+    PLATFORM:
+      description: Dockerfile platform used
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      description: Version of preCICE to use
+      default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: "master"
+    DUMUX_ADAPTER_REF:
+      semnantic: Git ref of the dumux adapter to use
+      default: "main"
+
