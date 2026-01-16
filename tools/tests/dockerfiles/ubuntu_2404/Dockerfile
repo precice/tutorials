@@ -194,22 +194,29 @@ USER root
 RUN apt-get update
 USER precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
-ARG DUNEVERSION
-ARG DUMUXVERSION
+ARG DUNE_VERSION
+ARG DUMUX_VERSION
 RUN mkdir dumux&&\
     cd dumux&&\
-    git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/$DUNEVERSION &&\
-    git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/$DUNEVERSION &&\
-    git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/$DUNEVERSION &&\
-    git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/$DUNEVERSION &&\
-    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/$DUNEVERSION &&\
-    git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/$DUMUXVERSION &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/$DUNE_VERSION &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/$DUNE_VERSION &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/$DUNE_VERSION &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/$DUNE_VERSION &&\
+    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/$DUNE_VERSION &&\
+    git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/$DUMUX_VERSION &&\
     git clone -b cell_problems https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git &&\
-    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/$DUNEVERSION &&\
-    git clone --depth 1 https://github.com/precice/dumux-adapter.git -b develop
+    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/$DUNE_VERSION
 USER precice
 WORKDIR /home/precice/dumux
 ENV PATH ${WORKDIR}/dune-common/bin:${PATH}
 # build core DUNE, DuMuX and the adapter
 RUN dunecontrol --opts=cmake-test.opts all
 ENV DUNE_CONTROL_PATH=${WORKDIR}/dune-common/dune.module:${WORKDIR}/dune-geometry/dune.module:${WORKDIR}/dune-grid/dune.module:${WORKDIR}/dune-localfunctions/dune.module:${WORKDIR}/dune-istl/dune.module:${WORKDIR}/dune-subgrid/dune.module:${WORKDIR}/dumux/dune.module
+ARG DUMUX_ADAPTER_PR
+ARG DUMUX_ADAPTER_REF
+RUN git clone --depth 1 https://github.com/precice/dumux-adapter.git &&\
+    cd dumux-adapter && \
+    if [ -n "${DUMUX_ADAPTER_PR}" ]; then git fetch origin pull/${DUMUX_ADAPTER_PR}/head; fi && \
+    git checkout ${DUMUX_ADAPTER_REF} && \
+    cd .. &&\
+    dunecontrol --opts=cmake-test.opts --only=dumux-adapter all
