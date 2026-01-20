@@ -11,15 +11,15 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-cpp_solid-python.tar.gz | 2025-04-13 15:08:07 | b245b06ac8d4d572bf83cd6bdc156c0bb31fa89a34fbc76d4916a4f5cb216385 |
-| fluid-python_solid-python.tar.gz | 2025-04-13 15:08:07 | e2c03a1f6f6cd52b4eff509cab69c4003b931ff845c7c2e1633371dac5b675e8 |
-| fluid-cpp_solid-cpp.tar.gz | 2025-04-13 15:08:07 | 45966fe65edaa117964c3977632e8c4589645f86de3cf592a64560225ae997f6 |
+| fluid-cpp_solid-cpp.tar.gz | 2026-01-19 17:58:00 | 9b66094c7cf9cc8e58892e31474b31eab1dc2b6efd29444c8c7d6801e3f6ef3c |
+| fluid-python_solid-python.tar.gz | 2026-01-19 17:58:00 | d0f9c38e953f6fdd1ac7124431d370c429128f440e90dcd52555442dc925e9be |
+| fluid-cpp_solid-python.tar.gz | 2026-01-19 17:58:00 | 2c3f7c9d3173e4c65fe74458ab682f763a3f4de910c33839a1f139ffb93830d8 |
 
 ## List of arguments used to generate the files
 
 | name | value |
 |------|------|
-| PRECICE_REF | v3.2.0 |
+| PRECICE_REF | 40a98c3 |
 | PRECICE_PRESET | production-audit |
 | OPENFOAM_EXECUTABLE | openfoam2312 |
 | OPENFOAM_ADAPTER_REF | v1.3.1 |
@@ -38,32 +38,32 @@ We also include some information on the machine used to generate them
 
 ### uname -a
 
-Linux precice-tests 5.15.0-131-generic #141-Ubuntu SMP Fri Jan 10 21:18:28 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+Linux precice-tests 5.15.0-163-generic #173-Ubuntu SMP Tue Oct 14 17:51:00 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
 
 
 ### lscpu
 
-Architecture:                         x86_64
-CPU op-mode(s):                       32-bit, 64-bit
-Address sizes:                        45 bits physical, 48 bits virtual
-Byte Order:                           Little Endian
-CPU(s):                               4
-On-line CPU(s) list:                  0-3
-Vendor ID:                            GenuineIntel
-Model name:                           Intel(R) Xeon(R) Gold 6130 CPU @ 2.10GHz
-CPU family:                           6
-Model:                                85
-Thread(s) per core:                   1
-Core(s) per socket:                   1
-Socket(s):                            4
-Stepping:                             4
-BogoMIPS:                             4199.99
-Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon nopl xtopology tsc_reliable nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch invpcid_single pti ssbd ibrs ibpb stibp fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid avx512f avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves arat pku ospke md_clear flush_l1d arch_capabilities
-Hypervisor vendor:                    VMware
-Virtualization type:                  full
-L1d cache:                            128 KiB (4 instances)
-L1i cache:                            128 KiB (4 instances)
-L2 cache:                             4 MiB (4 instances)
-L3 cache:                             88 MiB (4 instances)
-NUMA node(s):                         1
-NUMA node0 CPU(s):                    0-3
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           45 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  4
+On-line CPU(s) list:                     0-3
+Vendor ID:                               GenuineIntel
+Model name:                              Intel(R) Xeon(R) Gold 6130 CPU @ 2.10GHz
+CPU family:                              6
+Model:                                   85
+Thread(s) per core:                      1
+Core(s) per socket:                      1
+Socket(s):                               4
+Stepping:                                4
+BogoMIPS:                                4199.99
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon nopl xtopology tsc_reliable nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch invpcid_single pti ssbd ibrs ibpb stibp fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid avx512f avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves arat pku ospke md_clear flush_l1d arch_capabilities
+Hypervisor vendor:                       VMware
+Virtualization type:                     full
+L1d cache:                               128 KiB (4 instances)
+L1i cache:                               128 KiB (4 instances)
+L2 cache:                                4 MiB (4 instances)
+L3 cache:                                88 MiB (4 instances)
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0-3
