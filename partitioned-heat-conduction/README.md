@@ -82,6 +82,7 @@ The G+Smo-based version of the tutorial offers IsoGeometric Analysis discretizat
 git clone git@github.com:gismo/gismo.git
 cd gismo
 mkdir build
+cd build
 ```
  - Configure G+Smo 
 ```
