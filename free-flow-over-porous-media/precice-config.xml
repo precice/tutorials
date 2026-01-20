@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<precice-configuration>
+  <log>
+    <sink
+      type="stream"
+      output="stdout"
+      filter="(%Severity% > debug) or (%Severity% >= trace and %Module% contains SolverInterfaceImpl)"
+      enabled="false" />
+  </log>
+
+  <data:scalar name="Velocity" />
+  <data:scalar name="Pressure" />
+
+  <mesh name="Free-Flow-Mesh" dimensions="2">
+    <use-data name="Velocity" />
+    <use-data name="Pressure" />
+  </mesh>
+
+  <mesh name="Porous-Media-Mesh" dimensions="2">
+    <use-data name="Velocity" />
+    <use-data name="Pressure" />
+  </mesh>
+
+  <participant name="Free-Flow">
+    <provide-mesh name="Free-Flow-Mesh" />
+    <receive-mesh name="Porous-Media-Mesh" from="Porous-Media" />
+    <read-data name="Velocity" mesh="Free-Flow-Mesh" />
+    <write-data name="Pressure" mesh="Free-Flow-Mesh" />
+    <mapping:nearest-neighbor
+      direction="write"
+      from="Free-Flow-Mesh"
+      to="Porous-Media-Mesh"
+      constraint="conservative" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Porous-Media-Mesh"
+      to="Free-Flow-Mesh"
+      constraint="consistent" />
+  </participant>
+
+  <participant name="Porous-Media">
+    <provide-mesh name="Porous-Media-Mesh" />
+    <read-data name="Pressure" mesh="Porous-Media-Mesh" />
+    <write-data name="Velocity" mesh="Porous-Media-Mesh" />
+  </participant>
+
+  <m2n:sockets acceptor="Free-Flow" connector="Porous-Media" exchange-directory=".." />
+
+  <coupling-scheme:parallel-implicit>
+    <participants first="Free-Flow" second="Porous-Media" />
+    <max-time value="1" />
+    <time-window-size value="1" />
+    <max-iterations value="100" />
+    <exchange
+      data="Pressure"
+      mesh="Porous-Media-Mesh"
+      from="Free-Flow"
+      to="Porous-Media"
+      initialize="false" />
+    <exchange
+      data="Velocity"
+      mesh="Porous-Media-Mesh"
+      from="Porous-Media"
+      to="Free-Flow"
+      initialize="true" />
+    <relative-convergence-measure limit="1e-6" data="Pressure" mesh="Porous-Media-Mesh" />
+    <relative-convergence-measure limit="1e-6" data="Velocity" mesh="Porous-Media-Mesh" />
+    <acceleration:IQN-ILS>
+      <data mesh="Porous-Media-Mesh" name="Pressure" />
+      <data mesh="Porous-Media-Mesh" name="Velocity" />
+      <preconditioner type="residual-sum" />
+      <initial-relaxation value="0.1" />
+      <max-used-iterations value="40" />
+      <time-windows-reused value="10" />
+      <filter type="QR2" limit="1e-3" />
+    </acceleration:IQN-ILS>
+  </coupling-scheme:parallel-implicit>
+</precice-configuration>

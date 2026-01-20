@@ -1,0 +1,18 @@
+[Grid]
+Verbosity = true
+LowerLeft = 0 0
+UpperRight = 1 1
+Cells = 40 40
+Grading1 = 1
+
+[Problem]
+Name = porous-media-dumux
+InitialP = 0.0e-9
+
+[SpatialParams]
+Permeability = 1e-6 # m^2
+Porosity = 0.4
+AlphaBeaversJoseph = 1.0
+
+[Vtk]
+AddVelocity = 1
