@@ -192,4 +192,3 @@ dumux-adapter:
     DUMUX_ADAPTER_REF:
       semnantic: Git ref of the dumux adapter to use
       default: "main"
-
