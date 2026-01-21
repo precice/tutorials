@@ -196,14 +196,14 @@ ARG DUNE_VERSION
 ARG DUMUX_VERSION
 RUN mkdir dumux&&\
     cd dumux&&\
-    git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/$DUNE_VERSION &&\
-    git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/$DUNE_VERSION &&\
-    git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/$DUNE_VERSION &&\
-    git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/$DUNE_VERSION &&\
-    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/$DUNE_VERSION &&\
-    git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/$DUMUX_VERSION &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION} &&\
     git clone -b cell_problems https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git &&\
-    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/$DUNE_VERSION
+    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION}
 USER precice
 WORKDIR /home/precice/dumux
 ENV PATH="${WORKDIR}/dune-common/bin:${PATH}"
