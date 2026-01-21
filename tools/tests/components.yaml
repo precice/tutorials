@@ -183,6 +183,12 @@ dumux-adapter:
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
+    DUNE_VERSION:
+      description: Version of DUNE to use
+      default: "2.9"
+    DUMUX_VERSION:
+      description: Version of DuMux to use
+      default: "3.7"
     DUMUX_ADAPTER_REF:
       semnantic: Git ref of the dumux adapter to use
       default: "main"
