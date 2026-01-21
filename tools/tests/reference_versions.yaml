@@ -1,4 +1,4 @@
-PRECICE_REF: "v3.2.0"
+PRECICE_REF: "40a98c3" # develop, after https://github.com/precice/precice/pull/2389
 PRECICE_PRESET: "production-audit"
 OPENFOAM_EXECUTABLE: "openfoam2312"
 OPENFOAM_ADAPTER_REF: "v1.3.1"
