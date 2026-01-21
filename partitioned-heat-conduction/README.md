@@ -75,35 +75,23 @@ If you want to use Nutils or OpenFOAM, use `cd dirichlet/neumann-nutils`, respec
 mpirun -n <N_PROC> heat.py -d
 ```
 
-The G+Smo-based version of the tutorial offers IsoGeometric Analysis discretization method. To run the example you need to follow the following steps:
+For running G+Smo, follow the [G+Smo adapter installation instructions](https://precice.org/adapter-gismo.html) to build the `partitioned-heat-conduction` example. Then link the compiled executable to the `dirichlet-gismo` and `neumann-gismo` folders:
 
-- Download G+Smo and Create a Build Folder
-```
-git clone git@github.com:gismo/gismo.git
-cd gismo
-mkdir build
-cd build
-```
- - Configure G+Smo 
-```
-cmake .. -DGISMO_OPTIONAL="<other submodules>;gsPreCICE"
-```
-- Build the Example
-```
-make partitioned-heat-conduction -j <number of threads to use>
-```
-- Link the compiled executable to the gismo-executable folder within the tutorial directory
-```
-cd <Your preCICE tutorial folder>/partitioned-heat-conduction/gismo-executable
-ln -sf <You G+Smo build folder>/bin/partitioned-heat-conduction ./gismo_executable`
-```
-- Open two terminals and run
-```
- cd dirichlet-gismo
- ./run.sh
+```bash
+cd <tutorial-directory>/partitioned-heat-conduction/dirichlet-gismo
+ln -sf <gismo-build-directory>/bin/partitioned-heat-conduction ./gismo-executable
+cd ../neumann-gismo
+ln -sf <gismo-build-directory>/bin/partitioned-heat-conduction ./gismo-executable
 ```
 
+Then open two terminals and run:
+
+```bash
+cd dirichlet-gismo
+./run.sh
 ```
+
+```bash
 cd neumann-gismo
 ./run.sh
 ```
