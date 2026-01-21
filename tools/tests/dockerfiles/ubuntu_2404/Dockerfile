@@ -211,12 +211,12 @@ WORKDIR /home/precice/dumux
 ENV PATH="/home/precice/dumux/dune-common/bin:${PATH}"
 # build core DUNE, DuMuX and the adapter
 RUN dunecontrol --opts=./dumux/cmake.opts all
-ENV DUNE_CONTROL_PATH=${WORKDIR}/dune-common/dune.module:${WORKDIR}/dune-geometry/dune.module:${WORKDIR}/dune-grid/dune.module:${WORKDIR}/dune-localfunctions/dune.module:${WORKDIR}/dune-istl/dune.module:${WORKDIR}/dune-subgrid/dune.module:${WORKDIR}/dumux/dune.module
+ENV DUNE_CONTROL_PATH=/home/precice/dumux/dune-common/dune.module:/home/precice/dumux/dune-geometry/dune.module:/home/precice/dumux/dune-grid/dune.module:/home/precice/dumux/dune-localfunctions/dune.module:/home/precice/dumux/dune-istl/dune.module:/home/precice/dumux/dune-subgrid/dune.module:/home/precice/dumux/dumux/dune.module
 ARG DUMUX_ADAPTER_PR
 ARG DUMUX_ADAPTER_REF
-RUN git clone --depth 1 https://github.com/precice/dumux-adapter.git &&\
+RUN git clone https://github.com/precice/dumux-adapter.git &&\
     cd dumux-adapter && \
     if [ -n "${DUMUX_ADAPTER_PR}" ]; then git fetch origin pull/${DUMUX_ADAPTER_PR}/head; fi && \
     git checkout ${DUMUX_ADAPTER_REF} && \
     cd .. &&\
-    dunecontrol --opts=cmake-test.opts --only=dumux-adapter all
+    ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts all
