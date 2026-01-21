@@ -207,7 +207,7 @@ RUN mkdir dumux&&\
     git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/$DUNE_VERSION
 USER precice
 WORKDIR /home/precice/dumux
-ENV PATH ${WORKDIR}/dune-common/bin:${PATH}
+ENV PATH="${WORKDIR}/dune-common/bin:${PATH}"
 # build core DUNE, DuMuX and the adapter
 RUN dunecontrol --opts=cmake-test.opts all
 ENV DUNE_CONTROL_PATH=${WORKDIR}/dune-common/dune.module:${WORKDIR}/dune-geometry/dune.module:${WORKDIR}/dune-grid/dune.module:${WORKDIR}/dune-localfunctions/dune.module:${WORKDIR}/dune-istl/dune.module:${WORKDIR}/dune-subgrid/dune.module:${WORKDIR}/dumux/dune.module
