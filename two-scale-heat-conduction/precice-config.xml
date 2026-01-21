@@ -52,7 +52,7 @@
     <export:vtu directory="precice-exports" />
   </participant>
 
-  <m2n:sockets acceptor="Micro-Manager" connector="Macro" network="lo" exchange-directory=".." />
+  <m2n:sockets acceptor="Micro-Manager" connector="Macro" exchange-directory=".." />
 
   <coupling-scheme:serial-implicit>
     <participants first="Macro" second="Micro-Manager" />
