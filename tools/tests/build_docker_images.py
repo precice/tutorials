@@ -30,8 +30,7 @@ def main():
     args = parser.parse_args()
 
     # Configure logging based on the provided log level
-    logging.basicConfig(level=args.log_level,
-                        format='%(levelname)s: %(message)s')
+    logging.basicConfig(level=args.log_level, format='%(levelname)s: %(message)s')
 
     print(f"Using log-level: {args.log_level}")
 
@@ -49,8 +48,7 @@ def main():
             test_suite_found = available_testsuites.get_by_name(
                 test_suite_requested)
             if not test_suite_found:
-                logging.error(
-                    f"Did not find the testsuite with name {test_suite_requested}")
+                logging.error(f"Did not find the testsuite with name {test_suite_requested}")
             else:
                 test_suites_to_execute.append(test_suite_found)
         if not test_suites_to_execute:
@@ -68,18 +66,15 @@ def main():
     if not systemtests_to_run:
         raise RuntimeError("Did not find any Systemtests to execute.")
 
-    logging.info(
-        f"About to build the images for the following systemtests:\n {systemtests_to_run}")
+    logging.info(f"About to build the images for the following systemtests:\n {systemtests_to_run}")
 
     results = []
     for number, systemtest in enumerate(systemtests_to_run):
-        logging.info(
-            f"Started building {systemtest},  {number}/{len(systemtests_to_run)}")
+        logging.info(f"Started building {systemtest},  {number}/{len(systemtests_to_run)}")
         t = time.perf_counter()
         result = systemtest.run_only_build(run_directory)
         elapsed_time = time.perf_counter() - t
-        logging.info(
-            f"Building image for {systemtest} took {elapsed_time:^.1f} seconds")
+        logging.info(f"Building image for {systemtest} took {elapsed_time:^.1f} seconds")
         results.append(result)
 
     build_docker_success = True
