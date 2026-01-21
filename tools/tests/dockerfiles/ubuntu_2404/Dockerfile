@@ -192,7 +192,6 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
 FROM precice_dependecies AS dumux_adapter
 USER root
 RUN apt-get update
-USER precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DUNE_VERSION
 ARG DUMUX_VERSION
