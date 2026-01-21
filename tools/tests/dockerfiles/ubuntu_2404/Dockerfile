@@ -189,7 +189,7 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
     cmake . && \
     make -j $(nproc)
 
-FROM precice_dependecies AS dumux
+FROM precice_dependecies AS dumux_adapter
 USER root
 RUN apt-get update
 USER precice
