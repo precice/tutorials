@@ -142,6 +142,7 @@ jobs:
         SU2_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-su2-adapter }},\
         DUNE_VERSION:2.9,\
         DUMUX_VERSION:3.7,\
+        MICRO_MANAGER_VERSION:0.8.0,\
         TUTORIALS_REF:${{ needs.gather-refs.outputs.ref-tutorials }}"
       system_tests_branch: develop
       log_level: "INFO"

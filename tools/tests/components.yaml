@@ -192,3 +192,23 @@ dumux-adapter:
     DUMUX_ADAPTER_REF:
       semnantic: Git ref of the dumux adapter to use
       default: "main"
+
+micro-manager:
+  repository: https://github.com/precice/micro-manager
+  template: component-templates/micro-manager.yaml
+  build_arguments:
+    PLATFORM:
+      description: Dockerfile platform used
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      description: Version of preCICE to use
+      default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: "master"
+    MICRO_MANAGER_VERSION:
+      description: Version of Micro-Manager to use
+      default: "0.8.0"

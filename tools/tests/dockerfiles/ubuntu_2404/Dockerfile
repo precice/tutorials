@@ -189,7 +189,22 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
     cmake . && \
     make -j $(nproc)
 
-FROM precice_dependecies AS dumux_adapter
+
+FROM precice_dependecies AS micro_manager
+USER root
+WORKDIR /home/precice
+USER precice
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
+
+ARG MICRO_MANAGER_VERSION
+RUN python3 -m venv /home/precice/venv && \
+    . /home/precice/venv/bin/activate && \
+    git clone https://github.com/precice/micro-manager.git && \
+    cd micro-manager && \
+    git checkout ${MICRO_MANAGER_VERSION} && \
+    pip3 install .
+
+FROM micro_manager AS dumux_adapter
 USER root
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DUNE_VERSION
