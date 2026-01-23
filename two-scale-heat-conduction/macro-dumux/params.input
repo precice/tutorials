@@ -20,7 +20,7 @@ MaxDt = 0.004
 InitialDt = 0.01
 
 [Problem]
-Name = macro-heat
+Name = Macro
 EnableGravity = false
 Permeability = 1.0
 DefaultPorosity = 0.5
