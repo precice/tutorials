@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -e -u
 
-# To compile free-flow-dumux and porous-media-dumux from zero or recompile them after changes
+# To compile free-flow-dumux and porous-media-dumux from scratch or recompile them after changes
 ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts --only=free_flow_dumux all
 ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts --only=porous_media_dumux all
 

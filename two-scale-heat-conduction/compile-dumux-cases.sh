@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -e -u
 
-# To compile macro-dumux and micro-dumux from zero or recompile them after changes
+# To compile macro-dumux and micro-dumux from scratch or recompile them after changes
 ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts --only=macro_dumux all
 ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts --only=micro_sim all
 
