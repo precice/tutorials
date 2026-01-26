@@ -111,15 +111,15 @@ public:
       for (const auto &scv : scvs(fvGeometry)) {
         const auto elementIdx = scv.elementIndex();
         couplingData_[elementIdx][0] =
-            couplingParticipant_.getScalarQuantityOnFace("macro-mesh", "porosity", elementIdx);
+            couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "Porosity", elementIdx);
         couplingData_[elementIdx][1] =
-            couplingParticipant_.getScalarQuantityOnFace("macro-mesh", "k_00", elementIdx);
+            couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "K00", elementIdx);
         couplingData_[elementIdx][2] =
-            couplingParticipant_.getScalarQuantityOnFace("macro-mesh", "k_01", elementIdx);
+            couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "K01", elementIdx);
         couplingData_[elementIdx][3] =
-            couplingParticipant_.getScalarQuantityOnFace("macro-mesh", "k_10", elementIdx);
+            couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "K10", elementIdx);
         couplingData_[elementIdx][4] =
-            couplingParticipant_.getScalarQuantityOnFace("macro-mesh", "k_11", elementIdx);
+            couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "K11", elementIdx);
       }
     }
     // Trigger exchange of coupling data between neighboring ranks, if the domain is partitioned

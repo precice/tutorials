@@ -27,7 +27,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 This tutorial is only available in Python. You need to have preCICE and the Python bindings installed on your system.
 
-- *Python*: An example solver using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html). This solver also depends on the Python libraries `numpy`, which you can get from your system package manager or with `pip3 install --user <package>`.
+- *Python*: An example solver using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html). The run script installs the dependencies automatically via pip in a virtual environment.
 
 ## Running the Simulation
 
