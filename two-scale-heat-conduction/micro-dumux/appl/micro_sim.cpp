@@ -202,9 +202,9 @@ py::dict MicroSimulation::initialize()
   py::dict micro_write_data;
 
   // add micro_scalar_data and micro_vector_data to micro_write_data
-  micro_write_data["k_00"]     = _k_00;
-  micro_write_data["k_11"]     = _k_11;
-  micro_write_data["porosity"] = _porosity;
+  micro_write_data["K00"]      = _k_00;
+  micro_write_data["K11"]      = _k_11;
+  micro_write_data["Porosity"] = _porosity;
 
   return micro_write_data;
 }
@@ -227,7 +227,7 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
   _timeLoop->setTimeStepSize(dt);
 
   // read concentration from preCICE
-  double conc = macro_write_data["concentration"].cast<double>();
+  double conc = macro_write_data["Concentration"].cast<double>();
 
   // input macro concentration into allen-cahn problem
   _acProblem->updateConcentration(conc);
@@ -259,12 +259,12 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
   py::dict micro_write_data;
 
   // add micro_scalar_data and micro_vector_data to micro_write_data
-  micro_write_data["k_00"]       = _k_00;
-  micro_write_data["k_10"]       = _k_10;
-  micro_write_data["k_01"]       = _k_01;
-  micro_write_data["k_11"]       = _k_11;
-  micro_write_data["porosity"]   = _porosity;
-  micro_write_data["grain_size"] = std::sqrt((1 - _porosity) / pi_);
+  micro_write_data["K00"]        = _k_00;
+  micro_write_data["K10"]        = _k_10;
+  micro_write_data["K01"]        = _k_01;
+  micro_write_data["K11"]        = _k_11;
+  micro_write_data["Porosity"]   = _porosity;
+  micro_write_data["Grain-Size"] = std::sqrt((1 - _porosity) / pi_);
 
   // write current primary variables to previous primary variables
   _acGridVariables->advanceTimeStep();
