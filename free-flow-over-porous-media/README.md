@@ -33,9 +33,7 @@ Both the participants are computed using the simulation code [DuMu<sup>x</sup>](
 
 To solve the flows with the DuMux framework, the necessary DUNE modules need to be downloaded and set up. This is done by running `sh setup-dumux.sh` in the tutorial folder.
 
-Note that if an existing installation of DUNE modules is detected in a default location, this may lead to problems in running the `setup-dumux.sh` script. The script suppresses the environment variable `DUNE_CONTROL_PATH`.
-
-To only recompile the participants, run `sh compile-dumux-cases.sh` in the tutorial folder.
+If an existing installation of DUNE modules and DuMu<sup>x</sup> is to be used for compiling the solvers, the path can be specified by setting the arguments while running the script `run.sh` with `-l <path-to-DUNE-common>` in each solver folder. The environment variable `DUNE_CONTROL_PATH` is suppressed by the script. The `run.sh` scripts in the DuMu<sup>x</sup> solver folders will first compile the solver if not already compiled, and then run the simulation.
 
 ## Running the simulation
 
@@ -52,7 +50,7 @@ To run the porous-media participant, run:
 
 ```bash
 cd porous-media-dumux
-./run.sh
+./run.sh -l <path-to-DUNE-common>  # use -l to specify existing DUNE installation, no need if setup-dumux.sh was used for setup
 ```
 
 Participants can be executed only in serial. Parallel execution is not supported. The case takes approximately two minutes to finish.

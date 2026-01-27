@@ -35,7 +35,7 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 To solve either the macro or micro simulations with the DuMu<sup>x</sup> framework, the necessary DUNE modules need to be downloaded and set up. This is done by running `sh setup-dumux.sh` in the tutorial folder.
 
-Note that if an existing installation of DUNE modules is detected in a default location, this may lead to problems in running the `setup-dumux.sh` script. The environment variable `DUNE_CONTROL_PATH` is suppressed by the script.
+If an existing installation of DUNE modules and DuMu<sup>x</sup> is to be used for compiling the solvers, the path can be specified by setting the arguments while running the script `run.sh` with `-l <path-to-DUNE-common>` in each solver folder. The environment variable `DUNE_CONTROL_PATH` is suppressed by the script. The `run.sh` scripts in the DuMu<sup>x</sup> solver folders will first compile the solver if not already compiled, and then run the simulation.
 
 ## Running the simulation
 
@@ -55,7 +55,12 @@ cd micro-nutils
 ./run.sh -s
 ```
 
-If you want to use DuMu<sup>x</sup>, use `cd macro-dumux` instead of `cd macro-nutils` and/or `cd micro-dumux` instead of `cd micro-nutils`.
+If you want to use DuMu<sup>x</sup>, use `cd macro-dumux` instead of `cd macro-nutils` and/or `cd micro-dumux` instead of `cd micro-nutils`. For example, to run the macro simulation with DuMu<sup>x</sup>, run:
+
+```bash
+cd macro-dumux
+./run.sh -s -l <path-to-DUNE-common>  # to specify existing DUNE installation with -l and run the compiled simulation in serial
+```
 
 ## Running the simulation in parallel
 
