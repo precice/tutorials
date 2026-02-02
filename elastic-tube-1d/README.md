@@ -6,7 +6,7 @@ summary: The 1D Elastic Tube is a FSI case, that consists of an internal flow in
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/elastic-tube-1d). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/elastic-tube-1d), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/elastic-tube-1d) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
