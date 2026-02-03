@@ -6,25 +6,30 @@ cd "$(dirname "$0")/.."
 
 mkdir -p solver-scipy/data-training
 
+solver_path="./solver-scipy"
+if [ -d "$solver_path/.venv" ]; then
+  . "$solver_path/.venv/bin/activate"
+fi
+
 # Number of training runs to generate
 NUM_RUNS=200
 
 echo "Generating ${NUM_RUNS} training data samples..."
 
-for i in $(seq 0 $((${NUM_RUNS}-1)))
-do
+for i in $(seq 0 $((NUM_RUNS - 1))); do
   echo "--- Generating epoch ${i} ---"
-  
+
   # Generate IC
-  python3 utils/generate_ic.py --epoch ${i}
+  python3 utils/generate_ic.py --epoch "${i}"
 
   SAVE_PATH="data-training/burgers_data_epoch_${i}.npz"
 
   # Run the monolithic solver and save to save_path
   # The 'None' argument tells the solver to run monolithic (preCICE participant name is none, run without preCICE)
-  cd solver-scipy
-  python3 solver.py None --savefile "${SAVE_PATH}"
-  cd ..
+  (
+    cd solver-scipy
+    python3 solver.py None --savefile "${SAVE_PATH}"
+  )
 done
 
 echo "---"
