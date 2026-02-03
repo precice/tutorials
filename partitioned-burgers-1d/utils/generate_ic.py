@@ -4,6 +4,7 @@ import os
 import argparse
 import matplotlib.pyplot as plt
 
+
 def _generate_initial_condition(x_coords, ic_config, epoch):
     np.random.seed(epoch)
     ic_values = np.zeros(len(x_coords))
@@ -17,6 +18,7 @@ def _generate_initial_condition(x_coords, ic_config, epoch):
             ic_values += amp * np.sin(2 * np.pi * k * x_coords + phase_shift)
     return ic_values
 
+
 def project_initial_condition(domain_min, domain_max, nelems, ic_config, epoch):
     # 1. Generate a high-resolution "truth" on a fine grid
     fine_res = nelems * 10
@@ -29,20 +31,26 @@ def project_initial_condition(domain_min, domain_max, nelems, ic_config, epoch):
         cell_start = i * 10
         cell_end = (i + 1) * 10
         u_projected[i] = np.mean(fine_u[cell_start:cell_end])
-        
+
     return u_projected
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate initial conditions for the Burgers equation simulation.")
-    parser.add_argument("--epoch", type=int, default=0, help="Seed for the random number generator to ensure reproducibility.")
+    parser.add_argument(
+        "--epoch",
+        type=int,
+        default=0,
+        help="Seed for the random number generator to ensure reproducibility.")
     args = parser.parse_args()
 
     CASE_DIR = os.path.dirname(os.path.abspath(__file__))
     IMAGES_DIR = os.path.join(CASE_DIR, "../output")
+    os.makedirs(IMAGES_DIR, exist_ok=True)
 
     with open(os.path.join(CASE_DIR, "ic_params.json"), 'r') as f:
         config = json.load(f)
-    
+
     ic_config = config["initial_conditions"]
     domain_config = config["domain"]
 

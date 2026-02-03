@@ -1,8 +1,8 @@
 import torch
 
 # Model architecture
-INPUT_SIZE = 128 + 2 # +2 for ghost cells
-HIDDEN_SIZE = 64 # num filters
+INPUT_SIZE = 128 + 2  # +2 for ghost cells
+HIDDEN_SIZE = 64  # num filters
 OUTPUT_SIZE = 128
 
 assert INPUT_SIZE >= OUTPUT_SIZE, "Input size must be greater or equal to output size."

@@ -18,11 +18,14 @@ import json
 import os
 import argparse
 
-def lax_friedrichs_flux(u_left, u_right): # Flux at cell interface between i-1/2 and i+1/2
+
+def lax_friedrichs_flux(u_left, u_right):  # Flux at cell interface between i-1/2 and i+1/2
     return 0.5 * (0.5 * u_left**2 + 0.5 * u_right**2) - 0.5 * (u_right - u_left)
+
 
 def flux_function(u_left, u_right):
     return lax_friedrichs_flux(u_left, u_right)
+
 
 def burgers_rhs(t, u, dx, C, bc_left, bc_right):
     # Ghost cells for BCs
@@ -33,20 +36,21 @@ def burgers_rhs(t, u, dx, C, bc_left, bc_right):
 
     flux = np.empty(len(u) + 1)
     for i in range(len(flux)):
-        flux[i] = flux_function(u_padded[i], u_padded[i+1])
+        flux[i] = flux_function(u_padded[i], u_padded[i + 1])
 
     # viscosity
     viscosity = C * (u_padded[2:] - 2 * u_padded[1:-1] + u_padded[:-2]) / dx**2
     return -(flux[1:] - flux[:-1]) / dx + viscosity
 
+
 def burgers_jacobian(t, u, dx, C, bc_left, bc_right):
     n = len(u)
-    
+
     u_padded = np.empty(n + 2)
     u_padded[0] = bc_left
     u_padded[-1] = bc_right
     u_padded[1:-1] = u
-    
+
     # --- viscosity (constant) ---
     d_visc_di = -2 * C / dx**2
     d_visc_off = C / dx**2
@@ -55,10 +59,10 @@ def burgers_jacobian(t, u, dx, C, bc_left, bc_right):
     df_du_di = -1 / dx
 
     # Upper diagonal
-    df_du_upper = -(0.5 * u_padded[2:n+1] - 0.5) / dx
+    df_du_upper = -(0.5 * u_padded[2:n + 1] - 0.5) / dx
 
     # Lower diagonal
-    df_du_lower = (0.5 * u_padded[0:n-1] + 0.5) / dx
+    df_du_lower = (0.5 * u_padded[0:n - 1] + 0.5) / dx
 
     main_diag = df_du_di + d_visc_di
     upper_diag = df_du_upper + d_visc_off
@@ -68,19 +72,23 @@ def burgers_jacobian(t, u, dx, C, bc_left, bc_right):
 
     return jac
 
+
 def burgers_residual(u_new, u_old, dt, dx, C, bc_left, bc_right):
     return u_new - u_old - dt * burgers_rhs(0, u_new, dx, C, bc_left, bc_right)
+
 
 def burgers_jacobian_residual(u_new, u_old, dt, dx, C, bc_left, bc_right):
     n = len(u_new)
     I = identity(n, format='csc')
     J_rhs = burgers_jacobian(0, u_new, dx, C, bc_left, bc_right)
-    return (I - dt * J_rhs).toarray() # doesn't work with sparse matrix in root solver for some reason
+    return (I - dt * J_rhs).toarray()  # doesn't work with sparse matrix in root solver for some reason
+
 
 class BoundaryWrapper:
     """
-    Wrap the RHS and Jacobian to dynamically set BCs during the solve iterations with the updated state u. 
+    Wrap the RHS and Jacobian to dynamically set BCs during the solve iterations with the updated state u.
     """
+
     def __init__(self, dx, C, participant_name, u_from_neumann=None, du_dx_recv=None):
         self.dx = dx
         self.C = C
@@ -96,7 +104,7 @@ class BoundaryWrapper:
             return u[0]
         else:
             return u[0]
-    
+
     def bc_right(self, u):
         if self.participant_name == "Dirichlet":
             return self.u_from_neumann
@@ -114,19 +122,20 @@ class BoundaryWrapper:
     def jac(self, t, u):
         bc_left = self.bc_left(u)
         bc_right = self.bc_right(u)
-        
+
         J_rhs = burgers_jacobian(t, u, self.dx, self.C, bc_left, bc_right)
         return J_rhs
-    
+
     def rhs_residual(self, u_new, u_old, dt):
         bc_left = self.bc_left(u_new)
         bc_right = self.bc_right(u_new)
         return burgers_residual(u_new, u_old, dt, self.dx, self.C, bc_left, bc_right)
-    
+
     def jac_residual(self, u_new, u_old, dt):
         bc_left = self.bc_left(u_new)
         bc_right = self.bc_right(u_new)
         return burgers_jacobian_residual(u_new, u_old, dt, self.dx, self.C, bc_left, bc_right)
+
 
 def main(participant_name: str, savefile_path: str = None):
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -176,7 +185,7 @@ def main(participant_name: str, savefile_path: str = None):
         local_domain_min = full_domain_min + nelems_local * dx
         local_domain_max = full_domain_max
         coupling_point = [[local_domain_min, 0.0]]
-    else: #full domain run
+    else:  # full domain run
         local_domain_min = full_domain_min
         local_domain_max = full_domain_max
         nelems_local = nelems_total
@@ -195,7 +204,7 @@ def main(participant_name: str, savefile_path: str = None):
 
         if participant.requires_initial_data():
             if participant_name == "Dirichlet":
-                du_dx_send = (u[-1] - u[-2]) / dx # take forward difference inside domain for initial send
+                du_dx_send = (u[-1] - u[-2]) / dx  # take forward difference inside domain for initial send
                 participant.write_data(mesh_name, write_data_name, vertex_id, [du_dx_send])
             if participant_name == "Neumann":
                 participant.write_data(mesh_name, write_data_name, vertex_id, [u[0]])
@@ -236,7 +245,7 @@ def main(participant_name: str, savefile_path: str = None):
             du_dx_send = (bc_right - u[-1]) / dx
             flux_across_interface = flux_function(u[-1], bc_right)
             u_interface = (u[-1] + bc_right) / 2
-     
+
             participant.write_data(mesh_name, write_data_name, vertex_id, [du_dx_send])
 
             print(f"[{participant_name:9s}] t={t:6.4f} | u_coupling={u_interface:8.4f} | du_dx={du_dx_send:8.4f} | flux_across={flux_across_interface:8.4f}")
@@ -256,9 +265,9 @@ def main(participant_name: str, savefile_path: str = None):
                 u = saved_u.copy()
                 t = saved_t
                 t_index = saved_t_index
-                            
+
             du_dx_recv = participant.read_data(mesh_name, read_data_name, vertex_id, dt)[0]
-            
+
             t_end = t + dt
             wrapper = BoundaryWrapper(dx, C_viscosity, "Neumann", du_dx_recv=du_dx_recv)
 
@@ -299,14 +308,14 @@ def main(participant_name: str, savefile_path: str = None):
 
             sol = root(wrapper.rhs_residual, u, args=(u, dt), jac=wrapper.jac_residual, method='hybr')
             u = sol.x
-            
+
             t = t + dt
             t_index += 1
             solution_history[t_index] = u.copy()
 
     if not aborted:
 
-        cell_centers_x = np.linspace(local_domain_min + dx/2, local_domain_max - dx/2, nelems_local)
+        cell_centers_x = np.linspace(local_domain_min + dx / 2, local_domain_max - dx / 2, nelems_local)
         internal_coords = np.array([cell_centers_x, np.zeros(nelems_local)]).T
 
         sorted_times_index = sorted(solution_history.keys())
@@ -321,11 +330,11 @@ def main(participant_name: str, savefile_path: str = None):
     else:
         raise RuntimeError("Simulation aborted.")
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("participant", help="Name of the participant", choices=['Dirichlet', 'Neumann', 'None'])
     parser.add_argument("--savefile", help="Path to save the output npz file")
     args = parser.parse_args()
-
 
     main(args.participant, savefile_path=args.savefile)

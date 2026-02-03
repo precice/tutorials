@@ -17,7 +17,7 @@ else
 	pip install -r $solver_path/requirements.txt && pip freeze > $solver_path/pip-installed-packages.log
 fi
 
-python3 utils/generate_ic.py --epoch ${1:-0}
+python3 utils/generate_ic.py --epoch "${1:-0}"
 
 # full domain reference solution
 echo "Running monolithic reference solution..."

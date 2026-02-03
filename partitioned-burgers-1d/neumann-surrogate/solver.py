@@ -10,9 +10,10 @@ from config import INPUT_SIZE, OUTPUT_SIZE, HIDDEN_SIZE, NUM_RES_BLOCKS, KERNEL_
 
 GHOST_CELLS = INPUT_SIZE - OUTPUT_SIZE
 
+
 def main():
     participant_name = "Neumann"
-    
+
     script_dir = os.path.dirname(os.path.abspath(__file__))
     case_dir = os.path.abspath(os.path.join(script_dir, '..'))
     config_path = os.path.join(case_dir, "precice-config.xml")
@@ -71,7 +72,7 @@ def main():
     t_index = 0
     solution_history = {int(0): u.copy()}
 
-    # Main Coupling Loop 
+    # Main Coupling Loop
     with torch.no_grad():
         while participant.is_coupling_ongoing():
             if participant.requires_writing_checkpoint():
@@ -82,9 +83,9 @@ def main():
                 u = saved_u.copy()
                 t = saved_t
                 t_index = saved_t_index
-                            
+
             du_dx_recv = participant.read_data(mesh_name, read_data_name, vertex_id, dt)[0]
-            
+
             # Calculate ghost cell value from received gradient
             bc_left = u[0] - dx * du_dx_recv
             bc_right = u[-1]  # Zero gradient on right wall
@@ -93,9 +94,9 @@ def main():
             u_padded[0] = bc_left
             u_padded[-1] = bc_right
             u_padded[1:-1] = u
-            
+
             input_tensor = torch.from_numpy(u_padded).float().unsqueeze(0).unsqueeze(0).to(device)
-            
+
             output_tensor = model(input_tensor)
             u = output_tensor.squeeze().cpu().numpy()
 
@@ -118,8 +119,8 @@ def main():
 
     run_dir = os.getcwd()
     output_filename = os.path.join(run_dir, "surrogate.npz")
-    
-    cell_centers_x = np.linspace(local_domain_min + dx/2, local_domain_min + (nelems_local - 0.5) * dx, nelems_local)
+
+    cell_centers_x = np.linspace(local_domain_min + dx / 2, local_domain_min + (nelems_local - 0.5) * dx, nelems_local)
     internal_coords = np.array([cell_centers_x, np.zeros(nelems_local)]).T
 
     sorted_times_index = sorted(solution_history.keys())
@@ -131,6 +132,7 @@ def main():
         **{"Solver-Mesh-1D-Internal": final_solution}
     )
     print(f"[Surrogate] Results saved to {output_filename}")
+
 
 if __name__ == '__main__':
     main()

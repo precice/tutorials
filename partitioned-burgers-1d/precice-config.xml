@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
   <log>
     <sink filter="%Severity% > info" format="---[ %Severity% ] %Message%" enabled="true" />
@@ -22,7 +22,11 @@
     <receive-mesh name="Neumann-Mesh" from="Neumann" />
     <write-data name="Gradient" mesh="Dirichlet-Mesh" />
     <read-data name="Velocity" mesh="Dirichlet-Mesh" />
-    <mapping:nearest-neighbor direction="read" from="Neumann-Mesh" to="Dirichlet-Mesh" constraint="consistent" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Neumann-Mesh"
+      to="Dirichlet-Mesh"
+      constraint="consistent" />
   </participant>
 
   <participant name="Neumann">
@@ -30,18 +34,34 @@
     <receive-mesh name="Dirichlet-Mesh" from="Dirichlet" />
     <write-data name="Velocity" mesh="Neumann-Mesh" />
     <read-data name="Gradient" mesh="Neumann-Mesh" />
-    <mapping:nearest-neighbor direction="read" from="Dirichlet-Mesh" to="Neumann-Mesh" constraint="consistent" />
+    <mapping:nearest-neighbor
+      direction="read"
+      from="Dirichlet-Mesh"
+      to="Neumann-Mesh"
+      constraint="consistent" />
   </participant>
 
-  <m2n:sockets acceptor="Dirichlet" connector="Neumann" exchange-directory=".."/>
+  <m2n:sockets acceptor="Dirichlet" connector="Neumann" exchange-directory=".." />
 
   <coupling-scheme:serial-implicit>
     <participants first="Dirichlet" second="Neumann" />
     <max-time value="0.5" />
     <time-window-size value="0.005" />
     <max-iterations value="50" />
-    <exchange data="Gradient" mesh="Dirichlet-Mesh" from="Dirichlet" to="Neumann" initialize="true" substeps="false" />
-    <exchange data="Velocity" mesh="Neumann-Mesh" from="Neumann" to="Dirichlet" initialize="true" substeps="false" />
+    <exchange
+      data="Gradient"
+      mesh="Dirichlet-Mesh"
+      from="Dirichlet"
+      to="Neumann"
+      initialize="true"
+      substeps="false" />
+    <exchange
+      data="Velocity"
+      mesh="Neumann-Mesh"
+      from="Neumann"
+      to="Dirichlet"
+      initialize="true"
+      substeps="false" />
     <relative-convergence-measure data="Gradient" mesh="Dirichlet-Mesh" limit="1e-3" />
     <relative-convergence-measure data="Velocity" mesh="Neumann-Mesh" limit="1e-3" />
     <acceleration:aitken>
@@ -49,5 +69,4 @@
       <initial-relaxation value="0.1" />
     </acceleration:aitken>
   </coupling-scheme:serial-implicit>
-
 </precice-configuration>
