@@ -6,7 +6,7 @@ summary: This tutorial demonstrates the partitioned solution of the 1D Burgers' 
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-burgers-1d). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/partitioned-burgers-1d), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/partitioned-burgers-1d) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
