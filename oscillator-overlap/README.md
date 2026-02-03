@@ -6,7 +6,7 @@ summary: We solve an oscillator with two masses in a partitioned fashion with ov
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/oscillator-overlap). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/oscillator-overlap), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/oscillator-overlap) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
