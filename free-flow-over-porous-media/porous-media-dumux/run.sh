@@ -8,7 +8,7 @@ exec > >(tee --append "$LOGFILE") 2>&1
 usage() { echo "Usage: cmd [-l <path-to-DUNE-common>]" 1>&2; exit 1; }
 
 if [ ! -d "build-cmake" ]; then
-  echo "No build-cmake folder found. Compiling micro-dumux."
+  echo "Solver not built. Building now..."
   CASE_DIR=$(pwd)/..
 
   while getopts ":l:" opt; do

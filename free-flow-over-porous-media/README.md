@@ -33,7 +33,7 @@ Both the participants are computed using the simulation code [DuMu<sup>x</sup>](
 
 To solve the flows with the DuMux framework, the necessary DUNE modules need to be downloaded and set up. This is done by running `sh setup-dumux.sh` in the tutorial folder.
 
-If an existing installation of DUNE modules and DuMu<sup>x</sup> is to be used for compiling the solvers, the path can be specified by setting the arguments while running the script `run.sh` with `-l <path-to-DUNE-common>` in each solver folder. The environment variable `DUNE_CONTROL_PATH` is suppressed by the script. The `run.sh` scripts in the DuMu<sup>x</sup> solver folders will first compile the solver if not already compiled, and then run the simulation.
+If an existing path, containing compiled DUNE modules, DuMu<sup>x</sup> and DuMu<sup>x</sup>-adapter, is to be used for compiling the solvers, the path can be specified by setting the arguments while running the script `run.sh` with `-l <path-to-DUNE-common>` in each solver folder. The environment variable `DUNE_CONTROL_PATH` is suppressed by the script. The `run.sh` scripts in the DuMu<sup>x</sup> solver folders will first compile the solver if not already compiled, and then run the simulation.
 
 ## Running the simulation
 
