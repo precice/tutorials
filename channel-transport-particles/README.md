@@ -17,7 +17,7 @@ We model a two-dimensional incompressible fluid flowing through a channel with a
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-channel-transport-precice-config.png
+![preCICE configuration visualization](images/tutorials-channel-transport-particles-precice-config.pdf
 )
 
 ## Available solvers
