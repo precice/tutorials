@@ -6,7 +6,7 @@ summary: A CFD problem is coupled to a particles in a uni-directional way for pa
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/channel-transport-particles). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/channel-transport-particles), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/channel-transport-particles) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
