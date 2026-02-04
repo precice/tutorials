@@ -34,7 +34,7 @@ Fluid participant:
 
 Particle participant:
 
-* MercuryDPM
+* MercuryDPM. The specific case is available as part of MercuryDPM. To use it, compile MercuryDPM with support for preCICE (`-D MercuryDPM_PreCICE_COUPLING="ON"`). You can compile the relevant executable only using `make ChannelTransport`. Afterwards, the executable `ChannelTransport` is available in the build tree. The `run.sh` script can pick-up the executable, if a `MERCURYDPM_BUILD_DIR` has been exported. Copying the executable or providing it as a command line argument is also possible. Use `run.sh --help` for detailed information. Note that the drag model is mostly an arbitrary choice to validate the technical correctness, but it has no physical background.
 
 ## Running the simulation
 
@@ -47,7 +47,7 @@ cd fluid-nutils
 ./run.sh
 ```
 
-and either the non-adaptive mesh transport solver
+and the particle solver
 
 ```bash
 cd particles-mercurydpm
