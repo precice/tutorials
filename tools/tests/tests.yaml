@@ -41,11 +41,11 @@ test_suites:
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz
   dumux_test:
     tutorials:
-      # - path: free-flow-over-porous-media
-      #   case_combination:
-      #     - free-flow-dumux
-      #     - porous-media-dumux
-      #   reference_result: ./free-flow-over-porous-media/reference-results/free-flow-dumux_porous-media-dumux.tar.gz
+      - path: free-flow-over-porous-media
+        case_combination:
+          - free-flow-dumux
+          - porous-media-dumux
+        reference_result: ./free-flow-over-porous-media/reference-results/free-flow-dumux_porous-media-dumux.tar.gz
       - path: two-scale-heat-conduction
         case_combination:
           - macro-dumux
