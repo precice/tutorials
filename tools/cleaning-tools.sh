@@ -113,6 +113,23 @@ clean_nutils() {
     )
 }
 
+clean_mercurydpm() {
+    (
+        set -e -u
+        cd "$1"
+        echo "- Cleaning up MercuryDPM case in $(pwd)"
+        rm -fv ./*.vtu
+        rm -fv ./*.data
+        rm -fv ./*.ene
+        rm -fv ./*.fstat
+        rm -fv ./*.restart
+        rm -fv ./*.py
+        rm -fv ./*.xballs
+        clean_precice_logs .
+        clean_case_logs .
+    )
+}
+
 clean_openfoam() {
     (
         set -e -u
