@@ -124,7 +124,9 @@ After both participants (and/or monolithic simulation) have finished, you can ru
 python3 visualize_partitioned_domain.py --neumann neumann-surrogate/surrogate.npz [timestep]
 ```
 
-The script will produce the following output files in the `images/` directory:
+The script will produce the following output files in the `output/` directory:
+
+
 
 - `full-domain-timestep-slice.png`: Solution $u$ at a selected timestep
 
