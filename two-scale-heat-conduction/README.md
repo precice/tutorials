@@ -55,11 +55,17 @@ cd micro-nutils
 ./run.sh -s
 ```
 
-If you want to use DuMux, use `cd macro-dumux` instead of `cd macro-nutils` and/or `cd micro-dumux` instead of `cd micro-nutils`. For example, to run the macro simulation with DuMux, run:
+If you want to use DuMux, use `cd macro-dumux` instead of `cd macro-nutils` and/or `cd micro-dumux` instead of `cd micro-nutils`. For example, to run the macro simulation with DuMux in serial (default), run:
 
 ```bash
 cd macro-dumux
-./run.sh -s -l <path-to-DUNE-common>  # to specify existing DUNE installation with -l and run the compiled simulation in serial
+./run.sh -s
+```
+
+This assumes a DuMux and DUNE modules installation in the case folder. You can specify the path to an existing DUNE installation with with `-l`:
+
+```bash
+./run.sh -s -l <path-to-DUNE-common>
 ```
 
 ## Running the simulation in parallel
