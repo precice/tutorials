@@ -10,11 +10,11 @@ cases:
   macro-dumux:
     participant: macro-heat
     directory: ./macro-dumux
-    run: ./../compile-dumux-cases.sh && ./run.sh
+    run: ./run.sh -l /home/precice/dumux
     component: dumux-adapter
 
   micro-dumux:
     participant: Micro-Manager
     directory: ./micro-dumux
-    run: ./../compile-dumux-cases.sh && ./run.sh
+    run: ./run.sh -l /home/precice/dumux
     component: dumux-adapter
