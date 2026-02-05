@@ -126,8 +126,6 @@ python3 visualize_partitioned_domain.py --neumann neumann-surrogate/surrogate.np
 
 The script will produce the following output files in the `output/` directory:
 
-
-
 - `full-domain-timestep-slice.png`: Solution $u$ at a selected timestep
 
 <p align="left">
