@@ -50,7 +50,13 @@ To run the porous-media participant, run:
 
 ```bash
 cd porous-media-dumux
-./run.sh -l <path-to-DUNE-common>  # use -l to specify existing DUNE installation, no need if setup-dumux.sh was used for setup
+./run.sh
+```
+
+This assumes a DuMux and DUNE modules installation in the case folder. You can specify the path to an existing DUNE installation with with `-l`:
+
+```bash
+./run.sh -l <path-to-DUNE-common>
 ```
 
 Participants can be executed only in serial. Parallel execution is not supported. The case takes approximately two minutes to finish.
