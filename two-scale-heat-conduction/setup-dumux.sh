@@ -34,4 +34,5 @@ DUNE_CONTROL_PATH=. python3 dumux/bin/installexternal.py spgrid
 DUNE_CONTROL_PATH=. ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts all
 
 # Compile and move macro-dumux and micro-dumux executables to the participant folder level
-./compile-dumux-cases.sh
+mv macro-dumux/build-cmake/appl/macro_dumux macro-dumux/
+mv micro-dumux/build-cmake/appl/micro_sim*.so micro-dumux/

@@ -27,15 +27,13 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 ## Available solvers
 
-Both the participants are computed using the simulation code [DuMu<sup>x</sup>](https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/).
+Both the participants are computed using the simulation code [DuMux](https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/).
 
 ## Solver setup
 
 To solve the flows with the DuMux framework, the necessary DUNE modules need to be downloaded and set up. This is done by running `sh setup-dumux.sh` in the tutorial folder.
 
-Note that if an existing installation of DUNE modules is detected in a default location, this may lead to problems in running the `setup-dumux.sh` script. The script suppresses the environment variable `DUNE_CONTROL_PATH`.
-
-To only recompile the participants, run `sh compile-dumux-cases.sh` in the tutorial folder.
+If an existing path, containing compiled DUNE modules, DuMux and DuMux-adapter, is to be used for compiling the solvers, the path can be specified by setting the arguments while running the script `run.sh` with `-l <path-to-DUNE-common>` in each solver folder. The environment variable `DUNE_CONTROL_PATH` is suppressed by the script. The `run.sh` scripts in the DuMux solver folders will first compile the solver if not already compiled, and then run the simulation.
 
 ## Running the simulation
 
@@ -53,6 +51,12 @@ To run the porous-media participant, run:
 ```bash
 cd porous-media-dumux
 ./run.sh
+```
+
+This assumes a DuMux and DUNE modules installation in the case folder. You can specify the path to an existing DUNE installation with with `-l`:
+
+```bash
+./run.sh -l <path-to-DUNE-common>
 ```
 
 Participants can be executed only in serial. Parallel execution is not supported. The case takes approximately two minutes to finish.
