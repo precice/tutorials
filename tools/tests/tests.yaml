@@ -30,6 +30,11 @@ test_suites:
           - fluid-openfoam
           - solid-openfoam
         reference_result: ./flow-over-heated-plate-nearest-projection/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+      - path: flow-over-heated-plate-two-meshes
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        reference_result: ./flow-over-heated-plate-two-meshes/reference-results/fluid-openfoam_solid-openfoam.tar.gz
   openfoam_adapter_release:
     tutorials:
       - path: flow-over-heated-plate
@@ -37,6 +42,26 @@ test_suites:
           - fluid-openfoam
           - solid-openfoam
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+      - path: flow-over-heated-plate-nearest-projection
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        reference_result: ./flow-over-heated-plate-nearest-projection/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+      - path: flow-over-heated-plate-two-meshes
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        reference_result: ./flow-over-heated-plate-two-meshes/reference-results/fluid-openfoam_solid-openfoam.tar.gz
   fenics_test:
     tutorials:
       - path: flow-over-heated-plate
@@ -63,6 +88,11 @@ test_suites:
           - fluid-openfoam
           - solid-calculix
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz
+      - path: flow-over-heated-plate-two-meshes
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        reference_result: ./flow-over-heated-plate-two-meshes/reference-results/fluid-openfoam_solid-openfoam.tar.gz
   dumux_test:
     tutorials:
       - path: two-scale-heat-conduction
@@ -176,6 +206,11 @@ test_suites:
           - fluid-openfoam
           - solid-openfoam
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+      - path: flow-over-heated-plate-two-meshes
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        reference_result: ./flow-over-heated-plate-two-meshes/reference-results/fluid-openfoam_solid-openfoam.tar.gz
       - path: perpendicular-flap
         case_combination:
           - fluid-openfoam
