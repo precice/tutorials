@@ -191,9 +191,8 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
 
 
 FROM precice_dependecies AS micro_manager
-USER root
-WORKDIR /home/precice
 USER precice
+WORKDIR /home/precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 
 ARG MICRO_MANAGER_VERSION
@@ -225,8 +224,6 @@ RUN mkdir dumux&&\
 WORKDIR /home/precice/dumux
 ENV PATH="/home/precice/dumux/dune-common/bin:${PATH}"
 # build core DUNE, DuMuX and the adapter
-RUN dunecontrol --opts=./dumux/cmake.opts all
-ENV DUNE_CONTROL_PATH=/home/precice/dumux/dune-common/dune.module:/home/precice/dumux/dune-geometry/dune.module:/home/precice/dumux/dune-grid/dune.module:/home/precice/dumux/dune-localfunctions/dune.module:/home/precice/dumux/dune-istl/dune.module:/home/precice/dumux/dune-subgrid/dune.module:/home/precice/dumux/dumux/dune.module
 ARG DUMUX_ADAPTER_PR
 ARG DUMUX_ADAPTER_REF
 RUN git clone https://github.com/precice/dumux-adapter.git &&\
