@@ -6,19 +6,17 @@ FoamFile
     object      blockMeshDict;
 }
 
-d 0.00025;
-
 x0 0.;
-x1 0.00625;
+x1 0.00625; // x dim
 x2 3.;
 x3 6.;
 
 y0 0.;
-y1 0.01875;
+y1 0.01875; // height of the block
 y2 2.;
 
 z0 0;
-z1 0.00625;
+z1 0.003125; // z dim
 
 vertices
 (
@@ -49,18 +47,14 @@ vertices
     ($x3 $y2 $z1 )         // 23
 );
 
-
-// Grading
-h1 25;
-h2 8;
-h3 24;
-v1 75;
-w1 25;
+xc 10;
+yc 40;
+zc 5;
 
 blocks
 (
     hex (   0   1   5   4   12  13  17  16  )
-    ($h1 $v1 $w1)
+    ($xc $yc $zc)
     simpleGrading (1 1 1)
 );
 
