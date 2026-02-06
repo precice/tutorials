@@ -12,6 +12,14 @@ participant Fluid;
 
 modules (FF);
 
+FF
+{
+  nameAlpha alphaSolid;
+  nameExplicitMomentum ExplicitMomentum;
+  nameImplicitMomentum ImplicitMomentum;
+};
+
+
 interfaces
 {
   Interface1
@@ -22,11 +30,15 @@ interfaces
     
     readData
     (
+        ImplicitMomentum
+        ExplicitMomentum
+        Alpha
     );
 
     writeData
     (
         Velocity
+        PressureGradientFull
     );
   };
 };
