@@ -22,25 +22,25 @@ USER root
 # Installing necessary dependecies for preCICE
 RUN apt-get -qq update && \
     apt-get -qq -y install \
-    build-essential \
-    software-properties-common \
-    cmake \
-    curl \
-    g++ \
-    gfortran \
-    git \
-    libbenchmark-dev \
-    libboost-all-dev \
-    libeigen3-dev \
-    libxml2-dev \
-    lsb-release \
-    petsc-dev \
-    python3-dev \
-    python3-numpy \
-    python3-pip \
-    python3-venv \
-    pkg-config \
-    wget
+        build-essential \
+        software-properties-common \
+        cmake \
+        curl \
+        g++ \
+        gfortran \
+        git \
+        libbenchmark-dev \
+        libboost-all-dev \
+        libeigen3-dev \
+        libxml2-dev \
+        lsb-release \
+        petsc-dev \
+        python3-dev \
+        python3-numpy \
+        python3-pip \
+        python3-venv \
+        pkg-config \
+        wget
 USER precice
 
 FROM precice_dependecies AS precice
