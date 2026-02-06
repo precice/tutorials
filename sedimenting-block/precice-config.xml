@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<precice-configuration experimental="True">
+  <log>
+    <sink
+      type="stream"
+      output="stdout"
+      format="---[precice] %ColorizedSeverity% %Message%"
+      filter="(%Severity% > debug) and not ((%Rank% != 0))" />
+  </log>
+
+  <profiling mode="off" />
+
+  <data:scalar name="Alpha" waveform-degree="2" />
+  <data:vector name="ExplicitMomentum" waveform-degree="2" />
+  <data:scalar name="ImplicitMomentum" waveform-degree="2" />
+  <data:vector name="Velocity" waveform-degree="0" />
+  <data:vector name="PressureGradientFull" waveform-degree="0" />
+
+  <mesh name="Fluid-Mesh" dimensions="3">
+    <use-data name="Velocity" />
+    <use-data name="PressureGradientFull" />
+    <use-data name="Alpha" />
+    <use-data name="ExplicitMomentum" />
+    <use-data name="ImplicitMomentum" />
+  </mesh>
+
+  <participant name="Fluid">
+    <provide-mesh name="Fluid-Mesh" />
+    <write-data name="Velocity" mesh="Fluid-Mesh" />
+    <write-data name="PressureGradientFull" mesh="Fluid-Mesh" />
+    <read-data name="Alpha" mesh="Fluid-Mesh" />
+    <read-data name="ExplicitMomentum" mesh="Fluid-Mesh" />
+    <read-data name="ImplicitMomentum" mesh="Fluid-Mesh" />
+  </participant>
+
+  <participant name="Particles">
+    <receive-mesh name="Fluid-Mesh" from="Fluid" safety-factor="0.5" api-access="true" />
+    <read-data name="Velocity" mesh="Fluid-Mesh" />
+    <read-data name="PressureGradientFull" mesh="Fluid-Mesh" />
+    <write-data name="Alpha" mesh="Fluid-Mesh" />
+    <write-data name="ExplicitMomentum" mesh="Fluid-Mesh" />
+    <write-data name="ImplicitMomentum" mesh="Fluid-Mesh" />
+    <mapping:rbf-pum-direct
+      direction="read"
+      from="Fluid-Mesh"
+      constraint="consistent"
+      vertices-per-cluster="30">
+      <basis-function:compact-polynomial-c4 support-radius="0.5" />
+    </mapping:rbf-pum-direct>
+    <mapping:coarse-graining
+      direction="write"
+      to="Fluid-Mesh"
+      constraint="conservative"
+      radius="0.05" />
+  </participant>
+
+  <m2n:sockets acceptor="Fluid" connector="Particles" exchange-directory=".." />
+
+  <coupling-scheme:serial-explicit>
+    <participants second="Fluid" first="Particles" />
+    <time-window-size value="0.005" />
+    <max-time value="0.25" />
+    <exchange data="Velocity" mesh="Fluid-Mesh" from="Fluid" to="Particles" substeps="false" />
+    <exchange
+      data="PressureGradientFull"
+      mesh="Fluid-Mesh"
+      from="Fluid"
+      to="Particles"
+      substeps="false" />
+    <exchange data="Alpha" mesh="Fluid-Mesh" from="Particles" to="Fluid" substeps="true" />
+    <exchange
+      data="ExplicitMomentum"
+      mesh="Fluid-Mesh"
+      from="Particles"
+      to="Fluid"
+      substeps="true" />
+    <exchange
+      data="ImplicitMomentum"
+      mesh="Fluid-Mesh"
+      from="Particles"
+      to="Fluid"
+      substeps="true" />
+  </coupling-scheme:serial-explicit>
+</precice-configuration>

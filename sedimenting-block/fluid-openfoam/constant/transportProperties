@@ -1,0 +1,14 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      transportProperties;
+}
+
+transportModel  Newtonian;
+
+nu              [0 2 -1 0 0 0 0] 1.5e-05; // = air at 20°C m^2/s
+rho             1.2; // kg/m^3
+g               (0 -9.81 0);
+
