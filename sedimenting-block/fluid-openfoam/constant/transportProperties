@@ -8,7 +8,7 @@ FoamFile
 
 transportModel  Newtonian;
 
-nu              [0 2 -1 0 0 0 0] 1.5e-05; // = air at 20°C m^2/s
-rho             1.2; // kg/m^3
-g               (0 -9.81 0);
+nu              nu [ 0 2 -1 0 0 0 0 ] 0.000001004;
+rho             [1 -3 0 0 0 0 0] 998.25;
+g               [0 1 -2 0 0 0 0]  (0 -9.81 0);
 

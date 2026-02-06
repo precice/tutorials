@@ -58,8 +58,8 @@
 
   <coupling-scheme:serial-explicit>
     <participants second="Fluid" first="Particles" />
-    <time-window-size value="0.005" />
-    <max-time value="0.25" />
+    <time-window-size value="1e-3" />
+    <max-time value="0.1" />
     <exchange data="Velocity" mesh="Fluid-Mesh" from="Fluid" to="Particles" substeps="false" />
     <exchange
       data="PressureGradientFull"

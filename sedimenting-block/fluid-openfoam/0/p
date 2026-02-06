@@ -12,34 +12,8 @@ internalField   uniform 0;
 
 boundaryField
 {
-    inlet
+    walls
     {
         type            zeroGradient;
-    }
-
-    outlet
-    {
-        type            fixedValue;
-        value           uniform 0;
-    }
-
-    obstacle
-    {
-        type            zeroGradient;
-    }
-    
-    upperWall
-    {
-        type            zeroGradient;
-    }
-
-    lowerWall
-    {
-        type            zeroGradient;
-    }
-
-    frontAndBack
-    {
-        type            empty;
     }
 }
