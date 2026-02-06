@@ -4,7 +4,7 @@ set -euo pipefail
 # ---- Config (you can override via env vars) ----
 REPO_HTTPS_DEFAULT="https://bitbucket.org/davidscn/mercurydpm.git"
 REPO_URL="${REPO_URL:-$REPO_HTTPS_DEFAULT}"          # or git@bitbucket.org:davidscn/mercurydpm.git
-BRANCH="${BRANCH:-channel-transport-tutorial}"
+BRANCH="${BRANCH:-channel-bidirectional}"
 SRC_DIR="${SRC_DIR:-$PWD/mercurydpm}"
 BUILD_DIR="${BUILD_DIR:-$SRC_DIR/build}"
 
