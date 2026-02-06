@@ -22,8 +22,8 @@ test_suites:
     tutorials:
       - path: flow-over-heated-plate
         case_combination:
-          - fluid-openfoam
-          - solid-fenics
+         - fluid-openfoam
+         - solid-fenics
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz
   nutils_test:
     tutorials:
