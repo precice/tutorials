@@ -16,7 +16,7 @@
   <data:vector name="Velocity" waveform-degree="0" />
   <data:vector name="PressureGradientFull" waveform-degree="0" />
 
-  <mesh name="Fluid-Mesh" dimensions="3">
+  <mesh name="Fluid-Mesh" dimensions="2">
     <use-data name="Velocity" />
     <use-data name="PressureGradientFull" />
     <use-data name="Alpha" />
