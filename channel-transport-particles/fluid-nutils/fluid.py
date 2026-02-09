@@ -112,7 +112,10 @@ def main():
 
         velocity_values = gauss.eval(ns.u, **state)
         # COMMENT: here we would also need to write the pressure gradient to preCICE
+        # Important note: OpenFOAM scales the pressue (and thereby also its gradient) by the fluid density, so we would
+        # need to do the same scaling here. I set the fluid density to 1.2
         participant.write_data(mesh_name, data_name, vertex_ids, velocity_values)
+        # rho_f = 1.2
         # participant.write_data(mesh_name, pressure_gradient_name, vertex_ids, pressure_gradient_values)
 
         # do the coupling
