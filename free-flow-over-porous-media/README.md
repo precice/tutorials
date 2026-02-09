@@ -6,7 +6,7 @@ summary: Flow-flow coupling example with porous media field and free flow field.
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/free-flow-over-porous-media-2d), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/free-flow-over-porous-media-2d) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/free-flow-over-porous-media), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/free-flow-over-porous-media) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
