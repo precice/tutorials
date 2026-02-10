@@ -231,4 +231,5 @@ RUN git clone https://github.com/precice/dumux-adapter.git &&\
     if [ -n "${DUMUX_ADAPTER_PR}" ]; then git fetch origin pull/${DUMUX_ADAPTER_PR}/head; fi && \
     git checkout ${DUMUX_ADAPTER_REF} && \
     cd .. &&\
-    ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts all
+    ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
+    ./dune-common/bin/dunecontrol make -j $(nproc)
