@@ -83,7 +83,11 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
 
     max_name_length = _get_length_of_name(results)
 
-    header = f"| {'systemtest':<{max_name_length + 2}} | {'success':^7} | {'building time [s]':^17} | {'solver time [s]':^15} | {'fieldcompare time [s]':^21} |"
+    header = f"| {'systemtest':<{max_name_length + 2}} "\
+        f"| {'success':^7} "\
+        f"| {'building time [s]':^17} "\
+        f"| {'solver time [s]':^15} "\
+        f"| {'fieldcompare time [s]':^21} |"
     separator_plaintext = "+-" + "-" * (max_name_length + 2) + \
         "-+---------+-------------------+-----------------+-----------------------+"
     separator_markdown = "| --- | --- | --- | --- | --- |"
@@ -98,7 +102,11 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
             print(separator_markdown, file=f)
 
     for result in results:
-        row = f"| {str(result.systemtest):<{max_name_length + 2}} | {result.success:^7} | {result.build_time:^17.1f} | {result.solver_time:^15.1f} | {result.fieldcompare_time:^21.1f} |"
+        row = f"| {str(result.systemtest):<{max_name_length + 2}} "\
+            f"| {result.success:^7} "\
+            f"| {result.build_time:^17.1f} "\
+            f"| {result.solver_time:^15.1f} "\
+            f"| {result.fieldcompare_time:^21.1f} |"
         print(row)
         print(separator_plaintext)
         if "GITHUB_STEP_SUMMARY" in os.environ:
@@ -138,7 +146,7 @@ class Systemtest:
         return False
 
     def __hash__(self) -> int:
-        return hash(f"{self.tutorial,self.arguments,self.case_combination}")
+        return hash(f"{self.tutorial, self.arguments, self.case_combination}")
 
     def __post_init__(self):
         self.__init_args_to_use()

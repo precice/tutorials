@@ -236,7 +236,7 @@ class Case:
         return f"{self.name}"
 
     def __hash__(self) -> int:
-        return hash(f"{self.name,self.participant,self.component,self.tutorial}")
+        return hash(f"{self.name, self.participant, self.component, self.tutorial}")
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Case):

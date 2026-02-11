@@ -1,4 +1,4 @@
-PRECICE_REF: "v3.2.0"
+PRECICE_REF: "d199bb3" # develop, January 20, 2026
 PRECICE_PRESET: "production-audit"
 OPENFOAM_EXECUTABLE: "openfoam2312"
 OPENFOAM_ADAPTER_REF: "v1.3.1"

@@ -82,9 +82,9 @@ class MicroSimulation:
         self._solu = solu  # Save solution for output
 
         output_data = dict()
-        output_data["k_00"] = k[0][0]
-        output_data["k_11"] = k[1][1]
-        output_data["porosity"] = psi
+        output_data["K00"] = k[0][0]
+        output_data["K11"] = k[1][1]
+        output_data["Porosity"] = psi
 
         return output_data
 
@@ -237,7 +237,7 @@ class MicroSimulation:
 
             assert ((solphi >= 0.0) & (solphi <= 1.0)).all()
 
-            solphi = self._solve_allen_cahn(topo, solphi, macro_data["concentration"], dt)
+            solphi = self._solve_allen_cahn(topo, solphi, macro_data["Concentration"], dt)
             psi = self._get_avg_porosity(topo, solphi)
 
             solu = self._solve_heat_cell_problem(topo, solphi)
@@ -255,12 +255,12 @@ class MicroSimulation:
             psi = self._psi_nm1
 
         output_data = dict()
-        output_data["k_00"] = k[0][0]
-        output_data["k_01"] = k[0][1]
-        output_data["k_10"] = k[1][0]
-        output_data["k_11"] = k[1][1]
-        output_data["porosity"] = psi
-        output_data["grain_size"] = math.sqrt((1 - psi) / math.pi)
+        output_data["K00"] = k[0][0]
+        output_data["K01"] = k[0][1]
+        output_data["K10"] = k[1][0]
+        output_data["K11"] = k[1][1]
+        output_data["Porosity"] = psi
+        output_data["Grain-Size"] = math.sqrt((1 - psi) / math.pi)
 
         return output_data
 
@@ -275,7 +275,7 @@ def main():
     concentration = dict()
 
     for conc in concentrations:
-        concentration["concentration"] = conc
+        concentration["Concentration"] = conc
 
         micro_sim_output = micro_problem.solve(concentration, dt)
 
