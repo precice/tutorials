@@ -32,8 +32,10 @@ RUN apt-get -qq update && \
         libbenchmark-dev \
         libboost-all-dev \
         libeigen3-dev \
+        libopenmpi-dev \
         libxml2-dev \
         lsb-release \
+        openmpi-bin \
         petsc-dev \
         python3-dev \
         python3-numpy \
@@ -100,7 +102,7 @@ RUN add-apt-repository -y ppa:fenics-packages/fenics && \
 USER precice
 ARG FENICS_ADAPTER_REF
 # Building fenics-adapter
-RUN python3 -m venv /home/precice/venv && \
+RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
 
