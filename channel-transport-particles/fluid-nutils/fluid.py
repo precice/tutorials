@@ -43,16 +43,25 @@ def main():
     # that's the only reason
     ns.ubasis = domain.basis("std", degree=2).vector(2)
     ns.pbasis = domain.basis("std", degree=1)
+    ns.εbasis = gauss.basis()
+    ns.Fbasis = gauss.basis().vector(2)
     ns.u_i = "ubasis_ni ?u_n"  # solution
+    ns.u0_i = "ubasis_ni ?u0_n"  # solution
     ns.p = "pbasis_n ?p_n"  # solution
-    ns.dudt_i = "ubasis_ni (?u_n - ?u0_n) / ?dt"  # time derivative
+    ns.ε = "εbasis_ni ?ε_n"  # solid fraction
+    ns.ε0 = "εbasis_ni ?ε0_n"  # solid fraction
+    ns.F_i = "Fbasis_ni ?F_n"  # drag force
+    ns.g = numpy.array([0, -9.81])
+    ns.ρ = 1.0  # density TODO FIX VALUE
+    ns.DεDt = "(ε - ε0) / ?dt + (ε u_i)_,i"
+    ns.DρεuDt_i = "ρ (ε u_i - ε0 u0_i) / ?dt + ρ (ε u_i u_j)_,j"
     ns.μ = 0.5  # viscosity
     ns.σ_ij = "μ (u_i,j + u_j,i) - p δ_ij"
     ns.uin = "10 x_1 (2 - x_1)"  # inflow profile
 
     # define the weak form, Stokes problem
-    ures = gauss.integral("ubasis_ni,j σ_ij d:x" @ ns)
-    pres = gauss.integral("pbasis_n u_k,k d:x" @ ns)
+    ures = gauss.integral("(ubasis_ni (DρεuDt_i - ε ρ g_i + F_i) + ubasis_ni,j ε σ_ij) d:x" @ ns) # TODO correct weak form
+    pres = gauss.integral("pbasis_n DεDt d:x" @ ns)
 
     # Dirichlet boundary condition
     sqr = domain.boundary["inflow"].integral("(u_0 - uin)^2 d:x" @ ns, degree=2)
@@ -81,10 +90,11 @@ def main():
     precice_dt = participant.get_max_time_step_size()
     dt = min(precice_dt, solver_dt)
 
-    state = solver.solve_linear(("u", "p"), (ures, pres), constrain=cons)  # initial condition
+    ## TODO: INITIAL CONDITION
+    #state = solver.solve_linear(("u", "p"), (ures, pres), constrain=cons)  # initial condition
 
-    # add convective term and time derivative for Navier-Stokes
-    ures += gauss.integral("ubasis_ni (dudt_i + μ (u_i u_j)_,j) d:x" @ ns)
+    ## add convective term and time derivative for Navier-Stokes
+    #ures += gauss.integral("ubasis_ni (dudt_i + μ (u_i u_j)_,j) d:x" @ ns)
 
     while participant.is_coupling_ongoing():
 
@@ -105,8 +115,12 @@ def main():
         # drag_force_name = participant.read_data(mesh_name, drag_force_name, vertex_ids, ...)
         # Checkpointing for implicit coupling is generally not required
 
+        state['ε'] = 1 - participant.read_data(mesh_name, solid_fraction_name, vertex_ids, dt)
+        state['F'] = participant.read_data(mesh_name, drag_force_name, vertex_ids, dt)
+
         # solve Nutils timestep
         state["u0"] = state["u"]
+        state["ε0"] = state["ε"]
         state["dt"] = dt
         state = solver.newton(("u", "p"), (ures, pres), constrain=cons, arguments=state).solve(1e-10)
 
