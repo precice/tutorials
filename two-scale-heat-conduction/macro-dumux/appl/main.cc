@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 
   if (runWithCoupling) {
     couplingParticipant.announceConfig(mpiHelper.rank(), mpiHelper.size());
-    meshName = couplingParticipant.getMeshNames[0];
+    meshName = couplingParticipant.getMeshNames()[0];
     // verify that dimensions match
     const int preciceDim = couplingParticipant.getMeshDimensions(meshName);
     const int dim        = int(leafGridView.dimension);
