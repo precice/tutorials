@@ -79,7 +79,7 @@ fenics-adapter:
       default: "master"
     FENICS_ADAPTER_REF:
       semnantic: Git ref of the fenics adapter to use
-      default: "master"
+      default: "develop"
 
 nutils-adapter:
   repository: https://github.com/precice/nutils-adapter
