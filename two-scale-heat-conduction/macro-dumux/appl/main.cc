@@ -93,7 +93,7 @@ int main(int argc, char **argv)
   // - Name of solver
   // - What rank of how many ranks this instance is
   // Configure preCICE. For now the config file is hardcoded.
-  const std::string meshName;
+  std::string meshName;
 
   auto &couplingParticipant = Dumux::Precice::CouplingAdapter::getInstance();
 
@@ -148,12 +148,12 @@ int main(int argc, char **argv)
   }
 
   // initialize the coupling data
-  const std::string readDatak00;
-  const std::string readDatak01;
-  const std::string readDatak10;
-  const std::string readDatak11;
-  const std::string readDataPorosity;
-  const std::string writeDataConcentration;
+  std::string readDatak00;
+  std::string readDatak01;
+  std::string readDatak10;
+  std::string readDatak11;
+  std::string readDataPorosity;
+  std::string writeDataConcentration;
 
   if (runWithCoupling) {
     readDatak00            = couplingParticipant.getReadDataNamesOnMesh(meshName)[0];
