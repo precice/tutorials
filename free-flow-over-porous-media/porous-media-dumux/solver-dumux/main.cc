@@ -203,8 +203,8 @@ int main(int argc, char **argv)
   couplingParticipant.setMesh(meshName, coords);
   couplingParticipant.createIndexMapping(coupledScvfIndices);
 
-  const std::string dataNameV = couplingParticipant.getWriteDataNamesonMesh(meshName)[0];
-  const std::string dataNamePcouplingParticipant.getReadDataNamesonMesh(meshName)[0];
+  const std::string dataNameV = couplingParticipant.getWriteDataNamesOnMesh(meshName)[0];
+  const std::string dataNameP = couplingParticipant.getReadDataNamesOnMesh(meshName)[0];
 
   darcyProblem->applyInitialSolution(sol);
 
