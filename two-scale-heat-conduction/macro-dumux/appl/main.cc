@@ -93,18 +93,15 @@ int main(int argc, char **argv)
   // - Name of solver
   // - What rank of how many ranks this instance is
   // Configure preCICE. For now the config file is hardcoded.
-  std::string       preciceConfigFilename = "../precice-config.xml";
-  const std::string meshName              = "Macro-Mesh";
-  if (argc > 2)
-    preciceConfigFilename = argv[argc - 1];
+  const std::string meshName;
 
   auto &couplingParticipant = Dumux::Precice::CouplingAdapter::getInstance();
 
   const auto runWithCoupling = getParam<bool>("Precice.RunWithCoupling");
 
   if (runWithCoupling) {
-    couplingParticipant.announceSolver("Macro", preciceConfigFilename,
-                                       mpiHelper.rank(), mpiHelper.size());
+    couplingParticipant.announceConfig(mpiHelper.rank(), mpiHelper.size());
+    meshName = couplingParticipant.getMeshNames[0];
     // verify that dimensions match
     const int preciceDim = couplingParticipant.getMeshDimensions(meshName);
     const int dim        = int(leafGridView.dimension);
@@ -151,20 +148,20 @@ int main(int argc, char **argv)
   }
 
   // initialize the coupling data
-  const std::string readDatak00            = "K00";
-  const std::string readDatak01            = "K01";
-  const std::string readDatak10            = "K10";
-  const std::string readDatak11            = "K11";
-  const std::string readDataPorosity       = "Porosity";
-  const std::string writeDataConcentration = "Concentration";
+  const std::string readDatak00;
+  const std::string readDatak01;
+  const std::string readDatak10;
+  const std::string readDatak11;
+  const std::string readDataPorosity;
+  const std::string writeDataConcentration;
 
   if (runWithCoupling) {
-    couplingParticipant.announceQuantity(meshName, readDatak00);
-    couplingParticipant.announceQuantity(meshName, readDatak01);
-    couplingParticipant.announceQuantity(meshName, readDatak10);
-    couplingParticipant.announceQuantity(meshName, readDatak11);
-    couplingParticipant.announceQuantity(meshName, readDataPorosity);
-    couplingParticipant.announceQuantity(meshName, writeDataConcentration);
+    readDatak00            = couplingParticipant.getReadDataNamesOnMesh(meshName)[0];
+    readDatak01            = couplingParticipant.getReadDataNamesOnMesh(meshName)[1];
+    readDatak10            = couplingParticipant.getReadDataNamesOnMesh(meshName)[2];
+    readDatak11            = couplingParticipant.getReadDataNamesOnMesh(meshName)[3];
+    readDataPorosity       = couplingParticipant.getReadDataNamesOnMesh(meshName)[4];
+    writeDataConcentration = couplingParticipant.getWriteDataNamesOnMesh(meshName)[0];
   }
 
   // the solution vector (initialized with zeros) NElements x 2(pressure,
