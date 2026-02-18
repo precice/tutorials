@@ -6,7 +6,7 @@ summary: In this case, a fluid and two solids are coupled together using a fully
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/multiple-perpendicular-flaps). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/multiple-perpendicular-flaps), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/multiple-perpendicular-flaps) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Case Setup

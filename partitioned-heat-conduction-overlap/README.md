@@ -6,7 +6,7 @@ summary: We solve a simple heat equation. The domain is partitioned and the coup
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-overlap). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/partitioned-heat-conduction-overlap), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-overlap) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
