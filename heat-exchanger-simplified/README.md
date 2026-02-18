@@ -7,7 +7,7 @@ summary: This tutorial describes how to run a conjugate heat transfer simulation
 
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/heat-exchanger-simplified). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/heat-exchanger-simplified), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/heat-exchanger-simplified) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup

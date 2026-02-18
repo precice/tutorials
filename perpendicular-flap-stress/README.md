@@ -6,7 +6,7 @@ summary: This tutorial is a modified version of the “perpendicular flap” tut
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/perpendicular-flap-stress). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/perpendicular-flap-stress), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/perpendicular-flap-stress) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup

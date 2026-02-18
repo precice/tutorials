@@ -6,7 +6,7 @@ summary: Flow around a rigid moving cylinder. A FMI-based controller is used to 
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-around-controlled-moving-cylinder). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/flow-around-controlled-moving-cylinder), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/flow-around-controlled-moving-cylinder) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
