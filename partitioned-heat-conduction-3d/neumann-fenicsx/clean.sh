@@ -2,5 +2,5 @@
 set -e -u
 
 rm -rfv ./precice-profiling
-rm -rfv ./output_NEUMANN.bp
+rm -rfv ./output-neumann.bp
 rm -fv ./*.log

@@ -49,7 +49,7 @@ cd neumann-fenicsx
 
 ## Visualization
 
-Output is written into the folders of the fenicsx solvers (`dirichlet-fenicsx/output-DIRICHLET.bp` and `dirichlet-fenicsx/output-DIRICHLET.bp`).
+Output is written into the folders of the fenicsx solvers (`neumann-fenicsx/output-neumann.bp` and `dirichlet-fenicsx/output-dirichlet.bp`).
 
 It is sufficient to import the folders to paraview to get the visualization of the simulation.
 

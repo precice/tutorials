@@ -232,7 +232,7 @@ u_D.interpolate(u_exact)
 
 f_err = fem.Function(V)
 # create writer for output files
-vtxwriter = io.VTXWriter(MPI.COMM_WORLD, f"output_{problem.name}.bp", [f_err])
+vtxwriter = io.VTXWriter(MPI.COMM_WORLD, f"output-{problem.name}.bp".lower(), [f_err])
 vtxwriter.write(t)
 
 if problem is ProblemType.NEUMANN:
