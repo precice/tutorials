@@ -11,7 +11,6 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-
 We solve a partitioned heat equation. For information on the two dimensional non-partitioned case, please refer to [1, p.37ff]. In this tutorial the computational domain is partitioned and coupled via preCICE. The coupling roughly follows the approach described in [2].
 
 ![Case setup of partitioned-heat-conduction case](images/tutorials-partitioned-heat-conduction-setup.png)

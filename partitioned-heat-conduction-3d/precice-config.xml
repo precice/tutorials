@@ -22,7 +22,7 @@
 
   <participant name="Dirichlet">
     <provide-mesh name="Dirichlet-Mesh" />
-    <receive-mesh name="Neumann-Mesh" from="Neumann" api-access="false"/>
+    <receive-mesh name="Neumann-Mesh" from="Neumann" api-access="false" />
     <write-data name="Heat-Flux" mesh="Dirichlet-Mesh" />
     <read-data name="Temperature" mesh="Dirichlet-Mesh" />
     <mapping:rbf-pum-direct
@@ -34,13 +34,13 @@
       relative-overlap="0.75"
       vertices-per-cluster="90"
       polynomial="separate">
-      <basis-function:compact-polynomial-c8 support-radius="2.0"/>
+      <basis-function:compact-polynomial-c8 support-radius="2.0" />
     </mapping:rbf-pum-direct>
   </participant>
 
   <participant name="Neumann">
     <provide-mesh name="Neumann-Mesh" />
-    <receive-mesh name="Dirichlet-Mesh" from="Dirichlet" api-access="false"/>
+    <receive-mesh name="Dirichlet-Mesh" from="Dirichlet" api-access="false" />
     <write-data name="Temperature" mesh="Neumann-Mesh" />
     <read-data name="Heat-Flux" mesh="Neumann-Mesh" />
     <mapping:nearest-neighbor
@@ -48,7 +48,7 @@
       from="Dirichlet-Mesh"
       to="Neumann-Mesh"
       constraint="consistent" />
-    </participant>
+  </participant>
 
   <m2n:sockets acceptor="Dirichlet" connector="Neumann" exchange-directory=".." />
 
@@ -75,6 +75,6 @@
     <relative-convergence-measure data="Temperature" mesh="Neumann-Mesh" limit="1e-10" />
     <acceleration:constant>
       <relaxation value="0.2" />
-    </acceleration:constant> 
+    </acceleration:constant>
   </coupling-scheme:serial-implicit>
 </precice-configuration>
