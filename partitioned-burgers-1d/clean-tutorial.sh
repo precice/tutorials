@@ -9,8 +9,6 @@ clean_precice_logs .
 rm -fv ./*.log
 rm -fv ./*.vtu
 
-rm -f solver-scipy/full_domain.npz
-rm -f dirichlet-scipy/dirichlet.npz
-rm -f neumann-scipy/neumann.npz
-rm -rf output/
+# Clean up root directory
 rm -f initial_condition.npz
+rm -rf output/

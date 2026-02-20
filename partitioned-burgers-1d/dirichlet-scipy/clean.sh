@@ -1,6 +1,9 @@
 #!/usr/bin/env sh
 set -e -u
 
-rm -rf precice-profiling
-rm -f dirichlet-scipy.log precice-Dirichlet-convergence.log precice-Dirichlet-iterations.log
+# shellcheck disable=SC1091
+. ../../tools/cleaning-tools.sh
+
+clean_precice_logs .
+clean_case_logs .
 rm -f dirichlet.npz
