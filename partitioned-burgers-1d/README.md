@@ -112,7 +112,7 @@ cd solver-scipy
 ## Post-processing
 
 After both participants (and/or monolithic simulation) have finished, you can run the visualization script.
-`visualize_partitioned_domain.py` generates plots comparing the partitioned and monolithic solutions. You can specify which timestep to plot:
+`visualize_partitioned_domain.py` generates plots comparing the partitioned and monolithic solutions. You can specify which timestep to plot. Call from the root of the tutorial:
 
 ```bash
 python3 utils/visualize_partitioned_domain.py --neumann neumann-surrogate/surrogate.npz [timestep]
@@ -120,11 +120,11 @@ python3 utils/visualize_partitioned_domain.py --neumann neumann-surrogate/surrog
 
 The script will produce the following output files in the `output/` directory:
 
-- `full-domain-timestep-slice.png`: Solution $u$ at a selected timestep
+- `full-domain-timestep-slice.png`: Solution $u$ at the selected timestep
 
 ![Full Domain Timestep Slice](images/tutorials-partitioned-burgers-1d-full-domain-timestep-slice.png)
 
-- `gradient-timestep-slice.png`: Gradient $du/dx$ at a selected timestep
+- `gradient-timestep-slice.png`: Gradient $du/dx$ at the selected timestep
 
 - `full-domain-evolution.png`: Time evolution of the solution
 
