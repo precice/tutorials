@@ -90,8 +90,6 @@ python3 utils/generate_ic.py --epoch <seed>
 
 This script requires the Python libraries `numpy` and `matplotlib`.
 
----
-
 ### Helper scripts
 
 There are helper scripts in the `utils/` directory that automate runs and visualization of both participants. They also accept an integer seed argument to specify the initial condition.
