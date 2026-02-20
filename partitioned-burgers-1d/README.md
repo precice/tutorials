@@ -35,17 +35,17 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 ![preCICE configuration visualization](images/tutorials-partitioned-burgers-1d-precice-config.png)
 
-## Available Solvers
+## Available solvers
 
-The conservative formulation of the Burgers' equation `solver-scipy` is implemented in a first-order finite volume code using Lax-Friedrichs fluxes and implicit Euler time stepping.
+Currently, the SciPy solver (`solver-scipy`) can be used for both sides, the NN surrogate solver (`neumann-surrogate`) only for the Neumann side.
 
-This tutorial includes two versions for the Neumann participant:
+- SciPy. Simple finite volume solver using Lax-Friedrichs fluxes and implicit Euler time stepping.
+- Surrogate. Pre-trained neural network surrogate model.
 
-- A standard finite volume solver (`neumann-scipy`).
-- A pre-trained neural network surrogate that approximates the solver (`neumann-surrogate`).
+The conservative formulation of the Burgers' equation is implemented in the SciPy solver. The surrogate is a neural network trained to predict the next time step solution based on the current solution. The surrogate model was trained on solutions obtained with the SciPy solver.
 
 {% note %}
-The surrogate participant requires PyTorch and related dependencies, which requires several gigabytes of disk space (~7Gb).
+The surrogate participant requires PyTorch and related dependencies. By default, the CPU version is installed. If you wish to use the GPU version, see the comment in `neumann-surrogate/requirements.txt`. The GPU version requires several gigabytes of disk space (~6.2Gb).
 {% endnote %}
 
 ## Running the simulation
@@ -115,7 +115,7 @@ After both participants (and/or monolithic simulation) have finished, you can ru
 `visualize_partitioned_domain.py` generates plots comparing the partitioned and monolithic solutions. You can specify which timestep to plot:
 
 ```bash
-python3 visualize_partitioned_domain.py --neumann neumann-surrogate/surrogate.npz [timestep]
+python3 utils/visualize_partitioned_domain.py --neumann neumann-surrogate/surrogate.npz [timestep]
 ```
 
 The script will produce the following output files in the `output/` directory:
