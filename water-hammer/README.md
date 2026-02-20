@@ -10,6 +10,9 @@ We solve a **partitioned water hammer problem** using a 1D–3D coupling approac
 In this tutorial, the computational domain is split into two coupled regions: a 1D pipe section and a 3D pipe section.  
 The coupling is performed using **preCICE**.
 
+In addition to the 1D–3D setup, this tutorial also includes configurations for **1D–1D** and **3D–3D** coupling.  
+These variants can be beneficial for validation studies, solver comparisons, or for investigating the influence of model dimensionality on transient wave propagation.
+
 The case setup is inspired by [1].  
 This tutorial extends the study conducted in [2], which implemented the water hammer benchmark using a 1D–3D coupling with preCICE.  
 In that study, the cross-section of the pipe was square. In this tutorial, this has been changed to a circular cross-section.  
@@ -89,11 +92,17 @@ preCICE configuration for the 3D–1D simulation:
 First, select which coupling you want to run. This sets the correct `precice-config.xml` symlink.
 
 ```bash
-# Choose one (1D → 3D or 3D → 1D)
+# Choose one configuration
 ./setcase.sh 1d3d
 # or
 ./setcase.sh 3d1d
+# or
+./setcase.sh 1d1d
+# or
+./setcase.sh 3d3d
 ```
+
+The additional 1D–1D and 3D–3D configurations are particularly useful for validation purposes and for comparing reduced-order and full-order modeling approaches.
 
 Open **two terminals** and start the corresponding participants for your chosen setup.
 

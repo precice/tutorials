@@ -29,7 +29,10 @@
     <read-data name="Velocity" mesh="Fluid1DLeft-Mesh" />
     <mapping:axial-geometric-multiscale
       direction="read"
+      multiscale-dimension="1d-3d"
+      multiscale-cross-section="circle"
       multiscale-type="collect"
+      multiscale-spread-profile="uniform"
       multiscale-radius="1.0"
       multiscale-axis="y"
       from="Fluid3DRight-Mesh"
@@ -45,7 +48,10 @@
     <write-data name="Velocity" mesh="Fluid3DRight-Mesh" />
     <mapping:axial-geometric-multiscale
       direction="read"
+      multiscale-dimension="1d-3d"
+      multiscale-cross-section="circle"
       multiscale-type="spread"
+      multiscale-spread-profile="uniform"
       multiscale-radius="1.0"
       multiscale-axis="y"
       from="Fluid1DLeft-Mesh"

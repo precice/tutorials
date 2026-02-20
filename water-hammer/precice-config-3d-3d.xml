@@ -12,7 +12,7 @@
   <data:vector name="Velocity" />
   <data:scalar name="Pressure" />
 
-  <mesh name="Fluid1DRight-Mesh" dimensions="3">
+  <mesh name="Fluid3DRight-Mesh" dimensions="3">
     <use-data name="Velocity" />
     <use-data name="Pressure" />
   </mesh>
@@ -22,51 +22,40 @@
     <use-data name="Pressure" />
   </mesh>
 
-  <participant name="Fluid1DRight">
-    <provide-mesh name="Fluid1DRight-Mesh" />
+  <participant name="Fluid3DRight">
+    <provide-mesh name="Fluid3DRight-Mesh" />
     <receive-mesh name="Fluid3DLeft-Mesh" from="Fluid3DLeft" />
-    <write-data name="Velocity" mesh="Fluid1DRight-Mesh" />
-    <read-data name="Pressure" mesh="Fluid1DRight-Mesh" />
-    <mapping:axial-geometric-multiscale
+    <write-data name="Velocity" mesh="Fluid3DRight-Mesh" />
+    <read-data name="Pressure" mesh="Fluid3DRight-Mesh" />
+    <mapping:nearest-neighbor
       direction="read"
-      multiscale-dimension="1d-3d"
-      multiscale-cross-section="circle"
-      multiscale-type="collect"
-      multiscale-radius="1.0"
-      multiscale-axis="y"
       from="Fluid3DLeft-Mesh"
-      to="Fluid1DRight-Mesh"
+      to="Fluid3DRight-Mesh"
       constraint="consistent" />
     <export:vtu directory="precice-exports" />
   </participant>
 
   <participant name="Fluid3DLeft">
     <provide-mesh name="Fluid3DLeft-Mesh" />
-    <receive-mesh name="Fluid1DRight-Mesh" from="Fluid1DRight" />
+    <receive-mesh name="Fluid3DRight-Mesh" from="Fluid3DRight" />
     <read-data name="Velocity" mesh="Fluid3DLeft-Mesh" />
     <write-data name="Pressure" mesh="Fluid3DLeft-Mesh" />
-    <mapping:axial-geometric-multiscale
+    <mapping:nearest-neighbor
       direction="read"
-      multiscale-dimension="1d-3d"
-      multiscale-cross-section="circle"
-      multiscale-type="spread"
-      multiscale-spread-profile="uniform"
-      multiscale-radius="1.0"
-      multiscale-axis="y"
-      from="Fluid1DRight-Mesh"
+      from="Fluid3DRight-Mesh"
       to="Fluid3DLeft-Mesh"
       constraint="consistent" />
     <export:vtu directory="precice-exports" />
   </participant>
 
-  <m2n:sockets acceptor="Fluid1DRight" connector="Fluid3DLeft" exchange-directory=".." />
+  <m2n:sockets acceptor="Fluid3DRight" connector="Fluid3DLeft" exchange-directory=".." />
 
   <coupling-scheme:serial-implicit>
     <time-window-size value="0.005" />
     <max-time value="20.0" />
-    <participants first="Fluid1DRight" second="Fluid3DLeft" />
-    <exchange data="Pressure" mesh="Fluid3DLeft-Mesh" from="Fluid3DLeft" to="Fluid1DRight" />
-    <exchange data="Velocity" mesh="Fluid1DRight-Mesh" from="Fluid1DRight" to="Fluid3DLeft" />
+    <participants first="Fluid3DRight" second="Fluid3DLeft" />
+    <exchange data="Pressure" mesh="Fluid3DLeft-Mesh" from="Fluid3DLeft" to="Fluid3DRight" />
+    <exchange data="Velocity" mesh="Fluid3DRight-Mesh" from="Fluid3DRight" to="Fluid3DLeft" />
     <max-iterations value="100" />
     <relative-convergence-measure limit="1.0e-3" data="Pressure" mesh="Fluid3DLeft-Mesh" />
     <acceleration:IQN-ILS>
