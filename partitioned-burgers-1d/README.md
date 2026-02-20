@@ -26,18 +26,14 @@ The domain is partitioned into participants at $x=1$:
 
 Both outer boundaries use zero-gradient conditions $\frac{\partial u}{\partial x} = 0$. The problem can be solved for different initial conditions of superimposed sine waves, which can be generated using the provided script `utils/generate_ic.py`.
 
-<p align="center">
-  <img src="images/tutorials-partitioned-burgers-1d-full-domain-diagram.png" alt="Domain Diagram" width="500"/>
-  <br><em>Diagram of the partitioned domain with an example initial condition.</em>
-</p>
+![Domain Diagram](images/tutorials-partitioned-burgers-1d-full-domain-diagram.png)
+Diagram of the partitioned domain with an example initial condition.
 
 ## Configuration
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-<p align="center">
-  <img src="images/tutorials-partitioned-burgers-1d-precice-config.png" alt="preCICE configuration visualization" width="600"/>
-</p>
+![preCICE configuration visualization](images/tutorials-partitioned-burgers-1d-precice-config.png)
 
 ## Available Solvers
 
@@ -113,7 +109,7 @@ cd solver-scipy
 ./run.sh
 ```
 
-## Visualization
+## Post-processing
 
 After both participants (and/or monolithic simulation) have finished, you can run the visualization script.
 `visualize_partitioned_domain.py` generates plots comparing the partitioned and monolithic solutions. You can specify which timestep to plot:
@@ -126,14 +122,10 @@ The script will produce the following output files in the `output/` directory:
 
 - `full-domain-timestep-slice.png`: Solution $u$ at a selected timestep
 
-<p align="left">
-  <img src="images/tutorials-partitioned-burgers-1d-full-domain-timestep-slice.png" alt="Full Domain Timestep Slice" width="400"/>
-</p>
+![Full Domain Timestep Slice](images/tutorials-partitioned-burgers-1d-full-domain-timestep-slice.png)
 
 - `gradient-timestep-slice.png`: Gradient $du/dx$ at a selected timestep
 
 - `full-domain-evolution.png`: Time evolution of the solution
 
-<p align="left">
-  <img src="images/tutorials-partitioned-burgers-1d-full-domain-evolution.png" alt="Full Domain Evolution" width="400"/>
-</p>
+![Full Domain Evolution](images/tutorials-partitioned-burgers-1d-full-domain-evolution.png)
