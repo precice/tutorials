@@ -93,23 +93,19 @@ int main(int argc, char **argv)
   // - Name of solver
   // - What rank of how many ranks this instance is
   // Configure preCICE. For now the config file is hardcoded.
-  std::string       preciceConfigFilename = "../precice-config.xml";
-  const std::string meshName              = "macro-mesh";
-  if (argc > 2)
-    preciceConfigFilename = argv[argc - 1];
+  std::string meshName;
 
   auto &couplingParticipant = Dumux::Precice::CouplingAdapter::getInstance();
 
   const auto runWithCoupling = getParam<bool>("Precice.RunWithCoupling");
 
   if (runWithCoupling) {
-    couplingParticipant.announceSolver("macro-heat", preciceConfigFilename,
-                                       mpiHelper.rank(), mpiHelper.size());
+    couplingParticipant.announceConfig(mpiHelper.rank(), mpiHelper.size());
+    meshName = couplingParticipant.getMeshNames()[0];
     // verify that dimensions match
     const int preciceDim = couplingParticipant.getMeshDimensions(meshName);
     const int dim        = int(leafGridView.dimension);
-    std::cout << "coupling Dims = " << dim << " , leafgrid dims = " << dim
-              << std::endl;
+    std::cout << "Coupling dims = " << preciceDim << " , leafgrid dims = " << dim << std::endl;
     if (preciceDim != dim)
       DUNE_THROW(Dune::InvalidStateException, "Dimensions do not match");
   }
@@ -135,11 +131,15 @@ int main(int argc, char **argv)
     }
   }
 
-  std::cout << "Number of Coupled Cells:" << coupledElementIdxs.size()
-            << std::endl;
+  std::cout << "Number of Coupled Cells:" << coupledElementIdxs.size() << std::endl;
 
-  auto numberOfElements =
-      coords.size() / couplingParticipant.getMeshDimensions(meshName);
+  int numberOfElements;
+  if (runWithCoupling) {
+    numberOfElements = coords.size() / couplingParticipant.getMeshDimensions(meshName);
+  } else {
+    numberOfElements = coupledElementIdxs.size();
+  }
+
   if (runWithCoupling) {
     couplingParticipant.setMesh(meshName, coords);
 
@@ -148,22 +148,20 @@ int main(int argc, char **argv)
   }
 
   // initialize the coupling data
-  const std::string readDatak00            = "k_00";
-  const std::string readDatak01            = "k_01";
-  const std::string readDatak10            = "k_10";
-  const std::string readDatak11            = "k_11";
-  const std::string readDataPorosity       = "porosity";
-  const std::string writeDataConcentration = "concentration";
-  // const std::string writeDataTemperature = "temperature";
+  std::string readDatak00;
+  std::string readDatak01;
+  std::string readDatak10;
+  std::string readDatak11;
+  std::string readDataPorosity;
+  std::string writeDataConcentration;
 
   if (runWithCoupling) {
-    couplingParticipant.announceQuantity(meshName, readDatak00);
-    couplingParticipant.announceQuantity(meshName, readDatak01);
-    couplingParticipant.announceQuantity(meshName, readDatak10);
-    couplingParticipant.announceQuantity(meshName, readDatak11);
-    couplingParticipant.announceQuantity(meshName, readDataPorosity);
-    couplingParticipant.announceQuantity(meshName, writeDataConcentration);
-    // couplingParticipant.announceQuantity(meshName, writeDataTemperature);
+    readDatak00            = couplingParticipant.getReadDataNamesOnMesh(meshName)[0];
+    readDatak01            = couplingParticipant.getReadDataNamesOnMesh(meshName)[1];
+    readDatak10            = couplingParticipant.getReadDataNamesOnMesh(meshName)[2];
+    readDatak11            = couplingParticipant.getReadDataNamesOnMesh(meshName)[3];
+    readDataPorosity       = couplingParticipant.getReadDataNamesOnMesh(meshName)[4];
+    writeDataConcentration = couplingParticipant.getWriteDataNamesOnMesh(meshName)[0];
   }
 
   // the solution vector (initialized with zeros) NElements x 2(pressure,
@@ -172,10 +170,6 @@ int main(int argc, char **argv)
   SolutionVector x(gridGeometry->numDofs());
   problem->applyInitialSolution(x);
   auto xOld = x;
-
-  auto   xCheckpoint        = x;
-  double timeCheckpoint     = 0.0;
-  int    timeStepCheckpoint = 0;
 
   // initialize the coupling data
   std::vector<double> temperatures;
@@ -215,11 +209,11 @@ int main(int argc, char **argv)
                                                            problem->name());
   IOFields::initOutputModule(vtkWriter);
   // add model specific output fields
-  vtkWriter.addField(problem->getPorosity(), "porosity");
-  vtkWriter.addField(problem->getK00(), "k00");
-  vtkWriter.addField(problem->getK01(), "k01");
-  vtkWriter.addField(problem->getK10(), "k10");
-  vtkWriter.addField(problem->getK11(), "k11");
+  vtkWriter.addField(problem->getPorosity(), "Porosity");
+  vtkWriter.addField(problem->getK00(), "K00");
+  vtkWriter.addField(problem->getK01(), "K01");
+  vtkWriter.addField(problem->getK10(), "K10");
+  vtkWriter.addField(problem->getK11(), "K11");
   problem->updateVtkOutput(x);
   vtkWriter.write(0.0);
 
@@ -227,17 +221,20 @@ int main(int argc, char **argv)
   const int vtkOutputInterval = getParam<int>("TimeLoop.OutputInterval");
 
   // initialize preCICE
-  couplingParticipant.initialize();
+  if (runWithCoupling) {
+    couplingParticipant.initialize();
+  }
 
   // time loop parameters
-  const auto tEnd      = getParam<Scalar>("TimeLoop.TEnd");
-  double     preciceDt = couplingParticipant.getMaxTimeStepSize();
+  const auto tEnd = getParam<Scalar>("TimeLoop.TEnd");
+  double     preciceDt;
   double     solverDt;
   double     dt;
 
   if (runWithCoupling) {
-    solverDt = getParam<Scalar>("TimeLoop.InitialDt");
-    dt       = std::min(preciceDt, solverDt);
+    preciceDt = couplingParticipant.getMaxTimeStepSize();
+    solverDt  = getParam<Scalar>("TimeLoop.InitialDt");
+    dt        = std::min(preciceDt, solverDt);
   } else {
     dt = getParam<Scalar>("TimeLoop.InitialDt");
   }
@@ -245,6 +242,11 @@ int main(int argc, char **argv)
   // instantiate time loop
   auto timeLoop = std::make_shared<TimeLoop<Scalar>>(0.0, dt, tEnd);
   timeLoop->setMaxTimeStepSize(getParam<Scalar>("TimeLoop.MaxDt"));
+
+  // initialize adapter checkpointing
+  if (runWithCoupling) {
+    couplingParticipant.initializeCheckpoint(x, *gridVariables, *timeLoop);
+  }
 
   // the assembler with time loop for instationary problem
   using Assembler = FVAssembler<TypeTag, DiffMethod::numeric>;
@@ -263,7 +265,7 @@ int main(int argc, char **argv)
   NewtonSolver nonLinearSolver(assembler, linearSolver);
 
   // time loop
-  int n = 0; // counts timesteps for the output interval
+  int n_out = 0; // counts timesteps for the output interval
   std::cout << "Time Loop starts" << std::endl;
   timeLoop->start();
   do {
@@ -272,11 +274,7 @@ int main(int argc, char **argv)
         break;
 
       // write checkpoint
-      if (couplingParticipant.requiresToWriteCheckpoint()) {
-        xCheckpoint        = x;
-        timeCheckpoint     = timeLoop->time();
-        timeStepCheckpoint = timeLoop->timeStepIndex();
-      }
+      couplingParticipant.writeCheckpointIfRequired();
 
       preciceDt = couplingParticipant.getMaxTimeStepSize();
       solverDt  = std::min(nonLinearSolver.suggestTimeStepSize(timeLoop->timeStepSize()),
@@ -306,7 +304,7 @@ int main(int argc, char **argv)
     // set new dt as suggested by the Newton solver or by preCICE
     timeLoop->setTimeStepSize(dt);
 
-    std::cout << "Solver starts with target dt: " << dt << std::endl;
+    std::cout << "nonLinearSolver starts with target dt: " << dt << std::endl;
 
     // linearize & solve
     nonLinearSolver.solve(x, *timeLoop);
@@ -319,15 +317,6 @@ int main(int argc, char **argv)
     timeLoop->advanceTimeStep();
     timeLoop->reportTimeStep();
     xOld = x;
-
-    // Vtk output
-    // TODO: output interval does not work seamlessly when subcycling
-    n += 1;
-    if (n == vtkOutputInterval) {
-      problem->updateVtkOutput(x);
-      vtkWriter.write(timeLoop->time());
-      n = 0;
-    }
 
     if (runWithCoupling) {
       int solIdx = 0;
@@ -357,16 +346,29 @@ int main(int argc, char **argv)
       couplingParticipant.advance(dt);
 
       // reset to checkpoint if not converged
-      if (couplingParticipant.requiresToReadCheckpoint()) {
-        x    = xCheckpoint;
-        xOld = x;
-        timeLoop->setTime(timeCheckpoint, timeStepCheckpoint);
-
-        // TODO: previousTimeStep might be more appropriate, last one could be small
-        timeLoop->setTimeStepSize(dt);
-        gridVariables->update(x);
+      if (couplingParticipant.readCheckpointIfRequired()) {
         gridVariables->advanceTimeStep();
+        xOld = x;
         continue;
+      }
+    }
+
+    if (runWithCoupling) {
+      // if coupling, write VTK output only when time window is complete
+      if (couplingParticipant.isTimeWindowComplete()) {
+        n_out += 1;
+        if (n_out == vtkOutputInterval) {
+          problem->updateVtkOutput(x);
+          vtkWriter.write(timeLoop->time());
+          n_out = 0;
+        }
+      }
+    } else {
+      n_out += 1;
+      if (n_out == vtkOutputInterval) {
+        problem->updateVtkOutput(x);
+        vtkWriter.write(timeLoop->time());
+        n_out = 0;
       }
     }
 

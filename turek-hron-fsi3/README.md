@@ -6,7 +6,7 @@ summary: The Turek-Hron FSI cases are well-established numerical benchmarks and,
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/turek-hron-fsi3). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/turek-hron-fsi3), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/turek-hron-fsi3) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup

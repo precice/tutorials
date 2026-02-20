@@ -6,7 +6,7 @@ summary: A dummy source participant is coupled to a fluid in a uni-directional w
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/volume-coupled-flow). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/volume-coupled-flow), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/volume-coupled-flow) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup

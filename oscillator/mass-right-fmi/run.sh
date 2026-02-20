@@ -16,9 +16,12 @@ if [ ! -f ../solver-fmi/Oscillator.fmu ]; then
   cd ../../../mass-right-fmi
 fi
 
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -r requirements.txt && pip freeze > pip-installed-packages.log
+if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
+then
+    python3 -m venv .venv
+    . .venv/bin/activate
+    pip install -r requirements.txt && pip freeze > pip-installed-packages.log
+fi
 
 fmiprecice fmi-settings.json precice-settings.json
 python3 ../solver-fmi/calculate-error.py ../mass-left-fmi/fmi-settings.json ../mass-left-fmi/precice-settings.json ../mass-right-fmi/fmi-settings.json ../mass-right-fmi/precice-settings.json Mass-Right

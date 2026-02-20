@@ -1,0 +1,25 @@
+[Grid]
+Verbosity = true
+LowerLeft = 0 0
+UpperRight = 1 1
+Cells = 40 40
+Grading1 = 1
+
+[Problem]
+Name = porous-media-dumux
+InitialP = 0.0e-9
+
+[SpatialParams]
+Permeability = 1e-6 # m^2
+Porosity = 0.4
+AlphaBeaversJoseph = 1.0
+
+[Vtk]
+AddVelocity = 1
+
+[precice-adapter-config]
+participant_name = Porous-Media
+precice_config_file_path = ../precice-config.xml
+interfaces.1.mesh_name = Porous-Media-Mesh
+interfaces.1.read_data.1.name = Pressure
+interfaces.1.write_data.1.name = Velocity
