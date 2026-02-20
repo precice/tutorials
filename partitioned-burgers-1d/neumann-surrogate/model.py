@@ -29,11 +29,7 @@ class LinearExtrapolationPadding1D(nn.Module):
         grad_left = x[:, :, 1:2] - ghost_cell_left
         grad_right = ghost_cell_right - x[:, :, -2:-1]
 
-        # Higher order finite difference gradient approximation
-        # grad_left = ( -11 * ghost_cell_left + 18 * x[:, :, 1:2] - 9 * x[:, :, 2:3] + 2 * x[:, :, 3:4]) / 6
-        # grad_right = (11 * ghost_cell_right - 18 * x[:, :, -2:-1] + 9 * x[:, :, -3:-2] - 2 * x[:, :, -4:-3]) / 6
-
-        # 3. Extrapolated padding tensors
+        # Extrapolated padding tensors
         left_ramp = torch.arange(self.pad_beg, 0, -1, device=x.device, dtype=x.dtype).view(1, 1, -1)
         left_padding = ghost_cell_left - left_ramp * grad_left
 

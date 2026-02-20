@@ -81,7 +81,7 @@ def burgers_jacobian_residual(u_new, u_old, dt, dx, C, bc_left, bc_right):
     n = len(u_new)
     I = identity(n, format='csc')
     J_rhs = burgers_jacobian(0, u_new, dx, C, bc_left, bc_right)
-    return (I - dt * J_rhs).toarray()  # doesn't work with sparse matrix in root solver for some reason
+    return (I - dt * J_rhs).toarray()
 
 
 class BoundaryWrapper:
@@ -220,7 +220,7 @@ def main(participant_name: str, savefile_path: str = None):
     C_viscosity = 1e-12
     aborted = False
 
-    # --- Serial Coupling Loop ---
+    # --- Main Coupling Loop ---
     if participant_name == "Dirichlet":
         while participant.is_coupling_ongoing():
             if participant.requires_writing_checkpoint():
