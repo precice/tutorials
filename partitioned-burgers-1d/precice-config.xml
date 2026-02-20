@@ -46,7 +46,7 @@
 
   <m2n:sockets acceptor="Dirichlet" connector="Neumann" exchange-directory=".." />
 
-  <coupling-scheme:parallel-implicit>
+  <coupling-scheme:serial-implicit>
     <participants first="Dirichlet" second="Neumann" />
     <max-time value="0.5" />
     <time-window-size value="0.005" />
@@ -56,18 +56,13 @@
       mesh="Dirichlet-Mesh"
       from="Dirichlet"
       to="Neumann"
-      initialize="true"/>
-    <exchange
-      data="Velocity"
-      mesh="Neumann-Mesh"
-      from="Neumann"
-      to="Dirichlet"
-      initialize="true"/>
+      initialize="true" />
+    <exchange data="Velocity" mesh="Neumann-Mesh" from="Neumann" to="Dirichlet" initialize="true" />
     <relative-convergence-measure data="Gradient" mesh="Dirichlet-Mesh" limit="1e-3" />
     <relative-convergence-measure data="Velocity" mesh="Neumann-Mesh" limit="1e-3" />
     <acceleration:aitken>
       <data name="Velocity" mesh="Neumann-Mesh" />
       <initial-relaxation value="0.1" />
     </acceleration:aitken>
-  </coupling-scheme:parallel-implicit>
+  </coupling-scheme:serial-implicit>
 </precice-configuration>
