@@ -353,12 +353,25 @@ class Systemtest:
             for key, value in self.env.items():
                 env_file.write(f"{key}={value}\n")
 
-    def __unpack_reference_results(self):
-        with tarfile.open(self.reference_result.path) as reference_results_tared:
-            # specify which folder to extract to
-            reference_results_tared.extractall(self.system_test_dir / PRECICE_REL_REFERENCE_DIR)
-        logging.debug(
-            f"extracting {self.reference_result.path} into {self.system_test_dir / PRECICE_REL_REFERENCE_DIR}")
+    def __unpack_reference_results(self) -> bool:
+        if not self.reference_result.path.exists():
+            logging.error(
+                f"Reference results archive was not found for {self}. "
+                f"Expected file: {self.reference_result.path}. "
+                "Please generate the reference results first or update tests.yaml accordingly.")
+            return False
+
+        try:
+            with tarfile.open(self.reference_result.path) as reference_results_tared:
+                # specify which folder to extract to
+                reference_results_tared.extractall(self.system_test_dir / PRECICE_REL_REFERENCE_DIR)
+            logging.debug(
+                f"extracting {self.reference_result.path} into {self.system_test_dir / PRECICE_REL_REFERENCE_DIR}")
+            return True
+        except (tarfile.TarError, OSError) as e:
+            logging.error(
+                f"Could not unpack reference results archive {self.reference_result.path} for {self}: {e}")
+            return False
 
     def _run_field_compare(self):
         """
@@ -372,7 +385,12 @@ class Systemtest:
         """
         logging.debug(f"Running fieldcompare for {self}")
         time_start = time.perf_counter()
-        self.__unpack_reference_results()
+        if not self.__unpack_reference_results():
+            elapsed_time = time.perf_counter() - time_start
+            error_message = (
+                f"Reference results are missing or invalid for {self}. "
+                f"Expected archive at: {self.reference_result.path}")
+            return FieldCompareResult(1, [], [error_message], self, elapsed_time)
         docker_compose_content = self.__get_field_compare_compose_file()
         stdout_data = []
         stderr_data = []
