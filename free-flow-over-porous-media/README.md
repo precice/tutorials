@@ -1,6 +1,7 @@
 ---
 title: Free flow over porous media 2D
-permalink: tutorials-free-flow-over-porous-media-2d.html
+title: Free flow over porous media
+permalink: tutorials-free-flow-over-porous-media.html
 keywords: DuMux, porous media
 summary: Flow-flow coupling example with porous media field and free flow field.
 ---
