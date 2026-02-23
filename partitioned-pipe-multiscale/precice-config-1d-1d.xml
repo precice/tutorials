@@ -17,67 +17,52 @@
     <use-data name="Pressure" />
   </mesh>
 
-  <mesh name="Fluid3DLeft-Mesh" dimensions="3">
+  <mesh name="Fluid1DLeft-Mesh" dimensions="3">
     <use-data name="Velocity" />
     <use-data name="Pressure" />
   </mesh>
 
   <participant name="Fluid1DRight">
     <provide-mesh name="Fluid1DRight-Mesh" />
-    <receive-mesh name="Fluid3DLeft-Mesh" from="Fluid3DLeft" api-access="false" />
+    <receive-mesh name="Fluid1DLeft-Mesh" from="Fluid1DLeft" api-access="false" />
     <write-data name="Pressure" mesh="Fluid1DRight-Mesh" />
     <read-data name="Velocity" mesh="Fluid1DRight-Mesh" />
-    <mapping:axial-geometric-multiscale
+    <mapping:nearest-neighbor
       direction="read"
-      multiscale-dimension="1d-3d"
-      multiscale-cross-section="circle"
-      multiscale-type="collect"
-      multiscale-radius="10.0"
-      multiscale-axis="z"
-      from="Fluid3DLeft-Mesh"
+      from="Fluid1DLeft-Mesh"
       to="Fluid1DRight-Mesh"
       constraint="consistent" />
     <export:vtu directory="precice-exports" />
   </participant>
 
-  <participant name="Fluid3DLeft">
-    <provide-mesh name="Fluid3DLeft-Mesh" />
+  <participant name="Fluid1DLeft">
+    <provide-mesh name="Fluid1DLeft-Mesh" />
     <receive-mesh name="Fluid1DRight-Mesh" from="Fluid1DRight" api-access="false" />
-    <read-data name="Pressure" mesh="Fluid3DLeft-Mesh" />
-    <write-data name="Velocity" mesh="Fluid3DLeft-Mesh" />
-    <mapping:axial-geometric-multiscale
+    <read-data name="Pressure" mesh="Fluid1DLeft-Mesh" />
+    <write-data name="Velocity" mesh="Fluid1DLeft-Mesh" />
+    <mapping:nearest-neighbor
       direction="read"
-      multiscale-dimension="1d-3d"
-      multiscale-cross-section="circle"
-      multiscale-type="spread"
-      multiscale-cross-section-profile="uniform"
-      multiscale-radius="10.0"
-      multiscale-axis="z"
       from="Fluid1DRight-Mesh"
-      to="Fluid3DLeft-Mesh"
+      to="Fluid1DLeft-Mesh"
       constraint="consistent" />
     <export:vtu directory="precice-exports" />
   </participant>
 
-  <m2n:sockets acceptor="Fluid1DRight" connector="Fluid3DLeft" exchange-directory=".." />
+  <m2n:sockets acceptor="Fluid1DRight" connector="Fluid1DLeft" exchange-directory=".." />
 
   <coupling-scheme:parallel-implicit>
     <time-window-size value="0.01" />
     <max-time value="20.0" />
-    <participants first="Fluid3DLeft" second="Fluid1DRight" />
-    <exchange data="Velocity" mesh="Fluid3DLeft-Mesh" from="Fluid3DLeft" to="Fluid1DRight" />
-    <exchange data="Pressure" mesh="Fluid1DRight-Mesh" from="Fluid1DRight" to="Fluid3DLeft" />
+    <participants first="Fluid1DLeft" second="Fluid1DRight" />
+    <exchange data="Velocity" mesh="Fluid1DLeft-Mesh" from="Fluid1DLeft" to="Fluid1DRight" />
+    <exchange data="Pressure" mesh="Fluid1DRight-Mesh" from="Fluid1DRight" to="Fluid1DLeft" />
     <max-iterations value="100" />
-    <relative-convergence-measure limit="1.0e-3" data="Velocity" mesh="Fluid3DLeft-Mesh" />
+    <relative-convergence-measure limit="1.0e-3" data="Velocity" mesh="Fluid1DLeft-Mesh" />
     <relative-convergence-measure limit="1.0e-3" data="Pressure" mesh="Fluid1DRight-Mesh" />
-    <acceleration:IQN-ILS>
-      <data mesh="Fluid3DLeft-Mesh" name="Velocity" />
+    <acceleration:aitken>
+      <data mesh="Fluid1DLeft-Mesh" name="Velocity" />
       <data mesh="Fluid1DRight-Mesh" name="Pressure" />
-      <preconditioner type="residual-sum" />
       <initial-relaxation value="1.0" />
-      <max-used-iterations value="3" />
-      <time-windows-reused value="10" />
-      <filter type="QR1" limit="1e-6" />
-    </acceleration:IQN-ILS>
+    </acceleration:aitken>
   </coupling-scheme:parallel-implicit>
 </precice-configuration>

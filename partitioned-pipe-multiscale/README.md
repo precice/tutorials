@@ -39,6 +39,9 @@ Two coupling directions are possible:
 - **1D → 3D**: The 1D solver provides the interface velocity to the 3D solver, which responds with pressure.  
 - **3D → 1D**: The 3D solver provides the velocity, and the 1D solver returns the pressure.
 
+In addition to the 1D–3D setup, this tutorial also includes configurations for **1D–1D** and **3D–3D** coupling.  
+These variants can be beneficial for validation studies, solver comparisons, or for investigating the influence of model dimensionality
+
 The outlet pressure is set to
 
 $$
@@ -79,10 +82,14 @@ preCICE configuration for the 3D-1D simulation:
 First, select which coupling you want to run. This sets the correct `precice-config.xml` symlink:
 
 ```bash
-# Choose one (1D → 3D or 3D → 1D)
+# Choose one configuration
 ./setcase.sh 1d3d
 # or
 ./setcase.sh 3d1d
+# or
+./setcase.sh 1d1d
+# or
+./setcase.sh 3d3d
 ```
 
 Open **two terminals** and start the corresponding participants for your chosen setup.
