@@ -118,7 +118,7 @@ def main():
     current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     logging.info(f"About to run the following tests {systemtests_to_run}")
-    for number, systemtest in enumerate(systemtests_to_run):
+    for number, systemtest in enumerate(systemtests_to_run, start=1):
         logging.info(f"Started running {systemtest},  {number}/{len(systemtests_to_run)}")
         t = time.perf_counter()
         result = systemtest.run_for_reference_results(run_directory)

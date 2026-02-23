@@ -69,7 +69,7 @@ def main():
     logging.info(f"About to run the following systemtest in the directory {run_directory}:\n {systemtests_to_run}")
 
     results = []
-    for number, systemtest in enumerate(systemtests_to_run):
+    for number, systemtest in enumerate(systemtests_to_run, start=1):
         logging.info(f"Started running {systemtest},  {number}/{len(systemtests_to_run)}")
         t = time.perf_counter()
         result = systemtest.run(run_directory)
