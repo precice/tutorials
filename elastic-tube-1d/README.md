@@ -43,6 +43,61 @@ Both fluid and solid participant are supported in:
 - *Python*: example solvers using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html). The run script installs these automatically via pip in a virtual environment.
 - *Rust*: example solvers using the preCICE [Rust bindings](https://precice.org/installation-bindings-rust.html). They need `cargo` to be installed.
 
+## Python callback interface tutorial track
+
+This case now includes a runnable callback variant matching the Python callback interface from the preCICE documentation:
+[configuration-action: Python callback interface](https://precice.org/configuration-action.html#python-callback-interface).
+
+The callback variant uses:
+
+- `precice-config-callback.xml` (adds `<action:python ...>` on `Solid`)
+- `solid-python/pressureRampAction.py` (defines `performAction(time, sourceData, targetData)`)
+- callback entry points `fluid-python/FluidSolverCallback.py` and `solid-python/SolidSolverCallback.py`
+
+### Goal
+
+Show a complete end-to-end callback setup while keeping the same physical model and participants.
+
+### Running the callback variant
+
+In two terminals:
+
+```bash
+cd solid-python
+bash run-callback.sh
+```
+
+```bash
+cd fluid-python
+bash run-callback.sh
+```
+
+This runs the same tube case with a Python action callback that ramps pressure for `t < 0.2`.
+
+### Compare callback vs baseline
+
+1. Baseline:
+
+   ```bash
+   cd solid-python && ./run.sh
+   cd fluid-python && ./run.sh
+   ```
+
+2. Callback variant:
+
+   ```bash
+   cd solid-python && bash run-callback.sh
+   cd fluid-python && bash run-callback.sh
+   ```
+
+3. Compare post-processing:
+
+   ```bash
+   ./plot-diameter.sh
+   ```
+
+You can inspect callback behavior by editing `solid-python/pressureRampAction.py`.
+
 ## Running the Simulation
 
 Choose one solver for each pariticipant, then open two separate terminals and start each soler by calling the respective run script.
