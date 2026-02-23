@@ -22,25 +22,7 @@ This tutorial extends the study conducted in [2], which implemented the water ha
 In that study, the cross-section of the pipe was square. In this tutorial, this has been changed to a circular cross-section.  
 In the following, $\mathrm{1D}$ denotes the reduced-order domain (e.g., a Nutils solver) and $\mathrm{3D}$ denotes the full 3D CFD domain (e.g., OpenFOAM).
 
-The problem consists of a straight pipe of length  
-
-$$
-L = 1000~\text{m}
-$$
-
-and diameter  
-
-$$
-D = 2~\text{m}.
-$$
-
-We partition the domain at  
-
-$$
-y_c = 500~\text{m},
-$$
-
-where the coupling interface is located.  
+The problem consists of a straight pipe of length  $L = 1000\,\mathrm{m}$ and diameter $D = 2\,\mathrm{m}$. We partition the domain at $y_c = 500\,\mathrm{m}$, where the coupling interface is located.  
 The **1D domain** solves the unsteady compressible flow equations using Nutils, while the **3D domain** is solved using OpenFOAM.  
 Both solvers are coupled via preCICE by exchanging the **pressure** and **axial velocity** at the interface.
 
@@ -49,25 +31,8 @@ Two coupling directions are possible:
 - **1D → 3D**: The 1D solver provides the interface pressure to the 3D solver, which responds with velocity.  
 - **3D → 1D**: The 3D solver provides the pressure, and the 1D solver returns the velocity.
 
-The initial inlet pressure is set to  
-
-$$
-p_\text{in} = 98100~\text{Pa}.
-$$
-
-The opening valve at the outlet is modeled through a prescribed outlet velocity, which increases linearly from  
-
-$$
-0~\text{m/s} \quad \text{to} \quad 1~\text{m/s}
-$$
-
-over the first  
-
-$$
-t = 5~\text{s}
-$$
-
-and remains constant afterwards.  
+The initial inlet pressure is set to $p_{\mathrm{in}} = 98100\,\mathrm{Pa}$.
+The opening valve at the outlet is modeled through a prescribed outlet velocity, which increases linearly from $0\,\mathrm{m/s}$ to $1\,\mathrm{m/s}$ over the first $t = 5\,\mathrm{s}$, and remains constant afterwards.  
 This sudden valve opening generates pressure disturbances that propagate through the pipe, resulting in the characteristic **pressure wave oscillations** known as the *water hammer* phenomenon.
 
 ---
