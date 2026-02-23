@@ -4,6 +4,10 @@ keywords: OpenFOAM, Nutils, preCICE, geometric-multiscale, fluid, transient
 summary: The Partitioned Water Hammer tutorial simulates unsteady pressure wave propagation in pipe systems using different 1D and 3D configurations coupled via preCICE.
 ---
 
+{% note %}
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/water-hammer), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/water-hammer) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+{% endnote %}
+
 ## Setup
 
 We solve a **partitioned water hammer problem** using a 1D–3D coupling approach.  
@@ -16,7 +20,7 @@ These variants can be beneficial for validation studies, solver comparisons, or 
 The case setup is inspired by [1].  
 This tutorial extends the study conducted in [2], which implemented the water hammer benchmark using a 1D–3D coupling with preCICE.  
 In that study, the cross-section of the pipe was square. In this tutorial, this has been changed to a circular cross-section.  
-In the following, \( \text{1D} \) denotes the reduced-order domain (e.g., a Nutils solver) and \( \text{3D} \) denotes the full 3D CFD domain (e.g., OpenFOAM).
+In the following, $\mathrm{1D}$ denotes the reduced-order domain (e.g., a Nutils solver) and $\mathrm{3D}$ denotes the full 3D CFD domain (e.g., OpenFOAM).
 
 The problem consists of a straight pipe of length  
 
