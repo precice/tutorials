@@ -1,5 +1,4 @@
 ---
-title: Free flow over porous media 2D
 title: Free flow over porous media
 permalink: tutorials-free-flow-over-porous-media.html
 keywords: DuMux, porous media
