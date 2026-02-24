@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=schemas/components.schema.json
 bare: # A default component used when the solver does not have any dependencies apart from preCICE itself
   repository: https://github.com/precice/precice
   template: component-templates/bare.yaml

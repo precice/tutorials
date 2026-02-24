@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://precice.org/schemas/tests.schema.json",
+  "title": "preCICE System Tests",
+  "description": "Schema for defining system test suites that specify which tutorial-case combinations to run and their expected reference results.",
+  "type": "object",
+  "required": ["test_suites"],
+  "additionalProperties": false,
+  "properties": {
+    "test_suites": {
+      "type": "object",
+      "description": "A mapping of test suite names to their definitions. Each test suite groups a set of tutorial runs.",
+      "additionalProperties": {
+        "$ref": "#/definitions/test_suite"
+      }
+    }
+  },
+  "definitions": {
+    "test_suite": {
+      "type": "object",
+      "description": "A test suite groups one or more tutorial runs with specific case combinations.",
+      "required": ["tutorials"],
+      "additionalProperties": false,
+      "properties": {
+        "tutorials": {
+          "type": "array",
+          "description": "The list of tutorial runs included in this test suite.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/tutorial_run"
+          }
+        }
+      }
+    },
+    "tutorial_run": {
+      "type": "object",
+      "description": "Defines a single tutorial execution with a specific case combination and its reference result.",
+      "required": ["path", "case_combination", "reference_result"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "The relative path of the tutorial directory (e.g., 'flow-over-heated-plate', 'perpendicular-flap'). Must match a tutorial's 'path' field in its metadata.yaml."
+        },
+        "case_combination": {
+          "type": "array",
+          "description": "An ordered list of case names that form the combination to run. Each name must match a case defined in the tutorial's metadata.yaml.",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "description": "Name of a case (e.g., 'fluid-openfoam', 'solid-calculix')."
+          }
+        },
+        "reference_result": {
+          "type": "string",
+          "description": "Relative path to the reference result archive (.tar.gz) used for field comparison.",
+          "pattern": ".*\\.tar\\.gz$"
+        }
+      }
+    }
+  }
+}

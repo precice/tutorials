@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://precice.org/schemas/component-template.schema.json",
+  "title": "preCICE Component Template (Docker Compose Service Fragment)",
+  "description": "Schema for component template YAML files. These are Jinja2 templates that render into a single Docker Compose service definition. The rendered output follows a subset of the Docker Compose service specification. Note: Jinja2 template expressions ({{ ... }}, {% ... %}) are present in the raw files and will not validate against this schema directly — this schema describes the expected *structure* of the template.",
+  "type": "object",
+  "required": ["build", "depends_on", "volumes", "command"],
+  "additionalProperties": false,
+  "properties": {
+    "build": {
+      "type": "object",
+      "description": "Docker build configuration for the service image.",
+      "required": ["context", "args", "target"],
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "type": "string",
+          "description": "Build context path (Jinja2 template variable: {{ dockerfile_context }})."
+        },
+        "args": {
+          "description": "Build arguments passed to Docker. Rendered from Jinja2 loop over build_arguments.",
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "Build argument in KEY=VALUE format."
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "target": {
+          "type": "string",
+          "description": "The Docker multi-stage build target to use (e.g., 'precice', 'openfoam_adapter', 'fenics_adapter')."
+        }
+      }
+    },
+    "depends_on": {
+      "type": "object",
+      "description": "Service dependencies. Typically depends on the 'prepare' service.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "condition": {
+            "type": "string",
+            "description": "Condition for the dependency (e.g., 'service_completed_successfully').",
+            "enum": [
+              "service_started",
+              "service_healthy",
+              "service_completed_successfully"
+            ]
+          }
+        },
+        "required": ["condition"],
+        "additionalProperties": false
+      }
+    },
+    "volumes": {
+      "type": "array",
+      "description": "Volume mounts for the service container.",
+      "items": {
+        "type": "string",
+        "description": "Volume mount in HOST:CONTAINER format."
+      }
+    },
+    "command": {
+      "description": "The command to run inside the container. Typically a bash script that changes to the case directory and executes the run command.",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    }
+  }
+}

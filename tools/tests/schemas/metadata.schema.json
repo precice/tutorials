@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://precice.org/schemas/metadata.schema.json",
+  "title": "preCICE Tutorial Metadata",
+  "description": "Schema for tutorial metadata.yaml files that describe a preCICE tutorial, its participants, and available solver cases.",
+  "type": "object",
+  "required": ["name", "path", "url", "participants", "cases"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Human-readable name of the tutorial (e.g., 'Flow over heated plate')."
+    },
+    "path": {
+      "type": "string",
+      "description": "Relative path of the tutorial directory within the tutorials repository (e.g., 'flow-over-heated-plate')."
+    },
+    "url": {
+      "type": "string",
+      "description": "URL to the tutorial's documentation page on precice.org.",
+      "format": "uri"
+    },
+    "participants": {
+      "type": "array",
+      "description": "The list of coupling participants in the simulation (e.g., ['Fluid', 'Solid']).",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "cases": {
+      "type": "object",
+      "description": "A mapping of case names to their definitions. Each case represents a solver setup for a specific participant.",
+      "additionalProperties": {
+        "$ref": "#/definitions/case"
+      }
+    }
+  },
+  "definitions": {
+    "case": {
+      "type": "object",
+      "description": "A case definition specifying which participant it serves, the directory, run command, and which component (adapter) it uses.",
+      "required": ["participant", "directory", "run", "component"],
+      "additionalProperties": false,
+      "properties": {
+        "participant": {
+          "type": "string",
+          "description": "The participant this case belongs to. Must match one of the entries in the top-level 'participants' list."
+        },
+        "directory": {
+          "type": "string",
+          "description": "Relative path to the case directory within the tutorial (e.g., './fluid-openfoam')."
+        },
+        "run": {
+          "type": "string",
+          "description": "The command to execute this case (typically './run.sh')."
+        },
+        "component": {
+          "type": "string",
+          "description": "Name of the component (adapter) from components.yaml that this case uses (e.g., 'openfoam-adapter', 'fenics-adapter')."
+        }
+      }
+    }
+  }
+}

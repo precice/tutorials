@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://precice.org/schemas/components.schema.json",
+  "title": "preCICE System Test Components",
+  "description": "Schema for defining adapter components used in preCICE system tests. Each component maps to a Docker build target and a Jinja2 service template.",
+  "type": "object",
+  "additionalProperties": {
+    "$ref": "#/definitions/component"
+  },
+  "definitions": {
+    "component": {
+      "type": "object",
+      "description": "A component (adapter) definition including its repository, Docker Compose service template, and build arguments.",
+      "required": ["repository", "template", "build_arguments"],
+      "additionalProperties": false,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "The GitHub repository URL for this component (e.g., 'https://github.com/precice/openfoam-adapter').",
+          "format": "uri"
+        },
+        "template": {
+          "type": "string",
+          "description": "Relative path to the Jinja2 service template YAML file (e.g., 'component-templates/openfoam-adapter.yaml').",
+          "pattern": "^component-templates/.+\\.yaml$"
+        },
+        "build_arguments": {
+          "type": "object",
+          "description": "Docker build arguments passed when building images for this component. Common arguments include PLATFORM, PRECICE_REF, and adapter-specific refs.",
+          "additionalProperties": {
+            "$ref": "#/definitions/build_argument"
+          }
+        }
+      }
+    },
+    "build_argument": {
+      "type": "object",
+      "description": "A single build argument with its description, default value, and optional value constraints.",
+      "required": ["default"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of what this build argument controls."
+        },
+        "semnantic": {
+          "type": "string",
+          "description": "Semantic description of the build argument (alternative to 'description', used in some components)."
+        },
+        "default": {
+          "type": "string",
+          "description": "The default value for this build argument, used when not overridden via command-line."
+        },
+        "value_options": {
+          "type": "array",
+          "description": "An optional list of allowed values for this argument. If omitted, any value is accepted.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
