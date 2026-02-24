@@ -7,6 +7,7 @@ on:
 jobs:
   gather-refs:
     name: Map Git branches to latest refs
+    if: ${{ github.event.label.name == 'trigger-system-tests' }}
     runs-on: ubuntu-latest
     outputs:
       ref-precice: ${{ steps.ref-precice.outputs.shorthash }}
@@ -23,6 +24,7 @@ jobs:
           owner: precice
           repo: precice
           branch: develop
+          token: ${{ secrets.GITHUB_TOKEN }}
       - id: ref-python-bindings
         name: Get Python bindings ref
         uses: nmbgeek/github-action-get-latest-commit@main
@@ -30,6 +32,7 @@ jobs:
           owner: precice
           repo: python-bindings
           branch: develop
+          token: ${{ secrets.GITHUB_TOKEN }}
       - id: ref-calculix-adapter
         name: Get CalculiX adapter ref
         uses: nmbgeek/github-action-get-latest-commit@main
@@ -37,6 +40,7 @@ jobs:
           owner: precice
           repo: calculix-adapter
           branch: develop
+          token: ${{ secrets.GITHUB_TOKEN }}
       - id: ref-fenics-adapter
         name: Get FEniCS adapter ref
         uses: nmbgeek/github-action-get-latest-commit@main
@@ -44,6 +48,7 @@ jobs:
           owner: precice
           repo: fenics-adapter
           branch: develop
+          token: ${{ secrets.GITHUB_TOKEN }}
       - id: ref-openfoam-adapter
         name: Get OpenFOAM adapter ref
         uses: nmbgeek/github-action-get-latest-commit@main
@@ -51,6 +56,7 @@ jobs:
           owner: precice
           repo: openfoam-adapter
           branch: develop
+          token: ${{ secrets.GITHUB_TOKEN }}
       - id: ref-su2-adapter
         name: Get SU2 adapter ref
         uses: nmbgeek/github-action-get-latest-commit@main
@@ -58,6 +64,7 @@ jobs:
           owner: precice
           repo: su2-adapter
           branch: develop
+          token: ${{ secrets.GITHUB_TOKEN }}
       - id: report-refs
         name: Report Git refs
         run: |
