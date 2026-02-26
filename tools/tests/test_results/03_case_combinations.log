@@ -1,0 +1,18 @@
+Case Combinations Discovery
+===========================
+Command: python print_case_combinations.py
+Date: February 26, 2026
+
+Quickstart Tutorial - Possible Combinations:
+--------------------------------------------
+✓ fluid-openfoam + solid-cpp
+
+Components Required:
+- openfoam-adapter: For OpenFOAM fluid solver
+- bare: C++ compiler and CMake for custom solid solver
+
+Pattern Match:
+Similar to elastic-tube-1d which uses mixed adapter/bare configuration
+
+Status: PASSED ✓
+Case combination valid and properly configured

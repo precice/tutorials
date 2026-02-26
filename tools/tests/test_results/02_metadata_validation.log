@@ -1,0 +1,24 @@
+Metadata Validation - Quickstart Tutorial
+=========================================
+Command: python print_metadata.py
+Date: February 26, 2026
+
+Tutorial: Quickstart
+├── Path: quickstart
+├── URL: https://precice.org/quickstart.html
+├── Participants: ['Fluid', 'Solid']
+└── Cases:
+    ├── fluid-openfoam
+    │   ├── Participant: Fluid
+    │   ├── Directory: ./fluid-openfoam
+    │   ├── Run: ./run.sh
+    │   └── Component: openfoam-adapter
+    │
+    └── solid-cpp
+        ├── Participant: Solid
+        ├── Directory: ./solid-cpp
+        ├── Run: mkdir build && cmake -S . -B build && cmake --build build && ./run.sh
+        └── Component: bare
+
+Status: PASSED ✓
+Metadata file correctly parsed and validated

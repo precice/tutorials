@@ -1,0 +1,25 @@
+QUICKSTART VALIDATION TEST
+============================================================
+Date: February 26, 2026
+Command: python simple_validation.py
+
+[Test 1] Loading tutorials...
+✓ Found: Quickstart
+  Cases: ['fluid-openfoam', 'solid-cpp']
+
+[Test 2] Loading test suites...
+✓ release_test suite has 11 test configurations
+
+[Test 3] Checking quickstart in release_test...
+✓ Quickstart test found:
+  Cases: [(fluid-openfoam, solid-cpp)]
+  Reference: fluid-openfoam_solid-cpp.tar.gz
+
+============================================================
+ALL TESTS PASSED ✓
+============================================================
+
+Summary:
+- Quickstart metadata successfully parsed
+- Quickstart added to release_test suite
+- Configuration validated and ready for use

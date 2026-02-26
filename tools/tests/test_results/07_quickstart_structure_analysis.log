@@ -1,0 +1,121 @@
+Quickstart Tutorial Structure Analysis
+======================================
+Date: February 26, 2026
+
+
+Tutorial Overview
+-----------------
+The quickstart tutorial demonstrates fluid-structure interaction between:
+- OpenFOAM fluid solver (channel flow)
+- Custom C++ rigid body solver (rotating flap)
+
+Coupling is performed through preCICE for force and displacement exchange.
+
+
+Directory Structure
+-------------------
+quickstart/
+├── precice-config.xml          # preCICE coupling configuration
+├── metadata.yaml               # System test metadata (NEW)
+├── fluid-openfoam/            # OpenFOAM participant
+│   ├── run.sh                 # Executes: blockMesh, pimpleFoam
+│   ├── 0/                     # Initial conditions
+│   ├── constant/              # Mesh, properties
+│   └── system/                # OpenFOAM control files
+└── solid-cpp/                 # C++ rigid body participant
+    ├── CMakeLists.txt         # Build configuration
+    ├── rigid_body_solver.cpp  # Main solver code
+    └── run.sh                 # Executes: ./rigid_body_solver
+
+
+Execution Flow
+--------------
+
+Terminal 1: Fluid Participant (OpenFOAM)
+  cd quickstart/fluid-openfoam
+  ./run.sh
+  
+  Steps:
+  1. blockMesh - Generates computational mesh
+  2. pimpleFoam - Solves fluid flow equations
+  3. Couples with preCICE at runtime
+  4. Sends forces to solid
+  5. Receives displacements from solid
+
+Terminal 2: Solid Participant (C++)
+  cd quickstart/solid-cpp
+  mkdir build && cd build
+  cmake ..
+  make
+  cd ..
+  ./run.sh
+  
+  Steps:
+  1. Reads forces from fluid via preCICE
+  2. Computes rigid body rotation (1 DOF)
+  3. Applies rotational spring damping
+  4. Sends displacement back to fluid
+  5. Updates flap position
+
+
+preCICE Configuration
+---------------------
+Coupling scheme: Parallel implicit
+Data exchange:
+  - Fluid -> Solid: Force (vector)
+  - Solid -> Fluid: Displacement (vector)
+
+Meshes:
+  - Fluid-Mesh: Interface of fluid domain
+  - Solid-Mesh: Interface of solid/flap
+
+Mapping: Radial basis function (RBF) for data transfer
+
+
+System Test Integration
+-----------------------
+Test configuration (in tests.yaml):
+  Path: quickstart
+  Cases: [fluid-openfoam, solid-cpp]
+  Components: openfoam-adapter, bare (C++ compiler)
+  
+When executed by system tests:
+1. Docker container spins up with OpenFOAM and preCICE
+2. solid-cpp is compiled with CMake
+3. Both participants start and couple
+4. Simulation runs for 2.5 seconds (default)
+5. Results compared with reference using fieldcompare
+
+
+Expected Results
+----------------
+- Flap oscillates due to fluid forces
+- Spring constant changes at t=1.5s
+- Produces VTK output files for visualization
+- Generates preCICE iteration logs
+- Creates checkpoint data
+
+
+Why This Test Matters
+----------------------
+1. First tutorial new users encounter
+2. Tests OpenFOAM adapter functionality
+3. Validates bare C++ coupling (no adapter)
+4. Demonstrates FSI coupling pattern
+5. Quick runtime suitable for CI/CD
+
+
+Requirements for Execution
+---------------------------
+- preCICE library v3.x
+- OpenFOAM v2512 or compatible
+- OpenFOAM-preCICE adapter v1.3+
+- C++ compiler with C++14 support
+- CMake 3.10.2+
+
+
+Note
+----
+This analysis documents the tutorial structure for system testing.
+Actual execution requires Linux environment with preCICE and OpenFOAM installed.
+System tests run this in Docker containers with all dependencies.

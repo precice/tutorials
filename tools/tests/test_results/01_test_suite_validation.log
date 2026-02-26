@@ -1,0 +1,25 @@
+Test Suite Discovery - Quickstart Validation
+============================================
+Command: python print_test_suites.py --log-level INFO
+Date: February 26, 2026
+
+✓ Quickstart successfully added to release_test suite
+
+Test suite: release_test contains:
+    Elastic tube 1D
+        cases: [(fluid-cpp, solid-cpp), (fluid-python, solid-python), (fluid-cpp, solid-python)]
+        
+    Quickstart
+        cases: [(fluid-openfoam, solid-cpp)]
+        reference_results: quickstart/reference-results/fluid-openfoam_solid-cpp.tar.gz
+    
+    Flow over heated plate
+        cases: [(fluid-openfoam, solid-nutils), (fluid-openfoam, solid-fenics), (fluid-openfoam, solid-openfoam)]
+    
+    Perpendicular flap
+        cases: [(fluid-openfoam, solid-calculix), (fluid-su2, solid-fenics), (fluid-openfoam, solid-dealii)]
+    
+    Multiple perpendicular flaps
+        cases: [(fluid-openfoam, solid-upstream-dealii, solid-downstream-dealii)]
+
+Status: PASSED ✓

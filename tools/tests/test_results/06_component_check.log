@@ -1,0 +1,25 @@
+COMPONENT CONFIGURATION CHECK
+============================================================
+Date: February 26, 2026
+Command: python check_components.py
+
+Components Required for Quickstart:
+------------------------------------------------------------
+
+✓ openfoam-adapter
+  Repository: https://github.com/precice/openfoam-adapter
+  Template: component-templates/openfoam-adapter.yaml
+
+✓ bare
+  Repository: https://github.com/precice/precice
+  Template: component-templates/bare.yaml
+
+============================================================
+Component check complete
+============================================================
+
+Analysis:
+- OpenFOAM adapter: For fluid-openfoam participant
+- Bare: Provides C++ compiler and CMake for solid-cpp participant
+- Both components properly configured
+- Ready for Docker-based system testing

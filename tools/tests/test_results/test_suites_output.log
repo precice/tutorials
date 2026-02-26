@@ -1,0 +1,65 @@
+﻿Using log-level: INFO
+Test suite: openfoam_adapter_pr contains:
+    Flow over heated plate
+        cases: [(fluid-openfoam, solid-openfoam)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz]
+    Perpendicular flap
+        cases: [(fluid-openfoam, solid-calculix)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz]
+
+Test suite: openfoam_adapter_release contains:
+    Flow over heated plate
+        cases: [(fluid-openfoam, solid-openfoam)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz]
+
+Test suite: fenics_test contains:
+    Flow over heated plate
+        cases: [(fluid-openfoam, solid-fenics)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz]
+
+Test suite: nutils_test contains:
+    Flow over heated plate
+        cases: [(fluid-openfoam, solid-nutils)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/flow-over-heated-plate/reference-results/fluid-openfoam_solid-nutils.tar.gz]
+
+Test suite: calculix_test contains:
+    Perpendicular flap
+        cases: [(fluid-openfoam, solid-calculix)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz]
+
+Test suite: su2_test contains:
+    Perpendicular flap
+        cases: [(fluid-su2, solid-fenics)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz]
+
+Test suite: dealii_test contains:
+    Perpendicular flap
+        cases: [(fluid-openfoam, solid-dealii)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/perpendicular-flap/reference-results/fluid-openfoam_solid-dealii.tar.gz]
+    Multiple perpendicular flaps
+        cases: [(fluid-openfoam, solid-upstream-dealii, solid-downstream-dealii)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/perpendicular-flap/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz]
+
+Test suite: elastic_tube_1d_test contains:
+    Elastic tube 1D
+        cases: [(fluid-cpp, solid-cpp), (fluid-python, solid-python), (fluid-cpp, solid-python)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/elastic-tube-1d/reference-results/fluid-cpp_solid-cpp.tar.gz, C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/elastic-tube-1d/reference-results/fluid-python_solid-python.tar.gz, C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/elastic-tube-1d/reference-results/fluid-cpp_solid-python.tar.gz]
+
+Test suite: release_test contains:
+    Elastic tube 1D
+        cases: [(fluid-cpp, solid-cpp), (fluid-python, solid-python), (fluid-cpp, solid-python)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/elastic-tube-1d/reference-results/fluid-cpp_solid-cpp.tar.gz, C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/elastic-tube-1d/reference-results/fluid-python_solid-python.tar.gz, C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/elastic-tube-1d/reference-results/fluid-cpp_solid-python.tar.gz]
+    Quickstart
+        cases: [(fluid-openfoam, solid-cpp)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/quickstart/reference-results/fluid-openfoam_solid-cpp.tar.gz]
+    Flow over heated plate
+        cases: [(fluid-openfoam, solid-nutils), (fluid-openfoam, solid-fenics), (fluid-openfoam, solid-openfoam)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/flow-over-heated-plate/reference-results/fluid-openfoam_solid-nutils.tar.gz, C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz, C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz]
+    Perpendicular flap
+        cases: [(fluid-openfoam, solid-calculix), (fluid-su2, solid-fenics), (fluid-openfoam, solid-dealii)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz, C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz, C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/perpendicular-flap/reference-results/fluid-openfoam_solid-dealii.tar.gz]
+    Multiple perpendicular flaps
+        cases: [(fluid-openfoam, solid-upstream-dealii, solid-downstream-dealii)]
+        reference_results: [C:/Users/nithi/Downloads/tutorials-develop/tutorials-develop/perpendicular-flap/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz]
+
+
