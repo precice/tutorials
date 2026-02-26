@@ -142,7 +142,7 @@ def main():
     # write readme
     for tutorial in reference_result_per_tutorial.keys():
         reference_results_dir = tutorial.path / "reference-results"
-        reference_results_dir.mkdir(parents=True, exist_ok=True)     
+        reference_results_dir.mkdir(parents=True, exist_ok=True)
         with open(reference_results_dir / "reference_results.metadata", 'w') as file:
             ref_results_info = render_reference_results_info(
                 reference_result_per_tutorial[tutorial], build_args, current_time_string)
