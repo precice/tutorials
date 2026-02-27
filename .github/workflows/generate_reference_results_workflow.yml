@@ -10,6 +10,11 @@ on:
         description: 'Commit msg for commit that adds the reference results'
         default: "Adding reference results"
         type: string
+      suites:
+        description: 'Comma-separated test suites to generate reference results for. If empty, all suites are generated.'
+        default: ''
+        required: false
+        type: string
       log_level:
         description: 'Logging verbosity level used for the systemtests'
         default: 'INFO'
@@ -24,6 +29,7 @@ jobs:
         echo "Initiated by: ${{ github.actor }}"
         echo "Running generate_reference_results.py --log-level ${{inputs.log_level}}"
         echo "Using Ref: ${{ inputs.from_ref }}"
+        echo "Suites filter: ${{ inputs.suites || 'all (no filter)' }}"
         echo "Commit message on success:  ${{ inputs.commit_msg }}"
     - name: Move LFS URL to local LFS server
       run: |
@@ -56,15 +62,26 @@ jobs:
         test -f generate_reference_results.py && export GENERATE_REF_RESULTS=generate_reference_results.py
         test -f generate_reference_data.py && export GENERATE_REF_RESULTS=generate_reference_data.py
         echo "Selected $GENERATE_REF_RESULTS to run"
-        python $GENERATE_REF_RESULTS --log-level=${{inputs.log_level}}
+        SUITES_ARG=""
+        if [ -n "${{ inputs.suites }}" ]; then
+          SUITES_ARG="--suites=${{ inputs.suites }}"
+        fi
+        python $GENERATE_REF_RESULTS --log-level=${{inputs.log_level}} $SUITES_ARG
         cd ../../
     - name: Create commit
       if: success()
       run: |
         git checkout ${{ inputs.from_ref }}
-        git add ./*/*/*.tar.gz
-        git add ./*/*.tar.gz
-        git add ./*/reference-results/*.metadata
+        # Add only the changed reference results.
+        # When no suite filter is given, add all reference result files.
+        # When a suite filter is given, only add files that were actually modified.
+        if [ -z "${{ inputs.suites }}" ]; then
+          git add ./*/*/*.tar.gz
+          git add ./*/*.tar.gz
+          git add ./*/reference-results/*.metadata
+        else
+          git add --update '*.tar.gz' '*.metadata'
+        fi
         git commit -m "${{inputs.commit_msg}}"
         git push
     - name: Upload artifacts for debugging

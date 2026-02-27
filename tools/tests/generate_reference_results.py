@@ -86,6 +86,9 @@ def main():
     parser = argparse.ArgumentParser(description='Generate reference data for systemtests')
     parser.add_argument('--rundir', type=str, help='Directory to run the systemstests in.',
                         nargs='?', const=PRECICE_TESTS_RUN_DIR, default=PRECICE_TESTS_RUN_DIR)
+    parser.add_argument('--suites', type=str,
+                        help='Comma-separated test suites to generate reference results for. '
+                             'If not specified, all suites are used.')
     parser.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
                         default='INFO', help='Set the logging level')
 
@@ -99,7 +102,25 @@ def main():
 
     available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
 
-    test_suites = TestSuites.from_yaml(PRECICE_TESTS_DIR / "tests.yaml", available_tutorials)
+    all_test_suites = TestSuites.from_yaml(PRECICE_TESTS_DIR / "tests.yaml", available_tutorials)
+
+    if args.suites:
+        test_suites_requested = args.suites.split(',')
+        test_suites = []
+        for name in test_suites_requested:
+            found = all_test_suites.get_by_name(name)
+            if not found:
+                logging.error(f"Did not find the testsuite with name {name}")
+            else:
+                test_suites.append(found)
+        if not test_suites:
+            raise RuntimeError(
+                f"No matching test suites with names {test_suites_requested} found. "
+                "Use print_test_suites.py to get an overview")
+        logging.info(f"Filtering to requested suites: {[s.name for s in test_suites]}")
+    else:
+        test_suites = all_test_suites
+        logging.info("No --suites filter specified, generating reference results for all suites.")
 
     # Read in parameters
     build_args = SystemtestArguments.from_yaml(PRECICE_TESTS_DIR / "reference_versions.yaml")
