@@ -4,6 +4,10 @@ keywords: OpenFOAM, Nutils, preCICE, geometric multiscale, fluid
 summary: The Partitioned Pipe — Geometric Axial Multiscale tutorial couples a 1D pipe model with a 3D CFD pipe using preCICE.
 ---
 
+{% note %}
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/partitioned-pipe-multiscale), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/partitioned-pipe-multiscale) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+{% endnote %}
+
 ## Setup
 
 We solve a simple **partitioned pipe problem** using a 1D–3D coupling approach.  
