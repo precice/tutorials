@@ -63,7 +63,7 @@
 
   <coupling-scheme:parallel-implicit>
     <time-window-size value="0.01" />
-    <max-time value="20.0" />
+    <max-time value="5.0" />
     <participants first="Fluid3DLeft" second="Fluid1DRight" />
     <exchange data="Velocity" mesh="Fluid3DLeft-Mesh" from="Fluid3DLeft" to="Fluid1DRight" />
     <exchange data="Pressure" mesh="Fluid1DRight-Mesh" from="Fluid1DRight" to="Fluid3DLeft" />
