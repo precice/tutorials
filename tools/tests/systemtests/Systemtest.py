@@ -74,47 +74,83 @@ class SystemtestResult:
     fieldcompare_time: float  # in seconds
 
 
+def _escape_markdown_cell(text: str) -> str:
+    """
+    Escape content for use inside a GitHub Flavored Markdown table cell.
+
+    The pipe character must be escaped as ``\\|`` because it is the column
+    delimiter in GFM tables.  Other characters that can trigger unwanted
+    inline formatting (backtick, asterisk, underscore, tilde) are also
+    escaped so that e.g. a tutorial path like ``fluid_openfoam`` is not
+    rendered as italic text.
+    """
+    text = str(text)
+    # Order matters: backslash first to avoid double-escaping
+    for char in ('\\', '|', '`', '*', '_', '~'):
+        text = text.replace(char, f'\\{char}')
+    return text
+
+
 def display_systemtestresults_as_table(results: List[SystemtestResult]):
     """
-    Prints the result in a nice tabluated way to get an easy overview
+    Prints the result in a nice tabluated way to get an easy overview.
+
+    Plain-text output goes to stdout with fixed-width columns.
+    A properly-escaped GitHub Flavored Markdown table is appended to
+    GITHUB_STEP_SUMMARY when that environment variable is set.
     """
     def _get_length_of_name(results: List[SystemtestResult]) -> int:
         return max(len(str(result.systemtest)) for result in results)
 
     max_name_length = _get_length_of_name(results)
 
-    header = f"| {'systemtest':<{max_name_length + 2}} "\
+    # --- plain-text output (terminal) ---
+    header_plain = f"| {'systemtest':<{max_name_length + 2}} "\
         f"| {'success':^7} "\
         f"| {'building time [s]':^17} "\
         f"| {'solver time [s]':^15} "\
         f"| {'fieldcompare time [s]':^21} |"
     separator_plaintext = "+-" + "-" * (max_name_length + 2) + \
         "-+---------+-------------------+-----------------+-----------------------+"
-    separator_markdown = "| --- | --- | --- | --- | --- |"
 
     print(separator_plaintext)
-    print(header)
+    print(header_plain)
     print(separator_plaintext)
-
-    if "GITHUB_STEP_SUMMARY" in os.environ:
-        with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
-            print(header, file=f)
-            print(separator_markdown, file=f)
 
     for result in results:
-        row = f"| {str(result.systemtest):<{max_name_length + 2}} "\
+        row_plain = f"| {str(result.systemtest):<{max_name_length + 2}} "\
             f"| {result.success:^7} "\
             f"| {result.build_time:^17.1f} "\
             f"| {result.solver_time:^15.1f} "\
             f"| {result.fieldcompare_time:^21.1f} |"
-        print(row)
+        print(row_plain)
         print(separator_plaintext)
-        if "GITHUB_STEP_SUMMARY" in os.environ:
-            with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
-                print(row, file=f)
 
+    # --- GitHub step summary (Markdown) ---
     if "GITHUB_STEP_SUMMARY" in os.environ:
+        # Use a clean, properly-escaped Markdown table — never reuse the
+        # fixed-width plain-text format because extra spaces are collapsed
+        # and pipe characters in cell content would break the table structure.
+        md_header = "| systemtest | success | building time [s] | solver time [s] | fieldcompare time [s] |"
+        md_separator = "| --- | --- | --- | --- | --- |"
+
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+            print(md_header, file=f)
+            print(md_separator, file=f)
+            for result in results:
+                # Represent success as a clear visual symbol rather than the
+                # Python literal ``True`` / ``False``.
+                success_icon = ":white_check_mark:" if result.success else ":x:"
+                # Escape all cell content that may contain Markdown-special chars.
+                name_escaped = _escape_markdown_cell(str(result.systemtest))
+                md_row = (
+                    f"| {name_escaped} "
+                    f"| {success_icon} "
+                    f"| {result.build_time:.1f} "
+                    f"| {result.solver_time:.1f} "
+                    f"| {result.fieldcompare_time:.1f} |"
+                )
+                print(md_row, file=f)
             print("\n\n", file=f)
             print(
                 "In case a test fails, download the archive from the bottom of this page and look into each `stdout.log` and `stderr.log`. The time spent in each step might already give useful hints.",
@@ -134,6 +170,9 @@ class Systemtest:
     arguments: SystemtestArguments
     case_combination: CaseCombination
     reference_result: ReferenceResult
+    # Maximum number of seconds to wait for a docker-compose process before
+    # considering it hung and killing it.  Defaults to GLOBAL_TIMEOUT.
+    timeout: int = GLOBAL_TIMEOUT
     params_to_use: Dict[str, str] = field(init=False)
     env: Dict[str, str] = field(init=False)
 
@@ -354,6 +393,12 @@ class Systemtest:
                 env_file.write(f"{key}={value}\n")
 
     def __unpack_reference_results(self):
+        if not self.reference_result.path.exists():
+            raise FileNotFoundError(
+                f"Reference results archive not found at '{self.reference_result.path}'. "
+                f"Please generate reference results first by running "
+                f"'python generate_reference_results.py' from the tools/tests directory, "
+                f"or download them from the CI artifacts stored in Git LFS.")
         with tarfile.open(self.reference_result.path) as reference_results_tared:
             # specify which folder to extract to
             reference_results_tared.extractall(self.system_test_dir / PRECICE_REL_REFERENCE_DIR)
@@ -372,7 +417,13 @@ class Systemtest:
         """
         logging.debug(f"Running fieldcompare for {self}")
         time_start = time.perf_counter()
-        self.__unpack_reference_results()
+        try:
+            self.__unpack_reference_results()
+        except FileNotFoundError as e:
+            elapsed_time = time.perf_counter() - time_start
+            error_msg = str(e)
+            logging.error(f"Cannot run field comparison for {self}: {error_msg}")
+            return FieldCompareResult(1, [], [error_msg], self, elapsed_time)
         docker_compose_content = self.__get_field_compare_compose_file()
         stdout_data = []
         stderr_data = []
@@ -394,7 +445,7 @@ class Systemtest:
                                        cwd=self.system_test_dir)
 
             try:
-                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
+                stdout, stderr = process.communicate(timeout=self.timeout)
             except KeyboardInterrupt as k:
                 process.kill()
                 raise KeyboardInterrupt from k
@@ -439,7 +490,7 @@ class Systemtest:
                                        cwd=self.system_test_dir)
 
             try:
-                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
+                stdout, stderr = process.communicate(timeout=self.timeout)
             except KeyboardInterrupt as k:
                 process.kill()
                 # process.send_signal(9)
@@ -483,7 +534,7 @@ class Systemtest:
                                        cwd=self.system_test_dir)
 
             try:
-                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
+                stdout, stderr = process.communicate(timeout=self.timeout)
             except KeyboardInterrupt as k:
                 process.kill()
                 # process.send_signal(9)
