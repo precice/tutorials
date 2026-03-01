@@ -147,6 +147,58 @@ probeLocations
 - `fluid3d-right/postProcessing/probes/0/p`  
 - `fluid3d-right/postProcessing/probes/0/U`
 
+In addition to point probes, the 3D participant samples the **axial pressure distribution** along the pipe centerline using `sampleDict`. This provides the spatial pressure variation along the pipe and allows direct comparison with the 1D solution at the latest time step.
+
+The tutorial includes a `sampleDict` in the 3D cases:
+
+- `fluid3d-left/system/sampleDict`  
+- `fluid3d-right/system/sampleDict`  
+
+**sampleDict (excerpt):**
+
+```cpp
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      sampleDict;
+}
+
+type            sets;
+libs            ("libsampling.so");
+
+setFormat       raw;
+
+sets
+(
+    centerline
+    {
+        type    uniform;
+        axis    z;
+        start   (0 0 0);
+        end     (0 0 20);
+        nPoints 200;
+    }
+);
+
+fields (p);
+```
+
+The sampling is executed automatically during the run.
+
+**Output location:**
+
+```text
+postProcessing/sampleDict/<latestTime>/centerline_p.xy
+```
+
+The file contains two columns:
+
+1. axial coordinate `z`  
+2. pressure `p`
+
 ### 1D domain (Nutils)
 
 The 1D solver writes a `watchpoint.txt` with semicolon-separated time series:
@@ -168,6 +220,27 @@ x u p
 ```
 
 They correspond to the axial position, velocity and pressure at the last time-step, i.e., at \(t = 5\,\mathrm{s}\).
+
+### Plotting axial pressure distribution (optional)
+
+To reproduce the axial pressure distribution shown in the figure below, a helper script is provided:
+
+```bash
+cd visualization-scripts
+python plot-pressure-distribution.py
+```
+
+The script reads the centerline sampling data from the 3D participant (`centerline_p.xy`) and the `final_fields.txt` output from the 1D solver, and combines them to plot the pressure variation along the coupled pipe.
+
+By default, the figures are saved to:
+
+```text
+images/pressure_distribution_*.png
+```
+
+You can select which coupling configurations to plot by editing the `PLOT_CASES` variable inside the script.
+
+The script assumes that the simulation has been executed and that the sampling and solver output files are available.
 
 ### Example visualization
 
