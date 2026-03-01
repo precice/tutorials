@@ -1,0 +1,11 @@
+# Reference results for partitioned-heat-conduction are stored as Git LFS archives.
+#
+# To generate them locally, run from tutorials/tools/tests:
+#
+#   python generate_reference_results.py --tutorial partitioned-heat-conduction \
+#       --case-combination dirichlet-fenics neumann-fenics
+#
+# Expected archives (one per registered case combination in tests.yaml):
+#   dirichlet-fenics_neumann-fenics.tar.gz
+#   dirichlet-nutils_neumann-nutils.tar.gz
+#   dirichlet-openfoam_neumann-openfoam.tar.gz

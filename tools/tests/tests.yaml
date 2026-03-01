@@ -71,6 +71,24 @@ test_suites:
           - solid-upstream-dealii
           - solid-downstream-dealii
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz
+  partitioned_heat_conduction_test:
+    tutorials:
+      - path: partitioned-heat-conduction
+        case_combination:
+          - dirichlet-fenics
+          - neumann-fenics
+        reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-fenics_neumann-fenics.tar.gz
+      - path: partitioned-heat-conduction
+        case_combination:
+          - dirichlet-nutils
+          - neumann-nutils
+        reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-nutils_neumann-nutils.tar.gz
+      - path: partitioned-heat-conduction
+        case_combination:
+          - dirichlet-openfoam
+          - neumann-openfoam
+        reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-openfoam_neumann-openfoam.tar.gz
+
   elastic_tube_1d_test:
     tutorials:
       - path: elastic-tube-1d
