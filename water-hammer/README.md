@@ -181,6 +181,29 @@ where:
 
 ---
 
+### Plotting outlet pressure (optional)
+
+To reproduce the outlet pressure time history shown in the figure below, a helper script is provided:
+
+```bash
+cd visualization-scripts
+python plot-pressure.py
+```
+
+The script reads probe data from the OpenFOAM participant and the `watchpoint.txt` file from the 1D solver and generates outlet pressure plots for the selected coupling configurations.
+
+By default, the figures are saved to:
+
+```text
+images/p_outlet_*.png
+```
+
+You can select which cases to plot by editing the `PLOT_CASES` variable inside the script.
+
+The script assumes that the simulation has been executed and the corresponding output files are available.
+
+---
+
 ### Example visualization
 
 ![Pressure evolution at the outlet of the 3D domain in the 1D–3D simulation](images/tutorials-water-hammer-1d3d-outlet-pressure.png)
