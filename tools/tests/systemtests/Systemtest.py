@@ -22,6 +22,36 @@ import os
 GLOBAL_TIMEOUT = 900
 SHORT_TIMEOUT = 10
 
+# Cached result of docker compose command detection
+_DOCKER_COMPOSE_CMD = None
+
+
+def _get_docker_compose_cmd():
+    """Return the docker compose command list: either ['docker', 'compose'] or ['docker-compose']."""
+    global _DOCKER_COMPOSE_CMD
+    if _DOCKER_COMPOSE_CMD is not None:
+        return _DOCKER_COMPOSE_CMD
+    try:
+        subprocess.run(
+            ['docker', 'compose', 'version'],
+            capture_output=True,
+            timeout=5,
+            check=True,
+        )
+        _DOCKER_COMPOSE_CMD = ['docker', 'compose']
+    except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+        try:
+            subprocess.run(
+                ['docker-compose', 'version'],
+                capture_output=True,
+                timeout=5,
+                check=True,
+            )
+            _DOCKER_COMPOSE_CMD = ['docker-compose']
+        except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+            _DOCKER_COMPOSE_CMD = ['docker', 'compose']  # default; will fail with clear error
+    return _DOCKER_COMPOSE_CMD
+
 
 def slugify(value, allow_unicode=False):
     """
@@ -381,13 +411,11 @@ class Systemtest:
             file.write(docker_compose_content)
         try:
             # Execute docker-compose command
-            process = subprocess.Popen(['docker',
-                                        'compose',
-                                        '--file',
-                                        'docker-compose.field_compare.yaml',
-                                        'up',
-                                        '--exit-code-from',
-                                        'field-compare'],
+            cmd = _get_docker_compose_cmd() + [
+                '-f', 'docker-compose.field_compare.yaml',
+                'up', '--exit-code-from', 'field-compare'
+            ]
+            process = subprocess.Popen(cmd,
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
                                        start_new_session=True,
@@ -428,11 +456,11 @@ class Systemtest:
 
         try:
             # Execute docker-compose command
-            process = subprocess.Popen(['docker',
-                                        'compose',
-                                        '--file',
-                                        'docker-compose.tutorial.yaml',
-                                        'build'],
+            cmd = _get_docker_compose_cmd() + [
+                '-f', 'docker-compose.tutorial.yaml',
+                'build'
+            ]
+            process = subprocess.Popen(cmd,
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
                                        start_new_session=True,
@@ -472,11 +500,11 @@ class Systemtest:
         stderr_data = []
         try:
             # Execute docker-compose command
-            process = subprocess.Popen(['docker',
-                                        'compose',
-                                        '--file',
-                                        'docker-compose.tutorial.yaml',
-                                        'up'],
+            cmd = _get_docker_compose_cmd() + [
+                '-f', 'docker-compose.tutorial.yaml',
+                'up'
+            ]
+            process = subprocess.Popen(cmd,
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
                                        start_new_session=True,

@@ -2,13 +2,15 @@ FROM ubuntu:24.04 AS base_image
 USER root
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
-# We set a sensical value, but still have the possibilty to influence this via the build time arguments. 
+# We set a sensical value, but still have the possibilty to influence this via the build time arguments.
 # When the dockerfile is built using the systemtests.py we set the PRECICE_UID and PRECICE_GID to the user executing the systemtests.
 # This ensures no file ownership problems down the line and is the most easy fix, as we normally built the containers locally
 # If not built via the systemtests.py its either possible to specify manually but 1000 would be the default anyway.
+# Ubuntu 24.04+ images include a default user "ubuntu" with UID/GID 1000; remove it so we can create "precice" with the same UID/GID.
 ARG PRECICE_UID=1000
 ARG PRECICE_GID=1000
-RUN groupadd -g ${PRECICE_GID} precice && useradd -u ${PRECICE_UID} -g ${PRECICE_GID} -ms /bin/bash precice
+RUN userdel ubuntu 2>/dev/null || true; groupdel ubuntu 2>/dev/null || true; \
+    groupadd -g ${PRECICE_GID} precice && useradd -u ${PRECICE_UID} -g ${PRECICE_GID} -ms /bin/bash precice
 ENV PATH="${PATH}:/home/precice/.local/bin" 
 ENV LD_LIBRARY_PATH="/home/precice/.local/lib:${LD_LIBRARY_PATH}" 
 ENV CPATH="/home/precice/.local/include:$CPATH"
@@ -83,7 +85,7 @@ RUN git clone https://github.com/precice/openfoam-adapter.git &&\
 
 FROM precice_dependecies AS python_bindings
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
-ARG PYTHON_BINDINGS_REF
+ARG PYTHON_BINDINGS_REF=master
 USER precice
 WORKDIR /home/precice
 # Builds the precice python bindings for python3
@@ -100,7 +102,7 @@ RUN add-apt-repository -y ppa:fenics-packages/fenics && \
     apt-get -qq update && \
     apt-get -qq install --no-install-recommends fenics
 USER precice
-ARG FENICS_ADAPTER_REF
+ARG FENICS_ADAPTER_REF=master
 # Building fenics-adapter
 RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
@@ -123,9 +125,9 @@ RUN apt-get -qq update && \
     apt-get -qq install libarpack2-dev libspooles-dev libyaml-cpp-dev
 ARG CALCULIX_VERSION
 USER precice
-#Download Calculix
+#Download Calculix (retry for transient DNS/network)
 WORKDIR /home/precice
-RUN wget http://www.dhondt.de/ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
+RUN wget --tries=3 --retry-connrefused --timeout=30 http://www.dhondt.de/ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
     tar xvjf ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
     rm -fv ccx_${CALCULIX_VERSION}.src.tar.bz2
 

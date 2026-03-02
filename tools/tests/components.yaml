@@ -117,6 +117,9 @@ calculix-adapter:
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
+    PYTHON_BINDINGS_REF:
+      description: Git ref of the Python bindings (required when shared Dockerfile builds python_bindings stage)
+      default: "master"
     CALCULIX_VERSION:
       description: Version of Calculix to use
       default: "2.20"
