@@ -17,4 +17,6 @@ cases:
     participant: Micro-Manager
     directory: ./micro-dumux
     run: ./run.sh -l /home/precice/dumux
-    component: dumux-adapter
+    component:
+      - dumux-adapter
+      - micro-manager
