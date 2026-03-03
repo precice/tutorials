@@ -204,16 +204,12 @@ RUN python3 -m venv /home/precice/venv && \
     cd micro-manager && \
     git checkout ${MICRO_MANAGER_VERSION} && \
     pip3 install .
-
-FROM micro_manager AS pybind11
-USER precice
 WORKDIR /home/precice
-COPY --from=precice /home/precice/.local/ /home/precice/.local/
 RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install pybind11
 
-FROM pybind11 AS dumux_adapter
+FROM precice_dependencies AS dumux_adapter
 USER root
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DUNE_VERSION
