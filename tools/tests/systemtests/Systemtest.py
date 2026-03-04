@@ -6,6 +6,8 @@ import shutil
 from pathlib import Path
 from paths import PRECICE_REL_OUTPUT_DIR, PRECICE_TOOLS_DIR, PRECICE_REL_REFERENCE_DIR, PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
 
+FIELDCOMPARE_DIFFS_DIR = "fieldcompare-diffs"
+
 from metadata_parser.metdata import Tutorial, CaseCombination, Case, ReferenceResult
 from .SystemtestArguments import SystemtestArguments
 
@@ -413,6 +415,24 @@ class Systemtest:
             elapsed_time = time.perf_counter() - time_start
             return FieldCompareResult(1, stdout_data, stderr_data, self, elapsed_time)
 
+    def __archive_fieldcompare_diffs(self):
+        """
+        Copy fieldcompare diff VTK files from precice-exports into fieldcompare-diffs/
+        so they are easy to find in CI artifacts (issue #441).
+        """
+        precice_exports = self.system_test_dir / PRECICE_REL_OUTPUT_DIR
+        if not precice_exports.exists():
+            return
+        diff_files = list(precice_exports.glob("diff_*")) + list(precice_exports.glob("*_diff.*"))
+        if not diff_files:
+            return
+        dest_dir = self.system_test_dir / FIELDCOMPARE_DIFFS_DIR
+        dest_dir.mkdir(exist_ok=True)
+        for f in diff_files:
+            if f.is_file():
+                shutil.copy2(f, dest_dir / f.name)
+        logging.debug(f"Archived {len(diff_files)} fieldcompare diff file(s) to {dest_dir} for {self}")
+
     def _build_docker(self):
         """
         Builds the docker image
@@ -563,6 +583,7 @@ class Systemtest:
                 fieldcompare_time=0)
 
         fieldcompare_result = self._run_field_compare()
+        self.__archive_fieldcompare_diffs()
         std_out.extend(fieldcompare_result.stdout_data)
         std_err.extend(fieldcompare_result.stderr_data)
         if fieldcompare_result.exit_code != 0:
