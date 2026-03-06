@@ -6,7 +6,7 @@ LOGFILE="$CASENAME.log"
 export LOGFILE
 
 rfc_email_date() {
-    date --rfc-email 2>/dev/null || date -u '+%a, %d %b %Y %H:%M:%S %z'
+    date --rfc-email 2>/dev/null || date '+%a, %d %b %Y %H:%M:%S %z'
 }
 
 STARTDATE="$(rfc_email_date)"
@@ -14,7 +14,7 @@ STARTTIME="$(date +%s)"
 echo "Started on: $STARTDATE" | tee "$CASENAME.log" 2>&1
 
 close_log() {
-    echo "Started on:  $STARTDATE" | tee -a "$LOGFILE" 2>&1
+    echo "Started on: $STARTDATE" | tee -a "$LOGFILE" 2>&1
     ENDDATE="$(rfc_email_date)"
     ENDTIME="$(date +%s)"
     echo "Finished on: $ENDDATE" | tee -a "$LOGFILE" 2>&1
