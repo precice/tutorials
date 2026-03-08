@@ -5,12 +5,15 @@ build:
       - {{key}}={{value}}
     {% endfor %}
   target: python_bindings
+environment:
+  - PRECICE_TUTORIALS_NO_VENV=1
 depends_on:    
   prepare:
     condition: service_completed_successfully
 volumes:
   - {{ run_directory }}:/runs
 command: >
-  /bin/bash -c "id && 
+  /bin/bash -c "id &&
+  [ -n \"$$PRECICE_TUTORIALS_NO_VENV\" ] && (python3 -c 'import precice' || { echo 'ERROR: PRECICE_TUTORIALS_NO_VENV set but precice not found. Check Docker image.'; exit 1; }) ;
   cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&
   {{ run }} | tee system-tests_{{ case_folder }}.log 2>&1"

@@ -91,7 +91,9 @@ WORKDIR /home/precice
 RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
-    pip3 install matplotlib 
+    pip3 install matplotlib
+ENV VIRTUAL_ENV="/home/precice/venv"
+ENV PATH="/home/precice/venv/bin:$PATH"
 
 FROM precice_dependecies AS fenics_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
@@ -105,6 +107,8 @@ ARG FENICS_ADAPTER_REF
 RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
+ENV VIRTUAL_ENV="/home/precice/venv"
+ENV PATH="/home/precice/venv/bin:$PATH"
 
 
 FROM precice_dependecies AS nutils_adapter
@@ -114,6 +118,8 @@ USER precice
 RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install nutils
+ENV VIRTUAL_ENV="/home/precice/venv"
+ENV PATH="/home/precice/venv/bin:$PATH"
 
 
 FROM precice_dependecies AS calculix_adapter
