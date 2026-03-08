@@ -5,6 +5,8 @@ build:
       - {{key}}={{value}}
     {% endfor %}
   target: su2_adapter
+environment:
+  - PRECICE_TUTORIALS_NO_VENV=1
 depends_on:    
   prepare:
     condition: service_completed_successfully
