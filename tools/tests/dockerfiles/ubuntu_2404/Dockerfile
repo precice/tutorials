@@ -196,3 +196,48 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
     git checkout ${DEALII_ADAPTER_REF} && \
     cmake . && \
     make -j $(nproc)
+
+
+FROM precice_dependecies AS micro_manager
+USER precice
+WORKDIR /home/precice
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
+
+ARG MICRO_MANAGER_VERSION
+RUN python3 -m venv /home/precice/venv && \
+    . /home/precice/venv/bin/activate && \
+    git clone https://github.com/precice/micro-manager.git && \
+    cd micro-manager && \
+    git checkout ${MICRO_MANAGER_VERSION} && \
+    pip3 install .
+
+FROM micro_manager AS dumux_adapter
+USER root
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
+ARG DUNE_VERSION
+ARG DUMUX_VERSION
+USER precice
+WORKDIR /home/precice
+RUN mkdir dumux&&\
+    cd dumux&&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION} &&\
+    git clone -b cell_problems https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git &&\
+    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION}
+WORKDIR /home/precice/dumux
+ENV PATH="/home/precice/dumux/dune-common/bin:${PATH}"
+# build core DUNE, DuMuX and the adapter
+ARG DUMUX_ADAPTER_PR
+ARG DUMUX_ADAPTER_REF
+RUN git clone https://github.com/precice/dumux-adapter.git &&\
+    cd dumux-adapter && \
+    if [ -n "${DUMUX_ADAPTER_PR}" ]; then git fetch origin pull/${DUMUX_ADAPTER_PR}/head; fi && \
+    git checkout ${DUMUX_ADAPTER_REF} && \
+    cd .. &&\
+    ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
+    ./dune-common/bin/dunecontrol make -j $(nproc)
