@@ -185,6 +185,25 @@ User-facing tools:
   - `print_case_combinations.py`: Prints all possible combinations of tutorial cases, using the `metadata.yaml` files.
   - `build_docker_images.py`: Build the Docker images for each test
   - `generate_reference_results.py`: Executes the system tests with the versions defined in `reference_versions.yaml` and generates the reference data archives, with the names described in `tests.yaml`. (should only be used by the CI Pipeline)
+  - `update_requirements_reference.py`: Regenerates `requirements-reference.txt` with pinned Python versions from `reference_versions.yaml` (for reproducibility, see issue #610).
+  - `validate_requirements_reference.py`: Validates that `requirements-reference.txt` exists and pyprecice version matches `reference_versions.yaml`.
+
+### requirements-reference.txt
+
+A lockfile-style list of pinned Python dependency versions (pyprecice, numpy, matplotlib, nutils, setuptools) for reproducible builds and distributions (see issue [#610](https://github.com/precice/tutorials/issues/610)). This file is a **reference manifest only**: tutorial `run.sh` scripts keep using their own `requirements.txt` (with loose constraints) to avoid merge back-and-forth; system tests use the Docker image’s venv. The reference file records “versions known to work” for a distribution.
+
+**Update at each release.** For best accuracy (match what CI uses), capture from the systemtest Docker image:
+
+```bash
+docker run --rm <python_bindings_or_fenics_image> pip freeze | python3 update_requirements_reference.py --from-freeze
+```
+
+Or regenerate from `reference_versions.yaml` only (pyprecice from PYTHON_BINDINGS_REF; others from script defaults):
+
+```bash
+cd tools/tests
+python3 update_requirements_reference.py
+```
 
 Implementation scripts:
 

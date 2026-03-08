@@ -1,0 +1,28 @@
+name: Check requirements-reference
+on:
+  push:
+    branches:
+      - master
+      - develop
+    paths:
+      - tools/tests/requirements-reference.txt
+      - tools/tests/reference_versions.yaml
+      - tools/tests/update_requirements_reference.py
+  pull_request:
+    branches:
+      - master
+      - develop
+    paths:
+      - tools/tests/requirements-reference.txt
+      - tools/tests/reference_versions.yaml
+      - tools/tests/update_requirements_reference.py
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Validate requirements-reference
+        run: python3 tools/tests/validate_requirements_reference.py

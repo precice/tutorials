@@ -10,6 +10,8 @@ TODO
   - Add a [sidebar entry](https://github.com/precice/precice.github.io/blob/master/_data/sidebars/tutorial_sidebar.yml)
   - Add it to the [overview](https://github.com/precice/precice.github.io/blob/master/content/tutorials/tutorials.md)
 
+For **release PRs** (new distribution): update `tools/tests/requirements-reference.txt` if `reference_versions.yaml` changed (`python3 tools/tests/update_requirements_reference.py`).
+
 ## Resources
 
 - [Contributing tutorials](https://precice.org/community-contribute-to-precice.html#contributing-tutorials)
