@@ -10,6 +10,7 @@ class TestSuite:
     name: str
     cases_of_tutorial: Dict[Tutorial, List[CaseCombination]]
     reference_results: Dict[Tutorial, List[ReferenceResult]]
+    max_times: Dict[Tutorial, List[Optional[float]]] = field(default_factory=dict)
 
     def __repr__(self) -> str:
         return_string = f"Test suite: {self.name} contains:"
@@ -48,6 +49,7 @@ class TestSuites(list):
             for test_suite_name in test_suites_raw:
                 case_combinations_of_tutorial = {}
                 reference_results_of_tutorial = {}
+                max_times_of_tutorial: Dict[Tutorial, List[Optional[float]]] = {}
                 # iterate over tutorials:
                 for tutorial_case in test_suites_raw[test_suite_name]['tutorials']:
                     tutorial = parsed_tutorials.get_by_path(tutorial_case['path'])
@@ -57,6 +59,7 @@ class TestSuites(list):
                     if tutorial not in case_combinations_of_tutorial:
                         case_combinations_of_tutorial[tutorial] = []
                         reference_results_of_tutorial[tutorial] = []
+                        max_times_of_tutorial[tutorial] = []
 
                     all_case_combinations = tutorial.case_combinations
                     case_combination_requested = CaseCombination.from_string_list(
@@ -65,12 +68,17 @@ class TestSuites(list):
                         case_combinations_of_tutorial[tutorial].append(case_combination_requested)
                         reference_results_of_tutorial[tutorial].append(ReferenceResult(
                             tutorial_case['reference_result'], case_combination_requested))
+                        max_times_of_tutorial[tutorial].append(tutorial_case.get('max_time'))
                     else:
                         raise Exception(
                             f"Could not find the following cases {tutorial_case['case-combination']} in the current metadata of tutorial {tutorial.name}")
 
-                testsuites.append(TestSuite(test_suite_name, case_combinations_of_tutorial,
-                                            reference_results_of_tutorial))
+                testsuites.append(TestSuite(
+                    test_suite_name,
+                    case_combinations_of_tutorial,
+                    reference_results_of_tutorial,
+                    max_times_of_tutorial,
+                ))
 
         return cls(testsuites)
 

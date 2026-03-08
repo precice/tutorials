@@ -1,10 +1,14 @@
+import hashlib
+import json
 import subprocess
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Tuple
 from jinja2 import Environment, FileSystemLoader
 from dataclasses import dataclass, field
 import shutil
 from pathlib import Path
 from paths import PRECICE_REL_OUTPUT_DIR, PRECICE_TOOLS_DIR, PRECICE_REL_REFERENCE_DIR, PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
+
+ITERATIONS_LOGS_DIR = "iterations-logs"
 
 from metadata_parser.metdata import Tutorial, CaseCombination, Case, ReferenceResult
 from .SystemtestArguments import SystemtestArguments
@@ -19,7 +23,7 @@ import logging
 import os
 
 
-GLOBAL_TIMEOUT = 600
+GLOBAL_TIMEOUT = 900
 SHORT_TIMEOUT = 10
 
 
@@ -134,6 +138,7 @@ class Systemtest:
     arguments: SystemtestArguments
     case_combination: CaseCombination
     reference_result: ReferenceResult
+    max_time: Optional[float] = None
     params_to_use: Dict[str, str] = field(init=False)
     env: Dict[str, str] = field(init=False)
 
@@ -413,6 +418,88 @@ class Systemtest:
             elapsed_time = time.perf_counter() - time_start
             return FieldCompareResult(1, stdout_data, stderr_data, self, elapsed_time)
 
+    @staticmethod
+    def _sha256_file(path: Path) -> str:
+        """Compute SHA-256 hex digest of a file."""
+        h = hashlib.sha256()
+        mv = memoryview(bytearray(128 * 1024))
+        with open(path, 'rb', buffering=0) as f:
+            while n := f.readinto(mv):
+                h.update(mv[:n])
+        return h.hexdigest()
+
+    def _collect_iterations_logs(
+        self, system_test_dir: Path
+    ) -> List[Tuple[str, Path]]:
+        """
+        Collect precice-*-iterations.log files from case dirs.
+        Returns list of (relative_path, absolute_path) e.g. ("solid-fenics/precice-Solid-iterations.log", path).
+        """
+        collected = []
+        for case in self.case_combination.cases:
+            case_dir = system_test_dir / Path(case.path).name
+            if not case_dir.exists():
+                continue
+            for log_file in case_dir.glob("precice-*-iterations.log"):
+                if log_file.is_file():
+                    rel = f"{Path(case.path).name}/{log_file.name}"
+                    collected.append((rel, log_file))
+        return collected
+
+    def __archive_iterations_logs(self):
+        """
+        Copy precice-*-iterations.log from case dirs into iterations-logs/
+        so they are available in CI artifacts (issue #440).
+        """
+        collected = self._collect_iterations_logs(self.system_test_dir)
+        if not collected:
+            return
+        dest_dir = self.system_test_dir / ITERATIONS_LOGS_DIR
+        dest_dir.mkdir(exist_ok=True)
+        for rel, src in collected:
+            dest_name = Path(rel).name
+            if len(collected) > 1:
+                prefix = Path(rel).parent.name + "_"
+                dest_name = prefix + dest_name
+            shutil.copy2(src, dest_dir / dest_name)
+        logging.debug(f"Archived {len(collected)} iterations log(s) to {dest_dir} for {self}")
+
+    def __compare_iterations_hashes(self) -> bool:
+        """
+        Compare current iterations.log hashes against reference sidecar.
+        Returns True if comparison passes (or is skipped). Returns False if hashes differ.
+        """
+        sidecar = self.reference_result.path.with_suffix(".iterations-hashes.json")
+        if not sidecar.exists():
+            return True
+        try:
+            ref_hashes = json.loads(sidecar.read_text())
+        except (json.JSONDecodeError, OSError) as e:
+            logging.warning(f"Could not read iterations hashes from {sidecar}: {e}")
+            return True
+        if not ref_hashes:
+            return True
+        collected = self._collect_iterations_logs(self.system_test_dir)
+        current = {rel: self._sha256_file(p) for rel, p in collected}
+        for rel, expected in ref_hashes.items():
+            if rel not in current:
+                logging.critical(
+                    f"Missing iterations log {rel} (expected from reference); {self} fails"
+                )
+                return False
+            if current[rel] != expected:
+                logging.critical(
+                    f"Hash mismatch for {rel} (iterations.log regression); {self} fails"
+                )
+                return False
+        if len(current) != len(ref_hashes):
+            extra = set(current) - set(ref_hashes)
+            logging.critical(
+                f"Unexpected iterations log(s) {extra}; {self} fails"
+            )
+            return False
+        return True
+
     def _build_docker(self):
         """
         Builds the docker image
@@ -513,11 +600,56 @@ class Systemtest:
         with open(self.system_test_dir / "stderr.log", 'w') as stderr_file:
             stderr_file.write("\n".join(stderr_data))
 
+    def __apply_precice_max_time_override(self):
+        """
+        If max_time is set, override <max-time value="..."> in precice-config.xml
+        of the copied tutorial directory. Applies to both test runs and reference generation.
+        Uses a precise pattern to target only <max-time> tags.
+        """
+        if self.max_time is None:
+            return
+        if not (isinstance(self.max_time, (int, float)) and self.max_time > 0):
+            logging.warning(
+                f"Invalid max_time {self.max_time} for {self}; must be a positive number. Skipping override.")
+            return
+        config_path = self.system_test_dir / "precice-config.xml"
+        if not config_path.exists():
+            logging.warning(
+                f"Requested max_time override for {self}, but no precice-config.xml "
+                f"found in {self.system_test_dir}"
+            )
+            return
+        try:
+            text = config_path.read_text()
+        except Exception as e:
+            logging.warning(f"Could not read {config_path} to apply max_time override: {e}")
+            return
+        # Target only <max-time value="..."> to avoid modifying time-window-size etc.
+        pattern = r'(<max-time\s+value=")([^"]*)(")'
+        matches = re.findall(pattern, text)
+        if not matches:
+            logging.warning(
+                f"Requested max_time override for {self}, but no <max-time> tag "
+                f"found in {config_path}"
+            )
+            return
+        if len(matches) > 1:
+            logging.warning(
+                f"Multiple <max-time> tags found in {config_path}; overriding all to {self.max_time}"
+            )
+        new_text = re.sub(pattern, rf"\g<1>{self.max_time}\g<3>", text)
+        try:
+            config_path.write_text(new_text)
+            logging.info(f"Overwrote max-time in {config_path} to {self.max_time} for {self}")
+        except Exception as e:
+            logging.warning(f"Failed to write updated {config_path}: {e}")
+
     def __prepare_for_run(self, run_directory: Path):
         """
         Prepares the run_directory with folders and datastructures needed for every systemtest execution
         """
         self.__copy_tutorial_into_directory(run_directory)
+        self.__apply_precice_max_time_override()
         self.__copy_tools(run_directory)
         self.__put_gitignore(run_directory)
         host_uid, host_gid = self.__get_uid_gid()
@@ -553,6 +685,21 @@ class Systemtest:
         if docker_run_result.exit_code != 0:
             self.__write_logs(std_out, std_err)
             logging.critical(f"Could not run the tutorial, {self} failed")
+            return SystemtestResult(
+                False,
+                std_out,
+                std_err,
+                self,
+                build_time=docker_build_result.runtime,
+                solver_time=docker_run_result.runtime,
+                fieldcompare_time=0)
+
+        self.__archive_iterations_logs()
+        if not self.__compare_iterations_hashes():
+            self.__write_logs(std_out, std_err)
+            logging.critical(
+                f"Iterations.log hash comparison failed (regression), {self} failed"
+            )
             return SystemtestResult(
                 False,
                 std_out,

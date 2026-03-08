@@ -58,10 +58,14 @@ def main():
         for test_suite in test_suites_to_execute:
             tutorials = test_suite.cases_of_tutorial.keys()
             for tutorial in tutorials:
-                for case, reference_result in zip(
-                        test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial]):
+                cases = test_suite.cases_of_tutorial[tutorial]
+                reference_results = test_suite.reference_results[tutorial]
+                max_times = test_suite.max_times.get(
+                    tutorial, [None] * len(cases))
+                for case, reference_result, max_time in zip(
+                        cases, reference_results, max_times):
                     systemtests_to_run.append(
-                        Systemtest(tutorial, build_args, case, reference_result))
+                        Systemtest(tutorial, build_args, case, reference_result, max_time=max_time))
 
     if not systemtests_to_run:
         raise RuntimeError("Did not find any Systemtests to execute.")

@@ -15,6 +15,7 @@ import logging
 
 from paths import PRECICE_TUTORIAL_DIR, PRECICE_TESTS_RUN_DIR, PRECICE_TESTS_DIR, PRECICE_REL_OUTPUT_DIR
 import time
+import json
 
 
 def create_tar_gz(source_folder: Path, output_filename: Path):
@@ -108,10 +109,13 @@ def main():
     for test_suite in test_suites:
         tutorials = test_suite.cases_of_tutorial.keys()
         for tutorial in tutorials:
-            for case, reference_result in zip(
-                    test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial]):
+            cases = test_suite.cases_of_tutorial[tutorial]
+            reference_results = test_suite.reference_results[tutorial]
+            max_times = test_suite.max_times.get(tutorial, [None] * len(cases))
+            for case, reference_result, max_time in zip(
+                    cases, reference_results, max_times):
                 systemtests_to_run.add(
-                    Systemtest(tutorial, build_args, case, reference_result))
+                    Systemtest(tutorial, build_args, case, reference_result, max_time=max_time))
 
     reference_result_per_tutorial = {}
     current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -138,6 +142,16 @@ def main():
         else:
             raise RuntimeError(
                 f"Error executing: \n {systemtest} \n Could not find result folder {reference_result_folder}\n Probably the tutorial did not run through properly. Please check corresponding logs")
+
+        # Write iterations.log hashes sidecar for implicit-coupling regression checks (issue #440)
+        collected = systemtest._collect_iterations_logs(systemtest.get_system_test_dir())
+        if collected:
+            hashes = {
+                rel: Systemtest._sha256_file(p) for rel, p in collected
+            }
+            sidecar = systemtest.reference_result.path.with_suffix(".iterations-hashes.json")
+            sidecar.write_text(json.dumps(hashes, sort_keys=True, indent=2))
+            logging.info(f"Wrote iterations hashes for {systemtest.reference_result.path.name}")
 
     # write readme
     for tutorial in reference_result_per_tutorial.keys():
