@@ -13,6 +13,7 @@ depends_on:
 volumes:
   - {{ run_directory }}:/runs
 command: >
-  /bin/bash -c "id && 
+  /bin/bash -c "id &&
+  [ -n "$$PRECICE_TUTORIALS_NO_VENV" ] && (python3 -c 'import precice' || { echo 'ERROR: PRECICE_TUTORIALS_NO_VENV set but precice not importable. Check Docker image.'; exit 1; }) ;
   cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&
   {{ run }} | tee system-tests_{{ case_folder }}.log 2>&1"
