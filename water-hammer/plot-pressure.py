@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -14,17 +14,10 @@ TXT_T_COL_1B = 1
 TXT_P_COL_1B = 4
 
 FILES = {
-    "1D-3D": ("../fluid3d-right/postProcessing/probes/0/p", "foam"),
-    "3D-1D": ("../fluid1d-right/probes.txt", "txt"),
-    "1D-1D": ("../fluid1d-right/probes.txt", "txt"),
-    "3D-3D": ("../fluid3d-right/postProcessing/probes/0/p", "foam"),
-}
-
-PLOT_CASES = {
-    "1D-3D",
-    # "3D-1D",
-    # "1D-1D",
-    # "3D-3D"
+    "1D-3D": ("fluid3d-right-openfoam/postProcessing/probes/0/p", "foam"),
+    "3D-1D": ("fluid1d-right-nutils/probes.txt", "txt"),
+    "1D-1D": ("fluid1d-right-nutils/probes.txt", "txt"),
+    "3D-3D": ("fluid3d-right-openfoam/postProcessing/probes/0/p", "foam"),
 }
 
 
@@ -81,16 +74,18 @@ def load_txt(path, sep=TXT_SEP, t_col_1b=TXT_T_COL_1B, p_col_1b=TXT_P_COL_1B):
     return crop(t, p)
 
 
-for label in PLOT_CASES:
-    path, kind = FILES[label]
-
-    if kind == "foam":
-        t, p = load_foam(path)
-    else:
-        t, p = load_txt(path)
+for label, (path, kind) in FILES.items():
+    try:
+        if kind == "foam":
+            t, p = load_foam(path)
+        else:
+            t, p = load_txt(path)
+    except FileNotFoundError:
+        print(f"[INFO] Case '{label}' skipped: file not found ({path})")
+        continue
 
     outlet_domain = "1D domain" if label.split("-")[1] == "1D" else "3D domain"
-    out = f"../images/p_outlet_{label.replace('-', '')}.png"
+    out = f"images/p_outlet_{label.replace('-', '')}.png"
 
     plt.figure(figsize=(9, 4.8))
     plt.plot(t, p, linewidth=1.5)

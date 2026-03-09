@@ -80,14 +80,14 @@ Open **two terminals** and start the corresponding participants for your chosen 
 Terminal 1:
 
 ```bash
-cd fluid1d-left
+cd fluid1d-left-nutils
 ./run.sh
 ```
 
 Terminal 2:
 
 ```bash
-cd fluid3d-right
+cd fluid3d-right-openfoam
 ./run.sh
 ```
 
@@ -96,14 +96,14 @@ cd fluid3d-right
 Terminal 1:
 
 ```bash
-cd fluid3d-left
+cd fluid3d-left-openfoam
 ./run.sh
 ```
 
 Terminal 2:
 
 ```bash
-cd fluid1d-right
+cd fluid1d-right-nutils
 ./run.sh
 ```
 
@@ -113,21 +113,21 @@ cd fluid1d-right
 
 ## Visualization
 
-The output of the coupled simulation is written into the folders `fluid1d-left`, `fluid1d-right`, `fluid3d-left`, and `fluid3d-right`, depending on which coupling direction (`1d3d` or `3d1d`) you selected.
+The output of the coupled simulation is written into the folders `fluid1d-left-nutils`, `fluid1d-right-nutils`, `fluid3d-left-openfoam`, and `fluid3d-right-openfoam`, depending on which coupling direction (`1d3d` or `3d1d`) you selected.
 
 ### 3D domain (OpenFOAM)
 
-For the 3D participant, all simulation results are stored in the time directories inside the respective case folder (e.g., `fluid3d-right/`).  
+For the 3D participant, all simulation results are stored in the time directories inside the respective case folder (e.g., `fluid3d-right-openfoam/`).  
 You can visualize the flow field and pressure distribution using **ParaView** by opening the case file:
 
 ```bash
-paraview fluid3d-right/fluid3d-right.foam
+paraview fluid3d-right-openfoam/fluid3d-right-openfoam.foam
 ```
 
 or, for the left domain if applicable:
 
 ```bash
-paraview fluid3d-left/fluid3d-left.foam
+paraview fluid3d-left-openfoam/fluid3d-left-openfoam.foam
 ```
 
 Typical fields to inspect include:
@@ -156,8 +156,8 @@ probeLocations
 
 **Output location:**
 
-- `fluid3d-right/postProcessing/probes/0/p`
-- `fluid3d-right/postProcessing/probes/0/U`
+- `fluid3d-right-openfoam/postProcessing/probes/0/p`
+- `fluid3d-right-openfoam/postProcessing/probes/0/U`
 
 Each file contains a header (commented with `#`) and time-series columns for each probe.
 
@@ -186,21 +186,18 @@ where:
 To reproduce the outlet pressure time history shown in the figure below, a helper script is provided:
 
 ```bash
-cd visualization-scripts
 python plot-pressure.py
 ```
 
-The script reads probe data from the OpenFOAM participant and the `probes.txt` file from the 1D solver and generates outlet pressure plots for the selected coupling configurations.
+The script reads probe data from the OpenFOAM participant and the `probes.txt` file from the 1D solver and generates outlet pressure plots for the available coupling configurations.
+
+If the required output files for a case are not found, that case is automatically skipped.
 
 By default, the figures are saved to:
 
 ```text
 images/p_outlet_*.png
 ```
-
-You can select which cases to plot by editing the `PLOT_CASES` variable inside the script.
-
-The script assumes that the simulation has been executed and the corresponding output files are available.
 
 ---
 
