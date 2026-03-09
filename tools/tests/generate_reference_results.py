@@ -1,4 +1,3 @@
-
 import argparse
 from metadata_parser.metdata import Tutorials, ReferenceResult
 from systemtests.TestSuite import TestSuites
@@ -142,7 +141,9 @@ def main():
 
     # write readme
     for tutorial in reference_result_per_tutorial.keys():
-        with open(tutorial.path / "reference_results.metadata", 'w') as file:
+        reference_results_dir = tutorial.path / "reference-results"
+        reference_results_dir.mkdir(parents=True, exist_ok=True)
+        with open(reference_results_dir / "reference_results.metadata", 'w') as file:
             ref_results_info = render_reference_results_info(
                 reference_result_per_tutorial[tutorial], build_args, current_time_string)
             logging.info(f"Writing results for {tutorial.name}")
