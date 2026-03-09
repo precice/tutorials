@@ -15,8 +15,8 @@ TXT_P_COL_1B = 4
 
 FILES = {
     "1D-3D": ("../fluid3d-right/postProcessing/probes/0/p", "foam"),
-    "3D-1D": ("../fluid1d-right/watchpoint.txt", "txt"),
-    "1D-1D": ("../fluid1d-right/watchpoint.txt", "txt"),
+    "3D-1D": ("../fluid1d-right/probes.txt", "txt"),
+    "1D-1D": ("../fluid1d-right/probes.txt", "txt"),
     "3D-3D": ("../fluid3d-right/postProcessing/probes/0/p", "foam"),
 }
 

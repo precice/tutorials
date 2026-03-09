@@ -165,7 +165,7 @@ Each file contains a header (commented with `#`) and time-series columns for eac
 
 ### 1D domain (Nutils)
 
-The 1D participant writes results to a file named `watchpoint.txt`, containing the temporal evolution of key quantities at selected spatial locations.
+The 1D participant writes results to a file named `probes.txt`, containing the temporal evolution of key quantities at selected spatial locations.
 
 The structure of each line in the file is:
 
@@ -190,7 +190,7 @@ cd visualization-scripts
 python plot-pressure.py
 ```
 
-The script reads probe data from the OpenFOAM participant and the `watchpoint.txt` file from the 1D solver and generates outlet pressure plots for the selected coupling configurations.
+The script reads probe data from the OpenFOAM participant and the `probes.txt` file from the 1D solver and generates outlet pressure plots for the selected coupling configurations.
 
 By default, the figures are saved to:
 
