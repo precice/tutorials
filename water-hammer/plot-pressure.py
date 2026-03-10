@@ -87,9 +87,11 @@ def resolve_input(case_dir):
 
 if len(sys.argv) == 1:
     case_dir = "fluid3d-right-openfoam"
+    case_name = case_dir
     print(f"[INFO] No directory provided. Using default: {case_dir}")
 elif len(sys.argv) == 2:
-    case_dir = sys.argv[1]
+    case_dir = Path(sys.argv[1])
+    case_name = case_dir.name
 else:
     print("Usage: python plot-pressure.py <case-directory>")
     print("Example: python plot-pressure.py fluid3d-right-openfoam")
@@ -97,7 +99,7 @@ else:
 
 allowed_cases = ["fluid3d-right-openfoam", "fluid1d-right-nutils"]
 
-if case_dir not in allowed_cases:
+if case_name not in allowed_cases:
     print(f"[ERROR] Invalid case directory: {case_dir}")
     print("Allowed cases:")
     for c in allowed_cases:
@@ -105,7 +107,7 @@ if case_dir not in allowed_cases:
     sys.exit(1)
 
 try:
-    data_file, loader = resolve_input(case_dir)
+    data_file, loader = resolve_input(case_name)
 except ValueError as e:
     print(f"[ERROR] {e}")
     sys.exit(1)
@@ -115,15 +117,16 @@ if not data_file.is_file():
     sys.exit(1)
 
 t, p = loader(data_file)
-out = f"images/p_outlet_{case_dir}.png"
+out = f"images/p_outlet_{case_name}.png"
 
 plt.figure(figsize=(9, 4.8))
 plt.plot(t, p, linewidth=1.5)
 plt.xlabel("Time [s]")
 plt.ylabel("Pressure p [Pa]")
-plt.title(f"Pressure evolution at the outlet ({case_dir})")
+plt.title(f"Pressure evolution at the outlet ({case_name})")
 plt.grid(True, linewidth=0.3)
 plt.tight_layout()
 
 plt.savefig(out, dpi=200)
 plt.close()
+print(f"[INFO] Image saved to: {out}")
