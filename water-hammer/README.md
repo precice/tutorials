@@ -189,14 +189,40 @@ To reproduce the outlet pressure time history shown in the figure below, a helpe
 python plot-pressure.py
 ```
 
-The script reads probe data from the OpenFOAM participant and the `probes.txt` file from the 1D solver and generates outlet pressure plots for the available coupling configurations.
+By default, the script reads the probe data from the OpenFOAM case:
 
-If the required output files for a case are not found, that case is automatically skipped.
+```bash
+fluid3d-right-openfoam/postProcessing/probes/0/p
+```
 
-By default, the figures are saved to:
+and generates the outlet pressure plot.
 
-```text
-images/p_outlet_*.png
+You can also specify the case directory explicitly:
+
+```bash
+python plot-pressure.py fluid3d-right-openfoam
+```
+
+or
+
+```bash
+python plot-pressure.py fluid1d-right-nutils
+```
+
+The script automatically selects the correct input file depending on the solver:
+
+- **OpenFOAM case (`fluid3d-right-openfoam`)**  
+  Reads probe data from  
+  `postProcessing/probes/0/p`
+
+- **Nutils case (`fluid1d-right-nutils`)**  
+  Reads probe data from  
+  `probes.txt`
+
+The generated plot is saved to:
+
+```bash
+images/p_outlet_<case-directory>.png
 ```
 
 ---
