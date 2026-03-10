@@ -6,7 +6,7 @@ summary: We simulate an advection-diffusion-reaction scenario in a fluid in moti
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/channel-transport-reaction). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/channel-transport-reaction), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/channel-transport-reaction) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup

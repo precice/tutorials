@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: "0 4 * * *"
   workflow_dispatch:
-    
+
 jobs:
   gather-refs:
     name: Map Git branches to latest refs
@@ -136,10 +136,12 @@ jobs:
         CALCULIX_VERSION:2.20,\
         CALCULIX_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-calculix-adapter }},\
         FENICS_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-fenics-adapter }},\
-        OPENFOAM_EXECUTABLE:openfoam2312,\
+        OPENFOAM_EXECUTABLE:openfoam2512,\
         OPENFOAM_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-openfoam-adapter }},\
         SU2_VERSION:7.5.1,\
         SU2_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-su2-adapter }},\
+        DUMUX_VERSION:3.7,\
+        MICRO_MANAGER_VERSION:0.8.0,\
         TUTORIALS_REF:${{ needs.gather-refs.outputs.ref-tutorials }}"
       system_tests_branch: develop
       log_level: "INFO"

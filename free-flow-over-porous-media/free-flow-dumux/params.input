@@ -1,0 +1,44 @@
+[FreeFlow]
+EnableUnsymmetrizedVelocityGradientForBeaversJoseph = false
+
+[FreeFlow.Grid]
+Verbosity = true
+LowerLeft = 0 1
+UpperRight = 1 2
+Cells = 40 40
+Grading1 = 1
+
+[Darcy.Grid]
+Verbosity = true
+LowerLeft = 0 0
+UpperRight = 1 1
+Cells = 40 40
+Grading1 = 1
+
+[FreeFlow.Problem]
+Name = free-flow-dumux
+EnableInertiaTerms = false
+PressureDifference = 1e-2
+
+[Darcy.SpatialParams]
+Permeability = 1e-6 # m^2
+Porosity = 0.4
+AlphaBeaversJoseph = 1.0
+
+[Problem]
+Name = fvca-iterative
+EnableGravity = false
+CouplingMode = ReconstructFreeFlowNormalStress
+
+[Vtk]
+AddVelocity = 1
+
+[Output]
+EnableCSVWriter = false
+
+[precice-adapter-config]
+participant_name = Free-Flow
+precice_config_file_path = ../precice-config.xml
+interfaces.1.mesh_name = Free-Flow-Mesh
+interfaces.1.read_data.1.name = Velocity
+interfaces.1.write_data.1.name = Pressure

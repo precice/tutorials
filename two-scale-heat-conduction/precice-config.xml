@@ -6,85 +6,78 @@
 
   <profiling mode="fundamental" synchronize="false" />
 
-  <data:scalar name="k_00" />
-  <data:scalar name="k_01" />
-  <data:scalar name="k_10" />
-  <data:scalar name="k_11" />
-  <data:scalar name="porosity" />
-  <data:scalar name="concentration" />
-  <data:scalar name="micro_sim_time" />
-  <data:scalar name="grain_size" />
-  <data:scalar name="active_state" />
-  <data:scalar name="active_steps" />
+  <data:scalar name="K00" />
+  <data:scalar name="K01" />
+  <data:scalar name="K10" />
+  <data:scalar name="K11" />
+  <data:scalar name="Porosity" />
+  <data:scalar name="Concentration" />
+  <data:scalar name="Grain-Size" />
+  <data:scalar name="Active-State" />
+  <data:scalar name="Active-Steps" />
 
-  <mesh name="macro-mesh" dimensions="2">
-    <use-data name="k_00" />
-    <use-data name="k_01" />
-    <use-data name="k_10" />
-    <use-data name="k_11" />
-    <use-data name="porosity" />
-    <use-data name="concentration" />
-    <use-data name="micro_sim_time" />
-    <use-data name="grain_size" />
-    <use-data name="active_state" />
-    <use-data name="active_steps" />
+  <mesh name="Macro-Mesh" dimensions="2">
+    <use-data name="K00" />
+    <use-data name="K01" />
+    <use-data name="K10" />
+    <use-data name="K11" />
+    <use-data name="Porosity" />
+    <use-data name="Concentration" />
+    <use-data name="Grain-Size" />
+    <use-data name="Active-State" />
+    <use-data name="Active-Steps" />
   </mesh>
 
-  <participant name="macro-heat">
-    <provide-mesh name="macro-mesh" />
-    <read-data name="k_00" mesh="macro-mesh" />
-    <read-data name="k_01" mesh="macro-mesh" />
-    <read-data name="k_10" mesh="macro-mesh" />
-    <read-data name="k_11" mesh="macro-mesh" />
-    <read-data name="porosity" mesh="macro-mesh" />
-    <write-data name="concentration" mesh="macro-mesh" />
+  <participant name="Macro">
+    <provide-mesh name="Macro-Mesh" />
+    <read-data name="K00" mesh="Macro-Mesh" />
+    <read-data name="K01" mesh="Macro-Mesh" />
+    <read-data name="K10" mesh="Macro-Mesh" />
+    <read-data name="K11" mesh="Macro-Mesh" />
+    <read-data name="Porosity" mesh="Macro-Mesh" />
+    <write-data name="Concentration" mesh="Macro-Mesh" />
   </participant>
 
   <participant name="Micro-Manager">
-    <receive-mesh name="macro-mesh" from="macro-heat" direct-access="true" safety-factor="0.0" />
-    <read-data name="concentration" mesh="macro-mesh" />
-    <write-data name="k_00" mesh="macro-mesh" />
-    <write-data name="k_01" mesh="macro-mesh" />
-    <write-data name="k_10" mesh="macro-mesh" />
-    <write-data name="k_11" mesh="macro-mesh" />
-    <write-data name="porosity" mesh="macro-mesh" />
-    <write-data name="micro_sim_time" mesh="macro-mesh" />
-    <write-data name="grain_size" mesh="macro-mesh" />
-    <write-data name="active_state" mesh="macro-mesh" />
-    <write-data name="active_steps" mesh="macro-mesh" />
+    <receive-mesh name="Macro-Mesh" from="Macro" direct-access="true" safety-factor="0.0" />
+    <read-data name="Concentration" mesh="Macro-Mesh" />
+    <write-data name="K00" mesh="Macro-Mesh" />
+    <write-data name="K01" mesh="Macro-Mesh" />
+    <write-data name="K10" mesh="Macro-Mesh" />
+    <write-data name="K11" mesh="Macro-Mesh" />
+    <write-data name="Porosity" mesh="Macro-Mesh" />
+    <write-data name="Grain-Size" mesh="Macro-Mesh" />
+    <write-data name="Active-State" mesh="Macro-Mesh" />
+    <write-data name="Active-Steps" mesh="Macro-Mesh" />
     <export:vtu directory="precice-exports" />
   </participant>
 
-  <m2n:sockets
-    acceptor="Micro-Manager"
-    connector="macro-heat"
-    network="lo"
-    exchange-directory=".." />
+  <m2n:sockets acceptor="Micro-Manager" connector="Macro" exchange-directory=".." />
 
   <coupling-scheme:serial-implicit>
-    <participants first="macro-heat" second="Micro-Manager" />
-    <max-time value="0.02" />
+    <participants first="Macro" second="Micro-Manager" />
+    <max-time value="0.025" />
     <time-window-size value="1.0e-2" />
     <max-iterations value="30" />
-    <exchange data="k_00" mesh="macro-mesh" from="Micro-Manager" to="macro-heat" />
-    <exchange data="k_01" mesh="macro-mesh" from="Micro-Manager" to="macro-heat" />
-    <exchange data="k_10" mesh="macro-mesh" from="Micro-Manager" to="macro-heat" />
-    <exchange data="k_11" mesh="macro-mesh" from="Micro-Manager" to="macro-heat" />
-    <exchange data="porosity" mesh="macro-mesh" from="Micro-Manager" to="macro-heat" />
+    <exchange data="K00" mesh="Macro-Mesh" from="Micro-Manager" to="Macro" />
+    <exchange data="K01" mesh="Macro-Mesh" from="Micro-Manager" to="Macro" />
+    <exchange data="K10" mesh="Macro-Mesh" from="Micro-Manager" to="Macro" />
+    <exchange data="K11" mesh="Macro-Mesh" from="Micro-Manager" to="Macro" />
+    <exchange data="Porosity" mesh="Macro-Mesh" from="Micro-Manager" to="Macro" />
     <exchange
-      data="concentration"
-      mesh="macro-mesh"
-      from="macro-heat"
+      data="Concentration"
+      mesh="Macro-Mesh"
+      from="Macro"
       to="Micro-Manager"
       initialize="true" />
-    <relative-convergence-measure limit="1e-3" data="k_00" mesh="macro-mesh" />
-    <relative-convergence-measure limit="1e-3" data="k_11" mesh="macro-mesh" />
-    <relative-convergence-measure limit="1e-3" data="porosity" mesh="macro-mesh" />
-    <relative-convergence-measure limit="1e-3" data="concentration" mesh="macro-mesh" />
+    <relative-convergence-measure limit="1e-3" data="K00" mesh="Macro-Mesh" />
+    <relative-convergence-measure limit="1e-3" data="K11" mesh="Macro-Mesh" />
+    <relative-convergence-measure limit="1e-3" data="Porosity" mesh="Macro-Mesh" />
+    <relative-convergence-measure limit="1e-3" data="Concentration" mesh="Macro-Mesh" />
     <acceleration:IQN-ILS>
-      <data name="k_00" mesh="macro-mesh" />
-      <data name="k_11" mesh="macro-mesh" />
-      <data name="porosity" mesh="macro-mesh" />
+      <data name="K00" mesh="Macro-Mesh" />
+      <data name="K11" mesh="Macro-Mesh" />
+      <data name="Porosity" mesh="Macro-Mesh" />
       <preconditioner type="residual-sum" />
       <initial-relaxation value="0.9" />
       <max-used-iterations value="40" />
