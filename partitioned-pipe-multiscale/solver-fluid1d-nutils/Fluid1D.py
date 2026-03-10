@@ -91,7 +91,7 @@ def main(nelems=400, dt=0.01, theta=0.5, u_in=0.1, p_out=0, rho=1, nu=10, R=5, s
     t = 0.0
     bezier = domain.sample('bezier', 2)
 
-    f = open("watchpoint.txt", "w")
+    f = open("probes.txt", "w")
 
     # --- Time loop with preCICE coupling ---
     while participant.is_coupling_ongoing():

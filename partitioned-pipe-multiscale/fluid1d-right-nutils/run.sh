@@ -8,6 +8,6 @@ python3 -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt && pip freeze > pip-installed-packages.log
 
-NUTILS_RICHOUTPUT=no python3 ../solver-fluid1d/Fluid1D.py side=Left
+NUTILS_RICHOUTPUT=no python3 ../solver-fluid1d-nutils/Fluid1D.py side=Right
 
 close_log

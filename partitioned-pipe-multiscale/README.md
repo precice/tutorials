@@ -72,14 +72,14 @@ Open **two terminals** and start the corresponding participants for your chosen 
 Terminal 1:
 
 ```bash
-cd fluid1d-left
+cd fluid1d-left-nutils
 ./run.sh
 ```
 
 Terminal 2:
 
 ```bash
-cd fluid3d-right
+cd fluid3d-right-openfoam
 ./run.sh
 ```
 
@@ -88,14 +88,14 @@ cd fluid3d-right
 Terminal 1:
 
 ```bash
-cd fluid3d-left
+cd fluid3d-left-openfoam
 ./run.sh
 ```
 
 Terminal 2:
 
 ```bash
-cd fluid1d-right
+cd fluid1d-right-nutils
 ./run.sh
 ```
 
@@ -103,21 +103,21 @@ cd fluid1d-right
 
 ## Visualization
 
-The output of the coupled simulation is written into the folders `fluid1d-left`, `fluid1d-right`, `fluid3d-left`, and `fluid3d-right`, depending on which coupling direction (`1d3d` or `3d1d`) you selected.
+The output of the coupled simulation is written into the folders `fluid1d-left-nutils`, `fluid1d-right-nutils`, `fluid3d-left-openfoam`, and `fluid3d-right-openfoam`, depending on which coupling direction (`1d3d` or `3d1d`) you selected.
 
 ### 3D domain (OpenFOAM)
 
-For the 3D participant, all simulation results are stored in the time directories inside the respective case folder (e.g., `fluid3d-right/`).  
+For the 3D participant, all simulation results are stored in the time directories inside the respective case folder (e.g., `fluid3d-right-openfoam/`).  
 You can visualize the flow field and pressure distribution using **ParaView** by opening the case file:
 
 ```bash
-paraview fluid3d-right/fluid3d-right.foam
+paraview fluid3d-right-openfoam/fluid3d-right-openfoam.foam
 ```
 
 or, for the left domain if applicable:
 
 ```bash
-paraview fluid3d-left/fluid3d-left.foam
+paraview fluid3d-left-openfoam/fluid3d-left-openfoam.foam
 ```
 
 Typical fields to inspect include:  
@@ -144,15 +144,15 @@ probeLocations
 
 **Output location:**  
 
-- `fluid3d-right/postProcessing/probes/0/p`  
-- `fluid3d-right/postProcessing/probes/0/U`
+- `fluid3d-right-openfoam/postProcessing/probes/0/p`  
+- `fluid3d-right-openfoam/postProcessing/probes/0/U`
 
 In addition to point probes, the 3D participant samples the **axial pressure distribution** along the pipe centerline using `sampleDict`. This provides the spatial pressure variation along the pipe and allows direct comparison with the 1D solution at the latest time step.
 
 The tutorial includes a `sampleDict` in the 3D cases:
 
-- `fluid3d-left/system/sampleDict`  
-- `fluid3d-right/system/sampleDict`  
+- `fluid3d-left-openfoam/system/sampleDict`  
+- `fluid3d-right-openfoam/system/sampleDict`  
 
 **sampleDict (excerpt):**
 
@@ -201,7 +201,7 @@ The file contains two columns:
 
 ### 1D domain (Nutils)
 
-The 1D solver writes a `watchpoint.txt` with semicolon-separated time series:
+The 1D solver writes a `probes.txt` with semicolon-separated time series:
 
 ```text
 time; p_in; u_in; p_out; u_out; p_mid; u_mid
@@ -226,21 +226,48 @@ They correspond to the axial position, velocity and pressure at the last time-st
 To reproduce the axial pressure distribution shown in the figure below, a helper script is provided:
 
 ```bash
-cd visualization-scripts
 python plot-pressure-distribution.py
 ```
 
-The script reads the centerline sampling data from the 3D participant (`centerline_p.xy`) and the `final_fields.txt` output from the 1D solver, and combines them to plot the pressure variation along the coupled pipe.
+By default, the script uses the `1d3d` case.
+
+You can also specify the coupling configuration explicitly:
+
+```bash
+python plot-pressure-distribution.py 1d3d
+```
+
+```bash
+python plot-pressure-distribution.py 3d1d
+```
+
+```bash
+python plot-pressure-distribution.py 1d1d
+```
+
+```bash
+python plot-pressure-distribution.py 3d3d
+```
+
+Allowed cases are:
+
+- `1d3d`
+- `3d1d`
+- `1d1d`
+- `3d3d`
+
+Depending on the selected case, the script reads:
+
+- `final_fields.txt` from the 1D Nutils solver
+- `centerline_p.xy` from the 3D OpenFOAM participant
+
+and combines both datasets to plot the pressure distribution along the coupled pipe.
 
 By default, the figures are saved to:
 
 ```text
-images/pressure_distribution_*.png
+images/pressure_distribution_<case>.png
 ```
-
-You can select which coupling configurations to plot by editing the `PLOT_CASES` variable inside the script.
-
-The script assumes that the simulation has been executed and that the sampling and solver output files are available.
 
 ### Example visualization
 
