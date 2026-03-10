@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import sys
+from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -12,13 +14,6 @@ FOAM_P_COL = 1
 TXT_SEP = ";"
 TXT_T_COL_1B = 1
 TXT_P_COL_1B = 4
-
-FILES = {
-    "1D-3D": ("fluid3d-right-openfoam/postProcessing/probes/0/p", "foam"),
-    "3D-1D": ("fluid1d-right-nutils/probes.txt", "txt"),
-    "1D-1D": ("fluid1d-right-nutils/probes.txt", "txt"),
-    "3D-3D": ("fluid3d-right-openfoam/postProcessing/probes/0/p", "foam"),
-}
 
 
 def crop(t, y):
@@ -74,26 +69,61 @@ def load_txt(path, sep=TXT_SEP, t_col_1b=TXT_T_COL_1B, p_col_1b=TXT_P_COL_1B):
     return crop(t, p)
 
 
-for label, (path, kind) in FILES.items():
-    try:
-        if kind == "foam":
-            t, p = load_foam(path)
-        else:
-            t, p = load_txt(path)
-    except FileNotFoundError:
-        print(f"[INFO] Case '{label}' skipped: file not found ({path})")
-        continue
+def resolve_input(case_dir):
+    parts = case_dir.split("-")
+    last = parts[-1]
 
-    outlet_domain = "1D domain" if label.split("-")[1] == "1D" else "3D domain"
-    out = f"images/p_outlet_{label.replace('-', '')}.png"
+    if last == "openfoam":
+        data_file = Path(case_dir) / "postProcessing" / "probes" / "0" / "p"
+        loader = load_foam
+    elif last == "nutils":
+        data_file = Path(case_dir) / "probes.txt"
+        loader = load_txt
+    else:
+        raise ValueError(f"Unknown case type '{last}'. Expected a directory ending in ...-openfoam' or '...-nutils'.")
 
-    plt.figure(figsize=(9, 4.8))
-    plt.plot(t, p, linewidth=1.5)
-    plt.xlabel("Time [s]")
-    plt.ylabel("Pressure p [Pa]")
-    plt.title(f"Pressure evolution at the outlet of the {outlet_domain} ({label})")
-    plt.grid(True, linewidth=0.3)
-    plt.tight_layout()
+    return data_file, loader
 
-    plt.savefig(out, dpi=200)
-    plt.close()
+
+if len(sys.argv) == 1:
+    case_dir = "fluid3d-right-openfoam"
+    print(f"[INFO] No directory provided. Using default: {case_dir}")
+elif len(sys.argv) == 2:
+    case_dir = sys.argv[1]
+else:
+    print("Usage: python plot-pressure.py <case-directory>")
+    print("Example: python plot-pressure.py fluid3d-right-openfoam")
+    sys.exit(1)
+
+allowed_cases = ["fluid3d-right-openfoam", "fluid1d-right-nutils"]
+
+if case_dir not in allowed_cases:
+    print(f"[ERROR] Invalid case directory: {case_dir}")
+    print("Allowed cases:")
+    for c in allowed_cases:
+        print(f"  - {c}")
+    sys.exit(1)
+
+try:
+    data_file, loader = resolve_input(case_dir)
+except ValueError as e:
+    print(f"[ERROR] {e}")
+    sys.exit(1)
+
+if not data_file.is_file():
+    print(f"[ERROR] File not found: {data_file}")
+    sys.exit(1)
+
+t, p = loader(data_file)
+out = f"images/p_outlet_{case_dir}.png"
+
+plt.figure(figsize=(9, 4.8))
+plt.plot(t, p, linewidth=1.5)
+plt.xlabel("Time [s]")
+plt.ylabel("Pressure p [Pa]")
+plt.title(f"Pressure evolution at the outlet ({case_dir})")
+plt.grid(True, linewidth=0.3)
+plt.tight_layout()
+
+plt.savefig(out, dpi=200)
+plt.close()
