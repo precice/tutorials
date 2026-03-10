@@ -139,3 +139,5 @@ plt.grid(True)
 plt.tight_layout()
 plt.savefig(out, dpi=300)
 plt.close()
+
+print(f"[INFO] Image saved to: {out}")
