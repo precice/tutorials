@@ -28,7 +28,7 @@ Two coupling directions are possible:
 - **1D → 3D**: The 1D solver provides the interface velocity to the 3D solver, which responds with pressure.  
 - **3D → 1D**: The 3D solver provides the velocity, and the 1D solver returns the pressure.
 
-The global outlet (end of the rightmost domain) is set to $p_{\mathrm{out}} = 0\,\mathrm{Pa}$.
+The global outlet (end of the rightmost domain) is set to $p_{\mathrm{out}} = 0 \mathrm{Pa}$.
 
 For the **3D → 1D** coupling, the 3D inlet velocity is prescribed as a **parabolic (Poiseuille)** profile with a bulk velocity of $u_{\mathrm{in}} = 0.1\,\mathrm{m/s}$
 implemented using a `codedFixedValue` boundary condition. This ensures a physically realistic velocity distribution consistent with the 1D model.
