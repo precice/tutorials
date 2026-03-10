@@ -58,7 +58,7 @@ preCICE configuration for the 3D–1D simulation:
 
 ## Running the Simulation
 
-First, select which coupling you want to run. This sets the correct `precice-config.xml` symlink.
+First, select which coupling you want to run. This sets the correct `precice-config.xml` symlink (by default, set to `1d3d`).
 
 ```bash
 # Choose one configuration
@@ -93,6 +93,8 @@ cd fluid3d-right-openfoam
 
 ### Example B — 3D → 1D coupling
 
+Run `./setcase.sh 3d1d` and then navigate to the respective directories.
+
 Terminal 1:
 
 ```bash
@@ -106,8 +108,6 @@ Terminal 2:
 cd fluid1d-right-nutils
 ./run.sh
 ```
-
-> Tip: If you switch coupling direction later, rerun `./setcase.sh` with the other option before launching the participants.
 
 ---
 
