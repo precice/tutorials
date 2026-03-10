@@ -19,7 +19,7 @@ These variants can be beneficial for validation studies, solver comparisons, or 
 
 In the following, $\mathrm{1D}$ denotes the reduced-order domain (e.g., a Nutils solver) and $\mathrm{3D}$ denotes the full 3D CFD domain (e.g., OpenFOAM).
 
-The problem consists of a straight pipe of length $L = 40\,\mathrm{m}$ and diameter $D = 10\,\mathrm{m}$. We partition the domain at $z_c = 20\,\mathrm{m}$, where the coupling interface is located. The pipe axis is aligned with the z-axis.
+The problem consists of a straight pipe of length $L = 40 \mathrm{m}$ and diameter $D = 10 \mathrm{m}$. We partition the domain at $z_c = 20 \mathrm{m}$, where the coupling interface is located. The pipe axis is aligned with the z-axis.
 The **1D domain** solves the flow equations using Nutils, while the **3D domain** is solved using OpenFOAM.  
 Both solvers are coupled via preCICE by exchanging the **pressure** and **axial velocity** at the interface.
 
@@ -30,10 +30,10 @@ Two coupling directions are possible:
 
 The global outlet (end of the rightmost domain) is set to $p_{\mathrm{out}} = 0 \mathrm{Pa}$.
 
-For the **3D → 1D** coupling, the 3D inlet velocity is prescribed as a **parabolic (Poiseuille)** profile with a bulk velocity of $u_{\mathrm{in}} = 0.1\,\mathrm{m/s}$
+For the **3D → 1D** coupling, the 3D inlet velocity is prescribed as a **parabolic (Poiseuille)** profile with a bulk velocity of $u_{\mathrm{in}} = 0.1 \mathrm{m/s}$
 implemented using a `codedFixedValue` boundary condition. This ensures a physically realistic velocity distribution consistent with the 1D model.
 
-For the **1D → 3D** coupling, the inlet velocity is set to $u_{\mathrm{in}} = 0.1\,\mathrm{m/s}$.
+For the **1D → 3D** coupling, the inlet velocity is set to $u_{\mathrm{in}} = 0.1 \mathrm{m/s}$.
 
 ## Configuration
 
@@ -219,7 +219,7 @@ The 1D solver also writes a `final_fields.txt` with space-separated values:
 x u p
 ```
 
-They correspond to the axial position, velocity and pressure at the last time-step, i.e., at $t = 5\,\mathrm{s}$.
+They correspond to the axial position, velocity and pressure at the last time-step, i.e., at $t = 5 \mathrm{s}$.
 
 ### Plotting axial pressure distribution (optional)
 
