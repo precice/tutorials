@@ -219,7 +219,7 @@ The 1D solver also writes a `final_fields.txt` with space-separated values:
 x u p
 ```
 
-They correspond to the axial position, velocity and pressure at the last time-step, i.e., at \(t = 5\,\mathrm{s}\).
+They correspond to the axial position, velocity and pressure at the last time-step, i.e., at $t = 5\,\mathrm{s}$.
 
 ### Plotting axial pressure distribution (optional)
 
