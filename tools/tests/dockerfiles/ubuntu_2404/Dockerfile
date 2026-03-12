@@ -207,7 +207,9 @@ RUN python3 -m venv /home/precice/venv && \
 WORKDIR /home/precice
 RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
-    pip3 install pybind11
+    pip3 install pybind11 &&\
+    pybind11_DIR = "/home/precice/venv/lib/python3.13/site-packages/pybind11/share/cmake/pybind11"
+    
 
 FROM micro_manager AS dumux_adapter
 USER root
