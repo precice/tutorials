@@ -209,7 +209,7 @@ RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install pybind11
 
-FROM precice_dependecies AS dumux_adapter
+FROM micro_manager AS dumux_adapter
 USER root
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DUNE_VERSION
