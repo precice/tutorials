@@ -1,0 +1,61 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      U;
+}
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    inlet
+    {
+        type            codedFixedValue;
+        value           uniform (0 0 0);   // dummy fallback
+        name            parabolicInlet;
+
+        code
+        #{
+            // User parameters — edit these:
+            const scalar Uinlet  = 0.1;                  // m/s (set this)
+            const scalar R     = 5.0;                 // m   (pipe radius)
+            const vector axis  = vector(0,0,1);        // flow axis (unit!)
+            const vector ctr   = vector(0,0,0);        // inlet center (global coords)
+
+            // Ensure axis is unit length
+            const vector e = axis/mag(axis);
+
+            // Face centres on this patch
+            const vectorField& Cf = patch().Cf();
+
+            // Reference to the patch field to write into
+            vectorField& Up = *this;
+
+            forAll(Cf, i)
+            {
+                const vector x = Cf[i];
+                const vector rvec = x - ctr;
+                // radial component: subtract axial projection
+                const vector rperp = rvec - (rvec & e)*e;
+                const scalar r = mag(rperp);
+
+                scalar u = 2 * Uinlet * max(0.0, 1.0 - sqr(r/R)); // clip outside R
+                Up[i] = u * e;
+            }
+        #};
+    }
+    outlet
+    {
+        type            fixedGradient;
+        gradient        uniform (0 0 0);
+    }
+    fixedWalls
+    {
+        type            noSlip;
+    }
+}

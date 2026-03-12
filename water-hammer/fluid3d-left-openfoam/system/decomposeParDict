@@ -1,0 +1,16 @@
+FoamFile {
+    version 2.0;
+    class dictionary;
+    object decomposeParDict;
+    format ascii;
+}
+
+numberOfSubdomains 2;
+
+method          simple;
+
+simpleCoeffs
+{
+    n               (1 1 2);
+    delta           0.001;
+}
