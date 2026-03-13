@@ -16,5 +16,5 @@ cases:
   micro-dumux:
     participant: Micro-Manager
     directory: ./micro-dumux
-    run: export pybind11_DIR="/home/precice/venv/lib/python3.13/site-packages/pybind11/share/cmake/pybind11" && ./run.sh -l /home/precice/dumux
+    run: source /home/precice/venv/bin/activate && ./run.sh -l /home/precice/dumux
     component: dumux-adapter
