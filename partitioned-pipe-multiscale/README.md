@@ -1,5 +1,6 @@
 ---
-title: Partitioned Pipe — Geometric Axial Multiscale
+title: Partitioned pipe — Geometric multiscale
+permalink: tutorials-partitioned-pipe-multiscale.html
 keywords: OpenFOAM, Nutils, preCICE, geometric multiscale, fluid
 summary: The Partitioned Pipe — Geometric Axial Multiscale tutorial couples a 1D pipe model with a 3D CFD pipe using preCICE.
 ---
