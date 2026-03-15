@@ -1,5 +1,7 @@
+import hashlib
+import json
 import subprocess
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Tuple
 from jinja2 import Environment, FileSystemLoader
 from dataclasses import dataclass, field
 import shutil
@@ -21,6 +23,7 @@ import os
 
 GLOBAL_TIMEOUT = 600
 SHORT_TIMEOUT = 10
+ITERATIONS_LOGS_DIR = "iterations-logs"
 
 
 def slugify(value, allow_unicode=False):
@@ -513,6 +516,89 @@ class Systemtest:
         with open(self.system_test_dir / "stderr.log", 'w') as stderr_file:
             stderr_file.write("\n".join(stderr_data))
 
+
+    @staticmethod
+    def _sha256_file(path: Path) -> str:
+        """Compute SHA-256 hex digest of a file."""
+        h = hashlib.sha256()
+        mv = memoryview(bytearray(128 * 1024))
+        with open(path, 'rb', buffering=0) as f:
+            while n := f.readinto(mv):
+                h.update(mv[:n])
+        return h.hexdigest()
+
+    def _collect_iterations_logs(self, system_test_dir: Path) -> List[Tuple[str, Path]]:
+        """
+        Collect precice-*-iterations.log files from each case directory.
+        Returns list of (relative_path, absolute_path) e.g.
+        ("solid-fenics/precice-Solid-iterations.log", path).
+        """
+        collected = []
+        for case in self.case_combination.cases:
+            case_dir = system_test_dir / Path(case.path).name
+            if not case_dir.exists():
+                continue
+            for log_file in case_dir.glob("precice-*-iterations.log"):
+                if log_file.is_file():
+                    rel = f"{Path(case.path).name}/{log_file.name}"
+                    collected.append((rel, log_file))
+        return collected
+
+    def __archive_iterations_logs(self):
+        """
+        Copy precice-*-iterations.log files from case directories into
+        iterations-logs/ so they are available in CI artifacts (fixes #440).
+        Prefixes filenames with the case name when multiple cases are present
+        to avoid collisions.
+        """
+        collected = self._collect_iterations_logs(self.system_test_dir)
+        if not collected:
+            logging.debug(f"No iterations logs found for {self}, skipping archiving")
+            return
+        dest_dir = self.system_test_dir / ITERATIONS_LOGS_DIR
+        dest_dir.mkdir(exist_ok=True)
+        for rel, src in collected:
+            dest_name = Path(rel).name
+            if len(collected) > 1:
+                prefix = Path(rel).parent.name + "_"
+                dest_name = prefix + dest_name
+            shutil.copy2(src, dest_dir / dest_name)
+        logging.debug(f"Archived {len(collected)} iterations log(s) to {dest_dir} for {self}")
+
+    def __compare_iterations_hashes(self) -> bool:
+        """
+        Compare current iterations.log SHA-256 hashes against a reference sidecar
+        (.iterations-hashes.json). Returns True if comparison passes or sidecar is absent.
+        Returns False if any hash mismatches or unexpected logs are found.
+        """
+        sidecar = self.reference_result.path.with_suffix(".iterations-hashes.json")
+        if not sidecar.exists():
+            return True
+        try:
+            ref_hashes = json.loads(sidecar.read_text())
+        except (json.JSONDecodeError, OSError) as e:
+            logging.warning(f"Could not read iterations hashes from {sidecar}: {e}")
+            return True
+        if not ref_hashes:
+            return True
+        collected = self._collect_iterations_logs(self.system_test_dir)
+        current = {rel: self._sha256_file(p) for rel, p in collected}
+        for rel, expected in ref_hashes.items():
+            if rel not in current:
+                logging.critical(
+                    f"Missing iterations log {rel!r} (expected from reference); {self} fails")
+                return False
+            if current[rel] != expected:
+                logging.critical(
+                    f"Hash mismatch for {rel!r} (iterations.log regression); {self} fails")
+                return False
+        if len(current) != len(ref_hashes):
+            extra = set(current) - set(ref_hashes)
+            logging.critical(
+                f"Unexpected iterations log(s) {extra}; {self} fails")
+            return False
+        return True
+
     def __prepare_for_run(self, run_directory: Path):
         """
         Prepares the run_directory with folders and datastructures needed for every systemtest execution
@@ -553,6 +639,19 @@ class Systemtest:
         if docker_run_result.exit_code != 0:
             self.__write_logs(std_out, std_err)
             logging.critical(f"Could not run the tutorial, {self} failed")
+            return SystemtestResult(
+                False,
+                std_out,
+                std_err,
+                self,
+                build_time=docker_build_result.runtime,
+                solver_time=docker_run_result.runtime,
+                fieldcompare_time=0)
+
+        self.__archive_iterations_logs()
+        if not self.__compare_iterations_hashes():
+            self.__write_logs(std_out, std_err)
+            logging.critical(f"Iterations.log hash comparison failed (regression), {self} failed")
             return SystemtestResult(
                 False,
                 std_out,
@@ -625,6 +724,13 @@ class Systemtest:
                 solver_time=docker_run_result.runtime,
                 fieldcompare_time=0)
 
+        self.__archive_iterations_logs()
+        collected = self._collect_iterations_logs(self.system_test_dir)
+        if collected:
+            hashes = {rel: self._sha256_file(p) for rel, p in collected}
+            sidecar = self.reference_result.path.with_suffix(".iterations-hashes.json")
+            sidecar.write_text(json.dumps(hashes, sort_keys=True, indent=2))
+            logging.info(f"Wrote iterations hashes for {self.reference_result.path.name}")
         self.__write_logs(std_out, std_err)
         return SystemtestResult(
             True,
