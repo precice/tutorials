@@ -96,6 +96,7 @@ flux_y = fem.Function(W)
 
 # Define initial value
 u_n = fem.Function(V)
+u_n.name = "T"
 u_n.interpolate(initial_value(310))
 
 tdim = mesh.topology.dim
@@ -152,7 +153,7 @@ flux = fem.Function(V_g)
 
 while precice.is_coupling_ongoing():
 
-    if precice.requires_writing_checkpoint():  # write checkpoint
+    if precice.requires_writing_checkpoint():
         precice.store_checkpoint(u_n, t, 0)
 
     precice_dt = precice.get_max_time_step_size()
@@ -188,10 +189,6 @@ while precice.is_coupling_ongoing():
         n += 1
         if n % 20 == 0:
             vtxwriter.write(t)
-
-    if precice.is_time_window_complete():
-        # update boundary condition not necessary because it is constant
-        pass
 
 
 precice.finalize()
