@@ -32,7 +32,7 @@ python-bindings:
       description: Tutorial git reference to use
       default: "master"
     PYTHON_BINDINGS_REF:
-      semnantic: Git ref of the Python bindings to use
+      description: Git ref of the Python bindings to use
       default: "master"
 
 openfoam-adapter:
@@ -75,10 +75,10 @@ fenics-adapter:
       description: Tutorial git reference to use
       default: "master"
     PYTHON_BINDINGS_REF:
-      semnantic: Git ref of the Python bindings to use
+      description: Git ref of the Python bindings to use
       default: "master"
     FENICS_ADAPTER_REF:
-      semnantic: Git ref of the fenics adapter to use
+      description: Git ref of the fenics adapter to use
       default: "master"
 
 nutils-adapter:
@@ -98,7 +98,7 @@ nutils-adapter:
       description: Tutorial git reference to use
       default: "master"
     PYTHON_BINDINGS_REF:
-      semnantic: Git ref of the Python bindings to use
+      description: Git ref of the Python bindings to use
       default: "master"
 
 calculix-adapter:
@@ -190,7 +190,7 @@ dumux-adapter:
       description: Version of DuMux to use
       default: "3.7"
     DUMUX_ADAPTER_REF:
-      semnantic: Git ref of the dumux adapter to use
+      description: Git ref of the dumux adapter to use
       default: "main"
 
 micro-manager:
