@@ -166,3 +166,49 @@ dealii-adapter:
     DEALII_ADAPTER_REF:
       description: Version of deal.ii-adapter to use
       default: "master"
+
+dumux-adapter:
+  repository: https://github.com/precice/dumux-adapter
+  template: component-templates/dumux-adapter.yaml
+  build_arguments:
+    PLATFORM:
+      description: Dockerfile platform used
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      description: Version of preCICE to use
+      default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: "master"
+    DUNE_VERSION:
+      description: Version of DUNE to use
+      default: "2.9"
+    DUMUX_VERSION:
+      description: Version of DuMux to use
+      default: "3.7"
+    DUMUX_ADAPTER_REF:
+      semnantic: Git ref of the dumux adapter to use
+      default: "main"
+
+micro-manager:
+  repository: https://github.com/precice/micro-manager
+  template: component-templates/micro-manager.yaml
+  build_arguments:
+    PLATFORM:
+      description: Dockerfile platform used
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      description: Version of preCICE to use
+      default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: "master"
+    MICRO_MANAGER_VERSION:
+      description: Version of Micro-Manager to use
+      default: "0.8.0"

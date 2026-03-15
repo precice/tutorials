@@ -21,7 +21,7 @@ import logging
 import os
 
 
-GLOBAL_TIMEOUT = 600
+GLOBAL_TIMEOUT = 900
 SHORT_TIMEOUT = 10
 ITERATIONS_LOGS_DIR = "iterations-logs"
 
