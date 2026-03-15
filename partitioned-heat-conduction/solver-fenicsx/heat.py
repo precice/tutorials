@@ -5,7 +5,7 @@ Tutorial I. Springer International Publishing, 2016."
 The example code has been extended with preCICE API calls and mixed boundary conditions to allow for a Dirichlet-Neumann
 coupling of two separate heat equations. It also has been adapted to be compatible with FEniCSx.
 
-The original source code can be found on https://jsdokken.com/dolfinx-tutorial/chapter2/heat_equation.html.
+The original source code can be found on https://jsdokken.com/dolfinx-tutorial/chapter2/heat_equation.html
 
 Heat equation with Dirichlet conditions. (Dirichlet problem)
   u'= Laplace(u) + f  in the unit square [0,1] x [0,1]
@@ -45,7 +45,8 @@ def interface(x):
 class GradientSolver:
     """
     compute flux following http://hplgit.github.io/INF5620/doc/pub/fenics_tutorial1.1/tu2.html#tut-poisson-gradu
-    The solver has been changed since the original version from the link above introduces larger errors
+    The given legacy FEniCS code has been modified to be compatible with FEniCSx.
+    Additionally, the GradientSolver reuses the system matrix and the solver
 
     :param V_g: Vector function space
     :param u: solution where gradient is to be determined
@@ -82,7 +83,6 @@ parser = argparse.ArgumentParser(description="Solving heat equation for simple o
 parser.add_argument("participantName", help="Name of the solver.", type=str, choices=[p.value for p in ProblemType])
 parser.add_argument("-e", "--error-tol", help="set error tolerance", type=float, default=10**-9,)
 args = parser.parse_args()
-# Init variables with arguments
 participant_name = args.participantName
 error_tol = args.error_tol
 
@@ -158,7 +158,6 @@ if problem is ProblemType.DIRICHLET:
 u_n = fem.Function(V)  # IV and solution u for the n-th time step
 u_n.interpolate(u_exact)
 
-# initialise precice
 precice, precice_dt, initial_data = None, 0.0, None
 if problem is ProblemType.DIRICHLET:
     precice = Adapter(adapter_config_filename="precice-adapter-config-D.json", mpi_comm=comm)
@@ -176,7 +175,6 @@ elif problem is ProblemType.NEUMANN:
 # get precice's dt
 precice_dt = precice.get_max_time_step_size()
 dt = np.min([fenics_dt, precice_dt])
-
 
 # Define the variational formualation
 # As $f$ is a constant independent of $t$, we can define it as a constant.
@@ -204,6 +202,7 @@ if problem is ProblemType.NEUMANN:
     # modify Neumann boundary condition on coupling interface, modify weak
     # form correspondingly
     F += dt * coupling_function * v * ufl.ds
+
 a = fem.form(ufl.lhs(F))
 L = fem.form(ufl.rhs(F))
 
@@ -229,7 +228,7 @@ solver.getPC().setType(PETSc.PC.Type.LU)
 if problem is ProblemType.DIRICHLET:
     flux = fem.Function(V_g)
 
-# boundaries point as always to the end of the timestep
+# values of the boundary conditions are set to the end of the timestep
 u_exact.t += dt
 u_D.interpolate(u_exact)
 
@@ -239,7 +238,6 @@ cell_candidates = geometry.compute_colliding_cells(domain, cell_candidates, dofs
 cc = np.array(list(set(cell_candidates.array)))
 
 f_err = fem.Function(V)
-# create writer for output files
 vtxwriter = io.VTXWriter(MPI.COMM_WORLD, f"output_{problem.name}.bp", [f_err])
 vtxwriter.write(t)
 
@@ -286,7 +284,7 @@ while precice.is_coupling_ongoing():
     precice.advance(dt)
     precice_dt = precice.get_max_time_step_size()
 
-    # roll back to checkpoint
+    # revert to checkpoint
     if precice.requires_reading_checkpoint():
         u_cp, t_cp, _ = precice.retrieve_checkpoint()
         u_n.x.array[:] = u_cp.x.array
