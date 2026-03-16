@@ -1,7 +1,8 @@
 ---
-title: Partitioned Water Hammer
+title: Water hammer
+permalink: tutorials-water-hammer.html
 keywords: OpenFOAM, Nutils, preCICE, geometric-multiscale, fluid, transient
-summary: The Partitioned Water Hammer tutorial simulates unsteady pressure wave propagation in pipe systems using different 1D and 3D configurations coupled via preCICE.
+summary: The water hammer tutorial simulates unsteady pressure wave propagation in pipe systems using different 1D and 3D configurations coupled via preCICE.
 ---
 
 {% note %}
