@@ -2,7 +2,7 @@
 import argparse
 from pathlib import Path
 from systemtests.SystemtestArguments import SystemtestArguments
-from systemtests.Systemtest import Systemtest, display_systemtestresults_as_table
+from systemtests.Systemtest import Systemtest, display_systemtestresults_as_table, GLOBAL_TIMEOUT
 from systemtests.TestSuite import TestSuites
 from metadata_parser.metdata import Tutorials, Case
 import logging
@@ -26,6 +26,19 @@ def main():
     parser.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
                         default='INFO', help='Set the logging level')
 
+    parser.add_argument(
+        '--timeout',
+        type=int,
+        default=GLOBAL_TIMEOUT,
+        help=(
+            f'Maximum number of seconds to wait for each docker-compose process '
+            f'(build, run, or field-compare) before killing it and marking the '
+            f'test as failed. Defaults to {GLOBAL_TIMEOUT} seconds. '
+            f'Increase this value for slow machines or large simulations; '
+            f'decrease it to catch hanging tests faster.'
+        )
+    )
+
     # Parse the command-line arguments
     args = parser.parse_args()
 
@@ -33,6 +46,7 @@ def main():
     logging.basicConfig(level=args.log_level, format='%(levelname)s: %(message)s')
 
     print(f"Using log-level: {args.log_level}")
+    print(f"Using timeout:   {args.timeout} seconds")
 
     systemtests_to_run = []
     available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
@@ -61,7 +75,7 @@ def main():
                 for case, reference_result in zip(
                         test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial]):
                     systemtests_to_run.append(
-                        Systemtest(tutorial, build_args, case, reference_result))
+                        Systemtest(tutorial, build_args, case, reference_result, timeout=args.timeout))
 
     if not systemtests_to_run:
         raise RuntimeError("Did not find any Systemtests to execute.")
