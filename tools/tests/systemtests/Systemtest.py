@@ -565,39 +565,39 @@ class Systemtest:
             shutil.copy2(src, dest_dir / dest_name)
         logging.debug(f"Archived {len(collected)} iterations log(s) to {dest_dir} for {self}")
 
-    def __compare_iterations_hashes(self) -> bool:
+    def __compare_iterations_hashes(self) -> tuple[bool, str | None]:
         """
         Compare current iterations.log SHA-256 hashes against a reference sidecar
-        (.iterations-hashes.json). Returns True if comparison passes or sidecar is absent.
-        Returns False if any hash mismatches or unexpected logs are found.
+        (.iterations-hashes.json). Returns (True, None) if comparison passes or sidecar
+        is absent. Returns (False, reason) if any hash mismatches or unexpected logs found.
         """
         sidecar = self.reference_result.path.with_suffix(".iterations-hashes.json")
         if not sidecar.exists():
-            return True
+            return True, None
         try:
             ref_hashes = json.loads(sidecar.read_text())
         except (json.JSONDecodeError, OSError) as e:
             logging.warning(f"Could not read iterations hashes from {sidecar}: {e}")
-            return True
+            return True, None
         if not ref_hashes:
-            return True
+            return True, None
         collected = self._collect_iterations_logs(self.system_test_dir)
         current = {rel: self._sha256_file(p) for rel, p in collected}
         for rel, expected in ref_hashes.items():
             if rel not in current:
-                logging.critical(
-                    f"Missing iterations log {rel!r} (expected from reference); {self} fails")
-                return False
+                msg = f"Missing iterations log {rel!r} (expected from reference)"
+                logging.critical(f"{msg}; {self} fails")
+                return False, msg
             if current[rel] != expected:
-                logging.critical(
-                    f"Hash mismatch for {rel!r} (iterations.log regression); {self} fails")
-                return False
+                msg = f"Hash mismatch for {rel!r} (iterations.log regression)"
+                logging.critical(f"{msg}; {self} fails")
+                return False, msg
         if len(current) != len(ref_hashes):
             extra = set(current) - set(ref_hashes)
-            logging.critical(
-                f"Unexpected iterations log(s) {extra}; {self} fails")
-            return False
-        return True
+            msg = f"Unexpected iterations log(s) {extra!r}"
+            logging.critical(f"{msg}; {self} fails")
+            return False, msg
+        return True, None
 
     def __prepare_for_run(self, run_directory: Path):
         """
@@ -649,9 +649,10 @@ class Systemtest:
                 fieldcompare_time=0)
 
         self.__archive_iterations_logs()
-        if not self.__compare_iterations_hashes():
+        hash_ok, hash_error = self.__compare_iterations_hashes()
+        if not hash_ok:
             self.__write_logs(std_out, std_err)
-            logging.critical(f"Iterations.log hash comparison failed (regression), {self} failed")
+            logging.critical(f"Iterations.log hash comparison failed: {hash_error}; {self} failed")
             return SystemtestResult(
                 False,
                 std_out,
