@@ -3,4 +3,4 @@ set -e -u
 
 . ../../tools/cleaning-tools.sh
 
-clean_fenics .
+clean_fenicsx .
