@@ -202,6 +202,7 @@ RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     git clone https://github.com/precice/micro-manager.git && \
     cd micro-manager && \
+    if [ -n "${MICRO_MANAGER_PR}" ]; then git fetch origin pull/${MICRO_MANAGER_PR}/head; fi && \
     git checkout ${MICRO_MANAGER_VERSION} && \
     pip3 install .
 WORKDIR /home/precice
