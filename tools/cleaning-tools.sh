@@ -102,6 +102,17 @@ clean_fenics() {
     )
 }
 
+clean_fenicsx() {
+    (
+        set -e -u
+        cd "$1"
+        echo "- Cleaning up FEniCSx case in $(pwd)"
+        rm -rfv ./*.bp
+        clean_precice_logs .
+        clean_case_logs .
+    )
+}
+
 clean_nutils() {
     (
         set -e -u
