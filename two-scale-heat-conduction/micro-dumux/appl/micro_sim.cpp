@@ -68,11 +68,10 @@ public:
   // solve takes python dict for macro_write data, dt, and returns python dict for macro_read data
   py::dict solve(py::dict macro_write_data, double dt);
 
-  // void save_checkpoint();
-  // void reload_checkpoint();
-
   void      setState(py::tuple phi);
   py::tuple getState() const;
+
+  int get_global_id() const;
 
 private:
   const double pi_ = 3.14159265358979323846;
@@ -81,6 +80,7 @@ private:
   double       _k_10;
   double       _k_11;
   double       _porosity;
+  int          sim_id;
 
   ACSolutionVector _phi;    // Solution of Allen Cahn Problem
   ACSolutionVector _phiOld; // for checkpointing
