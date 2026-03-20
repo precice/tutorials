@@ -11,9 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-dealii.tar.gz | 2026-03-20 17:25:51 | babb3be79fd712062e5440b9a789b4a6f38d026e7e2016ba401200c2f76bf1dc |
-| fluid-openfoam_solid-calculix.tar.gz | 2026-03-20 17:25:51 | 9700848bacb55184350ea75e4ff3437781f73764b669873651c1b19f20cdefc4 |
-| fluid-su2_solid-fenics.tar.gz | 2026-03-20 17:25:51 | a62556372546d128fdf27dac0c3f77cf24669c048e0555fe6410dcc2490480b4 |
+| macro-dumux_micro-dumux.tar.gz | 2026-03-20 17:25:51 | 730550fecee6fe6f698eba35a7c565f586cb98db119982cd01148ba2a2b672fe |
 
 ## List of arguments used to generate the files
 
