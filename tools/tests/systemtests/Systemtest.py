@@ -20,6 +20,7 @@ import os
 
 
 GLOBAL_TIMEOUT = 600
+DIFF_RESULTS_DIR = "diff-results"
 SHORT_TIMEOUT = 10
 
 
@@ -513,6 +514,46 @@ class Systemtest:
         with open(self.system_test_dir / "stderr.log", 'w') as stderr_file:
             stderr_file.write("\n".join(stderr_data))
 
+    def __archive_diff_files(self):
+        """
+        Copies any diff files produced by fieldcompare into a dedicated
+        diff-results/ folder inside the system test directory so they are
+        included in the CI artifact and can be downloaded for inspection.
+
+        Collects all files matching diff_* (any format fieldcompare may produce,
+        including .vtu, .vtk, .vtp, .hdf, .h5, .csv) to avoid silently missing
+        non-VTK diff outputs.
+        """
+        precice_exports = self.system_test_dir / PRECICE_REL_OUTPUT_DIR
+        diff_dest = self.system_test_dir / DIFF_RESULTS_DIR
+        try:
+            diff_dest.relative_to(precice_exports)
+            logging.warning(
+                f"diff-results dir {diff_dest} is inside precice-exports {precice_exports}; "
+                "skipping archiving to avoid self-copy loop")
+            return
+        except ValueError:
+            pass  # Expected: diff_dest is not under precice_exports, safe to proceed
+
+        if not precice_exports.exists():
+            logging.debug("No precice-exports directory found, skipping diff file archiving")
+            return
+        diff_files = [f for f in precice_exports.rglob("diff_*") if f.is_file()]
+        if not diff_files:
+            logging.warning(
+                f"Fieldcompare failed but no diff_* files were found in {precice_exports}; "
+                "results may have diverged without producing diff output (check tolerances or output format)")
+            return
+        diff_dest.mkdir(exist_ok=True)
+        for diff_file in diff_files:
+            rel_path = diff_file.relative_to(precice_exports)
+            dest_file = diff_dest / rel_path
+            dest_file.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(diff_file, dest_file)
+            logging.debug(f"Archived diff file: {rel_path} -> {dest_file}")
+        logging.info(f"Archived {len(diff_files)} diff file(s) to {diff_dest}")
+
+
     def __prepare_for_run(self, run_directory: Path):
         """
         Prepares the run_directory with folders and datastructures needed for every systemtest execution
@@ -566,6 +607,7 @@ class Systemtest:
         std_out.extend(fieldcompare_result.stdout_data)
         std_err.extend(fieldcompare_result.stderr_data)
         if fieldcompare_result.exit_code != 0:
+            self.__archive_diff_files()
             self.__write_logs(std_out, std_err)
             logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
             return SystemtestResult(
