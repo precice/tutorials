@@ -7,6 +7,7 @@ on:
 jobs:
   gather-refs:
     name: Map Git branches to latest refs
+    if: ${{ github.event.label.name == 'trigger-system-tests' }}
     runs-on: ubuntu-latest
     outputs:
       ref-precice: ${{ steps.ref-precice.outputs.shorthash }}
