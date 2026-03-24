@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz | 2026-01-20 18:43:46 | 8519683febf6d16be13f8be0db49e0a3f04b9e16780cdab5440ba0ee01f4ac12 |
+| fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz | 2026-03-20 17:25:51 | d777eb8903e66c8be018e34309d83b07b5e426b5012a2c319da46d9e7c9f251d |
 
 ## List of arguments used to generate the files
 
@@ -23,20 +23,24 @@ We also include some information on the machine used to generate them
 | OPENFOAM_ADAPTER_REF | v1.3.1 |
 | PYTHON_BINDINGS_REF | v3.2.0 |
 | FENICS_ADAPTER_REF | v2.2.0 |
-| TUTORIALS_REF | 80b5e41 |
+| TUTORIALS_REF | e27f5d4 |
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
 | CALCULIX_ADAPTER_REF | v2.20.1 |
 | SU2_VERSION | 7.5.1 |
 | SU2_ADAPTER_REF | 64d4aff |
 | DEALII_ADAPTER_REF | 02c5d18 |
+| DUNE_VERSION | 2.9 |
+| DUMUX_VERSION | 3.7 |
+| DUMUX_ADAPTER_REF | 0e914bb |
+| MICRO_MANAGER_VERSION | v0.8.0 |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
 ## Information about the machine
 
 ### uname -a
 
-Linux precice-tests 5.15.0-163-generic #173-Ubuntu SMP Tue Oct 14 17:51:00 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+Linux precice-tests 5.15.0-168-generic #178-Ubuntu SMP Fri Jan 9 19:05:03 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
 
 
 ### lscpu
