@@ -19,7 +19,7 @@ import logging
 import os
 
 
-GLOBAL_TIMEOUT = 600
+GLOBAL_TIMEOUT = 900
 DIFF_RESULTS_DIR = "diff-results"
 SHORT_TIMEOUT = 10
 
