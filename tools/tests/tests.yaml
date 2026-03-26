@@ -58,6 +58,9 @@ test_suites:
           - fluid-su2
           - solid-fenics
         reference_result: ./perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz
+  heat_exchanger_simplified_test:
+    tutorials:
+      - *heat_exchanger_simplified
   dealii_test:
     tutorials:
       - path: perpendicular-flap
@@ -141,3 +144,10 @@ test_suites:
           - solid-upstream-dealii
           - solid-downstream-dealii
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz
+      - &heat_exchanger_simplified
+        path: heat-exchanger-simplified
+        case_combination:
+          - fluid-top-openfoam
+          - fluid-btm-openfoam
+          - solid-calculix
+        reference_result: ./heat-exchanger-simplified/reference-results/fluid-top-openfoam_fluid-btm-openfoam_solid-calculix.tar.gz
