@@ -32,6 +32,7 @@ test_suites:
           - fluid-openfoam
           - solid-nutils
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-nutils.tar.gz
+        timeout: 1200
   calculix_test:
     tutorials:
       - path: perpendicular-flap

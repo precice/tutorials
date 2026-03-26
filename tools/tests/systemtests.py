@@ -2,7 +2,7 @@
 import argparse
 from pathlib import Path
 from systemtests.SystemtestArguments import SystemtestArguments
-from systemtests.Systemtest import Systemtest, display_systemtestresults_as_table
+from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT, display_systemtestresults_as_table
 from systemtests.TestSuite import TestSuites
 from metadata_parser.metdata import Tutorials, Case
 import logging
@@ -58,10 +58,12 @@ def main():
         for test_suite in test_suites_to_execute:
             tutorials = test_suite.cases_of_tutorial.keys()
             for tutorial in tutorials:
-                for case, reference_result in zip(
-                        test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial]):
+                timeouts = test_suite.timeouts.get(tutorial, [])
+                for i, (case, reference_result) in enumerate(zip(
+                        test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial])):
+                    timeout = timeouts[i] if i < len(timeouts) and timeouts[i] is not None else GLOBAL_TIMEOUT
                     systemtests_to_run.append(
-                        Systemtest(tutorial, build_args, case, reference_result))
+                        Systemtest(tutorial, build_args, case, reference_result, timeout=timeout))
 
     if not systemtests_to_run:
         raise RuntimeError("Did not find any Systemtests to execute.")

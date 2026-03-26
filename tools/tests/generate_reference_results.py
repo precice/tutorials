@@ -2,7 +2,7 @@ import argparse
 from metadata_parser.metdata import Tutorials, ReferenceResult
 from systemtests.TestSuite import TestSuites
 from systemtests.SystemtestArguments import SystemtestArguments
-from systemtests.Systemtest import Systemtest
+from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT
 from pathlib import Path
 from typing import List
 from paths import PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
@@ -108,10 +108,12 @@ def main():
     for test_suite in test_suites:
         tutorials = test_suite.cases_of_tutorial.keys()
         for tutorial in tutorials:
-            for case, reference_result in zip(
-                    test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial]):
+            timeouts = test_suite.timeouts.get(tutorial, [])
+            for i, (case, reference_result) in enumerate(zip(
+                    test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial])):
+                timeout = timeouts[i] if i < len(timeouts) and timeouts[i] is not None else GLOBAL_TIMEOUT
                 systemtests_to_run.add(
-                    Systemtest(tutorial, build_args, case, reference_result))
+                    Systemtest(tutorial, build_args, case, reference_result, timeout=timeout))
 
     reference_result_per_tutorial = {}
     current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')

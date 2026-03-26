@@ -19,7 +19,7 @@ import logging
 import os
 
 
-GLOBAL_TIMEOUT = 900
+GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTEST_TIMEOUT", 900))
 SHORT_TIMEOUT = 10
 
 
@@ -134,6 +134,7 @@ class Systemtest:
     arguments: SystemtestArguments
     case_combination: CaseCombination
     reference_result: ReferenceResult
+    timeout: int = GLOBAL_TIMEOUT
     params_to_use: Dict[str, str] = field(init=False)
     env: Dict[str, str] = field(init=False)
 
@@ -394,7 +395,7 @@ class Systemtest:
                                        cwd=self.system_test_dir)
 
             try:
-                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
+                stdout, stderr = process.communicate(timeout=self.timeout)
             except KeyboardInterrupt as k:
                 process.kill()
                 raise KeyboardInterrupt from k
@@ -483,7 +484,7 @@ class Systemtest:
                                        cwd=self.system_test_dir)
 
             try:
-                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
+                stdout, stderr = process.communicate(timeout=self.timeout)
             except KeyboardInterrupt as k:
                 process.kill()
                 # process.send_signal(9)
