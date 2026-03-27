@@ -43,25 +43,31 @@ def main():
     # that's the only reason
     ns.ubasis = domain.basis("std", degree=2).vector(2)
     ns.pbasis = domain.basis("std", degree=1)
-    ns.εbasis = gauss.basis()
-    ns.Fbasis = gauss.basis().vector(2)
-    ns.u_i = "ubasis_ni ?u_n"  # solution
-    ns.u0_i = "ubasis_ni ?u0_n"  # solution
-    ns.p = "pbasis_n ?p_n"  # solution
-    ns.ε = "εbasis_ni ?ε_n"  # solid fraction
-    ns.ε0 = "εbasis_ni ?ε0_n"  # solid fraction
+    ns.εbasis = ns.pbasis
+    ns.αbasis = gauss.basis()
+    ns.Fbasis = ns.αbasis.vector(2)
+    ns.u_i = "ubasis_ni ?u_n"  # velocity
+    ns.v_i = "ubasis_ni ?v_n"  # test velocity
+    ns.u0_i = "ubasis_ni ?u0_n"  # previous velocity
+    ns.p = "pbasis_n ?p_n"  # pressure
+    ns.q = "pbasis_n ?p_n"  # test pressure
+    ns.α = "αbasis_ni ?α_n"  # solid fraction
+    ns.ε = "εbasis_ni ?ε_n"  # void fraction
+    ns.ε0 = "εbasis_ni ?ε0_n"  # previous void fraction
     ns.F_i = "Fbasis_ni ?F_n"  # drag force
     ns.g = numpy.array([0, -9.81])
     ns.ρ = 1.0  # density TODO FIX VALUE
+    ns.ρf = 1.2  # QUESTION: different from ρ
     ns.DεDt = "(ε - ε0) / ?dt + (ε u_i)_,i"
-    ns.DρεuDt_i = "ρ (ε u_i - ε0 u0_i) / ?dt + ρ (ε u_i u_j)_,j"
-    ns.μ = 0.5  # viscosity
+    ns.DεuDt_i = "(ε u_i - ε0 u0_i) / ?dt + ε u_i_,j u_j"
+    ns.μ = 0.5  # dynamic viscosity
     ns.σ_ij = "μ (u_i,j + u_j,i) - p δ_ij"
     ns.uin = "10 x_1 (2 - x_1)"  # inflow profile
 
     # define the weak form, Stokes problem
-    ures = gauss.integral("(ubasis_ni (DρεuDt_i - ε ρ g_i + F_i) + ubasis_ni,j ε σ_ij) d:x" @ ns) # TODO correct weak form
-    pres = gauss.integral("pbasis_n DεDt d:x" @ ns)
+    res = gauss.integral("(DεuDt_i v_i + μ (ε u_i,j)_,j v_i - p (ε v_i)_,i / ρ + F_i v_i / ρ) d:x" @ ns)
+    res += gauss.integral("(DεuDt_i + ε p_,i / ρ - ε μ u_i,kk + F_i / ρ) τu v_i,j u_j d:x" @ ns)
+    res += gauss.integral("q DεDt d:x" @ ns)
 
     # Dirichlet boundary condition
     sqr = domain.boundary["inflow"].integral("(u_0 - uin)^2 d:x" @ ns, degree=2)
@@ -90,19 +96,26 @@ def main():
     precice_dt = participant.get_max_time_step_size()
     dt = min(precice_dt, solver_dt)
 
-    ## TODO: INITIAL CONDITION
-    #state = solver.solve_linear(("u", "p"), (ures, pres), constrain=cons)  # initial condition
+    # TODO: INITIAL CONDITION
+    state = {
+        'u': np.zeros(len(ns.ubasis)),
+        'p': np.zeros(len(ns.pbasis)),  # <- for plotting / vtk output
+    }
 
-    ## add convective term and time derivative for Navier-Stokes
-    #ures += gauss.integral("ubasis_ni (dudt_i + μ (u_i u_j)_,j) d:x" @ ns)
+    # add convective term and time derivative for Navier-Stokes
+    # ures += gauss.integral("ubasis_ni (dudt_i + μ (u_i u_j)_,j) d:x" @ ns)
+
+    sqr = gauss.integral('(ε - (1 - α))^2 d:x' @ ns)
+    sys_project_ε = solver.System(sqr, trial='ε')
+
+    sys_vans = solver.System(res, trial='u,p', test='v,q')
+
+    bezier = domain.sample("bezier", 2)
 
     while participant.is_coupling_ongoing():
 
-        if timestep % 1 == 0:  # visualize
-            bezier = domain.sample("bezier", 2)
-            x, u, p = bezier.eval(["x_i", "u_i", "p"] @ ns, **state)
-            with log.add(log.DataLog()):
-                export.vtk("Fluid_" + str(timestep), bezier.tri, x, u=u, p=p)
+        x, u, p = bezier.eval(["x_i", "u_i", "p"] @ ns, arguments=state)
+        export.vtk("Fluid_" + str(timestep), bezier.tri, x, u=u, p=p)
 
         precice_dt = participant.get_max_time_step_size()
 
@@ -115,22 +128,24 @@ def main():
         # drag_force_name = participant.read_data(mesh_name, drag_force_name, vertex_ids, ...)
         # Checkpointing for implicit coupling is generally not required
 
-        state['ε'] = 1 - participant.read_data(mesh_name, solid_fraction_name, vertex_ids, dt)
+        state['α'] = participant.read_data(mesh_name, solid_fraction_name, vertex_ids, dt)
         state['F'] = participant.read_data(mesh_name, drag_force_name, vertex_ids, dt)
 
-        # solve Nutils timestep
+        # determine void ratio
+        state = sys_project_ε.solve(arguments=state)
+
+        # solve timestep
         state["u0"] = state["u"]
         state["ε0"] = state["ε"]
         state["dt"] = dt
-        state = solver.newton(("u", "p"), (ures, pres), constrain=cons, arguments=state).solve(1e-10)
+        state = sys_vans.solve(constrain=cons, arguments=state, tol=1e-10)
 
-        velocity_values = gauss.eval(ns.u, **state)
+        velocity_values, pressure_gradient_values = gauss.eval(['u_i', 'ρf p_,i'] @ ns, arguments=state)
         # COMMENT: here we would also need to write the pressure gradient to preCICE
         # Important note: OpenFOAM scales the pressue (and thereby also its gradient) by the fluid density, so we would
         # need to do the same scaling here. I set the fluid density to 1.2
         participant.write_data(mesh_name, data_name, vertex_ids, velocity_values)
-        # rho_f = 1.2
-        # participant.write_data(mesh_name, pressure_gradient_name, vertex_ids, pressure_gradient_values)
+        participant.write_data(mesh_name, pressure_gradient_name, vertex_ids, pressure_gradient_values)
 
         # do the coupling
         participant.advance(dt)
