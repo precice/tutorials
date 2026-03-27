@@ -134,6 +134,8 @@ class Systemtest:
     arguments: SystemtestArguments
     case_combination: CaseCombination
     reference_result: ReferenceResult
+    max_time: float | None = None
+    max_time_windows: int | None = None
     params_to_use: Dict[str, str] = field(init=False)
     env: Dict[str, str] = field(init=False)
 
@@ -513,11 +515,35 @@ class Systemtest:
         with open(self.system_test_dir / "stderr.log", 'w') as stderr_file:
             stderr_file.write("\n".join(stderr_data))
 
+    def __apply_max_time_override(self):
+        """Overwrite <max-time> or <max-time-windows> value in precice-config.xml."""
+        if self.max_time is None and self.max_time_windows is None:
+            return
+        config_path = self.system_test_dir / "precice-config.xml"
+        text = config_path.read_text()
+        new_text = text
+        if self.max_time is not None:
+            pattern = r'(<max-time\s+value=")[^"]*(")'
+            new_text, count = re.subn(pattern, rf'\g<1>{self.max_time}\2', new_text)
+            if count == 0:
+                logging.warning(f"No <max-time> tag found in {config_path}")
+            else:
+                logging.info(f"Overwrote <max-time> to {self.max_time} in {config_path}")
+        if self.max_time_windows is not None:
+            pattern = r'(<max-time-windows\s+value=")[^"]*(")'
+            new_text, count = re.subn(pattern, rf'\g<1>{self.max_time_windows}\2', new_text)
+            if count == 0:
+                logging.warning(f"No <max-time-windows> tag found in {config_path}")
+            else:
+                logging.info(f"Overwrote <max-time-windows> to {self.max_time_windows} in {config_path}")
+        config_path.write_text(new_text)
+
     def __prepare_for_run(self, run_directory: Path):
         """
         Prepares the run_directory with folders and datastructures needed for every systemtest execution
         """
         self.__copy_tutorial_into_directory(run_directory)
+        self.__apply_max_time_override()
         self.__copy_tools(run_directory)
         self.__put_gitignore(run_directory)
         host_uid, host_gid = self.__get_uid_gid()
