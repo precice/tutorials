@@ -50,22 +50,28 @@ def main():
     ns.v_i = "ubasis_ni ?v_n"  # test velocity
     ns.u0_i = "ubasis_ni ?u0_n"  # previous velocity
     ns.p = "pbasis_n ?p_n"  # pressure
-    ns.q = "pbasis_n ?p_n"  # test pressure
-    ns.α = "αbasis_ni ?α_n"  # solid fraction
-    ns.ε = "εbasis_ni ?ε_n"  # void fraction
-    ns.ε0 = "εbasis_ni ?ε0_n"  # previous void fraction
+    ns.q = "pbasis_n ?q_n"  # test pressure
+    ns.α = "αbasis_n ?α_n"  # solid fraction
+    ns.ε = "εbasis_n ?ε_n"  # void fraction
+    ns.ε0 = "εbasis_n ?ε0_n"  # previous void fraction
     ns.F_i = "Fbasis_ni ?F_n"  # drag force
-    ns.g = numpy.array([0, -9.81])
+    ns.g = np.array([0, -9.81])
     ns.ρ = 1.0  # density TODO FIX VALUE
     ns.ρf = 1.2  # QUESTION: different from ρ
     ns.DεDt = "(ε - ε0) / ?dt + (ε u_i)_,i"
-    ns.DεuDt_i = "(ε u_i - ε0 u0_i) / ?dt + ε u_i_,j u_j"
+    ns.DεuDt_i = "(ε u_i - ε0 u0_i) / ?dt + ε u_i,j u_j"
     ns.μ = 0.5  # dynamic viscosity
     ns.σ_ij = "μ (u_i,j + u_j,i) - p δ_ij"
     ns.uin = "10 x_1 (2 - x_1)"  # inflow profile
 
     # define the weak form, Stokes problem
     res = gauss.integral("(DεuDt_i v_i + μ (ε u_i,j)_,j v_i - p (ε v_i)_,i / ρ + F_i v_i / ρ) d:x" @ ns)
+    # Define the stabilization parameter \tau u according to Tezduyar
+    ns.h = 0.125  # TODO: How do I get the element size here?
+    ns.hconv = "h" # element size related to convection (I would stick to h)
+    ns.hdiff = "h" # element size related to diffusion (I would stick to h here)
+    ns.τu = "((1 / ?dt)^2 + (2 (u_k u_k)^0.5 / hconv)^2 + 9 (4 (μ / ρ) / hdiff^2)^2)^-0.5"
+
     res += gauss.integral("(DεuDt_i + ε p_,i / ρ - ε μ u_i,kk + F_i / ρ) τu v_i,j u_j d:x" @ ns)
     res += gauss.integral("q DεDt d:x" @ ns)
 
