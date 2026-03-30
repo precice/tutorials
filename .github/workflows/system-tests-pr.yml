@@ -99,6 +99,12 @@ jobs:
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.ref-calculix-adapter.outputs.description }}" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "### DuMux adapter" >> $GITHUB_STEP_SUMMARY
+          echo "Reference: [\`${{ steps.ref-dumux-adapter.outputs.shorthash }}\`](https://github.com/precice/dumux-adapter/commit/${{ steps.ref-dumux-adapter.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
+          echo "Description:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.ref-dumux-adapter.outputs.description }}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "### FEniCS adapter" >> $GITHUB_STEP_SUMMARY
           echo "Reference: [\`${{ steps.ref-fenics-adapter.outputs.shorthash }}\`](https://github.com/precice/fenics-adapter/commit/${{ steps.ref-fenics-adapter.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
           echo "Description:" >> $GITHUB_STEP_SUMMARY
