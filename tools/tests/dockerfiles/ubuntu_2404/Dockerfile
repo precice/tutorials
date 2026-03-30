@@ -197,13 +197,13 @@ USER precice
 WORKDIR /home/precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 
-ARG MICRO_MANAGER_VERSION
+ARG MICRO_MANAGER_REF
 RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     git clone https://github.com/precice/micro-manager.git && \
     cd micro-manager && \
     if [ -n "${MICRO_MANAGER_PR}" ]; then git fetch origin pull/${MICRO_MANAGER_PR}/head; fi && \
-    git checkout ${MICRO_MANAGER_VERSION} && \
+    git checkout ${MICRO_MANAGER_REF} && \
     pip3 install .
 WORKDIR /home/precice
 RUN python3 -m venv /home/precice/venv && \
