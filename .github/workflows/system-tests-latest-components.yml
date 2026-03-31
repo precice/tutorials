@@ -129,7 +129,7 @@ jobs:
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.ref-fenics-adapter.outputs.description }}" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "### Micro-Manager adapter" >> $GITHUB_STEP_SUMMARY
+          echo "### Micro-Manager" >> $GITHUB_STEP_SUMMARY
           echo "Reference: [\`${{ steps.ref-micro-manager.outputs.shorthash }}\`](https://github.com/precice/micro-manager/commit/${{ steps.ref-micro-manager.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
           echo "Description:" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
