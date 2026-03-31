@@ -51,6 +51,13 @@ test_suites:
           - free-flow-dumux
           - porous-media-dumux
         reference_result: ./free-flow-over-porous-media/reference-results/free-flow-dumux_porous-media-dumux.tar.gz
+  micro_manager_test:
+    tutorials:
+      - path: two-scale-heat-conduction
+        case_combination:
+          - macro-dumux
+          - micro-dumux
+        reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux.tar.gz # Too small values, expected to fail the comparisons.
   su2_test:
     tutorials:
       - path: perpendicular-flap
