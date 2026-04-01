@@ -45,12 +45,19 @@ test_suites:
         case_combination:
           - macro-dumux
           - micro-dumux
-        reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux.tar.gz
+        reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux.tar.gz # Too small values, expected to fail the comparisons.
       - path: free-flow-over-porous-media
         case_combination:
           - free-flow-dumux
           - porous-media-dumux
         reference_result: ./free-flow-over-porous-media/reference-results/free-flow-dumux_porous-media-dumux.tar.gz
+  micro_manager_test:
+    tutorials:
+      - path: two-scale-heat-conduction
+        case_combination:
+          - macro-dumux
+          - micro-dumux
+        reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux.tar.gz # Too small values, expected to fail the comparisons.
   su2_test:
     tutorials:
       - path: perpendicular-flap
@@ -141,3 +148,8 @@ test_suites:
           - solid-upstream-dealii
           - solid-downstream-dealii
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz
+      - path: free-flow-over-porous-media
+        case_combination:
+          - free-flow-dumux
+          - porous-media-dumux
+        reference_result: ./free-flow-over-porous-media/reference-results/free-flow-dumux_porous-media-dumux.tar.gz
