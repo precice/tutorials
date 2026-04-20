@@ -14,7 +14,7 @@ from mpi4py import MPI
 def main():
 
     # COMMENT: nothing to change here
-    print("Running Nutils")
+    log.info("Running Nutils")
 
     nx = 48
     ny = 16
@@ -70,7 +70,9 @@ def main():
     ns.h = 0.125  # TODO: How do I get the element size here?
     ns.hconv = "h" # element size related to convection (I would stick to h)
     ns.hdiff = "h" # element size related to diffusion (I would stick to h here)
-    ns.τu = "((1 / ?dt)^2 + (2 (u_k u_k)^0.5 / hconv)^2 + 9 (4 (μ / ρ) / hdiff^2)^2)^-0.5"
+    ns.τu = "((1 / ?dt)^2 + (2 (u_k u_k + 1e-15)^0.5 / hconv)^2 + 9 (4 (μ / ρ) / hdiff^2)^2)^-0.5"
+    #ns.τu = "((1 / ?dt)^2 + (2 (u_k u_k)^0.5 + 1e-15 / hconv)^2 + 9 (4 (μ / ρ) / hdiff^2)^2)^-0.5"
+    #ns.τu = "0.05"
 
     res += gauss.integral("(DεuDt_i + ε p_,i / ρ - ε μ u_i,kk + F_i / ρ) τu v_i,j u_j d:x" @ ns)
     res += gauss.integral("q DεDt d:x" @ ns)
@@ -104,8 +106,9 @@ def main():
 
     # TODO: INITIAL CONDITION
     state = {
-        'u': np.zeros(len(ns.ubasis)),
-        'p': np.zeros(len(ns.pbasis)),  # <- for plotting / vtk output
+        'u': np.ones(len(ns.ubasis)) * 10,
+        'p': np.zeros(len(ns.pbasis)),  # for plotting
+        'ε': np.zeros(len(ns.εbasis)),  # for plotting
     }
 
     # add convective term and time derivative for Navier-Stokes
@@ -120,8 +123,9 @@ def main():
 
     while participant.is_coupling_ongoing():
 
-        x, u, p = bezier.eval(["x_i", "u_i", "p"] @ ns, arguments=state)
-        export.vtk("Fluid_" + str(timestep), bezier.tri, x, u=u, p=p)
+        x, u, p, eps = bezier.eval(["x_i", "u_i", "p", "ε"] @ ns, arguments=state)
+        with log.add(log.DataLog()):
+            export.vtk("Fluid_" + str(timestep), bezier.tri, x, u=u, p=p, eps=eps)
 
         precice_dt = participant.get_max_time_step_size()
 
