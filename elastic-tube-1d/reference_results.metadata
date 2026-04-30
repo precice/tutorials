@@ -11,15 +11,15 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-cpp_solid-cpp.tar.gz | 2026-01-19 17:58:00 | 9b66094c7cf9cc8e58892e31474b31eab1dc2b6efd29444c8c7d6801e3f6ef3c |
-| fluid-python_solid-python.tar.gz | 2026-01-19 17:58:00 | d0f9c38e953f6fdd1ac7124431d370c429128f440e90dcd52555442dc925e9be |
-| fluid-cpp_solid-python.tar.gz | 2026-01-19 17:58:00 | 2c3f7c9d3173e4c65fe74458ab682f763a3f4de910c33839a1f139ffb93830d8 |
+| fluid-python_solid-python.tar.gz | 2026-01-20 18:43:46 | 76121685086b99551f5e795039657c2536c6c06aa9374b132b654d1e2b7617b8 |
+| fluid-cpp_solid-python.tar.gz | 2026-01-20 18:43:46 | ec7403591a334a1d20b72b15124b20b355cbffc2aeba8997cbdceba0518bc96e |
+| fluid-cpp_solid-cpp.tar.gz | 2026-01-20 18:43:46 | 1a8dc371b6acbd3f085fa7b668316b919d4b1c8ec0d7978932964acf7f0e806b |
 
 ## List of arguments used to generate the files
 
 | name | value |
 |------|------|
-| PRECICE_REF | 40a98c3 |
+| PRECICE_REF | d199bb3 |
 | PRECICE_PRESET | production-audit |
 | OPENFOAM_EXECUTABLE | openfoam2312 |
 | OPENFOAM_ADAPTER_REF | v1.3.1 |

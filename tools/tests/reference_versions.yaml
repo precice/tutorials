@@ -1,13 +1,17 @@
-PRECICE_REF: "40a98c3" # develop, after https://github.com/precice/precice/pull/2389
+PRECICE_REF: "d199bb3" # develop, January 20, 2026
 PRECICE_PRESET: "production-audit"
 OPENFOAM_EXECUTABLE: "openfoam2312"
 OPENFOAM_ADAPTER_REF: "v1.3.1"
 PYTHON_BINDINGS_REF: "v3.2.0"
 FENICS_ADAPTER_REF: "v2.2.0"
-TUTORIALS_REF: "80b5e41" # develop, April 12, 2025
+TUTORIALS_REF: "e27f5d4" # develop, Febuary 05, 2026
 PLATFORM: "ubuntu_2404"
 CALCULIX_VERSION: "2.20"
 CALCULIX_ADAPTER_REF: "v2.20.1"
 SU2_VERSION: "7.5.1"
 SU2_ADAPTER_REF: "64d4aff" # Distribution v2404
 DEALII_ADAPTER_REF: "02c5d18" # develop, April 12, 2025
+DUNE_VERSION: "2.9"
+DUMUX_VERSION: "3.7"
+DUMUX_ADAPTER_REF: "0e914bb" # develop, March 18, 2026
+MICRO_MANAGER_REF: "v0.8.0"

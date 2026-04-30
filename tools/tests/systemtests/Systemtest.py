@@ -19,7 +19,7 @@ import logging
 import os
 
 
-GLOBAL_TIMEOUT = 600
+GLOBAL_TIMEOUT = 900
 SHORT_TIMEOUT = 10
 
 
@@ -84,10 +84,10 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
     max_name_length = _get_length_of_name(results)
 
     header = f"| {'systemtest':<{max_name_length + 2}} "\
-             f"| {'success':^7} "\
-             f"| {'building time [s]':^17} "\
-             f"| {'solver time [s]':^15} "\
-             f"| {'fieldcompare time [s]':^21} |"
+        f"| {'success':^7} "\
+        f"| {'building time [s]':^17} "\
+        f"| {'solver time [s]':^15} "\
+        f"| {'fieldcompare time [s]':^21} |"
     separator_plaintext = "+-" + "-" * (max_name_length + 2) + \
         "-+---------+-------------------+-----------------+-----------------------+"
     separator_markdown = "| --- | --- | --- | --- | --- |"
@@ -103,10 +103,10 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
 
     for result in results:
         row = f"| {str(result.systemtest):<{max_name_length + 2}} "\
-              f"| {result.success:^7} "\
-              f"| {result.build_time:^17.1f} "\
-              f"| {result.solver_time:^15.1f} "\
-              f"| {result.fieldcompare_time:^21.1f} |"
+            f"| {result.success:^7} "\
+            f"| {result.build_time:^17.1f} "\
+            f"| {result.solver_time:^15.1f} "\
+            f"| {result.fieldcompare_time:^21.1f} |"
         print(row)
         print(separator_plaintext)
         if "GITHUB_STEP_SUMMARY" in os.environ:

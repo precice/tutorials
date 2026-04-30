@@ -3,9 +3,9 @@
     "coupling_params": {
             "participant_name": "Micro-Manager",
             "precice_config_file_name": "../precice-config.xml",
-            "macro_mesh_name": "macro-mesh",
-            "write_data_names": ["k_00", "k_01", "k_10", "k_11", "porosity"],
-            "read_data_names": ["concentration"]
+            "macro_mesh_name": "Macro-Mesh",
+            "write_data_names": ["K00", "K01", "K10", "K11", "Porosity"],
+            "read_data_names": ["Concentration"]
     },
     "simulation_params": {
       "micro_dt": 0.01,
@@ -14,7 +14,7 @@
       "adaptivity": true,
       "adaptivity_settings": {
         "type": "global",
-        "data": ["k_00", "k_11", "porosity", "concentration"],
+        "data": ["K00", "K11", "Porosity", "Concentration"],
         "history_param": 0.1,
         "coarsening_constant": 0.2,
         "refining_constant": 0.05,
@@ -22,6 +22,6 @@
       }
     },
     "diagnostics": {
-      "data_from_micro_sims": ["grain_size"]
+      "data_from_micro_sims": ["Grain-Size"]
     }
 }

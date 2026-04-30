@@ -6,7 +6,7 @@ summary: Tutorial for a shell-and-tube heat exchanger, using OpenFOAM and Calcul
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/heat-exchanger). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/heat-exchanger), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/heat-exchanger) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 {% tip %}
