@@ -32,8 +32,10 @@ RUN apt-get -qq update && \
         libbenchmark-dev \
         libboost-all-dev \
         libeigen3-dev \
+        libopenmpi-dev \
         libxml2-dev \
         lsb-release \
+        openmpi-bin \
         petsc-dev \
         python3-dev \
         python3-numpy \
@@ -100,7 +102,7 @@ RUN add-apt-repository -y ppa:fenics-packages/fenics && \
 USER precice
 ARG FENICS_ADAPTER_REF
 # Building fenics-adapter
-RUN python3 -m venv /home/precice/venv && \
+RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
 
@@ -169,3 +171,72 @@ RUN cd "${SU2_HOME}" &&\
     sed -i '1s/^/#include <cstdint>\n/' SU2_CFD/src/output/filewriter/CParaviewXMLFileWriter.cpp &&\
     ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN &&\
     ./ninja -C build install
+
+FROM precice_dependecies AS dealii_adapter
+USER root
+RUN apt-get update &&\
+    apt-get -qq install libdeal.ii-dev libdeal.ii-doc cmake make g++
+USER precice
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
+ARG DEALII_ADAPTER_PR
+ARG DEALII_ADAPTER_REF
+# Build the deal.II adapter 
+USER precice
+WORKDIR /home/precice
+ENV PATH="/home/precice/dealii-adapter/:$PATH"
+RUN git clone https://github.com/precice/dealii-adapter.git &&\
+    cd dealii-adapter && \
+    if [ -n "${DEALII_ADAPTER_PR}" ]; then git fetch origin pull/${DEALII_ADAPTER_PR}/head; fi && \
+    git checkout ${DEALII_ADAPTER_REF} && \
+    cmake . && \
+    make -j $(nproc)
+
+
+FROM precice_dependecies AS micro_manager
+USER precice
+WORKDIR /home/precice
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
+
+ARG MICRO_MANAGER_REF
+RUN python3 -m venv /home/precice/venv && \
+    . /home/precice/venv/bin/activate && \
+    git clone https://github.com/precice/micro-manager.git && \
+    cd micro-manager && \
+    if [ -n "${MICRO_MANAGER_PR}" ]; then git fetch origin pull/${MICRO_MANAGER_PR}/head; fi && \
+    git checkout ${MICRO_MANAGER_REF} && \
+    pip3 install .
+WORKDIR /home/precice
+RUN python3 -m venv /home/precice/venv && \
+    . /home/precice/venv/bin/activate && \
+    pip3 install pybind11    
+
+FROM micro_manager AS dumux_adapter
+USER root
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
+ARG DUNE_VERSION
+ARG DUMUX_VERSION
+USER precice
+WORKDIR /home/precice
+RUN mkdir dumux&&\
+    cd dumux&&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION} &&\
+    git clone -b cell_problems https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git &&\
+    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION} &&\
+    git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION}
+WORKDIR /home/precice/dumux
+ENV PATH="/home/precice/dumux/dune-common/bin:${PATH}"
+# build core DUNE, DuMuX and the adapter
+ARG DUMUX_ADAPTER_PR
+ARG DUMUX_ADAPTER_REF
+RUN git clone https://github.com/precice/dumux-adapter.git &&\
+    cd dumux-adapter && \
+    if [ -n "${DUMUX_ADAPTER_PR}" ]; then git fetch origin pull/${DUMUX_ADAPTER_PR}/head; fi && \
+    git checkout ${DUMUX_ADAPTER_REF} && \
+    cd .. &&\
+    ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
+    ./dune-common/bin/dunecontrol make -j $(nproc)

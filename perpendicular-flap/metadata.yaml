@@ -31,11 +31,11 @@ cases:
     run: ./run.sh 
     component: calculix-adapter 
   
-  # solid-dealii:
-  #   participant: Solid
-  #   directory: ./solid-dealii
-  #   run: ./run.sh
-  #   component: dealii-adapter
+  solid-dealii:
+    participant: Solid
+    directory: ./solid-dealii
+    run: ./run.sh
+    component: dealii-adapter
   
   # solid-dune:
   #   participant: Solid

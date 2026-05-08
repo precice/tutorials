@@ -6,7 +6,7 @@ summary: Tutorial for a shell-and-tube heat exchanger, using OpenFOAM and Calcul
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/heat-exchanger). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/heat-exchanger), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/heat-exchanger) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 {% tip %}
@@ -15,7 +15,7 @@ This is one of our first ever and most popular tutorials, yet definitely not the
 
 This tutorial describes how to run a conjugate heat transfer simulation with two separate OpenFOAM solvers and CalculiX. The files for this tutorial are located in this repository (directory CHT/heat_exchanger).
 
-This tutorial is based on [a case](https://www.simscale.com/projects/cheunglucia/heat_exchanger_-_cht_simulation/) prepared with [SimScale](https://www.simscale.com/) by [Lucia Cheung Yau](https://github.com/ludcila) for her [Master's Thesis](https://www5.in.tum.de/pub/Cheung2016_Thesis.pdf).
+This tutorial is based on [a case](https://www.simscale.com/projects/cheunglucia/heat_exchanger_-_cht_simulation/) prepared with [SimScale](https://www.simscale.com/) by [Lucia Cheung Yau](https://github.com/ludcila) for her [Master's Thesis](https://mediatum.ub.tum.de/1461907).
 
 ## Setup
 

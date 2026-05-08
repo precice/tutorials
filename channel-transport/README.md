@@ -6,7 +6,7 @@ summary: A CFD problem is coupled to a transport (of, e.g., a chemistry species)
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/channel-transport). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/channel-transport), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/channel-transport) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup

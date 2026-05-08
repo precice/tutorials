@@ -162,3 +162,22 @@ RUN git clone https://github.com/precice/su2-adapter.git && \
 RUN cd "${SU2_HOME}" &&\
     ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN &&\
     ./ninja -C build install
+
+FROM precice_dependecies AS dealii_adapter
+USER root
+RUN apt-get update &&\
+    apt-get -qq install libdeal.ii-dev libdeal.ii-doc cmake make g++
+USER precice
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
+ARG DEALII_ADAPTER_PR
+ARG DEALII_ADAPTER_REF
+# Build the deal.II adapter 
+USER precice
+WORKDIR /home/precice
+ENV PATH="/home/precice/dealii-adapter/:$PATH"
+RUN git clone https://github.com/precice/dealii-adapter.git &&\
+    cd dealii-adapter && \
+    if [ -n "${DEALII_ADAPTER_PR}" ]; then git fetch origin pull/${DEALII_ADAPTER_PR}/head; fi && \
+    git checkout ${DEALII_ADAPTER_REF} && \
+    cmake . && \
+    make -j $(nproc)

@@ -18,6 +18,9 @@
 #ifndef DUMUX_TEST_1PNI_SPATIAL_PARAMS_HH
 #define DUMUX_TEST_1PNI_SPATIAL_PARAMS_HH
 
+#include <dune/grid/common/partitionset.hh>
+
+#include <dumux/parallel/vectorcommdatahandle.hh>
 #include <dumux/porousmediumflow/fvspatialparams1p.hh>
 #include <dumux/porousmediumflow/properties.hh>
 
@@ -48,8 +51,9 @@ public:
   using PermeabilityType = Scalar;
 
   OnePNISpatialParams(std::shared_ptr<const GridGeometry> gridGeometry)
-      : ParentType(gridGeometry),
-        couplingParticipant_(Dumux::Precice::CouplingAdapter::getInstance()) {}
+      : ParentType(gridGeometry), couplingParticipant_(Dumux::Precice::CouplingAdapter::getInstance()), couplingData_(gridGeometry->numDofs()), couplingDataHandle_(this->gridGeometry().elementMapper(), couplingData_)
+  {
+  }
 
   /*!
    * \brief Defines the intrinsic permeability \f$\mathrm{[m^2]}\f$.
@@ -71,8 +75,7 @@ public:
                   const ElementSolution &elemSol) const
   {
     if (getParam<bool>("Precice.RunWithCoupling") == true)
-      return couplingParticipant_.getScalarQuantityOnFace(
-          "macro-mesh", "porosity", scv.elementIndex());
+      return couplingData_[scv.elementIndex()][0];
     else
       return getParam<Scalar>("Problem.DefaultPorosity");
   }
@@ -87,14 +90,10 @@ public:
     DimWorldMatrix K;
 
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
-      K[0][0] = couplingParticipant_.getScalarQuantityOnFace(
-          "macro-mesh", "k_00", scv.elementIndex());
-      K[0][1] = couplingParticipant_.getScalarQuantityOnFace(
-          "macro-mesh", "k_01", scv.elementIndex());
-      K[1][0] = couplingParticipant_.getScalarQuantityOnFace(
-          "macro-mesh", "k_10", scv.elementIndex());
-      K[1][1] = couplingParticipant_.getScalarQuantityOnFace(
-          "macro-mesh", "k_11", scv.elementIndex());
+      K[0][0] = couplingData_[scv.elementIndex()][1];
+      K[0][1] = couplingData_[scv.elementIndex()][2];
+      K[1][0] = couplingData_[scv.elementIndex()][3];
+      K[1][1] = couplingData_[scv.elementIndex()][4];
     } else {
       K[0][0] = getParam<Scalar>("Component.SolidThermalConductivity");
       K[0][1] = 0.0;
@@ -104,8 +103,40 @@ public:
     return K;
   }
 
+  void updateCouplingData()
+  {
+    for (const auto &element : elements(this->gridGeometry().gridView(), Dune::Partitions::interior)) {
+      auto fvGeometry = localView(this->gridGeometry());
+      fvGeometry.bindElement(element);
+      for (const auto &scv : scvs(fvGeometry)) {
+        const auto elementIdx = scv.elementIndex();
+        couplingData_[elementIdx][0] =
+            couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "Porosity", elementIdx);
+        couplingData_[elementIdx][1] =
+            couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "K00", elementIdx);
+        couplingData_[elementIdx][2] =
+            couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "K01", elementIdx);
+        couplingData_[elementIdx][3] =
+            couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "K10", elementIdx);
+        couplingData_[elementIdx][4] =
+            couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "K11", elementIdx);
+      }
+    }
+    // Trigger exchange of coupling data between neighboring ranks, if the domain is partitioned
+    if (this->gridGeometry().gridView().comm().size() > 1) {
+      this->gridGeometry().gridView().communicate(couplingDataHandle_,
+                                                  Dune::InteriorBorder_All_Interface, Dune::ForwardCommunication);
+    }
+  }
+
 private:
-  Dumux::Precice::CouplingAdapter &couplingParticipant_;
+  Dumux::Precice::CouplingAdapter                &couplingParticipant_;
+  Dune::BlockVector<Dune::FieldVector<double, 5>> couplingData_;
+  Dumux::VectorCommDataHandleEqual<
+      typename GridGeometry::ElementMapper,
+      Dune::BlockVector<Dune::FieldVector<double, 5>>,
+      /* Entity codimension = */ 0>
+      couplingDataHandle_;
 };
 
 } // end namespace Dumux

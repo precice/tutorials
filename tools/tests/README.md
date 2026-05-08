@@ -8,6 +8,10 @@ summary: "Test complete simulations combining preCICE components of specific ver
 
 The tutorials repository hosts cases that need multiple components from the preCICE ecosystem to run. This directory provides tools that can automatically run complete simulations, using different versions of each component, and compare the results to references. While the main purpose is to run complete tests in the continuous integration workflows of preCICE, you can also run these tests on your laptop.
 
+Read more about the system tests in the publication [System Regression Tests for the preCICE Coupling Ecosystem](https://doi.org/10.14279/eceasst.v83.2614).
+
+[![ECEASST](https://img.shields.io/badge/DOI-10.14279%2Feceasst.v83.2614-green)](https://doi.org/10.14279/eceasst.v83.2614)
+
 ## Running the system tests
 
 The main workflow for the user is executing the `systemtests.py` script. Depending on the options given to the script, it reads in the respective metadata files and generates `docker-compose.yaml` files that can start a fully-defined coupled simulation.
@@ -21,7 +25,7 @@ Workflow for the preCICE v3 release testing:
 3. Trigger the GitHub Actions Workflow. Until we merge the workflow to develop, this can only happen via the [GitHub CLI](https://cli.github.com/):
 
     ```bash
-    gh workflow run run_testsuite_manual.yml -f suites=release_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,TUTORIALS_REF:340b447" --ref=develop
+    gh workflow run run_testsuite_manual.yml -f suites=release_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" --ref=develop
     ```
 
 4. Go to the tutorials [Actions](https://github.com/precice/tutorials/actions) page and find the running workflow
@@ -61,7 +65,7 @@ gh workflow run run_testsuite_manual.yml -f suites=fenics_test --ref=develop
 Another example, to use the latest releases and enable debug information of the tests:
 
 ```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,TUTORIALS_REF:340b447" -f log_level=DEBUG --ref=develop
+gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" -f log_level=DEBUG --ref=develop
 ```
 
 where the `*_REF` should be a specific [commit-ish](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefcommit-ishacommit-ishalsocommittish).
@@ -258,9 +262,8 @@ openfoam-adapter:
       description: Tutorial git reference to use
       default: "master"
     OPENFOAM_EXECUTABLE:
-      options: ["openfoam2306","openfoam2212","openfoam2112"]
       description: exectuable of openfoam to use
-      default: "openfoam2306"
+      default: "openfoam2512"
     OPENFOAM_ADAPTER_REF:
       description: Reference/tag of the actual OpenFOAM adapter
       default: "master"
@@ -276,7 +279,9 @@ This `openfoam-adapter` component has the following attributes:
 
 Since the docker containers are still a bit mixed in terms of capabilities and support for different build_argument combinations the following rules apply:
 
-- A build_argument ending in **_REF** means that it refers to a git commit-ish (like a tag or commit) beeing used to build the image. Its important to not use branch names here as we heavily rely on dockers build cache to speedup things. But since the input variable to the docker builder will not change, we might have wrong cache hits.
+- A build argument ending in `_REF` refers to a git commit-ish (like a tag or commit) being used to build the image. It is important to not use branch names here as we heavily rely on Docker's build cache to speedup things. But since the input variable to the docker builder will not change, we might have wrong cache hits.
+- Some workflows set variables ending in `_PR`. These specify the GitHub pull request which provides the above `_REF` and can be on a fork.
+- A build argument ending in `_VERSION` refers to the version of a third-party dependency to use (e.g., DUNE).
 - All other build_arguments are free of rules and up to the container maintainer.
 
 ### Component templates

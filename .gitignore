@@ -20,8 +20,10 @@ precice-profiling/
 precice-run/
 core
 profiling.json
+profiling.db
 profiling.csv
 trace.json
+profiling.pftrace
 
 # C++
 *.o
@@ -96,6 +98,9 @@ dumux-adapter/
 dune-*
 */build-cmake/
 install*
+
+# G+smo
+pointData.csv
 
 # FEniCS covered by .vtk
 # Nutils covered by .vtk

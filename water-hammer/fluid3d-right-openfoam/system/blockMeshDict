@@ -1,0 +1,100 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant/polyMesh";
+    object      blockMeshDict;
+}
+
+scale 1;
+
+ymin  500;
+ymax  1000;
+
+xcells 10; // per block (5 blocks)
+ycells 10; // per block (5 blocks)
+zcells 100;
+
+vertices
+(
+    (-0.707107  $ymin -0.707107) // 0
+    ( 0.707107  $ymin -0.707107) // 1
+    ( 0.707107  $ymin  0.707107) // 2
+    (-0.707107  $ymin  0.707107) // 3
+    (-0.282843  $ymin -0.282843) // 4 
+    ( 0.282843  $ymin -0.282843) // 5
+    ( 0.282843  $ymin  0.282843) // 6
+    (-0.282843  $ymin  0.282843) // 7
+
+    (-0.707107  $ymax -0.707107) // 8
+    ( 0.707107  $ymax -0.707107) // 9
+    ( 0.707107  $ymax  0.707107) // 10
+    (-0.707107  $ymax  0.707107) // 11
+    (-0.282843  $ymax -0.282843) // 12
+    ( 0.282843  $ymax -0.282843) // 13
+    ( 0.282843  $ymax  0.282843) // 14
+    (-0.282843  $ymax  0.282843) // 15
+);
+
+blocks
+(
+    // right-handed along +y (unchanged)
+    hex (8 9 13 12 0 1 5 4)     pipe ($xcells $ycells $zcells) edgeGrading (1 1 1 1 1 1 1 1 1 1 1 1)
+    hex (9 10 14 13 1 2 6 5)    pipe ($xcells $ycells $zcells) edgeGrading (1 1 1 1 1 1 1 1 1 1 1 1)
+    hex (10 11 15 14 2 3 7 6)   pipe ($xcells $ycells $zcells) edgeGrading (1 1 1 1 1 1 1 1 1 1 1 1)
+    hex (11 8 12 15 3 0 4 7)    pipe ($xcells $ycells $zcells) edgeGrading (1 1 1 1 1 1 1 1 1 1 1 1)
+    hex (12 13 14 15 4 5 6 7)   pipe ($xcells $ycells $zcells) edgeGrading (1 1 1 1 1 1 1 1 1 1 1 1)
+);
+
+edges
+(
+    // arcs on y = ymin plane (outer radius 1, inner 0.3)
+    arc 0 1   ( 0     $ymin  -1)
+    arc 1 2   ( 1     $ymin   0)
+    arc 2 3   ( 0     $ymin   1)
+    arc 3 0   (-1     $ymin   0)
+    arc 4 5   ( 0     $ymin  -0.3)
+    arc 5 6   ( 0.3   $ymin   0)
+    arc 6 7   ( 0     $ymin   0.3)
+    arc 7 4   (-0.3   $ymin   0)
+
+    // arcs on y = ymax plane
+    arc 8 9   ( 0     $ymax  -1)
+    arc 9 10  ( 1     $ymax   0)
+    arc 10 11 ( 0     $ymax   1)
+    arc 11 8  (-1     $ymax   0)
+    arc 12 13 ( 0     $ymax  -0.3)
+    arc 13 14 ( 0.3   $ymax   0)
+    arc 14 15 ( 0     $ymax   0.3)
+    arc 15 12 (-0.3   $ymax   0)
+);
+
+patches
+(
+    patch fixedWalls
+    (
+        (0 1 9  8)
+        (1 2 10 9)
+        (2 3 11 10)
+        (3 0 8  11)
+    )
+
+    patch inlet
+    (
+        (0 1 5 4)
+        (1 2 6 5)
+        (2 3 7 6)
+        (3 0 4 7)
+        (4 5 6 7)
+    )
+
+    patch outlet
+    (
+        (8  9 13 12)
+        (9 10 14 13)
+        (10 11 15 14)
+        (11  8 12 15)
+        (12 13 14 15)
+    )
+);
