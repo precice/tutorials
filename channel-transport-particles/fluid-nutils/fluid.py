@@ -123,9 +123,10 @@ def main():
 
     while participant.is_coupling_ongoing():
 
-        x, u, p, eps = bezier.eval(["x_i", "u_i", "p", "ε"] @ ns, arguments=state)
-        with log.add(log.DataLog()):
-            export.vtk("Fluid_" + str(timestep), bezier.tri, x, u=u, p=p, eps=eps)
+        if timestep > 1:  # visualize, in earlier timesteps, epsilon is not yet available
+            x, u, p, eps = bezier.eval(["x_i", "u_i", "p", "ε"] @ ns, arguments=state)
+            with log.add(log.DataLog()):
+                export.vtk("Fluid_" + str(timestep), bezier.tri, x, u=u, p=p, eps=eps)
 
         precice_dt = participant.get_max_time_step_size()
 
