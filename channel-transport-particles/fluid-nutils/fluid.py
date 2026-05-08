@@ -83,14 +83,14 @@ def main():
 
     # TODO: Refactor the \tau_u terms to use the same strong_res (remove duplication)
     # ns.strong_res_i = "ε DuDt_i + (ε p_,i / ρf) - (ε μ u_i,kk) + (F_i / ρf)"
-    res += gauss.integral("(ε DuDt_i + ε p_,i / ρf - ε μ u_i,kk + F_i / ρf) τu v_i,j u_j d:x" @ ns)
+    res += gauss.integral("(ε DuDt_i + ε p_,i / ρf - ε μ u_i,kk / ρf + F_i / ρf) τu v_i,j u_j d:x" @ ns)
 
     ns.γ = "μ / ρf + h (u_k u_k + 1e-15)^0.5"
     res += gauss.integral("γ DεDt v_i,i d:x" @ ns)
 
     # Continuity equation including the PSPG stabilization
     res += gauss.integral("q DεDt d:x" @ ns)
-    res += gauss.integral("(ε DuDt_i + ε p_,i / ρf - ε μ u_i,kk + F_i / ρf) τu q_,i d:x" @ ns)
+    res += gauss.integral("(ε DuDt_i + ε p_,i / ρf - ε μ u_i,kk / ρf + F_i / ρf) τu q_,i d:x" @ ns)
 
     # Dirichlet boundary condition
     sqr = domain.boundary["inflow"].integral("(u_0 - uin)^2 d:x" @ ns, degree=2)
