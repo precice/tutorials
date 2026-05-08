@@ -150,10 +150,10 @@ def main():
         state["dt"] = dt
         state = sys_vans.solve(constrain=cons, arguments=state, tol=1e-10)
 
-        velocity_values, pressure_gradient_values = gauss.eval(['u_i', 'ρf p_,i'] @ ns, arguments=state)
         # COMMENT: here we would also need to write the pressure gradient to preCICE
         # Important note: OpenFOAM scales the pressue (and thereby also its gradient) by the fluid density, so we would
         # need to do the same scaling here. I set the fluid density to 1.2
+        velocity_values, pressure_gradient_values = gauss.eval(['u_i', 'p_,i / ρf'] @ ns, arguments=state)
         participant.write_data(mesh_name, data_name, vertex_ids, velocity_values)
         participant.write_data(mesh_name, pressure_gradient_name, vertex_ids, pressure_gradient_values)
 
