@@ -106,9 +106,8 @@ def main():
 
     # TODO: INITIAL CONDITION
     state = {
-        'u': np.ones(len(ns.ubasis)) * 10,
+        'u': np.zeros(len(ns.ubasis)),
         'p': np.zeros(len(ns.pbasis)),  # for plotting
-        'ε': np.zeros(len(ns.εbasis)),  # for plotting
     }
 
     # add convective term and time derivative for Navier-Stokes
