@@ -56,26 +56,41 @@ def main():
     ns.ε0 = "εbasis_n ?ε0_n"  # previous void fraction
     ns.F_i = "Fbasis_ni ?F_n"  # drag force
     ns.g = np.array([0, -9.81])
-    ns.ρ = 1.0  # density TODO FIX VALUE
-    ns.ρf = 1.2  # QUESTION: different from ρ
+    ns.ρf = 1.2  # fluid density
     ns.DεDt = "(ε - ε0) / ?dt + (ε u_i)_,i"
-    ns.DεuDt_i = "(ε u_i - ε0 u0_i) / ?dt + ε u_i,j u_j"
-    ns.μ = 0.5  # dynamic viscosity
-    ns.σ_ij = "μ (u_i,j + u_j,i) - p δ_ij"
+    ns.DuDt_i = "(u_i - u0_i) / ?dt + u_i,j u_j"
+    ns.μ = 1.8e-5  # dynamic viscosity
     ns.uin = "10 x_1 (2 - x_1)"  # inflow profile
 
-    # define the weak form, Stokes problem
-    res = gauss.integral("(DεuDt_i v_i + μ (ε u_i,j)_,j v_i - p (ε v_i)_,i / ρ + F_i v_i / ρ) d:x" @ ns)
-    # Define the stabilization parameter \tau u according to Tezduyar
-    ns.h = 0.125  # TODO: How do I get the element size here?
-    ns.hconv = "h" # element size related to convection (I would stick to h)
-    ns.hdiff = "h" # element size related to diffusion (I would stick to h here)
-    ns.τu = "((1 / ?dt)^2 + (2 (u_k u_k + 1e-15)^0.5 / hconv)^2 + 9 (4 (μ / ρ) / hdiff^2)^2)^-0.5"
-    #ns.τu = "((1 / ?dt)^2 + (2 (u_k u_k)^0.5 + 1e-15 / hconv)^2 + 9 (4 (μ / ρ) / hdiff^2)^2)^-0.5"
-    #ns.τu = "0.05"
+    # define the weak form
+    # Gertjan implemented DεuDt_i instead of the ε DuDt_i
+    # where ns.DεuDt_i = "(ε u_i - ε0 u0_i) / ?dt + ε u_i,j u_j"
+    res = gauss.integral("(ε DuDt_i v_i - p (ε v_i)_,i / ρf + F_i v_i / ρf) d:x" @ ns)
 
-    res += gauss.integral("(DεuDt_i + ε p_,i / ρ - ε μ u_i,kk + F_i / ρ) τu v_i,j u_j d:x" @ ns)
+    # the version closest to the paper notation
+    res += gauss.integral("((ε μ u_i,kk + μ u_i,j ε_,j) v_i) / ρf d:x" @ ns)
+    # or Gertjan's equivalent version
+    # res += gauss.integral("(μ (ε u_i,j)_,j v_i) / ρf d:x" @ ns)
+
+    # less strict form ?
+    # res += gauss.integral("-μ ε u_i,j v_i,j d:x" @ ns)
+
+    # Define the stabilization parameter \tau u according to Tezduyar
+    ns.h = 0.08     # TODO: How do I get the element size here? note that this affects gamma
+    ns.hconv = "h"  # element size related to convection (I would stick to h)
+    ns.hdiff = "h"  # element size related to diffusion (I would stick to h here)
+    ns.τu = "((1 / ?dt)^2 + (2 (u_k u_k + 1e-15)^0.5 / hconv)^2 + 9 (4 (μ / ρf) / hdiff^2)^2)^-0.5"
+
+    # TODO: Refactor the \tau_u terms to use the same strong_res (remove duplication)
+    # ns.strong_res_i = "ε DuDt_i + (ε p_,i / ρf) - (ε μ u_i,kk) + (F_i / ρf)"
+    res += gauss.integral("(ε DuDt_i + ε p_,i / ρf - ε μ u_i,kk + F_i / ρf) τu v_i,j u_j d:x" @ ns)
+
+    ns.γ = "μ / ρf + h (u_k u_k + 1e-15)^0.5"
+    res += gauss.integral("γ DεDt v_i,i d:x" @ ns)
+
+    # Continuity equation including the PSPG stabilization
     res += gauss.integral("q DεDt d:x" @ ns)
+    res += gauss.integral("(ε DuDt_i + ε p_,i / ρf - ε μ u_i,kk + F_i / ρf) τu q_,i d:x" @ ns)
 
     # Dirichlet boundary condition
     sqr = domain.boundary["inflow"].integral("(u_0 - uin)^2 d:x" @ ns, degree=2)
