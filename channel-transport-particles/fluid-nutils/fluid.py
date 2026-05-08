@@ -139,7 +139,7 @@ def main():
         # Checkpointing for implicit coupling is generally not required
 
         state['α'] = participant.read_data(mesh_name, solid_fraction_name, vertex_ids, dt)
-        state['F'] = participant.read_data(mesh_name, drag_force_name, vertex_ids, dt)
+        state['F'] = participant.read_data(mesh_name, drag_force_name, vertex_ids, dt).flatten()
 
         # determine void ratio
         state = sys_project_ε.solve(arguments=state)
