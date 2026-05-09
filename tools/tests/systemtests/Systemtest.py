@@ -374,7 +374,8 @@ class Systemtest:
                     member_path = dest_dir / member.name
                     member_path_resolved = member_path.resolve()
                     # Ensure the resolved member path is within the destination directory
-                    if os.path.commonpath([str(dest_dir_resolved), str(member_path_resolved)]) != str(dest_dir_resolved):
+                    if os.path.commonpath([str(dest_dir_resolved), str(
+                            member_path_resolved)]) != str(dest_dir_resolved):
                         logging.error(
                             f"Unsafe path detected in reference results archive {self.reference_result.path} "
                             f"for {self}: {member.name}")
