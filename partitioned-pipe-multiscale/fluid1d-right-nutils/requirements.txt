@@ -1,5 +1,5 @@
 setuptools # required by nutils
-nutils==9
+nutils~=9.0
 numpy >1, <2
 pyprecice~=3.0
 matplotlib
