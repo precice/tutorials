@@ -11,6 +11,11 @@ test_suites:
           - fluid-openfoam
           - solid-calculix
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-openfoam.tar.gz
       - path: flow-over-heated-plate-nearest-projection
         case_combination:
           - fluid-openfoam
@@ -30,6 +35,11 @@ test_suites:
          - fluid-openfoam
          - solid-fenics
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-fenics
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-fenics.tar.gz
   nutils_test:
     tutorials:
       - path: flow-over-heated-plate
@@ -80,6 +90,16 @@ test_suites:
           - fluid-openfoam
           - solid-dealii
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-dealii.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-fenics
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-fenics.tar.gz
       - path: flow-over-heated-plate-nearest-projection
         case_combination:
           - fluid-openfoam
