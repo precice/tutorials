@@ -1,5 +1,5 @@
 import subprocess
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Tuple
 from jinja2 import Environment, FileSystemLoader
 from dataclasses import dataclass, field
 import shutil
@@ -353,26 +353,59 @@ class Systemtest:
             for key, value in self.env.items():
                 env_file.write(f"{key}={value}\n")
 
-    def __unpack_reference_results(self):
-        with tarfile.open(self.reference_result.path) as reference_results_tared:
-            # specify which folder to extract to
-            reference_results_tared.extractall(self.system_test_dir / PRECICE_REL_REFERENCE_DIR)
-        logging.debug(
-            f"extracting {self.reference_result.path} into {self.system_test_dir / PRECICE_REL_REFERENCE_DIR}")
+    def __unpack_reference_results(self) -> Tuple[bool, str]:
+        if not self.reference_result.path.exists():
+            error_message = (
+                f"Reference results archive was not found for {self}. "
+                f"Expected file: {self.reference_result.path}. "
+                "Please generate the reference results first or update tests.yaml accordingly.")
+            logging.error(error_message)
+            return False, error_message
+
+        try:
+            # Base directory where reference results should be extracted
+            dest_dir = self.system_test_dir / PRECICE_REL_REFERENCE_DIR
+            dest_dir.mkdir(parents=True, exist_ok=True)
+            dest_dir_resolved = dest_dir.resolve()
+
+            with tarfile.open(self.reference_result.path) as reference_results_tared:
+                # Validate that each member will be extracted within dest_dir
+                for member in reference_results_tared.getmembers():
+                    member_path = dest_dir / member.name
+                    member_path_resolved = member_path.resolve()
+                    # Ensure the resolved member path is within the destination directory
+                    if os.path.commonpath([str(dest_dir_resolved), str(
+                            member_path_resolved)]) != str(dest_dir_resolved):
+                        logging.error(
+                            f"Unsafe path detected in reference results archive {self.reference_result.path} "
+                            f"for {self}: {member.name}")
+                        return False
+
+                # All paths are safe; extract into the destination directory
+                reference_results_tared.extractall(dest_dir)
+
+            logging.debug(
+                f"extracting {self.reference_result.path} into {dest_dir}")
+            return True, ""
+        except (tarfile.TarError, OSError) as e:
+            error_message = (
+                f"Could not unpack reference results archive {self.reference_result.path} for {self}: {e}")
+            logging.error(error_message)
+            return False, error_message
 
     def _run_field_compare(self):
         """
-        Writes the Docker Compose file to disk, executes docker-compose up, and handles the process output.
-
-        Args:
-            docker_compose_content: The content of the Docker Compose file.
+        Executes the field comparison step after unpacking reference results.
 
         Returns:
-            A SystemtestResult object containing the state.
+            A FieldCompareResult object containing the command outcome and logs.
         """
         logging.debug(f"Running fieldcompare for {self}")
         time_start = time.perf_counter()
-        self.__unpack_reference_results()
+        unpack_success, unpack_error_message = self.__unpack_reference_results()
+        if not unpack_success:
+            elapsed_time = time.perf_counter() - time_start
+            return FieldCompareResult(1, [], [unpack_error_message], self, elapsed_time)
         docker_compose_content = self.__get_field_compare_compose_file()
         stdout_data = []
         stderr_data = []
