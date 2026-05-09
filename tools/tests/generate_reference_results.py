@@ -1,4 +1,3 @@
-
 import argparse
 from metadata_parser.metdata import Tutorials, ReferenceResult
 from systemtests.TestSuite import TestSuites
@@ -118,7 +117,7 @@ def main():
     current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     logging.info(f"About to run the following tests {systemtests_to_run}")
-    for number, systemtest in enumerate(systemtests_to_run):
+    for number, systemtest in enumerate(systemtests_to_run, start=1):
         logging.info(f"Started running {systemtest},  {number}/{len(systemtests_to_run)}")
         t = time.perf_counter()
         result = systemtest.run_for_reference_results(run_directory)
@@ -142,7 +141,9 @@ def main():
 
     # write readme
     for tutorial in reference_result_per_tutorial.keys():
-        with open(tutorial.path / "reference_results.metadata", 'w') as file:
+        reference_results_dir = tutorial.path / "reference-results"
+        reference_results_dir.mkdir(parents=True, exist_ok=True)
+        with open(reference_results_dir / "reference_results.metadata", 'w') as file:
             ref_results_info = render_reference_results_info(
                 reference_result_per_tutorial[tutorial], build_args, current_time_string)
             logging.info(f"Writing results for {tutorial.name}")

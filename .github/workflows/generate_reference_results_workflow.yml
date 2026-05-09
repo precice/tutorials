@@ -64,7 +64,7 @@ jobs:
         git checkout ${{ inputs.from_ref }}
         git add ./*/*/*.tar.gz
         git add ./*/*.tar.gz
-        git add ./*/*.metadata
+        git add ./*/reference-results/*.metadata
         git commit -m "${{inputs.commit_msg}}"
         git push
     - name: Upload artifacts for debugging

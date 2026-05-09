@@ -1,0 +1,5 @@
+numpy >1, <2
+fenicsxprecice
+scipy
+sympy
+mpi4py>=3
