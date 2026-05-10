@@ -86,9 +86,9 @@ test_suites:
         path: heat-exchanger-simplified
         case_combination:
           - fluid-top-openfoam
-          - fluid-btm-openfoam
+          - fluid-bottom-openfoam
           - solid-calculix
-        reference_result: ./heat-exchanger-simplified/reference-results/fluid-top-openfoam_fluid-btm-openfoam_solid-calculix.tar.gz
+        reference_result: ./heat-exchanger-simplified/reference-results/fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix.tar.gz
   dealii_test:
     tutorials:
       - path: perpendicular-flap
