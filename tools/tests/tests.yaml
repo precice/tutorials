@@ -1,6 +1,15 @@
 test_suites:
+  quickstart_test:
+    tutorials:
+      - &quickstart
+        path: quickstart
+        case_combination:
+          - fluid-openfoam
+          - solid-cpp
+        reference_result: ./quickstart/reference-results/fluid-openfoam_solid-cpp.tar.gz
   openfoam_adapter_pr:
     tutorials:
+      - *quickstart
       - path: flow-over-heated-plate
         case_combination:
           - fluid-openfoam
@@ -136,6 +145,7 @@ test_suites:
         reference_result: ./elastic-tube-1d/reference-results/fluid-cpp_solid-python.tar.gz
   release_test:
     tutorials:
+      - *quickstart
       - path: elastic-tube-1d
         case_combination:
           - fluid-cpp
