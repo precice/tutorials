@@ -72,7 +72,8 @@ class TestSuites(list):
                         reference_results_of_tutorial[tutorial].append(ReferenceResult(
                             tutorial_case['reference_result'], case_combination_requested))
                         max_time_raw = tutorial_case.get('max_time', None)
-                        if max_time_raw is not None and (not isinstance(max_time_raw, (int, float)) or max_time_raw <= 0):
+                        if max_time_raw is not None and (not isinstance(
+                                max_time_raw, (int, float)) or max_time_raw <= 0):
                             raise ValueError(f"max_time must be a positive number, got {max_time_raw!r}")
                         max_times_of_tutorial[tutorial].append(max_time_raw)
                         mtw_raw = tutorial_case.get('max_time_windows', None)
