@@ -108,10 +108,14 @@ def main():
     for test_suite in test_suites:
         tutorials = test_suite.cases_of_tutorial.keys()
         for tutorial in tutorials:
-            for case, reference_result in zip(
-                    test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial]):
+            max_times = test_suite.max_times.get(tutorial, [])
+            mtw_list = test_suite.max_time_windows.get(tutorial, [])
+            for i, (case, reference_result) in enumerate(zip(
+                    test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial])):
+                max_time = max_times[i] if i < len(max_times) else None
+                max_time_windows = mtw_list[i] if i < len(mtw_list) else None
                 systemtests_to_run.add(
-                    Systemtest(tutorial, build_args, case, reference_result))
+                    Systemtest(tutorial, build_args, case, reference_result, max_time=max_time, max_time_windows=max_time_windows))
 
     reference_result_per_tutorial = {}
     current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
