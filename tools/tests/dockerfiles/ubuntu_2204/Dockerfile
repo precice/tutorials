@@ -20,8 +20,8 @@ USER precice
 FROM base_image AS precice_dependecies
 USER root
 # Installing necessary dependecies for preCICE
-RUN apt-get -qq update && \
-    apt-get -qq -y install \
+RUN apt-get -o Acquire::Retries=3 -qq update && \
+    apt-get -o Acquire::Retries=3 -qq -y install \
         build-essential \
         software-properties-common \
         cmake \
@@ -63,9 +63,9 @@ RUN git clone https://github.com/precice/precice.git precice && \
 FROM precice_dependecies AS openfoam_adapter
 ARG OPENFOAM_EXECUTABLE
 USER root
-RUN apt-get update &&\
-    wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | bash &&\
-    apt-get -qq install ${OPENFOAM_EXECUTABLE}-dev &&\
+RUN apt-get -o Acquire::Retries=3 update &&\
+    wget --tries=3 --waitretry=5 -q -O - https://dl.openfoam.com/add-debian-repo.sh | bash &&\
+    apt-get -o Acquire::Retries=3 -qq install ${OPENFOAM_EXECUTABLE}-dev &&\
     ln -s $(which ${OPENFOAM_EXECUTABLE} ) /usr/bin/openfoam
 USER precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
@@ -95,8 +95,8 @@ FROM precice_dependecies AS fenics_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
 USER root
 RUN add-apt-repository -y ppa:fenics-packages/fenics && \
-    apt-get -qq update && \
-    apt-get -qq install --no-install-recommends fenics
+    apt-get -o Acquire::Retries=3 -qq update && \
+    apt-get -o Acquire::Retries=3 -qq install --no-install-recommends fenics
 USER precice
 ARG FENICS_ADAPTER_REF
 # Building fenics-adapter
@@ -113,13 +113,13 @@ RUN pip3 install --user nutils
 FROM precice_dependecies AS calculix_adapter
 COPY --from=precice /home/precice/.local /home/precice/.local
 USER root
-RUN apt-get -qq update && \
-    apt-get -qq install libarpack2-dev libspooles-dev libyaml-cpp-dev
+RUN apt-get -o Acquire::Retries=3 -qq update && \
+    apt-get -o Acquire::Retries=3 -qq install libarpack2-dev libspooles-dev libyaml-cpp-dev
 ARG CALCULIX_VERSION
 USER precice
 #Download Calculix
 WORKDIR /home/precice
-RUN wget http://www.dhondt.de/ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
+RUN wget --tries=3 --waitretry=5 http://www.dhondt.de/ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
     tar xvjf ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
     rm -fv ccx_${CALCULIX_VERSION}.src.tar.bz2
 
@@ -136,14 +136,14 @@ RUN git clone https://github.com/precice/calculix-adapter.git && \
 FROM python_bindings AS su2_adapter
 COPY --from=precice /home/precice/.local /home/precice/.local
 USER root
-RUN apt-get -qq update && \
-    apt-get -qq install swig
+RUN apt-get -o Acquire::Retries=3 -qq update && \
+    apt-get -o Acquire::Retries=3 -qq install swig
 ARG SU2_VERSION
 USER precice
 
 # Download and build SU2 (We could also use pre-built binaries from the SU2 releases)
 WORKDIR /home/precice
-RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
+RUN wget --tries=3 --waitretry=5 https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
     tar xvzf v${SU2_VERSION}.tar.gz && \
     rm -fv v${SU2_VERSION}.tar.gz
 RUN pip3 install --user mpi4py
@@ -165,8 +165,8 @@ RUN cd "${SU2_HOME}" &&\
 
 FROM precice_dependecies AS dealii_adapter
 USER root
-RUN apt-get update &&\
-    apt-get -qq install libdeal.ii-dev libdeal.ii-doc cmake make g++
+RUN apt-get -o Acquire::Retries=3 update &&\
+    apt-get -o Acquire::Retries=3 -qq install libdeal.ii-dev libdeal.ii-doc cmake make g++
 USER precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DEALII_ADAPTER_PR
