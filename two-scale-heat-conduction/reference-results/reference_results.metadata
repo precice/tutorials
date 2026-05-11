@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| macro-dumux_micro-dumux.tar.gz | 2026-03-20 17:25:51 | 730550fecee6fe6f698eba35a7c565f586cb98db119982cd01148ba2a2b672fe |
+| macro-dumux_micro-dumux.tar.gz | 2026-05-11 07:45:27 | b08f5a2e5cf0535bc7c08bbf9ddc9dbaa875363b2c030bc0ee25de654cb7e027 |
 
 ## List of arguments used to generate the files
 
@@ -23,7 +23,7 @@ We also include some information on the machine used to generate them
 | OPENFOAM_ADAPTER_REF | v1.3.1 |
 | PYTHON_BINDINGS_REF | v3.2.0 |
 | FENICS_ADAPTER_REF | v2.2.0 |
-| TUTORIALS_REF | e27f5d4 |
+| TUTORIALS_REF | b18b3ef |
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
 | CALCULIX_ADAPTER_REF | v2.20.1 |
@@ -33,14 +33,14 @@ We also include some information on the machine used to generate them
 | DUNE_VERSION | 2.9 |
 | DUMUX_VERSION | 3.7 |
 | DUMUX_ADAPTER_REF | 0e914bb |
-| MICRO_MANAGER_VERSION | v0.8.0 |
+| MICRO_MANAGER_REF | v0.8.0 |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
 ## Information about the machine
 
 ### uname -a
 
-Linux precice-tests 5.15.0-168-generic #178-Ubuntu SMP Fri Jan 9 19:05:03 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Linux precice-tests 5.15.0-177-generic #187-Ubuntu SMP Sat Apr 11 22:54:33 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
 
 
 ### lscpu
