@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| free-flow-dumux_porous-media-dumux.tar.gz | 2026-05-11 07:45:27 | bc2e6a3137af7f16976b0731817170a7bf664255ddb4173e2c4d5c0319487cf4 |
+| fluid-openfoam_solid-openfoam.tar.gz | 2026-05-11 07:45:27 | 1a61f981eb713f32f0b47435512857e346e5a9aac01794c815dc2531b2ca32e6 |
 
 ## List of arguments used to generate the files
 
