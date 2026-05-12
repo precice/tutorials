@@ -20,8 +20,10 @@ precice-profiling/
 precice-run/
 core
 profiling.json
+profiling.db
 profiling.csv
 trace.json
+profiling.pftrace
 
 # C++
 *.o
