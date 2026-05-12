@@ -36,7 +36,7 @@ Workflow for the preCICE v3 release testing:
 
 6. Download the build artifacts from Summary > runs.
 
-    - In there, you may want to check the `stdout.log` and `stderr.log` files.
+    - In there, you may want to check the `system-tests-stdout.log` and `system-tests-stderr.log` files.
     - The produced results are in `precice-exports/`, the reference results in `reference-results-unpacked`.
     - Compare using, e.g., ParaView or [fieldcompare](https://gitlab.com/dglaeser/fieldcompare): `fieldcompare dir precice-exports/ reference/`. The `--diff` option will give you `precice-exports/diff_*.vtu` files, while you can also try different tolerances with `-rtol` and `-atol`.
 
