@@ -81,7 +81,7 @@ jobs:
           git add ./*/*.tar.gz
           git add ./*/reference-results/*.metadata
         else
-          git add -A -- '*.tar.gz' '*.metadata'
+          git add -A -- '**/reference-results/*.tar.gz' '**/reference-results/*.metadata'
         fi
         git commit -m "${{inputs.commit_msg}}"
         git push
