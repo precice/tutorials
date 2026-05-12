@@ -83,7 +83,7 @@ FROM precice_dependecies AS openfoam_adapter
 ARG OPENFOAM_EXECUTABLE
 USER root
 RUN apt-get -o Acquire::Retries=3 update &&\
-    wget --tries=3 --waitretry=5 -q -O - https://dl.openfoam.com/add-debian-repo.sh | bash &&\
+    wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | bash &&\
     apt-get -o Acquire::Retries=3 -qq install ${OPENFOAM_EXECUTABLE}-dev &&\
     ln -s $(which ${OPENFOAM_EXECUTABLE} ) /usr/bin/openfoam
 USER precice
@@ -144,7 +144,7 @@ ARG CALCULIX_VERSION
 USER precice
 #Download Calculix
 WORKDIR /home/precice
-RUN wget --tries=3 --waitretry=5 http://www.dhondt.de/ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
+RUN wget http://www.dhondt.de/ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
     tar xvjf ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
     rm -fv ccx_${CALCULIX_VERSION}.src.tar.bz2
 
@@ -169,7 +169,7 @@ USER precice
 # Download and build SU2 (We could also use pre-built binaries from the SU2 releases)
 # The sed command applies a patch needed for Ubuntu 24.04.
 WORKDIR /home/precice
-RUN wget --tries=3 --waitretry=5 https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
+RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
     tar xvzf v${SU2_VERSION}.tar.gz && \
     rm -fv v${SU2_VERSION}.tar.gz
 RUN python3 -m venv /home/precice/venv && \
