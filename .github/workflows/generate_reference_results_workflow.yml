@@ -74,13 +74,14 @@ jobs:
         git checkout ${{ inputs.from_ref }}
         # Add only the changed reference results.
         # When no suite filter is given, add all reference result files.
-        # When a suite filter is given, only add files that were actually modified.
+        # When a suite filter is given, only add matching reference result artifacts,
+        # including newly created files for newly added tutorials or suites.
         if [ -z "${{ inputs.suites }}" ]; then
           git add ./*/*/*.tar.gz
           git add ./*/*.tar.gz
           git add ./*/reference-results/*.metadata
         else
-          git add --update '*.tar.gz' '*.metadata'
+          git add -A -- '*.tar.gz' '*.metadata'
         fi
         git commit -m "${{inputs.commit_msg}}"
         git push
