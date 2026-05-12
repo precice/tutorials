@@ -62,11 +62,11 @@ jobs:
         test -f generate_reference_results.py && export GENERATE_REF_RESULTS=generate_reference_results.py
         test -f generate_reference_data.py && export GENERATE_REF_RESULTS=generate_reference_data.py
         echo "Selected $GENERATE_REF_RESULTS to run"
-        SUITES_ARG=""
+        SUITES_ARGS=()
         if [ -n "${{ inputs.suites }}" ]; then
-          SUITES_ARG="--suites=${{ inputs.suites }}"
+          SUITES_ARGS+=(--suites "${{ inputs.suites }}")
         fi
-        python $GENERATE_REF_RESULTS --log-level=${{inputs.log_level}} $SUITES_ARG
+        python "$GENERATE_REF_RESULTS" --log-level="${{inputs.log_level}}" "${SUITES_ARGS[@]}"
         cd ../../
     - name: Create commit
       if: success()
