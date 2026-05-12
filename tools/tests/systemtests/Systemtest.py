@@ -19,7 +19,7 @@ import logging
 import os
 
 
-GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTEST_TIMEOUT", 900))
+GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 900))
 SHORT_TIMEOUT = 10
 
 

@@ -334,7 +334,7 @@ test_suites:
         timeout: 1200
 ```
 
-The optional `timeout` field (in seconds) sets the maximum time for the solver run and fieldcompare phases of that specific case. If omitted, it defaults to `GLOBAL_TIMEOUT` (currently 900s, overridable via the `PRECICE_SYSTEMTEST_TIMEOUT` environment variable).
+The optional `timeout` field (in seconds) sets the maximum time for the solver run and fieldcompare phases of that specific case. If omitted, it defaults to `GLOBAL_TIMEOUT` (currently 900s, overridable via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable).
 
 This defines two test suites, namely `openfoam_adapter_pr` and `openfoam_adapter_release`. Each of them defines which case combinations of which tutorials to run.
 
