@@ -12,6 +12,7 @@ class TestSuite:
     reference_results: Dict[Tutorial, List[ReferenceResult]]
     max_times: Dict[Tutorial, list] = field(default_factory=dict)
     max_time_windows: Dict[Tutorial, list] = field(default_factory=dict)
+    timeouts: Dict[Tutorial, List] = field(default_factory=dict)
 
     def __repr__(self) -> str:
         return_string = f"Test suite: {self.name} contains:"
@@ -52,6 +53,7 @@ class TestSuites(list):
                 reference_results_of_tutorial = {}
                 max_times_of_tutorial = {}
                 max_time_windows_of_tutorial = {}
+                timeouts_of_tutorial = {}
                 # iterate over tutorials:
                 for tutorial_case in test_suites_raw[test_suite_name]['tutorials']:
                     tutorial = parsed_tutorials.get_by_path(tutorial_case['path'])
@@ -63,6 +65,7 @@ class TestSuites(list):
                         reference_results_of_tutorial[tutorial] = []
                         max_times_of_tutorial[tutorial] = []
                         max_time_windows_of_tutorial[tutorial] = []
+                        timeouts_of_tutorial[tutorial] = []
 
                     all_case_combinations = tutorial.case_combinations
                     case_combination_requested = CaseCombination.from_string_list(
@@ -80,12 +83,20 @@ class TestSuites(list):
                         if mtw_raw is not None and (not isinstance(mtw_raw, int) or mtw_raw <= 0):
                             raise ValueError(f"max_time_windows must be a positive integer, got {mtw_raw!r}")
                         max_time_windows_of_tutorial[tutorial].append(mtw_raw)
+
+                        timeout_value = tutorial_case.get('timeout', None)
+                        if timeout_value is not None and not isinstance(timeout_value, int):
+                            raise TypeError(
+                                f"Expected 'timeout' to be an integer or None, but got {type(timeout_value).__name__} "
+                                f"(value: {timeout_value}) in tutorial '{tutorial}'."
+                            )
+                        timeouts_of_tutorial[tutorial].append(timeout_value)
                     else:
                         raise Exception(
                             f"Could not find the following cases {tutorial_case['case-combination']} in the current metadata of tutorial {tutorial.name}")
 
                 testsuites.append(TestSuite(test_suite_name, case_combinations_of_tutorial,
-                                            reference_results_of_tutorial, max_times_of_tutorial, max_time_windows_of_tutorial))
+                                            reference_results_of_tutorial, max_times_of_tutorial, max_time_windows_of_tutorial, timeouts_of_tutorial))
 
         return cls(testsuites)
 
