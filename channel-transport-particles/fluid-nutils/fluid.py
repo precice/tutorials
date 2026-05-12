@@ -68,16 +68,16 @@ def main():
     res = gauss.integral("(ε DuDt_i v_i - p (ε v_i)_,i / ρf + F_i v_i / ρf) d:x" @ ns)
 
     # the version closest to the paper notation
-    res += gauss.integral("((ε μ u_i,kk + μ u_i,j ε_,j) v_i) / ρf d:x" @ ns)
+    # res += gauss.integral("((ε μ u_i,kk + μ u_i,j ε_,j) v_i) / ρf d:x" @ ns)
     # or Gertjan's equivalent version
     # res += gauss.integral("(μ (ε u_i,j)_,j v_i) / ρf d:x" @ ns)
+    # But mistake in the paper? I think there shouldn't be the second derivative on u
+    # Instead the standard integrated-by-parts form and a term with grad epsilon, i.e., from the product rule
+    res += gauss.integral("(ε μ u_i,k v_i,k / ρf + (μ u_i,j ε_,j) v_i / ρf) d:x" @ ns)
 
-    # less strict form ?
-    # res += gauss.integral("-μ ε u_i,j v_i,j d:x" @ ns)
-
-    # Define the stabilization parameter \tau u according to Tezduyar
+    # Define the stabilization parameter \tau u according to Tezduyar, Eq. (16)
     ns.h = 0.08     # TODO: How do I get the element size here? note that this affects gamma
-    ns.hconv = "h"  # element size related to convection (I would stick to h)
+    ns.hconv = "h"  # element size related to convection (I would stick to h unless there is a better idea)
     ns.hdiff = "h"  # element size related to diffusion (I would stick to h here)
     ns.τu = "((1 / ?dt)^2 + (2 (u_k u_k + 1e-15)^0.5 / hconv)^2 + 9 (4 (μ / ρf) / hdiff^2)^2)^-0.5"
 
@@ -125,9 +125,7 @@ def main():
         'p': np.zeros(len(ns.pbasis)),  # for plotting
     }
 
-    # add convective term and time derivative for Navier-Stokes
-    # ures += gauss.integral("ubasis_ni (dudt_i + μ (u_i u_j)_,j) d:x" @ ns)
-
+    # Projection of the volume fraction
     sqr = gauss.integral('(ε - (1 - α))^2 d:x' @ ns)
     sys_project_ε = solver.System(sqr, trial='ε')
 
