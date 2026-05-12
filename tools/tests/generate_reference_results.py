@@ -86,6 +86,9 @@ def main():
     parser = argparse.ArgumentParser(description='Generate reference data for systemtests')
     parser.add_argument('--rundir', type=str, help='Directory to run the systemstests in.',
                         nargs='?', const=PRECICE_TESTS_RUN_DIR, default=PRECICE_TESTS_RUN_DIR)
+    parser.add_argument('--suites', type=str,
+                        help='Comma-separated test suites to generate reference results for. '
+                             'If not specified, all suites are used.')
     parser.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
                         default='INFO', help='Set the logging level')
 
@@ -99,7 +102,38 @@ def main():
 
     available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
 
-    test_suites = TestSuites.from_yaml(PRECICE_TESTS_DIR / "tests.yaml", available_tutorials)
+    all_test_suites = TestSuites.from_yaml(PRECICE_TESTS_DIR / "tests.yaml", available_tutorials)
+
+    if args.suites:
+        test_suites_requested = []
+        for name in args.suites.split(','):
+            normalized_name = name.strip()
+            if normalized_name and normalized_name not in test_suites_requested:
+                test_suites_requested.append(normalized_name)
+
+        if not test_suites_requested:
+            parser.error(
+                "The --suites option did not contain any valid suite names after parsing. "
+                "Use print_test_suites.py to get an overview")
+
+        test_suites = []
+        unknown_test_suites = []
+        for name in test_suites_requested:
+            found = all_test_suites.get_by_name(name)
+            if not found:
+                unknown_test_suites.append(name)
+            else:
+                test_suites.append(found)
+
+        if unknown_test_suites:
+            parser.error(
+                f"Unknown test suite name(s): {', '.join(unknown_test_suites)}. "
+                "Use print_test_suites.py to get an overview")
+
+        logging.info(f"Filtering to requested suites: {[s.name for s in test_suites]}")
+    else:
+        test_suites = all_test_suites
+        logging.info("No --suites filter specified, generating reference results for all suites.")
 
     # Read in parameters
     build_args = SystemtestArguments.from_yaml(PRECICE_TESTS_DIR / "reference_versions.yaml")
@@ -108,12 +142,16 @@ def main():
     for test_suite in test_suites:
         tutorials = test_suite.cases_of_tutorial.keys()
         for tutorial in tutorials:
+            max_times = test_suite.max_times.get(tutorial, [])
+            mtw_list = test_suite.max_time_windows.get(tutorial, [])
             timeouts = test_suite.timeouts.get(tutorial, [])
             for i, (case, reference_result) in enumerate(zip(
                     test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial])):
+                max_time = max_times[i] if i < len(max_times) else None
+                max_time_windows = mtw_list[i] if i < len(mtw_list) else None
                 timeout = timeouts[i] if i < len(timeouts) and timeouts[i] is not None else GLOBAL_TIMEOUT
                 systemtests_to_run.add(
-                    Systemtest(tutorial, build_args, case, reference_result, timeout=timeout))
+                    Systemtest(tutorial, build_args, case, reference_result, max_time=max_time, max_time_windows=max_time_windows, timeout=timeout))
 
     reference_result_per_tutorial = {}
     current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')

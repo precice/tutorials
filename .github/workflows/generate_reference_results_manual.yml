@@ -10,6 +10,11 @@ on:
         description: 'Commit msg for commit that adds the reference results'
         default: "Adding reference results"
         type: string
+      suites:
+        description: 'Comma-separated test suites to generate reference results for (leave empty for all)'
+        default: ''
+        required: false
+        type: string
       log_level:
         description: 'Logging verbosity level used for the systemtests'
         default: 'INFO'
@@ -28,4 +33,5 @@ jobs:
     with: 
       from_ref: ${{ inputs.from_ref }}
       commit_msg: ${{ inputs.commit_msg }}
+      suites: ${{ inputs.suites }}
       log_level: ${{ inputs.log_level }}

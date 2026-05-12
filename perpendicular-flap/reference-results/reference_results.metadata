@@ -11,9 +11,11 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-dealii.tar.gz | 2026-03-20 17:25:51 | babb3be79fd712062e5440b9a789b4a6f38d026e7e2016ba401200c2f76bf1dc |
-| fluid-openfoam_solid-calculix.tar.gz | 2026-03-20 17:25:51 | 9700848bacb55184350ea75e4ff3437781f73764b669873651c1b19f20cdefc4 |
-| fluid-su2_solid-fenics.tar.gz | 2026-03-20 17:25:51 | a62556372546d128fdf27dac0c3f77cf24669c048e0555fe6410dcc2490480b4 |
+| fluid-openfoam_solid-calculix.tar.gz | 2026-05-11 07:45:27 | 4fbb2c688033023cda1ff26f7c97bb123931014d66620b572c930e4b8e0bcf7f |
+| fluid-openfoam_solid-openfoam.tar.gz | 2026-05-11 07:45:27 | e138d80b4640eac657ba3e03ac54391f92381b3555150887129fce6f6321facd |
+| fluid-su2_solid-fenics.tar.gz | 2026-05-11 07:45:27 | 8c41e5f1390b4b7038abf42e874438603efb0fa032a3f5f249c5475214cafcde |
+| fluid-openfoam_solid-fenics.tar.gz | 2026-05-11 07:45:27 | 49cd8553f6ce718a23c8b727ffbb0b1e4c45b2286ecb071120ff9327b1ebf751 |
+| fluid-openfoam_solid-dealii.tar.gz | 2026-05-11 07:45:27 | 6fdbfbdf4636e3d646cb74741fcd986a025ae1a07462b2cd321d3da46e95d2f0 |
 
 ## List of arguments used to generate the files
 
@@ -25,7 +27,7 @@ We also include some information on the machine used to generate them
 | OPENFOAM_ADAPTER_REF | v1.3.1 |
 | PYTHON_BINDINGS_REF | v3.2.0 |
 | FENICS_ADAPTER_REF | v2.2.0 |
-| TUTORIALS_REF | e27f5d4 |
+| TUTORIALS_REF | b18b3ef |
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
 | CALCULIX_ADAPTER_REF | v2.20.1 |
@@ -35,14 +37,14 @@ We also include some information on the machine used to generate them
 | DUNE_VERSION | 2.9 |
 | DUMUX_VERSION | 3.7 |
 | DUMUX_ADAPTER_REF | 0e914bb |
-| MICRO_MANAGER_VERSION | v0.8.0 |
+| MICRO_MANAGER_REF | v0.8.0 |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
 ## Information about the machine
 
 ### uname -a
 
-Linux precice-tests 5.15.0-168-generic #178-Ubuntu SMP Fri Jan 9 19:05:03 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Linux precice-tests 5.15.0-177-generic #187-Ubuntu SMP Sat Apr 11 22:54:33 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
 
 
 ### lscpu
