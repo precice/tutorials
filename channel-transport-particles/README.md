@@ -21,7 +21,7 @@ Note that this scenario features a unidirectional coupling, where the fluid velo
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-channel-transport-particles-precice-config.pdf
+![preCICE configuration visualization](images/tutorials-channel-transport-particles-precice-config.png
 )
 
 ## Available solvers

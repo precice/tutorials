@@ -22,7 +22,7 @@ jobs:
       - name: Install pre-commit
         run: pip install pre-commit
       - name: Run checks
-        run: pre-commit run -a -v
+        run: pre-commit run -a
       - name: Git status
         if: always()
         run: |
