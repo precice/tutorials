@@ -105,18 +105,31 @@ def main():
     all_test_suites = TestSuites.from_yaml(PRECICE_TESTS_DIR / "tests.yaml", available_tutorials)
 
     if args.suites:
-        test_suites_requested = args.suites.split(',')
+        test_suites_requested = []
+        for name in args.suites.split(','):
+            normalized_name = name.strip()
+            if normalized_name and normalized_name not in test_suites_requested:
+                test_suites_requested.append(normalized_name)
+
+        if not test_suites_requested:
+            parser.error(
+                "The --suites option did not contain any valid suite names after parsing. "
+                "Use print_test_suites.py to get an overview")
+
         test_suites = []
+        unknown_test_suites = []
         for name in test_suites_requested:
             found = all_test_suites.get_by_name(name)
             if not found:
-                logging.error(f"Did not find the testsuite with name {name}")
+                unknown_test_suites.append(name)
             else:
                 test_suites.append(found)
-        if not test_suites:
-            raise RuntimeError(
-                f"No matching test suites with names {test_suites_requested} found. "
+
+        if unknown_test_suites:
+            parser.error(
+                f"Unknown test suite name(s): {unknown_test_suites}. "
                 "Use print_test_suites.py to get an overview")
+
         logging.info(f"Filtering to requested suites: {[s.name for s in test_suites]}")
     else:
         test_suites = all_test_suites
