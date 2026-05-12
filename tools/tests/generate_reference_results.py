@@ -127,7 +127,7 @@ def main():
 
         if unknown_test_suites:
             parser.error(
-                f"Unknown test suite name(s): {unknown_test_suites}. "
+                f"Unknown test suite name(s): {', '.join(unknown_test_suites)}. "
                 "Use print_test_suites.py to get an overview")
 
         logging.info(f"Filtering to requested suites: {[s.name for s in test_suites]}")
