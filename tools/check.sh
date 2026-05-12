@@ -20,12 +20,15 @@ for tutorial in $tutorials; do
     if ! [[ $link =~ ^$prefix ]]; then
       echo "$doc: error: wrong permalink"
       echo "$doc: note: permalink \"$link\" does not start with \"$prefix\""
+      echo
       CODE=1
     else
-      echo "$doc: info: correct permalink"
-      echo "$doc: note: permalink is \"$link\""
+      if [ "${1:-}" = "-v" ]; then
+        echo "$doc: info: correct permalink"
+        echo "$doc: note: permalink is \"$link\""
+        echo
+      fi
     fi
-    echo
   done
 
   images=$(find "./$tutorial/images" -type f 2> /dev/null | sed "s/^.\///")
@@ -36,11 +39,14 @@ for tutorial in $tutorials; do
     if ! [[ $img =~ ^$tutorial/images/$prefix ]]; then
       echo "$img: error: wrong filename"
       echo "$img: note: expected prefix \"$prefix\""
+      echo
       CODE=1
     else
-      echo "$img: info: correct filename"
+      if [ "${1:-}" = "-v" ]; then
+        echo "$img: info: correct filename"
+        echo
+      fi
     fi
-    echo
   done
 done
 
@@ -55,12 +61,15 @@ for doc in $docs; do
   if ! [[ $link =~ ^$prefix ]]; then
     echo "$doc: error: wrong permalink"
     echo "$doc: note: permalink \"$link\" does not start with \"$prefix\""
+    echo
     CODE=1
   else
-    echo "$doc: info: correct permalink"
-    echo "$doc: note: permalink is \"$link\""
+    if [ "${1:-}" = "-v" ]; then
+      echo "$doc: info: correct permalink"
+      echo "$doc: note: permalink is \"$link\""
+      echo
+    fi
   fi
-  echo
 done
 
 images=$(find ./quickstart/images -type f 2> /dev/null | sed "s/^.\///")
@@ -71,11 +80,14 @@ for img in $images; do
   if ! [[ $img =~ ^quickstart/images/$prefix ]]; then
     echo "$img: error: wrong filename"
     echo "$img: note: expected prefix \"$prefix\""
+    echo
     CODE=1
   else
-    echo "$img: info: correct filename"
+    if [ "${1:-}" = "-v" ]; then
+      echo "$img: info: correct filename"
+      echo
+    fi
   fi
-  echo
 done
 
 
