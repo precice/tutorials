@@ -117,7 +117,7 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
             print("\n\n", file=f)
             print(
-                "In case a test fails, download the archive from the bottom of this page and look into each `stdout.log` and `stderr.log`. The time spent in each step might already give useful hints.",
+                "In case a test fails, download the archive from the bottom of this page and look into each `system-tests-stdout.log` and `system-tests-stderr.log`. The time spent in each step might already give useful hints.",
                 file=f)
             print(
                 "See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).",
@@ -543,9 +543,9 @@ class Systemtest:
         return f"{self.tutorial.name} {self.case_combination}"
 
     def __write_logs(self, stdout_data: List[str], stderr_data: List[str]):
-        with open(self.system_test_dir / "stdout.log", 'w') as stdout_file:
+        with open(self.system_test_dir / "system-tests-stdout.log", 'w') as stdout_file:
             stdout_file.write("\n".join(stdout_data))
-        with open(self.system_test_dir / "stderr.log", 'w') as stderr_file:
+        with open(self.system_test_dir / "system-tests-stderr.log", 'w') as stderr_file:
             stderr_file.write("\n".join(stderr_data))
 
     def __apply_max_time_override(self):
