@@ -7,7 +7,7 @@ summary: This tutorial describes how to run a conjugate heat transfer simulation
 
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/heat-exchanger-simplified). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/heat-exchanger-simplified), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/heat-exchanger-simplified) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -61,7 +61,11 @@ to run the solid participant (which is also controlling the coupling).
 
 Similarly to the [flow over heated plate: Two meshes](https://precice.org/tutorials-flow-over-heated-plate-two-meshes.html) tutorial.
 
-![Results of the simplified heat exchanger tutorial](images/tutorials-heat-exchanger-simplified-overview.png)
+![Results of the simplified heat exchanger tutorial at t=1s](images/tutorials-heat-exchanger-simplified-overview-1s.png)
+
+By default, this tutorial simulates 1s. Temperature distribution at 5s:
+
+![Results of the simplified heat exchanger tutorial at t=5s](images/tutorials-heat-exchanger-simplified-overview-5s.png)
 
 ![Animation of the simplified heat exchanger tutorial](images/tutorials-heat-exchanger-simplified-animation.webp)
 

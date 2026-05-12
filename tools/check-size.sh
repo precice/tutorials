@@ -18,6 +18,8 @@ echo "Limit for gifs: ${MAXIMUMGIFSIZE} kb"
 for tutorial in $tutorials; do
   images=$(find ./"${tutorial}"/images -type f 2> /dev/null | sed "s/^.\///")
   for img in $images; do
+    # Only check files that are tracked by git
+    git ls-files --error-unmatch "$img" >/dev/null 2>&1 || continue
     actualsize=$(du -k "$img" | cut -f 1)
     # Check gifs
     if [[ "${img}" == *.gif || "${img}" == *.webp || "${img}" == *.webm ]]; then

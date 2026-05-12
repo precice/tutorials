@@ -6,7 +6,7 @@ summary: This tutorial describes how to run a conjugate heat transfer coupled si
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/flow-over-heated-plate), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -40,6 +40,8 @@ Solid participant:
 * OpenFOAM (laplacianFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
 * FEniCS. For more information, have a look at the [FeniCS adapter documentation](https://precice.org/adapter-fenics.html).
+
+* FEniCSx. For more information, have a look at the [FeniCSx adapter documentation](https://precice.org/adapter-fenicsx.html).
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 

@@ -93,18 +93,15 @@ int main(int argc, char **argv)
   // - Name of solver
   // - What rank of how many ranks this instance is
   // Configure preCICE. For now the config file is hardcoded.
-  std::string       preciceConfigFilename = "../precice-config.xml";
-  const std::string meshName              = "macro-mesh";
-  if (argc > 2)
-    preciceConfigFilename = argv[argc - 1];
+  std::string meshName;
 
   auto &couplingParticipant = Dumux::Precice::CouplingAdapter::getInstance();
 
   const auto runWithCoupling = getParam<bool>("Precice.RunWithCoupling");
 
   if (runWithCoupling) {
-    couplingParticipant.announceSolver("macro-heat", preciceConfigFilename,
-                                       mpiHelper.rank(), mpiHelper.size());
+    couplingParticipant.announceConfig(mpiHelper.rank(), mpiHelper.size());
+    meshName = couplingParticipant.getMeshNames()[0];
     // verify that dimensions match
     const int preciceDim = couplingParticipant.getMeshDimensions(meshName);
     const int dim        = int(leafGridView.dimension);
@@ -151,22 +148,20 @@ int main(int argc, char **argv)
   }
 
   // initialize the coupling data
-  const std::string readDatak00            = "k_00";
-  const std::string readDatak01            = "k_01";
-  const std::string readDatak10            = "k_10";
-  const std::string readDatak11            = "k_11";
-  const std::string readDataPorosity       = "porosity";
-  const std::string writeDataConcentration = "concentration";
-  // const std::string writeDataTemperature = "temperature";
+  std::string readDatak00;
+  std::string readDatak01;
+  std::string readDatak10;
+  std::string readDatak11;
+  std::string readDataPorosity;
+  std::string writeDataConcentration;
 
   if (runWithCoupling) {
-    couplingParticipant.announceQuantity(meshName, readDatak00);
-    couplingParticipant.announceQuantity(meshName, readDatak01);
-    couplingParticipant.announceQuantity(meshName, readDatak10);
-    couplingParticipant.announceQuantity(meshName, readDatak11);
-    couplingParticipant.announceQuantity(meshName, readDataPorosity);
-    couplingParticipant.announceQuantity(meshName, writeDataConcentration);
-    // couplingParticipant.announceQuantity(meshName, writeDataTemperature);
+    readDatak00            = couplingParticipant.getReadDataNamesOnMesh(meshName)[0];
+    readDatak01            = couplingParticipant.getReadDataNamesOnMesh(meshName)[1];
+    readDatak10            = couplingParticipant.getReadDataNamesOnMesh(meshName)[2];
+    readDatak11            = couplingParticipant.getReadDataNamesOnMesh(meshName)[3];
+    readDataPorosity       = couplingParticipant.getReadDataNamesOnMesh(meshName)[4];
+    writeDataConcentration = couplingParticipant.getWriteDataNamesOnMesh(meshName)[0];
   }
 
   // the solution vector (initialized with zeros) NElements x 2(pressure,
@@ -214,11 +209,11 @@ int main(int argc, char **argv)
                                                            problem->name());
   IOFields::initOutputModule(vtkWriter);
   // add model specific output fields
-  vtkWriter.addField(problem->getPorosity(), "porosity");
-  vtkWriter.addField(problem->getK00(), "k00");
-  vtkWriter.addField(problem->getK01(), "k01");
-  vtkWriter.addField(problem->getK10(), "k10");
-  vtkWriter.addField(problem->getK11(), "k11");
+  vtkWriter.addField(problem->getPorosity(), "Porosity");
+  vtkWriter.addField(problem->getK00(), "K00");
+  vtkWriter.addField(problem->getK01(), "K01");
+  vtkWriter.addField(problem->getK10(), "K10");
+  vtkWriter.addField(problem->getK11(), "K11");
   problem->updateVtkOutput(x);
   vtkWriter.write(0.0);
 
