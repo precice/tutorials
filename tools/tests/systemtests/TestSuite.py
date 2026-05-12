@@ -83,7 +83,14 @@ class TestSuites(list):
                         if mtw_raw is not None and (not isinstance(mtw_raw, int) or mtw_raw <= 0):
                             raise ValueError(f"max_time_windows must be a positive integer, got {mtw_raw!r}")
                         max_time_windows_of_tutorial[tutorial].append(mtw_raw)
-                        timeouts_of_tutorial[tutorial].append(tutorial_case.get('timeout', None))
+
+                        timeout_value = tutorial_case.get('timeout', None)
+                        if timeout_value is not None and not isinstance(timeout_value, int):
+                            raise TypeError(
+                                f"Expected 'timeout' to be an integer or None, but got {type(timeout_value).__name__} "
+                                f"(value: {timeout_value}) in tutorial '{tutorial}'."
+                            )
+                        timeouts_of_tutorial[tutorial].append(timeout_value)
                     else:
                         raise Exception(
                             f"Could not find the following cases {tutorial_case['case-combination']} in the current metadata of tutorial {tutorial.name}")
