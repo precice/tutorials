@@ -6,8 +6,6 @@ import shutil
 from pathlib import Path
 from paths import PRECICE_REL_OUTPUT_DIR, PRECICE_TOOLS_DIR, PRECICE_REL_REFERENCE_DIR, PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
 
-DIFF_RESULTS_DIR = "diff-results"
-
 from metadata_parser.metdata import Tutorial, CaseCombination, Case, ReferenceResult
 from .SystemtestArguments import SystemtestArguments
 
@@ -23,6 +21,8 @@ import os
 
 GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 900))
 SHORT_TIMEOUT = 10
+
+DIFF_RESULTS_DIR = "diff-results"
 
 
 def slugify(value, allow_unicode=False):
@@ -451,30 +451,45 @@ class Systemtest:
             elapsed_time = time.perf_counter() - time_start
             return FieldCompareResult(1, stdout_data, stderr_data, self, elapsed_time)
 
-    def __archive_fieldcompare_diffs(self):
+    def __archive_fieldcompare_diffs(self) -> None:
         """
-        Copy fieldcompare diff VTK files from precice-exports into diff-results/
-        so they are easy to find in CI artifacts when investigating failures (issue #441).
+        Copy fieldcompare diff VTK files from precice-exports/ into diff-results/,
+        preserving paths under precice-exports/ so nested outputs are not skipped
+        and identical basenames in different folders do not overwrite each other.
         """
-        precice_exports = self.system_test_dir / PRECICE_REL_OUTPUT_DIR
-        if not precice_exports.exists():
+        exports_dir = self.system_test_dir / PRECICE_REL_OUTPUT_DIR
+        if not exports_dir.is_dir():
             return
-        diff_files = []
-        for pattern in ("*diff*.vtu", "*diff*.vtk", "*diff*.vtp"):
-            diff_files.extend(precice_exports.glob(pattern))
-        if not diff_files:
-            return
-        dest_dir = self.system_test_dir / DIFF_RESULTS_DIR
-        dest_dir.mkdir(exist_ok=True)
-        for f in diff_files:
-            if f.is_file():
-                shutil.copy2(f, dest_dir / f.name)
-        logging.debug(
-            "Archived %d fieldcompare diff file(s) to %s for %s",
-            len(diff_files),
-            dest_dir,
-            self,
-        )
+        suffixes = (".vtu", ".vtk", ".vtp")
+        dest_root = self.system_test_dir / DIFF_RESULTS_DIR
+        seen_resolved: set[Path] = set()
+        archived_count = 0
+        for path in exports_dir.rglob("*"):
+            if not path.is_file():
+                continue
+            if path.suffix.lower() not in suffixes:
+                continue
+            if "diff" not in path.name.lower():
+                continue
+            resolved = path.resolve()
+            if resolved in seen_resolved:
+                continue
+            try:
+                rel = path.relative_to(exports_dir)
+            except ValueError:
+                continue
+            seen_resolved.add(resolved)
+            dest_path = dest_root / rel
+            dest_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, dest_path)
+            archived_count += 1
+        if archived_count:
+            logging.debug(
+                "Archived %d fieldcompare diff file(s) to %s for %s",
+                archived_count,
+                dest_root,
+                self,
+            )
 
     def _build_docker(self):
         """

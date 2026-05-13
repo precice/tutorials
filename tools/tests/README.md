@@ -105,7 +105,7 @@ In this case, building and running seems to work out, but the tests fail because
 
 The easiest way to debug a systemtest run is first to have a look at the output written into the action on GitHub.
 If this does not provide enough hints, the next step is to download the generated `system_tests_run_<run_id>_<run_attempt>` artifact. Note that by default this will only be generated if the systemtests fail.
-Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains two log files: a `stderr.log` and `stdout.log`. This can be a starting point for a further investigation. When fieldcompare runs with `--diff`, it writes VTK diff files; these are copied into a `diff-results/` subfolder in the same run directory so you can open them (e.g. in ParaView) to see where results differ from the reference.
+Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains two log files: a `stderr.log` and `stdout.log`. This can be a starting point for a further investigation. When fieldcompare runs with `--diff`, it writes VTK diff files under `precice-exports/`; if the comparison fails, those files are copied into a `diff-results/` subfolder in the same run directory (mirroring any subpaths under `precice-exports/`) so you can open them (e.g. in ParaView) to see where results differ from the reference. On successful comparisons, `diff-results/` is therefore absent.
 
 ## Adding new tests
 
