@@ -81,9 +81,9 @@ For running G+Smo, follow the [G+Smo adapter installation instructions](https://
 
 ```bash
 cd <tutorial-directory>/partitioned-heat-conduction/dirichlet-gismo
-ln -sf <gismo-build-directory>/bin/partitioned-heat-conduction ./gismo-executable
+ln -sf <gismo-build-directory>/bin/partitioned-heat-conduction ./partitioned-heat-conduction
 cd ../neumann-gismo
-ln -sf <gismo-build-directory>/bin/partitioned-heat-conduction ./gismo-executable
+ln -sf <gismo-build-directory>/bin/partitioned-heat-conduction ./partitioned-heat-conduction
 ```
 
 Then open two terminals and run:

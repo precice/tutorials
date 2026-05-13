@@ -4,6 +4,6 @@ set -e -u
 . ../../tools/log.sh
 exec > >(tee --append "$LOGFILE") 2>&1
 
-./gismo-executable -c ../precice-config.xml --plot -s 0
+./partitioned-heat-conduction -s 0 -c ../precice-config.xml --plot
 
 close_log
