@@ -77,7 +77,14 @@ If you want to use Nutils or OpenFOAM, use `cd dirichlet/neumann-nutils`, respec
 mpirun -n <N_PROC> heat.py -d
 ```
 
-For running G+Smo, follow the [G+Smo adapter installation instructions](https://precice.org/adapter-gismo.html) to build the `partitioned-heat-conduction` example. Then link the compiled executable to the `dirichlet-gismo` and `neumann-gismo` folders:
+For running G+Smo, follow the [G+Smo adapter installation instructions](https://precice.org/adapter-gismo.html) to build the `partitioned-heat-conduction` example. This tutorial only requires the `gsPreCICE` submodule:
+
+```bash
+cmake .. -DGISMO_OPTIONAL="gsPreCICE"
+make partitioned-heat-conduction
+```
+
+Then link the compiled executable to the `dirichlet-gismo` and `neumann-gismo` folders:
 
 ```bash
 cd <tutorial-directory>/partitioned-heat-conduction/dirichlet-gismo
