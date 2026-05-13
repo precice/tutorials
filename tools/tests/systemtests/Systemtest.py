@@ -469,7 +469,12 @@ class Systemtest:
         for f in diff_files:
             if f.is_file():
                 shutil.copy2(f, dest_dir / f.name)
-        logging.debug(f"Archived {len(diff_files)} fieldcompare diff file(s) to {dest_dir} for {self}")
+        logging.debug(
+            "Archived %d fieldcompare diff file(s) to %s for %s",
+            len(diff_files),
+            dest_dir,
+            self,
+        )
 
     def _build_docker(self):
         """
