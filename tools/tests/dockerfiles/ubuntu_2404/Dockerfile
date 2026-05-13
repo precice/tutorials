@@ -235,20 +235,18 @@ COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DUNE_VERSION
 ARG DUMUX_VERSION
 USER precice
-WORKDIR /home/precice
-RUN mkdir dumux&&\
-    cd dumux&&\
-    git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION} &&\
-    git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION} &&\
-    git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION} &&\
-    git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION} &&\
-    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION} &&\
-    git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION} &&\
-    git clone -b cell_problems https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git &&\
-    git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION} &&\
-    git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION}
 WORKDIR /home/precice/dumux
 ENV PATH="/home/precice/dumux/dune-common/bin:${PATH}"
+# This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
+RUN for i in $(seq 1 3); do git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION} && break && [[ $i -eq 3 ]] && sleep 10 && rm -rf dune-common; done
+RUN for i in $(seq 1 3); do git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION} && break && [[ $i -eq 3 ]]  && sleep 10 && rm -rf dune-geometry; done
+RUN for i in $(seq 1 3); do git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION} && break && [[ $i -eq 3 ]]  && sleep 10 && rm -rf dune-grid; done
+RUN for i in $(seq 1 3); do git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION} && break && [[ $i -eq 3 ]]  && sleep 10 && rm -rf dune-istl; done
+RUN for i in $(seq 1 3); do git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION} && break && [[ $i -eq 3 ]]  && sleep 10 && rm -rf dune-subgrid; done
+RUN for i in $(seq 1 3); do git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION} && break && [[ $i -eq 3 ]]  && sleep 10 && rm -rf dumux; done
+RUN for i in $(seq 1 3); do git clone -b cell_problems https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git && break && [[ $i -eq 3 ]]  && sleep 10 && rm -rf dumux-phasefield; done
+RUN for i in $(seq 1 3); do git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION} && break && [[ $i -eq 3 ]]  && sleep 10 && rm -rf dune-SPGrid; done
+RUN for i in $(seq 1 3); do git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION} && break && [[ $i -eq 3 ]]  && sleep 10 && rm -rf dune-localfunctions; done
 # build core DUNE, DuMuX and the adapter
 ARG DUMUX_ADAPTER_PR
 ARG DUMUX_ADAPTER_REF
