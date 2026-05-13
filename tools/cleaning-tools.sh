@@ -230,6 +230,9 @@ clean_gismo(){
         cd "$1"
         echo "- Cleaning up G+Smo case in $(pwd)"
         rm -rfv ./output/
+        rm -fv ./*.vtp
+        rm -fv ./*.vts
+        rm -fv ./*.pvd
         clean_precice_logs .
         clean_case_logs .
     )
