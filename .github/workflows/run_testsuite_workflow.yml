@@ -77,11 +77,19 @@ jobs:
         cd tools/tests
         python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log-level=${{ inputs.log_level}}
         cd ../../
+    - name: Archive main log files
+      uses: actions/upload-artifact@v4
+      with:
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_logs
+        path: |
+          runs/*/system-tests-stdout.log
+          runs/*/system-tests-stderr.log
+          runs/*/*/system-tests_*.log
     - name: Archive run files
       if: ${{  failure() || inputs.upload_artifacts == 'TRUE' }}
       uses: actions/upload-artifact@v4
       with:
-        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_full
         path: |
           runs/*
     - name: tidy up the docker

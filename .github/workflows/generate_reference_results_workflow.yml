@@ -85,10 +85,18 @@ jobs:
         fi
         git commit -m "${{inputs.commit_msg}}"
         git push
-    - name: Upload artifacts for debugging
+    - name: Archive main log files
+      uses: actions/upload-artifact@v4
+      with:
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference_logs
+        path: |
+          runs/*/system-tests-stdout.log
+          runs/*/system-tests-stderr.log
+          runs/*/*/system-tests_*.log
+    - name: Archive run files
       if: failure()
       uses: actions/upload-artifact@v4
       with:
-        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference_full
         path: |
           runs/*
