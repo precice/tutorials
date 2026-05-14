@@ -239,56 +239,56 @@ WORKDIR /home/precice/dumux
 ENV PATH="/home/precice/dumux/dune-common/bin:${PATH}"
 # This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION}; then break; fi \
-        rm -rf dune-common \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION}; then break; fi; \
+        rm -rf dune-common; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION}; then break; fi \
-        rm -rf dune-geometry \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION}; then break; fi; \
+        rm -rf dune-geometry; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION}; then break; fi \
-        rm -rf dune-grid \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        rm -rf dune-grid; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION}; then break; fi \
-        rm -rf dune-istl \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION}; then break; fi; \
+        rm -rf dune-istl; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION}; then break; fi \
-        rm -rf dune-subgrid \
+        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        rm -rf dune-subgrid; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION}; then break; fi \
-        rm -rf dumux \
+        if git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION}; then break; fi; \
+        rm -rf dumux; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone -b cell_problems https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git; then break; fi \
-        rm -rf dumux-phasefield \
+        if git clone -b cell_problems https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git; then break; fi; \
+        rm -rf dumux-phasefield; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION}; then break; fi \
-        rm -rf dune-SPGrid \
+        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        rm -rf dune-SPGrid; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION}; then break; fi \
-        rm -rf dune-localfunctions \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION}; then break; fi; \
+        rm -rf dune-localfunctions; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
