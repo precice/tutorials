@@ -22,6 +22,8 @@ import os
 GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 900))
 SHORT_TIMEOUT = 10
 
+DIFF_RESULTS_DIR = "diff-results"
+
 
 def slugify(value, allow_unicode=False):
     """
@@ -449,6 +451,46 @@ class Systemtest:
             elapsed_time = time.perf_counter() - time_start
             return FieldCompareResult(1, stdout_data, stderr_data, self, elapsed_time)
 
+    def __archive_fieldcompare_diffs(self) -> None:
+        """
+        Copy fieldcompare diff VTK files from precice-exports/ into diff-results/,
+        preserving paths under precice-exports/ so nested outputs are not skipped
+        and identical basenames in different folders do not overwrite each other.
+        """
+        exports_dir = self.system_test_dir / PRECICE_REL_OUTPUT_DIR
+        if not exports_dir.is_dir():
+            return
+        suffixes = (".vtu", ".vtk", ".vtp")
+        dest_root = self.system_test_dir / DIFF_RESULTS_DIR
+        seen_resolved: set[Path] = set()
+        archived_count = 0
+        for path in exports_dir.rglob("*"):
+            if not path.is_file():
+                continue
+            if path.suffix.lower() not in suffixes:
+                continue
+            if "diff" not in path.name.lower():
+                continue
+            resolved = path.resolve()
+            if resolved in seen_resolved:
+                continue
+            try:
+                rel = path.relative_to(exports_dir)
+            except ValueError:
+                continue
+            seen_resolved.add(resolved)
+            dest_path = dest_root / rel
+            dest_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, dest_path)
+            archived_count += 1
+        if archived_count:
+            logging.debug(
+                "Archived %d fieldcompare diff file(s) to %s for %s",
+                archived_count,
+                dest_root,
+                self,
+            )
+
     def _build_docker(self):
         """
         Builds the docker image
@@ -626,6 +668,7 @@ class Systemtest:
         std_out.extend(fieldcompare_result.stdout_data)
         std_err.extend(fieldcompare_result.stderr_data)
         if fieldcompare_result.exit_code != 0:
+            self.__archive_fieldcompare_diffs()
             self.__write_logs(std_out, std_err)
             logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
             return SystemtestResult(
