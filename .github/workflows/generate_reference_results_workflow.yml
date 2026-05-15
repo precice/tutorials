@@ -17,7 +17,6 @@ on:
         type: string
       log_level:
         description: 'Logging verbosity level used for the systemtests'
-        default: 'INFO'
         required: true
         type: string
 jobs:

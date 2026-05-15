@@ -12,7 +12,6 @@ on:
         type: string
       system_tests_branch:
         description: 'Branch to take the system tests from'
-        default: 'develop'
         required: true
         type: string
       log_level:
