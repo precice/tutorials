@@ -39,17 +39,19 @@ jobs:
         echo "python3 systemtests.py --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}"
     - name: Prepare the Markdown step summary
       run: |
-        echo "Job inputs:" >> $GITHUB_STEP_SUMMARY
-        echo "- Initiated by: @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
-        echo "- Test suites: \`${{ inputs.suites}}\`" >> $GITHUB_STEP_SUMMARY
-        echo "- System tests branch (\`tools/\`): [\`${{ inputs.system_tests_branch }}\`](https://github.com/precice/tutorials/tree/${{ inputs.system_tests_branch }})" >> $GITHUB_STEP_SUMMARY
-        echo "- System tests log level: \`${{ inputs.log_level }}\`" >> $GITHUB_STEP_SUMMARY
-        echo "- Uploading the runs folder on success: \`${{ inputs.upload_artifacts }}\`" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "Running the following command inside \`tutorials/tools/\`:" >> $GITHUB_STEP_SUMMARY
-        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-        echo "python3 systemtests.py --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}" >> $GITHUB_STEP_SUMMARY
-        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        {
+          echo "Job inputs:"
+          echo "- Initiated by: @${{ github.actor }}"
+          echo "- Test suites: \`${{ inputs.suites}}\`"
+          echo "- System tests branch (\`tools/\`): [\`${{ inputs.system_tests_branch }}\`](https://github.com/precice/tutorials/tree/${{ inputs.system_tests_branch }})"
+          echo "- System tests log level: \`${{ inputs.log_level }}\`"
+          echo "- Uploading the runs folder on success: \`${{ inputs.upload_artifacts }}\`"
+          echo ""
+          echo "Running the following command inside \`tutorials/tools/\`:"
+          echo "\`\`\`"
+          echo "python3 systemtests.py --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}"
+          echo "\`\`\`"
+        } >> $GITHUB_STEP_SUMMARY
     - name: Move LFS URL to local LFS server
       run: |
         /home/precice/runners_root/scripts/make_lfs_local.sh
