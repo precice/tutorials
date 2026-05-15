@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
          python-version: '3.10'
          check-latest: true
@@ -23,15 +23,3 @@ jobs:
         run: pip install pre-commit
       - name: Run checks
         run: pre-commit run -a
-      - name: Git status
-        if: always()
-        run: |
-          echo -e '### Status\n```text' >> $GITHUB_STEP_SUMMARY
-          git status | tee -a $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-      - name: Full diff
-        if: always()
-        run: |
-          echo -e '### Diff\n```diff' >> $GITHUB_STEP_SUMMARY
-          git diff | tee -a $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY

@@ -17,7 +17,6 @@ on:
         type: string
       log_level:
         description: 'Logging verbosity level used for the systemtests'
-        default: 'INFO'
         required: true
         type: string
 jobs:
@@ -43,7 +42,7 @@ jobs:
         rm -rf ./.??*
         ls -la ./
     - name: Check out Tutorials for the system tests (tools/tests/)
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         ref: ${{ inputs.from_ref }}
         lfs: true
@@ -85,18 +84,18 @@ jobs:
         fi
         git commit -m "${{inputs.commit_msg}}"
         git push
+    - name: Archive run files
+      if: failure()
+      uses: actions/upload-artifact@v7
+      with:
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference_full
+        path: |
+          runs/*
     - name: Archive main log files
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference_logs
         path: |
           runs/*/system-tests-stdout.log
           runs/*/system-tests-stderr.log
           runs/*/*/system-tests_*.log
-    - name: Archive run files
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference_full
-        path: |
-          runs/*
