@@ -28,14 +28,14 @@ jobs:
         run: |
           {
             echo -e '### Status\n```text'
-            git status | tee -a $GITHUB_STEP_SUMMARY
+            git status | tee -a "$GITHUB_STEP_SUMMARY"
             echo '```'
-          } >> $GITHUB_STEP_SUMMARY
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Full diff
         if: always()
         run: |
           {
             echo -e '### Diff\n```diff'
-            git diff | tee -a $GITHUB_STEP_SUMMARY
+            git diff | tee -a "$GITHUB_STEP_SUMMARY"
             echo '```'
-          } >> $GITHUB_STEP_SUMMARY
+          } >> "$GITHUB_STEP_SUMMARY"

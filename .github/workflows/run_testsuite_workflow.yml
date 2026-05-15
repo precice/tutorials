@@ -50,7 +50,7 @@ jobs:
           echo "\`\`\`"
           echo "python3 systemtests.py --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}"
           echo "\`\`\`"
-        } >> $GITHUB_STEP_SUMMARY
+        } >> "$GITHUB_STEP_SUMMARY"
     - name: Move LFS URL to local LFS server
       run: |
         /home/precice/runners_root/scripts/make_lfs_local.sh

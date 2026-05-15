@@ -142,7 +142,7 @@ jobs:
             echo "### Tutorials"
             echo "Reference (pull request): \`${{ github.event.pull_request.head.sha }}\`"
             echo "Pull request number: [${{ github.event.number }}](https://github.com/precice/tutorials/pull/${{ github.event.number }})"
-          } >> $GITHUB_STEP_SUMMARY
+          } >> "$GITHUB_STEP_SUMMARY"
 
   run-system-tests:
     name: Trigger system tests

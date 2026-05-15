@@ -154,7 +154,7 @@ jobs:
             echo "\`\`\`"
             echo "${{ steps.ref-tutorials.outputs.description }}"
             echo "\`\`\`"
-          } >> $GITHUB_STEP_SUMMARY
+          } >> "$GITHUB_STEP_SUMMARY"
 
   run-system-tests:
     name: Trigger system tests
