@@ -48,3 +48,7 @@ repos:
       language: script
       entry: tools/check-links-to-precice.sh
       types_or: ["markdown", "html"]
+- repo: https://github.com/rhysd/actionlint
+  rev: v1.7.12
+  hooks:
+    - id: actionlint
