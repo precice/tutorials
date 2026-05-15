@@ -23,19 +23,3 @@ jobs:
         run: pip install pre-commit
       - name: Run checks
         run: pre-commit run -a
-      - name: Git status
-        if: always()
-        run: |
-          {
-            echo -e '### Status\n```text'
-            git status | tee -a "$GITHUB_STEP_SUMMARY"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
-      - name: Full diff
-        if: always()
-        run: |
-          {
-            echo -e '### Diff\n```diff'
-            git diff | tee -a "$GITHUB_STEP_SUMMARY"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
