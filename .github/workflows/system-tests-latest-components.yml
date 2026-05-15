@@ -3,6 +3,7 @@ name: System tests (latest components)
 on:
   schedule:
     - cron: "0 4 * * *"
+      timezone: "Europe/Berlin"
   workflow_dispatch:
 
 jobs:
