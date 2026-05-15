@@ -60,7 +60,7 @@ jobs:
         rm -rf ./.??*
         ls -la ./
     - name: Check out Tutorials for the system tests (tools/tests/)
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         repository: precice/tutorials
         ref: ${{ inputs.system_tests_branch }}
