@@ -517,7 +517,7 @@ class Systemtest:
                                        cwd=self.system_test_dir)
 
             try:
-                stdout, stderr = process.communicate(timeout=BUILD_TIMEOUT)
+                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
             except KeyboardInterrupt as k:
                 process.kill()
                 # process.send_signal(9)
