@@ -196,6 +196,8 @@ RUN cd "${SU2_HOME}" &&\
     sed -i '1s/^/#include <cstdint>\n/' SU2_CFD/src/output/filewriter/CParaviewXMLFileWriter.cpp &&\
     ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN &&\
     ./ninja -C build install
+ENV VIRTUAL_ENV="/home/precice/venv"
+ENV PATH="/home/precice/venv/bin:$PATH"
 
 FROM precice_dependecies AS dealii_adapter
 USER root
@@ -234,6 +236,8 @@ WORKDIR /home/precice
 RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install pybind11    
+ENV VIRTUAL_ENV="/home/precice/venv"
+ENV PATH="/home/precice/venv/bin:$PATH"
 
 FROM micro_manager AS dumux_adapter
 USER root
