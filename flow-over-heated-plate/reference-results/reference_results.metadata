@@ -11,9 +11,9 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-fenics.tar.gz | 2026-01-20 18:43:46 | 6317b8b1f58452e71f0a8bee3e7eb2ebd005a131fc8c29ab83edeec496c7e9e5 |
-| fluid-openfoam_solid-openfoam.tar.gz | 2026-01-20 18:43:46 | 180981d1a89c93b416c4d3aa87be3d597c06c0178d0d41f70c180e7c6b3f8b2c |
-| fluid-openfoam_solid-nutils.tar.gz | 2026-01-20 18:43:46 | c5cdfefa125a4e24d3222fa129e6e8ded9383dd240db3e4f10e9ff4834b8f3c4 |
+| fluid-openfoam_solid-openfoam.tar.gz | 2026-05-11 07:45:27 | 758a2fb73703b7a693a8b2b2994dab0ff52e89b0b1ce25c8389571f3397cce15 |
+| fluid-openfoam_solid-fenics.tar.gz | 2026-05-11 07:45:27 | 059d338dd1e93b3661b052665fa297a55668e7e81d385d409b12dcbbe0ac74ed |
+| fluid-openfoam_solid-nutils.tar.gz | 2026-05-11 07:45:27 | 96d2748fcc27be2b8977b30192965ae5a736c679e3a2f26c2f6713348c2bc2f4 |
 
 ## List of arguments used to generate the files
 
@@ -25,20 +25,24 @@ We also include some information on the machine used to generate them
 | OPENFOAM_ADAPTER_REF | v1.3.1 |
 | PYTHON_BINDINGS_REF | v3.2.0 |
 | FENICS_ADAPTER_REF | v2.2.0 |
-| TUTORIALS_REF | 80b5e41 |
+| TUTORIALS_REF | b18b3ef |
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
 | CALCULIX_ADAPTER_REF | v2.20.1 |
 | SU2_VERSION | 7.5.1 |
 | SU2_ADAPTER_REF | 64d4aff |
 | DEALII_ADAPTER_REF | 02c5d18 |
+| DUNE_VERSION | 2.9 |
+| DUMUX_VERSION | 3.7 |
+| DUMUX_ADAPTER_REF | 0e914bb |
+| MICRO_MANAGER_REF | v0.8.0 |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
 ## Information about the machine
 
 ### uname -a
 
-Linux precice-tests 5.15.0-163-generic #173-Ubuntu SMP Tue Oct 14 17:51:00 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+Linux precice-tests 5.15.0-177-generic #187-Ubuntu SMP Sat Apr 11 22:54:33 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
 
 
 ### lscpu

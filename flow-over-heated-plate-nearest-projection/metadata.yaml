@@ -1,0 +1,20 @@
+name: Flow over heated plate nearest projection
+path: flow-over-heated-plate-nearest-projection
+url: https://precice.org/tutorials-flow-over-heated-plate-nearest-projection.html
+
+participants:
+  - Fluid
+  - Solid
+
+cases:
+  fluid-openfoam:
+    participant: Fluid
+    directory: ./fluid-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+
+  solid-openfoam:
+    participant: Solid
+    directory: ./solid-openfoam
+    run: ./run.sh
+    component: openfoam-adapter

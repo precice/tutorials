@@ -125,6 +125,14 @@ You may be curious what displacements OpenFOAM received from the rigid body solv
 
 ![result](images/quickstart-result.png)
 
+Additionally, as we defined a watchpoint on the `Solid` participant at the flap tip (see `precice-config.xml`), we can plot it with gnuplot:
+
+```bash
+./plotDisplacement.sh
+```
+
+The resulting plot shows the y-displacement of the flap tip over time.
+
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.
 {% enddisclaimer %}

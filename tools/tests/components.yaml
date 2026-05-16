@@ -209,6 +209,6 @@ micro-manager:
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
-    MICRO_MANAGER_VERSION:
+    MICRO_MANAGER_REF:
       description: Version of Micro-Manager to use
       default: "0.8.0"

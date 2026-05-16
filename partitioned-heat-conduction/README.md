@@ -1,7 +1,7 @@
 ---
 title: Partitioned heat conduction
 permalink: tutorials-partitioned-heat-conduction.html
-keywords: FEniCS, Nutils, Heat conduction
+keywords: FEniCS, Nutils, G+Smo, Heat conduction
 summary: We solve a simple heat equation. The domain is partitioned and the coupling is established in a Dirichlet-Neumann fashion.
 ---
 
@@ -31,11 +31,15 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE and the python bindings installed on your system.
 
-* FEniCS. Install [FEniCS](https://fenicsproject.org/download/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
+* FEniCS. Install [FEniCS](https://fenicsproject.org/download/archive/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
+
+* FEniCSx. Install [FEniCSx](https://fenicsproject.org/download/) and the [FEniCSx-adapter](https://github.com/precice/fenicsx-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
 
 * Nutils. Install [Nutils](https://nutils.org/install-nutils.html).
 
 * OpenFOAM. This case uses the custom [heatTransfer](https://github.com/precice/tutorials/blob/master/partitioned-heat-conduction/solver-openfoam/heatTransfer.C) solver (find it in `solver-openfoam` and build with `wmake`). Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
+
+* G+Smo. Install the [G+Smo adapter](https://precice.org/adapter-gismo.html).
 
 ## Running the simulation
 
@@ -73,6 +77,34 @@ If you want to use Nutils or OpenFOAM, use `cd dirichlet/neumann-nutils`, respec
 mpirun -n <N_PROC> heat.py -d
 ```
 
+For running G+Smo, follow the [G+Smo adapter installation instructions](https://precice.org/adapter-gismo.html) to build the `partitioned-heat-conduction` example. This tutorial only requires the `gsPreCICE` submodule:
+
+```bash
+cmake .. -DGISMO_OPTIONAL="gsPreCICE"
+make partitioned-heat-conduction
+```
+
+Then link the compiled executable to the `dirichlet-gismo` and `neumann-gismo` folders:
+
+```bash
+cd <tutorial-directory>/partitioned-heat-conduction/dirichlet-gismo
+ln -sf <gismo-build-directory>/bin/partitioned-heat-conduction ./partitioned-heat-conduction
+cd ../neumann-gismo
+ln -sf <gismo-build-directory>/bin/partitioned-heat-conduction ./partitioned-heat-conduction
+```
+
+Then open two terminals and run:
+
+```bash
+cd dirichlet-gismo
+./run.sh
+```
+
+```bash
+cd neumann-gismo
+./run.sh
+```
+
 ### Note on the combination of Nutils & FEniCS
 
 You can mix the Nutils and FEniCS solver, if you like. Note that the error for a pure FEniCS simulation is lower than for a mixed one. We did not yet study the origin of this error, but assume that this is due to the fact that Nutils uses Gauss points as coupling mesh and therefore entails extrapolation in the data mapping at the top and bottom corners.
@@ -84,6 +116,8 @@ Output is written into the folders `fenics/out` and `nutils`.
 For FEniCS you can visualize the content with paraview by opening the `*.pvd` files. The files `Dirichlet.pvd` and `Neumann.pvd` correspond to the numerical solution of the Dirichlet, respectively Neumann, problem, while the files with the prefix `ref` correspond to the analytical reference solution, the files with `error` show the error and the files with `ranks` the ranks of the solvers (if executed in parallel).
 
 For Nutils, please use the files `Dirichlet-*.vtk` or `Neumann-*.vtk`. Please note that these files contain the temperature as well as the reference solution.
+
+For G+Smo, please use the generated `solution.pvd` files in the dirichlet-gismo and neumann-gismo directories.
 
 ![Animation of the partitioned heat equation](images/tutorials-partitioned-heat-conduction-FEniCS-movie.gif)
 
