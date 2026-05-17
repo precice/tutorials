@@ -207,7 +207,6 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
 FROM python_bindings AS micro_manager
 USER precice
 WORKDIR /home/precice
-COPY --from=precice /home/precice/.local/ /home/precice/.local/
 
 ARG MICRO_MANAGER_REF
 RUN git clone https://github.com/precice/micro-manager.git && \
