@@ -22,18 +22,19 @@ To get a feeling what preCICE does, watch a [short presentation](https://www.you
 
 For this tutorial, we will mainly need to install preCICE, OpenFOAM, and the OpenFOAM-preCICE adapter. In many parts of the preCICE documentation, we assume a Linux system (most commonly a recent Ubuntu LTS). If you are on Windows, [Ubuntu on Windows (WSL)](https://www.microsoft.com/en-us/p/ubuntu/9nblggh4msv6) works. If you are on macOS or a Linux distribution other than Ubuntu, then [Homebrew](https://precice.org/installation-packages.html#macos) is the way to go (both for preCICE and for [OpenFOAM](https://github.com/gerlero/homebrew-openfoam)).
 
-1. Get and install preCICE. For Ubuntu 24.04 (Noble Numbat), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
+1. Get and install preCICE. For Ubuntu 26.04 (Resolute Raccoon), this is pretty easy: [download](https://github.com/precice/precice/releases/latest) and install our binary package by clicking on it or using the following commands:
 
     ```bash
-    wget https://github.com/precice/precice/releases/download/v3.3.1/libprecice3_3.3.1_noble.deb
-    sudo apt install ./libprecice3_3.3.1_noble.deb
+    wget https://github.com/precice/precice/releases/download/v3.4.1/libprecice3_3.4.1_resolute.deb
+    sudo apt install ./libprecice3_3.4.1_resolute.deb
     ```
 
     | OS                            | Package |
     | ---                           | ---     |
-    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.3.1_jammy.deb`](https://github.com/precice/precice/releases/download/v3.3.1/libprecice3_3.3.1_jammy.deb) |
-    | Ubuntu 24.04 Noble Numbat     | [`libprecice3_3.3.1_noble.deb`](https://github.com/precice/precice/releases/download/v3.3.1/libprecice3_3.3.1_noble.deb) |
-    | Debian 13 Trixie              | [`libprecice3_3.3.1_trixie.deb`](https://github.com/precice/precice/releases/download/v3.3.1/libprecice3_3.3.1_trixie.deb) |
+    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.4.1_jammy.deb`](https://github.com/precice/precice/releases/download/v3.4.1/libprecice3_3.4.1_jammy.deb) |
+    | Ubuntu 24.04 Noble Numbat     | [`libprecice3_3.4.1_noble.deb`](https://github.com/precice/precice/releases/download/v3.4.1/libprecice3_3.4.1_noble.deb) |
+    | Ubuntu 26.04 Resolute Raccoon | [`libprecice3_3.4.1_resolute.deb`](https://github.com/precice/precice/releases/download/v3.4.1/libprecice3_3.4.1_resolute.deb) |
+    | Debian 13 Trixie              | [`libprecice3_3.4.1_trixie.deb`](https://github.com/precice/precice/releases/download/v3.4.1/libprecice3_3.4.1_trixie.deb) |
     | Something else                | See an [overview of options](https://precice.org/installation-overview.html) |
 
     Facing any problems? [Ask for help](https://precice.org/community-channels.html).
