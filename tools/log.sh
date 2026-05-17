@@ -5,13 +5,13 @@ CASENAME="$(pwd | xargs basename)"
 LOGFILE="$CASENAME.log"
 export LOGFILE
 
-STARTDATE="$(date --rfc-email)"
+STARTDATE="$(date '+%a, %d %b %Y %H:%M:%S %z')"
 STARTTIME="$(date +%s)"
 echo "Started on: $STARTDATE" | tee "$CASENAME.log" 2>&1
 
 close_log() {
     echo "Started on:  $STARTDATE" | tee --append "$LOGFILE" 2>&1
-    ENDDATE="$(date --rfc-email)"
+    ENDDATE="$(date '+%a, %d %b %Y %H:%M:%S %z')"
     ENDTIME="$(date +%s)"
     echo "Finished on: $ENDDATE" | tee --append "$LOGFILE" 2>&1
     echo "Duration:    $((ENDTIME-STARTTIME)) seconds (wall-clock time, including time waiting for participants)" | tee --append "$LOGFILE" 2>&1
