@@ -62,7 +62,7 @@ cd macro-dumux
 ./run.sh -s
 ```
 
-This assumes a DuMux and DUNE modules installation in the case folder. You can specify the path to an existing DUNE installation with with `-l`:
+This assumes a DuMux and DUNE modules installation in the case folder. You can specify the path to an existing DUNE installation with `-l`:
 
 ```bash
 ./run.sh -s -l <path-to-DUNE-common>
