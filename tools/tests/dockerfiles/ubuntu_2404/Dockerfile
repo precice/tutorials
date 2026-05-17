@@ -125,7 +125,6 @@ RUN . /home/precice/venv/bin/activate && \
 
 
 FROM python_bindings AS nutils_adapter
-COPY --from=python_bindings /home/precice/.local /home/precice/.local
 USER precice
 # Installing nutils - There is no adapter
 RUN . /home/precice/venv/bin/activate && \
@@ -156,7 +155,6 @@ RUN git clone https://github.com/precice/calculix-adapter.git && \
     ln -s /home/precice/calculix-adapter/bin/ccx_preCICE /home/precice/.local/bin/ccx_preCICE
 
 FROM python_bindings AS su2_adapter
-COPY --from=precice /home/precice/.local /home/precice/.local
 USER root
 RUN apt-get -qq update && \
     apt-get -qq install swig python3-mpi4py python3-setuptools
@@ -226,7 +224,6 @@ RUN . /home/precice/venv/bin/activate && \
 
 FROM micro_manager AS dumux_adapter
 USER root
-COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DUNE_VERSION
 ARG DUMUX_VERSION
 USER precice
