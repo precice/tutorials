@@ -111,6 +111,8 @@ RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
     pip3 install matplotlib
+ENV VIRTUAL_ENV=/home/precice/venv
+ENV PATH="/home/precice/venv/bin:$PATH"
 
 FROM python_bindings AS fenics_adapter
 USER root
