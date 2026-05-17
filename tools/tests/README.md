@@ -169,7 +169,7 @@ Metadata and workflow/script files:
     - ...
   - `dockerfiles/`
     - Multi-stage build Dockerfiles that define how to build each component, in a layered approach
-  - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Componse service template)
+  - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Compose service template)
   - `docker-compose.field_compare.template.yaml`: Describes how to compare results with fieldcompare (Docker Compose service template)
   - `components.yaml`: Declares the available components and their parameters/options
   - `reference_results.metadata.template`: Template for reporting the versions used to generate the reference results
@@ -235,7 +235,7 @@ Description:
 - `name`: A human-readable, descriptive name
 - `path`: Where the tutorial is located, relative to the tutorials repository
 - `url`: A web page with more information on the tutorial
-- `participants`: A list of preCICE participants, typically corresponing to different domains of the simulation
+- `participants`: A list of preCICE participants, typically corresponding to different domains of the simulation
 - `cases`: A list of solver configuration directories. Each element of the list includes:
   - `participant`: Which participant this solver case can serve as
   - `directory`: Where the case directory is located, relative to the tutorial directory
@@ -346,7 +346,7 @@ This defines two test suites, namely `openfoam_adapter_pr` and `openfoam_adapter
 
 #### via GitHub workflow (recommended)
 
-The preferred way of adding reference results is via the manual triggerable `Generate reference results (manual)` workflow. This takes two inputs:
+The preferred way of adding reference results is via the manual `Generate reference results (manual)` workflow. This takes two inputs:
 
 - `from_ref`: branch where the new test configuration (e.g added tests, new reference_versions.yaml) is
 - `commit_msg`: commit message for adding the reference results into the branch
