@@ -107,15 +107,12 @@ USER precice
 WORKDIR /home/precice
 # Builds the precice python bindings for python3
 # Installs also matplotlib as its needed for the elastic-tube 1d fluid-python participant.
-RUN python3 -m venv /home/precice/venv && \
+RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
     pip3 install matplotlib
-ENV VIRTUAL_ENV="/home/precice/venv"
-ENV PATH="/home/precice/venv/bin:$PATH"
 
-FROM precice_dependecies AS fenics_adapter
-COPY --from=python_bindings /home/precice/.local /home/precice/.local
+FROM python_bindings AS fenics_adapter
 USER root
 RUN add-apt-repository -y ppa:fenics-packages/fenics && \
     apt-get -qq update && \
@@ -123,22 +120,16 @@ RUN add-apt-repository -y ppa:fenics-packages/fenics && \
 USER precice
 ARG FENICS_ADAPTER_REF
 # Building fenics-adapter
-RUN python3 -m venv --system-site-packages /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
+RUN . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
-ENV VIRTUAL_ENV="/home/precice/venv"
-ENV PATH="/home/precice/venv/bin:$PATH"
 
 
-FROM precice_dependecies AS nutils_adapter
+FROM python_bindings AS nutils_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
 USER precice
 # Installing nutils - There is no adapter
-RUN python3 -m venv /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
+RUN . /home/precice/venv/bin/activate && \
     pip3 install nutils
-ENV VIRTUAL_ENV="/home/precice/venv"
-ENV PATH="/home/precice/venv/bin:$PATH"
 
 
 FROM precice_dependecies AS calculix_adapter
@@ -178,8 +169,7 @@ WORKDIR /home/precice
 RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
     tar xvzf v${SU2_VERSION}.tar.gz && \
     rm -fv v${SU2_VERSION}.tar.gz
-RUN python3 -m venv /home/precice/venv && \
-    . /home/precice/venv/bin/activate
+RUN . /home/precice/venv/bin/activate
 ARG SU2_ADAPTER_PR
 ARG SU2_ADAPTER_REF
 WORKDIR /home/precice
@@ -196,8 +186,6 @@ RUN cd "${SU2_HOME}" &&\
     sed -i '1s/^/#include <cstdint>\n/' SU2_CFD/src/output/filewriter/CParaviewXMLFileWriter.cpp &&\
     ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN &&\
     ./ninja -C build install
-ENV VIRTUAL_ENV="/home/precice/venv"
-ENV PATH="/home/precice/venv/bin:$PATH"
 
 FROM precice_dependecies AS dealii_adapter
 USER root
@@ -219,7 +207,7 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
     make -j $(nproc)
 
 
-FROM precice_dependecies AS micro_manager
+FROM python_bindings AS micro_manager
 USER precice
 WORKDIR /home/precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
@@ -233,11 +221,8 @@ RUN python3 -m venv /home/precice/venv && \
     git checkout ${MICRO_MANAGER_REF} && \
     pip3 install .
 WORKDIR /home/precice
-RUN python3 -m venv /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
+RUN . /home/precice/venv/bin/activate && \
     pip3 install pybind11    
-ENV VIRTUAL_ENV="/home/precice/venv"
-ENV PATH="/home/precice/venv/bin:$PATH"
 
 FROM micro_manager AS dumux_adapter
 USER root
