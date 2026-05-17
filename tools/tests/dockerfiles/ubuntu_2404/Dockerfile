@@ -122,15 +122,13 @@ RUN add-apt-repository -y ppa:fenics-packages/fenics && \
 USER precice
 ARG FENICS_ADAPTER_REF
 # Building fenics-adapter
-RUN . /home/precice/venv/bin/activate && \
-    pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
+RUN pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
 
 
 FROM python_bindings AS nutils_adapter
 USER precice
 # Installing nutils - There is no adapter
-RUN . /home/precice/venv/bin/activate && \
-    pip3 install nutils
+RUN pip3 install nutils
 
 
 FROM precice_dependecies AS calculix_adapter
@@ -169,7 +167,6 @@ WORKDIR /home/precice
 RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
     tar xvzf v${SU2_VERSION}.tar.gz && \
     rm -fv v${SU2_VERSION}.tar.gz
-RUN . /home/precice/venv/bin/activate
 ARG SU2_ADAPTER_PR
 ARG SU2_ADAPTER_REF
 WORKDIR /home/precice
@@ -213,16 +210,13 @@ WORKDIR /home/precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 
 ARG MICRO_MANAGER_REF
-RUN python3 -m venv /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
-    git clone https://github.com/precice/micro-manager.git && \
+RUN git clone https://github.com/precice/micro-manager.git && \
     cd micro-manager && \
     if [ -n "${MICRO_MANAGER_PR}" ]; then git fetch origin pull/${MICRO_MANAGER_PR}/head; fi && \
     git checkout ${MICRO_MANAGER_REF} && \
     pip3 install .
+RUN pip3 install pybind11
 WORKDIR /home/precice
-RUN . /home/precice/venv/bin/activate && \
-    pip3 install pybind11    
 
 FROM micro_manager AS dumux_adapter
 USER root
