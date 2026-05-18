@@ -11,9 +11,11 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-dealii.tar.gz | 2026-01-20 18:43:46 | 36c17f95beff15d26509a9ab16ada783b40fcdce573a7d7546d4059e764ade1e |
-| fluid-su2_solid-fenics.tar.gz | 2026-01-20 18:43:46 | 24a9e4a19e71cfbac24f8b5d6a68514061e2d834e4e209a803893e6b4c0dae3f |
-| fluid-openfoam_solid-calculix.tar.gz | 2026-01-20 18:43:46 | 5a88a24d754baf6c3d4b96cca8b9b2d846abae88b66a1a6d8c38245563ac4e22 |
+| fluid-openfoam_solid-calculix.tar.gz | 2026-05-11 07:45:27 | 4fbb2c688033023cda1ff26f7c97bb123931014d66620b572c930e4b8e0bcf7f |
+| fluid-openfoam_solid-openfoam.tar.gz | 2026-05-11 07:45:27 | e138d80b4640eac657ba3e03ac54391f92381b3555150887129fce6f6321facd |
+| fluid-su2_solid-fenics.tar.gz | 2026-05-11 07:45:27 | 8c41e5f1390b4b7038abf42e874438603efb0fa032a3f5f249c5475214cafcde |
+| fluid-openfoam_solid-fenics.tar.gz | 2026-05-11 07:45:27 | 49cd8553f6ce718a23c8b727ffbb0b1e4c45b2286ecb071120ff9327b1ebf751 |
+| fluid-openfoam_solid-dealii.tar.gz | 2026-05-11 07:45:27 | 6fdbfbdf4636e3d646cb74741fcd986a025ae1a07462b2cd321d3da46e95d2f0 |
 
 ## List of arguments used to generate the files
 
@@ -25,20 +27,24 @@ We also include some information on the machine used to generate them
 | OPENFOAM_ADAPTER_REF | v1.3.1 |
 | PYTHON_BINDINGS_REF | v3.2.0 |
 | FENICS_ADAPTER_REF | v2.2.0 |
-| TUTORIALS_REF | 80b5e41 |
+| TUTORIALS_REF | b18b3ef |
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
 | CALCULIX_ADAPTER_REF | v2.20.1 |
 | SU2_VERSION | 7.5.1 |
 | SU2_ADAPTER_REF | 64d4aff |
 | DEALII_ADAPTER_REF | 02c5d18 |
+| DUNE_VERSION | 2.9 |
+| DUMUX_VERSION | 3.7 |
+| DUMUX_ADAPTER_REF | 0e914bb |
+| MICRO_MANAGER_REF | v0.8.0 |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
 ## Information about the machine
 
 ### uname -a
 
-Linux precice-tests 5.15.0-163-generic #173-Ubuntu SMP Tue Oct 14 17:51:00 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+Linux precice-tests 5.15.0-177-generic #187-Ubuntu SMP Sat Apr 11 22:54:33 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
 
 
 ### lscpu

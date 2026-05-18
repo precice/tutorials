@@ -10,9 +10,13 @@ on:
         description: 'Commit msg for commit that adds the reference results'
         default: "Adding reference results"
         type: string
+      suites:
+        description: 'Comma-separated test suites to generate reference results for. If empty, all suites are generated.'
+        default: ''
+        required: false
+        type: string
       log_level:
         description: 'Logging verbosity level used for the systemtests'
-        default: 'INFO'
         required: true
         type: string
 jobs:
@@ -24,6 +28,7 @@ jobs:
         echo "Initiated by: ${{ github.actor }}"
         echo "Running generate_reference_results.py --log-level ${{inputs.log_level}}"
         echo "Using Ref: ${{ inputs.from_ref }}"
+        echo "Suites filter: ${{ inputs.suites || 'all (no filter)' }}"
         echo "Commit message on success:  ${{ inputs.commit_msg }}"
     - name: Move LFS URL to local LFS server
       run: |
@@ -37,7 +42,7 @@ jobs:
         rm -rf ./.??*
         ls -la ./
     - name: Check out Tutorials for the system tests (tools/tests/)
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         ref: ${{ inputs.from_ref }}
         lfs: true
@@ -56,21 +61,41 @@ jobs:
         test -f generate_reference_results.py && export GENERATE_REF_RESULTS=generate_reference_results.py
         test -f generate_reference_data.py && export GENERATE_REF_RESULTS=generate_reference_data.py
         echo "Selected $GENERATE_REF_RESULTS to run"
-        python $GENERATE_REF_RESULTS --log-level=${{inputs.log_level}}
+        SUITES_ARGS=()
+        if [ -n "${{ inputs.suites }}" ]; then
+          SUITES_ARGS+=(--suites "${{ inputs.suites }}")
+        fi
+        python "$GENERATE_REF_RESULTS" --log-level="${{inputs.log_level}}" "${SUITES_ARGS[@]}"
         cd ../../
     - name: Create commit
       if: success()
       run: |
         git checkout ${{ inputs.from_ref }}
-        git add ./*/*/*.tar.gz
-        git add ./*/*.tar.gz
-        git add ./*/reference-results/*.metadata
+        # Add only the changed reference results.
+        # When no suite filter is given, add all reference result files.
+        # When a suite filter is given, only add matching reference result artifacts,
+        # including newly created files for newly added tutorials or suites.
+        if [ -z "${{ inputs.suites }}" ]; then
+          git add ./*/*/*.tar.gz
+          git add ./*/*.tar.gz
+          git add ./*/reference-results/*.metadata
+        else
+          git add -A -- '**/reference-results/*.tar.gz' '**/reference-results/*.metadata'
+        fi
         git commit -m "${{inputs.commit_msg}}"
         git push
-    - name: Upload artifacts for debugging
+    - name: Archive run files
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
-        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference_full
         path: |
           runs/*
+    - name: Archive main log files
+      uses: actions/upload-artifact@v7
+      with:
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference_logs
+        path: |
+          runs/*/system-tests-stdout.log
+          runs/*/system-tests-stderr.log
+          runs/*/*/system-tests_*.log

@@ -53,7 +53,7 @@ In order to run the coupled simulation, you can simply step into the participant
 
 After the first results are written (a new time directory will be created), you may visualize the results.
 
-For the OpenFOAM results, you can use ParaView and open the allready-provided `fluid-inner-openfoam.foam` and `fluid-outer-openfoam.foam` files. You can then group the two cases and visualize them together.
+For the OpenFOAM results, you can use ParaView and open the already-provided `fluid-inner-openfoam.foam` and `fluid-outer-openfoam.foam` files. You can then group the two cases and visualize them together.
 
 Unfortunately, ParaView does not support CalculiX result files. You may see the results in CGX or convert them using 3rd-party tools.
 

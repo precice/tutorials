@@ -1,0 +1,27 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      sampleDict;
+}
+
+type            sets;
+libs            ("libsampling.so");
+
+setFormat       raw;
+
+sets
+(
+    centerline
+    {
+        type    uniform;
+        axis    z;
+        start   (0 0 0);
+        end     (0 0 20);
+        nPoints 200;
+    }
+);
+
+fields (p);

@@ -1,0 +1,20 @@
+name: Free flow over porous media
+path: free-flow-over-porous-media
+url: https://precice.org/tutorials-free-flow-over-porous-media-2d.html
+
+participants:
+  - Free-Flow
+  - Porous-Media
+
+cases:
+  free-flow-dumux:
+    participant: Free-Flow
+    directory: ./free-flow-dumux
+    run: ./run.sh -l /home/precice/dumux
+    component: dumux-adapter
+
+  porous-media-dumux:
+    participant: Porous-Media
+    directory: ./porous-media-dumux
+    run: ./run.sh -l /home/precice/dumux
+    component: dumux-adapter
