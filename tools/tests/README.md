@@ -340,7 +340,6 @@ test_suites:
 
 The optional `timeout` field (in seconds) sets the maximum time for the solver run and fieldcompare phases of that specific case. If omitted, it defaults to `GLOBAL_TIMEOUT` (currently 900s, overridable via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable).
 
-
 #### External tutorial sources
 
 By default, every `path` must exist in the local `precice/tutorials` checkout. For tutorials maintained elsewhere, add an optional `source` block:
