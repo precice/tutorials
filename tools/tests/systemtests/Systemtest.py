@@ -1,5 +1,4 @@
 import hashlib
-import json
 import subprocess
 from typing import List, Dict, Optional, Tuple
 from jinja2 import Environment, FileSystemLoader
@@ -529,29 +528,17 @@ class Systemtest:
 
     def _reference_iterations_hashes(self) -> Optional[Dict[str, str]]:
         """
-        Load expected iterations.log hashes from archived reference files or a legacy sidecar.
+        Load expected iterations.log hashes from archived reference files.
         Returns None if no reference data is available.
         """
         ref_dir = self._iterations_logs_reference_dir()
-        if ref_dir.is_dir():
-            ref_hashes = {}
-            for log_file in ref_dir.rglob("precice-*-iterations.log"):
-                if log_file.is_file():
-                    rel = log_file.relative_to(ref_dir).as_posix()
-                    ref_hashes[rel] = self._sha256_file(log_file)
-            if ref_hashes:
-                return ref_hashes
-
-        sidecar = self.reference_result.path.with_suffix(".iterations-hashes.json")
-        if not sidecar.exists():
+        if not ref_dir.is_dir():
             return None
-        try:
-            ref_hashes = json.loads(sidecar.read_text())
-        except (json.JSONDecodeError, OSError) as e:
-            logging.warning(
-                "Could not read iterations hashes from %s: %s", sidecar, e
-            )
-            return None
+        ref_hashes = {}
+        for log_file in ref_dir.rglob("precice-*-iterations.log"):
+            if log_file.is_file():
+                rel = log_file.relative_to(ref_dir).as_posix()
+                ref_hashes[rel] = self._sha256_file(log_file)
         return ref_hashes if ref_hashes else None
 
     def __archive_iterations_logs(self) -> None:
@@ -605,6 +592,13 @@ class Systemtest:
                 "Unexpected iterations log(s) %s; %s fails", extra, self
             )
             return False
+        logging.info(
+            "Iterations.log hash check passed for %s (%d file(s))",
+            self,
+            len(ref_hashes),
+        )
+        for rel in sorted(ref_hashes):
+            logging.debug("  %s: sha256 ok", rel)
         return True
 
     def _build_docker(self):
