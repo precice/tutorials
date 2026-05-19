@@ -6,7 +6,7 @@ TODO
 
 - [ ] I added a summary of any user-facing changes (compared to the last release) in the `changelog-entries/<PRnumber>.md`.
 - [ ] New tutorial case (e.g., new `fluid-openfoam` folder for existing tutorial)? Add it to the respective `README.md`.
-- [ ] New tutorial? Update the website!
+- [ ] New tutorial? Update the website.
   - Add a [sidebar entry](https://github.com/precice/precice.github.io/blob/master/_data/sidebars/tutorial_sidebar.yml)
   - Add it to the [overview](https://github.com/precice/precice.github.io/blob/master/content/tutorials/tutorials.md)
 
