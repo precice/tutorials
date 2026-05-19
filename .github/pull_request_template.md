@@ -1,8 +1,16 @@
-<!-- Please submit your Pull Request to the `develop` branch.
+## Description
 
-It may help to have a look at the file `CONTRIBUTING.md` for a few hints and guidelines. -->
+TODO
 
-Checklist:
+## Checklist
 
 - [ ] I added a summary of any user-facing changes (compared to the last release) in the `changelog-entries/<PRnumber>.md`.
-- [ ] I will remember to squash-and-merge, providing a useful summary of the changes of this PR.
+- [ ] New tutorial case (e.g., new `fluid-openfoam` folder for existing tutorial)? Add it to the respective `README.md`.
+- [ ] New tutorial? Update the website.
+  - Add a [sidebar entry](https://github.com/precice/precice.github.io/blob/master/_data/sidebars/tutorial_sidebar.yml)
+  - Add it to the [overview](https://github.com/precice/precice.github.io/blob/master/content/tutorials/tutorials.md)
+
+## Resources
+
+- [Contributing tutorials](https://precice.org/community-contribute-to-precice.html#contributing-tutorials)
+- [System tests documentation](https://precice.org/dev-docs-system-tests.html)
