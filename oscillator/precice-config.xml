@@ -56,14 +56,12 @@
       mesh="Mass-Left-Mesh"
       from="Mass-Left"
       to="Mass-Right"
-      initialize="true"
-      substeps="true" />
+      initialize="true" />
     <exchange
       data="Force-Right"
       mesh="Mass-Left-Mesh"
       from="Mass-Right"
       to="Mass-Left"
-      initialize="true"
-      substeps="true" />
+      initialize="true" />
   </coupling-scheme:serial-implicit>
 </precice-configuration>

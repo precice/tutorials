@@ -44,8 +44,8 @@
     <max-time value="10" />
     <time-window-size value="1" />
     <max-iterations value="100" />
-    <exchange data="Current" mesh="Coil-Mesh" from="Coil" to="Capacitor" substeps="true" />
-    <exchange data="Voltage" mesh="Coil-Mesh" from="Capacitor" to="Coil" substeps="true" />
+    <exchange data="Current" mesh="Coil-Mesh" from="Coil" to="Capacitor" />
+    <exchange data="Voltage" mesh="Coil-Mesh" from="Capacitor" to="Coil" />
     <relative-convergence-measure limit="1e-3" data="Current" mesh="Coil-Mesh" />
     <relative-convergence-measure limit="1e-3" data="Voltage" mesh="Coil-Mesh" />
   </coupling-scheme:serial-implicit>
