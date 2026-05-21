@@ -104,8 +104,57 @@ In this case, building and running seems to work out, but the tests fail because
 ## Understanding what went wrong
 
 The easiest way to debug a systemtest run is first to have a look at the output written into the action on GitHub.
-If this does not provide enough hints, the next step is to download the generated `system_tests_run_<run_id>_<run_attempt>` artifact. Note that by default this will only be generated if the systemtests fail.
+If this does not provide enough hints, the next step is to download the generated `system_tests_run_<run_id>_<run_attempt>_full` artifact (a smaller `_logs` archive contains only log files). Note that by default this will only be generated if the systemtests fail.
 Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains two log files: `system-tests-stderr.log` and `system-tests-stdout.log`. This can be a starting point for a further investigation. When fieldcompare runs with `--diff`, it writes VTK diff files under `precice-exports/`; if the comparison fails, those files are copied into a `diff-results/` subfolder in the same run directory (mirroring any subpaths under `precice-exports/`) so you can open them (e.g. in ParaView) to see where results differ from the reference. On successful comparisons, `diff-results/` is therefore absent.
+
+### Re-running system tests from CI artifacts
+
+Download the **full** artifact from a failed (or manually uploaded) workflow run:
+
+`system_tests_run_<run_id>_<run_attempt>_full`
+
+The archive contains a `runs/` directory shared by all system tests from that run:
+
+```text
+runs/
+├── tools/                              # Dockerfiles and helpers (shared)
+└── <tutorial>_<cases>_<timestamp>/     # one folder per system test
+    ├── docker-compose.tutorial.yaml
+    ├── docker-compose.field_compare.yaml   # if fieldcompare ran
+    ├── rerun_systemtest.sh
+    └── …
+```
+
+To re-run one test locally:
+
+1. Download and extract `system_tests_run_<run_id>_<run_attempt>_full.zip`.
+2. Keep the `runs/` layout intact (the tutorial folder needs the sibling `tools/` directory):
+
+   ```bash
+   unzip system_tests_run_<run_id>_<run_attempt>_full.zip
+   cd system_tests_run_<run_id>_<run_attempt>_full/runs
+   ls
+   cd <tutorial>_<cases>_<timestamp>
+   ```
+
+3. In the tutorial folder you will find the copied tutorial, generated Docker Compose
+   files, and `rerun_systemtest.sh`. The shared `tools/` tree lives one level up in
+   `runs/tools/`.
+
+4. Re-run with Docker:
+
+   ```bash
+   ./rerun_systemtest.sh   # or: sh rerun_systemtest.sh
+   ```
+
+The script rebuilds images, runs the tutorial containers, and (if
+`docker-compose.field_compare.yaml` exists) runs fieldcompare with the same
+`--exit-code-from` behavior as the CI runner. Compose paths are relative to the
+tutorial folder (`..` points at the parent `runs/` directory), so you can relocate the
+entire extracted `runs/` tree on any Linux host with Docker.
+
+Fieldcompare requires reference results in the artifact (unpacked by CI during the
+original run) or you must unpack them manually before that step.
 
 ## Adding new tests
 
