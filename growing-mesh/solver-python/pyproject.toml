@@ -1,0 +1,11 @@
+[project]
+name = "growing"
+version = "0"
+dependencies = [
+    "numpy",
+    "pyprecice @ git+https://github.com/precice/python-bindings.git@develop",
+    "mpi4py"
+]
+
+[project.scripts]
+growing = "solver:main"

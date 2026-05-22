@@ -35,6 +35,7 @@ build/
 .venv/
 __pycache__/
 *.pyc
+*.egg-info
 
 # Rust
 Cargo.lock
