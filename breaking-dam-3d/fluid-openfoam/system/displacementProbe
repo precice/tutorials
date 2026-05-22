@@ -1,0 +1,18 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+Description
+    Writes out values of fields from cells nearest to specified locations.
+
+\*---------------------------------------------------------------------------*/
+
+#includeEtc "caseDicts/postProcessing/probes/probes.cfg"
+type		probes;
+probeLocations
+(
+	(0 0.15 1.0)
+);
+fields
+(
+	cellDisplacement
+);
+
+// ************************************************************************* //
