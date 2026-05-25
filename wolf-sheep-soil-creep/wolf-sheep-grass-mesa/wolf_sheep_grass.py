@@ -13,7 +13,7 @@ min_depth_for_grass = 0.2
 dx = 1.0
 fast_creep = 0.1
 
-# Initalize Wolf-Sheep-Grass model
+# Initialize Wolf-Sheep-Grass model
 wss = WolfSheepScenario(
     initial_sheep=20,
     initial_wolves=10,
