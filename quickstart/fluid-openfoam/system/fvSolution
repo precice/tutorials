@@ -14,6 +14,10 @@ solvers
         tolerance        1e-6;
         relTol           1e-4;
         smoother         DICGaussSeidel;
+         // The following entries are only relevant to foam-extend
+        agglomerator    faceAreaPair;
+        nCellsInCoarsestLevel 10;
+        mergeLevels 1;
     }
 
     pFinal
@@ -78,3 +82,17 @@ potentialFlow
 {
     nNonOrthogonalCorrectors 1;
 }
+
+// The relaxationFactors and fieldBounds are only relevant to foam-extend
+relaxationFactors
+{
+    U          0.7;
+    UFinal     1;
+}
+
+fieldBounds
+{
+    p -1e5 1e5;
+    U 100;
+}
+

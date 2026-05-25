@@ -22,11 +22,14 @@ boundaryField
     top
     {
         type            noSlip;
+        value           uniform (0 0 0);
+        // Note: Values in noSlip are only needed for foam-extend
     }
 
     bottom
     {
         type            noSlip;
+        value           uniform (0 0 0);
     }
 
     inlet

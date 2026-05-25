@@ -3,12 +3,16 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
+    location    "system";
     object      controlDict;
 }
 
+// Note: This file is prepared to run with the latest supported version of OpenFOAM.com.
+// The tutorials/tools/run-foam-extend.sh script can modify this and other files to run with foam-extend.
+// The format of the file (e.g., linked libraries in one line each) is at parts important to the script.
+
 application     pimpleFoam;       // latest OpenFOAM
 // application     pimpleDyMFoam; // OpenFOAM v1712, OpenFOAM 5.x, or older
-
 
 startFrom           startTime;
 
@@ -36,7 +40,10 @@ timeFormat          general;
 
 timePrecision       8;
 
-libs ("libpreciceAdapterFunctionObject.so");
+libs
+(
+    "libpreciceAdapterFunctionObject.so"
+);
 functions
 {
     forces
@@ -47,6 +54,13 @@ functions
         rho                 rhoInf;
         log                 true;
         rhoInf              10;
+        // The following entries are only relevant to foam-extend
+        functionObjectLibs  ( "libforces.so" );
+        outputControl       timeStep;
+        outputInterval      1;
+        pName               p;
+        UName               U;
+        rhoName             rhoInf;
         CofR                (0 0 0);
     }
 
