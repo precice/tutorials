@@ -282,7 +282,8 @@ class Systemtest:
                 raise RuntimeError(f"git command returned code {result.returncode}")
 
         except Exception as e:
-            raise RuntimeError(f"An error occurred while fetching origin '{ref}':  {e}")
+            raise RuntimeError(
+                f"An error occurred while fetching origin '{ref}':  {e}. Do the values in reference_versions.yaml point to (still) valid Git refs?")
 
     def _checkout_ref_in_subfolder(self, repository: Path, subfolder: Path, ref: str):
         try:
