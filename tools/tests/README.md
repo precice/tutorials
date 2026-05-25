@@ -8,6 +8,10 @@ summary: "Test complete simulations combining preCICE components of specific ver
 
 The tutorials repository hosts cases that need multiple components from the preCICE ecosystem to run. This directory provides tools that can automatically run complete simulations, using different versions of each component, and compare the results to references. While the main purpose is to run complete tests in the continuous integration workflows of preCICE, you can also run these tests on your laptop.
 
+Read more about the system tests in the publication [System Regression Tests for the preCICE Coupling Ecosystem](https://doi.org/10.14279/eceasst.v83.2614).
+
+[![ECEASST](https://img.shields.io/badge/DOI-10.14279%2Feceasst.v83.2614-green)](https://doi.org/10.14279/eceasst.v83.2614)
+
 ## Running the system tests
 
 The main workflow for the user is executing the `systemtests.py` script. Depending on the options given to the script, it reads in the respective metadata files and generates `docker-compose.yaml` files that can start a fully-defined coupled simulation.
@@ -32,7 +36,7 @@ Workflow for the preCICE v3 release testing:
 
 6. Download the build artifacts from Summary > runs.
 
-    - In there, you may want to check the `stdout.log` and `stderr.log` files.
+    - In there, you may want to check the `system-tests-stdout.log` and `system-tests-stderr.log` files.
     - The produced results are in `precice-exports/`, the reference results in `reference-results-unpacked`.
     - Compare using, e.g., ParaView or [fieldcompare](https://gitlab.com/dglaeser/fieldcompare): `fieldcompare dir precice-exports/ reference/`. The `--diff` option will give you `precice-exports/diff_*.vtu` files, while you can also try different tolerances with `-rtol` and `-atol`.
 
@@ -101,7 +105,7 @@ In this case, building and running seems to work out, but the tests fail because
 
 The easiest way to debug a systemtest run is first to have a look at the output written into the action on GitHub.
 If this does not provide enough hints, the next step is to download the generated `system_tests_run_<run_id>_<run_attempt>` artifact. Note that by default this will only be generated if the systemtests fail.
-Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains two log files: a `stderr.log` and `stdout.log`. This can be a starting point for a further investigation.
+Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains two log files: `system-tests-stderr.log` and `system-tests-stdout.log`. This can be a starting point for a further investigation. When fieldcompare runs with `--diff`, it writes VTK diff files under `precice-exports/`; if the comparison fails, those files are copied into a `diff-results/` subfolder in the same run directory (mirroring any subpaths under `precice-exports/`) so you can open them (e.g. in ParaView) to see where results differ from the reference. On successful comparisons, `diff-results/` is therefore absent.
 
 ## Adding new tests
 
@@ -113,6 +117,8 @@ In order for the systemtests to pick up the tutorial we need to define a `metada
 
 To add a testsuite just open the `tests.yaml` file and use the output of `python print_case_combinations.py` to add the right case combinations you want to test. Note that you can specify a `reference_result` which is not yet present. The `generate_reference_data.py` will pick that up and create it for you.
 Note that its important to carefully check the paths of the `reference_result` in order to not have typos in there. Also note that same cases in different testsuites should use the same `reference_result`.
+
+To cap the preCICE simulation time for a specific test without editing `precice-config.xml`, add an optional `max_time` (positive float, overrides `<max-time>`) or `max_time_windows` (positive integer, overrides `<max-time-windows>`) field to the tutorial entry. Applies to both test runs and reference result generation.
 
 ### Generate reference results
 
@@ -163,7 +169,7 @@ Metadata and workflow/script files:
     - ...
   - `dockerfiles/`
     - Multi-stage build Dockerfiles that define how to build each component, in a layered approach
-  - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Componse service template)
+  - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Compose service template)
   - `docker-compose.field_compare.template.yaml`: Describes how to compare results with fieldcompare (Docker Compose service template)
   - `components.yaml`: Declares the available components and their parameters/options
   - `reference_results.metadata.template`: Template for reporting the versions used to generate the reference results
@@ -229,7 +235,7 @@ Description:
 - `name`: A human-readable, descriptive name
 - `path`: Where the tutorial is located, relative to the tutorials repository
 - `url`: A web page with more information on the tutorial
-- `participants`: A list of preCICE participants, typically corresponing to different domains of the simulation
+- `participants`: A list of preCICE participants, typically corresponding to different domains of the simulation
 - `cases`: A list of solver configuration directories. Each element of the list includes:
   - `participant`: Which participant this solver case can serve as
   - `directory`: Where the case directory is located, relative to the tutorial directory
@@ -259,7 +265,7 @@ openfoam-adapter:
       default: "master"
     OPENFOAM_EXECUTABLE:
       description: exectuable of openfoam to use
-      default: "openfoam2312"
+      default: "openfoam2512"
     OPENFOAM_ADAPTER_REF:
       description: Reference/tag of the actual OpenFOAM adapter
       default: "master"
@@ -275,7 +281,9 @@ This `openfoam-adapter` component has the following attributes:
 
 Since the docker containers are still a bit mixed in terms of capabilities and support for different build_argument combinations the following rules apply:
 
-- A build_argument ending in **_REF** means that it refers to a git commit-ish (like a tag or commit) beeing used to build the image. Its important to not use branch names here as we heavily rely on dockers build cache to speedup things. But since the input variable to the docker builder will not change, we might have wrong cache hits.
+- A build argument ending in `_REF` refers to a git commit-ish (like a tag or commit) being used to build the image. It is important to not use branch names here as we heavily rely on Docker's build cache to speedup things. But since the input variable to the docker builder will not change, we might have wrong cache hits.
+- Some workflows set variables ending in `_PR`. These specify the GitHub pull request which provides the above `_REF` and can be on a fork.
+- A build argument ending in `_VERSION` refers to the version of a third-party dependency to use (e.g., DUNE).
 - All other build_arguments are free of rules and up to the container maintainer.
 
 ### Component templates
@@ -327,7 +335,10 @@ test_suites:
           - fluid-openfoam
           - solid-fenics
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz
+        timeout: 1200
 ```
+
+The optional `timeout` field (in seconds) sets the maximum time for the solver run and fieldcompare phases of that specific case. If omitted, it defaults to `GLOBAL_TIMEOUT` (currently 900s, overridable via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable).
 
 This defines two test suites, namely `openfoam_adapter_pr` and `openfoam_adapter_release`. Each of them defines which case combinations of which tutorials to run.
 
@@ -335,7 +346,7 @@ This defines two test suites, namely `openfoam_adapter_pr` and `openfoam_adapter
 
 #### via GitHub workflow (recommended)
 
-The preferred way of adding reference results is via the manual triggerable `Generate reference results (manual)` workflow. This takes two inputs:
+The preferred way of adding reference results is via the manual `Generate reference results (manual)` workflow. This takes two inputs:
 
 - `from_ref`: branch where the new test configuration (e.g added tests, new reference_versions.yaml) is
 - `commit_msg`: commit message for adding the reference results into the branch

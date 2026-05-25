@@ -24,14 +24,14 @@
 
   <participant name="Dirichlet">
     <provide-mesh name="Dirichlet-Mesh" />
-    <receive-mesh name="Neumann-Mesh" from="Neumann" direct-access="true" />
+    <receive-mesh name="Neumann-Mesh" from="Neumann" api-access="true" />
     <write-data name="Heat-Flux" mesh="Neumann-Mesh" />
     <read-data name="Temperature" mesh="Dirichlet-Mesh" />
   </participant>
 
   <participant name="Neumann">
     <provide-mesh name="Neumann-Mesh" />
-    <receive-mesh name="Dirichlet-Mesh" from="Dirichlet" direct-access="true" />
+    <receive-mesh name="Dirichlet-Mesh" from="Dirichlet" api-access="true" />
     <write-data name="Temperature" mesh="Dirichlet-Mesh" />
     <read-data name="Heat-Flux" mesh="Neumann-Mesh" />
   </participant>

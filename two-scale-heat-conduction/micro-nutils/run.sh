@@ -6,9 +6,12 @@ exec > >(tee --append "$LOGFILE") 2>&1
 
 usage() { echo "Usage: cmd [-s] [-p n]" 1>&2; exit 1; }
 
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -r requirements.txt && pip freeze > pip-installed-packages.log
+if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
+then
+    python3 -m venv .venv
+    . .venv/bin/activate
+    pip install -r requirements.txt && pip freeze > pip-installed-packages.log
+fi
 
 # Check if no input argument was provided
 if [ -z "$*" ] ; then

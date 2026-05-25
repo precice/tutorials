@@ -7,7 +7,7 @@ summary: This tutorial describes how to run a conjugate heat transfer coupled si
 
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate-calculix). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/flow-over-heated-plate-calculix), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate-calculix) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -27,7 +27,7 @@ By default, the fluid participant reads heat-flux values and the solid participa
 Fluid participant:
 
 * OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
-* SU2 (copy the `fluid-su2` directory from the `flow-over-heated-plate` tutorial as-is). For more information, have a look at the [SU2 adapter docmentation](https://precice.org/adapter-su2-overview.html).
+* SU2 (copy the `fluid-su2` directory from the `flow-over-heated-plate` tutorial as-is). For more information, have a look at the [SU2 adapter documentation](https://precice.org/adapter-su2-overview.html).
 
 Solid participant:
 

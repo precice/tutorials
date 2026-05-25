@@ -6,7 +6,7 @@ summary: This tutorial describes how to run a fluid-structure interaction using 
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/perpendicular-flap). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/perpendicular-flap), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/perpendicular-flap) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -29,7 +29,7 @@ Fluid participant:
 
 * OpenFOAM (pimpleFoam). In case you are using a very old OpenFOAM version, you will need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
-* SU2. As opposed to the other two fluid codes, SU2 is in particular specialized for compressible flow. Therefore the default simulation parameters haven been adjusted in order to pull the setup into the compressible flow regime. For more information, have a look at the [SU2 adapter documentation](https://precice.org/adapter-su2-overview.html).
+* SU2. As opposed to the other two fluid codes, SU2 is in particular specialized for compressible flow. Therefore the default simulation parameters have been adjusted in order to pull the setup into the compressible flow regime. For more information, have a look at the [SU2 adapter documentation](https://precice.org/adapter-su2-overview.html).
 
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v6.0. This case currently takes orders of magnitude longer than the OpenFOAM and SU2 cases, see [related issue](https://github.com/precice/tutorials/issues/506).
 
@@ -47,7 +47,7 @@ Solid participant:
 
 * Nutils. The structural model is currently limited to linear elasticity. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v8.0.
 
-* solids4foam. Like for CalculiX, the geometrically non-linear solver is used by default. For more information, see the [solids4foam documentation](https://solids4foam.github.io/documentation/overview.html) and a [related tutorial](https://solids4foam.github.io/tutorials/more-tutorials/flexibleOversetCylinder.html). This case works with solids4foam v2.0, which is compatible with up to OpenFOAM v2012 and OpenFOAM 9 (as well as foam-extend, with which the OpenFOAM-preCICE adapter is not compatible), as well as the OpenFOAM-preCICE adapter v1.2.0 or later.
+* solids4foam. Like for CalculiX, the geometrically non-linear solver is used by default. For more information, see the [solids4foam documentation](https://solids4foam.github.io/documentation/overview.html) and a [related tutorial](https://www.solids4foam.com/tutorials/more-tutorials/fluid-solid-interaction/flexibleOversetCylinder.html). This case works with solids4foam v2.0, which is compatible with up to OpenFOAM v2012 and OpenFOAM 9 (as well as foam-extend, with which the OpenFOAM-preCICE adapter is not compatible), as well as the OpenFOAM-preCICE adapter v1.2.0 or later.
 
 * OpenFOAM (solidDisplacementFoam). For more information, have a look at the [OpenFOAM plateHole tutorial](https://www.openfoam.com/documentation/tutorial-guide/5-stress-analysis/5.1-stress-analysis-of-a-plate-with-a-hole). The solidDisplacementFoam solver only supports linear geometry and this case is only provided for quick testing purposes, leading to outlier results. For general solid mechanics procedures in OpenFOAM, see solids4foam.
 
@@ -89,7 +89,7 @@ You should get results similar to this one:
 
 Reasons for the differences:
 
-* The CalculiX adapter only supports linear finite elements (deal.II uses 4th order, FEniCS 2nd order).
+* The CalculiX mesh uses the linear element [C3D8I](https://web.mit.edu/calculix_v2.7/CalculiX/ccx_2.7/doc/ccx/node28.html), as opposed to FEniCS using a quadratic element, and deal.II using a 4th order element.
 * SU2 models a compressible fluid, OpenFOAM and Nutils an incompressible one.  
 
 ### Looking closer
@@ -115,6 +115,17 @@ Combinations (excerpt) using the compressible `fluid-su2` case:
 Combinations (excerpt) using the dummy `fluid-fake` case:
 
 ![Flap watchpoints using fluid-fake](images/tutorials-perpendicular-flap-displacement-fake-watchpoints.png)
+
+## Try the case with a stronger coupling
+
+In this case, the coupling between the fluid flow and the flap becomes stronger when the fluid is heavier relative to the flap. We can try out this setting by decreasing the density of the solid participant.
+
+With the default value of $$ \rho_s= 3.0·10^{3}kg/m^{3} $$, the simulation will also converge with an explicit coupling scheme. With $$ \rho_s= 1kg/m^{3} $$, the simulation will only converge with implicit coupling, with an acceleration method such as the IQN-ILS in the current configuration.
+
+See [how this tutorial behaves with different coupling algorithms](https://makish.github.io/vki-training/#/17).
+This talk varies the [coupling scheme configuration](https://precice.org/configuration-coupling.html) and demonstrates explicit and implicit coupling schemes, the latter with constant, Aitken, and Anderson acceleration.
+Even though this is not a rigorous study, it demonstrates the effect that different coupling algorithms can have.
+Find more thorough studies in the [literature guide](https://precice.org/fundamentals-literature-guide.html#precice-features).
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM®  and OpenCFD®  trade marks.

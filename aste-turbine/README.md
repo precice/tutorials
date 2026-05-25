@@ -5,7 +5,7 @@ keywords: ASTE, mapping, data mapping, mapping configuration, turbine
 summary: This tutorial is an example case for ASTE, where we investigate different preCICE mappings using ASTE.
 ---
 
-{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/aste-turbine). Read how in the [tutorials introduction](https://precice.org/tutorials.html)." %}
+{% include note.html content="Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/aste-turbine), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/aste-turbine) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html)." %}
 
 If you are completely new to ASTE have a look at our [ASTE documentation](https://precice.org/tooling-aste.html). This tutorial shows how to setup a mapping between two (artificial) meshes using preCICE and ASTE in parallel. The executed mapping can be investigated in terms of accuracy as well as runtime.
 
