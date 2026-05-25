@@ -55,8 +55,6 @@ positions = [[x, y] for x in range(width) for y in range(height)]
 vertex_gm_ids = participant.set_mesh_vertices("Soil-Creep-Mesh", positions)
 vertex_soil_ids = participant.set_mesh_vertices("Soil-Depth-Mesh", positions)
 
-u = np.zeros([width, height])
-
 participant.initialize()
 
 while participant.is_coupling_ongoing():
