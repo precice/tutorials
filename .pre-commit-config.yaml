@@ -5,7 +5,7 @@ repos:
   hooks:
   - id: format-precice-config
 - repo: https://github.com/igorshubovych/markdownlint-cli
-  rev: v0.30.0
+  rev: v0.48.0
   hooks:
     - id: markdownlint
       exclude: ^(.github/pull_request_template.md|changelog-entries)
@@ -22,7 +22,7 @@ repos:
   - id: clang-format
     exclude: '\.(json|m|mm)$'
 - repo: https://github.com/koalaman/shellcheck-precommit
-  rev: v0.10.0
+  rev: v0.11.0
   hooks:
     - id: shellcheck
       args: [ --external-sources, --exclude=SC1091 ]

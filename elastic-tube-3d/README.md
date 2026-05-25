@@ -31,7 +31,7 @@ Solid participant:
 
 * CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html).
 
-* FEniCS. The structural model is currently limited to linear elasticity. Currently 3D functionality is experimental in the FEniCS adapter and more details can be found [here](https://github.com/precice/fenics-adapter/pull/133) For more information, have a look at the [FeniCS adapter documentation](https://precice.org/adapter-fenics.html).
+* FEniCS. The structural model is currently limited to linear elasticity. Currently 3D functionality is experimental in the FEniCS adapter and more details can be found [in this discussion](https://github.com/precice/fenics-adapter/pull/133). For more information, have a look at the [FeniCS adapter documentation](https://precice.org/adapter-fenics.html).
 
 ## Running the simulation
 
