@@ -23,9 +23,15 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 ![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-direct-precice-config.png)
 
+The data mapping is computed by directly sampling the FEM function representation at the inquired locations.
+
 ## Available solvers
 
-Currently only `nutils` is provided as a solver. The data mapping is computed by directly sampling the FEM function representation at the inquired locations.
+You can either couple a solver with itself or different solvers with each other. Available solvers:
+
+- Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
+
+- G+Smo. Install the [G+Smo adapter](https://precice.org/adapter-gismo.html).
 
 ## Running the simulation
 

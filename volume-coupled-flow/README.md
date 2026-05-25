@@ -33,7 +33,7 @@ Fluid participant:
 
 Source participant:
 
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
+* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
 ## Running the simulation
 

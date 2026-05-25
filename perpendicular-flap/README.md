@@ -31,7 +31,7 @@ Fluid participant:
 
 * SU2. As opposed to the other two fluid codes, SU2 is in particular specialized for compressible flow. Therefore the default simulation parameters have been adjusted in order to pull the setup into the compressible flow regime. For more information, have a look at the [SU2 adapter documentation](https://precice.org/adapter-su2-overview.html).
 
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v6.0. This case currently takes orders of magnitude longer than the OpenFOAM and SU2 cases, see [related issue](https://github.com/precice/tutorials/issues/506).
+* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This case currently takes orders of magnitude longer than the OpenFOAM and SU2 cases, see [related issue](https://github.com/precice/tutorials/issues/506).
 
 * Fake. A simple python script that acts as a fake solver and provides an arbitrary force, linearly-increasing per length of the flap. This solver can be used for debugging of the solid participant and its adapter. It also technically works with implicit coupling, thus no changes to the preCICE configuration are necessary. Note that [ASTE's replay mode](https://precice.org/tooling-aste.html#replay-mode) has a similar use case and could also feed artificial or previously recorded real data, replacing an actual solver.
 
@@ -45,7 +45,7 @@ Solid participant:
 
 * DUNE. For more information, have a look at the [experimental DUNE adapter](https://github.com/precice/dune-adapter) and send us your feedback.
 
-* Nutils. The structural model is currently limited to linear elasticity. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v8.0.
+* Nutils. The structural model is currently limited to linear elasticity. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
 * solids4foam. Like for CalculiX, the geometrically non-linear solver is used by default. For more information, see the [solids4foam documentation](https://solids4foam.github.io/documentation/overview.html) and a [related tutorial](https://www.solids4foam.com/tutorials/more-tutorials/fluid-solid-interaction/flexibleOversetCylinder.html). This case works with solids4foam v2.0, which is compatible with up to OpenFOAM v2012 and OpenFOAM 9 (as well as foam-extend, with which the OpenFOAM-preCICE adapter is not compatible), as well as the OpenFOAM-preCICE adapter v1.2.0 or later.
 
