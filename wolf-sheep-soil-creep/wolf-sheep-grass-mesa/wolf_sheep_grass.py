@@ -24,6 +24,7 @@ ws = WolfSheep(wss)
 
 ground_cover_cmap = copy.copy(mpl.colormaps["YlGn"])
 
+
 def generate_grass_map(model):
     grass_map = np.zeros((model.grid.width, model.grid.height))
     for cell in model.grid:
@@ -42,6 +43,7 @@ def plot_grass_map(grass_map):
     plt.imshow(grass_map, interpolation="nearest", cmap=ground_cover_cmap)
     plt.colorbar()
 
+
 def limit_grass_by_soil(wsg_model, soil, min_soil_depth):
     soilmatrix = soil.reshape((wsg_model.width, wsg_model.height))
     for cell in wsg_model.grid:
@@ -51,6 +53,7 @@ def limit_grass_by_soil(wsg_model, soil, min_soil_depth):
             for agent in cell_content:
                 if type(agent) is GrassPatch:
                     agent.fully_grown = False
+
 
 width = ws.grid.width
 height = ws.grid.height
@@ -66,7 +69,7 @@ positions = [[x, y] for x in range(width) for y in range(height)]
 vertex_gm_ids = participant.set_mesh_vertices("Wolf-Sheep-Grass-Mesh", positions)
 vertex_soil_ids = participant.set_mesh_vertices("Soil-Grass-Mesh", positions)
 
-soil = np.zeros([width*height])
+soil = np.zeros([width * height])
 
 if participant.requires_initial_data():
     gm = generate_grass_map(ws)
