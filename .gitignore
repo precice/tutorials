@@ -40,6 +40,10 @@ __pycache__/
 Cargo.lock
 target/
 
+# Julia
+Manifest.toml
+Project.toml
+
 # OpenFOAM
 0.*/
 [1-9]*/
