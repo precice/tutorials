@@ -1,0 +1,11 @@
+#includeEtc "caseDicts/postProcessing/probes/probes.cfg"
+
+fields (p U);
+probeLocations
+(
+    (0 0 40)
+    (0 0 20)
+
+);
+
+// ************************************************************************* //

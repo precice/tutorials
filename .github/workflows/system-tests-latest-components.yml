@@ -3,8 +3,9 @@ name: System tests (latest components)
 on:
   schedule:
     - cron: "0 4 * * *"
+      timezone: "Europe/Berlin"
   workflow_dispatch:
-    
+
 jobs:
   gather-refs:
     name: Map Git branches to latest refs
@@ -13,7 +14,9 @@ jobs:
       ref-precice: ${{ steps.ref-precice.outputs.shorthash }}
       ref-python-bindings: ${{ steps.ref-python-bindings.outputs.shorthash }}
       ref-calculix-adapter: ${{ steps.ref-calculix-adapter.outputs.shorthash }}
+      ref-dumux-adapter: ${{ steps.ref-dumux-adapter.outputs.shorthash }}
       ref-fenics-adapter: ${{ steps.ref-fenics-adapter.outputs.shorthash }}
+      ref-micro-manager: ${{ steps.ref-micro-manager.outputs.shorthash }}
       ref-openfoam-adapter: ${{ steps.ref-openfoam-adapter.outputs.shorthash }}
       ref-su2-adapter: ${{ steps.ref-su2-adapter.outputs.shorthash }}
       ref-tutorials: ${{ steps.ref-tutorials.outputs.shorthash }}
@@ -39,12 +42,26 @@ jobs:
           owner: precice
           repo: calculix-adapter
           branch: develop
+      - id: ref-dumux-adapter
+        name: Get DuMux adapter ref
+        uses: nmbgeek/github-action-get-latest-commit@main
+        with:
+          owner: precice
+          repo: dumux-adapter
+          branch: develop
       - id: ref-fenics-adapter
         name: Get FEniCS adapter ref
         uses: nmbgeek/github-action-get-latest-commit@main
         with:
           owner: precice
           repo: fenics-adapter
+          branch: develop
+      - id: ref-micro-manager
+        name: Get Micro-Manager ref
+        uses: nmbgeek/github-action-get-latest-commit@main
+        with:
+          owner: precice
+          repo: micro-manager
           branch: develop
       - id: ref-openfoam-adapter
         name: Get OpenFOAM adapter ref
@@ -73,56 +90,72 @@ jobs:
           printf 'preCICE: ${{ steps.ref-precice.outputs.shorthash }}\n ${{ steps.ref-precice.outputs.description }}\n----------\n'
           printf 'Python bindings: ${{ steps.ref-python-bindings.outputs.shorthash }}\n ${{ steps.ref-python-bindings.outputs.description }}\n----------\n'
           printf 'CalculiX adapter: ${{ steps.ref-calculix-adapter.outputs.shorthash }}\n ${{ steps.ref-calculix-adapter.outputs.description }}\n----------\n'
+          printf 'DuMux adapter: ${{ steps.ref-dumux-adapter.outputs.shorthash }}\n ${{ steps.ref-dumux-adapter.outputs.description }}\n----------\n'
           printf 'FEniCS adapter: ${{ steps.ref-fenics-adapter.outputs.shorthash }}\n ${{ steps.ref-fenics-adapter.outputs.description }}\n----------\n'
+          printf 'Micro-Manager: ${{ steps.ref-micro-manager.outputs.shorthash }}\n ${{ steps.ref-micro-manager.outputs.description }}\n----------\n'
           printf 'OpenFOAM adapter: ${{ steps.ref-openfoam-adapter.outputs.shorthash }} ${{ steps.ref-openfoam-adapter.outputs.description }}\n----------\n'
           printf 'SU2 adapter: ${{ steps.ref-su2-adapter.outputs.shorthash }}\n ${{ steps.ref-su2-adapter.outputs.description }}\n----------\n'
           printf 'Tutorials: ${{ steps.ref-tutorials.outputs.shorthash }} ${{ steps.ref-tutorials.outputs.description }}\n----------\n'
       - id: summary
         name: Prepare Markdown summary
         run: |
-          echo "## Git references of latest (develop) components" >> $GITHUB_STEP_SUMMARY
-          echo "### preCICE" >> $GITHUB_STEP_SUMMARY
-          echo "Reference: [\`${{ steps.ref-precice.outputs.shorthash }}\`](https://github.com/precice/precice/commit/${{ steps.ref-precice.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
-          echo "Description:" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.ref-precice.outputs.description }}" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "### Python bindings" >> $GITHUB_STEP_SUMMARY
-          echo "Reference: [\`${{ steps.ref-python-bindings.outputs.shorthash }}\`](https://github.com/precice/python-bindings/commit/${{ steps.ref-python-bindings.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
-          echo "Description:" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.ref-python-bindings.outputs.description }}" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "### CalculiX adapter" >> $GITHUB_STEP_SUMMARY
-          echo "Reference: [\`${{ steps.ref-calculix-adapter.outputs.shorthash }}\`](https://github.com/precice/calculix-adapter/commit/${{ steps.ref-calculix-adapter.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
-          echo "Description:" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.ref-calculix-adapter.outputs.description }}" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "### FEniCS adapter" >> $GITHUB_STEP_SUMMARY
-          echo "Reference: [\`${{ steps.ref-fenics-adapter.outputs.shorthash }}\`](https://github.com/precice/fenics-adapter/commit/${{ steps.ref-fenics-adapter.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
-          echo "Description:" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.ref-fenics-adapter.outputs.description }}" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "### OpenFOAM adapter" >> $GITHUB_STEP_SUMMARY
-          echo "Reference: [\`${{ steps.ref-openfoam-adapter.outputs.shorthash }}\`](https://github.com/precice/openfoam-adapter/commit/${{ steps.ref-openfoam-adapter.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
-          echo "Description:" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.ref-openfoam-adapter.outputs.description }}" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "### SU2 adapter" >> $GITHUB_STEP_SUMMARY
-          echo "Reference: [\`${{ steps.ref-su2-adapter.outputs.shorthash }}\`](https://github.com/precice/su2-adapter/commit/${{ steps.ref-su2-adapter.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
-          echo "Description:" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.ref-su2-adapter.outputs.description }}" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "### Tutorials" >> $GITHUB_STEP_SUMMARY
-          echo "Reference: [\`${{ steps.ref-tutorials.outputs.shorthash }}\`](https://github.com/precice/tutorials/commit/${{ steps.ref-tutorials.outputs.shorthash }})" >> $GITHUB_STEP_SUMMARY
-          echo "Description:" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.ref-tutorials.outputs.description }}" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "## Git references of latest (develop) components"
+            echo "### preCICE"
+            echo "Reference: [\`${{ steps.ref-precice.outputs.shorthash }}\`](https://github.com/precice/precice/commit/${{ steps.ref-precice.outputs.shorthash }})"
+            echo "Description:"
+            echo "\`\`\`"
+            echo "${{ steps.ref-precice.outputs.description }}"
+            echo "\`\`\`"
+            echo "### Python bindings"
+            echo "Reference: [\`${{ steps.ref-python-bindings.outputs.shorthash }}\`](https://github.com/precice/python-bindings/commit/${{ steps.ref-python-bindings.outputs.shorthash }})"
+            echo "Description:"
+            echo "\`\`\`"
+            echo "${{ steps.ref-python-bindings.outputs.description }}"
+            echo "\`\`\`"
+            echo "### CalculiX adapter"
+            echo "Reference: [\`${{ steps.ref-calculix-adapter.outputs.shorthash }}\`](https://github.com/precice/calculix-adapter/commit/${{ steps.ref-calculix-adapter.outputs.shorthash }})"
+            echo "Description:"
+            echo "\`\`\`"
+            echo "${{ steps.ref-calculix-adapter.outputs.description }}"
+            echo "\`\`\`"
+            echo "### DuMux adapter"
+            echo "Reference: [\`${{ steps.ref-dumux-adapter.outputs.shorthash }}\`](https://github.com/precice/dumux-adapter/commit/${{ steps.ref-dumux-adapter.outputs.shorthash }})"
+            echo "Description:"
+            echo "\`\`\`"
+            echo "${{ steps.ref-dumux-adapter.outputs.description }}"
+            echo "\`\`\`"
+            echo "### FEniCS adapter"
+            echo "Reference: [\`${{ steps.ref-fenics-adapter.outputs.shorthash }}\`](https://github.com/precice/fenics-adapter/commit/${{ steps.ref-fenics-adapter.outputs.shorthash }})"
+            echo "Description:"
+            echo "\`\`\`"
+            echo "${{ steps.ref-fenics-adapter.outputs.description }}"
+            echo "\`\`\`"
+            echo "### Micro-Manager"
+            echo "Reference: [\`${{ steps.ref-micro-manager.outputs.shorthash }}\`](https://github.com/precice/micro-manager/commit/${{ steps.ref-micro-manager.outputs.shorthash }})"
+            echo "Description:"
+            echo "\`\`\`"
+            echo "${{ steps.ref-micro-manager.outputs.description }}"
+            echo "\`\`\`"
+            echo "### OpenFOAM adapter"
+            echo "Reference: [\`${{ steps.ref-openfoam-adapter.outputs.shorthash }}\`](https://github.com/precice/openfoam-adapter/commit/${{ steps.ref-openfoam-adapter.outputs.shorthash }})"
+            echo "Description:"
+            echo "\`\`\`"
+            echo "${{ steps.ref-openfoam-adapter.outputs.description }}"
+            echo "\`\`\`"
+            echo "### SU2 adapter"
+            echo "Reference: [\`${{ steps.ref-su2-adapter.outputs.shorthash }}\`](https://github.com/precice/su2-adapter/commit/${{ steps.ref-su2-adapter.outputs.shorthash }})"
+            echo "Description:"
+            echo "\`\`\`"
+            echo "${{ steps.ref-su2-adapter.outputs.description }}"
+            echo "\`\`\`"
+            echo "### Tutorials"
+            echo "Reference: [\`${{ steps.ref-tutorials.outputs.shorthash }}\`](https://github.com/precice/tutorials/commit/${{ steps.ref-tutorials.outputs.shorthash }})"
+            echo "Description:"
+            echo "\`\`\`"
+            echo "${{ steps.ref-tutorials.outputs.description }}"
+            echo "\`\`\`"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   run-system-tests:
     name: Trigger system tests
@@ -135,8 +168,11 @@ jobs:
         PYTHON_BINDINGS_REF:${{ needs.gather-refs.outputs.ref-python-bindings }},\
         CALCULIX_VERSION:2.20,\
         CALCULIX_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-calculix-adapter }},\
+        DUMUX_VERSION:3.7,\
+        DUMUX_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-dumux-adapter }},\
         FENICS_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-fenics-adapter }},\
-        OPENFOAM_EXECUTABLE:openfoam2312,\
+        MICRO_MANAGER_REF:${{ needs.gather-refs.outputs.ref-micro-manager }},\
+        OPENFOAM_EXECUTABLE:openfoam2512,\
         OPENFOAM_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-openfoam-adapter }},\
         SU2_VERSION:7.5.1,\
         SU2_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-su2-adapter }},\

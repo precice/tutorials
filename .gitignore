@@ -20,8 +20,10 @@ precice-profiling/
 precice-run/
 core
 profiling.json
+profiling.db
 profiling.csv
 trace.json
+profiling.pftrace
 
 # C++
 *.o
@@ -37,6 +39,10 @@ __pycache__/
 # Rust
 Cargo.lock
 target/
+
+# Julia
+Manifest.toml
+Project.toml
 
 # OpenFOAM
 0.*/

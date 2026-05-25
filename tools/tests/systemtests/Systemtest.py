@@ -1,5 +1,5 @@
 import subprocess
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Tuple
 from jinja2 import Environment, FileSystemLoader
 from dataclasses import dataclass, field
 import shutil
@@ -19,8 +19,10 @@ import logging
 import os
 
 
-GLOBAL_TIMEOUT = 600
+GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 900))
 SHORT_TIMEOUT = 10
+
+DIFF_RESULTS_DIR = "diff-results"
 
 
 def slugify(value, allow_unicode=False):
@@ -83,7 +85,11 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
 
     max_name_length = _get_length_of_name(results)
 
-    header = f"| {'systemtest':<{max_name_length + 2}} | {'success':^7} | {'building time [s]':^17} | {'solver time [s]':^15} | {'fieldcompare time [s]':^21} |"
+    header = f"| {'systemtest':<{max_name_length + 2}} "\
+        f"| {'success':^7} "\
+        f"| {'building time [s]':^17} "\
+        f"| {'solver time [s]':^15} "\
+        f"| {'fieldcompare time [s]':^21} |"
     separator_plaintext = "+-" + "-" * (max_name_length + 2) + \
         "-+---------+-------------------+-----------------+-----------------------+"
     separator_markdown = "| --- | --- | --- | --- | --- |"
@@ -98,7 +104,11 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
             print(separator_markdown, file=f)
 
     for result in results:
-        row = f"| {str(result.systemtest):<{max_name_length + 2}} | {result.success:^7} | {result.build_time:^17.1f} | {result.solver_time:^15.1f} | {result.fieldcompare_time:^21.1f} |"
+        row = f"| {str(result.systemtest):<{max_name_length + 2}} "\
+            f"| {result.success:^7} "\
+            f"| {result.build_time:^17.1f} "\
+            f"| {result.solver_time:^15.1f} "\
+            f"| {result.fieldcompare_time:^21.1f} |"
         print(row)
         print(separator_plaintext)
         if "GITHUB_STEP_SUMMARY" in os.environ:
@@ -109,7 +119,7 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
             print("\n\n", file=f)
             print(
-                "In case a test fails, download the archive from the bottom of this page and look into each `stdout.log` and `stderr.log`. The time spent in each step might already give useful hints.",
+                "In case a test fails, download the archive from the bottom of this page and look into each `system-tests-stdout.log` and `system-tests-stderr.log`. The time spent in each step might already give useful hints.",
                 file=f)
             print(
                 "See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).",
@@ -126,6 +136,9 @@ class Systemtest:
     arguments: SystemtestArguments
     case_combination: CaseCombination
     reference_result: ReferenceResult
+    max_time: float | None = None
+    max_time_windows: int | None = None
+    timeout: int = GLOBAL_TIMEOUT
     params_to_use: Dict[str, str] = field(init=False)
     env: Dict[str, str] = field(init=False)
 
@@ -138,7 +151,7 @@ class Systemtest:
         return False
 
     def __hash__(self) -> int:
-        return hash(f"{self.tutorial,self.arguments,self.case_combination}")
+        return hash(f"{self.tutorial, self.arguments, self.case_combination}")
 
     def __post_init__(self):
         self.__init_args_to_use()
@@ -345,26 +358,59 @@ class Systemtest:
             for key, value in self.env.items():
                 env_file.write(f"{key}={value}\n")
 
-    def __unpack_reference_results(self):
-        with tarfile.open(self.reference_result.path) as reference_results_tared:
-            # specify which folder to extract to
-            reference_results_tared.extractall(self.system_test_dir / PRECICE_REL_REFERENCE_DIR)
-        logging.debug(
-            f"extracting {self.reference_result.path} into {self.system_test_dir / PRECICE_REL_REFERENCE_DIR}")
+    def __unpack_reference_results(self) -> Tuple[bool, str]:
+        if not self.reference_result.path.exists():
+            error_message = (
+                f"Reference results archive was not found for {self}. "
+                f"Expected file: {self.reference_result.path}. "
+                "Please generate the reference results first or update tests.yaml accordingly.")
+            logging.error(error_message)
+            return False, error_message
+
+        try:
+            # Base directory where reference results should be extracted
+            dest_dir = self.system_test_dir / PRECICE_REL_REFERENCE_DIR
+            dest_dir.mkdir(parents=True, exist_ok=True)
+            dest_dir_resolved = dest_dir.resolve()
+
+            with tarfile.open(self.reference_result.path) as reference_results_tared:
+                # Validate that each member will be extracted within dest_dir
+                for member in reference_results_tared.getmembers():
+                    member_path = dest_dir / member.name
+                    member_path_resolved = member_path.resolve()
+                    # Ensure the resolved member path is within the destination directory
+                    if os.path.commonpath([str(dest_dir_resolved), str(
+                            member_path_resolved)]) != str(dest_dir_resolved):
+                        logging.error(
+                            f"Unsafe path detected in reference results archive {self.reference_result.path} "
+                            f"for {self}: {member.name}")
+                        return False
+
+                # All paths are safe; extract into the destination directory
+                reference_results_tared.extractall(dest_dir)
+
+            logging.debug(
+                f"extracting {self.reference_result.path} into {dest_dir}")
+            return True, ""
+        except (tarfile.TarError, OSError) as e:
+            error_message = (
+                f"Could not unpack reference results archive {self.reference_result.path} for {self}: {e}")
+            logging.error(error_message)
+            return False, error_message
 
     def _run_field_compare(self):
         """
-        Writes the Docker Compose file to disk, executes docker-compose up, and handles the process output.
-
-        Args:
-            docker_compose_content: The content of the Docker Compose file.
+        Executes the field comparison step after unpacking reference results.
 
         Returns:
-            A SystemtestResult object containing the state.
+            A FieldCompareResult object containing the command outcome and logs.
         """
         logging.debug(f"Running fieldcompare for {self}")
         time_start = time.perf_counter()
-        self.__unpack_reference_results()
+        unpack_success, unpack_error_message = self.__unpack_reference_results()
+        if not unpack_success:
+            elapsed_time = time.perf_counter() - time_start
+            return FieldCompareResult(1, [], [unpack_error_message], self, elapsed_time)
         docker_compose_content = self.__get_field_compare_compose_file()
         stdout_data = []
         stderr_data = []
@@ -386,7 +432,7 @@ class Systemtest:
                                        cwd=self.system_test_dir)
 
             try:
-                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
+                stdout, stderr = process.communicate(timeout=self.timeout)
             except KeyboardInterrupt as k:
                 process.kill()
                 raise KeyboardInterrupt from k
@@ -404,6 +450,46 @@ class Systemtest:
             logging.CRITICAL("Error executing docker compose command:", e)
             elapsed_time = time.perf_counter() - time_start
             return FieldCompareResult(1, stdout_data, stderr_data, self, elapsed_time)
+
+    def __archive_fieldcompare_diffs(self) -> None:
+        """
+        Copy fieldcompare diff VTK files from precice-exports/ into diff-results/,
+        preserving paths under precice-exports/ so nested outputs are not skipped
+        and identical basenames in different folders do not overwrite each other.
+        """
+        exports_dir = self.system_test_dir / PRECICE_REL_OUTPUT_DIR
+        if not exports_dir.is_dir():
+            return
+        suffixes = (".vtu", ".vtk", ".vtp")
+        dest_root = self.system_test_dir / DIFF_RESULTS_DIR
+        seen_resolved: set[Path] = set()
+        archived_count = 0
+        for path in exports_dir.rglob("*"):
+            if not path.is_file():
+                continue
+            if path.suffix.lower() not in suffixes:
+                continue
+            if "diff" not in path.name.lower():
+                continue
+            resolved = path.resolve()
+            if resolved in seen_resolved:
+                continue
+            try:
+                rel = path.relative_to(exports_dir)
+            except ValueError:
+                continue
+            seen_resolved.add(resolved)
+            dest_path = dest_root / rel
+            dest_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, dest_path)
+            archived_count += 1
+        if archived_count:
+            logging.debug(
+                "Archived %d fieldcompare diff file(s) to %s for %s",
+                archived_count,
+                dest_root,
+                self,
+            )
 
     def _build_docker(self):
         """
@@ -475,7 +561,7 @@ class Systemtest:
                                        cwd=self.system_test_dir)
 
             try:
-                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
+                stdout, stderr = process.communicate(timeout=self.timeout)
             except KeyboardInterrupt as k:
                 process.kill()
                 # process.send_signal(9)
@@ -500,16 +586,40 @@ class Systemtest:
         return f"{self.tutorial.name} {self.case_combination}"
 
     def __write_logs(self, stdout_data: List[str], stderr_data: List[str]):
-        with open(self.system_test_dir / "stdout.log", 'w') as stdout_file:
+        with open(self.system_test_dir / "system-tests-stdout.log", 'w') as stdout_file:
             stdout_file.write("\n".join(stdout_data))
-        with open(self.system_test_dir / "stderr.log", 'w') as stderr_file:
+        with open(self.system_test_dir / "system-tests-stderr.log", 'w') as stderr_file:
             stderr_file.write("\n".join(stderr_data))
+
+    def __apply_max_time_override(self):
+        """Overwrite <max-time> or <max-time-windows> value in precice-config.xml."""
+        if self.max_time is None and self.max_time_windows is None:
+            return
+        config_path = self.system_test_dir / "precice-config.xml"
+        text = config_path.read_text()
+        new_text = text
+        if self.max_time is not None:
+            pattern = r'(<max-time\s+value=")[^"]*(")'
+            new_text, count = re.subn(pattern, rf'\g<1>{self.max_time}\2', new_text)
+            if count == 0:
+                logging.warning(f"No <max-time> tag found in {config_path}")
+            else:
+                logging.info(f"Overwrote <max-time> to {self.max_time} in {config_path}")
+        if self.max_time_windows is not None:
+            pattern = r'(<max-time-windows\s+value=")[^"]*(")'
+            new_text, count = re.subn(pattern, rf'\g<1>{self.max_time_windows}\2', new_text)
+            if count == 0:
+                logging.warning(f"No <max-time-windows> tag found in {config_path}")
+            else:
+                logging.info(f"Overwrote <max-time-windows> to {self.max_time_windows} in {config_path}")
+        config_path.write_text(new_text)
 
     def __prepare_for_run(self, run_directory: Path):
         """
         Prepares the run_directory with folders and datastructures needed for every systemtest execution
         """
         self.__copy_tutorial_into_directory(run_directory)
+        self.__apply_max_time_override()
         self.__copy_tools(run_directory)
         self.__put_gitignore(run_directory)
         host_uid, host_gid = self.__get_uid_gid()
@@ -558,6 +668,7 @@ class Systemtest:
         std_out.extend(fieldcompare_result.stdout_data)
         std_err.extend(fieldcompare_result.stderr_data)
         if fieldcompare_result.exit_code != 0:
+            self.__archive_fieldcompare_diffs()
             self.__write_logs(std_out, std_err)
             logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
             return SystemtestResult(

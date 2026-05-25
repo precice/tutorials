@@ -2,7 +2,7 @@
 import argparse
 from pathlib import Path
 from systemtests.SystemtestArguments import SystemtestArguments
-from systemtests.Systemtest import Systemtest, display_systemtestresults_as_table
+from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT, display_systemtestresults_as_table
 from systemtests.TestSuite import TestSuites
 from metadata_parser.metdata import Tutorials, Case
 import logging
@@ -58,10 +58,16 @@ def main():
         for test_suite in test_suites_to_execute:
             tutorials = test_suite.cases_of_tutorial.keys()
             for tutorial in tutorials:
-                for case, reference_result in zip(
-                        test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial]):
+                max_times = test_suite.max_times.get(tutorial, [])
+                mtw_list = test_suite.max_time_windows.get(tutorial, [])
+                timeouts = test_suite.timeouts.get(tutorial, [])
+                for i, (case, reference_result) in enumerate(zip(
+                        test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial])):
+                    max_time = max_times[i] if i < len(max_times) else None
+                    max_time_windows = mtw_list[i] if i < len(mtw_list) else None
+                    timeout = timeouts[i] if i < len(timeouts) and timeouts[i] is not None else GLOBAL_TIMEOUT
                     systemtests_to_run.append(
-                        Systemtest(tutorial, build_args, case, reference_result))
+                        Systemtest(tutorial, build_args, case, reference_result, max_time=max_time, max_time_windows=max_time_windows, timeout=timeout))
 
     if not systemtests_to_run:
         raise RuntimeError("Did not find any Systemtests to execute.")
@@ -69,7 +75,7 @@ def main():
     logging.info(f"About to run the following systemtest in the directory {run_directory}:\n {systemtests_to_run}")
 
     results = []
-    for number, systemtest in enumerate(systemtests_to_run):
+    for number, systemtest in enumerate(systemtests_to_run, start=1):
         logging.info(f"Started running {systemtest},  {number}/{len(systemtests_to_run)}")
         t = time.perf_counter()
         result = systemtest.run(run_directory)

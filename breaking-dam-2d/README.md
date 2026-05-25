@@ -6,7 +6,7 @@ summary: FSI simulation of a two-dimensional water column striking a flexible wa
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/breaking-dam-2d). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/breaking-dam-2d), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/breaking-dam-2d) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -39,7 +39,7 @@ You can start the simulation by running the script `./run.sh` located in each pa
 
 ## Post-processing
 
-You can visualize the results using ParaView or `cgx` (for native CalculiX results files) as usual. See some [visualization hints for CalculiX results](https://precice.org/tutorials.html#visualizing-calculix-results).
+You can visualize the results using ParaView or `cgx` (for native CalculiX results files) as usual. See some [visualization hints for CalculiX results](https://precice.org/tutorials-visualization.html#visualizing-calculix-results).
 
 {% disclaimer %}
 This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM® and OpenCFD® trade marks.
