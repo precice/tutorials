@@ -6,7 +6,7 @@ summary: Example of bi-directional ABM-PDE coupling via preCICE.
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/partitioned-pipe-two-phase), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/partitioned-pipe-two-phase) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/wolf-sheep-soil-creep), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/wolf-sheep-soil-creep) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
