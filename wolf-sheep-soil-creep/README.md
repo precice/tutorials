@@ -31,7 +31,7 @@ Wolf-Sheep-Grass ABM participant:
 
 ## Running the simulation
 
-Open two separate terminals and start the soil creep and wolf sheep participant by calling the respective run scripts `run.sh` located in each of the participants' directory. For example:
+Open two separate terminals and start the soil creep and wolf sheep participants by calling the respective run scripts `run.sh` located in each of the participants' directories. For example:
 
 ```bash
 cd soil-creep-landlab
