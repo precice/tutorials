@@ -1,7 +1,7 @@
 ---
 title: Wolf-sheep-grass model with soil creep
 permalink: tutorials-wolf-sheep-soil-creep.html
-keywords: MESA, Landlab, wolf-sheep-grass, soil creep, ABM
+keywords: MESA, Landlab, wolf-sheep-grass, soil creep, ABM, agent-based modeling
 summary: Example of bi-directional ABM-PDE coupling via preCICE.
 ---
 
