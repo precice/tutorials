@@ -87,6 +87,7 @@ while participant.is_coupling_ongoing():
 participant.finalize()
 
 # Calculate and plot the erosion/deposition patterns
+plt.figure()
 ero_dep = elev - initial_elev
 maxchange = np.amax(np.abs(ero_dep))
 imshow_grid(
@@ -97,14 +98,19 @@ imshow_grid(
     cmap="coolwarm_r",
     colorbar_label="Depth of soil accumulation (+) or loss (-), m",
 )
-plt.show()
+plt.savefig("output/erosion_deposition_patterns.png")
+plt.close()
 
 # Soil thickness
+plt.figure()
 imshow_grid(rmg, soil, colorbar_label="Soil thickness, m")
-plt.show()
+plt.savefig("output/soil_thickness.png")
+plt.close()
 
 # Ground cover
+plt.figure()
 imshow_grid(
     rmg, gm, cmap=ground_cover_cmap, colorbar_label="Ground cover (1 = bare, 2 = grass)"
 )
-plt.show()
+plt.savefig("output/grass_map.png")
+plt.close()
