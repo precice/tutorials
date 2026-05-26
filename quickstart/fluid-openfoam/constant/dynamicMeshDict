@@ -14,7 +14,10 @@ motionSolverLibs ("libfvMotionSolvers.so");
 solver      displacementLaplacian;
 // OpenFOAM9 or newer: rename "solver" to "motionSolver"
 
-diffusivity uniform; // Only relevant to foam-extend
+// The following entries are only relevant to foam-extend
+/* uncomment
+diffusivity uniform;
+*/ // foam-extend
 
 displacementLaplacianCoeffs {
     diffusivity quadratic inverseDistance (flap);

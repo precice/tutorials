@@ -19,8 +19,18 @@ sed -i "s,// application     pimpleDyMFoam;,application     pimpleDyMFoam;,g" sy
 sed -i '41i\ \ \ \ "liblduSolvers.so"' system/controlDict
 sed -i '41i\ \ \ \ "libforces.so"' system/controlDict
 sed -i "s,writeCompression    off,writeCompression    uncompressed,g" system/controlDict
+sed -i "s,\/\* uncomment,// FOAMEXTENDBEGIN,g" system/controlDict
+sed -i "s,\*\/ // foam-extend,// FOAMEXTENDEND,g" system/controlDict
+
+sed -i "s,\/\* uncomment,// FOAMEXTENDBEGIN,g" system/fvSchemes
+sed -i "s,\*\/ // foam-extend,// FOAMEXTENDEND,g" system/fvSchemes
+
+sed -i "s,\/\* uncomment,// FOAMEXTENDBEGIN,g" system/fvSolution
+sed -i "s,\*\/ // foam-extend,// FOAMEXTENDEND,g" system/fvSolution
 
 sed -i "s/libfvMotionSolvers\./libfvMotionSolver\./g" constant/dynamicMeshDict
+sed -i "s,\/\* uncomment,// FOAMEXTENDBEGIN,g" constant/dynamicMeshDict
+sed -i "s,\*\/ // foam-extend,// FOAMEXTENDEND,g" constant/dynamicMeshDict
 
 # OpenFOAM run functions: getApplication, getNumberOfProcessors
 # shellcheck disable=SC1090 # This is an OpenFOAM file which we don't need to check
@@ -43,5 +53,15 @@ fi
 #sed -i '/   "liblduSolvers.so"/d' system/controlDict
 #sed -i '/   "libforces.so/d' system/controlDict
 #sed -i "s,writeCompression    uncompressed,writeCompression    off,g" system/controlDict
+#sed -i "s,// FOAMEXTENDBEGIN,\/\* uncomment,g" system/controlDict
+#sed -i "s,// FOAMEXTENDEND,\*\/ // foam-extend,g" system/controlDict
+#
+#sed -i "s,// FOAMEXTENDBEGIN,\/\* uncomment,g" system/fvSchemes
+#sed -i "s,// FOAMEXTENDEND,\*\/ // foam-extend,g" system/fvSchemes
+#
+#sed -i "s,// FOAMEXTENDBEGIN,\/\* uncomment,g" system/fvSolution
+#sed -i "s,// FOAMEXTENDEND,\*\/ // foam-extend,g" system/fvSolution
 #
 #sed -i "s/libfvMotionSolver\./libfvMotionSolvers\./g" constant/dynamicMeshDict
+#sed -i "s,// FOAMEXTENDBEGIN,\/\* uncomment,g" constant/dynamicMeshDict
+#sed -i "s,// FOAMEXTENDEND,\*\/ // foam-extend,g" constant/dynamicMeshDict
