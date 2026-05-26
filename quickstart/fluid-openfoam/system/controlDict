@@ -55,12 +55,14 @@ functions
         log                 true;
         rhoInf              10;
         // The following entries are only relevant to foam-extend
+        /* uncomment
         functionObjectLibs  ( "libforces.so" );
         outputControl       timeStep;
         outputInterval      1;
         pName               p;
         UName               U;
         rhoName             rhoInf;
+        */ // foam-extend
         CofR                (0 0 0);
     }
 

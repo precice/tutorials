@@ -19,6 +19,8 @@ sed -i "s,// application     pimpleDyMFoam;,application     pimpleDyMFoam;,g" sy
 sed -i '41i\ \ \ \ "liblduSolvers.so"' system/controlDict
 sed -i '41i\ \ \ \ "libforces.so"' system/controlDict
 sed -i "s,writeCompression    off,writeCompression    uncompressed,g" system/controlDict
+sed -i "s,\/\* uncomment,// FOAMEXTENDBEGIN,g" system/controlDict
+sed -i "s,\*\/ // foam-extend,// FOAMEXTENDEND,g" system/controlDict
 
 sed -i "s/libfvMotionSolvers\./libfvMotionSolver\./g" constant/dynamicMeshDict
 
@@ -43,5 +45,7 @@ fi
 #sed -i '/   "liblduSolvers.so"/d' system/controlDict
 #sed -i '/   "libforces.so/d' system/controlDict
 #sed -i "s,writeCompression    uncompressed,writeCompression    off,g" system/controlDict
+#sed -i "s,// FOAMEXTENDBEGIN,\/\* uncomment,g" system/controlDict
+#sed -i "s,// FOAMEXTENDEND,\*\/ // foam-extend,g" system/controlDict
 #
 #sed -i "s/libfvMotionSolver\./libfvMotionSolvers\./g" constant/dynamicMeshDict
