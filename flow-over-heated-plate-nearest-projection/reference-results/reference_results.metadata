@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-openfoam.tar.gz | 2026-05-11 07:45:27 | 1a61f981eb713f32f0b47435512857e346e5a9aac01794c815dc2531b2ca32e6 |
+| fluid-openfoam_solid-openfoam.tar.gz | 2026-05-26 23:33:13 | 2a07a451fdaa93f02abd78186ad36cbd8b9db63b13633e07e6eb3d4f8487849d |
 
 ## List of arguments used to generate the files
 
@@ -23,7 +23,7 @@ We also include some information on the machine used to generate them
 | OPENFOAM_ADAPTER_REF | v1.3.1 |
 | PYTHON_BINDINGS_REF | v3.2.0 |
 | FENICS_ADAPTER_REF | v2.2.0 |
-| TUTORIALS_REF | b18b3ef |
+| TUTORIALS_REF | c725522598fedf6bf691f0292aafb85e97fae73d |
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
 | CALCULIX_ADAPTER_REF | v2.20.1 |
@@ -40,7 +40,7 @@ We also include some information on the machine used to generate them
 
 ### uname -a
 
-Linux precice-tests 5.15.0-177-generic #187-Ubuntu SMP Sat Apr 11 22:54:33 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Linux precice-tests 5.15.0-179-generic #189-Ubuntu SMP Tue May 5 18:20:56 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
 
 
 ### lscpu
