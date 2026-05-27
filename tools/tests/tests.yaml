@@ -101,6 +101,17 @@ test_suites:
           - porous-media-dumux
         reference_result: ./free-flow-over-porous-media/reference-results/free-flow-dumux_porous-media-dumux.tar.gz
 
+  heat-exchanger:
+    tutorials:
+      - &heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam
+        path: heat-exchanger
+        case_combination:
+          - fluid-inner-openfoam
+          - fluid-outer-openfoam
+          - solid-calculix
+        max_time_windows: 3
+        reference_result: ./heat-exchanger/reference-results/fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam.tar.gz
+
   heat-exchanger-simplified:
     tutorials:
       - &heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
@@ -193,6 +204,7 @@ test_suites:
       - *flow-over-heated-plate-nearest-projection_fluid-openfoam_solid-openfoam
       - *flow-over-heated-plate-two-meshes_fluid-openfoam_solid-calculix
       - *free-flow-over-porous-media_free-flow-dumux_porous-media-dumux
+      - *heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam
       - *heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
       - *perpendicular-flap_fluid-openfoam_solid-calculix
@@ -207,6 +219,7 @@ test_suites:
     tutorials:
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
       - *flow-over-heated-plate-two-meshes_fluid-openfoam_solid-calculix
+      - *heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam
       - *heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-calculix
 
@@ -244,6 +257,7 @@ test_suites:
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam
       - *flow-over-heated-plate-nearest-projection_fluid-openfoam_solid-openfoam
       - *flow-over-heated-plate-two-meshes_fluid-openfoam_solid-calculix
+      - *heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam
       - *heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
       - *perpendicular-flap_fluid-openfoam_solid-calculix
