@@ -15,6 +15,13 @@ on:
         default: ''
         required: false
         type: string
+      clean_docker:
+        description: 'Clean Docker before running'
+        default: 'TRUE'
+        type: choice
+        options:
+            - 'FALSE'
+            - 'TRUE'
       log_level:
         description: 'Logging verbosity level used for the systemtests'
         default: 'INFO'
@@ -34,4 +41,5 @@ jobs:
       from_ref: ${{ inputs.from_ref }}
       commit_msg: ${{ inputs.commit_msg }}
       suites: ${{ inputs.suites }}
+      clean_docker: ${{ inputs.clean_docker }}
       log_level: ${{ inputs.log_level }}

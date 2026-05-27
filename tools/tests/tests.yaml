@@ -32,6 +32,23 @@ test_suites:
           - solid-python
         reference_result: ./elastic-tube-1d/reference-results/fluid-python_solid-python.tar.gz
 
+  elastic-tube-3d:
+    tutorials:
+      - &elastic-tube-3d_fluid-openfoam_solid-calculix
+        path: elastic-tube-3d
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        max_time_windows: 3
+        reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-calculix.tar.gz
+      - &elastic-tube-3d_fluid-openfoam_solid-fenics
+        path: elastic-tube-3d
+        case_combination:
+          - fluid-openfoam
+          - solid-fenics
+        max_time_windows: 1
+        reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-fenics.tar.gz
+
   flow-over-heated-plate:
     tutorials:
       - &flow-over-heated-plate_fluid-openfoam_solid-fenics
@@ -159,6 +176,8 @@ test_suites:
       - *elastic-tube-1d_fluid-cpp_solid-cpp
       - *elastic-tube-1d_fluid-cpp_solid-python
       - *elastic-tube-1d_fluid-python_solid-python
+      - *elastic-tube-3d_fluid-openfoam_solid-calculix
+      - *elastic-tube-3d_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam
@@ -177,6 +196,7 @@ test_suites:
 
   calculix-adapter:
     tutorials:
+      - *elastic-tube-3d_fluid-openfoam_solid-calculix
       - *flow-over-heated-plate-two-meshes_fluid-openfoam_solid-calculix
       - *heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-calculix
@@ -193,6 +213,7 @@ test_suites:
 
   fenics-adapter:
     tutorials:
+      - *elastic-tube-3d_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-su2_solid-fenics
@@ -207,6 +228,8 @@ test_suites:
 
   openfoam-adapter:
     tutorials:
+      - *elastic-tube-3d_fluid-openfoam_solid-calculix
+      - *elastic-tube-3d_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam

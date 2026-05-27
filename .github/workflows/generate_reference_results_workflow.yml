@@ -15,6 +15,10 @@ on:
         default: ''
         required: false
         type: string
+      clean_docker:
+        description: 'Clean Docker before running'
+        default: 'TRUE'
+        type: string
       log_level:
         description: 'Logging verbosity level used for the systemtests'
         required: true
@@ -51,6 +55,7 @@ jobs:
       run: |
         pip install --user -r tools/tests/requirements.txt
     - name: Cleanup Docker cache
+      if: ${{  inputs.clean_docker == 'TRUE' }}
       # Remove all Docker containers, images, and build caches
       # to ensure consistent results and as storage cleanup
       run: |
