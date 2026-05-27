@@ -45,7 +45,7 @@ Workflow for the preCICE v3 release testing:
 To test a certain test-suite defined in `tests.yaml`, use:
 
 ```bash
-python3 systemtests.py --suites=fenics_test,<someothersuite>
+python3 systemtests.py --suites=fenics-adapter,<someothersuite>
 ```
 
 To discover all tests, use `python print_test_suites.py`.
@@ -59,13 +59,13 @@ Go to Actions > [Run Testsuite (manual)](https://github.com/precice/tutorials/ac
 After bringing these changes to `master`, the manual triggering option should be visible on the top right. Until that happens, we can only trigger this workflow manually from the [GitHub CLI](https://github.blog/changelog/2021-04-15-github-cli-1-9-enables-you-to-work-with-github-actions-from-your-terminal/):
 
 ```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics_test --ref=develop
+gh workflow run run_testsuite_manual.yml -f suites=fenics-adapter --ref=develop
 ```
 
 Another example, to use the latest releases and enable debug information of the tests:
 
 ```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" -f log_level=DEBUG --ref=develop
+gh workflow run run_testsuite_manual.yml -f suites=fenics-adapter -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" -f log_level=DEBUG --ref=develop
 ```
 
 where the `*_REF` should be a specific [commit-ish](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefcommit-ishacommit-ishalsocommittish).
@@ -75,7 +75,7 @@ Example output:
 ```text
 Run cd tools/tests
   cd tools/tests
-  python systemtests.py --build_args=PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0 --suites=fenics_test --log-level=DEBUG
+  python systemtests.py --build_args=PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0 --suites=fenics-adapter --log-level=DEBUG
   cd ../../
   shell: /usr/bin/bash -e {0}
 INFO: About to run the following systemtest in the directory /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs:
@@ -316,14 +316,7 @@ Concrete tests are specified centrally in the file `tests.yaml`. For example:
 
 ```yaml
 test_suites:
-  openfoam_adapter_pr:
-    tutorials:
-      - path: flow-over-heated-plate
-        case_combination:
-          - fluid-openfoam
-          - solid-openfoam
-        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
-  openfoam_adapter_release:
+  openfoam-adapter:
     tutorials:
       - path: flow-over-heated-plate
         case_combination:
@@ -340,7 +333,7 @@ test_suites:
 
 The optional `timeout` field (in seconds) sets the maximum time for the solver run and fieldcompare phases of that specific case. If omitted, it defaults to `GLOBAL_TIMEOUT` (currently 900s, overridable via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable).
 
-This defines two test suites, namely `openfoam_adapter_pr` and `openfoam_adapter_release`. Each of them defines which case combinations of which tutorials to run.
+This defines the test suite `openfoam-adapter`, with a case combination to run.
 
 ### Generate Reference Results
 
