@@ -112,7 +112,7 @@ def main():
         test_header = f"[{number}/{total}] {systemtest}"
         _group_start(test_header)
         print("=" * 80)
-        logging.info(f"Started {systemtest}")
+        logging.info(f"[{number}/{total}] Started {systemtest}")
         t = time.perf_counter()
         result = systemtest.run(run_directory)
         elapsed_time = time.perf_counter() - t
@@ -122,7 +122,9 @@ def main():
         else:
             status_label = _style("❌ FAIL", 31)
 
-        logging.info(f"Finished {systemtest} in {elapsed_time:.1f}s [{status_label}]")
+        logging.info(
+            f"[{number}/{total}] Finished {systemtest} in {elapsed_time:.1f}s [{status_label}]"
+        )
         _group_end()
         print("=" * 80)
         results.append(result)
