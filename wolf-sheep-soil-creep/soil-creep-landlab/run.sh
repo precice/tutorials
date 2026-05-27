@@ -17,7 +17,7 @@ if [ ! -v PRECICE_TUTORIALS_NO_VENV ]; then
 
 fi
 
-mkdir output
+mkdir -p output
 python3 soil_creep.py
 
 close_log
