@@ -151,6 +151,16 @@ test_suites:
         max_time: 0.1
         reference_result: ./partitioned-pipe/reference-results/fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam.tar.gz
 
+  partitioned-pipe-multiscale:
+    tutorials:
+      - &partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
+        path: partitioned-pipe-multiscale
+        case_combination:
+          - fluid1d-left-nutils
+          - fluid3d-right-openfoam
+        max_time: 0.1
+        reference_result: ./partitioned-pipe-multiscale/reference-results/fluid1d-left-nutils_fluid3d-right-openfoam
+
   partitioned-pipe-two-phase:
     tutorials:
       - &partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam
@@ -236,6 +246,8 @@ test_suites:
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
       - *partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam
       - *partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
+      - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam
       - *perpendicular-flap_fluid-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-dealii
       - *perpendicular-flap_fluid-openfoam_solid-fenics
@@ -276,6 +288,7 @@ test_suites:
   nutils-adapter: # Not a repository
     tutorials:
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
+      - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
 
   openfoam-adapter:
     tutorials:
@@ -291,6 +304,8 @@ test_suites:
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
       - *partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam
       - *partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
+      - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam
       - *perpendicular-flap_fluid-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-dealii
       - *perpendicular-flap_fluid-openfoam_solid-fenics
