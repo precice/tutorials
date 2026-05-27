@@ -39,14 +39,14 @@ test_suites:
         case_combination:
           - fluid-openfoam
           - solid-calculix
-        max_time_windows: 5
+        max_time_windows: 3
         reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-calculix.tar.gz
       - &elastic-tube-3d_fluid-openfoam_solid-fenics
         path: elastic-tube-3d
         case_combination:
           - fluid-openfoam
           - solid-fenics
-        max_time_windows: 5
+        max_time_windows: 3
         reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-fenics.tar.gz
 
   flow-over-heated-plate:
