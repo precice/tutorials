@@ -134,6 +134,23 @@ test_suites:
         max_time: 0.1
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz
 
+  partitioned-pipe:
+    tutorials:
+      - &partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam
+        path: partitioned-pipe
+        case_combination:
+          - fluid1-openfoam-pimplefoam
+          - fluid2-openfoam-pimplefoam
+        max_time: 0.1
+        reference_result: ./perpendicular-flap/reference-results/fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam.tar.gz
+      - &partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
+        path: partitioned-pipe
+        case_combination:
+          - fluid1-openfoam-sonicliquidfoam
+          - fluid2-openfoam-sonicliquidfoam
+        max_time: 0.1
+        reference_result: ./perpendicular-flap/reference-results/fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam.tar.gz
+
   perpendicular-flap:
     tutorials:
       - &perpendicular-flap_fluid-openfoam_solid-calculix
@@ -207,6 +224,8 @@ test_suites:
       - *heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam
       - *heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
+      - *partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam
+      - *partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
       - *perpendicular-flap_fluid-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-dealii
       - *perpendicular-flap_fluid-openfoam_solid-fenics
@@ -260,6 +279,8 @@ test_suites:
       - *heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam
       - *heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
+      - *partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam
+      - *partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
       - *perpendicular-flap_fluid-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-dealii
       - *perpendicular-flap_fluid-openfoam_solid-fenics

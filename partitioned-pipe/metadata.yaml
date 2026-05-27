@@ -1,0 +1,32 @@
+name: Partitioned pipe
+path: partitioned-pipe # relative to git repo 
+url: https://precice.org/tutorials-partitioned-pipe.html
+
+participants:
+  - Fluid1
+  - Fluid2
+
+cases:
+  fluid1-openfoam-pimplefoam:
+    participant: Fluid1
+    directory: ./fluid1-openfoam-pimplefoam
+    run: ./run.sh -parallel
+    component: openfoam-adapter
+  
+  fluid1-openfoam-sonicliquidfoam:
+    participant: Fluid1
+    directory: ./fluid1-openfoam-sonicliquidfoam
+    run: ./run.sh -parallel
+    component: openfoam-adapter
+
+  fluid2-openfoam-pimplefoam:
+    participant: Fluid2
+    directory: ./fluid2-openfoam-pimplefoam
+    run: ./run.sh -parallel
+    component: openfoam-adapter
+
+  fluid2-openfoam-sonicliquidfoam:
+    participant: Fluid2
+    directory: ./fluid2-openfoam-sonicliquidfoam
+    run: ./run.sh -parallel
+    component: openfoam-adapter
