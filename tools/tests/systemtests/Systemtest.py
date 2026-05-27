@@ -1,4 +1,5 @@
 import subprocess
+import threading
 from typing import List, Dict, Optional, Tuple
 from jinja2 import Environment, FileSystemLoader
 from dataclasses import dataclass, field
@@ -23,6 +24,46 @@ GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 900))
 SHORT_TIMEOUT = 10
 
 DIFF_RESULTS_DIR = "diff-results"
+
+COMBINED_STDOUT_LOG = "system-tests-stdout.log"
+COMBINED_STDERR_LOG = "system-tests-stderr.log"
+PHASE_LOG_FILES = {
+    "build": "system-tests-build.log",
+    "solver": "system-tests-solver.log",
+    "fieldcompare": "system-tests-fieldcompare.log",
+}
+
+
+class _SystemtestLogSink:
+    """Writes subprocess output incrementally to combined and phase log files."""
+
+    def __init__(self, system_test_dir: Path):
+        self._system_test_dir = system_test_dir
+        self._lock = threading.Lock()
+        self._stdout_path = system_test_dir / COMBINED_STDOUT_LOG
+        self._stderr_path = system_test_dir / COMBINED_STDERR_LOG
+        self._stdout_path.write_text("", encoding="utf-8")
+        self._stderr_path.write_text("", encoding="utf-8")
+
+    def begin_phase(self, phase: str) -> None:
+        phase_path = self._system_test_dir / PHASE_LOG_FILES[phase]
+        phase_path.write_text(f"=== {phase} ===\n", encoding="utf-8")
+
+    def append_stdout(self, line: str, phase: str) -> None:
+        with self._lock:
+            with self._stdout_path.open("a", encoding="utf-8") as log_file:
+                log_file.write(line + "\n")
+            phase_path = self._system_test_dir / PHASE_LOG_FILES[phase]
+            with phase_path.open("a", encoding="utf-8") as log_file:
+                log_file.write(line + "\n")
+
+    def append_stderr(self, line: str, phase: str) -> None:
+        with self._lock:
+            with self._stderr_path.open("a", encoding="utf-8") as log_file:
+                log_file.write(line + "\n")
+            phase_path = self._system_test_dir / PHASE_LOG_FILES[phase]
+            with phase_path.open("a", encoding="utf-8") as log_file:
+                log_file.write(f"[stderr] {line}\n")
 
 
 def slugify(value, allow_unicode=False):
@@ -399,6 +440,94 @@ class Systemtest:
             logging.error(error_message)
             return False, error_message
 
+    def __init_run_logs(self) -> None:
+        self._log_sink = _SystemtestLogSink(self.system_test_dir)
+
+    def _run_docker_compose_subprocess(
+        self,
+        command: List[str],
+        phase: str,
+        timeout: int,
+    ) -> Tuple[int, List[str], List[str]]:
+        """
+        Run a docker compose command, streaming stdout/stderr to log files as they arrive.
+        """
+        stdout_data: List[str] = []
+        stderr_data: List[str] = []
+        log_sink = getattr(self, "_log_sink", None)
+        if log_sink is not None:
+            log_sink.begin_phase(phase)
+        logging.info(f"Docker compose {phase} for {self}")
+
+        try:
+            process = subprocess.Popen(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                bufsize=1,
+                start_new_session=True,
+                cwd=self.system_test_dir,
+            )
+        except Exception as e:
+            logging.critical(f"Error starting docker compose {phase} command: {e}")
+            return 1, stdout_data, stderr_data
+
+        def read_stream(stream, is_stderr: bool) -> None:
+            if stream is None:
+                return
+            for line in stream:
+                line = line.rstrip("\n\r")
+                if is_stderr:
+                    stderr_data.append(line)
+                    if log_sink is not None:
+                        log_sink.append_stderr(line, phase)
+                else:
+                    stdout_data.append(line)
+                    if log_sink is not None:
+                        log_sink.append_stdout(line, phase)
+            stream.close()
+
+        stdout_thread = threading.Thread(
+            target=read_stream, args=(process.stdout, False), daemon=True)
+        stderr_thread = threading.Thread(
+            target=read_stream, args=(process.stderr, True), daemon=True)
+        stdout_thread.start()
+        stderr_thread.start()
+
+        try:
+            exit_code = process.wait(timeout=timeout)
+        except KeyboardInterrupt as k:
+            process.kill()
+            stdout_thread.join(timeout=SHORT_TIMEOUT)
+            stderr_thread.join(timeout=SHORT_TIMEOUT)
+            raise KeyboardInterrupt from k
+        except subprocess.TimeoutExpired:
+            logging.critical(
+                f"Systemtest {self} timed out during docker compose {phase} "
+                f"after {timeout}s. Killing the process.")
+            process.kill()
+            try:
+                process.wait(timeout=SHORT_TIMEOUT)
+            except subprocess.TimeoutExpired:
+                pass
+            exit_code = process.returncode if process.returncode is not None else 1
+        except Exception as e:
+            logging.critical(
+                f"Systemtest {self} had serious issues during docker compose {phase}: {e}")
+            process.kill()
+            try:
+                process.wait(timeout=SHORT_TIMEOUT)
+            except subprocess.TimeoutExpired:
+                pass
+            exit_code = process.returncode if process.returncode is not None else 1
+
+        stdout_thread.join(timeout=SHORT_TIMEOUT)
+        stderr_thread.join(timeout=SHORT_TIMEOUT)
+        if exit_code is None:
+            exit_code = process.poll() or 1
+        return exit_code, stdout_data, stderr_data
+
     def _run_field_compare(self):
         """
         Executes the field comparison step after unpacking reference results.
@@ -410,47 +539,31 @@ class Systemtest:
         time_start = time.perf_counter()
         unpack_success, unpack_error_message = self.__unpack_reference_results()
         if not unpack_success:
+            log_sink = getattr(self, "_log_sink", None)
+            if log_sink is not None:
+                log_sink.begin_phase("fieldcompare")
+                log_sink.append_stderr(unpack_error_message, "fieldcompare")
             elapsed_time = time.perf_counter() - time_start
             return FieldCompareResult(1, [], [unpack_error_message], self, elapsed_time)
         docker_compose_content = self.__get_field_compare_compose_file()
-        stdout_data = []
-        stderr_data = []
 
         with open(self.system_test_dir / "docker-compose.field_compare.yaml", 'w') as file:
             file.write(docker_compose_content)
-        try:
-            # Execute docker-compose command
-            process = subprocess.Popen(['docker',
-                                        'compose',
-                                        '--file',
-                                        'docker-compose.field_compare.yaml',
-                                        'up',
-                                        '--exit-code-from',
-                                        'field-compare'],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE,
-                                       start_new_session=True,
-                                       cwd=self.system_test_dir)
-
-            try:
-                stdout, stderr = process.communicate(timeout=self.timeout)
-            except KeyboardInterrupt as k:
-                process.kill()
-                raise KeyboardInterrupt from k
-            except Exception as e:
-                logging.critical(
-                    f"Systemtest {self} had serious issues executing the docker compose command about to kill the docker compose command. Please check the logs! {e}")
-                process.kill()
-                process.communicate(timeout=SHORT_TIMEOUT)
-            stdout_data.extend(stdout.decode().splitlines())
-            stderr_data.extend(stderr.decode().splitlines())
-            process.poll()
-            elapsed_time = time.perf_counter() - time_start
-            return FieldCompareResult(process.returncode, stdout_data, stderr_data, self, elapsed_time)
-        except Exception as e:
-            logging.CRITICAL("Error executing docker compose command:", e)
-            elapsed_time = time.perf_counter() - time_start
-            return FieldCompareResult(1, stdout_data, stderr_data, self, elapsed_time)
+        exit_code, stdout_data, stderr_data = self._run_docker_compose_subprocess(
+            [
+                'docker',
+                'compose',
+                '--file',
+                'docker-compose.field_compare.yaml',
+                'up',
+                '--exit-code-from',
+                'field-compare',
+            ],
+            "fieldcompare",
+            self.timeout,
+        )
+        elapsed_time = time.perf_counter() - time_start
+        return FieldCompareResult(exit_code, stdout_data, stderr_data, self, elapsed_time)
 
     def __archive_fieldcompare_diffs(self) -> None:
         """
@@ -502,41 +615,20 @@ class Systemtest:
         with open(self.system_test_dir / "docker-compose.tutorial.yaml", 'w') as file:
             file.write(docker_compose_content)
 
-        stdout_data = []
-        stderr_data = []
-
-        try:
-            # Execute docker-compose command
-            process = subprocess.Popen(['docker',
-                                        'compose',
-                                        '--file',
-                                        'docker-compose.tutorial.yaml',
-                                        'build'],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE,
-                                       start_new_session=True,
-                                       cwd=self.system_test_dir)
-
-            try:
-                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
-            except KeyboardInterrupt as k:
-                process.kill()
-                # process.send_signal(9)
-                raise KeyboardInterrupt from k
-            except Exception as e:
-                logging.critical(
-                    f"systemtest {self} had serious issues building the docker images via the `docker compose build` command. About to kill the docker compose command. Please check the logs! {e}")
-                process.communicate(timeout=SHORT_TIMEOUT)
-                process.kill()
-
-            stdout_data.extend(stdout.decode().splitlines())
-            stderr_data.extend(stderr.decode().splitlines())
-            elapsed_time = time.perf_counter() - time_start
-            return DockerComposeResult(process.returncode, stdout_data, stderr_data, self, elapsed_time)
-        except Exception as e:
-            logging.critical(f"Error executing docker compose build command: {e}")
-            elapsed_time = time.perf_counter() - time_start
-            return DockerComposeResult(1, stdout_data, stderr_data, self, elapsed_time)
+        exit_code, stdout_data, stderr_data = self._run_docker_compose_subprocess(
+            [
+                'docker',
+                'compose',
+                '--file',
+                'docker-compose.tutorial.yaml',
+                'build',
+                '--progress=plain',
+            ],
+            "build",
+            GLOBAL_TIMEOUT,
+        )
+        elapsed_time = time.perf_counter() - time_start
+        return DockerComposeResult(exit_code, stdout_data, stderr_data, self, elapsed_time)
 
     def _run_tutorial(self):
         """
@@ -547,49 +639,27 @@ class Systemtest:
         """
         logging.debug(f"Running tutorial {self}")
         time_start = time.perf_counter()
-        stdout_data = []
-        stderr_data = []
-        try:
-            # Execute docker-compose command
-            process = subprocess.Popen(['docker',
-                                        'compose',
-                                        '--file',
-                                        'docker-compose.tutorial.yaml',
-                                        'up'],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE,
-                                       start_new_session=True,
-                                       cwd=self.system_test_dir)
-
-            try:
-                stdout, stderr = process.communicate(timeout=self.timeout)
-            except KeyboardInterrupt as k:
-                process.kill()
-                # process.send_signal(9)
-                raise KeyboardInterrupt from k
-            except Exception as e:
-                logging.critical(
-                    f"Systemtest {self} had serious issues executing the docker compose command about to kill the docker compose command. Please check the logs! {e}")
-                process.kill()
-                stdout, stderr = process.communicate(timeout=SHORT_TIMEOUT)
-                process.kill()
-
-            stdout_data.extend(stdout.decode().splitlines())
-            stderr_data.extend(stderr.decode().splitlines())
-            elapsed_time = time.perf_counter() - time_start
-            return DockerComposeResult(process.returncode, stdout_data, stderr_data, self, elapsed_time)
-        except Exception as e:
-            logging.critical(f"Error executing docker compose up command: {e}")
-            elapsed_time = time.perf_counter() - time_start
-            return DockerComposeResult(1, stdout_data, stderr_data, self, elapsed_time)
+        exit_code, stdout_data, stderr_data = self._run_docker_compose_subprocess(
+            [
+                'docker',
+                'compose',
+                '--file',
+                'docker-compose.tutorial.yaml',
+                'up',
+            ],
+            "solver",
+            self.timeout,
+        )
+        elapsed_time = time.perf_counter() - time_start
+        return DockerComposeResult(exit_code, stdout_data, stderr_data, self, elapsed_time)
 
     def __repr__(self):
         return f"{self.tutorial.name} {self.case_combination}"
 
     def __write_logs(self, stdout_data: List[str], stderr_data: List[str]):
-        with open(self.system_test_dir / "system-tests-stdout.log", 'w') as stdout_file:
+        with open(self.system_test_dir / COMBINED_STDOUT_LOG, 'w', encoding="utf-8") as stdout_file:
             stdout_file.write("\n".join(stdout_data))
-        with open(self.system_test_dir / "system-tests-stderr.log", 'w') as stderr_file:
+        with open(self.system_test_dir / COMBINED_STDERR_LOG, 'w', encoding="utf-8") as stderr_file:
             stderr_file.write("\n".join(stderr_data))
 
     def __apply_max_time_override(self):
@@ -632,6 +702,7 @@ class Systemtest:
         Runs the system test by generating the Docker Compose file, copying everything into a run folder, and executing docker-compose up.
         """
         self.__prepare_for_run(run_directory)
+        self.__init_run_logs()
         std_out: List[str] = []
         std_err: List[str] = []
 
@@ -697,6 +768,7 @@ class Systemtest:
         Runs the system test by generating the Docker Compose files to generate the reference results
         """
         self.__prepare_for_run(run_directory)
+        self.__init_run_logs()
         std_out: List[str] = []
         std_err: List[str] = []
         docker_build_result = self._build_docker()
@@ -744,6 +816,7 @@ class Systemtest:
         Runs only the build commmand, for example to preheat the caches of the docker builder.
         """
         self.__prepare_for_run(run_directory)
+        self.__init_run_logs()
         std_out: List[str] = []
         std_err: List[str] = []
         docker_build_result = self._build_docker()

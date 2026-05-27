@@ -92,6 +92,9 @@ jobs:
         path: |
           runs/*/system-tests-stdout.log
           runs/*/system-tests-stderr.log
+          runs/*/system-tests-build.log
+          runs/*/system-tests-solver.log
+          runs/*/system-tests-fieldcompare.log
           runs/*/*/system-tests_*.log
     - name: tidy up the docker
       run: |
