@@ -11,8 +11,8 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-fenics.tar.gz | 2026-05-27 18:54:22 | 0489fe94ad7554f5e05b36e56cc8222463b900b14aee18db008597c77f981807 |
-| fluid-openfoam_solid-calculix.tar.gz | 2026-05-27 18:54:22 | 96b99b87b61101f8d8fd0ca5148de63170ffb441ab84a9cecf2a31218048a83c |
+| fluid-openfoam_solid-fenics.tar.gz | 2026-05-27 19:16:34 | 9fb5a39115545cf8d3b160662c1e330dc8000a87a23b3169a655a390f61eaa8e |
+| fluid-openfoam_solid-calculix.tar.gz | 2026-05-27 19:16:34 | dcd773b4c173936f5214a481991dec05b7d8fbdd5ad4136f6cb2a68839303fed |
 
 ## List of arguments used to generate the files
 
@@ -24,7 +24,7 @@ We also include some information on the machine used to generate them
 | OPENFOAM_ADAPTER_REF | v1.3.1 |
 | PYTHON_BINDINGS_REF | v3.2.0 |
 | FENICS_ADAPTER_REF | v2.2.0 |
-| TUTORIALS_REF | 018363a |
+| TUTORIALS_REF | ab8eaceb42daebc6c4d7d8864c25997f983522e5 |
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
 | CALCULIX_ADAPTER_REF | v2.20.1 |
