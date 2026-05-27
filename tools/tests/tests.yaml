@@ -4,7 +4,7 @@
 # suites for repositories, at the lower part of the file.
 #
 # Conventions:
-# - Test suites follow the name of the respective tutorial
+# - Test suites follow the name of the respective tutorial or repository
 # - Tests suites append the entries of the case_combination, separated by underscore
 # - Test suites and tests are sorted alphabetically
 # - Every test suite for a component includes by default all test cases that use that component.
