@@ -132,7 +132,7 @@ test_suites:
           - solid-upstream-dealii
           - solid-downstream-dealii
         max_time: 0.1
-        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz
+        reference_result: ./multiple-perpendicular-flaps/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz
 
   partitioned-pipe:
     tutorials:
@@ -142,14 +142,24 @@ test_suites:
           - fluid1-openfoam-pimplefoam
           - fluid2-openfoam-pimplefoam
         max_time: 0.1
-        reference_result: ./perpendicular-flap/reference-results/fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam.tar.gz
+        reference_result: ./partitioned-pipe/reference-results/fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam.tar.gz
       - &partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
         path: partitioned-pipe
         case_combination:
           - fluid1-openfoam-sonicliquidfoam
           - fluid2-openfoam-sonicliquidfoam
         max_time: 0.1
-        reference_result: ./perpendicular-flap/reference-results/fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam.tar.gz
+        reference_result: ./partitioned-pipe/reference-results/fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam.tar.gz
+
+  partitioned-pipe-two-phase:
+    tutorials:
+      - &partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam
+        path: partitioned-pipe-two-phase
+        case_combination:
+          - fluid1-openfoam
+          - fluid2-openfoam
+        max_time: 0.1
+        reference_result: ./partitioned-pipe-two-phase/reference-results/fluid1-openfoam_fluid2-openfoam.tar.gz
 
   perpendicular-flap:
     tutorials:
