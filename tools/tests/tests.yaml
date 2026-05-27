@@ -246,3 +246,8 @@ test_suites:
   su2-adapter:
     tutorials:
       - *perpendicular-flap_fluid-su2_solid-fenics
+
+# A test suite used for the system tests development
+  system-tests-dev:
+    tutorials:
+      - *elastic-tube-1d_fluid-cpp_solid-cpp
