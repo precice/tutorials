@@ -91,6 +91,7 @@ test_suites:
         reference_result: ./heat-exchanger-simplified/reference-results/fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix.tar.gz
 
   multiple-perpendicular-flaps:
+    tutorials:
       - &multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
         path: multiple-perpendicular-flaps
         case_combination:
@@ -100,6 +101,7 @@ test_suites:
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz
 
   perpendicular-flap:
+    tutorials:
       - &perpendicular-flap_fluid-openfoam_solid-calculix
         path: perpendicular-flap
         case_combination:
