@@ -36,7 +36,7 @@ Workflow for the preCICE v3 release testing:
 
 6. Download the build artifacts from Summary > runs.
 
-    - In there, you may want to check the `system-tests-stdout.log` and `system-tests-stderr.log` files.
+    - In there, you may want to inspect the combined logs (`system-tests-stdout.log`, `system-tests-stderr.log`) and the per-stage logs (`system-tests-build.log`, `system-tests-solver.log`, `system-tests-fieldcompare.log`).
     - The produced results are in `precice-exports/`, the reference results in `reference-results-unpacked`.
     - Compare using, e.g., ParaView or [fieldcompare](https://gitlab.com/dglaeser/fieldcompare): `fieldcompare dir precice-exports/ reference/`. The `--diff` option will give you `precice-exports/diff_*.vtu` files, while you can also try different tolerances with `-rtol` and `-atol`.
 
@@ -45,7 +45,7 @@ Workflow for the preCICE v3 release testing:
 To test a certain test-suite defined in `tests.yaml`, use:
 
 ```bash
-python3 systemtests.py --suites=fenics-adapter,<someothersuite>
+python3 systemtests.py --suites=fenics_test,<someothersuite>
 ```
 
 To discover all tests, use `python print_test_suites.py`.
@@ -59,13 +59,13 @@ Go to Actions > [Run Testsuite (manual)](https://github.com/precice/tutorials/ac
 After bringing these changes to `master`, the manual triggering option should be visible on the top right. Until that happens, we can only trigger this workflow manually from the [GitHub CLI](https://github.blog/changelog/2021-04-15-github-cli-1-9-enables-you-to-work-with-github-actions-from-your-terminal/):
 
 ```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics-adapter --ref=develop
+gh workflow run run_testsuite_manual.yml -f suites=fenics_test --ref=develop
 ```
 
 Another example, to use the latest releases and enable debug information of the tests:
 
 ```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics-adapter -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" -f log_level=DEBUG --ref=develop
+gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" -f log_level=DEBUG --ref=develop
 ```
 
 where the `*_REF` should be a specific [commit-ish](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefcommit-ishacommit-ishalsocommittish).
@@ -75,7 +75,7 @@ Example output:
 ```text
 Run cd tools/tests
   cd tools/tests
-  python systemtests.py --build_args=PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0 --suites=fenics-adapter --log-level=DEBUG
+  python systemtests.py --build_args=PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0 --suites=fenics_test --log-level=DEBUG
   cd ../../
   shell: /usr/bin/bash -e {0}
 INFO: About to run the following systemtest in the directory /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs:
@@ -105,7 +105,7 @@ In this case, building and running seems to work out, but the tests fail because
 
 The easiest way to debug a systemtest run is first to have a look at the output written into the action on GitHub.
 If this does not provide enough hints, the next step is to download the generated `system_tests_run_<run_id>_<run_attempt>` artifact. Note that by default this will only be generated if the systemtests fail.
-Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains two log files: `system-tests-stderr.log` and `system-tests-stdout.log`. This can be a starting point for a further investigation. When fieldcompare runs with `--diff`, it writes VTK diff files under `precice-exports/`; if the comparison fails, those files are copied into a `diff-results/` subfolder in the same run directory (mirroring any subpaths under `precice-exports/`) so you can open them (e.g. in ParaView) to see where results differ from the reference. On successful comparisons, `diff-results/` is therefore absent.
+Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains combined logs (`system-tests-stderr.log`, `system-tests-stdout.log`) and per-stage logs (`system-tests-build.log`, `system-tests-solver.log`, `system-tests-fieldcompare.log`). These are a good starting point for further investigation. When fieldcompare runs with `--diff`, it writes VTK diff files under `precice-exports/`; if the comparison fails, those files are copied into a `diff-results/` subfolder in the same run directory (mirroring any subpaths under `precice-exports/`) so you can open them (e.g. in ParaView) to see where results differ from the reference. On successful comparisons, `diff-results/` is therefore absent.
 
 ## Adding new tests
 
@@ -185,6 +185,25 @@ User-facing tools:
   - `print_case_combinations.py`: Prints all possible combinations of tutorial cases, using the `metadata.yaml` files.
   - `build_docker_images.py`: Build the Docker images for each test
   - `generate_reference_results.py`: Executes the system tests with the versions defined in `reference_versions.yaml` and generates the reference data archives, with the names described in `tests.yaml`. (should only be used by the CI Pipeline)
+  - `update_requirements_reference.py`: Regenerates `requirements-reference.txt` with pinned Python versions from `reference_versions.yaml` (for reproducibility, see issue #610).
+  - `validate_requirements_reference.py`: Validates that `requirements-reference.txt` exists and pyprecice version matches `reference_versions.yaml`.
+
+### requirements-reference.txt
+
+A lockfile-style list of pinned Python dependency versions (pyprecice, numpy, matplotlib, nutils, setuptools) for reproducible builds and distributions (see issue [#610](https://github.com/precice/tutorials/issues/610)). This file is a **reference manifest only**: tutorial `run.sh` scripts keep using their own `requirements.txt` (with loose constraints) to avoid merge back-and-forth; system tests use the Docker image’s venv. The reference file records “versions known to work” for a distribution.
+
+**Update at each release.** For best accuracy (match what CI uses), capture from the systemtest Docker image:
+
+```bash
+docker run --rm <python_bindings_or_fenics_image> pip freeze | python3 update_requirements_reference.py --from-freeze
+```
+
+Or regenerate from `reference_versions.yaml` only (pyprecice from PYTHON_BINDINGS_REF; others from script defaults):
+
+```bash
+cd tools/tests
+python3 update_requirements_reference.py
+```
 
 Implementation scripts:
 
@@ -316,7 +335,14 @@ Concrete tests are specified centrally in the file `tests.yaml`. For example:
 
 ```yaml
 test_suites:
-  openfoam-adapter:
+  openfoam_adapter_pr:
+    tutorials:
+      - path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+  openfoam_adapter_release:
     tutorials:
       - path: flow-over-heated-plate
         case_combination:
@@ -333,7 +359,7 @@ test_suites:
 
 The optional `timeout` field (in seconds) sets the maximum time for the solver run and fieldcompare phases of that specific case. If omitted, it defaults to `GLOBAL_TIMEOUT` (currently 900s, overridable via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable).
 
-This defines the test suite `openfoam-adapter`, with a case combination to run.
+This defines two test suites, namely `openfoam_adapter_pr` and `openfoam_adapter_release`. Each of them defines which case combinations of which tutorials to run.
 
 ### Generate Reference Results
 

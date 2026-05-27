@@ -85,7 +85,7 @@ jobs:
         name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_full
         path: |
           runs/*
-    - name: Archive main log files
+    - name: Archive system test logs (combined + per-stage)
       uses: actions/upload-artifact@v7
       with:
         name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_logs
