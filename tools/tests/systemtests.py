@@ -7,6 +7,8 @@ from systemtests.TestSuite import TestSuites
 from metadata_parser.metdata import Tutorials, Case
 import logging
 import time
+import os
+import sys
 from paths import PRECICE_TUTORIAL_DIR, PRECICE_TESTS_RUN_DIR, PRECICE_TESTS_DIR
 
 
@@ -44,6 +46,23 @@ def main():
     logging.basicConfig(level=args.log_level, handlers=[handler])
 
     print(f"Using log-level: {args.log_level}")
+
+    gh_actions = os.environ.get("GITHUB_ACTIONS", "").lower() == "true"
+    ansi_colors = sys.stdout.isatty() and os.environ.get("TERM", "") not in {"", "dumb"}
+
+    def _style(text: str, color_code: int | None) -> str:
+        if not ansi_colors or color_code is None:
+            return text
+        return f"\x1b[{color_code}m{text}\x1b[0m"
+
+    def _group_start(title: str) -> None:
+        # Only apply folding markers on GitHub actions.
+        if gh_actions:
+            print(f"::group::{title}")
+
+    def _group_end() -> None:
+        if gh_actions:
+            print("::endgroup::")
 
     systemtests_to_run = []
     available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
@@ -90,11 +109,22 @@ def main():
     results = []
     for number, systemtest in enumerate(systemtests_to_run, start=1):
         print()
-        logging.info(f"[{number}/{total}] Started running {systemtest}")
+        test_header = f"[{number}/{total}] {systemtest}"
+        _group_start(test_header)
+        print("=" * 80)
+        logging.info(f"Started {systemtest}")
         t = time.perf_counter()
         result = systemtest.run(run_directory)
         elapsed_time = time.perf_counter() - t
-        logging.info(f"[{number}/{total}] Finished {systemtest} in {elapsed_time:.1f}s")
+
+        if result.success:
+            status_label = _style("✅ PASS", 32)
+        else:
+            status_label = _style("❌ FAIL", 31)
+
+        logging.info(f"Finished {systemtest} in {elapsed_time:.1f}s [{status_label}]")
+        _group_end()
+        print("=" * 80)
         results.append(result)
 
     print()
