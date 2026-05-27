@@ -2,6 +2,13 @@
 # Define test suites per tutorial in the beginning of the file,
 # then refer to these in the release_test and in the individual test
 # suites for repositories, at the lower part of the file.
+#
+# Conventions:
+# - Test suites follow the name of the respective tutorial
+# - Tests suites append the entries of the case_combination, separated by underscore
+# - Test suites and tests are sorted alphabetically
+# - Every test suite for a component includes by default all test cases that use that component.
+#   Skipped components are still mentioned in a comment.
 
 test_suites:
   elastic-tube-1d:
