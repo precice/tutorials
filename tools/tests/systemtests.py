@@ -10,6 +10,15 @@ import time
 from paths import PRECICE_TUTORIAL_DIR, PRECICE_TESTS_RUN_DIR, PRECICE_TESTS_DIR
 
 
+class _ConsoleLogFormatter(logging.Formatter):
+    """Omit level prefix for INFO/DEBUG; keep it for warnings and errors."""
+
+    def format(self, record: logging.LogRecord) -> str:
+        if record.levelno >= logging.WARNING:
+            return f"{record.levelname}: {record.getMessage()}"
+        return record.getMessage()
+
+
 def main():
     parser = argparse.ArgumentParser(description='systemtest')
 
@@ -29,8 +38,10 @@ def main():
     # Parse the command-line arguments
     args = parser.parse_args()
 
-    # Configure logging based on the provided log level
-    logging.basicConfig(level=args.log_level, format='%(levelname)s: %(message)s')
+    # Configure logging: no "INFO:" prefix on routine messages (#790)
+    handler = logging.StreamHandler()
+    handler.setFormatter(_ConsoleLogFormatter())
+    logging.basicConfig(level=args.log_level, handlers=[handler])
 
     print(f"Using log-level: {args.log_level}")
 
@@ -72,17 +83,21 @@ def main():
     if not systemtests_to_run:
         raise RuntimeError("Did not find any Systemtests to execute.")
 
-    logging.info(f"About to run the following systemtest in the directory {run_directory}:\n {systemtests_to_run}")
+    total = len(systemtests_to_run)
+    logging.info(
+        f"About to run {total} systemtest(s) in the directory {run_directory}:\n {systemtests_to_run}")
 
     results = []
     for number, systemtest in enumerate(systemtests_to_run, start=1):
-        logging.info(f"Started running {systemtest},  {number}/{len(systemtests_to_run)}")
+        print()
+        logging.info(f"[{number}/{total}] Started running {systemtest}")
         t = time.perf_counter()
         result = systemtest.run(run_directory)
         elapsed_time = time.perf_counter() - t
-        logging.info(f"Running {systemtest} took {elapsed_time:^.1f} seconds")
+        logging.info(f"[{number}/{total}] Finished {systemtest} in {elapsed_time:.1f}s")
         results.append(result)
 
+    print()
     system_test_success = True
     for result in results:
         if not result.success:
