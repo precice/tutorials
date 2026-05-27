@@ -1,0 +1,29 @@
+name: Heat exchanger
+path: heat-exchanger # relative to git repo 
+url: https://precice.org/tutorials-heat-exchanger.html
+
+participants:
+  - Fluid-Inner 
+  - Fluid-Outer
+  - Solid
+
+cases:
+  fluid-inner-openfoam:
+    participant: Fluid-Inner
+    directory: ./fluid-inner-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+  
+  fluid-outer-openfoam:
+    participant: Fluid-Outer
+    directory: ./fluid-outer-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+
+  solid-calculix:
+    participant: Solid
+    directory: ./solid-calculix
+    run: ./run.sh
+    component: calculix-adapter
+
+
