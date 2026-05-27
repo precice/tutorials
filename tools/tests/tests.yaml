@@ -109,7 +109,7 @@ test_suites:
           - fluid-inner-openfoam
           - fluid-outer-openfoam
           - solid-calculix
-        max_time_windows: 3
+        max_time: 3
         reference_result: ./heat-exchanger/reference-results/fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam.tar.gz
 
   heat-exchanger-simplified:
