@@ -1,0 +1,68 @@
+name: Partitioned heat conduction
+path: partitioned-heat-conduction # relative to git repo 
+url: https://precice.org/tutorials-partitioned-heat-conduction.html
+
+participants:
+  - Dirichlet
+  - Neumann
+
+cases:
+  dirichlet-fenics:
+    participant: Dirichlet
+    directory: ./dirichlet-fenics
+    run: ./run.sh
+    component: fenics-adapter
+
+  # dirichlet-fenicsx:
+  #   participant: Dirichlet
+  #   directory: ./dirichlet-fenicsx
+  #   run: ./run.sh
+  #   component: fenicsx-adapter
+
+  # dirichlet-gismo:
+  #   participant: Dirichlet
+  #   directory: ./dirichlet-gismo
+  #   run: ./run.sh
+  #   component: gismo-adapter
+
+  dirichlet-nutils:
+    participant: Dirichlet
+    directory: ./dirichlet-nutils
+    run: ./run.sh
+    component: nutils-adapter
+
+  dirichlet-openfoam:
+    participant: Dirichlet
+    directory: ./dirichlet-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+
+  neumann-fenics:
+    participant: Neumann
+    directory: ./neumann-fenics
+    run: ./run.sh
+    component: fenics-adapter
+  
+  # neumann-fenicsx:
+  #   participant: Neumann
+  #   directory: ./neumann-fenicsx
+  #   run: ./run.sh
+  #   component: fenicsx-adapter
+
+  # neumann-gismo:
+  #   participant: Neumann
+  #   directory: ./neumann-gismo
+  #   run: ./run.sh
+  #   component: gismo-adapter
+
+  neumann-nutils:
+    participant: Neumann
+    directory: ./neumann-nutils
+    run: ./run.sh
+    component: nutils-adapter
+
+  neumann-openfoam:
+    participant: Neumann
+    directory: ./neumann-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
