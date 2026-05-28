@@ -276,7 +276,7 @@ test_suites:
 
   fenics-adapter:
     tutorials:
-      - # *two-scale-heat-conduction_macro-dumux_micro-dumux # excluded - too small values to compare
+      # *two-scale-heat-conduction_macro-dumux_micro-dumux # excluded - too small values to compare
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-su2_solid-fenics
