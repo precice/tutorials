@@ -24,6 +24,7 @@ profiling.db
 profiling.csv
 trace.json
 profiling.pftrace
+precice-config.xml.orig
 
 # C++
 *.o
