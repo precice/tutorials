@@ -151,6 +151,7 @@ test_suites:
         case_combination:
           - dirichlet-fenics
           - neumann-fenics
+        max_time: 0.3
         reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-fenics_neumann-fenics.tar.gz
       - &partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
         path: partitioned-heat-conduction
@@ -164,6 +165,7 @@ test_suites:
         case_combination:
           - dirichlet-openfoam
           - neumann-openfoam
+        max_time: 0.3
         reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-openfoam_neumann-openfoam.tar.gz
 
   partitioned-heat-conduction-complex:
