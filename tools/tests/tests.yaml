@@ -159,7 +159,7 @@ test_suites:
           - fluid1d-left-nutils
           - fluid3d-right-openfoam
         max_time: 0.05
-        reference_result: ./partitioned-pipe-multiscale/reference-results/fluid1d-left-nutils_fluid3d-right-openfoam
+        reference_result: ./partitioned-pipe-multiscale/reference-results/fluid1d-left-nutils_fluid3d-right-openfoam.tar.gz
 
   partitioned-pipe-two-phase:
     tutorials:
