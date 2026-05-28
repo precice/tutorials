@@ -10,7 +10,7 @@ cases:
   fluid-openfoam:
     participant: Fluid
     directory: ./fluid-openfoam
-    run: ./run.sh -parallel
+    run: ./run.sh
     component: openfoam-adapter
   
   solid-fenics:
@@ -28,7 +28,7 @@ cases:
   solid-openfoam:
     participant: Solid
     directory: ./solid-openfoam
-    run: ./run.sh -parallel
+    run: ./run.sh
     component: openfoam-adapter 
 
 
