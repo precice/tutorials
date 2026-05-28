@@ -1,9 +1,9 @@
 participants:
-    Calculix2:
+    Neumann:
         interfaces:
-        - nodes-mesh: Calculix-Mesh2
+        - nodes-mesh: Neumann-Mesh
           patch: surface
-          read-data: [Force0]
-          write-data: [Displacement0]
+          read-data: [Force]
+          write-data: [Displacement]
           
 precice-config-file: ../precice-config.xml
