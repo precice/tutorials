@@ -21,7 +21,7 @@ OPENFOAM_ADAPTER_REF: "2c3062c" # develop, May 27, 2026
 PRECICE_REF: "v3.4.1"
 PYTHON_BINDINGS_REF: "v3.4.0"
 SU2_ADAPTER_REF: "5abe79b"      # develop, May 27, 2026
-TUTORIALS_REF: "47187a1"        # develop, May 28, 2026
+TUTORIALS_REF: "69bf091"        # develop, May 28, 2026
 
 # Additional settings
 PRECICE_PRESET: "production-audit"
