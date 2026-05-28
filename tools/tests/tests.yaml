@@ -146,12 +146,6 @@ test_suites:
 
   partitioned-heat-conduction:
     tutorials:
-      - &partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam
-        path: partitioned-heat-conduction
-        case_combination:
-          - dirichlet-openfoam
-          - neumann-openfoam
-        reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-openfoam_neumann-openfoam.tar.gz
       - &partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
         path: partitioned-heat-conduction
         case_combination:
@@ -165,6 +159,12 @@ test_suites:
           - neumann-nutils
         max_time: 0.3
         reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-nutils_neumann-nutils.tar.gz
+      - &partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam
+        path: partitioned-heat-conduction
+        case_combination:
+          - dirichlet-openfoam
+          - neumann-openfoam
+        reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-openfoam_neumann-openfoam.tar.gz
 
   partitioned-heat-conduction-complex:
     tutorials:
@@ -286,9 +286,9 @@ test_suites:
       - *heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
       - *partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
-      - *partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam
       - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
+      - *partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam
       - *partitioned-heat-conduction-complex_dirichlet-fenics_neumann-fenics
       - *partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam
       - *partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
