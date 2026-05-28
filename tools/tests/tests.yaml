@@ -158,6 +158,13 @@ test_suites:
           - dirichlet-fenics
           - neumann-fenics
         reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-fenics_neumann-fenics.tar.gz
+      - &partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
+        path: partitioned-heat-conduction
+        case_combination:
+          - dirichlet-nutils
+          - neumann-nutils
+        max_time: 0.3
+        reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-nutils_neumann-nutils.tar.gz
 
   partitioned-pipe:
     tutorials:
@@ -272,6 +279,7 @@ test_suites:
       - *partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
       - *partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam
       - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
+      - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam
       - *partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
@@ -318,6 +326,7 @@ test_suites:
   nutils-adapter: # Not a repository
     tutorials:
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
+      - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
 
   openfoam-adapter:
