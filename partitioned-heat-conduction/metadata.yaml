@@ -13,8 +13,20 @@ cases:
     run: ./run.sh
     component: openfoam-adapter
   
+  dirichlet-fenics:
+    participant: Dirichlet
+    directory: ./dirichlet-openfoam
+    run: ./run.sh
+    component: fenics-adapter
+
   neumann-openfoam:
     participant: Neumann
     directory: ./neumann-openfoam
     run: ./run.sh
     component: openfoam-adapter
+
+  neumann-fenics:
+    participant: Neumann
+    directory: ./neumann-openfoam
+    run: ./run.sh
+    component: fenics-adapter

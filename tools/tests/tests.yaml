@@ -152,6 +152,12 @@ test_suites:
           - dirichlet-openfoam
           - neumann-openfoam
         reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-openfoam_neumann-openfoam.tar.gz
+      - &partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
+        path: partitioned-heat-conduction
+        case_combination:
+          - dirichlet-fenics
+          - neumann-fenics
+        reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-fenics_neumann-fenics.tar.gz
 
   partitioned-pipe:
     tutorials:
@@ -265,6 +271,7 @@ test_suites:
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
       - *partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
       - *partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam
+      - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
       - *partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam
       - *partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
@@ -300,6 +307,7 @@ test_suites:
     tutorials:
       # *two-scale-heat-conduction_macro-dumux_micro-dumux # excluded - too small values to compare
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
+      - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-su2_solid-fenics
 
