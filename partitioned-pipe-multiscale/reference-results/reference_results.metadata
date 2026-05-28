@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid1d-left-nutils_fluid3d-right-openfoam | 2026-05-28 13:11:52 | fb0a188b5ba0e4b6111a89a15e285816f1f9d855f88843624145f4d5cb229b6a |
+| fluid1d-left-nutils_fluid3d-right-openfoam.tar.gz | 2026-05-28 14:01:56 | bc40404e24756a6a6e913356965a67bbe84a1e7596fae90fead5fd4069677deb |
 
 ## List of arguments used to generate the files
 
@@ -32,7 +32,7 @@ We also include some information on the machine used to generate them
 | PRECICE_REF | v3.4.1 |
 | PYTHON_BINDINGS_REF | v3.4.0 |
 | SU2_ADAPTER_REF | 5abe79b |
-| TUTORIALS_REF | e0b75cc |
+| TUTORIALS_REF | 816ffe9 |
 | PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
