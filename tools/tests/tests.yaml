@@ -63,7 +63,7 @@ test_suites:
         case_combination:
           - fluid-openfoam
           - solid-nutils
-        max_time: 0.1
+        max_time: 0.05
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-nutils.tar.gz
       - &flow-over-heated-plate_fluid-openfoam_solid-openfoam
         path: flow-over-heated-plate
@@ -120,7 +120,7 @@ test_suites:
           - fluid-top-openfoam
           - fluid-bottom-openfoam
           - solid-calculix
-        max_time: 0.1
+        max_time: 0.05
         reference_result: ./heat-exchanger-simplified/reference-results/fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix.tar.gz
 
   multiple-perpendicular-flaps:
@@ -158,7 +158,7 @@ test_suites:
         case_combination:
           - fluid1d-left-nutils
           - fluid3d-right-openfoam
-        max_time: 0.1
+        max_time: 0.05
         reference_result: ./partitioned-pipe-multiscale/reference-results/fluid1d-left-nutils_fluid3d-right-openfoam
 
   partitioned-pipe-two-phase:
@@ -197,7 +197,7 @@ test_suites:
         case_combination:
           - fluid-openfoam
           - solid-openfoam
-        max_time: 0.1
+        max_time: 0.03
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-openfoam.tar.gz
       - &perpendicular-flap_fluid-su2_solid-fenics
         path: perpendicular-flap
