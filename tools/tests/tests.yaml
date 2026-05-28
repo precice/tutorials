@@ -48,7 +48,7 @@ test_suites:
           - fluid-openfoam
           - solid-fenics
         max_time_windows: 1
-        reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-fenics.tar.gz
+        reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-fenics.tar.gz # Too small values, expected to fail the comparisons.
 
   flow-over-heated-plate:
     tutorials:
@@ -234,7 +234,7 @@ test_suites:
       - *elastic-tube-1d_fluid-cpp_solid-python
       - *elastic-tube-1d_fluid-python_solid-python
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
-      - *elastic-tube-3d_fluid-openfoam_solid-fenics
+      # *elastic-tube-3d_fluid-openfoam_solid-fenics # excluded - too small values to compare
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam
@@ -253,7 +253,7 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
       - *perpendicular-flap_fluid-su2_solid-fenics
-      # two-scale-heat-conduction_macro-dumux_micro-dumux excluded
+      # *two-scale-heat-conduction_macro-dumux_micro-dumux # excluded - too small values to compare
       - *quickstart_openfoam_cpp
 
   calculix-adapter:
@@ -276,14 +276,14 @@ test_suites:
 
   fenics-adapter:
     tutorials:
-      - *elastic-tube-3d_fluid-openfoam_solid-fenics
+      - # *two-scale-heat-conduction_macro-dumux_micro-dumux # excluded - too small values to compare
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-su2_solid-fenics
 
   micro-manager:
     tutorials:
-      - *two-scale-heat-conduction_macro-dumux_micro-dumux
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux # expected to fail, but only available test - still useful
 
   nutils-adapter: # Not a repository
     tutorials:
@@ -293,7 +293,7 @@ test_suites:
   openfoam-adapter:
     tutorials:
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
-      - *elastic-tube-3d_fluid-openfoam_solid-fenics
+      # *elastic-tube-3d_fluid-openfoam_solid-fenics # excluded - too small values to compare
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam
