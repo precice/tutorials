@@ -11,30 +11,30 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam.tar.gz | 2026-05-28 09:29:43 | 74aaef5b7bdeb2999e947a6d67c3c5cdc39489bb7f0eedf1ddbf6bcfe4046c84 |
-| fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam.tar.gz | 2026-05-28 09:29:43 | 0844a705c909f2525f6d126fc76c52f506f1313a0f38a8dec1e4a3a99a5b2c32 |
+| fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam.tar.gz | 2026-05-28 11:46:06 | 500166363879b3767f5256dc640d61fa466005e707a45644a7c78a4ea6518132 |
+| fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam.tar.gz | 2026-05-28 11:46:06 | a7aa2d9a4bacc89fe494ee9e812bc5b437957a00943a13faf28887ca4a55fa39 |
 
 ## List of arguments used to generate the files
 
 | name | value |
 |------|------|
-| PRECICE_REF | v3.4.1 |
-| PRECICE_PRESET | production-audit |
-| OPENFOAM_EXECUTABLE | openfoam2312 |
-| OPENFOAM_ADAPTER_REF | 2c3062c |
-| PYTHON_BINDINGS_REF | v3.4.0 |
-| FENICS_ADAPTER_REF | v2.3.0 |
-| TUTORIALS_REF | af6bba0 |
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
-| CALCULIX_ADAPTER_REF | v2.20.1 |
-| SU2_VERSION | 7.5.1 |
-| SU2_ADAPTER_REF | 5abe79b |
-| DEALII_ADAPTER_REF | a421d92 |
 | DUNE_VERSION | 2.9 |
 | DUMUX_VERSION | 3.7 |
+| OPENFOAM_EXECUTABLE | openfoam2512 |
+| SU2_VERSION | 7.5.1 |
+| FENICS_ADAPTER_REF | v2.3.0 |
+| CALCULIX_ADAPTER_REF | v2.20.1 |
+| DEALII_ADAPTER_REF | a421d92 |
 | DUMUX_ADAPTER_REF | 3f3f54f |
 | MICRO_MANAGER_REF | v0.10.1 |
+| OPENFOAM_ADAPTER_REF | 2c3062c |
+| PRECICE_REF | v3.4.1 |
+| PYTHON_BINDINGS_REF | v3.4.0 |
+| SU2_ADAPTER_REF | 5abe79b |
+| TUTORIALS_REF | 9cb7068 |
+| PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
 ## Information about the machine

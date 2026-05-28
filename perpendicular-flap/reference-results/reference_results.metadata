@@ -11,33 +11,33 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-calculix.tar.gz | 2026-05-28 09:29:43 | 092c7c3f286c6b757bad44a9ac8bdb33d11c9f934045d806f1868a41142aeb88 |
-| fluid-openfoam_solid-openfoam.tar.gz | 2026-05-28 09:29:43 | 7e83659cc1321057b41b92bc6bf68d38cda0331095ee87c650611dff076d6ea9 |
-| fluid-openfoam_solid-fenics.tar.gz | 2026-05-28 09:29:43 | ca9af8314a88b4542ffdfcba9314f35d6014d80ef1a7751990ff725d5881cb00 |
-| fluid-openfoam_solid-dealii.tar.gz | 2026-05-28 09:29:43 | 1ee47dd459486ef149ef1583a08b605bf6f02a16e48727d15519c6f18d53bc61 |
-| fluid-su2_solid-fenics.tar.gz | 2026-05-28 09:29:43 | 69fca563854a1ca1ef5d2f5ec56a231e22c3d3f09af2a4b635430ab37fd6f670 |
+| fluid-openfoam_solid-fenics.tar.gz | 2026-05-28 11:46:06 | 002d647077d0f4558bdf692c858a12d8078bf460dbb336bdba22389f8f54eac9 |
+| fluid-openfoam_solid-openfoam.tar.gz | 2026-05-28 11:46:06 | 347c9e1a521146c2855f17798edd9ca2aa1ed8e24b2f1412655c8260d860a96a |
+| fluid-su2_solid-fenics.tar.gz | 2026-05-28 11:46:06 | 6f77d1458d64b243af525c09d62cfa7da217d6ea5d0924a769c73ef50e500757 |
+| fluid-openfoam_solid-calculix.tar.gz | 2026-05-28 11:46:06 | 1d8b37c6aa705766f5a9013381a044cc825b807bfcfc06b26adaea88c4de8afb |
+| fluid-openfoam_solid-dealii.tar.gz | 2026-05-28 11:46:06 | 562d713526dcd4d2daaa10b92fc09d01fcae88017d0d50b7dd78394c661410f9 |
 
 ## List of arguments used to generate the files
 
 | name | value |
 |------|------|
-| PRECICE_REF | v3.4.1 |
-| PRECICE_PRESET | production-audit |
-| OPENFOAM_EXECUTABLE | openfoam2312 |
-| OPENFOAM_ADAPTER_REF | 2c3062c |
-| PYTHON_BINDINGS_REF | v3.4.0 |
-| FENICS_ADAPTER_REF | v2.3.0 |
-| TUTORIALS_REF | af6bba0 |
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
-| CALCULIX_ADAPTER_REF | v2.20.1 |
-| SU2_VERSION | 7.5.1 |
-| SU2_ADAPTER_REF | 5abe79b |
-| DEALII_ADAPTER_REF | a421d92 |
 | DUNE_VERSION | 2.9 |
 | DUMUX_VERSION | 3.7 |
+| OPENFOAM_EXECUTABLE | openfoam2512 |
+| SU2_VERSION | 7.5.1 |
+| FENICS_ADAPTER_REF | v2.3.0 |
+| CALCULIX_ADAPTER_REF | v2.20.1 |
+| DEALII_ADAPTER_REF | a421d92 |
 | DUMUX_ADAPTER_REF | 3f3f54f |
 | MICRO_MANAGER_REF | v0.10.1 |
+| OPENFOAM_ADAPTER_REF | 2c3062c |
+| PRECICE_REF | v3.4.1 |
+| PYTHON_BINDINGS_REF | v3.4.0 |
+| SU2_ADAPTER_REF | 5abe79b |
+| TUTORIALS_REF | 9cb7068 |
+| PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
 ## Information about the machine

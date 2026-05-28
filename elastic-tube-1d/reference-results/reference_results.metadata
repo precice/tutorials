@@ -11,31 +11,31 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-python_solid-python.tar.gz | 2026-05-28 09:29:43 | 802a4f9d82320a220c89238fe6214b0befb3831f4e84743810d6a9853609de2a |
-| fluid-cpp_solid-python.tar.gz | 2026-05-28 09:29:43 | 077fe088ea23154db78f9021fac0b2af14cebef781a0053ec1b832e7050d3b63 |
-| fluid-cpp_solid-cpp.tar.gz | 2026-05-28 09:29:43 | dcac24d624a65deb88db28700983d5e51034ffecee0ce531e77411826da5fab4 |
+| fluid-cpp_solid-cpp.tar.gz | 2026-05-28 11:46:06 | 6cdb7515613c0d6ef5f7e3d86c08e4d0dd933ccec1b41c5459c956d8b68c84e0 |
+| fluid-python_solid-python.tar.gz | 2026-05-28 11:46:06 | fcd3ac4ecceddbe7c429af155e50175f38998fad1449b117aa8c60ef7b1bff12 |
+| fluid-cpp_solid-python.tar.gz | 2026-05-28 11:46:06 | 3a87326b2673b9a17ce94a9c280d4c76664a9465946a1b18e9fa118c70be51a6 |
 
 ## List of arguments used to generate the files
 
 | name | value |
 |------|------|
-| PRECICE_REF | v3.4.1 |
-| PRECICE_PRESET | production-audit |
-| OPENFOAM_EXECUTABLE | openfoam2312 |
-| OPENFOAM_ADAPTER_REF | 2c3062c |
-| PYTHON_BINDINGS_REF | v3.4.0 |
-| FENICS_ADAPTER_REF | v2.3.0 |
-| TUTORIALS_REF | af6bba0 |
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
-| CALCULIX_ADAPTER_REF | v2.20.1 |
-| SU2_VERSION | 7.5.1 |
-| SU2_ADAPTER_REF | 5abe79b |
-| DEALII_ADAPTER_REF | a421d92 |
 | DUNE_VERSION | 2.9 |
 | DUMUX_VERSION | 3.7 |
+| OPENFOAM_EXECUTABLE | openfoam2512 |
+| SU2_VERSION | 7.5.1 |
+| FENICS_ADAPTER_REF | v2.3.0 |
+| CALCULIX_ADAPTER_REF | v2.20.1 |
+| DEALII_ADAPTER_REF | a421d92 |
 | DUMUX_ADAPTER_REF | 3f3f54f |
 | MICRO_MANAGER_REF | v0.10.1 |
+| OPENFOAM_ADAPTER_REF | 2c3062c |
+| PRECICE_REF | v3.4.1 |
+| PYTHON_BINDINGS_REF | v3.4.0 |
+| SU2_ADAPTER_REF | 5abe79b |
+| TUTORIALS_REF | 9cb7068 |
+| PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
 ## Information about the machine
