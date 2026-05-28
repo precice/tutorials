@@ -11,9 +11,9 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| dirichlet-nutils_neumann-nutils.tar.gz | 2026-05-28 17:35:15 | dfc2180961830fbfa1eba9b556411477d05fc35622d96fcb1beb8703d0c1603e |
-| dirichlet-openfoam_neumann-openfoam.tar.gz | 2026-05-28 17:35:15 | 1375852faaf4217ec5b5a8399b6c11399bff5b0fa3062c90b64429fb10f241da |
-| dirichlet-fenics_neumann-fenics.tar.gz | 2026-05-28 17:35:15 | 19ce599b5d28376707a0daa5920083ec04c92491a5b24c198dae647184bca5bd |
+| dirichlet-openfoam_neumann-openfoam.tar.gz | 2026-05-28 17:44:13 | 12a281982b1dc08e7fd9092dd5b30110ccc5f5db5b76594d60e7186b38d5fcbb |
+| dirichlet-nutils_neumann-nutils.tar.gz | 2026-05-28 17:44:13 | 031a3bcc9a9d6d55ea4715b29e0c1a939bf522f1bf9cce048625590ab9fa3792 |
+| dirichlet-fenics_neumann-fenics.tar.gz | 2026-05-28 17:44:13 | 6d2123f020ee4cddf89fb05fdd6e7abeb8f16cb33cca4a74ca7cfafceabcd91b |
 
 ## List of arguments used to generate the files
 
@@ -34,7 +34,7 @@ We also include some information on the machine used to generate them
 | PRECICE_REF | v3.4.1 |
 | PYTHON_BINDINGS_REF | v3.4.0 |
 | SU2_ADAPTER_REF | 5abe79b |
-| TUTORIALS_REF | 69bf091 |
+| TUTORIALS_REF | 7a5a9c9 |
 | PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |

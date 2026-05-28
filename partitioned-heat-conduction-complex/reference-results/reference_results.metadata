@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| dirichlet-fenics_neumann-fenics.tar.gz | 2026-05-28 17:35:15 | f8ad9d8022b3fe6ad277a2c7276052cf99fb6468936fd887d19c3be346c44815 |
+| dirichlet-fenics_neumann-fenics.tar.gz | 2026-05-28 17:44:13 | 585f3f212d365a7a5183b37f0175a42ce98ec9f5c23b2ef1606bfb76199b4d24 |
 
 ## List of arguments used to generate the files
 
@@ -32,7 +32,7 @@ We also include some information on the machine used to generate them
 | PRECICE_REF | v3.4.1 |
 | PYTHON_BINDINGS_REF | v3.4.0 |
 | SU2_ADAPTER_REF | 5abe79b |
-| TUTORIALS_REF | 69bf091 |
+| TUTORIALS_REF | 7a5a9c9 |
 | PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
