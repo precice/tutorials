@@ -11,33 +11,33 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-openfoam.tar.gz | 2026-05-27 16:22:51 | afa2b5e7c1ce1dbe0457e78fa96a7250a6d10c31d51284722ed0f2d6079e74f2 |
-| fluid-su2_solid-fenics.tar.gz | 2026-05-27 16:22:51 | 1b56464502e14c212d8de8ea8321a2c640b20b3279c16e8ec0770f78e5db4e5b |
-| fluid-openfoam_solid-calculix.tar.gz | 2026-05-27 16:22:51 | 993ac60ae095bfc5e1e7ce8157c12c6d20093800eac91871b078cda83272e02b |
-| fluid-openfoam_solid-fenics.tar.gz | 2026-05-27 16:22:51 | 2f46e5ef72829f3fb68dfc6ec2b5db377d881d5446b2a1e283e718ee8bc2f225 |
-| fluid-openfoam_solid-dealii.tar.gz | 2026-05-27 16:22:51 | f15b2c7bbae2a678d19fc65fe86b6b5a529f06f0313d0a340f30c0079d0c0cc8 |
+| fluid-openfoam_solid-calculix.tar.gz | 2026-05-28 09:29:43 | 092c7c3f286c6b757bad44a9ac8bdb33d11c9f934045d806f1868a41142aeb88 |
+| fluid-openfoam_solid-openfoam.tar.gz | 2026-05-28 09:29:43 | 7e83659cc1321057b41b92bc6bf68d38cda0331095ee87c650611dff076d6ea9 |
+| fluid-openfoam_solid-fenics.tar.gz | 2026-05-28 09:29:43 | ca9af8314a88b4542ffdfcba9314f35d6014d80ef1a7751990ff725d5881cb00 |
+| fluid-openfoam_solid-dealii.tar.gz | 2026-05-28 09:29:43 | 1ee47dd459486ef149ef1583a08b605bf6f02a16e48727d15519c6f18d53bc61 |
+| fluid-su2_solid-fenics.tar.gz | 2026-05-28 09:29:43 | 69fca563854a1ca1ef5d2f5ec56a231e22c3d3f09af2a4b635430ab37fd6f670 |
 
 ## List of arguments used to generate the files
 
 | name | value |
 |------|------|
-| PRECICE_REF | d199bb3 |
+| PRECICE_REF | v3.4.1 |
 | PRECICE_PRESET | production-audit |
 | OPENFOAM_EXECUTABLE | openfoam2312 |
-| OPENFOAM_ADAPTER_REF | v1.3.1 |
-| PYTHON_BINDINGS_REF | v3.2.0 |
-| FENICS_ADAPTER_REF | v2.2.0 |
-| TUTORIALS_REF | aba048a5a36806cc2fd5a768e13174b82f365822 |
+| OPENFOAM_ADAPTER_REF | 2c3062c |
+| PYTHON_BINDINGS_REF | v3.4.0 |
+| FENICS_ADAPTER_REF | v2.3.0 |
+| TUTORIALS_REF | af6bba0 |
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
 | CALCULIX_ADAPTER_REF | v2.20.1 |
 | SU2_VERSION | 7.5.1 |
-| SU2_ADAPTER_REF | 64d4aff |
-| DEALII_ADAPTER_REF | 02c5d18 |
+| SU2_ADAPTER_REF | 5abe79b |
+| DEALII_ADAPTER_REF | a421d92 |
 | DUNE_VERSION | 2.9 |
 | DUMUX_VERSION | 3.7 |
-| DUMUX_ADAPTER_REF | 0e914bb |
-| MICRO_MANAGER_REF | v0.8.0 |
+| DUMUX_ADAPTER_REF | 3f3f54f |
+| MICRO_MANAGER_REF | v0.10.1 |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
 ## Information about the machine
