@@ -285,6 +285,24 @@ test_suites:
         timeout: 1200
         reference_result: ./perpendicular-flap/reference-results/fluid-nutils_solid-calculix.tar.gz
 
+  turek-hron-fsi3:
+    tutorials:
+      - &turek-hron-fsi3_fluid-nutils_solid-nutils
+        path: turek-hron-fsi3
+        case_combination:
+          - fluid-nutils
+          - solid-nutils
+        max_time: 0.003
+        timeout: 1200
+        reference_result: ./turek-hron-fsi3/reference-results/fluid-nutils_solid-nutils.tar.gz
+      - &turek-hron-fsi3_fluid-openfoam_solid-dealii
+        path: turek-hron-fsi3
+        case_combination:
+          - fluid-openfoam
+          - solid-dealii
+        max_time: 0.003
+        reference_result: ./turek-hron-fsi3/reference-results/fluid-openfoam_solid-dealii.tar.gz
+
   two-scale-heat-conduction:
     tutorials:
       - &two-scale-heat-conduction_macro-dumux_micro-dumux
@@ -337,15 +355,17 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
       - *perpendicular-flap_fluid-su2_solid-fenics
+      - *turek-hron-fsi3_fluid-openfoam_solid-dealii
       # *two-scale-heat-conduction_macro-dumux_micro-dumux # excluded - too small values to compare
       - *quickstart_openfoam_cpp
 
   # These test suites take longer to run. They are available, but not regularly executed.
   extra:
     tutorials:
-      # - *channel-transport_fluid-nutils_transport-nutils
-      # - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
+      - *channel-transport_fluid-nutils_transport-nutils
+      - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *perpendicular-flap_fluid-nutils_solid-calculix
+      - *turek-hron-fsi3_fluid-nutils_solid-nutils
 
   calculix-adapter:
     tutorials:
@@ -360,6 +380,7 @@ test_suites:
     tutorials:
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
       - *perpendicular-flap_fluid-openfoam_solid-dealii
+      - *turek-hron-fsi3_fluid-openfoam_solid-dealii
 
   dumux-adapter:
     tutorials:
@@ -388,6 +409,7 @@ test_suites:
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
       - *perpendicular-flap_fluid-nutils_solid-calculix
+      - *turek-hron-fsi3_fluid-nutils_solid-nutils
 
   openfoam-adapter:
     tutorials:
@@ -411,6 +433,7 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-dealii
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
+      - *turek-hron-fsi3_fluid-openfoam_solid-dealii
       - *quickstart_openfoam_cpp
 
   su2-adapter:
