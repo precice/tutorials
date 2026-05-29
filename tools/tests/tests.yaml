@@ -342,8 +342,8 @@ test_suites:
   # These test suites take longer to run. They are available, but not regularly executed.
   extra:
     tutorials:
-      - *channel-transport_fluid-nutils_transport-nutils
-      - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
+      # - *channel-transport_fluid-nutils_transport-nutils
+      # - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *perpendicular-flap_fluid-nutils_solid-calculix
 
   calculix-adapter:
@@ -386,6 +386,7 @@ test_suites:
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *perpendicular-flap_fluid-nutils_solid-calculix
 
   openfoam-adapter:
     tutorials:
