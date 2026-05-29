@@ -551,7 +551,7 @@ test_suites:
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
       - *wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
 
-  # These test suites take longer to run. They are available, but not regularly executed.
+  # These tests take longer to run. They are available, but not regularly executed.
   extra:
     tutorials:
       - *channel-transport_fluid-nutils_transport-nutils
@@ -564,6 +564,16 @@ test_suites:
       - *elastic-tube-3d_fluid-openfoam_solid-fenics # too small values to compare
       - *two-scale-heat-conduction_macro-dumux_micro-dumux # too small values to compare
 
+  # A selection of tests that cover a wide range of main features, meant for quicker CI executions
+  precice:
+    tutorials:
+      - *quickstart_openfoam_cpp                                                 # serial-explicit, RBF
+      - *channel-transport_fluid-openfoam_transport-nutils                       # parallel-explicit, RBF, python bindings
+      - *flow-over-heated-plate_fluid-openfoam_solid-openfoam                    # serial-implicit (Aitken), nearest-neighbor
+      - *flow-over-heated-plate-nearest-projection_fluid-openfoam_solid-openfoam # serial-implicit (IQN-ILS), nearest-projection
+      - *elastic-tube-1d_fluid-cpp_solid-cpp                                     # serial-implicit (IQN-ILS), nearest-neighbor
+      - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam  # parallel-implicit (IQN-ILS), axial-geometric-multiscale
+      
   calculix-adapter:
     tutorials:
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
