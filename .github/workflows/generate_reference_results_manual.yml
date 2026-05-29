@@ -8,7 +8,7 @@ on:
         type: string
       commit_msg:
         description: 'Commit msg for commit that adds the reference results'
-        default: "Adding reference results"
+        default: "Add reference results"
         type: string
       suites:
         description: 'Comma-separated test suites to generate reference results for (leave empty for all)'
