@@ -9,9 +9,8 @@ import precice
 
 min_depth_for_grass = 0.2
 
-# Use dx of Raster Model Grid from Soil Creep for solver_dt calculation
-dx = 1.0
-fast_creep = 0.1
+# Use the same time step size as the Soil-Creep participant
+solver_dt = 0.2
 
 # Initialize Wolf-Sheep-Grass model
 wss = WolfSheepScenario(
@@ -78,7 +77,6 @@ if participant.requires_initial_data():
 participant.initialize()
 
 while participant.is_coupling_ongoing():
-    solver_dt = 0.2 * dx * dx / fast_creep
     precice_dt = participant.get_max_time_step_size()
     dt = np.minimum(solver_dt, precice_dt)
 
