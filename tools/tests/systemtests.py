@@ -2,7 +2,13 @@
 import argparse
 from pathlib import Path
 from systemtests.SystemtestArguments import SystemtestArguments
-from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT, display_systemtestresults_as_table
+from systemtests.Systemtest import (
+    Systemtest,
+    GLOBAL_TIMEOUT,
+    append_systemtest_progress_to_github_summary,
+    display_systemtestresults_as_table,
+    initialize_systemtests_progress_in_github_summary,
+)
 from systemtests.TestSuite import TestSuites
 from metadata_parser.metdata import Tutorials, Case
 import logging
@@ -74,6 +80,7 @@ def main():
 
     logging.info(f"About to run the following systemtest in the directory {run_directory}:\n {systemtests_to_run}")
 
+    initialize_systemtests_progress_in_github_summary(len(systemtests_to_run))
     results = []
     for number, systemtest in enumerate(systemtests_to_run, start=1):
         logging.info(f"Started running {systemtest},  {number}/{len(systemtests_to_run)}")
@@ -82,6 +89,12 @@ def main():
         elapsed_time = time.perf_counter() - t
         logging.info(f"Running {systemtest} took {elapsed_time:^.1f} seconds")
         results.append(result)
+        append_systemtest_progress_to_github_summary(
+            result,
+            number,
+            len(systemtests_to_run),
+            elapsed_time,
+        )
 
     system_test_success = True
     for result in results:

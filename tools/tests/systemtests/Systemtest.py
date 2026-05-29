@@ -23,6 +23,8 @@ GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 900))
 SHORT_TIMEOUT = 10
 
 DIFF_RESULTS_DIR = "diff-results"
+GITHUB_SUMMARY_PROGRESS_HEADING = "## System tests progress"
+GITHUB_SUMMARY_RESULTS_HEADING = "## Final system test results"
 
 
 def slugify(value, allow_unicode=False):
@@ -76,6 +78,44 @@ class SystemtestResult:
     fieldcompare_time: float  # in seconds
 
 
+def _append_lines_to_github_summary(lines: List[str]):
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not summary_path:
+        return
+
+    with open(summary_path, "a") as summary_file:
+        for line in lines:
+            print(line, file=summary_file)
+
+
+def initialize_systemtests_progress_in_github_summary(total_systemtests: int):
+    if total_systemtests <= 0:
+        return
+
+    _append_lines_to_github_summary([
+        "",
+        GITHUB_SUMMARY_PROGRESS_HEADING,
+        "",
+        f"- Starting execution of `{total_systemtests}` system tests.",
+    ])
+
+
+def append_systemtest_progress_to_github_summary(
+        result: SystemtestResult,
+        number: int,
+        total_systemtests: int,
+        elapsed_time: float):
+    status_checkbox = "x" if result.success else " "
+    status_text = "finished successfully" if result.success else "failed"
+    progress_line = (
+        f"- [{status_checkbox}] `{number}/{total_systemtests}` "
+        f"`{result.systemtest}` {status_text} in `{elapsed_time:.1f}s` "
+        f"(build `{result.build_time:.1f}s`, solver `{result.solver_time:.1f}s`, "
+        f"fieldcompare `{result.fieldcompare_time:.1f}s`)."
+    )
+    _append_lines_to_github_summary([progress_line])
+
+
 def display_systemtestresults_as_table(results: List[SystemtestResult]):
     """
     Prints the result in a nice tabluated way to get an easy overview
@@ -100,6 +140,9 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
 
     if "GITHUB_STEP_SUMMARY" in os.environ:
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+            print("", file=f)
+            print(GITHUB_SUMMARY_RESULTS_HEADING, file=f)
+            print("", file=f)
             print(header, file=f)
             print(separator_markdown, file=f)
 
