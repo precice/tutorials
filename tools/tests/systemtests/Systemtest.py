@@ -399,6 +399,35 @@ class Systemtest:
             logging.error(error_message)
             return False, error_message
 
+    def _cleanup_docker_networks(self):
+        """
+        Prunes the unused Docker networks, since there is an upper limit on the number of custom networks defined.
+        """
+        logging.debug(f"Deleting unused Docker networks...")
+        stdout_data = []
+        stderr_data = []
+        try:
+            # Execute docker-network-prune command
+            process = subprocess.Popen(['docker',
+                                        'network',
+                                        'prune',
+                                        '-f'],
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE,
+                                       start_new_session=True,
+                                       cwd=self.system_test_dir)
+            try:
+                stdout, stderr = process.communicate(timeout=self.timeout)
+            except KeyboardInterrupt as k:
+                process.kill()
+                raise KeyboardInterrupt from k
+        except Exception as e:
+            logging.critical(
+                f"Systemtest {self} could not prune the Docker networks. This might prevent tests from starting.")
+            stdout_data.extend(stdout.decode().splitlines())
+            stderr_data.extend(stderr.decode().splitlines())
+            process.poll()
+
     def _run_field_compare(self):
         """
         Executes the field comparison step after unpacking reference results.
@@ -635,6 +664,7 @@ class Systemtest:
         std_out: List[str] = []
         std_err: List[str] = []
 
+        self._cleanup_docker_networks()
         docker_build_result = self._build_docker()
         std_out.extend(docker_build_result.stdout_data)
         std_err.extend(docker_build_result.stderr_data)
