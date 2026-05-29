@@ -11,7 +11,7 @@
 
   <data:vector name="Velocity" />
 
-  <mesh name="Flow-Mesh" dimensions="2">
+  <mesh name="Fluid-Mesh" dimensions="2">
     <use-data name="Velocity" />
   </mesh>
 
@@ -19,28 +19,28 @@
     <use-data name="Velocity" />
   </mesh>
 
-  <participant name="Flow">
-    <provide-mesh name="Flow-Mesh" />
-    <write-data name="Velocity" mesh="Flow-Mesh" />
+  <participant name="Fluid">
+    <provide-mesh name="Fluid-Mesh" />
+    <write-data name="Velocity" mesh="Fluid-Mesh" />
   </participant>
 
   <participant name="Chemical">
     <provide-mesh name="Chemical-Mesh" />
-    <receive-mesh name="Flow-Mesh" from="Flow" />
+    <receive-mesh name="Fluid-Mesh" from="Fluid" />
     <read-data name="Velocity" mesh="Chemical-Mesh" />
     <mapping:linear-cell-interpolation
       direction="read"
-      from="Flow-Mesh"
+      from="Fluid-Mesh"
       to="Chemical-Mesh"
       constraint="consistent" />
   </participant>
 
-  <m2n:sockets acceptor="Flow" connector="Chemical" exchange-directory=".." />
+  <m2n:sockets acceptor="Fluid" connector="Chemical" exchange-directory=".." />
 
   <coupling-scheme:serial-explicit>
-    <participants first="Flow" second="Chemical" />
+    <participants first="Fluid" second="Chemical" />
     <max-time value="5.0" />
     <time-window-size value="0.05" />
-    <exchange data="Velocity" mesh="Flow-Mesh" from="Flow" to="Chemical" />
+    <exchange data="Velocity" mesh="Fluid-Mesh" from="Fluid" to="Chemical" />
   </coupling-scheme:serial-explicit>
 </precice-configuration>
