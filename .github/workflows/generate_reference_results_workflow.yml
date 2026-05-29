@@ -17,7 +17,7 @@ on:
         type: string
       clean_docker:
         description: 'Clean Docker before running'
-        default: 'TRUE'
+        default: 'FALSE'
         type: string
       log_level:
         description: 'Logging verbosity level used for the systemtests'
