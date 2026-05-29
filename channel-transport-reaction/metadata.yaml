@@ -1,0 +1,20 @@
+name: Channel transport reaction
+path: channel-transport-reaction
+url: https://precice.org/tutorials-channel-transport-reaction.html
+
+participants:
+  - Fluid
+  - Chemical
+
+cases:
+  fluid-fenics:
+    participant: Fluid
+    directory: ./fluid-fenics
+    run: ./run.sh
+    component: fenics-adapter
+
+  chemical-fenics:
+    participant: Chemical
+    directory: ./chemical-fenics
+    run: ./run.sh
+    component: fenics-adapter
