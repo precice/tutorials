@@ -362,9 +362,9 @@ test_suites:
   # These test suites take longer to run. They are available, but not regularly executed.
   extra:
     tutorials:
-      # - *channel-transport_fluid-nutils_transport-nutils
-      # - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
-      # - *perpendicular-flap_fluid-nutils_solid-calculix
+      - *channel-transport_fluid-nutils_transport-nutils
+      - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
+      - *perpendicular-flap_fluid-nutils_solid-calculix
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
 
   calculix-adapter:
