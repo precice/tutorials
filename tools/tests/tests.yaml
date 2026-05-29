@@ -292,7 +292,7 @@ test_suites:
         case_combination:
           - fluid-openfoam
           - solid-dealii
-        max_time: 0.01
+        max_time: 0.003
         reference_result: ./turek-hron-fsi3/reference-results/fluid-openfoam_solid-dealii.tar.gz
       - &turek-hron-fsi3_fluid-nutils_solid-nutils
         path: turek-hron-fsi3
