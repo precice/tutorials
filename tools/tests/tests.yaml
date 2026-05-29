@@ -1,6 +1,6 @@
 # Test suites that can be triggered by the system tests.
 # Define test suites per tutorial in the beginning of the file,
-# then refer to these in the release_test and in the individual test
+# then refer to these in the release test suite and in the individual test
 # suites for repositories, at the lower part of the file.
 #
 # Conventions:
@@ -500,7 +500,7 @@ test_suites:
 #####################################################################
 ## Test suites referring to the test suites defined above
 
-  release_test:
+  release:
     tutorials:
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
