@@ -299,8 +299,8 @@ test_suites:
         case_combination:
           - fluid-nutils
           - solid-nutils
-        timeout: 1200
         max_time: 0.003
+        timeout: 1200
         reference_result: ./turek-hron-fsi3/reference-results/fluid-nutils_solid-nutils.tar.gz
 
   two-scale-heat-conduction:
