@@ -282,6 +282,7 @@ test_suites:
           - fluid-nutils
           - solid-calculix
         max_time: 0.1
+        timeout: 1200
         reference_result: ./perpendicular-flap/reference-results/fluid-nutils_solid-calculix.tar.gz
 
   two-scale-heat-conduction:
