@@ -712,6 +712,7 @@ class Systemtest:
                 fieldcompare_time=fieldcompare_result.runtime)
 
         # self.__cleanup()
+        self._cleanup_docker_networks()
         self.__write_logs(std_out, std_err)
         return SystemtestResult(
             True,
