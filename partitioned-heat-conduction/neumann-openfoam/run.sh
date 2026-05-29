@@ -13,8 +13,8 @@ if ! command -v heatTransfer > /dev/null 2>&1; then
     echo "Building the heatTransfer OpenFOAM solver"
     wmake ../solver-openfoam/
   else
-    echo "The executable heatTransfer is not found, but the build directory ../solver-openfoam/Make/${WM_OPTIONS} was detected. A build is probably in progress, waiting 60s..."
-    sleep 60
+    echo "The executable heatTransfer is not found, but the build directory ../solver-openfoam/Make/${WM_OPTIONS} was detected. A build is probably in progress, waiting 90s..."
+    sleep 90
     if ! command -v heatTransfer > /dev/null 2>&1; then
       exit 1
     fi
