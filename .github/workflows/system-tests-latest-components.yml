@@ -5,6 +5,12 @@ on:
     - cron: "0 4 * * *"
       timezone: "Europe/Berlin"
   workflow_dispatch:
+    inputs:
+      suites:
+        description: 'Comma-separated test suites to run'
+        default: 'release_test'
+        required: false
+        type: string
 
 jobs:
   gather-refs:
@@ -162,7 +168,7 @@ jobs:
     needs: gather-refs
     uses: precice/tutorials/.github/workflows/run_testsuite_workflow.yml@develop
     with:
-      suites: release_test
+      suites: ${{ inputs.suites }}
       build_args: "PLATFORM:ubuntu_2404,\
         PRECICE_REF:${{ needs.gather-refs.outputs.ref-precice }},\
         PYTHON_BINDINGS_REF:${{ needs.gather-refs.outputs.ref-python-bindings }},\
