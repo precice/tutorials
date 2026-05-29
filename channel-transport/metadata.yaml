@@ -1,0 +1,26 @@
+name: Channel transport
+path: channel-transport
+url: https://precice.org/tutorials-channel-transport.html
+
+participants:
+  - Fluid
+  - Transport
+
+cases:
+  fluid-openfoam:
+    participant: Fluid
+    directory: ./fluid-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+
+  fluid-nutils:
+    participant: Fluid
+    directory: ./fluid-nutils
+    run: ./run.sh
+    component: nutils-adapter
+
+  transport-nutils:
+    participant: Transport
+    directory: ./transport-nutils
+    run: ./run.sh
+    component: nutils-adapter

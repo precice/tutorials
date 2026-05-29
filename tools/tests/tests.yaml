@@ -11,6 +11,23 @@
 #   Skipped components are still mentioned in a comment.
 
 test_suites:
+  channel-transport:
+    tutorials:
+      - &channel-transport_fluid-openfoam_transport-nutils
+        path: channel-transport
+        case_combination:
+          - fluid-openfoam
+          - transport-nutils
+        max_time: 0.1
+        reference_result: ./channel-transport/reference-results/fluid-openfoam_transport-nutils.tar.gz
+      - &channel-transport_fluid-nutils_transport-nutils
+        path: channel-transport
+        case_combination:
+          - fluid-nutils
+          - transport-nutils
+        max_time: 0.05
+        reference_result: ./channel-transport/reference-results/fluid-nutils_transport-nutils.tar.gz
+
   elastic-tube-1d:
     tutorials:
       - &elastic-tube-1d_fluid-cpp_solid-cpp
@@ -273,6 +290,8 @@ test_suites:
 
   release_test:
     tutorials:
+      - *channel-transport_fluid-openfoam_transport-nutils
+      - *channel-transport_fluid-nutils_transport-nutils
       - *elastic-tube-1d_fluid-cpp_solid-cpp
       - *elastic-tube-1d_fluid-cpp_solid-python
       - *elastic-tube-1d_fluid-python_solid-python
@@ -338,12 +357,15 @@ test_suites:
 
   nutils-adapter: # Not a repository
     tutorials:
+      - *channel-transport_fluid-openfoam_transport-nutils
+      - *channel-transport_fluid-nutils_transport-nutils
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
 
   openfoam-adapter:
     tutorials:
+      - *channel-transport_fluid-openfoam_transport-nutils
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
       # *elastic-tube-3d_fluid-openfoam_solid-fenics # excluded - too small values to compare
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
