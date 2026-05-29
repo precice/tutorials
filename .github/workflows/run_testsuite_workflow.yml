@@ -93,6 +93,3 @@ jobs:
           runs/*/system-tests-stdout.log
           runs/*/system-tests-stderr.log
           runs/*/*/system-tests_*.log
-    - name: tidy up the docker
-      run: |
-        docker network prune -f
