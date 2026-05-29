@@ -128,6 +128,10 @@ RUN python3 -m venv --system-site-packages /home/precice/venv && \
 
 FROM precice_dependecies AS nutils_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
+USER root
+# libGLU is a dependency of gmsh, needed by the turek-hron-fsi3 nutils participant
+RUN apt-get -qq update && \
+apt-get -qq install libglu1-mesa
 USER precice
 # Installing nutils - There is no adapter
 RUN python3 -m venv /home/precice/venv && \
