@@ -287,13 +287,6 @@ test_suites:
 
   turek-hron-fsi3:
     tutorials:
-      - &turek-hron-fsi3_fluid-openfoam_solid-dealii
-        path: turek-hron-fsi3
-        case_combination:
-          - fluid-openfoam
-          - solid-dealii
-        max_time: 0.003
-        reference_result: ./turek-hron-fsi3/reference-results/fluid-openfoam_solid-dealii.tar.gz
       - &turek-hron-fsi3_fluid-nutils_solid-nutils
         path: turek-hron-fsi3
         case_combination:
@@ -302,6 +295,13 @@ test_suites:
         max_time: 0.003
         timeout: 1200
         reference_result: ./turek-hron-fsi3/reference-results/fluid-nutils_solid-nutils.tar.gz
+      - &turek-hron-fsi3_fluid-openfoam_solid-dealii
+        path: turek-hron-fsi3
+        case_combination:
+          - fluid-openfoam
+          - solid-dealii
+        max_time: 0.003
+        reference_result: ./turek-hron-fsi3/reference-results/fluid-openfoam_solid-dealii.tar.gz
 
   two-scale-heat-conduction:
     tutorials:
