@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-su2_solid-fenics.tar.gz | 2026-05-30 14:56:23 | 86eaf74d986b503b16919222ab93503a68974e87bb8477816366151ddc3a81fa |
+| fluid-su2_solid-fenics.tar.gz | 2026-05-30 15:20:27 | 58be305818bcceffab140fe23e539fc7541e389fda9de2125dd7581d88d6ef9b |
 
 ## List of arguments used to generate the files
 
