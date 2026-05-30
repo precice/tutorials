@@ -420,7 +420,7 @@ test_suites:
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam
-      - *flow-over-heated-plate_fluid-su2_solid-fenics
+      - *flow-over-heated-plate_fluid-su2_solid-openfoam
       - *flow-over-heated-plate-nearest-projection_fluid-openfoam_solid-openfoam
       - *flow-over-heated-plate-two-meshes_fluid-openfoam_solid-calculix
       - *free-flow-over-porous-media_free-flow-dumux_porous-media-dumux
