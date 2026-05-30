@@ -597,7 +597,7 @@ test_suites:
   micro-manager:
     tutorials:
       - *two-scale-heat-conduction_macro-dumux_micro-dumux # too small values to compare
-      - *two-scale-heat-conduction_macro-dumux_micro-dumux # too small values to compare
+      - *two-scale-heat-conduction_macro-nutils_micro-nutils # too small values to compare
 
   nutils-adapter: # Not a repository
     tutorials:
