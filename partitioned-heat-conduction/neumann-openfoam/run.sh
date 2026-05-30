@@ -5,20 +5,11 @@ set -e -u
 exec > >(tee --append "$LOGFILE") 2>&1
 
 # Build the heatTransfer solver, if not found.
-# Race condition: when running both participants with OpenFOAM,
-# they both need the same solver to be built.
-# The first one builds it, the second one waits.
 if ! command -v heatTransfer > /dev/null 2>&1; then
-  if [ ! -d "../solver-openfoam/Make/${WM_OPTIONS}" ]; then
-    echo "Building the heatTransfer OpenFOAM solver"
-    wmake ../solver-openfoam/
-  else
-    echo "The executable heatTransfer is not found, but the build directory ../solver-openfoam/Make/${WM_OPTIONS} was detected. A build is probably in progress, waiting 90s..."
-    sleep 90
-    if ! command -v heatTransfer > /dev/null 2>&1; then
-      exit 1
-    fi
-  fi
+  echo "Building ../solver-openfoam in a temporary build directory and installing to ${FOAM_USER_APPBIN}/heatTransfer..."
+  cp -r ../solver-openfoam ./_solver-openfoam-copy
+  wmake ./_solver-openfoam-copy
+  rm -r ./_solver-openfoam-copy
 fi
 
 blockMesh
