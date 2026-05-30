@@ -121,13 +121,13 @@ test_suites:
           - fluid-openfoam
           - solid-openfoam
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
-      - &flow-over-heated-plate_fluid-su2_solid-fenics
+      - &flow-over-heated-plate_fluid-su2_solid-openfoam
         path: flow-over-heated-plate
         case_combination:
          - fluid-su2
-         - solid-fenics
+         - solid-openfoam
         max_time: 0.1
-        reference_result: ./flow-over-heated-plate/reference-results/fluid-su2_solid-fenics.tar.gz
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-su2_solid-openfoam.tar.gz
 
   flow-over-heated-plate-nearest-projection:
     tutorials:
@@ -486,7 +486,6 @@ test_suites:
     tutorials:
       - *channel-transport-reaction_fluid-fenics_chemical-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
-      - *flow-over-heated-plate_fluid-su2_solid-fenics
       - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction-complex_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction-overlap_left-fenics_right-fenics
@@ -532,7 +531,7 @@ test_suites:
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam
       - *flow-over-heated-plate-nearest-projection_fluid-openfoam_solid-openfoam
       - *flow-over-heated-plate-two-meshes_fluid-openfoam_solid-calculix
-      - *flow-over-heated-plate_fluid-su2_solid-fenics
+      - *flow-over-heated-plate_fluid-su2_solid-openfoam
       - *heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam
       - *heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
@@ -553,7 +552,7 @@ test_suites:
 
   su2-adapter:
     tutorials:
-      - *flow-over-heated-plate_fluid-su2_solid-fenics
+      - *flow-over-heated-plate_fluid-su2_solid-openfoam
       - *perpendicular-flap_fluid-su2_solid-fenics
 
   # A test suite used for the system tests development
@@ -563,5 +562,4 @@ test_suites:
 
   temp:
     tutorials:
-      - *flow-over-heated-plate_fluid-su2_solid-fenics
-      - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
+      - *flow-over-heated-plate_fluid-su2_solid-openfoam
