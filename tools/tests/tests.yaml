@@ -173,6 +173,21 @@ test_suites:
         max_time: 0.1
         reference_result: ./multiple-perpendicular-flaps/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz
 
+  oscillator:
+    tutorials:
+      - &oscillator_mass-left-fmi_mass-right-fmi
+        path: oscillator
+        case_combination:
+          - mass-left-fmi
+          - mass-right-fmi
+        reference_result: ./oscillator/reference-results/mass-left-fmi_mass-right-fmi.tar.gz
+      - &oscillator_mass-left-python_mass-right-python
+        path: oscillator
+        case_combination:
+          - mass-left-python
+          - mass-right-python
+        reference_result: ./oscillator/reference-results/mass-left-python_mass-right-python.tar.gz
+
   partitioned-elastic-beam:
     tutorials:
       - &partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
@@ -374,6 +389,8 @@ test_suites:
       - *heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam
       - *heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
+      - *oscillator_mass-left-fmi_mass-right-fmi
+      - *oscillator_mass-left-python_mass-right-python
       - *partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
       - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam
@@ -438,6 +455,10 @@ test_suites:
       # Excluded:
       # *elastic-tube-3d_fluid-openfoam_solid-fenics # too small values to compare
 
+  fmi-runner:
+    tutorials:
+      - *oscillator_mass-left-fmi_mass-right-fmi
+
   fortran-module:
     tutorials:
       - *elastic-tube-1d_fluid-fortran-module_solid-fortran-module
@@ -491,7 +512,7 @@ test_suites:
     tutorials:
       - *perpendicular-flap_fluid-su2_solid-fenics
 
-# A test suite used for the system tests development
+  # A test suite used for the system tests development
   system-tests-dev:
     tutorials:
       - *elastic-tube-1d_fluid-cpp_solid-cpp
