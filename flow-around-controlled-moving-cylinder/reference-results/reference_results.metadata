@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-su2_solid-fenics.tar.gz | 2026-05-30 15:34:58 | f4d657d823f046455f49539f6e3e6e51ff93f1dbcc3671216ba3a097b9fdfd0f |
+| controller-fmi_fluid-openfoam_solid-python.tar.gz | 2026-05-30 15:34:58 | 8e948b0f82d011cf61a34c37f5ea7ae0f93c5fe67b0ab3ce49d49f7ba05e6fc2 |
 
 ## List of arguments used to generate the files
 
