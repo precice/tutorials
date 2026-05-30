@@ -347,6 +347,13 @@ test_suites:
 
   perpendicular-flap:
     tutorials:
+      - &perpendicular-flap_fluid-fake_solid-fake
+        path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-fake
+        max_time: 0.1
+        reference_result: ./perpendicular-flap/reference-results/fluid-fake_solid-fake.tar.gz
       - &perpendicular-flap_fluid-nutils_solid-calculix
         path: perpendicular-flap
         case_combination:
@@ -374,6 +381,13 @@ test_suites:
           - solid-fenics
         max_time: 0.1
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-fenics.tar.gz
+      - &perpendicular-flap_fluid-openfoam_solid-nutils
+        path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-nutils
+        max_time: 0.1
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-nutils.tar.gz
       - &perpendicular-flap_fluid-openfoam_solid-openfoam
         path: perpendicular-flap
         case_combination:
@@ -504,6 +518,7 @@ test_suites:
       - *partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
       - *partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam
+      - *perpendicular-flap_fluid-fake_solid-fake
       - *perpendicular-flap_fluid-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-dealii
       - *perpendicular-flap_fluid-openfoam_solid-fenics
@@ -635,3 +650,8 @@ test_suites:
   system-tests-dev:
     tutorials:
       - *elastic-tube-1d_fluid-cpp_solid-cpp
+
+  selected:
+    tutorials:
+      - *perpendicular-flap_fluid-fake_solid-fake
+      - *perpendicular-flap_fluid-openfoam_solid-nutils
