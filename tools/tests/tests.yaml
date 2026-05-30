@@ -188,6 +188,15 @@ test_suites:
           - mass-right-python
         reference_result: ./oscillator/reference-results/mass-left-python_mass-right-python.tar.gz
 
+  oscillator-overlap:
+    tutorials:
+      - &oscillator-overlap_mass-left-python_mass-right-python
+        path: oscillator-overlap
+        case_combination:
+          - mass-left-python
+          - mass-right-python
+        reference_result: ./oscillator-overlap/reference-results/mass-left-python_mass-right-python.tar.gz
+
   partitioned-elastic-beam:
     tutorials:
       - &partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
