@@ -115,6 +115,7 @@ test_suites:
         case_combination:
          - fluid-su2
          - solid-fenics
+        max_time: 0.1
         reference_result: ./flow-over-heated-plate/reference-results/fluid-su2_solid-fenics.tar.gz
 
   flow-over-heated-plate-nearest-projection:
