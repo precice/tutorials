@@ -11,6 +11,16 @@
 #   Skipped components are still mentioned in a comment.
 
 test_suites:
+  breaking-dam-2d:
+    tutorials:
+      - &breaking-dam-2d_fluid-openfoam_solid-calculix
+        path: breaking-dam-2d
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        max_time: 0.1
+        reference_result: ./breaking-dam-2d/reference-results/fluid-openfoam_solid-calculix.tar.gz
+
   channel-transport:
     tutorials:
       - &channel-transport_fluid-nutils_transport-nutils
@@ -408,6 +418,7 @@ test_suites:
 
   release_test:
     tutorials:
+      - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
       - *channel-transport-reaction_fluid-fenics_chemical-fenics
       - *elastic-tube-1d_fluid-cpp_solid-cpp
@@ -464,6 +475,7 @@ test_suites:
 
   calculix-adapter:
     tutorials:
+      - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
       - *flow-over-heated-plate-two-meshes_fluid-openfoam_solid-calculix
       - *heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam
@@ -523,6 +535,7 @@ test_suites:
 
   openfoam-adapter:
     tutorials:
+      - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
       - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
