@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| source-fenics_drain-fenics | 2026-05-30 22:41:29 | a20e747ea97e79c9d0fc17defbf7d7d236992fa08cc9798d1962a39a2d148aaf |
+| source-fenics_drain-fenics.tar.gz | 2026-05-31 00:09:19 | 5e6f023cd17fbd825c6deb2008a6c025d980dcf5a394b36a02c33f727bc14dd2 |
 
 ## List of arguments used to generate the files
 
