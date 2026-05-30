@@ -340,6 +340,15 @@ test_suites:
         max_time: 0.1
         reference_result: ./perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz
 
+  resonant-circuit:
+    tutorials:
+      - &resonant-circuit_capacitor-python_coil-python
+        path: resonant-circuit
+        case_combination:
+          - capacitor-python
+          - coil-python
+        reference_result: ./resonant-circuit/reference-results/capacitor-python_coil-python.tar.gz
+
   turek-hron-fsi3:
     tutorials:
       - &turek-hron-fsi3_fluid-nutils_solid-nutils
@@ -415,6 +424,7 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
       - *perpendicular-flap_fluid-su2_solid-fenics
+      - *resonant-circuit_capacitor-python_coil-python
       - *quickstart_openfoam_cpp
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
 
