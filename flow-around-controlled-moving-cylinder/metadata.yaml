@@ -8,7 +8,7 @@ participants:
   - Solid
 
 cases:
-  controlled-fmi:
+  controller-fmi:
     participant: Controller
     directory: ./controller-fmi
     run: ./run.sh
