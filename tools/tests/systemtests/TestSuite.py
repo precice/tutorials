@@ -93,7 +93,7 @@ class TestSuites(list):
                         timeouts_of_tutorial[tutorial].append(timeout_value)
                     else:
                         raise Exception(
-                            f"Could not find the following cases {tutorial_case['case-combination']} in the current metadata of tutorial {tutorial.name}")
+                            f"Could not find the following cases {tutorial_case['case_combination']} in the current metadata of tutorial {tutorial.name}")
 
                 testsuites.append(TestSuite(test_suite_name, case_combinations_of_tutorial,
                                             reference_results_of_tutorial, max_times_of_tutorial, max_time_windows_of_tutorial, timeouts_of_tutorial))
