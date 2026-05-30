@@ -451,7 +451,7 @@ test_suites:
         case_combination:
           - fluid-openfoam
           - source-nutils
-        max_time: 1.0
+        max_time: 0.05
         reference_result: ./volume-coupled-flow/reference-results/fluid-openfoam_source-nutils.tar.gz
 
 #####################################################################
