@@ -447,6 +447,13 @@ test_suites:
           - macro-dumux
           - micro-dumux
         reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux.tar.gz # Too small values, expected to fail the comparisons.
+      - &two-scale-heat-conduction_macro-nutils_micro-nutils
+        path: two-scale-heat-conduction
+        case_combination:
+          - macro-nutils
+          - micro-nutils
+        max_time: 0.25
+        reference_result: ./two-scale-heat-conduction/reference-results/macro-nutils_micro-nutils.tar.gz # Too small values, expected to fail the comparisons.
 
   volume-coupled-diffusion:
     tutorials:
@@ -589,10 +596,8 @@ test_suites:
 
   micro-manager:
     tutorials:
-      - *two-scale-heat-conduction_macro-dumux_micro-dumux
-
-      # Excluded:
-      # *two-scale-heat-conduction_macro-dumux_micro-dumux # too small values to compare
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux # too small values to compare
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux # too small values to compare
 
   nutils-adapter: # Not a repository
     tutorials:
@@ -606,6 +611,9 @@ test_suites:
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
+
+      # Excluded:
+      # *two-scale-heat-conduction_macro-nutils_micro-nutils # too small values to compare
 
   openfoam-adapter:
     tutorials:
@@ -650,8 +658,3 @@ test_suites:
   system-tests-dev:
     tutorials:
       - *elastic-tube-1d_fluid-cpp_solid-cpp
-
-  selected:
-    tutorials:
-      - *perpendicular-flap_fluid-fake_solid-fake
-      - *perpendicular-flap_fluid-openfoam_solid-nutils
