@@ -10,7 +10,7 @@ import precice
 min_depth_for_grass = 0.2
 
 # Use the same time step size as the Soil-Creep participant
-solver_dt = 0.2
+solver_dt = 2.0
 
 # Initialize Wolf-Sheep-Grass model
 wss = WolfSheepScenario(
