@@ -236,6 +236,16 @@ test_suites:
           - mass-right-python
         reference_result: ./oscillator-overlap/reference-results/mass-left-python_mass-right-python.tar.gz
 
+  partitioned-backwards-facing-step:
+    tutorials:
+      - &partitioned-backwards-facing-step_fluid1-openfoam_fluid2-openfoam
+        path: partitioned-backwards-facing-step
+        case_combination:
+          - fluid1-openfoam
+          - fluid2-openfoam
+        max_time: 0.1
+        reference_result: ./partitioned-backwards-facing-step/reference-results/fluid1-openfoam_fluid2-openfoam.tar.gz
+
   partitioned-elastic-beam:
     tutorials:
       - &partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
@@ -453,6 +463,7 @@ test_suites:
       - *oscillator_mass-left-fmi_mass-right-fmi
       - *oscillator_mass-left-python_mass-right-python
       - *oscillator-overlap_mass-left-python_mass-right-python
+      - *partitioned-backwards-facing-step_fluid1-openfoam_fluid2-openfoam
       - *partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
       - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam
@@ -561,6 +572,7 @@ test_suites:
       - *heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam
       - *heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
+      - *partitioned-backwards-facing-step_fluid1-openfoam_fluid2-openfoam
       - *partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam
       - *partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam
       - *partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
