@@ -24,6 +24,7 @@ profiling.db
 profiling.csv
 trace.json
 profiling.pftrace
+precice-config.xml.orig
 
 # C++
 *.o
@@ -39,6 +40,10 @@ __pycache__/
 # Rust
 Cargo.lock
 target/
+
+# Julia
+Manifest.toml
+Project.toml
 
 # OpenFOAM
 0.*/

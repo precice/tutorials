@@ -1,0 +1,34 @@
+name: Turek-Hron FSI3
+path: turek-hron-fsi3 # relative to git repo 
+url: https://precice.org/tutorials-turek-hron-fsi3.html
+
+participants:
+  - Fluid
+  - Solid
+
+cases:
+  fluid-openfoam:
+    participant: Fluid
+    directory: ./fluid-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+  
+  fluid-nutils:
+    participant: Fluid
+    directory: ./fluid-nutils
+    run: ./run.sh
+    component: nutils-adapter
+
+  solid-dealii:
+    participant: Solid
+    directory: ./solid-dealii
+    run: ./run.sh 
+    component: dealii-adapter 
+
+  solid-nutils:
+    participant: Solid
+    directory: ./solid-nutils
+    run: ./run.sh
+    component: nutils-adapter
+
+
