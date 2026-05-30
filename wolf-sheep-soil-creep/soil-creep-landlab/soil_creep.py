@@ -7,7 +7,11 @@ from landlab.components import LinearDiffuser
 import precice
 
 initial_soil_depth = 0.3
+
+# Set the soil-thickness scale for limiting creep where little soil is available
 hstar = 0.2
+
+# Set parameters for two soil creep coefficients: slow (full grass cover) and fast (partial or "eaten" grass cover)
 fast_creep = 0.1
 slow_creep = 0.001
 
@@ -33,8 +37,7 @@ initial_elev[:] = elev
 # Also remember the elevation of the prior time step, so we can difference
 prior_elev = np.zeros(rmg.number_of_nodes)
 
-# Create a field for the creep coefficient, and set parameters for two
-# rates: slow (full grass cover) and fast (partial or "eaten" grass cover)
+# Create a field for the creep coefficient
 creep_coef = rmg.add_zeros("creep_coefficient", at="node")
 
 # Create a soil-thickness field
@@ -70,11 +73,14 @@ while participant.is_coupling_ongoing():
     creep_coef[gm.flatten() == 1] = fast_creep
     creep_coef[gm.flatten() == 2] = slow_creep
 
-    # Adjust the creep coefficient to account for soil depth
+    # Limit the creep coefficient according to the soil-thickness field, so absent soil cannot move.
     creep_coef *= 1.0 - np.exp(-soil / hstar)
 
-    # Run the soil-creep model
+    # Remember the current elevation before LinearDiffuser updates the grid's
+    # topographic__elevation field in place.
     prior_elev[:] = elev
+
+    # Run the soil-creep model
     diffuser.run_one_step(dt)
 
     # Update the soil cover
