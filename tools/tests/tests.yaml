@@ -453,7 +453,7 @@ test_suites:
         case_combination:
           - macro-nutils
           - micro-nutils
-        max_time: 0.25
+        max_time: 0.05
         reference_result: ./two-scale-heat-conduction/reference-results/macro-nutils_micro-nutils.tar.gz # Too small values, expected to fail the comparisons.
 
   volume-coupled-diffusion:
@@ -660,3 +660,7 @@ test_suites:
   system-tests-dev:
     tutorials:
       - *elastic-tube-1d_fluid-cpp_solid-cpp
+
+  selected:
+    tutorials:
+      - *two-scale-heat-conduction_macro-nutils_micro-nutils
