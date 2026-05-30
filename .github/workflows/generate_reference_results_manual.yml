@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       suites:
-        description: 'Test suites to generate reference results for (comma-separated, see tests.yaml)'
+        description: 'Test suites to execute (comma-separated, see tests.yaml)'
         default: 'release_test'
         required: true
         type: string
