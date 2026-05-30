@@ -442,7 +442,17 @@ test_suites:
           - source-fenics
           - drain-fenics
         max_time: 1.0
-        reference_result: ./volume-coupled-diffusion/reference-results/source-fenics_drain-fenics
+        reference_result: ./volume-coupled-diffusion/reference-results/source-fenics_drain-fenics.tar.gz
+
+  volume-coupled-flow:
+    tutorials:
+      - &volume-coupled-flow_fluid-openfoam_source-nutils
+        path: volume-coupled-flow
+        case_combination:
+          - fluid-openfoam
+          - source-nutils
+        max_time: 1.0
+        reference_result: ./volume-coupled-flow/reference-results/fluid-openfoam_source-nutils.tar.gz
 
 #####################################################################
 ## Test suites referring to the test suites defined above
@@ -493,6 +503,7 @@ test_suites:
       - *resonant-circuit_capacitor-python_coil-python
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
       - *volume-coupled-diffusion_source-fenics_drain-fenics
+      - *volume-coupled-flow_fluid-openfoam_source-nutils
 
   # These test suites take longer to run. They are available, but not regularly executed.
   extra:
@@ -567,6 +578,7 @@ test_suites:
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
       - *perpendicular-flap_fluid-nutils_solid-calculix
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
+      - *volume-coupled-flow_fluid-openfoam_source-nutils
 
   openfoam-adapter:
     tutorials:
@@ -596,6 +608,7 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
       - *quickstart_openfoam_cpp
+      - *volume-coupled-flow_fluid-openfoam_source-nutils
 
       # Excluded:
       # *elastic-tube-3d_fluid-openfoam_solid-fenics # too small values to compare
