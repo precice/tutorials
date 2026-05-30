@@ -6,14 +6,14 @@ on:
         description: 'Use the systemtests + tutorial metadata + reference_version from this ref'
         required: true
         type: string
-      commit_msg:
-        description: 'Commit msg for commit that adds the reference results'
-        default: "Add reference results"
-        type: string
       suites:
         description: 'Comma-separated test suites to generate reference results for (leave empty for all)'
         default: ''
         required: false
+        type: string
+      commit_msg:
+        description: 'Commit msg for commit that adds the reference results'
+        default: "Add reference results"
         type: string
       clean_docker:
         description: 'Clean Docker before running'
