@@ -17,7 +17,8 @@ wss = WolfSheepScenario(
     initial_sheep=20,
     initial_wolves=10,
     grass=True,
-    grass_regrowth_time=15  # give grass a fighting chance...
+    grass_regrowth_time=15,  # give grass a fighting chance...
+    rng=42,  # fixed seed for reproducible results
 )
 ws = WolfSheep(wss)
 
