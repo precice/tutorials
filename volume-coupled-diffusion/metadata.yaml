@@ -1,0 +1,20 @@
+name: Volume coupled diffusion
+path: volume-coupled-diffusion # relative to git repo 
+url: https://precice.org/tutorials-volume-coupled-diffusion.html
+
+participants:
+  - Source
+  - Drain
+
+cases:
+  source-fenics:
+    participant: Source
+    directory: ./source-fenics
+    run: ./run.sh
+    component: fenics-adapter
+
+  drain-fenics:
+    participant: Drain
+    directory: ./drain-fenics
+    run: ./run.sh
+    component: fenics-adapter

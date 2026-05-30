@@ -389,6 +389,15 @@ test_suites:
         max_time: 0.1
         reference_result: ./perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz
 
+  quickstart:
+    tutorials:
+      - &quickstart_openfoam_cpp
+        path: quickstart
+        case_combination:
+          - fluid-openfoam
+          - solid-cpp
+        reference_result: ./quickstart/reference-results/fluid-openfoam_solid-cpp.tar.gz
+
   resonant-circuit:
     tutorials:
       - &resonant-circuit_capacitor-python_coil-python
@@ -425,14 +434,15 @@ test_suites:
           - micro-dumux
         reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux.tar.gz # Too small values, expected to fail the comparisons.
 
-  quickstart:
+  volume-coupled-diffusion:
     tutorials:
-      - &quickstart_openfoam_cpp
-        path: quickstart
+      - &volume-coupled-diffusion_source-fenics_drain-fenics
+        path: volume-coupled-diffusion
         case_combination:
-          - fluid-openfoam
-          - solid-cpp
-        reference_result: ./quickstart/reference-results/fluid-openfoam_solid-cpp.tar.gz
+          - source-fenics
+          - drain-fenics
+        max_time: 1.0
+        reference_result: ./volume-coupled-diffusion/reference-results/source-fenics_drain-fenics
 
 #####################################################################
 ## Test suites referring to the test suites defined above
@@ -479,9 +489,10 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
       - *perpendicular-flap_fluid-su2_solid-fenics
-      - *resonant-circuit_capacitor-python_coil-python
       - *quickstart_openfoam_cpp
+      - *resonant-circuit_capacitor-python_coil-python
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
+      - *volume-coupled-diffusion_source-fenics_drain-fenics
 
   # These test suites take longer to run. They are available, but not regularly executed.
   extra:
@@ -526,6 +537,7 @@ test_suites:
       - *partitioned-heat-conduction-overlap_left-fenics_right-fenics
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-su2_solid-fenics
+      - *volume-coupled-diffusion_source-fenics_drain-fenics
 
       # Excluded:
       # *elastic-tube-3d_fluid-openfoam_solid-fenics # too small values to compare
