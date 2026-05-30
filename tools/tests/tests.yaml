@@ -563,4 +563,5 @@ test_suites:
 
   temp:
     tutorials:
+      - *flow-over-heated-plate_fluid-su2_solid-fenics
       - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
