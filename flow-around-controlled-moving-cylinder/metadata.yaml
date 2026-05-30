@@ -1,0 +1,28 @@
+name: Flow around a controlled moving cylinder
+path: flow-around-controlled-moving-cylinder
+url: https://precice.org/tutorials-flow-around-controlled-moving-cylinder.html
+
+participants:
+  - Controller
+  - Fluid
+  - Solid
+
+cases:
+  controlled-fmi:
+    participant: Controller
+    directory: ./controller-fmi
+    run: ./run.sh
+    component: python-bindings
+  
+  fluid-openfoam:
+    participant: Fluid
+    directory: ./fluid-openfoam
+    run: ./run.sh
+    component: fluid-openfoam
+  
+  solid-python:
+    participant: Solid
+    directory: ./solid-python
+    run: ./run.sh
+    component: python-bindings
+  
