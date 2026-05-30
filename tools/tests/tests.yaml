@@ -243,7 +243,7 @@ test_suites:
         case_combination:
           - fluid1-openfoam
           - fluid2-openfoam
-        max_time: 1.0
+        max_time: 0.5
         reference_result: ./partitioned-backwards-facing-step/reference-results/fluid1-openfoam_fluid2-openfoam.tar.gz
 
   partitioned-elastic-beam:
