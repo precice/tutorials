@@ -90,6 +90,7 @@ jobs:
         git commit -m "${{inputs.commit_msg}}"
         git push
     - name: Archive main log files
+      if: ${{ always() }}
       uses: actions/upload-artifact@v7
       with:
         name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference_logs
