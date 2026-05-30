@@ -33,7 +33,7 @@ jobs:
         echo "- Test suites: \`${{ inputs.suites || 'all (no filter)' }}\`"
         echo "- Git branch to commit to: \`${{ inputs.from_ref }}\`"
         echo "- Commit message:  \`${{ inputs.commit_msg }}\`"
-        echo "- Run \`docker-system-prune\` before running tests: ${{ inputs.clean_docker }}"
+        echo "- Run \`docker-system-prune\` before running tests: \`${{ inputs.clean_docker }}\`"
         echo "- Log level: \`${{ inputs.log_level }}\`"
         echo "- Running \`generate_reference_results.py --suite ${{inputs.suites}} --log-level ${{inputs.log_level}}\`"
         } >> "$GITHUB_STEP_SUMMARY"
