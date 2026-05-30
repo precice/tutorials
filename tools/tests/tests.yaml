@@ -334,6 +334,7 @@ test_suites:
           - fluid3d-right-openfoam
         max_time: 0.05
         reference_result: ./partitioned-pipe-multiscale/reference-results/fluid1d-left-nutils_fluid3d-right-openfoam.tar.gz
+      # More case combinations are possible, but they requite calling set-case.sh
 
   partitioned-pipe-two-phase:
     tutorials:
@@ -484,6 +485,7 @@ test_suites:
           - fluid3d-right-openfoam
         max_time: 0.05
         reference_result: ./water-hammer/reference-results/fluid1d-left-nutils_fluid3d-right-openfoam.tar.gz
+      # More case combinations are possible, but they requite calling set-case.sh
 
 #####################################################################
 ## Test suites referring to the test suites defined above
