@@ -19,6 +19,12 @@ cases:
     run: ./run.sh
     component: bare
 
+  fluid-fortran-module:
+    participant: Fluid
+    directory: ./fluid-fortran-module
+    run: ./run.sh develop
+    component: bare
+
   fluid-python:
     participant: Fluid
     directory: ./fluid-python
@@ -41,6 +47,12 @@ cases:
     participant: Solid
     directory: ./solid-fortran
     run: ./run.sh
+    component: bare
+
+  solid-fortran-module:
+    participant: Solid
+    directory: ./solid-fortran-module
+    run: ./run.sh develop
     component: bare
 
   solid-python:

@@ -59,6 +59,12 @@ test_suites:
           - fluid-fortran
           - solid-fortran
         reference_result: ./elastic-tube-1d/reference-results/fluid-fortran_solid-fortran.tar.gz
+      - &elastic-tube-1d_fluid-fortran-module_solid-fortran-module
+        path: elastic-tube-1d
+        case_combination:
+          - fluid-fortran-module
+          - solid-fortran-module
+        reference_result: ./elastic-tube-1d/reference-results/fluid-fortran-module_solid-fortran-module.tar.gz
       - &elastic-tube-1d_fluid-python_solid-python
         path: elastic-tube-1d
         case_combination:
@@ -337,6 +343,7 @@ test_suites:
       - *elastic-tube-1d_fluid-cpp_solid-cpp
       - *elastic-tube-1d_fluid-cpp_solid-python
       - *elastic-tube-1d_fluid-fortran_solid-fortran
+      - *elastic-tube-1d_fluid-fortran-module_solid-fortran-module
       - *elastic-tube-1d_fluid-python_solid-python
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
@@ -408,6 +415,10 @@ test_suites:
 
       # Excluded:
       # *two-scale-heat-conduction_macro-dumux_micro-dumux # too small values to compare
+
+  fortran-module:
+    tutorials:
+      - *elastic-tube-1d_fluid-fortran-module_solid-fortran-module
 
   micro-manager:
     tutorials:
