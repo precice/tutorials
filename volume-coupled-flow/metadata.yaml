@@ -16,5 +16,5 @@ cases:
   source-nutils:
     participant: Source
     directory: ./source-nutils
-    run: ./run.sh
+    run: ./run.sh && inotifywait -e create,attrib -qq ../fluid-participant-finished.log
     component: nutils-adapter
