@@ -97,6 +97,12 @@ test_suites:
          - fluid-openfoam
          - solid-fenics
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz
+      - &flow-over-heated-plate_fluid-su2_solid-fenics
+        path: flow-over-heated-plate
+        case_combination:
+         - fluid-su2
+         - solid-fenics
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-su2_solid-fenics.tar.gz
       - &flow-over-heated-plate_fluid-openfoam_solid-nutils
         path: flow-over-heated-plate
         case_combination:
@@ -401,6 +407,7 @@ test_suites:
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam
+      - *flow-over-heated-plate_fluid-su2_solid-fenics
       - *flow-over-heated-plate-nearest-projection_fluid-openfoam_solid-openfoam
       - *flow-over-heated-plate-two-meshes_fluid-openfoam_solid-calculix
       - *free-flow-over-porous-media_free-flow-dumux_porous-media-dumux
@@ -409,6 +416,7 @@ test_suites:
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
       - *oscillator_mass-left-fmi_mass-right-fmi
       - *oscillator_mass-left-python_mass-right-python
+      - *oscillator-overlap_mass-left-python_mass-right-python
       - *partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
       - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam
@@ -465,6 +473,7 @@ test_suites:
     tutorials:
       - *channel-transport-reaction_fluid-fenics_chemical-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
+      - *flow-over-heated-plate_fluid-su2_solid-fenics
       - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction-complex_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction-overlap_left-fenics_right-fenics
@@ -509,6 +518,7 @@ test_suites:
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam
       - *flow-over-heated-plate-nearest-projection_fluid-openfoam_solid-openfoam
       - *flow-over-heated-plate-two-meshes_fluid-openfoam_solid-calculix
+      - *flow-over-heated-plate_fluid-su2_solid-fenics
       - *heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam
       - *heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
       - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
@@ -535,3 +545,7 @@ test_suites:
   system-tests-dev:
     tutorials:
       - *elastic-tube-1d_fluid-cpp_solid-cpp
+
+  temp:
+    tutorials:
+      - *flow-over-heated-plate_fluid-su2_solid-fenics
