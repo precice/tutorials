@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
     inputs:
       suites:
-        description: 'Comma-separated test suites to generate reference results for'
-        default: ''
-        required: false
+        description: 'Comma-separated test suites to generate reference results for (see tests.yaml)'
+        default: 'release_test'
+        required: true
         type: string
       commit_msg:
         description: 'Commit message'
@@ -13,7 +13,7 @@ on:
         type: string
       from_ref:
         description: 'Git ref for tools/tests/'
-        required: true
+        default: 'develop'
         type: string
       clean_docker:
         description: 'Run docker-system-prune before running'
@@ -25,7 +25,6 @@ on:
       log_level:
         description: 'Logging verbosity of systemtests.py'
         default: 'INFO'
-        required: true
         type: choice
         options:
             - 'INFO'

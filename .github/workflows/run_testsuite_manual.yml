@@ -3,17 +3,17 @@ on:
   workflow_dispatch:
     inputs:
       suites:
-        description: 'Comma-seperated test suites to execute'
+        description: 'Test suites to execute (comma-separated)'
         required: true
+        default: 'release_test'
         type: string
       build_args:
         description: 'Build arguments (override reference_versions.yaml)'
-        required: false
+        default: 'PRECICE_REF:v3.4.1,TUTORIALS_REF:develop'
         type: string
       system_tests_branch:
         description: 'Git ref for tools/tests/'
         default: 'develop'
-        required: true
         type: string
       upload_artifacts:
         description: 'Upload the complete case files also on success (always true for failure)'
@@ -25,7 +25,6 @@ on:
       log_level:
         description: 'Logging verbosity of systemtests.py'
         default: 'INFO'
-        required: true
         type: choice
         options:
             - 'INFO'

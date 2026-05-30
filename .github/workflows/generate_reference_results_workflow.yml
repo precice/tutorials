@@ -2,25 +2,24 @@ name: Generate reference results workflow
 on:
   workflow_call:
     inputs:
-      from_ref:
-        description: 'Use the systemtests + tutorial metadata + reference_version from this ref'
+      suites:
+        description: 'Comma-separated test suites to generate reference results for'
         required: true
         type: string
       commit_msg:
-        description: 'Commit msg for commit that adds the reference results'
+        description: 'Commit message'
         default: "Add reference results"
         type: string
-      suites:
-        description: 'Comma-separated test suites to generate reference results for. If empty, all suites are generated.'
-        default: ''
-        required: false
+      from_ref:
+        description: 'Git ref for tools/tests/'
+        default: 'develop'
         type: string
       clean_docker:
-        description: 'Clean Docker before running'
+        description: 'Run docker-system-prune before running'
         default: 'FALSE'
         type: string
       log_level:
-        description: 'Logging verbosity level used for the systemtests'
+        description: 'Logging verbosity of systemtests.py'
         required: true
         type: string
 jobs:
