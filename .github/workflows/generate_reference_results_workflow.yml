@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       suites:
-        description: 'Comma-separated test suites to generate reference results for'
+        description: 'Test suites to generate reference results for (comma-separated, see tests.yaml)'
         required: true
         type: string
       commit_msg:
