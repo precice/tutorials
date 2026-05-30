@@ -7,13 +7,13 @@ on:
         default: 'release_test'
         required: true
         type: string
+      from_ref:
+        description: 'Git branch to use and commit to'
+        required: true
+        type: string
       commit_msg:
         description: 'Commit message'
         default: "Add reference results"
-        type: string
-      from_ref:
-        description: 'Git ref for tools/tests/'
-        default: 'develop'
         type: string
       clean_docker:
         description: 'Run docker-system-prune before running'
