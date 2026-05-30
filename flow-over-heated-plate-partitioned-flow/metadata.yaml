@@ -24,7 +24,7 @@ cases:
     participant: Solid
     directory: ./solid-openfoam
     run: ./run.sh
-    component: calculix-adapter 
+    component: openfoam-adapter 
 
 
 
