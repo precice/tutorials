@@ -11,7 +11,8 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-nutils_solid-calculix.tar.gz | 2026-05-29 11:36:41 | 19316047524c56e1675cae8e80014bc6f845f074ce8b225b880fa7a7e140e567 |
+| fluid-openfoam_solid-nutils.tar.gz | 2026-05-31 00:45:02 | d8b622b7fa5a6b56dcdbfa09f077d78a38ae565fa2e4e9d286fc08d1de985a1e |
+| fluid-fake_solid-fake.tar.gz | 2026-05-31 00:45:02 | 292e859f538422389088f694de66988a5550d1700fe5881e4a8f0c2e349f7647 |
 
 ## List of arguments used to generate the files
 
@@ -32,7 +33,7 @@ We also include some information on the machine used to generate them
 | PRECICE_REF | v3.4.1 |
 | PYTHON_BINDINGS_REF | v3.4.0 |
 | SU2_ADAPTER_REF | 5abe79b |
-| TUTORIALS_REF | 0fc4468 |
+| TUTORIALS_REF | more-tests |
 | PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
