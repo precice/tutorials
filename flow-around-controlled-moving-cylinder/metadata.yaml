@@ -18,7 +18,7 @@ cases:
     participant: Fluid
     directory: ./fluid-openfoam
     run: ./run.sh
-    component: fluid-openfoam
+    component: openfoam-adapter
   
   solid-python:
     participant: Solid
