@@ -16,7 +16,7 @@ on:
         default: "Add reference results"
         type: string
       clean_docker:
-        description: 'Run docker-system-prune before running'
+        description: 'Run docker-system-prune before running tests'
         default: 'FALSE'
         type: choice
         options:
