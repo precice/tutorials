@@ -559,7 +559,3 @@ test_suites:
   system-tests-dev:
     tutorials:
       - *elastic-tube-1d_fluid-cpp_solid-cpp
-
-  temp:
-    tutorials:
-      - *flow-over-heated-plate_fluid-su2_solid-openfoam
