@@ -1,0 +1,45 @@
+name: Resonant circuit
+path: resonant-circuit
+url: https://precice.org/tutorials-resonant-circuit.html
+
+participants:
+  - Capacitor
+  - Coil
+
+cases:
+  # capacitor-julia:
+  #   participant: Capacitor
+  #   directory: ./capacitor-julia
+  #   run: ./run.sh
+  #   component: julia-bindings
+  
+  # capacitor-matlab:
+  #   participant: Capacitor
+  #   directory: ./capacitor-matlab
+  #   run: ./run.sh
+  #   component: matlab-bindings
+  
+  capacitor-python:
+    participant: Capacitor
+    directory: ./capacitor-python
+    run: ./run.sh
+    component: python-bindings
+  
+  # coil-julia:
+  #   participant: Coil
+  #   directory: ./coil-julia
+  #   run: ./run.sh
+  #   component: julia-bindings
+  
+  # coil-matlab:
+  #   participant: Coil
+  #   directory: ./coil-matlab
+  #   run: ./run.sh
+  #   component: matlab-bindings
+  
+  coil-python:
+    participant: Coil
+    directory: ./coil-python
+    run: ./run.sh
+    component: python-bindings
+  

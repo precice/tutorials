@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       suites:
-        description: 'Comma seperated testsuites to execute'
+        description: 'Test suites to execute (comma-separated)'
         required: true
         type: string
       build_args:

@@ -730,6 +730,7 @@ class Systemtest:
         self.__prepare_for_run(run_directory)
         std_out: List[str] = []
         std_err: List[str] = []
+        self._cleanup_docker_networks()
         docker_build_result = self._build_docker()
         std_out.extend(docker_build_result.stdout_data)
         std_err.extend(docker_build_result.stderr_data)
@@ -760,6 +761,7 @@ class Systemtest:
                 solver_time=docker_run_result.runtime,
                 fieldcompare_time=0)
 
+        self._cleanup_docker_networks()
         self.__write_logs(std_out, std_err)
         return SystemtestResult(
             True,

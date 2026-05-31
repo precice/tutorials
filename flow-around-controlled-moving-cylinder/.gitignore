@@ -1,3 +1,4 @@
 controller-fmi/PIDcontroller.fmu
 controller-fmi/output/
-fluid-openfoam/0/ # Since we start from 0.orig
+# The fluid-openfoam case uses a 0.orig
+fluid-openfoam/0/

@@ -7,14 +7,13 @@ on:
   workflow_dispatch:
     inputs:
       suites:
-        description: 'Comma-separated test suites to run'
+        description: 'Test suites to execute (comma-separated)'
         default: 'release_test'
-        required: false
+        required: true
         type: string
       system_tests_branch:
         description: 'Branch to take the system tests from'
         default: 'develop'
-        required: true
         type: string
 
 jobs:
