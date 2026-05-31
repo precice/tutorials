@@ -10,15 +10,33 @@ cases:
   fluid-openfoam:
     participant: Fluid
     directory: ./fluid-openfoam
-    run: ./run.sh 
+    run: ./run.sh
     component: openfoam-adapter
   
+  fluid-su2:
+    participant: Fluid
+    directory: ./fluid-su2
+    run: ./run.sh
+    component: su2-adapter
+
+  # solid-dunefem:
+  #   partitipant: Solid
+  #   directory: ./solid-dunefem
+  #   run: ./run.sh
+  #   component: ?
+
   solid-fenics:
     participant: Solid
     directory: ./solid-fenics
     run: ./run.sh 
     component: fenics-adapter 
-  
+
+  # solid-fenicsx:
+  #   participant: Solid
+  #   directory: ./solid-fenicsx
+  #   run: ./run.sh
+  #   component: fenicsx-adapter
+
   solid-nutils:
     participant: Solid
     directory: ./solid-nutils
@@ -28,7 +46,7 @@ cases:
   solid-openfoam:
     participant: Solid
     directory: ./solid-openfoam
-    run: ./run.sh 
+    run: ./run.sh
     component: openfoam-adapter 
 
 

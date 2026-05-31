@@ -1,0 +1,20 @@
+name: Partitioned pipe two phase
+path: partitioned-pipe-two-phase # relative to git repo 
+url: https://precice.org/tutorials-partitioned-pipe-two-phase.html
+
+participants:
+  - Fluid1
+  - Fluid2
+
+cases:
+  fluid1-openfoam:
+    participant: Fluid1
+    directory: ./fluid1-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+
+  fluid2-openfoam:
+    participant: Fluid2
+    directory: ./fluid2-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
