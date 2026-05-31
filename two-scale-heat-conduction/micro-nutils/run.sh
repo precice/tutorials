@@ -8,7 +8,9 @@ usage() { echo "Usage: cmd [-s] [-p n]" 1>&2; exit 1; }
 
 if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
 then
-    python3 -m venv .venv
+    if [ ! -d .venv ]; then
+        python3 -m venv .venv
+    fi
     . .venv/bin/activate
     pip install -r requirements.txt && pip freeze > pip-installed-packages.log
 fi
