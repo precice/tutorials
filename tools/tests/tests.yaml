@@ -487,6 +487,15 @@ test_suites:
         reference_result: ./water-hammer/reference-results/fluid1d-left-nutils_fluid3d-right-openfoam.tar.gz
       # More case combinations are possible, but they requite calling set-case.sh
 
+  wolf-sheep-soil-creep:
+    tutorials:
+      - &wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
+        path: wolf-sheep-soil-creep
+        case_combination:
+          - creep-landlab
+          - wolf-sheep-grass-mesa
+        reference_result: ./wolf-sheep-soil-creep/reference-results/soil-creep-landlab_wolf-sheep-grass-mesa.tar.gz
+
 #####################################################################
 ## Test suites referring to the test suites defined above
 
@@ -539,6 +548,7 @@ test_suites:
       - *volume-coupled-diffusion_source-fenics_drain-fenics
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
 
   # These test suites take longer to run. They are available, but not regularly executed.
   extra:
