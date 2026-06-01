@@ -56,11 +56,11 @@ def main():
 
     def _group_start(title: str) -> None:
         if gh_actions:
-            print(f"::group::{title}")
+            print(f"::group::{title}", flush=True)
 
     def _group_end() -> None:
         if gh_actions:
-            print("::endgroup::")
+            print("::endgroup::", flush=True)
 
     systemtests_to_run = []
     test_suites_to_execute = []
@@ -119,12 +119,11 @@ def main():
     results = []
     for number, systemtest in enumerate(systemtests_to_run, start=1):
         print(flush=True)
-        test_header = f"[{number}/{total}] {systemtest}"
-        _group_start(test_header)
-        if not gh_actions:
-            print("=" * 80, flush=True)
+        started_header = f"[{number}/{total}] Started {systemtest}"
+        _group_start(started_header)
         try:
-            logging.info(f"[{number}/{total}] Started {systemtest}")
+            if not gh_actions:
+                logging.info(started_header)
             t = time.perf_counter()
             result = systemtest.run(run_directory)
             elapsed_time = time.perf_counter() - t
@@ -133,16 +132,14 @@ def main():
                 status_label = _style("✅ PASS", 32)
             else:
                 status_label = _style("❌ FAIL", 31)
-
-            logging.info(
-                f"{status_label} Finished {systemtest} in {elapsed_time:.1f}s"
-            )
-            results.append(result)
         finally:
             _group_end()
-            if not gh_actions:
-                print("=" * 80, flush=True)
 
+        print(f"{status_label} Finished {systemtest} in {elapsed_time:.1f}s", flush=True)
+        print(f"[{number}/{total}] {systemtest}", flush=True)
+        results.append(result)
+
+    print(flush=True)
     system_test_success = True
     for result in results:
         if not result.success:

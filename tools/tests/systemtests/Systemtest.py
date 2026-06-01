@@ -117,6 +117,10 @@ class SystemtestResult:
     fieldcompare_time: float  # in seconds
 
 
+def _success_status_symbol(success: bool) -> str:
+    return "✅" if success else "❌"
+
+
 def display_systemtestresults_as_table(results: List[SystemtestResult]):
     """
     Prints the result in a nice tabluated way to get an easy overview
@@ -129,7 +133,7 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
     max_name_length = _get_length_of_name(results)
 
     header = f"| {'systemtest':<{max_name_length + 2}} "\
-        f"| {'success':^7} "\
+        f"| {'status':^7} "\
         f"| {'building time [s]':^17} "\
         f"| {'solver time [s]':^15} "\
         f"| {'fieldcompare time [s]':^21} |"
@@ -148,7 +152,7 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
 
     for result in results:
         row = f"| {str(result.systemtest):<{max_name_length + 2}} "\
-            f"| {result.success:^7} "\
+            f"| {_success_status_symbol(result.success):^7} "\
             f"| {result.build_time:^17.1f} "\
             f"| {result.solver_time:^15.1f} "\
             f"| {result.fieldcompare_time:^21.1f} |"
