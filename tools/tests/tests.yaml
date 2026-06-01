@@ -494,6 +494,7 @@ test_suites:
         case_combination:
           - soil-creep-landlab
           - wolf-sheep-grass-mesa
+        max_time: 20
         reference_result: ./wolf-sheep-soil-creep/reference-results/soil-creep-landlab_wolf-sheep-grass-mesa.tar.gz
 
 #####################################################################
