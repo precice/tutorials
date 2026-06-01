@@ -40,14 +40,13 @@ def main():
     # Parse the command-line arguments
     args = parser.parse_args()
 
-    # Configure logging: no "INFO:" prefix on routine messages (#790)
+    # Configure logging
     handler = logging.StreamHandler()
     handler.setFormatter(_ConsoleLogFormatter())
     logging.basicConfig(level=args.log_level, handlers=[handler])
 
-    print(f"Using log-level: {args.log_level}")
-
     gh_actions = os.environ.get("GITHUB_ACTIONS", "").lower() == "true"
+    # Skip ANSI colors when TERM is unset or "dumb" (minimal terminal, common in CI).
     ansi_colors = sys.stdout.isatty() and os.environ.get("TERM", "") not in {"", "dumb"}
 
     def _style(text: str, color_code: int | None) -> str:
@@ -56,7 +55,6 @@ def main():
         return f"\x1b[{color_code}m{text}\x1b[0m"
 
     def _group_start(title: str) -> None:
-        # Only apply folding markers on GitHub actions.
         if gh_actions:
             print(f"::group::{title}")
 
@@ -65,6 +63,7 @@ def main():
             print("::endgroup::")
 
     systemtests_to_run = []
+    test_suites_to_execute = []
     available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
 
     build_args = SystemtestArguments.from_args(args.build_args)
@@ -73,7 +72,6 @@ def main():
         test_suites_requested = args.suites.split(',')
         available_testsuites = TestSuites.from_yaml(
             PRECICE_TESTS_DIR / "tests.yaml", available_tutorials)
-        test_suites_to_execute = []
         for test_suite_requested in test_suites_requested:
             test_suite_found = available_testsuites.get_by_name(
                 test_suite_requested)
@@ -103,33 +101,48 @@ def main():
         raise RuntimeError("Did not find any Systemtests to execute.")
 
     total = len(systemtests_to_run)
-    logging.info(
-        f"About to run {total} systemtest(s) in the directory {run_directory}:\n {systemtests_to_run}")
+
+    if test_suites_to_execute:
+        print("Selected test suite(s):", flush=True)
+        print(flush=True)
+        for test_suite in test_suites_to_execute:
+            print(f"- {test_suite.name}", flush=True)
+        print(flush=True)
+
+    print(f"About to run {total} test(s) in the directory {run_directory}:", flush=True)
+    print(flush=True)
+    for number, systemtest in enumerate(systemtests_to_run, start=1):
+        print(f"{number}. {systemtest}", flush=True)
+    print(flush=True)
+    print(f"Using log-level: {args.log_level}", flush=True)
 
     results = []
     for number, systemtest in enumerate(systemtests_to_run, start=1):
-        print()
+        print(flush=True)
         test_header = f"[{number}/{total}] {systemtest}"
         _group_start(test_header)
-        print("=" * 80)
-        logging.info(f"[{number}/{total}] Started {systemtest}")
-        t = time.perf_counter()
-        result = systemtest.run(run_directory)
-        elapsed_time = time.perf_counter() - t
+        if not gh_actions:
+            print("=" * 80, flush=True)
+        try:
+            logging.info(f"[{number}/{total}] Started {systemtest}")
+            t = time.perf_counter()
+            result = systemtest.run(run_directory)
+            elapsed_time = time.perf_counter() - t
 
-        if result.success:
-            status_label = _style("✅ PASS", 32)
-        else:
-            status_label = _style("❌ FAIL", 31)
+            if result.success:
+                status_label = _style("✅ PASS", 32)
+            else:
+                status_label = _style("❌ FAIL", 31)
 
-        logging.info(
-            f"[{number}/{total}] Finished {systemtest} in {elapsed_time:.1f}s [{status_label}]"
-        )
-        _group_end()
-        print("=" * 80)
-        results.append(result)
+            logging.info(
+                f"{status_label} Finished {systemtest} in {elapsed_time:.1f}s"
+            )
+            results.append(result)
+        finally:
+            _group_end()
+            if not gh_actions:
+                print("=" * 80, flush=True)
 
-    print()
     system_test_success = True
     for result in results:
         if not result.success:

@@ -27,15 +27,15 @@ DIFF_RESULTS_DIR = "diff-results"
 
 COMBINED_STDOUT_LOG = "system-tests-stdout.log"
 COMBINED_STDERR_LOG = "system-tests-stderr.log"
-PHASE_LOG_FILES = {
+STAGE_LOG_FILES = {
     "build": "system-tests-build.log",
-    "solver": "system-tests-solver.log",
-    "fieldcompare": "system-tests-fieldcompare.log",
+    "run": "system-tests-run.log",
+    "compare": "system-tests-compare.log",
 }
 
 
 class _SystemtestLogSink:
-    """Writes subprocess output incrementally to combined and phase log files."""
+    """Writes subprocess output incrementally to combined and stage log files."""
 
     def __init__(self, system_test_dir: Path):
         self._system_test_dir = system_test_dir
@@ -45,24 +45,24 @@ class _SystemtestLogSink:
         self._stdout_path.write_text("", encoding="utf-8")
         self._stderr_path.write_text("", encoding="utf-8")
 
-    def begin_phase(self, phase: str) -> None:
-        phase_path = self._system_test_dir / PHASE_LOG_FILES[phase]
-        phase_path.write_text(f"=== {phase} ===\n", encoding="utf-8")
+    def begin_stage(self, stage: str) -> None:
+        stage_path = self._system_test_dir / STAGE_LOG_FILES[stage]
+        stage_path.write_text(f"=== {stage} ===\n", encoding="utf-8")
 
-    def append_stdout(self, line: str, phase: str) -> None:
+    def append_stdout(self, line: str, stage: str) -> None:
         with self._lock:
             with self._stdout_path.open("a", encoding="utf-8") as log_file:
                 log_file.write(line + "\n")
-            phase_path = self._system_test_dir / PHASE_LOG_FILES[phase]
-            with phase_path.open("a", encoding="utf-8") as log_file:
+            stage_path = self._system_test_dir / STAGE_LOG_FILES[stage]
+            with stage_path.open("a", encoding="utf-8") as log_file:
                 log_file.write(line + "\n")
 
-    def append_stderr(self, line: str, phase: str) -> None:
+    def append_stderr(self, line: str, stage: str) -> None:
         with self._lock:
             with self._stderr_path.open("a", encoding="utf-8") as log_file:
                 log_file.write(line + "\n")
-            phase_path = self._system_test_dir / PHASE_LOG_FILES[phase]
-            with phase_path.open("a", encoding="utf-8") as log_file:
+            stage_path = self._system_test_dir / STAGE_LOG_FILES[stage]
+            with stage_path.open("a", encoding="utf-8") as log_file:
                 log_file.write(f"[stderr] {line}\n")
 
 
@@ -121,6 +121,8 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
     """
     Prints the result in a nice tabluated way to get an easy overview
     """
+    print()
+
     def _get_length_of_name(results: List[SystemtestResult]) -> int:
         return max(len(str(result.systemtest)) for result in results)
 
@@ -160,7 +162,7 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
             print("\n\n", file=f)
             print(
-                "In case a test fails, download the archive from the bottom of this page and inspect the combined logs (`system-tests-stdout.log`, `system-tests-stderr.log`) and the per-stage logs (`system-tests-build.log`, `system-tests-solver.log`, `system-tests-fieldcompare.log`). The phase runtimes might already give useful hints.",
+                "In case a test fails, download the archive from the bottom of this page and inspect the combined logs (`system-tests-stdout.log`, `system-tests-stderr.log`) and the per-stage logs (`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`). The stage runtimes might already give useful hints.",
                 file=f)
             print(
                 "See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).",
@@ -446,7 +448,7 @@ class Systemtest:
     def _run_docker_compose_subprocess(
         self,
         command: List[str],
-        phase: str,
+        stage: str,
         timeout: int,
     ) -> Tuple[int, List[str], List[str]]:
         """
@@ -456,8 +458,8 @@ class Systemtest:
         stderr_data: List[str] = []
         log_sink = getattr(self, "_log_sink", None)
         if log_sink is not None:
-            log_sink.begin_phase(phase)
-        logging.info(f"Docker compose {phase} for {self}")
+            log_sink.begin_stage(stage)
+        logging.info(f"Docker compose {stage} for {self}")
 
         try:
             process = subprocess.Popen(
@@ -470,7 +472,7 @@ class Systemtest:
                 cwd=self.system_test_dir,
             )
         except Exception as e:
-            logging.critical(f"Error starting docker compose {phase} command: {e}")
+            logging.critical(f"Error starting docker compose {stage} command: {e}")
             return 1, stdout_data, stderr_data
 
         def read_stream(stream, is_stderr: bool) -> None:
@@ -481,11 +483,11 @@ class Systemtest:
                 if is_stderr:
                     stderr_data.append(line)
                     if log_sink is not None:
-                        log_sink.append_stderr(line, phase)
+                        log_sink.append_stderr(line, stage)
                 else:
                     stdout_data.append(line)
                     if log_sink is not None:
-                        log_sink.append_stdout(line, phase)
+                        log_sink.append_stdout(line, stage)
             stream.close()
 
         stdout_thread = threading.Thread(
@@ -504,7 +506,7 @@ class Systemtest:
             raise KeyboardInterrupt from k
         except subprocess.TimeoutExpired:
             logging.critical(
-                f"Systemtest {self} timed out during docker compose {phase} "
+                f"Systemtest {self} timed out during docker compose {stage} "
                 f"after {timeout}s. Killing the process.")
             process.kill()
             try:
@@ -514,7 +516,7 @@ class Systemtest:
             exit_code = process.returncode if process.returncode is not None else 1
         except Exception as e:
             logging.critical(
-                f"Systemtest {self} had serious issues during docker compose {phase}: {e}")
+                f"Systemtest {self} had serious issues during docker compose {stage}: {e}")
             process.kill()
             try:
                 process.wait(timeout=SHORT_TIMEOUT)
@@ -570,8 +572,8 @@ class Systemtest:
         if not unpack_success:
             log_sink = getattr(self, "_log_sink", None)
             if log_sink is not None:
-                log_sink.begin_phase("fieldcompare")
-                log_sink.append_stderr(unpack_error_message, "fieldcompare")
+                log_sink.begin_stage("compare")
+                log_sink.append_stderr(unpack_error_message, "compare")
             elapsed_time = time.perf_counter() - time_start
             return FieldCompareResult(1, [], [unpack_error_message], self, elapsed_time)
         docker_compose_content = self.__get_field_compare_compose_file()
@@ -588,7 +590,7 @@ class Systemtest:
                 '--exit-code-from',
                 'field-compare',
             ],
-            "fieldcompare",
+            "compare",
             self.timeout,
         )
         elapsed_time = time.perf_counter() - time_start
@@ -648,10 +650,10 @@ class Systemtest:
             [
                 'docker',
                 'compose',
+                '--progress=plain',
                 '--file',
                 'docker-compose.tutorial.yaml',
                 'build',
-                '--progress=plain',
             ],
             "build",
             GLOBAL_TIMEOUT,
@@ -676,7 +678,7 @@ class Systemtest:
                 'docker-compose.tutorial.yaml',
                 'up',
             ],
-            "solver",
+            "run",
             self.timeout,
         )
         elapsed_time = time.perf_counter() - time_start

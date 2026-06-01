@@ -36,7 +36,7 @@ Workflow for the preCICE v3 release testing:
 
 6. Download the build artifacts from Summary > runs.
 
-    - In there, you may want to check the `system-tests-stdout.log` and `system-tests-stderr.log` files.
+    - In there, inspect the combined logs (`system-tests-stdout.log`, `system-tests-stderr.log`) and the per-stage logs (`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`).
     - The produced results are in `precice-exports/`, the reference results in `reference-results-unpacked`.
     - Compare using, e.g., ParaView or [fieldcompare](https://gitlab.com/dglaeser/fieldcompare): `fieldcompare dir precice-exports/ reference/`. The `--diff` option will give you `precice-exports/diff_*.vtu` files, while you can also try different tolerances with `-rtol` and `-atol`.
 
@@ -105,7 +105,7 @@ In this case, building and running seems to work out, but the tests fail because
 
 The easiest way to debug a systemtest run is first to have a look at the output written into the action on GitHub.
 If this does not provide enough hints, the next step is to download the generated `system_tests_run_<run_id>_<run_attempt>` artifact. Note that by default this will only be generated if the systemtests fail.
-Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains two log files: `system-tests-stderr.log` and `system-tests-stdout.log`. This can be a starting point for a further investigation. When fieldcompare runs with `--diff`, it writes VTK (.vtu) diff files under `precice-exports/`; if the comparison fails, those files are copied into a `diff-results/` subfolder in the same run directory (mirroring any subpaths under `precice-exports/`) so you can open them (e.g. in ParaView) to see where results differ from the reference. On successful comparisons, `diff-results/` is therefore absent.
+Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains combined logs (`system-tests-stderr.log`, `system-tests-stdout.log`) and per-stage logs (`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`). These are a good starting point for further investigation. When fieldcompare runs with `--diff`, it writes VTK (.vtu) diff files under `precice-exports/`; if the comparison fails, those files are copied into a `diff-results/` subfolder in the same run directory (mirroring any subpaths under `precice-exports/`) so you can open them (e.g. in ParaView) to see where results differ from the reference. On successful comparisons, `diff-results/` is therefore absent.
 
 ## Adding new tests
 

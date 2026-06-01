@@ -92,7 +92,7 @@ jobs:
         fi
         git commit -m "${{inputs.commit_msg}}"
         git push
-    - name: Archive system test logs (combined + per-stage)
+    - name: Archive system test logs
       if: ${{ always() }}
       uses: actions/upload-artifact@v7
       with:
@@ -101,8 +101,8 @@ jobs:
           runs/*/system-tests-stdout.log
           runs/*/system-tests-stderr.log
           runs/*/system-tests-build.log
-          runs/*/system-tests-solver.log
-          runs/*/system-tests-fieldcompare.log
+          runs/*/system-tests-run.log
+          runs/*/system-tests-compare.log
           runs/*/*/system-tests_*.log
     - name: Archive run files
       if: failure()
