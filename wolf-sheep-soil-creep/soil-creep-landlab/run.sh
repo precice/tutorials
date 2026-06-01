@@ -6,7 +6,6 @@ set -e -u
 exec > >(tee --append "$LOGFILE") 2>&1
 
 if [ ! -v PRECICE_TUTORIALS_NO_VENV ]; then
-
     if [ ! -d ".venv" ]; then
         python3 -m venv .venv
         source .venv/bin/activate
@@ -14,7 +13,6 @@ if [ ! -v PRECICE_TUTORIALS_NO_VENV ]; then
     else
         source .venv/bin/activate
     fi
-
 fi
 
 mkdir -p output
