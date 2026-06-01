@@ -3,36 +3,33 @@ on:
   workflow_dispatch:
     inputs:
       suites:
-        description: 'Comma seperated testsuites to execute'
+        description: 'Test suites to execute (comma-separated)'
         required: true
+        default: 'release_test'
         type: string
       build_args:
-        description: 'Build arguments, if not specified defaults will be taken'
-        required: false
+        description: 'Build arguments (override component defaults)'
+        default: 'PRECICE_REF:v3.4.1,TUTORIALS_REF:develop'
         type: string
       system_tests_branch:
-        description: 'Branch to take the system tests from (tools/tests/)'
+        description: 'Git ref for tools/tests/'
         default: 'develop'
-        required: true
         type: string
-      log_level:
-        description: 'Logging verbosity level used for the systemtests'
-        default: 'INFO'
-        required: true
-        type: choice
-        options:
-            - 'DEBUG'
-            - 'INFO'
-            - 'WARNING'
-            - 'ERROR'
-            - 'CRITICAL'
       upload_artifacts:
-        description: 'Upload artifacts also on success (not only on failure)'
+        description: 'Upload the complete case files also on success (always true for failure)'
         default: 'TRUE'
         type: choice
         options:
             - 'FALSE'
             - 'TRUE'
+      log_level:
+        description: 'Logging verbosity of systemtests.py'
+        default: 'INFO'
+        type: choice
+        options:
+            - 'INFO'
+            - 'DEBUG'
+
 
 jobs:
   run_testsuite_manual:

@@ -3,21 +3,19 @@ on:
   workflow_call:
     inputs:
       suites:
-        description: 'Comma seperated testsuites to execute'
-        required: true
+        description: 'Test suites to execute (comma-separated)'
+        default: 'release_test'
         type: string
       build_args:
         description: 'Build arguments'
-        required: false
         type: string
       system_tests_branch:
         description: 'Branch to take the system tests from'
-        required: true
+        default: 'develop'
         type: string
       log_level:
         description: 'Logging verbosity level used for the systemtests'
         default: 'INFO'
-        required: false
         type: string
       upload_artifacts:
           description: 'TRUE or FALSE (FALSE -> Upload only when the workflow fails)'
