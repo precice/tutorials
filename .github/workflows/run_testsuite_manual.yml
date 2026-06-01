@@ -8,7 +8,7 @@ on:
         default: 'release_test'
         type: string
       build_args:
-        description: 'Build arguments (override reference_versions.yaml)'
+        description: 'Build arguments (override component defaults)'
         default: 'PRECICE_REF:v3.4.1,TUTORIALS_REF:develop'
         type: string
       system_tests_branch:

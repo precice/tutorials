@@ -4,20 +4,18 @@ on:
     inputs:
       suites:
         description: 'Test suites to execute (comma-separated)'
-        required: true
+        default: 'release_test'
         type: string
       build_args:
         description: 'Build arguments'
-        required: false
         type: string
       system_tests_branch:
         description: 'Branch to take the system tests from'
-        required: true
+        default: 'develop'
         type: string
       log_level:
         description: 'Logging verbosity level used for the systemtests'
         default: 'INFO'
-        required: false
         type: string
       upload_artifacts:
           description: 'TRUE or FALSE (FALSE -> Upload only when the workflow fails)'
