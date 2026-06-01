@@ -492,7 +492,7 @@ test_suites:
       - &wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
         path: wolf-sheep-soil-creep
         case_combination:
-          - creep-landlab
+          - soil-creep-landlab
           - wolf-sheep-grass-mesa
         reference_result: ./wolf-sheep-soil-creep/reference-results/soil-creep-landlab_wolf-sheep-grass-mesa.tar.gz
 
