@@ -137,6 +137,7 @@ def main():
 
         print(f"{status_label} Finished {systemtest} in {elapsed_time:.1f}s", flush=True)
         print(f"[{number}/{total}] {systemtest}", flush=True)
+        print(flush=True)
         results.append(result)
 
     print(flush=True)
