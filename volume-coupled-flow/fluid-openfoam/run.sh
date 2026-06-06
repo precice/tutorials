@@ -14,4 +14,4 @@ close_log
 
 # Necessary signal file for the system tests,
 # to keep the Source container running till the end
-touch ../fluid-participant-finished.log
+date > ../fluid-participant-finished.log
