@@ -135,8 +135,7 @@ def main():
         finally:
             _group_end()
 
-        print(f"{status_label} Finished {systemtest} in {elapsed_time:.1f}s", flush=True)
-        print(f"[{number}/{total}] {systemtest}", flush=True)
+        print(f"{status_label} Finished in {elapsed_time:.1f}s", flush=True)
         print(flush=True)
         results.append(result)
 
