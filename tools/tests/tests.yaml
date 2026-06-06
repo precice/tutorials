@@ -573,6 +573,8 @@ test_suites:
       - *flow-over-heated-plate-nearest-projection_fluid-openfoam_solid-openfoam # serial-implicit (IQN-ILS), nearest-projection
       - *elastic-tube-1d_fluid-cpp_solid-cpp                                     # serial-implicit (IQN-ILS), nearest-neighbor
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam  # parallel-implicit (IQN-ILS), axial-geometric-multiscale
+      - *elastic-tube-1d_fluid-fortran-module_solid-fortran-module               # integration with Fortran (module)
+      - *perpendicular-flap_fluid-openfoam_solid-calculix                        # integration with C
       
   calculix-adapter:
     tutorials:
