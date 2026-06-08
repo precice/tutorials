@@ -4,7 +4,7 @@ on:
     inputs:
       suites:
         description: 'Test suites to execute (comma-separated)'
-        default: 'release_test'
+        default: 'release'
         type: string
       build_args:
         description: 'Build arguments'

@@ -5,7 +5,7 @@ on:
       suites:
         description: 'Test suites to execute (comma-separated)'
         required: true
-        default: 'release_test'
+        default: 'release'
         type: string
       build_args:
         description: 'Build arguments (override component defaults)'

@@ -4,7 +4,7 @@ on:
     inputs:
       suites:
         description: 'Test suites to execute (comma-separated, see tests.yaml)'
-        default: 'release_test'
+        default: 'release'
         required: true
         type: string
       from_ref:

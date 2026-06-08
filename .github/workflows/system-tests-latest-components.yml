@@ -172,7 +172,7 @@ jobs:
     needs: gather-refs
     uses: precice/tutorials/.github/workflows/run_testsuite_workflow.yml@develop
     with:
-      suites: ${{ inputs.suites || 'release_test' }}
+      suites: ${{ inputs.suites || 'release' }}
       build_args: "PLATFORM:ubuntu_2404,\
         PRECICE_REF:${{ needs.gather-refs.outputs.ref-precice }},\
         PYTHON_BINDINGS_REF:${{ needs.gather-refs.outputs.ref-python-bindings }},\
