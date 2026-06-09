@@ -1,17 +1,27 @@
-PRECICE_REF: "d199bb3" # develop, January 20, 2026
-PRECICE_PRESET: "production-audit"
-OPENFOAM_EXECUTABLE: "openfoam2312"
-OPENFOAM_ADAPTER_REF: "v1.3.1"
-PYTHON_BINDINGS_REF: "v3.2.0"
-FENICS_ADAPTER_REF: "v2.2.0"
-TUTORIALS_REF: "b18b3ef" # May 10, 2026, https://github.com/precice/tutorials/pull/769
+# Versions used by the generate_reference_results.py script,
+# and default values for unspecified values in systemtests.py.
+
+# Dockerfile used (See dockerfiles/)
 PLATFORM: "ubuntu_2404"
+
+# Third-party dependencies
 CALCULIX_VERSION: "2.20"
-CALCULIX_ADAPTER_REF: "v2.20.1"
-SU2_VERSION: "7.5.1"
-SU2_ADAPTER_REF: "64d4aff" # Distribution v2404
-DEALII_ADAPTER_REF: "02c5d18" # develop, April 12, 2025
 DUNE_VERSION: "2.9"
 DUMUX_VERSION: "3.7"
-DUMUX_ADAPTER_REF: "0e914bb" # develop, March 18, 2026
-MICRO_MANAGER_REF: "v0.8.0"
+OPENFOAM_EXECUTABLE: "openfoam2512"
+SU2_VERSION: "7.5.1"
+
+# Tested components
+FENICS_ADAPTER_REF: "v2.3.0"
+CALCULIX_ADAPTER_REF: "v2.20.1"
+DEALII_ADAPTER_REF: "a421d92"   # develop, May 27, 2026
+DUMUX_ADAPTER_REF: "3f3f54f"    # develop, May 27, 2026
+MICRO_MANAGER_REF: "v0.10.1"
+OPENFOAM_ADAPTER_REF: "2c3062c" # develop, May 27, 2026
+PRECICE_REF: "v3.4.1"
+PYTHON_BINDINGS_REF: "v3.4.0"
+SU2_ADAPTER_REF: "5abe79b"      # develop, May 27, 2026
+TUTORIALS_REF: "develop"
+
+# Additional settings
+PRECICE_PRESET: "production-audit"

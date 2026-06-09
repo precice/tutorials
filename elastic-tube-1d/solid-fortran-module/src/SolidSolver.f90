@@ -63,7 +63,7 @@ program SolidSolver
     vertexIDs(i) = i - 1                                  ! 0-based indexing here
   end do
 
-  call precicef_set_vertices(meshName, chunkLength, grid, vertexIDs, &
+  call precicef_set_mesh_vertices(meshName, chunkLength, grid, vertexIDs, &
                              len_trim(meshName))
 
   ! Check if initial data is required and write if necessary

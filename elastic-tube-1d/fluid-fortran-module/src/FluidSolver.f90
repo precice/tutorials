@@ -101,7 +101,7 @@ program FluidSolver
     vertexIDs(i) = i - 1
   end do
 
-  call precicef_set_vertices(meshName, chunkLength, grid, vertexIDs, len_trim(meshName))
+  call precicef_set_mesh_vertices(meshName, chunkLength, grid, vertexIDs, len_trim(meshName))
 
   ! Check if Initial Data is Required and Write if Necessary
   call precicef_requires_initial_data(bool)

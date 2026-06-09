@@ -4,9 +4,11 @@ set -e -u
 . ../../tools/log.sh
 exec > >(tee --append "$LOGFILE") 2>&1
 
-if [ ! -f src/precice.f90 ]; then
-  echo "Fetching precice.f90 (Module for Fortran bindings of preCICE)..."
-  curl -o src/precice.f90 https://raw.githubusercontent.com/precice/fortran-module/master/precice.f90
+if [ ! -f thirdparty/precice.f90 ]; then
+  # Get the preCICE Fortran module. Switch the branch with ./run.sh <branch>.
+  DEFAULT_BRANCH="main"
+  echo "Fetching precice.f90 from  https://github.com/precice/fortran-module/tree/${1:-$DEFAULT_BRANCH}..."
+  curl --create-dirs -o thirdparty/precice.f90 "https://raw.githubusercontent.com/precice/fortran-module/${1:-$DEFAULT_BRANCH}/precice.f90"
 fi
 
 if [ ! -d build ]; then

@@ -5,8 +5,11 @@ set -e -u
 exec > >(tee --append "$LOGFILE") 2>&1
 
 if [ ! -f all.msh ]; then
-    echo "Mesh files not found. Use the Download_meshes script to download them."
-    exit
+    echo "Downloading the pre-processed Solid case..."
+    wget -nv -O - https://syncandshare.lrz.de/dl/fi3c9Xt5UzBc5hJvXzsLBHXn/Solid.tar.gz | tar -xzv
+    mv ./Solid/* .
+    rm -r ./Solid
+    sed -i 's/Solid/\./g' solid.inp
 fi
 
 export OMP_NUM_THREADS=1

@@ -45,7 +45,7 @@ Both fluid and solid participant are supported in:
 
 ## Running the Simulation
 
-Choose one solver for each pariticipant, then open two separate terminals and start each soler by calling the respective run script.
+Choose one solver for each participant, then open two separate terminals and start each solver by calling the respective run script.
 Here we use both C++ solvers:
 
 ```bash

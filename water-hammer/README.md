@@ -36,8 +36,6 @@ The initial inlet pressure is set to $p_{\mathrm{in}} = 98100 \mathrm{Pa}$.
 The opening valve at the outlet is modeled through a prescribed outlet velocity, which increases linearly from $0 \mathrm{m/s}$ to $1 \mathrm{m/s}$ over the first $t = 5 \mathrm{s}$, and remains constant afterwards.  
 This sudden valve opening generates pressure disturbances that propagate through the pipe, resulting in the characteristic **pressure wave oscillations** known as the *water hammer* phenomenon.
 
----
-
 ## Configuration
 
 preCICE configuration for the 1D–3D simulation (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
@@ -48,14 +46,10 @@ preCICE configuration for the 3D–1D simulation:
 
 ![preCICE configuration visualization 3D–1D](images/tutorials-water-hammer-3d1d-precice-config.png)
 
----
-
 ## Available solvers
 
 - OpenFOAM (sonicLiquidFoam). A compressible OpenFOAM solver. For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).  
 - Nutils. A Python-based finite element framework. For more information, see the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
-
----
 
 ## Running the Simulation
 
@@ -110,8 +104,6 @@ cd fluid1d-right-nutils
 ./run.sh
 ```
 
----
-
 ## Visualization
 
 The output of the coupled simulation is written into the folders `fluid1d-left-nutils`, `fluid1d-right-nutils`, `fluid3d-left-openfoam`, and `fluid3d-right-openfoam`, depending on which coupling direction (`1d3d` or `3d1d`) you selected.
@@ -162,8 +154,6 @@ probeLocations
 
 Each file contains a header (commented with `#`) and time-series columns for each probe.
 
----
-
 ### 1D domain (Nutils)
 
 The 1D participant writes results to a file named `probes.txt`, containing the temporal evolution of key quantities at selected spatial locations.
@@ -179,8 +169,6 @@ where:
 - `p_in`, `u_in` → pressure and velocity at the inlet of the 1D domain  
 - `p_out`, `u_out` → pressure and velocity at the outlet of the 1D domain  
 - `p_mid`, `u_mid` → pressure and velocity at the midpoint of the 1D domain
-
----
 
 ### Plotting outlet pressure (optional)
 
@@ -226,15 +214,11 @@ The generated plot is saved to:
 images/p_outlet_<case-directory>.png
 ```
 
----
-
 ### Example visualization
 
 ![Pressure evolution at the outlet of the 3D domain in the 1D–3D simulation](images/tutorials-water-hammer-1d3d-outlet-pressure.png)
 
 Pressure evolution at the outlet of the 3D domain during the 1D–3D water hammer simulation.
-
----
 
 ## References
 

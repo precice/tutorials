@@ -38,7 +38,7 @@ USER precice
 
 FROM base_image AS precice_dependecies
 USER root
-# Installing necessary dependecies for preCICE
+# Dependencies for preCICE and common dependencies for the tutorials/tests
 RUN apt-get -qq update && \
     apt-get -qq -y install \
         build-essential \
@@ -61,7 +61,8 @@ RUN apt-get -qq update && \
         python3-pip \
         python3-venv \
         pkg-config \
-        wget
+        wget \
+        inotify-tools
 USER precice
 
 FROM precice_dependecies AS precice
@@ -126,7 +127,12 @@ RUN . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
 
 
-FROM python_bindings AS nutils_adapter
+FROM precice_dependecies AS nutils_adapter
+COPY --from=python_bindings /home/precice/.local /home/precice/.local
+USER root
+# The following are dependencies of gmsh, needed by the turek-hron-fsi3 nutils participant
+RUN apt-get -qq update && \
+apt-get -qq install libglu1-mesa libxrender1 libxcursor1 libxft2 libxinerama1
 USER precice
 # Installing nutils - There is no adapter
 RUN pip3 install nutils

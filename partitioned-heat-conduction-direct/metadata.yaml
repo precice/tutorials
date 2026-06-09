@@ -1,0 +1,32 @@
+name: Partitioned heat conduction direct
+path: partitioned-heat-conduction-direct # relative to git repo 
+url: https://precice.org/tutorials-partitioned-heat-conduction-direct.html
+
+participants:
+  - Dirichlet
+  - Neumann
+
+cases:
+  dirichlet-nutils:
+    participant: Dirichlet
+    directory: ./dirichlet-nutils
+    run: ./run.sh
+    component: nutils-adapter
+
+  # dirichlet-gismo:
+  #   participant: Dirichlet
+  #   directory: ./dirichlet-gismo
+  #   run: ./run.sh
+  #   component: gismo-adapter
+
+  neumann-nutils:
+    participant: Neumann
+    directory: ./neumann-nutils
+    run: ./run.sh
+    component: nutils-adapter
+
+  # neumann-gismo:
+  #   participant: Neumann
+  #   directory: ./neumann-gismo
+  #   run: ./run.sh
+  #   component: gismo-adapter
