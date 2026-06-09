@@ -123,8 +123,8 @@ RUN add-apt-repository -y ppa:fenics-packages/fenics && \
 USER precice
 ARG FENICS_ADAPTER_REF
 # Building fenics-adapter
-RUN . /home/precice/venv/bin/activate && \
-    pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
+RUN pip3 install --user --break-system-packages \
+    git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
 
 
 FROM precice_dependecies AS nutils_adapter
