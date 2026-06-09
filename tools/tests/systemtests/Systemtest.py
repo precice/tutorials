@@ -25,8 +25,6 @@ SHORT_TIMEOUT = 10
 
 DIFF_RESULTS_DIR = "diff-results"
 
-COMBINED_STDOUT_LOG = "system-tests-stdout.log"
-COMBINED_STDERR_LOG = "system-tests-stderr.log"
 STAGE_LOG_FILES = {
     "build": "system-tests-build.log",
     "run": "system-tests-run.log",
@@ -35,15 +33,11 @@ STAGE_LOG_FILES = {
 
 
 class _SystemtestLogSink:
-    """Writes subprocess output incrementally to combined and stage log files."""
+    """Writes subprocess output incrementally to per-stage log files."""
 
     def __init__(self, system_test_dir: Path):
         self._system_test_dir = system_test_dir
         self._lock = threading.Lock()
-        self._stdout_path = system_test_dir / COMBINED_STDOUT_LOG
-        self._stderr_path = system_test_dir / COMBINED_STDERR_LOG
-        self._stdout_path.write_text("", encoding="utf-8")
-        self._stderr_path.write_text("", encoding="utf-8")
 
     def begin_stage(self, stage: str) -> None:
         stage_path = self._system_test_dir / STAGE_LOG_FILES[stage]
@@ -51,16 +45,12 @@ class _SystemtestLogSink:
 
     def append_stdout(self, line: str, stage: str) -> None:
         with self._lock:
-            with self._stdout_path.open("a", encoding="utf-8") as log_file:
-                log_file.write(line + "\n")
             stage_path = self._system_test_dir / STAGE_LOG_FILES[stage]
             with stage_path.open("a", encoding="utf-8") as log_file:
                 log_file.write(line + "\n")
 
     def append_stderr(self, line: str, stage: str) -> None:
         with self._lock:
-            with self._stderr_path.open("a", encoding="utf-8") as log_file:
-                log_file.write(line + "\n")
             stage_path = self._system_test_dir / STAGE_LOG_FILES[stage]
             with stage_path.open("a", encoding="utf-8") as log_file:
                 log_file.write(f"[stderr] {line}\n")
@@ -166,7 +156,7 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
             print("\n\n", file=f)
             print(
-                "In case a test fails, download the archive from the bottom of this page and inspect the combined logs (`system-tests-stdout.log`, `system-tests-stderr.log`) and the per-stage logs (`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`). The stage runtimes might already give useful hints.",
+                "In case a test fails, download the archive from the bottom of this page and inspect the per-stage logs (`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`). The stage runtimes might already give useful hints.",
                 file=f)
             print(
                 "See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).",
@@ -691,12 +681,6 @@ class Systemtest:
     def __repr__(self):
         return f"{self.tutorial.name} {self.case_combination}"
 
-    def __write_logs(self, stdout_data: List[str], stderr_data: List[str]):
-        with open(self.system_test_dir / COMBINED_STDOUT_LOG, 'w', encoding="utf-8") as stdout_file:
-            stdout_file.write("\n".join(stdout_data))
-        with open(self.system_test_dir / COMBINED_STDERR_LOG, 'w', encoding="utf-8") as stderr_file:
-            stderr_file.write("\n".join(stderr_data))
-
     def __apply_max_time_override(self):
         """Overwrite <max-time> or <max-time-windows> value in precice-config.xml."""
         if self.max_time is None and self.max_time_windows is None:
@@ -746,7 +730,6 @@ class Systemtest:
         std_out.extend(docker_build_result.stdout_data)
         std_err.extend(docker_build_result.stderr_data)
         if docker_build_result.exit_code != 0:
-            self.__write_logs(std_out, std_err)
             logging.critical(f"Could not build the docker images, {self} failed")
             return SystemtestResult(
                 False,
@@ -761,7 +744,6 @@ class Systemtest:
         std_out.extend(docker_run_result.stdout_data)
         std_err.extend(docker_run_result.stderr_data)
         if docker_run_result.exit_code != 0:
-            self.__write_logs(std_out, std_err)
             logging.critical(f"Could not run the tutorial, {self} failed")
             return SystemtestResult(
                 False,
@@ -777,7 +759,6 @@ class Systemtest:
         std_err.extend(fieldcompare_result.stderr_data)
         if fieldcompare_result.exit_code != 0:
             self.__archive_fieldcompare_diffs()
-            self.__write_logs(std_out, std_err)
             logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
             return SystemtestResult(
                 False,
@@ -790,7 +771,6 @@ class Systemtest:
 
         # self.__cleanup()
         self._cleanup_docker_networks()
-        self.__write_logs(std_out, std_err)
         return SystemtestResult(
             True,
             std_out,
@@ -813,7 +793,6 @@ class Systemtest:
         std_out.extend(docker_build_result.stdout_data)
         std_err.extend(docker_build_result.stderr_data)
         if docker_build_result.exit_code != 0:
-            self.__write_logs(std_out, std_err)
             logging.critical(f"Could not build the docker images, {self} failed")
             return SystemtestResult(
                 False,
@@ -828,7 +807,6 @@ class Systemtest:
         std_out.extend(docker_run_result.stdout_data)
         std_err.extend(docker_run_result.stderr_data)
         if docker_run_result.exit_code != 0:
-            self.__write_logs(std_out, std_err)
             logging.critical(f"Could not run the tutorial, {self} failed")
             return SystemtestResult(
                 False,
@@ -840,7 +818,6 @@ class Systemtest:
                 fieldcompare_time=0)
 
         self._cleanup_docker_networks()
-        self.__write_logs(std_out, std_err)
         return SystemtestResult(
             True,
             std_out,
@@ -862,7 +839,6 @@ class Systemtest:
         std_out.extend(docker_build_result.stdout_data)
         std_err.extend(docker_build_result.stderr_data)
         if docker_build_result.exit_code != 0:
-            self.__write_logs(std_out, std_err)
             logging.critical(f"Could not build the docker images, {self} failed")
             return SystemtestResult(
                 False,
@@ -873,7 +849,6 @@ class Systemtest:
                 solver_time=0,
                 fieldcompare_time=0)
 
-        self.__write_logs(std_out, std_err)
         return SystemtestResult(
             True,
             std_out,

@@ -140,13 +140,7 @@ def main():
         results.append(result)
 
     print(flush=True)
-    system_test_success = True
-    for result in results:
-        if not result.success:
-            logging.error(f"Failed to run {result.systemtest}")
-            system_test_success = False
-        else:
-            logging.info(f"Success running {result.systemtest}")
+    system_test_success = all(result.success for result in results)
 
     display_systemtestresults_as_table(results)
     if system_test_success:
