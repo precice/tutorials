@@ -113,26 +113,7 @@ def _success_status_symbol(success: bool) -> str:
     return "✅" if success else "❌"
 
 
-def _failing_stage_for_result(result: SystemtestResult) -> str:
-    if result.fieldcompare_time > 0:
-        return "compare"
-    if result.solver_time > 0:
-        return "run"
-    return "build"
-
-
-def _stages_that_ran(result: SystemtestResult) -> List[str]:
-    stages = ["build"]
-    if result.solver_time > 0:
-        stages.append("run")
-    if result.fieldcompare_time > 0:
-        stages.append("compare")
-    return stages
-
-
 def _read_log_tail(log_path: Path, max_lines: int = FAILURE_LOG_TAIL_LINES) -> str:
-    if not log_path.is_file():
-        return f"(log file not found: {log_path.name})"
     lines = log_path.read_text(encoding="utf-8", errors="replace").splitlines()
     if not lines:
         return "(log file is empty)"
@@ -149,22 +130,20 @@ def _append_failure_log_tails_to_summary(results: List[SystemtestResult]) -> Non
         return
 
     with open(summary_path, "a", encoding="utf-8") as summary_file:
-        print("\n## Failed test logs (last lines)\n", file=summary_file)
+        print("\n## Failed test logs\n", file=summary_file)
         for result in failed_results:
-            failing_stage = _failing_stage_for_result(result)
             print(
                 f"### {_success_status_symbol(False)} {result.systemtest}\n",
                 file=summary_file,
             )
-            for stage in _stages_that_ran(result):
-                log_path = result.systemtest.get_system_test_dir() / STAGE_LOG_FILES[stage]
+            run_dir = result.systemtest.get_system_test_dir()
+            for log_name in STAGE_LOG_FILES.values():
+                log_path = run_dir / log_name
+                if not log_path.is_file():
+                    continue
                 tail = _read_log_tail(log_path)
-                failure_label = " — failure stage" if stage == failing_stage else ""
-                summary_label = (
-                    f"{stage} log (last {FAILURE_LOG_TAIL_LINES} lines){failure_label}"
-                )
                 print("<details>", file=summary_file)
-                print(f"<summary>{summary_label}</summary>", file=summary_file)
+                print(f"<summary>{log_name} tail</summary>", file=summary_file)
                 print("", file=summary_file)
                 print("```text", file=summary_file)
                 print(tail, file=summary_file)
