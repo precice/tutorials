@@ -5,10 +5,10 @@ on:
       suites:
         description: 'Test suites to execute (comma-separated)'
         required: true
-        default: 'release_test'
+        default: 'release'
         type: string
       build_args:
-        description: 'Build arguments (override reference_versions.yaml)'
+        description: 'Build arguments (override component defaults)'
         default: 'PRECICE_REF:v3.4.1,TUTORIALS_REF:develop'
         type: string
       system_tests_branch:

@@ -16,5 +16,5 @@ cases:
   source-nutils:
     participant: Source
     directory: ./source-nutils
-    run: ./run.sh && inotifywait -e create,attrib -qq ../fluid-participant-finished.log
+    run: PRECICE_TUTORIALS_TESTING="TRUE" ./run.sh
     component: nutils-adapter

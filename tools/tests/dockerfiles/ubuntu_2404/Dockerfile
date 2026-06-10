@@ -38,7 +38,7 @@ USER precice
 
 FROM base_image AS precice_dependecies
 USER root
-# Installing necessary dependecies for preCICE
+# Dependencies for preCICE and common dependencies for the tutorials/tests
 RUN apt-get -qq update && \
     apt-get -qq -y install \
         build-essential \
@@ -61,7 +61,8 @@ RUN apt-get -qq update && \
         python3-pip \
         python3-venv \
         pkg-config \
-        wget
+        wget \
+        inotify-tools
 USER precice
 
 FROM precice_dependecies AS precice
