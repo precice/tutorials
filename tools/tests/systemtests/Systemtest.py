@@ -31,6 +31,8 @@ STAGE_LOG_FILES = {
     "compare": "system-tests-compare.log",
 }
 
+FAILURE_LOG_TAIL_LINES = 100
+
 
 class _SystemtestLogSink:
     """Writes subprocess output incrementally to per-stage log files."""
@@ -111,6 +113,45 @@ def _success_status_symbol(success: bool) -> str:
     return "✅" if success else "❌"
 
 
+def _read_log_tail(log_path: Path, max_lines: int = FAILURE_LOG_TAIL_LINES) -> str:
+    lines = log_path.read_text(encoding="utf-8", errors="replace").splitlines()
+    if not lines:
+        return "(log file is empty)"
+    return "\n".join(lines[-max_lines:])
+
+
+def _append_failure_log_tails_to_summary(results: List[SystemtestResult]) -> None:
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not summary_path:
+        return
+
+    failed_results = [result for result in results if not result.success]
+    if not failed_results:
+        return
+
+    with open(summary_path, "a", encoding="utf-8") as summary_file:
+        print("\n## Failed test logs\n", file=summary_file)
+        for result in failed_results:
+            print(
+                f"### {_success_status_symbol(False)} {result.systemtest}\n",
+                file=summary_file,
+            )
+            run_dir = result.systemtest.get_system_test_dir()
+            for log_name in STAGE_LOG_FILES.values():
+                log_path = run_dir / log_name
+                if not log_path.is_file():
+                    continue
+                tail = _read_log_tail(log_path)
+                print("<details>", file=summary_file)
+                print(f"<summary>{log_name} tail</summary>", file=summary_file)
+                print("", file=summary_file)
+                print("```text", file=summary_file)
+                print(tail, file=summary_file)
+                print("```", file=summary_file)
+                print("</details>", file=summary_file)
+                print("", file=summary_file)
+
+
 def display_systemtestresults_as_table(results: List[SystemtestResult]):
     """
     Prints the result in a nice tabluated way to get an easy overview
@@ -151,6 +192,8 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
         if "GITHUB_STEP_SUMMARY" in os.environ:
             with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
                 print(row, file=f)
+
+    _append_failure_log_tails_to_summary(results)
 
     if "GITHUB_STEP_SUMMARY" in os.environ:
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
