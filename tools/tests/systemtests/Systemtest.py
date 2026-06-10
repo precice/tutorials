@@ -14,6 +14,7 @@ from datetime import datetime
 import tarfile
 import time
 
+import html
 import unicodedata
 import re
 import logging
@@ -145,9 +146,14 @@ def _append_failure_log_tails_to_summary(results: List[SystemtestResult]) -> Non
                 print("<details>", file=summary_file)
                 print(f"<summary>{log_name} tail</summary>", file=summary_file)
                 print("", file=summary_file)
-                print("```text", file=summary_file)
-                print(tail, file=summary_file)
-                print("```", file=summary_file)
+                print(
+                    '<div style="max-height: 24em; overflow-y: auto; '
+                    'border: 1px solid #d0d7de; padding: 8px; '
+                    'font-family: monospace; font-size: 12px; white-space: pre-wrap;">',
+                    file=summary_file,
+                )
+                print(html.escape(tail), file=summary_file)
+                print("</div>", file=summary_file)
                 print("</details>", file=summary_file)
                 print("", file=summary_file)
 
