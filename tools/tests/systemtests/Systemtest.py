@@ -31,6 +31,8 @@ STAGE_LOG_FILES = {
     "compare": "system-tests-compare.log",
 }
 
+FAILURE_LOG_TAIL_LINES = 40
+
 
 class _SystemtestLogSink:
     """Writes subprocess output incrementally to per-stage log files."""
@@ -111,6 +113,49 @@ def _success_status_symbol(success: bool) -> str:
     return "✅" if success else "❌"
 
 
+def _failing_stage_for_result(result: SystemtestResult) -> str:
+    if result.fieldcompare_time > 0:
+        return "compare"
+    if result.solver_time > 0:
+        return "run"
+    return "build"
+
+
+def _read_log_tail(log_path: Path, max_lines: int = FAILURE_LOG_TAIL_LINES) -> str:
+    if not log_path.is_file():
+        return f"(log file not found: {log_path.name})"
+    lines = log_path.read_text(encoding="utf-8", errors="replace").splitlines()
+    if not lines:
+        return "(log file is empty)"
+    return "\n".join(lines[-max_lines:])
+
+
+def _append_failure_log_tails_to_summary(results: List[SystemtestResult]) -> None:
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not summary_path:
+        return
+
+    failed_results = [result for result in results if not result.success]
+    if not failed_results:
+        return
+
+    with open(summary_path, "a", encoding="utf-8") as summary_file:
+        print("\n## Failed test logs (last lines)\n", file=summary_file)
+        for result in failed_results:
+            stage = _failing_stage_for_result(result)
+            log_name = STAGE_LOG_FILES[stage]
+            log_path = result.systemtest.get_system_test_dir() / log_name
+            tail = _read_log_tail(log_path)
+            print(
+                f"### {_success_status_symbol(False)} {result.systemtest} — "
+                f"{stage} log (last {FAILURE_LOG_TAIL_LINES} lines)\n",
+                file=summary_file,
+            )
+            print("```text", file=summary_file)
+            print(tail, file=summary_file)
+            print("```\n", file=summary_file)
+
+
 def display_systemtestresults_as_table(results: List[SystemtestResult]):
     """
     Prints the result in a nice tabluated way to get an easy overview
@@ -152,11 +197,15 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
             with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
                 print(row, file=f)
 
+    _append_failure_log_tails_to_summary(results)
+
     if "GITHUB_STEP_SUMMARY" in os.environ:
-        with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
-            print("\n\n", file=f)
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+            print("\n", file=f)
             print(
-                "In case a test fails, download the archive from the bottom of this page and inspect the per-stage logs (`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`). The stage runtimes might already give useful hints.",
+                "For full logs, download the archive from the bottom of this page "
+                "(`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`). "
+                "The stage runtimes in the table above might already give useful hints.",
                 file=f)
             print(
                 "See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).",
