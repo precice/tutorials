@@ -6,10 +6,10 @@ exec > >(tee --append "$LOGFILE") 2>&1
 
 if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
 then
-    if [ ! -d .venv ]; then
+    if [ ! -d ".venv" ]; then
         python3 -m venv --system-site-packages .venv
     fi
-    . .venv/bin/activate
+    source .venv/bin/activate
     pip install -r ../solver-fenics/requirements.txt
 fi
 
