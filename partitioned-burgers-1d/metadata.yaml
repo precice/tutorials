@@ -18,3 +18,9 @@ cases:
     directory: ./neumann-scipy
     run: ./run.sh
     component: python-bindings
+  
+  neumann-surrogate:
+    participant: Neumann
+    directory: neumann-surrogate
+    run: ./run.sh
+    component: python-bindings
