@@ -31,12 +31,19 @@ precice-config.xml.orig
 *.o
 *.so
 .out
+
+# CMake
 build/
+CMakeFiles/
+cmake_install.cmake
+CMakeCache.txt
+Makefile
 
 # Python
 .venv/
 __pycache__/
 *.pyc
+*.pyo
 *.npz
 
 # Rust
@@ -61,6 +68,10 @@ postProcessing/
 *.foam
 *.OpenFOAM
 dynamicCode
+Make/*
+!Make/files
+!Make/options
+lnInclude/
 
 # CalculiX
 spooles.out
@@ -108,6 +119,9 @@ install*
 
 # G+smo
 pointData.csv
+
+# FMI
+*.fmu
 
 # FEniCS covered by .vtk
 # Nutils covered by .vtk
