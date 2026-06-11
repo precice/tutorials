@@ -31,12 +31,19 @@ precice-config.xml.orig
 *.o
 *.so
 .out
+
+# CMake
 build/
+CMakeFiles/
+cmake_install.cmake
+CMakeCache.txt
+Makefile
 
 # Python
 .venv/
 __pycache__/
 *.pyc
+*.pyo
 
 # Rust
 Cargo.lock
@@ -107,6 +114,9 @@ install*
 
 # G+smo
 pointData.csv
+
+# FMI
+*.fmu
 
 # FEniCS covered by .vtk
 # Nutils covered by .vtk
