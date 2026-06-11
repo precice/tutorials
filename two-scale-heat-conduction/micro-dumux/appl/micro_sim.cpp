@@ -68,11 +68,10 @@ public:
   // solve takes python dict for macro_write data, dt, and returns python dict for macro_read data
   py::dict solve(py::dict macro_write_data, double dt);
 
-  // void save_checkpoint();
-  // void reload_checkpoint();
-
   void      setState(py::tuple phi);
   py::tuple getState() const;
+
+  int get_global_id() const;
 
 private:
   const double pi_ = 3.14159265358979323846;
@@ -81,6 +80,7 @@ private:
   double       _k_10;
   double       _k_11;
   double       _porosity;
+  int          sim_id;
 
   ACSolutionVector _phi;    // Solution of Allen Cahn Problem
   ACSolutionVector _phiOld; // for checkpointing
@@ -107,7 +107,7 @@ MicroSimulation::MicroSimulation(int simulationID)
 {
   using namespace Dumux;
 
-  std::cout << "Initialize micro problem \n";
+  int sim_id = simulationID;
 
   // parse the input file
   Parameters::init("params.input");
@@ -198,10 +198,7 @@ py::dict MicroSimulation::initialize()
   _k_00 = _cpProblem->calculateConductivityTensorComponent(0, 0);
   _k_11 = _cpProblem->calculateConductivityTensorComponent(1, 1);
 
-  // create python dict for micro_write_data
   py::dict micro_write_data;
-
-  // add micro_scalar_data and micro_vector_data to micro_write_data
   micro_write_data["K00"]      = _k_00;
   micro_write_data["K11"]      = _k_11;
   micro_write_data["Porosity"] = _porosity;
@@ -209,7 +206,6 @@ py::dict MicroSimulation::initialize()
   return micro_write_data;
 }
 
-// Solve
 py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
 {
   // call leafgridView and point gridGeometry to it
@@ -218,7 +214,6 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
 
   std::cout << "Solve timestep of micro problem \n";
 
-  // assert(dt != 0);
   if (dt == 0) {
     std::cout << "dt is zero\n";
     exit(1);
@@ -226,7 +221,6 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
 
   _timeLoop->setTimeStepSize(dt);
 
-  // read concentration from preCICE
   double conc = macro_write_data["Concentration"].cast<double>();
 
   // input macro concentration into allen-cahn problem
@@ -235,7 +229,7 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
   // linearize & solve the allen cahn problem
   _acNonLinearSolver->solve(_phi, *_timeLoop);
 
-  // u pdate Phi in the cell problem
+  // update Phi in the cell problem
   _cpProblem->spatialParams().updatePhi(_phi);
 
   // solve the cell problems
@@ -243,7 +237,6 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
 
   std::cout << "Compute upscaled quantities \n";
 
-  // calculate porosity
   _porosity = _acProblem->calculatePorosity(_phi);
 
   // compute the psi derivatives (required for conductivity tensor)
@@ -255,7 +248,6 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
   _k_01 = _cpProblem->calculateConductivityTensorComponent(0, 1);
   _k_11 = _cpProblem->calculateConductivityTensorComponent(1, 1);
 
-  // create python dict for micro_write_data
   py::dict micro_write_data;
 
   // add micro_scalar_data and micro_vector_data to micro_write_data
@@ -273,7 +265,6 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
   return micro_write_data;
 }
 
-// This function needs to set the complete state of a micro simulation
 void MicroSimulation::setState(py::tuple phi)
 {
   py::list phi_py    = phi[0];
@@ -288,7 +279,6 @@ void MicroSimulation::setState(py::tuple phi)
   _acGridVariables->update(_phi);
 }
 
-// This function needs to return variables which can fully define the state of a micro simulation
 py::tuple MicroSimulation::getState() const
 {
   py::list phi_py;
@@ -305,6 +295,11 @@ py::tuple MicroSimulation::getState() const
   return py::make_tuple(phi_py, phiOld_py);
 }
 
+int MicroSimulation::get_global_id() const
+{
+  return sim_id;
+}
+
 PYBIND11_MODULE(micro_sim, m)
 {
   m.doc() = "pybind11 example plugin"; // optional module docstring
@@ -313,10 +308,9 @@ PYBIND11_MODULE(micro_sim, m)
       .def(py::init<int>())
       .def("initialize", &MicroSimulation::initialize)
       .def("solve", &MicroSimulation::solve)
-      //.def("save_checkpoint", &MicroSimulation::save_checkpoint)
-      //.def("reload_checkpoint", &MicroSimulation::reload_checkpoint)
       .def("get_state", &MicroSimulation::getState)
       .def("set_state", &MicroSimulation::setState)
+      .def("get_global_id", &MicroSimulation::get_global_id)
       .def(py::pickle(
           [](const MicroSimulation &ms) { // __getstate__
             /* Return a tuple that fully encodes the state of the object */

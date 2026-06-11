@@ -42,10 +42,8 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 ## Running the Simulation
 
 {% note %}
-Since the already prepared case contains mesh files of approx. 50MB in size, we currently host these files outside of the tutorials repository and you can download and extract them automatically in the appropriate locations by running the download-meshes.sh script. You can [help us improve this](https://github.com/precice/tutorials/issues/6)!
+Since the already prepared case contains mesh files of approx. 50MB in size, we currently host these files outside of the tutorials repository and are downloaded automatically the first time. You can [help us improve this](https://github.com/precice/tutorials/issues/6)!
 {% endnote %}
-
-Before starting the simulation for the first time you need to download the mesh files and copy them into the appropriate location. The shell script `./download-meshes.sh` will handle these things automatically. Afterwards, the simulation setup is ready to run.
 
 In order to run the coupled simulation, you can simply step into the participant directories and execute`./run.sh` (or `./run.sh -parallel` for running a fluid participant in parallel). The simulation will need several minutes or up to an hour on a laptop to end (t=500). Before repeating the simulation, you can use the `clean-tutorial.sh` script to clean-up any previous results and log files.
 
@@ -53,7 +51,7 @@ In order to run the coupled simulation, you can simply step into the participant
 
 After the first results are written (a new time directory will be created), you may visualize the results.
 
-For the OpenFOAM results, you can use ParaView and open the allready-provided `fluid-inner-openfoam.foam` and `fluid-outer-openfoam.foam` files. You can then group the two cases and visualize them together.
+For the OpenFOAM results, you can use ParaView and open the already-provided `fluid-inner-openfoam.foam` and `fluid-outer-openfoam.foam` files. You can then group the two cases and visualize them together.
 
 Unfortunately, ParaView does not support CalculiX result files. You may see the results in CGX or convert them using 3rd-party tools.
 

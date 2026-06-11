@@ -54,7 +54,7 @@ Nall,305.0
 ** written by write_step_begin function
 *STEP, INC=2000
 *HEAT TRANSFER, DIRECT
-0.01,5.0
+0.01,1.0
 
 ***********************************************************
 ** Fixed temperature constraint applied
@@ -71,7 +71,7 @@ Nyend,11,11,0.0
 ***********************************************************
 ** Outputs --> frd file
 ** written by write_outputs_types function
-*NODE FILE
+*NODE FILE, FREQUENCY=10
 NT
 
 ***********************************************************

@@ -18,7 +18,7 @@ clean_tutorial() {
         fi
 
         for case in */; do
-            if [ "${case}" = images/ ] || [ "${case}" = reference-results/ ] || [ "${case}" = utils/ ] || [ "${case}" = output/ ]; then
+            if [ "${case}" = images/ ] || [ "${case}" = reference-results/ ] || [ "${case}" = dumux/ ] || [ "${case}" = utils/ ] || [ "${case}" = output/ ]; then
                 continue
             fi
             case "${case}" in solver*)
@@ -102,6 +102,17 @@ clean_fenics() {
     )
 }
 
+clean_fenicsx() {
+    (
+        set -e -u
+        cd "$1"
+        echo "- Cleaning up FEniCSx case in $(pwd)"
+        rm -rfv ./*.bp
+        clean_precice_logs .
+        clean_case_logs .
+    )
+}
+
 clean_nutils() {
     (
         set -e -u
@@ -138,7 +149,7 @@ clean_openfoam() {
         if [ -n "${WM_PROJECT:-}" ] || error "No OpenFOAM environment is active."; then
             # shellcheck disable=SC1090 # This is an OpenFOAM file which we don't need to check
             . "${WM_PROJECT_DIR}/bin/tools/CleanFunctions"
-            cleanCase > /dev/null
+            region="*" cleanCase > /dev/null
             rm -rfv 0/uniform/functionObjects/functionObjectProperties history
         fi
         clean_precice_logs .
@@ -219,6 +230,9 @@ clean_gismo(){
         cd "$1"
         echo "- Cleaning up G+Smo case in $(pwd)"
         rm -rfv ./output/
+        rm -fv ./*.vtp
+        rm -fv ./*.vts
+        rm -fv ./*.pvd
         clean_precice_logs .
         clean_case_logs .
     )

@@ -1,0 +1,20 @@
+name: Partitioned heat conduction complex
+path: partitioned-heat-conduction-complex # relative to git repo 
+url: https://precice.org/tutorials-partitioned-heat-conduction-complex.html
+
+participants:
+  - Dirichlet
+  - Neumann
+
+cases:
+  dirichlet-fenics:
+    participant: Dirichlet
+    directory: ./dirichlet-fenics
+    run: ./run.sh
+    component: fenics-adapter
+
+  neumann-fenics:
+    participant: Neumann
+    directory: ./neumann-fenics
+    run: ./run.sh
+    component: fenics-adapter

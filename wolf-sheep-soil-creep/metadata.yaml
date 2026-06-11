@@ -1,0 +1,20 @@
+name: Wolf-sheep-grass soil creep
+path: wolf-sheep-soil-creep
+url: https://precice.org/tutorials-wolf-sheep-soil-creep.html
+
+participants:
+  - Soil-Creep
+  - Wolf-Sheep-Grass
+
+cases:
+  soil-creep-landlab:
+    participant: Soil-Creep
+    directory: ./soil-creep-landlab
+    run: ./run.sh
+    component: python-bindings
+  
+  wolf-sheep-grass-mesa:
+    participant: Wolf-Sheep-Grass
+    directory: ./wolf-sheep-grass-mesa
+    run: ./run.sh
+    component: python-bindings

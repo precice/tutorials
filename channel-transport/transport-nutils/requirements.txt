@@ -1,5 +1,5 @@
 setuptools # required by nutils
-nutils==7
+nutils~=7.3
 numpy >1, <2
 # remeshing support will be released with preCICE version 3.2
 pyprecice @ git+https://github.com/precice/python-bindings.git@develop

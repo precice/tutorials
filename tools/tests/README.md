@@ -25,7 +25,7 @@ Workflow for the preCICE v3 release testing:
 3. Trigger the GitHub Actions Workflow. Until we merge the workflow to develop, this can only happen via the [GitHub CLI](https://cli.github.com/):
 
     ```bash
-    gh workflow run run_testsuite_manual.yml -f suites=release_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" --ref=develop
+    gh workflow run run_testsuite_manual.yml -f suites=release -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" --ref=develop
     ```
 
 4. Go to the tutorials [Actions](https://github.com/precice/tutorials/actions) page and find the running workflow
@@ -36,7 +36,7 @@ Workflow for the preCICE v3 release testing:
 
 6. Download the build artifacts from Summary > runs.
 
-    - In there, you may want to check the `stdout.log` and `stderr.log` files.
+    - In there, inspect the per-stage logs (`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`).
     - The produced results are in `precice-exports/`, the reference results in `reference-results-unpacked`.
     - Compare using, e.g., ParaView or [fieldcompare](https://gitlab.com/dglaeser/fieldcompare): `fieldcompare dir precice-exports/ reference/`. The `--diff` option will give you `precice-exports/diff_*.vtu` files, while you can also try different tolerances with `-rtol` and `-atol`.
 
@@ -45,7 +45,7 @@ Workflow for the preCICE v3 release testing:
 To test a certain test-suite defined in `tests.yaml`, use:
 
 ```bash
-python3 systemtests.py --suites=fenics_test,<someothersuite>
+python3 systemtests.py --suites=fenics-adapter,<someothersuite>
 ```
 
 To discover all tests, use `python print_test_suites.py`.
@@ -59,13 +59,13 @@ Go to Actions > [Run Testsuite (manual)](https://github.com/precice/tutorials/ac
 After bringing these changes to `master`, the manual triggering option should be visible on the top right. Until that happens, we can only trigger this workflow manually from the [GitHub CLI](https://github.blog/changelog/2021-04-15-github-cli-1-9-enables-you-to-work-with-github-actions-from-your-terminal/):
 
 ```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics_test --ref=develop
+gh workflow run run_testsuite_manual.yml -f suites=fenics-adapter --ref=develop
 ```
 
 Another example, to use the latest releases and enable debug information of the tests:
 
 ```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" -f log_level=DEBUG --ref=develop
+gh workflow run run_testsuite_manual.yml -f suites=fenics-adapter -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" -f log_level=DEBUG --ref=develop
 ```
 
 where the `*_REF` should be a specific [commit-ish](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefcommit-ishacommit-ishalsocommittish).
@@ -75,7 +75,7 @@ Example output:
 ```text
 Run cd tools/tests
   cd tools/tests
-  python systemtests.py --build_args=PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0 --suites=fenics_test --log-level=DEBUG
+  python systemtests.py --build_args=PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0 --suites=fenics-adapter --log-level=DEBUG
   cd ../../
   shell: /usr/bin/bash -e {0}
 INFO: About to run the following systemtest in the directory /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs:
@@ -105,7 +105,7 @@ In this case, building and running seems to work out, but the tests fail because
 
 The easiest way to debug a systemtest run is first to have a look at the output written into the action on GitHub.
 If this does not provide enough hints, the next step is to download the generated `system_tests_run_<run_id>_<run_attempt>` artifact. Note that by default this will only be generated if the systemtests fail.
-Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains two log files: a `stderr.log` and `stdout.log`. This can be a starting point for a further investigation.
+Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains per-stage logs (`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`). These are a good starting point for further investigation. When fieldcompare runs with `--diff`, it writes VTK (.vtu) diff files under `precice-exports/`; if the comparison fails, those files are copied into a `diff-results/` subfolder in the same run directory (mirroring any subpaths under `precice-exports/`) so you can open them (e.g. in ParaView) to see where results differ from the reference. On successful comparisons, `diff-results/` is therefore absent.
 
 ## Adding new tests
 
@@ -117,6 +117,8 @@ In order for the systemtests to pick up the tutorial we need to define a `metada
 
 To add a testsuite just open the `tests.yaml` file and use the output of `python print_case_combinations.py` to add the right case combinations you want to test. Note that you can specify a `reference_result` which is not yet present. The `generate_reference_data.py` will pick that up and create it for you.
 Note that its important to carefully check the paths of the `reference_result` in order to not have typos in there. Also note that same cases in different testsuites should use the same `reference_result`.
+
+To cap the preCICE simulation time for a specific test without editing `precice-config.xml`, add an optional `max_time` (positive float, overrides `<max-time>`) or `max_time_windows` (positive integer, overrides `<max-time-windows>`) field to the tutorial entry. Applies to both test runs and reference result generation.
 
 ### Generate reference results
 
@@ -167,7 +169,7 @@ Metadata and workflow/script files:
     - ...
   - `dockerfiles/`
     - Multi-stage build Dockerfiles that define how to build each component, in a layered approach
-  - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Componse service template)
+  - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Compose service template)
   - `docker-compose.field_compare.template.yaml`: Describes how to compare results with fieldcompare (Docker Compose service template)
   - `components.yaml`: Declares the available components and their parameters/options
   - `reference_results.metadata.template`: Template for reporting the versions used to generate the reference results
@@ -233,7 +235,7 @@ Description:
 - `name`: A human-readable, descriptive name
 - `path`: Where the tutorial is located, relative to the tutorials repository
 - `url`: A web page with more information on the tutorial
-- `participants`: A list of preCICE participants, typically corresponing to different domains of the simulation
+- `participants`: A list of preCICE participants, typically corresponding to different domains of the simulation
 - `cases`: A list of solver configuration directories. Each element of the list includes:
   - `participant`: Which participant this solver case can serve as
   - `directory`: Where the case directory is located, relative to the tutorial directory
@@ -279,7 +281,9 @@ This `openfoam-adapter` component has the following attributes:
 
 Since the docker containers are still a bit mixed in terms of capabilities and support for different build_argument combinations the following rules apply:
 
-- A build_argument ending in **_REF** means that it refers to a git commit-ish (like a tag or commit) beeing used to build the image. Its important to not use branch names here as we heavily rely on dockers build cache to speedup things. But since the input variable to the docker builder will not change, we might have wrong cache hits.
+- A build argument ending in `_REF` refers to a git commit-ish (like a tag or commit) being used to build the image. It is important to not use branch names here as we heavily rely on Docker's build cache to speedup things. But since the input variable to the docker builder will not change, we might have wrong cache hits.
+- Some workflows set variables ending in `_PR`. These specify the GitHub pull request which provides the above `_REF` and can be on a fork.
+- A build argument ending in `_VERSION` refers to the version of a third-party dependency to use (e.g., DUNE).
 - All other build_arguments are free of rules and up to the container maintainer.
 
 ### Component templates
@@ -312,14 +316,7 @@ Concrete tests are specified centrally in the file `tests.yaml`. For example:
 
 ```yaml
 test_suites:
-  openfoam_adapter_pr:
-    tutorials:
-      - path: flow-over-heated-plate
-        case_combination:
-          - fluid-openfoam
-          - solid-openfoam
-        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
-  openfoam_adapter_release:
+  openfoam-adapter:
     tutorials:
       - path: flow-over-heated-plate
         case_combination:
@@ -331,15 +328,18 @@ test_suites:
           - fluid-openfoam
           - solid-fenics
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz
+        timeout: 1200
 ```
 
-This defines two test suites, namely `openfoam_adapter_pr` and `openfoam_adapter_release`. Each of them defines which case combinations of which tutorials to run.
+The optional `timeout` field (in seconds) sets the maximum time for the solver run and fieldcompare phases of that specific case. If omitted, it defaults to `GLOBAL_TIMEOUT` (currently 300s (5min), overridable via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable).
+
+This defines the test suite `openfoam-adapter`, with a case combination to run.
 
 ### Generate Reference Results
 
 #### via GitHub workflow (recommended)
 
-The preferred way of adding reference results is via the manual triggerable `Generate reference results (manual)` workflow. This takes two inputs:
+The preferred way of adding reference results is via the manual `Generate reference results (manual)` workflow. This takes two inputs:
 
 - `from_ref`: branch where the new test configuration (e.g added tests, new reference_versions.yaml) is
 - `commit_msg`: commit message for adding the reference results into the branch
