@@ -86,6 +86,12 @@ python3 utils/generate_ic.py
 
 This script requires the Python libraries `numpy` and `matplotlib`. It accepts an optional argument `--epochs` as a random number generator seed, which defaults to zero.
 
+To generate the training data, you can use the `utils/generate-training-data.sh` script from the tutorial root directory, which will generate data for different `--epoch` values:
+
+```bash
+./utils/generate-training-data.sh 
+```
+
 ### Monolithic solution (reference)
 
 You can run the whole domain using the monolithic solver for comparison:
