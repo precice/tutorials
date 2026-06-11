@@ -3,12 +3,12 @@ set -e -u
 
 if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
 then
-    if [ ! -d .venv ]; then
+    if [ ! -d ".venv" ]; then
         python3 -m venv .venv
-        . .venv/bin/activate
+        source .venv/bin/activate
         pip install -r requirements.txt && pip freeze > pip-installed-packages.log
     else
-        . .venv/bin/activate
+        source .venv/bin/activate
     fi
 fi
 
