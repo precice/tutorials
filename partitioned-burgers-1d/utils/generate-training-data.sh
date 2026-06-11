@@ -7,8 +7,13 @@ cd "$(dirname "$0")/.."
 mkdir -p solver-scipy/data-training
 
 solver_path="./solver-scipy"
-if [ -d "$solver_path/.venv" ]; then
-  . "$solver_path/.venv/bin/activate"
+if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
+then
+    if [ ! -d "$solver_path/.venv" ]; then
+        python3 -m venv "$solver_path/.venv"
+    fi
+    . "$solver_path/.venv/bin/activate"
+    pip install -r requirements.txt && pip freeze > pip-installed-packages.log
 fi
 
 # Number of training runs to generate
