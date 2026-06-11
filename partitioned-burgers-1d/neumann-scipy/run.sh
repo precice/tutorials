@@ -3,7 +3,9 @@ set -e -u
 
 if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
 then
-    python3 -m venv .venv
+    if [ ! -d .venv ]; then
+        python3 -m venv .venv
+    fi
     . .venv/bin/activate
     pip install -r ../solver-scipy/requirements.txt && pip freeze > pip-installed-packages.log
 fi
