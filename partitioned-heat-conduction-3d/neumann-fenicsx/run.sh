@@ -1,7 +1,13 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e -u
 
-python3 -m venv --system-site-packages .venv
-. .venv/bin/activate
-pip install -r ../solver-fenicsx/requirements.txt
+if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
+then
+    if [ ! -d .venv ]; then
+        python3 -m venv --system-site-packages .venv
+    fi
+    . .venv/bin/activate
+    pip install -r ../solver-fenicsx/requirements.txt
+fi
+
 python3 ../solver-fenicsx/heat.py Neumann --error-tol 10e-3
