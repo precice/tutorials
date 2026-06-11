@@ -37,6 +37,7 @@ build/
 .venv/
 __pycache__/
 *.pyc
+*.npz
 
 # Rust
 Cargo.lock
