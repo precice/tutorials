@@ -21,14 +21,14 @@ Note that this scenario features a unidirectional coupling, where the fluid velo
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-channel-transport-particles-precice-config.pdf
+![preCICE configuration visualization](images/tutorials-channel-transport-particles-precice-config.png
 )
 
 ## Available solvers
 
 Fluid participant:
 
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
+* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
 * OpenFOAM (pimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 

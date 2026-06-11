@@ -61,7 +61,11 @@ to run the solid participant (which is also controlling the coupling).
 
 Similarly to the [flow over heated plate: Two meshes](https://precice.org/tutorials-flow-over-heated-plate-two-meshes.html) tutorial.
 
-![Results of the simplified heat exchanger tutorial](images/tutorials-heat-exchanger-simplified-overview.png)
+![Results of the simplified heat exchanger tutorial at t=1s](images/tutorials-heat-exchanger-simplified-overview-1s.png)
+
+By default, this tutorial simulates 1s. Temperature distribution at 5s:
+
+![Results of the simplified heat exchanger tutorial at t=5s](images/tutorials-heat-exchanger-simplified-overview-5s.png)
 
 ![Animation of the simplified heat exchanger tutorial](images/tutorials-heat-exchanger-simplified-animation.webp)
 

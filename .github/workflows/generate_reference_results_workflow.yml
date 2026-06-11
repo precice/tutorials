@@ -2,29 +2,41 @@ name: Generate reference results workflow
 on:
   workflow_call:
     inputs:
-      from_ref:
-        description: 'Use the systemtests + tutorial metadata + reference_version from this ref'
+      suites:
+        description: 'Test suites to execute (comma-separated, see tests.yaml)'
         required: true
         type: string
+      from_ref:
+        description: 'Git branch to use and commit to'
+        default: 'develop'
+        type: string
       commit_msg:
-        description: 'Commit msg for commit that adds the reference results'
-        default: "Adding reference results"
+        description: 'Commit message'
+        default: "Add reference results"
+        type: string
+      clean_docker:
+        description: 'Run docker-system-prune before running tests'
+        default: 'FALSE'
         type: string
       log_level:
-        description: 'Logging verbosity level used for the systemtests'
-        default: 'INFO'
+        description: 'Logging verbosity of systemtests.py'
         required: true
         type: string
 jobs:
   generate_reference_results:
     runs-on: [self-hosted, linux, x64, precice-tests-vm]
     steps:
-    - name: Display a quick job summary
+    - name: Report the input values in the summary
       run: |
-        echo "Initiated by: ${{ github.actor }}"
-        echo "Running generate_reference_results.py --log-level ${{inputs.log_level}}"
-        echo "Using Ref: ${{ inputs.from_ref }}"
-        echo "Commit message on success:  ${{ inputs.commit_msg }}"
+        {
+        echo "- Initiated by: @${{ github.actor }}"
+        echo "- Test suites: \`${{ inputs.suites || 'all (no filter)' }}\`"
+        echo "- Git branch to commit to: \`${{ inputs.from_ref }}\`"
+        echo "- Commit message:  \`${{ inputs.commit_msg }}\`"
+        echo "- Run \`docker-system-prune\` before running tests: \`${{ inputs.clean_docker }}\`"
+        echo "- Log level: \`${{ inputs.log_level }}\`"
+        echo "- Running \`generate_reference_results.py --suite ${{inputs.suites}} --log-level ${{inputs.log_level}}\`"
+        } >> "$GITHUB_STEP_SUMMARY"
     - name: Move LFS URL to local LFS server
       run: |
         /home/precice/runners_root/scripts/make_lfs_local.sh
@@ -37,7 +49,7 @@ jobs:
         rm -rf ./.??*
         ls -la ./
     - name: Check out Tutorials for the system tests (tools/tests/)
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         ref: ${{ inputs.from_ref }}
         lfs: true
@@ -46,6 +58,7 @@ jobs:
       run: |
         pip install --user -r tools/tests/requirements.txt
     - name: Cleanup Docker cache
+      if: ${{  inputs.clean_docker == 'TRUE' }}
       # Remove all Docker containers, images, and build caches
       # to ensure consistent results and as storage cleanup
       run: |
@@ -56,21 +69,44 @@ jobs:
         test -f generate_reference_results.py && export GENERATE_REF_RESULTS=generate_reference_results.py
         test -f generate_reference_data.py && export GENERATE_REF_RESULTS=generate_reference_data.py
         echo "Selected $GENERATE_REF_RESULTS to run"
-        python $GENERATE_REF_RESULTS --log-level=${{inputs.log_level}}
+        SUITES_ARGS=()
+        if [ -n "${{ inputs.suites }}" ]; then
+          SUITES_ARGS+=(--suites "${{ inputs.suites }}")
+        fi
+        python "$GENERATE_REF_RESULTS" --log-level="${{inputs.log_level}}" "${SUITES_ARGS[@]}"
         cd ../../
     - name: Create commit
       if: success()
       run: |
         git checkout ${{ inputs.from_ref }}
-        git add ./*/*/*.tar.gz
-        git add ./*/*.tar.gz
-        git add ./*/*.metadata
+        # Add only the changed reference results.
+        # When no suite filter is given, add all reference result files.
+        # When a suite filter is given, only add matching reference result artifacts,
+        # including newly created files for newly added tutorials or suites.
+        if [ -z "${{ inputs.suites }}" ]; then
+          git add ./*/*/*.tar.gz
+          git add ./*/*.tar.gz
+          git add ./*/reference-results/*.metadata
+        else
+          git add -A -- '**/reference-results/*.tar.gz' '**/reference-results/*.metadata'
+        fi
         git commit -m "${{inputs.commit_msg}}"
         git push
-    - name: Upload artifacts for debugging
-      if: failure()
-      uses: actions/upload-artifact@v4
+    - name: Archive system test logs
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v7
       with:
-        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference_logs
+        path: |
+          runs/*/system-tests-build.log
+          runs/*/system-tests-run.log
+          runs/*/system-tests-compare.log
+          runs/*/*/system-tests_*.log
+    - name: Archive run files
+      if: failure()
+      uses: actions/upload-artifact@v7
+      with:
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference_full
         path: |
           runs/*
+

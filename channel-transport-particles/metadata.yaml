@@ -1,0 +1,26 @@
+name: Channel transport particles
+path: channel-transport-particles
+url: https://precice.org/tutorials-channel-transport-particles.html
+
+participants:
+  - Fluid
+  - Particles
+
+cases:
+  fluid-nutils:
+    participant: Fluid
+    directory: ./fluid-nutils
+    run: ./run.sh
+    component: nutils-adapter
+
+  fluid-openfoam:
+    participant: Fluid
+    directory: ./fluid-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+
+  # particles-mercurydpm:
+  #   participant: Particles
+  #   directory: ./particles-mercurydpm
+  #   run: ./run.sh
+  #   component: mercurydpm-adapter

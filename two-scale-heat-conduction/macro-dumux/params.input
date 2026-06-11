@@ -43,3 +43,14 @@ Pressure = 0.0
 
 [Precice]
 RunWithCoupling = true
+
+[precice-adapter-config]
+participant_name = Macro
+precice_config_file_path = ../precice-config.xml
+interfaces.1.mesh_name = Macro-Mesh
+interfaces.1.read_data.1.name = K00
+interfaces.1.read_data.2.name = K01
+interfaces.1.read_data.3.name = K10
+interfaces.1.read_data.4.name = K11
+interfaces.1.read_data.5.name = Porosity
+interfaces.1.write_data.1.name = Concentration

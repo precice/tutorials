@@ -1,0 +1,23 @@
+name: Breaking dam 2D
+path: breaking-dam-2d # relative to git repo 
+url: https://precice.org/tutorials-breaking-dam-2d.html
+
+participants:
+  - Fluid 
+  - Solid 
+
+cases:
+  fluid-openfoam:
+    participant: Fluid
+    directory: ./fluid-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+
+  solid-calculix:
+    participant: Solid
+    directory: ./solid-calculix
+    run: ./run.sh
+    component: calculix-adapter 
+
+
+

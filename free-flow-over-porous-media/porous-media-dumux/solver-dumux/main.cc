@@ -166,11 +166,10 @@ int main(int argc, char **argv)
   std::string preciceConfigFilename = "../precice-config.xml";
 
   auto &couplingParticipant = Dumux::Precice::CouplingAdapter::getInstance();
-  couplingParticipant.announceSolver("Porous-Media", preciceConfigFilename,
-                                     mpiHelper.rank(), mpiHelper.size());
+  couplingParticipant.announceConfig(mpiHelper.rank(), mpiHelper.size());
 
-  const std::string meshName("Porous-Media-Mesh");
-  const int         dim = couplingParticipant.getMeshDimensions(meshName);
+  const std::string meshName = couplingParticipant.getMeshNames()[0];
+  const int         dim      = couplingParticipant.getMeshDimensions(meshName);
   std::cout << dim << "  " << int(DarcyGridGeometry::GridView::dimension)
             << std::endl;
   if (dim != int(DarcyGridGeometry::GridView::dimension))
@@ -204,10 +203,8 @@ int main(int argc, char **argv)
   couplingParticipant.setMesh(meshName, coords);
   couplingParticipant.createIndexMapping(coupledScvfIndices);
 
-  const std::string dataNameV("Velocity");
-  const std::string dataNameP("Pressure");
-  couplingParticipant.announceQuantity(meshName, dataNameP);
-  couplingParticipant.announceQuantity(meshName, dataNameV);
+  const std::string dataNameV = couplingParticipant.getWriteDataNamesOnMesh(meshName)[0];
+  const std::string dataNameP = couplingParticipant.getReadDataNamesOnMesh(meshName)[0];
 
   darcyProblem->applyInitialSolution(sol);
 

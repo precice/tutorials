@@ -2,25 +2,33 @@ name: Generate reference results (manual)
 on:
   workflow_dispatch:
     inputs:
+      suites:
+        description: 'Test suites to execute (comma-separated, see tests.yaml)'
+        default: 'release'
+        required: true
+        type: string
       from_ref:
-        description: 'Use the systemtests + tutorial metadata + reference_version from this ref'
+        description: 'Git branch to use and commit to'
         required: true
         type: string
       commit_msg:
-        description: 'Commit msg for commit that adds the reference results'
-        default: "Adding reference results"
+        description: 'Commit message'
+        default: "Add reference results"
         type: string
-      log_level:
-        description: 'Logging verbosity level used for the systemtests'
-        default: 'INFO'
-        required: true
+      clean_docker:
+        description: 'Run docker-system-prune before running tests'
+        default: 'FALSE'
         type: choice
         options:
-            - 'DEBUG'
+            - 'FALSE'
+            - 'TRUE'
+      log_level:
+        description: 'Logging verbosity of systemtests.py'
+        default: 'INFO'
+        type: choice
+        options:
             - 'INFO'
-            - 'WARNING'
-            - 'ERROR'
-            - 'CRITICAL'
+            - 'DEBUG'
 
 jobs:
   generate_reference_results_manual:
@@ -28,4 +36,6 @@ jobs:
     with: 
       from_ref: ${{ inputs.from_ref }}
       commit_msg: ${{ inputs.commit_msg }}
+      suites: ${{ inputs.suites }}
+      clean_docker: ${{ inputs.clean_docker }}
       log_level: ${{ inputs.log_level }}
