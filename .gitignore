@@ -10,6 +10,7 @@
 out
 
 # Common result files
+output/
 *.vtk
 *.vtu
 *.pvd
