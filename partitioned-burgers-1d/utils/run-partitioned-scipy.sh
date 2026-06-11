@@ -9,7 +9,9 @@ solver_path="./solver-scipy"
 
 if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
 then
-    python3 -m venv "$solver_path/.venv"
+    if [ ! -d "$solver_path/.venv" ]; then
+        python3 -m venv "$solver_path/.venv"
+    fi
     . "$solver_path/.venv/bin/activate"
     pip install -r "$solver_path/requirements.txt" && pip freeze > "$solver_path/pip-installed-packages.log"
 fi
