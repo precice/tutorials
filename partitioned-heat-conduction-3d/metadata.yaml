@@ -7,14 +7,14 @@ participants:
   - Neumann
 
 cases:
-  # dirichlet-fenicsx:
-  #   participant: Dirichlet
-  #   directory: ./dirichlet-fenicsx
-  #   run: ./run.sh
-  #   component: fenicsx-adapter
+  dirichlet-fenicsx:
+    participant: Dirichlet
+    directory: ./dirichlet-fenicsx
+    run: ./run.sh
+    component: fenicsx-adapter
   
-  # neumann-fenicsx:
-  #   participant: Neumann
-  #   directory: ./neumann-fenicsx
-  #   run: ./run.sh
-  #   component: fenicsx-adapter
+  neumann-fenicsx:
+    participant: Neumann
+    directory: ./neumann-fenicsx
+    run: ./run.sh
+    component: fenicsx-adapter
