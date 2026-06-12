@@ -56,7 +56,7 @@
     <participants first="Dirichlet" second="Neumann" />
     <max-time value="1.0" />
     <time-window-size value="0.1" />
-    <max-iterations value="200" />
+    <max-iterations value="100" />
     <exchange
       data="Heat-Flux"
       mesh="Dirichlet-Mesh"
