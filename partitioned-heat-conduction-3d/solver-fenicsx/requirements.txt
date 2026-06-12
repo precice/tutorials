@@ -2,3 +2,4 @@ numpy >1, <2
 fenicsxprecice
 scipy
 sympy
+gmsh
