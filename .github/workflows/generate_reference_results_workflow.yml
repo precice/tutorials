@@ -103,7 +103,7 @@ jobs:
           runs/*/system-tests-compare.log
           runs/*/*/system-tests_*.log
     - name: Archive run files
-      if: failure()
+      if: ${{ always() }}
       uses: actions/upload-artifact@v7
       with:
         name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference_full
