@@ -300,6 +300,7 @@ test_suites:
         case_combination:
           - dirichlet-fenicsx
           - neumann-fenicsx
+        max_time: 0.3
         reference_result: ./partitioned-heat-conduction-3d/reference-results/dirichlet-fenicsx_neumann-fenicsx.tar.gz
 
   partitioned-heat-conduction-complex:
