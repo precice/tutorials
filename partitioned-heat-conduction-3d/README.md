@@ -13,7 +13,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 We solve a partitioned heat equation. For information on the two dimensional non-partitioned case, please refer to [1, p.37ff]. In this tutorial the computational domain is partitioned and coupled via preCICE. The coupling roughly follows the approach described in [2].
 
-![Case setup of partitioned-heat-conduction case](images/tutorials-partitioned-heat-conduction-setup.png)
+![Case setup of partitioned-heat-conduction case](images/tutorials-partitioned-heat-conduction-3d-setup.png)
 
 The computational domain can be seen in the picture above. To get a better overview of the domain, the domains of the participants are translated.
 The domain of the Neumann participant is the small box, and the Dirichlet participant's domain is the rest. In the simulation, the small box is fully contained in the Dirichlet domain. This means, the coupling interface consists of five sides of the box.
@@ -22,7 +22,7 @@ The domain of the Neumann participant is the small box, and the Dirichlet partic
 
 preCICE configuration (image generated using the [precice-config-visualizer](https://precice.org/tooling-config-visualization.html)):
 
-![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-precice-config.png)
+![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-3d-precice-config.png)
 
 ## Available solvers and dependencies
 
