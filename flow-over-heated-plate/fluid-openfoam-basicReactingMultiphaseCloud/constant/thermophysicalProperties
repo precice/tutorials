@@ -1,0 +1,47 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermophysicalProperties;
+}
+
+thermoType
+{
+    type            heRhoThermo;
+    mixture         reactingMixture;
+    transport       const;
+    thermo          hConst;
+    equationOfState perfectGas;
+    specie          specie;
+    energy          sensibleEnthalpy;
+}
+
+chemistryReader foamChemistryReader;
+
+foamChemistryFile "<constant>/foam.inp";
+
+foamChemistryThermoFile "<constant>/foam.dat";
+
+inertSpecie  H2O;
+
+liquids
+{
+    H2O;
+}
+
+solids
+{
+    tutorialParticle
+    {
+        defaultCoeffs   no;
+        rho             1;
+        Cp              5000;
+        kappa           0.04;
+        Hf              0;
+        emissivity      1.0;
+        W               58;
+    }
+}
+

@@ -1,0 +1,161 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      reactingCloud1Properties;
+}
+
+cloudType           basicReactingCloud;
+
+solution
+{
+    active          yes;
+    coupled         true;
+    transient       yes;
+
+    maxCo           0.3;
+    cellValueSourceCorrection off;
+
+    sourceTerms
+    {
+        resetOnStartup  false;
+        schemes
+        {
+            rho             explicit 1;
+            U               explicit 1;
+            Yi              explicit 1;
+            h               explicit 1;
+            radiation       explicit 1;
+        }
+    }
+
+    interpolationSchemes
+    {
+        rho             cell;
+        U               cellPoint;
+        thermo:mu       cell;
+        T               cell;
+        Cp              cell;
+        kappa           cell;
+        p               cell;
+    }
+
+    integrationSchemes
+    {
+        U               Euler;
+        T               analytical;
+    }
+}
+
+
+constantProperties
+{
+    rho0                1;
+    Cp0                 5000;
+    T0                  300;
+    hRetentionCoeff     0;
+    volumeUpdateMethod  constantRho;
+}
+
+
+subModels
+{
+    particleForces
+    {
+        sphereDrag;
+        gravity;
+    }
+
+    injectionModels
+    {
+        model1
+        {
+            type              implicitPatchInjection;
+            patch             inlet;
+            U0                (0.4 0 0);
+	    T0                300;
+            
+	    parcelBasisType   fixed;
+            nParticle         1;
+            parcelsPerSecond  200;
+
+            SOI               0;
+            duration          0.5;
+	    massTotal         9999999;
+
+            flowRateProfile   constant 1;
+
+            sizeDistribution
+            {
+                type        fixedValue;
+                fixedValueDistribution
+                {
+                    value       0.001;
+                }
+            }
+        }
+    }
+
+    dispersionModel none;
+
+    patchInteractionModel standardWallInteraction;
+
+    standardWallInteractionCoeffs
+    {
+        type            rebound;
+	e               0.9;
+	mu              0.9;
+    }
+
+    heatTransferModel RanzMarshall;
+
+    RanzMarshallCoeffs
+    {
+        BirdCorrection  off;
+    }
+
+    compositionModel singleMixtureFraction;
+
+    singleMixtureFractionCoeffs
+    {
+        phases
+        (
+            gas
+            {
+            }
+            liquid
+            {
+                H2O  1;
+            }
+            solid
+            {
+                tutorialParticle 1;
+            }
+        );
+        YGasTot0        0;
+        YLiquidTot0     0.0;
+        YSolidTot0      1;
+    }
+
+    phaseChangeModel none;
+
+    devolatilisationModel none;
+
+    surfaceReactionModel none;
+
+    stochasticCollisionModel none;
+
+    surfaceFilmModel none;
+
+    radiation       off;
+
+    heterogeneousReactingModel  none;
+
+}
+
+
+cloudFunctions
+{
+}
+

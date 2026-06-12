@@ -1,0 +1,15 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      chemistryProperties;
+}
+
+chemistryType
+{
+    solver            noChemistrySolver;
+}
+
+chemistry       off;
+
