@@ -102,7 +102,7 @@ fenicsx-adapter:
       default: "master"
     FENICSX_ADAPTER_REF:
       description: Git ref of the fenicsx adapter to use
-      default: "master"
+      default: "main"
 
 nutils-adapter:
   repository: https://github.com/precice/nutils-adapter

@@ -145,7 +145,7 @@ ARG FENICSX_ADAPTER_REF
 # Building fenicsx-adapter
 RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
-    pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICSX_ADAPTER_REF}
+    pip3 install git+https://github.com/precice/fenicsx-adapter.git@${FENICSX_ADAPTER_REF}
 
 FROM precice_dependecies AS nutils_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
