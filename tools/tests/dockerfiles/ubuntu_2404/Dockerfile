@@ -126,6 +126,18 @@ RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
 
+FROM precice_dependecies AS fenicsx_adapter
+COPY --from=python_bindings /home/precice/.local /home/precice/.local
+USER root
+RUN add-apt-repository -y ppa:fenics-packages/fenics && \
+    apt-get -qq update && \
+    apt-get -qq install --no-install-recommends fenicsx
+USER precice
+ARG FENICSX_ADAPTER_REF
+# Building fenicsx-adapter
+RUN python3 -m venv --system-site-packages /home/precice/venv && \
+    . /home/precice/venv/bin/activate && \
+    pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICSX_ADAPTER_REF}
 
 FROM precice_dependecies AS nutils_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local

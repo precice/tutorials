@@ -13,11 +13,11 @@ cases:
     run: ./run.sh
     component: fenics-adapter
 
-  # dirichlet-fenicsx:
-  #   participant: Dirichlet
-  #   directory: ./dirichlet-fenicsx
-  #   run: ./run.sh
-  #   component: fenicsx-adapter
+  dirichlet-fenicsx:
+    participant: Dirichlet
+    directory: ./dirichlet-fenicsx
+    run: ./run.sh
+    component: fenicsx-adapter
 
   # dirichlet-gismo:
   #   participant: Dirichlet
@@ -43,11 +43,11 @@ cases:
     run: ./run.sh
     component: fenics-adapter
   
-  # neumann-fenicsx:
-  #   participant: Neumann
-  #   directory: ./neumann-fenicsx
-  #   run: ./run.sh
-  #   component: fenicsx-adapter
+  neumann-fenicsx:
+    participant: Neumann
+    directory: ./neumann-fenicsx
+    run: ./run.sh
+    component: fenicsx-adapter
 
   # neumann-gismo:
   #   participant: Neumann
