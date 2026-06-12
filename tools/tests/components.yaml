@@ -81,6 +81,29 @@ fenics-adapter:
       description: Git ref of the fenics adapter to use
       default: "master"
 
+fenicsx-adapter:
+  repository: https://github.com/precice/fenicsx-adapter
+  template: component-templates/fenicsx-adapter.yaml
+  build_arguments:
+    PLATFORM:
+      description: Dockerfile platform used
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      description: Version of preCICE to use
+      default: "main"
+    PRECICE_PRESET:
+      description: CMake preset of preCICE
+      default: "production-audit"
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: "master"
+    PYTHON_BINDINGS_REF:
+      description: Git ref of the Python bindings to use
+      default: "master"
+    FENICSX_ADAPTER_REF:
+      description: Git ref of the fenicsx adapter to use
+      default: "master"
+
 nutils-adapter:
   repository: https://github.com/precice/nutils-adapter
   template: component-templates/nutils-adapter.yaml
