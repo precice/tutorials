@@ -5,11 +5,11 @@ if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
 then
     if [ ! -d ".venv" ]; then
         python3 -m venv --system-site-packages .venv
-        . .venv/bin/activate
+        source .venv/bin/activate
         pip install ../../..
         pip install -r .requirements.txt
     else
-        . .venv/bin/activate
+        source .venv/bin/activate
     fi
 fi
 

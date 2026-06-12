@@ -5,10 +5,10 @@ if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
 then
     if [ ! -d ".venv" ]; then
         python3 -m venv --system-site-packages .venv
-        . .venv/bin/activate
+        source .venv/bin/activate
         pip install -r ../solver-fenicsx/requirements.txt
     else
-        . .venv/bin/activate
+        source .venv/bin/activate
     fi
 fi
 
