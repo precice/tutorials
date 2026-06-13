@@ -13,5 +13,6 @@ volumes:
 command: >
   /bin/bash -c "id && 
   cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&
-  {{ run }} | tee system-tests_{{ case_folder }}.log 2>&1" &&
-  && rm -rf .venv __pycache__
+  {{ run }} &&
+  rm -rf .venv __pycache__
+  | tee system-tests_{{ case_folder }}.log 2>&1"
