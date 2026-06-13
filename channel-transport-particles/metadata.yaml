@@ -19,8 +19,8 @@ cases:
     run: ./run.sh
     component: openfoam-adapter
 
-  # particles-mercurydpm:
-  #   participant: Particles
-  #   directory: ./particles-mercurydpm
-  #   run: ./run.sh
-  #   component: mercurydpm-adapter
+  particles-mercurydpm:
+    participant: Particles
+    directory: ./particles-mercurydpm
+    run: ./run.sh
+    component: mercurydpm-adapter
