@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -e -u -o pipefail
+
+. ../../tools/log.sh
+exec > >(tee --append "$LOGFILE") 2>&1
 
 EXE=""
 MERCURYDPM_BUILD_DIR="${MERCURYDPM_BUILD_DIR:-}"
@@ -45,6 +48,7 @@ run_and_exit() {
   local cmd="$1"
   log "Using executable: ${cmd}"
   "${cmd}"
+  close_log
   exit 0
 }
 
@@ -102,4 +106,5 @@ Hints:
   - MercuryDPM must be built with preCICE coupling:
       -D MercuryDPM_PreCICE_COUPLING="ON"
 EOF
+close_log
 exit 1
