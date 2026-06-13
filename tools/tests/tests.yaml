@@ -436,6 +436,13 @@ test_suites:
           - solid-openfoam
         max_time: 0.03
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+      - &perpendicular-flap_fluid-openfoam_solid-solids4foam
+        path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-solids4foam
+        max_time: 0.1
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-solids4foam.tar.gz
       - &perpendicular-flap_fluid-su2_solid-fenics
         path: perpendicular-flap
         case_combination:
@@ -732,6 +739,10 @@ test_suites:
 
       # Excluded:
       # *elastic-tube-3d_fluid-openfoam_solid-fenics # too small values to compare
+
+  solids4foam:
+    tutorials:
+      - *perpendicular-flap_fluid-openfoam_solid-solids4foam
 
   su2-adapter:
     tutorials:

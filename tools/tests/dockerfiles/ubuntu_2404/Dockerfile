@@ -108,6 +108,12 @@ RUN git clone https://github.com/precice/openfoam-adapter.git &&\
     git checkout ${OPENFOAM_ADAPTER_REF} && \
     /usr/bin/${OPENFOAM_EXECUTABLE} ./Allwmake -j $(nproc)
 
+FROM openfoam_adapter AS solids4foam
+USER precice
+RUN python3 -m venv /home/precice/venv && \
+    . /home/precice/venv/bin/activate && \
+    pip3 install styro && \
+    styro install solids4foam
 
 FROM precice_dependecies AS python_bindings
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
