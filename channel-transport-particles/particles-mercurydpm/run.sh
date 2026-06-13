@@ -48,6 +48,11 @@ run_and_exit() {
   local cmd="$1"
   log "Using executable: ${cmd}"
   "${cmd}"
+
+  # Necessary signal file for the system tests,
+  # to keep the Source container running till the end
+  date > ../particles-participant-finished.log
+
   close_log
   exit 0
 }

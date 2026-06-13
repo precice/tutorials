@@ -16,4 +16,12 @@ fi
 
 python3 fluid.py
 
+# System tests: Keep the container and the respective network alive till the end.
+if [[ -v PRECICE_TUTORIALS_TESTING ]]; then
+    echo "Waiting for the Particles participant to finish..."
+    if [ ! -f "../particles-participant-finished.log" ]; then
+        inotifywait -e create,modify,attrib --include '/particles-participant-finished\.log$' -qq ..
+    fi
+fi
+
 close_log
