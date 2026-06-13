@@ -231,6 +231,19 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
     cmake . && \
     make -j $(nproc)
 
+FROM precice_dependecies AS mercurydpm_adapter
+USER precice
+COPY --from=precice /home/precice/.local /home/precice/.local
+WORKDIR /home/precice
+ENV PATH="/home/precice/mercurydpm/build/Drivers/PreCICE:$PATH"
+# The channel-transport-particles tutorial is hosted in a frozen fork of the MercuryDPM repository.
+# That's why there are no arguments for version, ref, or pr.
+RUN git clone https://bitbucket.org/davidscn/mercurydpm.git &&\
+    cd mercurydpm && \
+    git checkout channel-transport-tutorial && \
+    mkdir -p build && cd build && \
+    cmake -D MercuryDPM_PreCICE_COUPLING="ON" .. && \
+    make -j $(nproc) ChannelTransport
 
 FROM precice_dependecies AS micro_manager
 USER precice

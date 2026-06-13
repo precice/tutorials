@@ -48,6 +48,23 @@ test_suites:
         max_time: 0.5
         reference_result: ./channel-transport-reaction/reference-results/fluid-fenics_chemical-fenics.tar.gz
 
+  channel-transport-particles:
+    tutorials:
+      - &channel-transport-particles_fluid-openfoam_particles-mercurydpm
+        path: channel-transport-particles
+        case_combination:
+          - fluid-openfoam
+          - particles-mercurydpm
+        max_time: 0.025
+        reference_result: ./channel-transport-particles/reference-results/fluid-openfoam_particles-mercurydpm.tar.gz
+      - &channel-transport-particles_fluid-nutils_particles-mercurydpm
+        path: channel-transport-particles
+        case_combination:
+          - fluid-nutils
+          - particles-mercurydpm
+        max_time: 0.025
+        reference_result: ./channel-transport-particles/reference-results/fluid-nutils_particles-mercurydpm.tar.gz
+
   elastic-tube-1d:
     tutorials:
       - &elastic-tube-1d_fluid-cpp_solid-cpp
@@ -528,6 +545,8 @@ test_suites:
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
       - *channel-transport-reaction_fluid-fenics_chemical-fenics
+      - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
+      - *channel-transport-particles_fluid-nutils_particles-mercurydpm
       - *elastic-tube-1d_fluid-cpp_solid-cpp
       - *elastic-tube-1d_fluid-cpp_solid-python
       - *elastic-tube-1d_fluid-fortran_solid-fortran
@@ -652,6 +671,11 @@ test_suites:
     tutorials:
       - *elastic-tube-1d_fluid-fortran-module_solid-fortran-module
 
+  mercurydpm-adapter:
+    tutorials:
+      - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
+      - *channel-transport-particles_fluid-nutils_particles-mercurydpm
+
   micro-manager:
     tutorials:
       - *two-scale-heat-conduction_macro-dumux_micro-dumux # too small values to compare
@@ -661,6 +685,7 @@ test_suites:
     tutorials:
       - *channel-transport_fluid-openfoam_transport-nutils
       - *channel-transport_fluid-nutils_transport-nutils
+      - *channel-transport-particles_fluid-nutils_particles-mercurydpm
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *partitioned-heat-conduction-direct_dirichlet-nutils_neumann-nutils
@@ -677,6 +702,7 @@ test_suites:
     tutorials:
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
+      - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
       - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
