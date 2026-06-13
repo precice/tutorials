@@ -233,7 +233,7 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
 
 FROM precice_dependecies AS mercurydpm_adapter
 USER precice
-COPY --from=precice_dependecies /home/precice/.local /home/precice/.local
+COPY --from=precice /home/precice/.local /home/precice/.local
 WORKDIR /home/precice
 ENV PATH="/home/precice/mercurydpm/build/Drivers/PreCICE:$PATH"
 # The channel-transport-particles tutorial is hosted in a frozen fork of the MercuryDPM repository.
