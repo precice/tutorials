@@ -113,7 +113,7 @@ USER precice
 RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install styro && \
-    styro install solids4foam
+    /usr/bin/${OPENFOAM_EXECUTABLE} styro install solids4foam
 
 FROM precice_dependecies AS python_bindings
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
