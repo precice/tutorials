@@ -28,7 +28,7 @@ cases:
   fluid-python:
     participant: Fluid
     directory: ./fluid-python
-    run: ./run.sh
+    run: ./run.sh && rm -rf .venv
     component: python-bindings
 
   fluid-rust:
@@ -58,7 +58,7 @@ cases:
   solid-python:
     participant: Solid
     directory: ./solid-python
-    run: ./run.sh
+    run: ./run.sh && rm -rf .venv
     component: python-bindings
   
   solid-rust:

@@ -719,4 +719,4 @@ test_suites:
 
   selected:
     tutorials:
-      - *two-scale-heat-conduction_macro-nutils_micro-nutils
+      - *elastic-tube-1d_fluid-python_solid-python
