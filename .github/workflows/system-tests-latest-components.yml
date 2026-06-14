@@ -68,7 +68,7 @@ jobs:
     steps:
       - id: print-inputs
         name: Display inputs
-        uses: shayki5/print-workflow-dispatch-inputs@v1
+        uses: VeyronSakai/display-inputs-action@v0.1
         with:
           add_to_summary: 'true'
       - id: ref-precice
