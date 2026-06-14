@@ -15,8 +15,48 @@ on:
         description: 'Branch to take the system tests from'
         default: 'develop'
         type: string
+      ref-precice:
+        description: 'precice Git ref (override latest)'
+        type: string
+      ref-python-bindings:
+        description: 'python-bindings ref'
+        type: string
+      ref-calculix-adapter:
+        description: 'calculix-adapter ref'
+        type: string
+      ref-dealii-adapter:
+        description: 'dealii-adapter ref'
+        type: string
+      ref-dumux-adapter:
+        description: 'dumux-adapter ref'
+        type: string
+      ref-fenics-adapter:
+        description: 'fenics-adapter ref'
+        type: string
+      ref-fenicsx-adapter:
+        description: 'fenicsx-adapter ref'
+        type: string
+      ref-micro-manager:
+        description: 'micro-manager ref'
+        type: string
+      ref-openfoam-adapter:
+        description: 'openfoam-adapter ref'
+        type: string
+      ref-su2-adapter:
+        description: 'su2-adapter ref'
+        type: string
+      ref-tutorials:
+        description: 'tutorials ref'
+        type: string
 
 jobs:
+  report-inputs:
+    name: Report workflow inputs
+    runs-on: ubuntu-latest
+    steps:
+      - id: report-inputs
+        name: Report inputs
+        uses: VeyronSakai/display-inputs-action@v0.1
   gather-refs:
     name: Map Git branches to latest refs
     runs-on: ubuntu-latest
@@ -24,6 +64,7 @@ jobs:
       ref-precice: ${{ steps.ref-precice.outputs.shorthash }}
       ref-python-bindings: ${{ steps.ref-python-bindings.outputs.shorthash }}
       ref-calculix-adapter: ${{ steps.ref-calculix-adapter.outputs.shorthash }}
+      ref-dealii-adapter: ${{ steps.ref-dealii-adapter.outputs.shorthash }}
       ref-dumux-adapter: ${{ steps.ref-dumux-adapter.outputs.shorthash }}
       ref-fenics-adapter: ${{ steps.ref-fenics-adapter.outputs.shorthash }}
       ref-fenicsx-adapter: ${{ steps.ref-fenicsx-adapter.outputs.shorthash }}
@@ -52,6 +93,13 @@ jobs:
         with:
           owner: precice
           repo: calculix-adapter
+          branch: develop
+      - id: ref-dealii-adapter
+        name: Get deal.II adapter ref
+        uses: nmbgeek/github-action-get-latest-commit@main
+        with:
+          owner: precice
+          repo: dealii-adapter
           branch: develop
       - id: ref-dumux-adapter
         name: Get DuMux adapter ref
@@ -108,6 +156,7 @@ jobs:
           printf 'preCICE: ${{ steps.ref-precice.outputs.shorthash }}\n ${{ steps.ref-precice.outputs.description }}\n----------\n'
           printf 'Python bindings: ${{ steps.ref-python-bindings.outputs.shorthash }}\n ${{ steps.ref-python-bindings.outputs.description }}\n----------\n'
           printf 'CalculiX adapter: ${{ steps.ref-calculix-adapter.outputs.shorthash }}\n ${{ steps.ref-calculix-adapter.outputs.description }}\n----------\n'
+          printf 'deal.II adapter: ${{ steps.ref-dealii-adapter.outputs.shorthash }}\n ${{ steps.ref-dealii-adapter.outputs.description }}\n----------\n'
           printf 'DuMux adapter: ${{ steps.ref-dumux-adapter.outputs.shorthash }}\n ${{ steps.ref-dumux-adapter.outputs.description }}\n----------\n'
           printf 'FEniCS adapter: ${{ steps.ref-fenics-adapter.outputs.shorthash }}\n ${{ steps.ref-fenics-adapter.outputs.description }}\n----------\n'
           printf 'FEniCSx adapter: ${{ steps.ref-fenicsx-adapter.outputs.shorthash }}\n ${{ steps.ref-fenicsx-adapter.outputs.description }}\n----------\n'
@@ -137,6 +186,12 @@ jobs:
             echo "Description:"
             echo "\`\`\`"
             echo "${{ steps.ref-calculix-adapter.outputs.description }}"
+            echo "\`\`\`"
+            echo "### deal.II adapter"
+            echo "Reference: [\`${{ steps.ref-dealii-adapter.outputs.shorthash }}\`](https://github.com/precice/dealii-adapter/commit/${{ steps.ref-dealii-adapter.outputs.shorthash }})"
+            echo "Description:"
+            echo "\`\`\`"
+            echo "${{ steps.ref-dealii-adapter.outputs.description }}"
             echo "\`\`\`"
             echo "### DuMux adapter"
             echo "Reference: [\`${{ steps.ref-dumux-adapter.outputs.shorthash }}\`](https://github.com/precice/dumux-adapter/commit/${{ steps.ref-dumux-adapter.outputs.shorthash }})"
@@ -189,15 +244,16 @@ jobs:
     with:
       suites: ${{ inputs.suites || 'release' }}
       build_args: "PLATFORM:ubuntu_2404,\
-        PRECICE_REF:${{ needs.gather-refs.outputs.ref-precice }},\
-        PYTHON_BINDINGS_REF:${{ needs.gather-refs.outputs.ref-python-bindings }},\
-        CALCULIX_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-calculix-adapter }},\
-        DUMUX_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-dumux-adapter }},\
-        FENICS_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-fenics-adapter }},\
-        FENICSX_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-fenicsx-adapter }},\
-        MICRO_MANAGER_REF:${{ needs.gather-refs.outputs.ref-micro-manager }},\
-        OPENFOAM_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-openfoam-adapter }},\
-        SU2_ADAPTER_REF:${{ needs.gather-refs.outputs.ref-su2-adapter }},\
-        TUTORIALS_REF:${{ needs.gather-refs.outputs.ref-tutorials }}"
+        PRECICE_REF:${{ inputs.ref-precice || needs.gather-refs.outputs.ref-precice }},\
+        PYTHON_BINDINGS_REF:${{ inputs.ref-python-bindings || needs.gather-refs.outputs.ref-python-bindings }},\
+        CALCULIX_ADAPTER_REF:${{ inputs.ref-calculix-adapter || needs.gather-refs.outputs.ref-calculix-adapter }},\
+        DEALII_ADAPTER_REF:${{ inputs.ref-dealii-adapter || needs.gather-refs.outputs.ref-dealii-adapter }},\
+        DUMUX_ADAPTER_REF:${{ inputs.ref-dumux-adapter || needs.gather-refs.outputs.ref-dumux-adapter }},\
+        FENICS_ADAPTER_REF:${{ inputs.ref-fenics-adapter || needs.gather-refs.outputs.ref-fenics-adapter }},\
+        FENICSX_ADAPTER_REF:${{ inputs.ref-fenicsx-adapter || needs.gather-refs.outputs.ref-fenicsx-adapter }},\
+        MICRO_MANAGER_REF:${{ inputs.ref-micro-manager || needs.gather-refs.outputs.ref-micro-manager }},\
+        OPENFOAM_ADAPTER_REF:${{ inputs.ref-openfoam-adapter || needs.gather-refs.outputs.ref-openfoam-adapter }},\
+        SU2_ADAPTER_REF:${{ inputs.ref-su2-adapter || needs.gather-refs.outputs.ref-su2-adapter }},\
+        TUTORIALS_REF:${{ inputs.ref-tutorials || needs.gather-refs.outputs.ref-tutorials }}"
       system_tests_branch: ${{ inputs.system_tests_branch || 'develop' }}
       log_level: "INFO"
