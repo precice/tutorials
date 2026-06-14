@@ -50,6 +50,13 @@ on:
         type: string
 
 jobs:
+  report-inputs:
+    name: Report workflow inputs
+    runs-on: ubuntu-latest
+    steps:
+      - id: report-inputs
+        name: Report inputs
+        uses: VeyronSakai/display-inputs-action@v0.1
   gather-refs:
     name: Map Git branches to latest refs
     runs-on: ubuntu-latest
@@ -66,9 +73,6 @@ jobs:
       ref-su2-adapter: ${{ steps.ref-su2-adapter.outputs.shorthash }}
       ref-tutorials: ${{ steps.ref-tutorials.outputs.shorthash }}
     steps:
-      - id: print-inputs
-        name: Display inputs
-        uses: VeyronSakai/display-inputs-action@v0.1
       - id: ref-precice
         name: Get preCICE ref
         uses: nmbgeek/github-action-get-latest-commit@main
