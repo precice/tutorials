@@ -442,7 +442,6 @@ test_suites:
           - fluid-openfoam
           - solid-solids4foam
         max_time: 0.1
-        timeout: 3600
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-solids4foam.tar.gz
       - &perpendicular-flap_fluid-su2_solid-fenics
         path: perpendicular-flap
