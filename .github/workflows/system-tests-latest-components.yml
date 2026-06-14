@@ -66,6 +66,11 @@ jobs:
       ref-su2-adapter: ${{ steps.ref-su2-adapter.outputs.shorthash }}
       ref-tutorials: ${{ steps.ref-tutorials.outputs.shorthash }}
     steps:
+      - id: print-inputs
+        name: Display inputs
+        uses: shayki5/print-workflow-dispatch-inputs@v1
+        with:
+          add_to_summary: 'true'
       - id: ref-precice
         name: Get preCICE ref
         uses: nmbgeek/github-action-get-latest-commit@main
@@ -157,10 +162,6 @@ jobs:
           printf 'OpenFOAM adapter: ${{ steps.ref-openfoam-adapter.outputs.shorthash }} ${{ steps.ref-openfoam-adapter.outputs.description }}\n----------\n'
           printf 'SU2 adapter: ${{ steps.ref-su2-adapter.outputs.shorthash }}\n ${{ steps.ref-su2-adapter.outputs.description }}\n----------\n'
           printf 'Tutorials: ${{ steps.ref-tutorials.outputs.shorthash }} ${{ steps.ref-tutorials.outputs.description }}\n----------\n'
-      - id: inputs
-        uses: shayki5/print-workflow-dispatch-inputs@v1
-        with:
-          add_to_summary: 'true'
       - id: summary
         name: Prepare Markdown summary
         run: |
