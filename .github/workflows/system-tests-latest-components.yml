@@ -158,11 +158,9 @@ jobs:
           printf 'SU2 adapter: ${{ steps.ref-su2-adapter.outputs.shorthash }}\n ${{ steps.ref-su2-adapter.outputs.description }}\n----------\n'
           printf 'Tutorials: ${{ steps.ref-tutorials.outputs.shorthash }} ${{ steps.ref-tutorials.outputs.description }}\n----------\n'
       - id: inputs
-        run: |
-          {
-            echo "## Workflow inputs (will override the above reported latest components):"
-            echo "{{ inputs }}"
-          } >> "$GITHUB_STEP_SUMMARY"
+        uses: shayki5/print-workflow-dispatch-inputs@v1
+        with:
+          add_to_summary: 'true'
       - id: summary
         name: Prepare Markdown summary
         run: |
