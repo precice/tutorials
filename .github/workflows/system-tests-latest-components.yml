@@ -69,8 +69,6 @@ jobs:
       - id: print-inputs
         name: Display inputs
         uses: VeyronSakai/display-inputs-action@v0.1
-        with:
-          add_to_summary: 'true'
       - id: ref-precice
         name: Get preCICE ref
         uses: nmbgeek/github-action-get-latest-commit@main
