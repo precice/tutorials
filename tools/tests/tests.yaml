@@ -48,6 +48,23 @@ test_suites:
         max_time: 0.5
         reference_result: ./channel-transport-reaction/reference-results/fluid-fenics_chemical-fenics.tar.gz
 
+  channel-transport-particles:
+    tutorials:
+      - &channel-transport-particles_fluid-openfoam_particles-mercurydpm
+        path: channel-transport-particles
+        case_combination:
+          - fluid-openfoam
+          - particles-mercurydpm
+        max_time: 0.025
+        reference_result: ./channel-transport-particles/reference-results/fluid-openfoam_particles-mercurydpm.tar.gz
+      - &channel-transport-particles_fluid-nutils_particles-mercurydpm
+        path: channel-transport-particles
+        case_combination:
+          - fluid-nutils
+          - particles-mercurydpm
+        max_time: 0.025
+        reference_result: ./channel-transport-particles/reference-results/fluid-nutils_particles-mercurydpm.tar.gz
+
   elastic-tube-1d:
     tutorials:
       - &elastic-tube-1d_fluid-cpp_solid-cpp
@@ -118,6 +135,12 @@ test_suites:
          - fluid-openfoam
          - solid-fenics
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz
+      - &flow-over-heated-plate_fluid-openfoam_solid-fenicsx
+        path: flow-over-heated-plate
+        case_combination:
+         - fluid-openfoam
+         - solid-fenicsx
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenicsx.tar.gz
       - &flow-over-heated-plate_fluid-openfoam_solid-nutils
         path: flow-over-heated-plate
         case_combination:
@@ -280,6 +303,13 @@ test_suites:
           - neumann-fenics
         max_time: 0.3
         reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-fenics_neumann-fenics.tar.gz
+      - &partitioned-heat-conduction_dirichlet-fenicsx_neumann-fenicsx
+        path: partitioned-heat-conduction
+        case_combination:
+          - dirichlet-fenicsx
+          - neumann-fenicsx
+        max_time: 0.3
+        reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-fenicsx_neumann-fenicsx.tar.gz
       - &partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
         path: partitioned-heat-conduction
         case_combination:
@@ -294,6 +324,16 @@ test_suites:
           - neumann-openfoam
         max_time: 0.3
         reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-openfoam_neumann-openfoam.tar.gz
+
+  partitioned-heat-conduction-3d:
+    tutorials:
+      - &partitioned-heat-conduction-3d_dirichlet-fenicsx_neumann-fenicsx
+        path: partitioned-heat-conduction-3d
+        case_combination:
+          - dirichlet-fenicsx
+          - neumann-fenicsx
+        max_time: 0.3
+        reference_result: ./partitioned-heat-conduction-3d/reference-results/dirichlet-fenicsx_neumann-fenicsx.tar.gz
 
   partitioned-heat-conduction-complex:
     tutorials:
@@ -520,6 +560,8 @@ test_suites:
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
       - *channel-transport-reaction_fluid-fenics_chemical-fenics
+      - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
+      - *channel-transport-particles_fluid-nutils_particles-mercurydpm
       - *elastic-tube-1d_fluid-cpp_solid-cpp
       - *elastic-tube-1d_fluid-cpp_solid-python
       - *elastic-tube-1d_fluid-fortran_solid-fortran
@@ -528,6 +570,7 @@ test_suites:
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
       - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
+      - *flow-over-heated-plate_fluid-openfoam_solid-fenicsx
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam
       - *flow-over-heated-plate_fluid-su2_solid-openfoam
@@ -546,7 +589,9 @@ test_suites:
       - *partitioned-burgers-1d_dirichlet-scipy_neumann-surrogate
       - *partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
       - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
+      - *partitioned-heat-conduction_dirichlet-fenicsx_neumann-fenicsx
       - *partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam
+      - *partitioned-heat-conduction-3d_dirichlet-fenicsx_neumann-fenicsx
       - *partitioned-heat-conduction-complex_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction-direct_dirichlet-nutils_neumann-nutils
       - *partitioned-heat-conduction-overlap_left-fenics_right-fenics
@@ -574,6 +619,7 @@ test_suites:
       - *channel-transport_fluid-nutils_transport-nutils
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *perpendicular-flap_fluid-nutils_solid-calculix
+      - *perpendicular-flap_fluid-openfoam_solid-nutils
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
 
   expected-to-fail:
@@ -628,6 +674,12 @@ test_suites:
       # Excluded:
       # *elastic-tube-3d_fluid-openfoam_solid-fenics # too small values to compare
 
+  fenicsx-adapter:
+    tutorials:
+      - *flow-over-heated-plate_fluid-openfoam_solid-fenicsx
+      - *partitioned-heat-conduction_dirichlet-fenicsx_neumann-fenicsx
+      - *partitioned-heat-conduction-3d_dirichlet-fenicsx_neumann-fenicsx
+
   fmi-runner:
     tutorials:
       - *oscillator_mass-left-fmi_mass-right-fmi
@@ -635,6 +687,11 @@ test_suites:
   fortran-module:
     tutorials:
       - *elastic-tube-1d_fluid-fortran-module_solid-fortran-module
+
+  mercurydpm-adapter:
+    tutorials:
+      - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
+      - *channel-transport-particles_fluid-nutils_particles-mercurydpm
 
   micro-manager:
     tutorials:
@@ -645,6 +702,7 @@ test_suites:
     tutorials:
       - *channel-transport_fluid-openfoam_transport-nutils
       - *channel-transport_fluid-nutils_transport-nutils
+      - *channel-transport-particles_fluid-nutils_particles-mercurydpm
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *partitioned-heat-conduction-direct_dirichlet-nutils_neumann-nutils
@@ -661,6 +719,7 @@ test_suites:
     tutorials:
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
+      - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
       - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
@@ -700,3 +759,7 @@ test_suites:
   system-tests-dev:
     tutorials:
       - *elastic-tube-1d_fluid-cpp_solid-cpp
+
+  selected:
+    tutorials:
+      - *elastic-tube-1d_fluid-python_solid-python

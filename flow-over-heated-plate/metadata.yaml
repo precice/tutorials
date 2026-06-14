@@ -31,11 +31,11 @@ cases:
     run: ./run.sh 
     component: fenics-adapter 
 
-  # solid-fenicsx:
-  #   participant: Solid
-  #   directory: ./solid-fenicsx
-  #   run: ./run.sh
-  #   component: fenicsx-adapter
+  solid-fenicsx:
+    participant: Solid
+    directory: ./solid-fenicsx
+    run: ./run.sh
+    component: fenicsx-adapter
 
   solid-nutils:
     participant: Solid
