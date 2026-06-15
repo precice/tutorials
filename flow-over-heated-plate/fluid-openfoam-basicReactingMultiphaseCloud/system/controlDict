@@ -39,7 +39,7 @@ runTimeModifiable false;
 libs
 (
     "libpreciceAdapterFunctionObject.so"
-    "libimplicitPatchInjection.so"
+    "libimplicitInjectors.so"
 );
 
 functions
