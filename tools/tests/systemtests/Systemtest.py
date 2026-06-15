@@ -388,11 +388,11 @@ class Systemtest:
             # The output assumes a URL of the form <repository>/commits/<commit>. Works for GitHub and Bitbucket.
             logging.info(
                 f"Resolved the git ref {ref} of the repository {repository} to {repository}/commits/{commit} .")
-            return commit if commit else None
+            return commit if commit else ref
         except Exception:
             logging.warning(
                 f"Could not resolve git ref {ref} of the repository {repository} to a commit. Using the given git ref as-is.")
-            return None
+            return ref
 
     def _checkout_ref_in_subfolder(self, repository: Path, subfolder: Path, ref: str):
         try:
