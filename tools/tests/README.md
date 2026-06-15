@@ -75,7 +75,7 @@ Example output:
 ```text
 Run cd tools/tests
   cd tools/tests
-  python systemtests.py --build_args=PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0 --suites=fenics-adapter --log-level=DEBUG
+  python systemtests.py --build_args=PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0 --suites=fenics-adapter --log_level=DEBUG
   cd ../../
   shell: /usr/bin/bash -e {0}
 INFO: About to run the following systemtest in the directory /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs:
@@ -88,7 +88,7 @@ DEBUG: Building docker image for Flow over heated plate (fluid-openfoam, solid-f
 DEBUG: Running tutorial Flow over heated plate (fluid-openfoam, solid-fenics)
 DEBUG: Running fieldcompare for Flow over heated plate (fluid-openfoam, solid-fenics)
 DEBUG: extracting /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz into /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs/flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723/reference_results
-Using log-level: DEBUG
+Using log_level: DEBUG
 +---------------------------------------------------------+---------+-------------------+-----------------+-----------------------+
 | systemtest                                              | success | building time [s] | solver time [s] | fieldcompare time [s] |
 CRITICAL: Fieldcompare returned non zero exit code, therefore Flow over heated plate (fluid-openfoam, solid-fenics) failed

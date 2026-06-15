@@ -34,7 +34,7 @@ def main():
     parser.add_argument('--rundir', type=str, help='Directory to run the systemstests in.',
                         nargs='?', const=PRECICE_TESTS_RUN_DIR, default=PRECICE_TESTS_RUN_DIR)
 
-    parser.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+    parser.add_argument('--log_level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
                         default='INFO', help='Set the logging level')
 
     # Parse the command-line arguments
@@ -114,7 +114,7 @@ def main():
     for number, systemtest in enumerate(systemtests_to_run, start=1):
         print(f"{number}. {systemtest}", flush=True)
     print(flush=True)
-    print(f"Using log-level: {args.log_level}", flush=True)
+    print(f"Using log_level: {args.log_level}", flush=True)
 
     results = []
     for number, systemtest in enumerate(systemtests_to_run, start=1):
