@@ -1,5 +1,4 @@
 bare: # A default component used when the solver does not have any dependencies apart from preCICE itself
-  repository: https://github.com/precice/precice
   template: component-templates/bare.yaml
   build_arguments: # these things mean something to the docker-service
     PLATFORM:
@@ -7,16 +6,17 @@ bare: # A default component used when the solver does not have any dependencies 
       default: "ubuntu_2404"
     PRECICE_REF:
       description: Version of preCICE to use
+      repository: https://github.com/precice/precice
       default: "main"
     PRECICE_PRESET:
       description: CMake preset of preCICE
       default: "production-audit"
     TUTORIALS_REF:
       description: Tutorial git reference to use
+      repository: https://github.com/precice/tutorials
       default: "master"
 
 python-bindings:
-  repository: https://github.com/precice/python-bindings
   template: component-templates/python-bindings.yaml
   build_arguments:
     PLATFORM:
@@ -24,19 +24,21 @@ python-bindings:
       default: "ubuntu_2404"
     PRECICE_REF:
       description: Version of preCICE to use
+      repository: https://github.com/precice/precice
       default: "main"
     PRECICE_PRESET:
       description: CMake preset of preCICE
       default: "production-audit"
     TUTORIALS_REF:
       description: Tutorial git reference to use
+      repository: https://github.com/precice/tutorials
       default: "master"
     PYTHON_BINDINGS_REF:
       description: Git ref of the Python bindings to use
+      repository: https://github.com/precice/python-bindings
       default: "master"
 
 openfoam-adapter:
-  repository: https://github.com/precice/openfoam-adapter
   template: component-templates/openfoam-adapter.yaml
   build_arguments:
     PLATFORM:
@@ -44,22 +46,24 @@ openfoam-adapter:
       default: "ubuntu_2404"
     PRECICE_REF:
       description: Version of preCICE to use
+      repository: https://github.com/precice/precice
       default: "main"
     PRECICE_PRESET:
       description: CMake preset of preCICE
       default: "production-audit"
     TUTORIALS_REF:
       description: Tutorial git reference to use
+      repository: https://github.com/precice/tutorials
       default: "master"
     OPENFOAM_EXECUTABLE:
       description: exectuable of openfoam to use
       default: "openfoam2512"
     OPENFOAM_ADAPTER_REF:
       description: Reference/tag of the OpenFOAM adapter to use
+      repository: https://github.com/precice/openfoam-adapter
       default: "master"
 
 fenics-adapter:
-  repository: https://github.com/precice/fenics-adapter
   template: component-templates/fenics-adapter.yaml
   build_arguments:
     PLATFORM:
@@ -67,22 +71,25 @@ fenics-adapter:
       default: "ubuntu_2404"
     PRECICE_REF:
       description: Version of preCICE to use
+      repository: https://github.com/precice/precice
       default: "main"
     PRECICE_PRESET:
       description: CMake preset of preCICE
       default: "production-audit"
     TUTORIALS_REF:
       description: Tutorial git reference to use
+      repository: https://github.com/precice/tutorials
       default: "master"
     PYTHON_BINDINGS_REF:
       description: Git ref of the Python bindings to use
+      repository: https://github.com/precice/python-bindings
       default: "master"
     FENICS_ADAPTER_REF:
       description: Git ref of the fenics adapter to use
+      repository: https://github.com/precice/fenics-adapter
       default: "master"
 
 fenicsx-adapter:
-  repository: https://github.com/precice/fenicsx-adapter
   template: component-templates/fenicsx-adapter.yaml
   build_arguments:
     PLATFORM:
@@ -90,22 +97,25 @@ fenicsx-adapter:
       default: "ubuntu_2404"
     PRECICE_REF:
       description: Version of preCICE to use
+      repository: https://github.com/precice/precice
       default: "main"
     PRECICE_PRESET:
       description: CMake preset of preCICE
       default: "production-audit"
     TUTORIALS_REF:
       description: Tutorial git reference to use
+      repository: https://github.com/precice/tutorials
       default: "master"
     PYTHON_BINDINGS_REF:
       description: Git ref of the Python bindings to use
+      repository: https://github.com/precice/python-bindings
       default: "master"
     FENICSX_ADAPTER_REF:
       description: Git ref of the fenicsx adapter to use
+      repository: https://github.com/precice/fenicsx-adapter
       default: "main"
 
 nutils-adapter:
-  repository: https://github.com/precice/nutils-adapter
   template: component-templates/nutils-adapter.yaml
   build_arguments:
     PLATFORM:
@@ -113,19 +123,21 @@ nutils-adapter:
       default: "ubuntu_2404"
     PRECICE_REF:
       description: Version of preCICE to use
+      repository: https://github.com/precice/precice
       default: "main"
     PRECICE_PRESET:
       description: CMake preset of preCICE
       default: "production-audit"
     TUTORIALS_REF:
       description: Tutorial git reference to use
+      repository: https://github.com/precice/tutorials
       default: "master"
     PYTHON_BINDINGS_REF:
       description: Git ref of the Python bindings to use
+      repository: https://github.com/precice/python-bindings
       default: "master"
 
 calculix-adapter:
-  repository: https://github.com/precice/calculix-adapter
   template: component-templates/calculix-adapter.yaml
   build_arguments:
     PLATFORM:
@@ -133,22 +145,24 @@ calculix-adapter:
       default: "ubuntu_2404"
     PRECICE_REF:
       description: Version of preCICE to use
+      repository: https://github.com/precice/precice
       default: "main"
     PRECICE_PRESET:
       description: CMake preset of preCICE
       default: "production-audit"
     TUTORIALS_REF:
       description: Tutorial git reference to use
+      repository: https://github.com/precice/tutorials
       default: "master"
     CALCULIX_VERSION:
       description: Version of Calculix to use
       default: "2.20"
     CALCULIX_ADAPTER_REF:
       description: Version of Calculix-Adapter to use
+      repository: https://github.com/precice/calculix-adapter
       default: "master"
 
 su2-adapter:
-  repository: https://github.com/precice/su2-adapter
   template: component-templates/su2-adapter.yaml
   build_arguments:
     PLATFORM:
@@ -156,22 +170,24 @@ su2-adapter:
       default: "ubuntu_2404"
     PRECICE_REF:
       description: Version of preCICE to use
+      repository: https://github.com/precice/precice
       default: "main"
     PRECICE_PRESET:
       description: CMake preset of preCICE
       default: "production-audit"
     TUTORIALS_REF:
       description: Tutorial git reference to use
+      repository: https://github.com/precice/tutorials
       default: "master"
     SU2_VERSION:
       description: Version of SU2 to use
       default: "7.5.1"
     SU2_ADAPTER_REF:
       description: Version of SU2-Adapter to use
+      repository: https://github.com/precice/su2-adapter
       default: "master"
 
 dealii-adapter:
-  repository: https://github.com/precice/dealii-adapter
   template: component-templates/dealii-adapter.yaml
   build_arguments:
     PLATFORM:
@@ -179,19 +195,21 @@ dealii-adapter:
       default: "ubuntu_2404"
     PRECICE_REF:
       description: Version of preCICE to use
+      repository: https://github.com/precice/precice
       default: "main"
     PRECICE_PRESET:
       description: CMake preset of preCICE
       default: "production-audit"
     TUTORIALS_REF:
       description: Tutorial git reference to use
+      repository: https://github.com/precice/tutorials
       default: "master"
     DEALII_ADAPTER_REF:
       description: Version of deal.ii-adapter to use
+      repository: https://github.com/precice/dealii-adapter
       default: "master"
 
 dumux-adapter:
-  repository: https://github.com/precice/dumux-adapter
   template: component-templates/dumux-adapter.yaml
   build_arguments:
     PLATFORM:
@@ -199,12 +217,14 @@ dumux-adapter:
       default: "ubuntu_2404"
     PRECICE_REF:
       description: Version of preCICE to use
+      repository: https://github.com/precice/precice
       default: "main"
     PRECICE_PRESET:
       description: CMake preset of preCICE
       default: "production-audit"
     TUTORIALS_REF:
       description: Tutorial git reference to use
+      repository: https://github.com/precice/tutorials
       default: "master"
     DUNE_VERSION:
       description: Version of DUNE to use
@@ -214,10 +234,10 @@ dumux-adapter:
       default: "3.7"
     DUMUX_ADAPTER_REF:
       description: Git ref of the dumux adapter to use
+      repository: https://github.com/precice/dumux-adapter
       default: "main"
 
 mercurydpm-adapter:
-  repository: https://bitbucket.org/davidscn/mercurydpm
   template: component-templates/mercurydpm-adapter.yaml
   build_arguments:
     PLATFORM:
@@ -225,16 +245,17 @@ mercurydpm-adapter:
       default: "ubuntu_2404"
     PRECICE_REF:
       description: Version of preCICE to use
+      repository: https://github.com/precice/precice
       default: "main"
     PRECICE_PRESET:
       description: CMake preset of preCICE
       default: "production-audit"
     TUTORIALS_REF:
       description: Tutorial git reference to use
+      repository: https://github.com/precice/tutorials
       default: "master"
 
 micro-manager:
-  repository: https://github.com/precice/micro-manager
   template: component-templates/micro-manager.yaml
   build_arguments:
     PLATFORM:
@@ -242,13 +263,16 @@ micro-manager:
       default: "ubuntu_2404"
     PRECICE_REF:
       description: Version of preCICE to use
+      repository: https://github.com/precice/precice
       default: "main"
     PRECICE_PRESET:
       description: CMake preset of preCICE
       default: "production-audit"
     TUTORIALS_REF:
       description: Tutorial git reference to use
+      repository: https://github.com/precice/tutorials
       default: "master"
     MICRO_MANAGER_REF:
       description: Version of Micro-Manager to use
+      repository: https://github.com/precice/micro-manager
       default: "0.8.0"
