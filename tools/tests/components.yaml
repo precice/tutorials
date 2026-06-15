@@ -12,8 +12,8 @@ bare: # A default component used when the solver does not have any dependencies 
       repository: https://github.com/precice/tutorials
       default: "develop"
 
-python-bindings:
-  template: component-templates/python-bindings.yaml
+calculix-adapter:
+  template: component-templates/calculix-adapter.yaml
   build_arguments:
     PLATFORM:
       default: "ubuntu_2404"
@@ -25,12 +25,14 @@ python-bindings:
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
-    PYTHON_BINDINGS_REF:
-      repository: https://github.com/precice/python-bindings
+    CALCULIX_VERSION:
+      default: "2.20"
+    CALCULIX_ADAPTER_REF:
+      repository: https://github.com/precice/calculix-adapter
       default: "develop"
 
-openfoam-adapter:
-  template: component-templates/openfoam-adapter.yaml
+dealii-adapter:
+  template: component-templates/dealii-adapter.yaml
   build_arguments:
     PLATFORM:
       default: "ubuntu_2404"
@@ -42,10 +44,29 @@ openfoam-adapter:
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
-    OPENFOAM_EXECUTABLE:
-      default: "openfoam2512"
-    OPENFOAM_ADAPTER_REF:
-      repository: https://github.com/precice/openfoam-adapter
+    DEALII_ADAPTER_REF:
+      repository: https://github.com/precice/dealii-adapter
+      default: "develop"
+
+dumux-adapter:
+  template: component-templates/dumux-adapter.yaml
+  build_arguments:
+    PLATFORM:
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PRESET:
+      default: "production-audit"
+    TUTORIALS_REF:
+      repository: https://github.com/precice/tutorials
+      default: "develop"
+    DUNE_VERSION:
+      default: "2.9"
+    DUMUX_VERSION:
+      default: "3.7"
+    DUMUX_ADAPTER_REF:
+      repository: https://github.com/precice/dumux-adapter
       default: "develop"
 
 fenics-adapter:
@@ -88,99 +109,6 @@ fenicsx-adapter:
       repository: https://github.com/precice/fenicsx-adapter
       default: "develop"
 
-nutils-adapter:
-  template: component-templates/nutils-adapter.yaml
-  build_arguments:
-    PLATFORM:
-      default: "ubuntu_2404"
-    PRECICE_REF:
-      repository: https://github.com/precice/precice
-      default: "develop"
-    PRECICE_PRESET:
-      default: "production-audit"
-    TUTORIALS_REF:
-      repository: https://github.com/precice/tutorials
-      default: "develop"
-    PYTHON_BINDINGS_REF:
-      repository: https://github.com/precice/python-bindings
-      default: "develop"
-
-calculix-adapter:
-  template: component-templates/calculix-adapter.yaml
-  build_arguments:
-    PLATFORM:
-      default: "ubuntu_2404"
-    PRECICE_REF:
-      repository: https://github.com/precice/precice
-      default: "develop"
-    PRECICE_PRESET:
-      default: "production-audit"
-    TUTORIALS_REF:
-      repository: https://github.com/precice/tutorials
-      default: "develop"
-    CALCULIX_VERSION:
-      default: "2.20"
-    CALCULIX_ADAPTER_REF:
-      repository: https://github.com/precice/calculix-adapter
-      default: "develop"
-
-su2-adapter:
-  template: component-templates/su2-adapter.yaml
-  build_arguments:
-    PLATFORM:
-      default: "ubuntu_2404"
-    PRECICE_REF:
-      repository: https://github.com/precice/precice
-      default: "develop"
-    PRECICE_PRESET:
-      default: "production-audit"
-    TUTORIALS_REF:
-      repository: https://github.com/precice/tutorials
-      default: "develop"
-    SU2_VERSION:
-      default: "7.5.1"
-    SU2_ADAPTER_REF:
-      repository: https://github.com/precice/su2-adapter
-      default: "develop"
-
-dealii-adapter:
-  template: component-templates/dealii-adapter.yaml
-  build_arguments:
-    PLATFORM:
-      default: "ubuntu_2404"
-    PRECICE_REF:
-      repository: https://github.com/precice/precice
-      default: "develop"
-    PRECICE_PRESET:
-      default: "production-audit"
-    TUTORIALS_REF:
-      repository: https://github.com/precice/tutorials
-      default: "develop"
-    DEALII_ADAPTER_REF:
-      repository: https://github.com/precice/dealii-adapter
-      default: "develop"
-
-dumux-adapter:
-  template: component-templates/dumux-adapter.yaml
-  build_arguments:
-    PLATFORM:
-      default: "ubuntu_2404"
-    PRECICE_REF:
-      repository: https://github.com/precice/precice
-      default: "develop"
-    PRECICE_PRESET:
-      default: "production-audit"
-    TUTORIALS_REF:
-      repository: https://github.com/precice/tutorials
-      default: "develop"
-    DUNE_VERSION:
-      default: "2.9"
-    DUMUX_VERSION:
-      default: "3.7"
-    DUMUX_ADAPTER_REF:
-      repository: https://github.com/precice/dumux-adapter
-      default: "develop"
-
 mercurydpm-adapter:
   template: component-templates/mercurydpm-adapter.yaml
   build_arguments:
@@ -210,4 +138,76 @@ micro-manager:
       default: "develop"
     MICRO_MANAGER_REF:
       repository: https://github.com/precice/micro-manager
+      default: "develop"
+
+nutils-adapter:
+  template: component-templates/nutils-adapter.yaml
+  build_arguments:
+    PLATFORM:
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PRESET:
+      default: "production-audit"
+    TUTORIALS_REF:
+      repository: https://github.com/precice/tutorials
+      default: "develop"
+    PYTHON_BINDINGS_REF:
+      repository: https://github.com/precice/python-bindings
+      default: "develop"
+
+openfoam-adapter:
+  template: component-templates/openfoam-adapter.yaml
+  build_arguments:
+    PLATFORM:
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PRESET:
+      default: "production-audit"
+    TUTORIALS_REF:
+      repository: https://github.com/precice/tutorials
+      default: "develop"
+    OPENFOAM_EXECUTABLE:
+      default: "openfoam2512"
+    OPENFOAM_ADAPTER_REF:
+      repository: https://github.com/precice/openfoam-adapter
+      default: "develop"
+
+python-bindings:
+  template: component-templates/python-bindings.yaml
+  build_arguments:
+    PLATFORM:
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PRESET:
+      default: "production-audit"
+    TUTORIALS_REF:
+      repository: https://github.com/precice/tutorials
+      default: "develop"
+    PYTHON_BINDINGS_REF:
+      repository: https://github.com/precice/python-bindings
+      default: "develop"
+
+su2-adapter:
+  template: component-templates/su2-adapter.yaml
+  build_arguments:
+    PLATFORM:
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PRESET:
+      default: "production-audit"
+    TUTORIALS_REF:
+      repository: https://github.com/precice/tutorials
+      default: "develop"
+    SU2_VERSION:
+      default: "7.5.1"
+    SU2_ADAPTER_REF:
+      repository: https://github.com/precice/su2-adapter
       default: "develop"
