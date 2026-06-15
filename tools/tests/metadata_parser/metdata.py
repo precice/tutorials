@@ -14,6 +14,9 @@ class BuildArgument:
     description: str
     """The description of the parameter."""
 
+    repository: str
+    """The repository corresponging to a _REF parameter."""
+
     key: str
     """The name of the parameter."""
 
@@ -64,12 +67,14 @@ class BuildArguments:
             # TODO maybe **params
             description = argument_dict.get(
                 'description', f"No description provided for {argument_name}")
+            repository = argument_dict.get(
+                'repository', f"No repository provided for {argument_name}")
             key = argument_name
             default = argument_dict.get('default', None)
             value_options = argument_dict.get('value_options', None)
 
             arguments.append(BuildArgument(
-                description, key, value_options, default))
+                description, repository, key, value_options, default))
 
         return cls(arguments)
 
@@ -97,7 +102,6 @@ class Component:
 
     name: str
     template: str
-    repository: str
     parameters: BuildArguments
 
     def __eq__(self, other):
@@ -134,10 +138,9 @@ class Components(list):
             for component_name in data:
                 parameters = BuildArguments.from_components_yaml(
                     data[component_name])
-                repository = data[component_name]["repository"]
                 template = data[component_name]["template"]
                 components.append(
-                    Component(component_name, template, repository, parameters))
+                    Component(component_name, template, parameters))
 
         return cls(components)
 

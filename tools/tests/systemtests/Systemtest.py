@@ -256,9 +256,15 @@ class Systemtest:
         # Substitute defaults for non-provided, needed arguments
         for needed_param in needed_parameters:
             if not needed_param.key in provided_arguments:
-                logging.warning(
-                    f"No argument provided for needed parameter {needed_param.key}. Substituting with {needed_param.default}")
-                self.params_to_use[needed_param.key] = needed_param.default
+                logging.info(
+                    f"No argument provided for needed parameter {needed_param.key}. Substituting with {needed_param.default}.")
+                if needed_param.key.endswith("_REF"):
+                    logging.debug(
+                        f"The parameter {needed_param.key} points to the repository {needed_param.repository}.")
+                    self.params_to_use[needed_param.key] = self._resolve_branch_ref_to_commit(
+                        needed_param.repository, needed_param.default)
+                else:
+                    self.params_to_use[needed_param.key] = needed_param.default
 
     def __get_docker_services(self) -> Dict[str, str]:
         """
@@ -364,6 +370,28 @@ class Systemtest:
         except Exception as e:
             raise RuntimeError(
                 f"An error occurred while fetching origin '{ref}':  {e}. Do the values in reference_versions.yaml point to (still) valid Git refs?")
+
+    def _resolve_branch_ref_to_commit(self, repository: Path, ref: str) -> Optional[str]:
+        try:
+            git_ls_remote_output = subprocess.run([
+                "git",
+                "ls-remote",
+                os.fspath(repository),
+                ref,
+            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True, timeout=60)
+
+            # If an invalid ref is given, git ls-remote still returns success, but no list
+            git_remote_refs = git_ls_remote_output.stdout.strip()
+            if not git_remote_refs:
+                raise ValueError(f"The git ref {ref} does not appear in the repository {repository}.")
+
+            commit = git_remote_refs.split()[0]
+            logging.info(f"Resolved the git ref {ref} of the repository {repository} to {commit}.")
+            return commit if commit else None
+        except Exception:
+            logging.warning(
+                f"Could not resolve git ref {ref} of the repository {repository} to a commit. Using the given git ref as-is.")
+            return None
 
     def _checkout_ref_in_subfolder(self, repository: Path, subfolder: Path, ref: str):
         try:
