@@ -259,7 +259,7 @@ class Systemtest:
                 logging.info(
                     f"No argument provided for needed parameter {needed_param.key}. Substituting with {needed_param.default}.")
                 self.params_to_use[needed_param.key] = needed_param.default
-            if needed_param.key.endswith("_REF") and needed_param in provided_arguments:
+            if needed_param.key.endswith("_REF") and needed_param.key in provided_arguments:
                 logging.debug(
                     f"The parameter {needed_param.key} points to the repository {needed_param.repository}.")
                 self.params_to_use[needed_param.key] = self._resolve_branch_ref_to_commit(
