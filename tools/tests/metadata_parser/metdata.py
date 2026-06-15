@@ -11,9 +11,6 @@ from paths import PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
 class BuildArgument:
     """Represents a BuildArgument needed to run the docker container"""
 
-    description: str
-    """The description of the parameter."""
-
     repository: str
     """The repository corresponging to a _REF parameter."""
 
@@ -64,9 +61,6 @@ class BuildArguments:
         """
         arguments = []
         for argument_name, argument_dict in data['build_arguments'].items():
-            # TODO maybe **params
-            description = argument_dict.get(
-                'description', f"No description provided for {argument_name}")
             repository = argument_dict.get(
                 'repository', f"No repository provided for {argument_name}")
             key = argument_name
@@ -74,7 +68,7 @@ class BuildArguments:
             value_options = argument_dict.get('value_options', None)
 
             arguments.append(BuildArgument(
-                description, repository, key, value_options, default))
+                repository, key, value_options, default))
 
         return cls(arguments)
 

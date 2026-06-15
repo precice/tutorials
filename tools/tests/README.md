@@ -248,32 +248,27 @@ The components mentioned in the Metadata are defined in the central `components.
 
 ```yaml
 openfoam-adapter:
-  repository: https://github.com/precice/openfoam-adapter
   template: component-templates/openfoam-adapter.yaml
   build_arguments:
-    PRECICE_REF:
-      description: Version of preCICE to use
-      default: "main"
-    PRECICE_PRESET:
-      description: CMake preset of preCICE
-      default: "production-audit"
     PLATFORM:
-      description: Dockerfile platform used
       default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PRESET:
+      default: "production-audit"
     TUTORIALS_REF:
-      description: Tutorial git reference to use
-      default: "master"
+      repository: https://github.com/precice/tutorials
+      default: "develop"
     OPENFOAM_EXECUTABLE:
-      description: exectuable of openfoam to use
       default: "openfoam2512"
     OPENFOAM_ADAPTER_REF:
-      description: Reference/tag of the actual OpenFOAM adapter
-      default: "master"
+      repository: https://github.com/precice/openfoam-adapter
+      default: "develop"
 ```
 
 This `openfoam-adapter` component has the following attributes:
 
-- `repository`: URL to the Git projects
 - `template`: A template for a Docker Compose service of this component
 - `build_arguments`: Arguments passed to the Docker Compose service (arbitrary)
 
