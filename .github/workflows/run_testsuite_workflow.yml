@@ -32,7 +32,7 @@ jobs:
         echo "System tests branch (tools/): ${{ inputs.system_tests_branch }}"
         echo "System tests log level: ${{ inputs.log_level }}"
         echo "Uploading the runs folder on success: ${{ inputs.upload_artifacts }}"
-        echo "Running the following command inside tutorials/tools/:"
+        echo "Running the following command inside tutorials/tools/tests/:"
         echo "python3 systemtests.py --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}"
     - name: Prepare the Markdown step summary
       run: |
@@ -44,7 +44,7 @@ jobs:
           echo "- System tests log level: \`${{ inputs.log_level }}\`"
           echo "- Uploading the runs folder on success: \`${{ inputs.upload_artifacts }}\`"
           echo ""
-          echo "Running the following command inside \`tutorials/tools/\`:"
+          echo "Running the following command inside \`tutorials/tools/tests/\`:"
           echo "\`\`\`"
           echo "python3 systemtests.py --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}"
           echo "\`\`\`"
