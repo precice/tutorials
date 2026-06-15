@@ -50,14 +50,6 @@ on:
         type: string
 
 jobs:
-  report-inputs:
-    name: Report workflow inputs
-    runs-on: ubuntu-latest
-    steps:
-      - id: report-inputs
-        name: Report inputs
-        uses: VeyronSakai/display-inputs-action@v0.1
-
   run-system-tests:
     name: Trigger system tests
     uses: precice/tutorials/.github/workflows/run_testsuite_workflow.yml@develop
