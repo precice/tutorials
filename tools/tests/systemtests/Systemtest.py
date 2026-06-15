@@ -262,8 +262,15 @@ class Systemtest:
             if needed_param.key.endswith("_REF") and needed_param.key in provided_arguments:
                 logging.debug(
                     f"The parameter {needed_param.key} points to the repository {needed_param.repository}.")
-                self.params_to_use[needed_param.key] = self._resolve_branch_ref_to_commit(
-                    needed_param.repository, self.params_to_use[needed_param.key])
+                # If a commit has already been resolved and added to the params_to_use, it will be propagated to the next test in the test suite.
+                # To avoid resolving the same commit again, simply check if the key has the same length as the output of _resolve_branch_ref_to_commit.
+                # The whole process assumes that all components use the same refs.
+                if len(self.params_to_use[needed_param.key]) == 40:
+                    logging.debug(
+                        f"Git ref {self.params_to_use[needed_param.key]} is 40 characters long and probably already a commit.")
+                else:
+                    self.params_to_use[needed_param.key] = self._resolve_branch_ref_to_commit(
+                        needed_param.repository, self.params_to_use[needed_param.key])
 
     def __get_docker_services(self) -> Dict[str, str]:
         """
