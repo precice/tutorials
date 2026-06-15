@@ -386,7 +386,8 @@ class Systemtest:
 
             commit = git_remote_refs.split()[0]
             # The output assumes a URL of the form <repository>/commits/<commit>. Works for GitHub and Bitbucket.
-            logging.info(f"Resolved the git ref {ref} of the repository {repository} to {repository}/commits/{commit}.")
+            logging.info(
+                f"Resolved the git ref {ref} of the repository {repository} to {repository}/commits/{commit} .")
             return commit if commit else None
         except Exception:
             logging.warning(
