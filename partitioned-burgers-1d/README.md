@@ -109,8 +109,10 @@ After both participants (and/or monolithic simulation) have finished, you can ru
 `visualize_partitioned_domain.py` generates plots comparing the partitioned and monolithic solutions. You can specify which timestep to plot. Call from the root of the tutorial:
 
 ```bash
-python3 utils/visualize_partitioned_domain.py --neumann neumann-surrogate/surrogate.npz [timestep]
+python3 utils/visualize_partitioned_domain.py --neumann neumann-surrogate/surrogate.npz 10
 ```
+
+The final argument defines the coupling time step to plot (here, `10`). It can range from `0` up to the total number of time steps performed in the run.
 
 The script will produce the following output files in the `output/` directory:
 
