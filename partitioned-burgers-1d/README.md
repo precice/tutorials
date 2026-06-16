@@ -42,7 +42,9 @@ Currently, the SciPy solver (`solver-scipy`) can be used for both sides, the NN 
 - SciPy. Simple finite volume solver using Lax-Friedrichs fluxes and implicit Euler time stepping.
 - Surrogate. Pre-trained neural network surrogate model.
 
-The conservative formulation of the Burgers' equation is implemented in the SciPy solver. The surrogate is a neural network trained to predict the next time step solution based on the current solution. The surrogate model was trained on solutions obtained with the SciPy solver.
+The conservative formulation of the Burgers' equation is implemented in the SciPy solver. The surrogate is a neural network trained to autoregressively predict the next time step solution based on the current solution. The surrogate model was trained on solutions obtained with the SciPy solver. See [Initial condition](#initial-condition) for how to generate the training data. 
+
+Two pre-trained model checkpoints are provided in `neumann-surrogate/`, differing in how many unroll timesteps were used during the Backpropagation Through Time (BPTT) training phase. The two checkpoints, `CNN_RES_UNROLL_1.pth` and `CNN_RES_UNROLL_7.pth`, were trained, respectively, with a single-step prediction (rollout length 1) and a 7-step rollout, which improves stability over long autoregressive predictions. The checkpoint can be selected by changing `MODEL_NAME` in `neumann-surrogate/config.py`.
 
 {% note %}
 The surrogate participant requires PyTorch and related dependencies. By default, the CPU version is installed. If you wish to use the GPU version, see the comment in `neumann-surrogate/requirements.txt`. The GPU version requires several gigabytes of disk space (~6.2Gb).
