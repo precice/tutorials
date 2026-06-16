@@ -25,8 +25,16 @@ Workflow for the preCICE v3 release testing:
 3. Trigger the GitHub Actions Workflow. Until we merge the workflow to develop, this can only happen via the [GitHub CLI](https://cli.github.com/):
 
     ```bash
-    gh workflow run run_testsuite_manual.yml -f suites=release -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" --ref=develop
+    gh workflow run system-tests-latest-components.yml -f suites=release
     ```
+
+   More arguments are available, for example:
+
+    ```bash
+    gh workflow run system-tests-latest-components.yml -f suites=release -f build_args="PLATFORM:ubuntu2404,PRECICE_REF:develop" -f log_level="DEBUG" --ref=develop
+    ```
+
+   The `build_args` override the defaults set in `tools/tests/components.yaml`.
 
 4. Go to the tutorials [Actions](https://github.com/precice/tutorials/actions) page and find the running workflow
 5. Check the status and the runtimes of each tutorial:
@@ -54,18 +62,18 @@ To be able to fill in the right case tuple into the `tests.yaml`, you can use th
 
 ## Running the system tests on GitHub Actions
 
-Go to Actions > [Run Testsuite (manual)](https://github.com/precice/tutorials/actions/workflows/run_testsuite_manual.yml) to see this workflow.
+Go to Actions > [System tests (latest components)](https://github.com/precice/tutorials/actions/workflows/system-tests-latest-components.yml) to see this workflow.
 
 After bringing these changes to `master`, the manual triggering option should be visible on the top right. Until that happens, we can only trigger this workflow manually from the [GitHub CLI](https://github.blog/changelog/2021-04-15-github-cli-1-9-enables-you-to-work-with-github-actions-from-your-terminal/):
 
 ```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics-adapter --ref=develop
+gh workflow run system-tests-latest-components.yml -f suites=fenics-adapter --ref=develop
 ```
 
 Another example, to use the latest releases and enable debug information of the tests:
 
 ```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics-adapter -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" -f log_level=DEBUG --ref=develop
+gh workflow run system-tests-latest-components.yml -f suites=fenics-adapter -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" -f log_level=DEBUG --ref=develop
 ```
 
 where the `*_REF` should be a specific [commit-ish](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefcommit-ishacommit-ishalsocommittish).
@@ -152,8 +160,8 @@ The multi-stage Docker build allows building each component separately from the 
 Metadata and workflow/script files:
 
 - `.github/workflows/`
-  - `run_testsuite_workflow.yml`: workflow for running the tests, triggered by other workflows (e.g., other repositories)
-  - `run_testsuite_manual.yml`: manual triggering front-end for `run_testsuite_workflow.yml`
+  - `system-tests.yml`: workflow for running the tests, triggered by other workflows (e.g., other repositories)
+  - `system-tests-latest-components.yml`: manual triggering front-end for `system-tests.yml`
 - `flow-over-a-heated-plate/`
   - `fluid-openfoam/`
     - `run.sh`: describes how to execute the respective case
@@ -276,10 +284,10 @@ This `openfoam-adapter` component has the following attributes:
 
 Since the docker containers are still a bit mixed in terms of capabilities and support for different build_argument combinations the following rules apply:
 
-- A build argument ending in `_REF` refers to a git commit-ish (like a tag or commit) being used to build the image. It is important to not use branch names here as we heavily rely on Docker's build cache to speedup things. But since the input variable to the docker builder will not change, we might have wrong cache hits.
+- A build argument ending in `_REF` refers to a git commit-ish (like a tag or commit) being used to build the image.
 - Some workflows set variables ending in `_PR`. These specify the GitHub pull request which provides the above `_REF` and can be on a fork.
 - A build argument ending in `_VERSION` refers to the version of a third-party dependency to use (e.g., DUNE).
-- All other build_arguments are free of rules and up to the container maintainer.
+- All other `build_arguments` are free of rules and up to the container maintainer.
 
 ### Component templates
 

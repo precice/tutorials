@@ -1,4 +1,4 @@
-name: System tests (latest components)
+name: System tests (manual/nightly)
 
 on:
   schedule:
@@ -52,7 +52,7 @@ on:
 jobs:
   run-system-tests:
     name: Trigger system tests
-    uses: precice/tutorials/.github/workflows/run_testsuite_workflow.yml@develop
+    uses: precice/tutorials/.github/workflows/system-tests.yml@develop
     with:
       suites: ${{ inputs.suites || 'release' }}
       build_args: "PRECICE_REF:${{ inputs.ref-precice }},\

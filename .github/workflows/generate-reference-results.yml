@@ -1,4 +1,4 @@
-name: Generate reference results workflow
+name: Generate reference results (called)
 on:
   workflow_call:
     inputs:

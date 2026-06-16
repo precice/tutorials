@@ -32,7 +32,7 @@ on:
 
 jobs:
   generate_reference_results_manual:
-    uses: ./.github/workflows/generate_reference_results_workflow.yml
+    uses: ./.github/workflows/generate-reference-results.yml
     with: 
       from_ref: ${{ inputs.from_ref }}
       commit_msg: ${{ inputs.commit_msg }}
