@@ -19,12 +19,12 @@ def main():
     parser.add_argument(
         '--build_args',
         type=str,
-        help='Comma-separated list of arguments provided to the components like openfoam:2102,pythonbindings:latest')
+        help='Comma-separated list of component build arguments (e.g., "PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop")')
     parser.add_argument('--rundir', type=str, help='Directory to run the systemstests in.',
                         nargs='?', const=PRECICE_TESTS_RUN_DIR, default=PRECICE_TESTS_RUN_DIR)
 
     parser.add_argument('--log_level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-                        default='INFO', help='Set the logging level')
+                        default='INFO', help='Set the logging level of the system tests scripts.')
 
     # Parse the command-line arguments
     args = parser.parse_args()
