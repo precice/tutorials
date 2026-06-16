@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
+  <log>
+    <sink
+      filter="%Severity% > debug and %Rank% = 0"
+      format="---[precice] %ColorizedSeverity% %Message%"
+      enabled="true" />
+  </log>
+
   <data:scalar name="Current" waveform-degree="3" />
   <data:scalar name="Voltage" waveform-degree="3" />
 

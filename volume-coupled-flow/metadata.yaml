@@ -1,0 +1,20 @@
+name: Volume coupled flow
+path: volume-coupled-flow # relative to git repo 
+url: https://precice.org/tutorials-volume-coupled-flow.html
+
+participants:
+  - Fluid
+  - Source
+
+cases:
+  fluid-openfoam:
+    participant: Fluid
+    directory: ./fluid-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+  
+  source-nutils:
+    participant: Source
+    directory: ./source-nutils
+    run: PRECICE_TUTORIALS_TESTING="TRUE" ./run.sh
+    component: nutils-adapter

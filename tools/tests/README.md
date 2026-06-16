@@ -6,114 +6,117 @@ keywords: pages, development, tests
 summary: "Test complete simulations combining preCICE components of specific versions."
 ---
 
-The tutorials repository hosts cases that need multiple components from the preCICE ecosystem to run. This directory provides tools that can automatically run complete simulations, using different versions of each component, and compare the results to references. While the main purpose is to run complete tests in the continuous integration workflows of preCICE, you can also run these tests on your laptop.
+The tutorials repository hosts cases that need multiple components from the preCICE ecosystem to run. Te system tests automatically run tutorials combining the required components and compare the numerical results to references. While the main purpose is to run complete tests in the continuous integration workflows of preCICE, you can also run these tests on your laptop.
 
-Read more about the system tests in the publication [System Regression Tests for the preCICE Coupling Ecosystem](https://doi.org/10.14279/eceasst.v83.2614).
+## Running
 
-[![ECEASST](https://img.shields.io/badge/DOI-10.14279%2Feceasst.v83.2614-green)](https://doi.org/10.14279/eceasst.v83.2614)
+The main workflow for the user is executing the `systemtests.py` script, which is the same that the [GitHub Actions workflow](https://github.com/precice/tutorials/actions/workflows/system-tests-latest-components.yml) executes. Depending on the options given to the script, it reads in the respective metadata files and generates `docker-compose.yaml` files that can start a fully-defined coupled simulation. For arguments that are not provided, default values from `components.yaml` are used.
 
-## Running the system tests
+### Manual and nightly runs on GitHub
 
-The main workflow for the user is executing the `systemtests.py` script. Depending on the options given to the script, it reads in the respective metadata files and generates `docker-compose.yaml` files that can start a fully-defined coupled simulation.
+The [System tests (manual/nightly)](https://github.com/precice/tutorials/actions/workflows/system-tests-latest-components.yml) workflow executes the `release` test suite nightly and can also be triggered manually.
 
-### Running the tests for a preCICE release
+On the workflow page, click `Run workflow`. The default values will execute the `release` test suite using the latest `develop` branches of every component. If you want to override the version of some component, specify it in the respective field. Commit hashes, branches, and tags are all accepted. Branches and tags will get automatically resolved to their current commit on GitHub before starting any test, and all tests will use the same version of any common component.
 
-Workflow for the preCICE v3 release testing:
+The available test suites are found in [`tests.yaml`](https://github.com/precice/tutorials/blob/develop/tools/tests/tests.yaml) and common values are:
 
-1. Collect the Git commits/tags of all components you want to test. The caching mechanism cannot detect changes based on branch names. The same effect might be encountered when rebasing and force-pushing the release branch.
-2. In your terminal, navigate to the tutorials repository
-3. Trigger the GitHub Actions Workflow. Until we merge the workflow to develop, this can only happen via the [GitHub CLI](https://cli.github.com/):
+- `quickstart`, `elastic-tube-1d`, or any other tutorial (see [exceptions](https://github.com/precice/tutorials/issues/448))
+- `openfoam-adapter`, `micro-manager`, `fmi-runner`, or similar test cases involving the respective component
+- `precice` is a subset of cases that cover a range of preCICE features
+- `release` is for all available but some very long or known to fail tests
+- `extra` is for some longer tests
+- `expected-to-fail`, `selected`, and `system-tests-dev` for some special cases
 
-    ```bash
-    gh workflow run run_testsuite_manual.yml -f suites=release_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" --ref=develop
-    ```
+The `Use workflow from` is a default option of GitHub Actions that concerns the GHA workflow file itself.
 
-4. Go to the tutorials [Actions](https://github.com/precice/tutorials/actions) page and find the running workflow
-5. Check the status and the runtimes of each tutorial:
+### Running from a pull request
 
-    - Very small build times mean that the test is using cached container layers
-    - Most commonly, you will see tests failing with `Fieldcompare returned non zero exit code`. You will need to check the logs, but if the fieldcompare time is significant, this typically means that the numerical results differ above the tolerance (the test works!).
+Several repositories include a workflow that allows triggering the system tests by adding the `trigger-system-tests` label to the pull request. The event is triggered only at the moment of adding the label, so you need to remove the label and add it again if needed.
 
-6. Download the build artifacts from Summary > runs.
+See the [system tests workflow in the OpenFOAM adapter](https://github.com/precice/openfoam-adapter/blob/develop/.github/workflows/system-tests.yaml) for an example.
 
-    - In there, you may want to check the `system-tests-stdout.log` and `system-tests-stderr.log` files.
-    - The produced results are in `precice-exports/`, the reference results in `reference-results-unpacked`.
-    - Compare using, e.g., ParaView or [fieldcompare](https://gitlab.com/dglaeser/fieldcompare): `fieldcompare dir precice-exports/ reference/`. The `--diff` option will give you `precice-exports/diff_*.vtu` files, while you can also try different tolerances with `-rtol` and `-atol`.
+### Running from the GitHub CLI
 
-### Running specific test suites
+The [GitHub CLI](https://cli.github.com/) allows triggering workflows of a GitHub project. For example:
+
+```bash
+gh workflow run system-tests-latest-components.yml -f suites=release
+```
+
+More arguments are available, for example:
+
+```bash
+gh workflow run system-tests-latest-components.yml -f suites=release -f build_args="PLATFORM:ubuntu2404,PRECICE_REF:develop" -f log_level="DEBUG" --ref=develop
+```
+
+The `build_args` override the defaults set in `tools/tests/components.yaml`.
+
+### Running locally
+
+To run locally, you will need Docker, Docker Compose, and Python 3.
+
+Navigate into the directory `tools/tests/` of the tutorials, make a Python virtual environment, and install the dependencies:
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+python -m pip install -r requirements.txt
+```
 
 To test a certain test-suite defined in `tests.yaml`, use:
 
 ```bash
-python3 systemtests.py --suites=fenics_test,<someothersuite>
+python systemtests.py --suites=quickstart
 ```
 
-To discover all tests, use `python print_test_suites.py`.
+This will build and connect Docker containers and run tutorials in the `runs/` directory in the root of the tutorials.
 
-To be able to fill in the right case tuple into the `tests.yaml`, you can use the `python3 print_case_combinations.py` script.
+To clean up at the end, you might want to run a `docker system prune -a` and remove the `runs/` directory to save space.
 
-## Running the system tests on GitHub Actions
+There are also some auxiliary scripts (run without arguments):
 
-Go to Actions > [Run Testsuite (manual)](https://github.com/precice/tutorials/actions/workflows/run_testsuite_manual.yml) to see this workflow.
+- `print_test_suites.py`: Print all test suites defined in `tests.yaml`
+- `print_case_combinations.py`: Print all possible combinations of participants in a tutorial, using its `metadata.yaml`.
 
-After bringing these changes to `master`, the manual triggering option should be visible on the top right. Until that happens, we can only trigger this workflow manually from the [GitHub CLI](https://github.blog/changelog/2021-04-15-github-cli-1-9-enables-you-to-work-with-github-actions-from-your-terminal/):
+## Understanding the logs
 
-```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics_test --ref=develop
+For a local run, look into the `tutorials/runs/` directory, where you will find a time-stamped directory for every test executed.
+
+Each of these directories includes the usual tutorial case files and logs, as well as:
+
+1. `system-tests-build.log`: The logs of building the respective components.
+2. `system-tests-run.log`: The logs of running the simulation (intermixed, from all participants).
+3. `system-tests-compare.log`: The logs for the comparison to the reference results.
+
+In addition, in the directories of the cases executed, you can find `system-tests-<case>.log` files.
+
+### Numerical regressions
+
+When the tests fail at the results comparison step, this typically means that there are numerical regressions (unless something wrong went undetected in a previous step). We use [fieldcompare](https://gitlab.com/dglaeser/fieldcompare) to compare all [preCICE exports](https://precice.org/configuration-export.html) to reference results generated from a previous run. Relevant files:
+
+- `precice-exports/`: The coupling meshes of the test run.
+- `reference-results/`: The coupling meshes of the reference run, as stored on Git LFS, expanded into `reference-results-unpacked`.
+- `diff-results/`: Numerical difference of the results in the two directories (computed with `fieldcompare dir --diff precice-exports/ reference/`). These are only present on failed comparisons.
+
+To reproduce the comparison locally, use the [same fieldcompare command](https://github.com/precice/tutorials/blob/develop/tools/tests/docker-compose.field_compare.template.yaml):
+
+```bash
+fieldcompare dir precice-exports/ reference-results-unpacked/<case>/ \
+             --ignore-missing-reference-files \
+             --ignore-unsupported-file-formats \
+             -rtol 3e-7
 ```
 
-Another example, to use the latest releases and enable debug information of the tests:
+The differences are only shown per file, and there is no global metric or other summary (see [related discussion in fieldcompare](https://gitlab.com/dglaeser/fieldcompare/-/work_items/69)).
 
-```shell
-gh workflow run run_testsuite_manual.yml -f suites=fenics_test -f build_args="PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0,SU2_VERSION:7.5.1,SU2_ADAPTER_REF:64d4aff,DEALII_ADAPTER_REF:02c5d18,TUTORIALS_REF:340b447" -f log_level=DEBUG --ref=develop
-```
+Alternatively, [visualize the `precice-exports/diff_*.vtu` in ParaView](https://precice.org/configuration-export.html#visualization-with-paraview).
 
-where the `*_REF` should be a specific [commit-ish](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefcommit-ishacommit-ishalsocommittish).
+### Re-running from CI artifacts
 
-Example output:
-
-```text
-Run cd tools/tests
-  cd tools/tests
-  python systemtests.py --build_args=PRECICE_REF:v3.1.1,PRECICE_PRESET:production-audit,OPENFOAM_ADAPTER_REF:v1.3.0,PYTHON_BINDINGS_REF:v3.1.0,FENICS_ADAPTER_REF:v2.1.0 --suites=fenics_test --log-level=DEBUG
-  cd ../../
-  shell: /usr/bin/bash -e {0}
-INFO: About to run the following systemtest in the directory /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs:
- [Flow over heated plate (fluid-openfoam, solid-fenics)]
-INFO: Started running Flow over heated plate (fluid-openfoam, solid-fenics),  0/1
-DEBUG: Checking out tutorials master before copying
-From https://github.com/precice/tutorials
- * [new branch]      master     -> master
-DEBUG: Building docker image for Flow over heated plate (fluid-openfoam, solid-fenics)
-DEBUG: Running tutorial Flow over heated plate (fluid-openfoam, solid-fenics)
-DEBUG: Running fieldcompare for Flow over heated plate (fluid-openfoam, solid-fenics)
-DEBUG: extracting /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz into /home/precice/runners_root/actions-runner-tutorial/_work/tutorials/tutorials/runs/flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723/reference_results
-Using log-level: DEBUG
-+---------------------------------------------------------+---------+-------------------+-----------------+-----------------------+
-| systemtest                                              | success | building time [s] | solver time [s] | fieldcompare time [s] |
-CRITICAL: Fieldcompare returned non zero exit code, therefore Flow over heated plate (fluid-openfoam, solid-fenics) failed
-INFO: Running Flow over heated plate (fluid-openfoam, solid-fenics) took 280.5861554039875 seconds
-ERROR: Failed to run Flow over heated plate (fluid-openfoam, solid-fenics)
-+---------------------------------------------------------+---------+-------------------+-----------------+-----------------------+
-| Flow over heated plate (fluid-openfoam, solid-fenics)   |    0    |      271.80       |      5.60       |         2.42          |
-+---------------------------------------------------------+---------+-------------------+-----------------+-----------------------+
-```
-
-In this case, building and running seems to work out, but the tests fail because the results differ from the reference results. This may be incorrect, as the previous step may have silently failed.
-
-## Understanding what went wrong
-
-The easiest way to debug a systemtest run is first to have a look at the output written into the action on GitHub.
-If this does not provide enough hints, the next step is to download the generated `system_tests_run_<run_id>_<run_attempt>_full` artifact (a smaller `_logs` archive contains only log files). Note that by default this will only be generated if the systemtests fail.
-Inside the archive, a test-specific subfolder like `flow-over-heated-plate_fluid-openfoam-solid-fenics_2023-11-19-211723` contains two log files: `system-tests-stderr.log` and `system-tests-stdout.log`. This can be a starting point for a further investigation. When fieldcompare runs with `--diff`, it writes VTK diff files under `precice-exports/`; if the comparison fails, those files are copied into a `diff-results/` subfolder in the same run directory (mirroring any subpaths under `precice-exports/`) so you can open them (e.g. in ParaView) to see where results differ from the reference. On successful comparisons, `diff-results/` is therefore absent.
-
-### Re-running system tests from CI artifacts
-
-Download the **full** artifact from a failed (or manually uploaded) workflow run:
+When a system test fails in CI, download the **full** artifact:
 
 `system_tests_run_<run_id>_<run_attempt>_full`
 
-The archive contains a `runs/` directory shared by all system tests from that run:
+(a smaller `_logs` archive contains only log files). The archive contains a shared `runs/` directory:
 
 ```text
 runs/
@@ -122,67 +125,67 @@ runs/
     ├── docker-compose.tutorial.yaml
     ├── docker-compose.field_compare.yaml   # if fieldcompare ran
     ├── rerun_systemtest.sh
+    ├── system-tests-build.log
+    ├── system-tests-run.log
+    ├── system-tests-compare.log
     └── …
 ```
 
 To re-run one test locally:
 
-1. Download and extract `system_tests_run_<run_id>_<run_attempt>_full.zip`.
-2. Keep the `runs/` layout intact (the tutorial folder needs the sibling `tools/` directory):
+1. Extract the zip and keep the `runs/` layout (the test folder needs the sibling `tools/` directory).
+2. `cd` into the test folder.
+3. Run `./rerun_systemtest.sh` (or `sh rerun_systemtest.sh`).
 
-   ```bash
-   unzip system_tests_run_<run_id>_<run_attempt>_full.zip
-   cd system_tests_run_<run_id>_<run_attempt>_full/runs
-   ls
-   cd <tutorial>_<cases>_<timestamp>
-   ```
+The script rebuilds images, runs the tutorial, and (if present) runs fieldcompare with `--exit-code-from field-compare`, matching the Python runner. Compose paths are relative to the test folder (`..` is the parent `runs/` directory), so you can move the extracted tree elsewhere on a Linux host with Docker.
 
-3. In the tutorial folder you will find the copied tutorial, generated Docker Compose
-   files, and `rerun_systemtest.sh`. The shared `tools/` tree lives one level up in
-   `runs/tools/`.
+Fieldcompare requires reference results in the artifact (unpacked during the original CI run) or you must unpack them manually first.
 
-4. Re-run with Docker:
+## Extending
 
-   ```bash
-   ./rerun_systemtest.sh   # or: sh rerun_systemtest.sh
-   ```
+### Adding new tests
 
-The script rebuilds images, runs the tutorial containers, and (if
-`docker-compose.field_compare.yaml` exists) runs fieldcompare with the same
-`--exit-code-from` behavior as the CI runner. Compose paths are relative to the
-tutorial folder (`..` points at the parent `runs/` directory), so you can relocate the
-entire extracted `runs/` tree on any Linux host with Docker.
+Tests and test suites are defined in [`tests.yaml`](https://github.com/precice/tutorials/blob/develop/tools/tests/tests.yaml). By convention, every tutorial defines a test suite with the same name as its directory, and several test cases using combinations of the available participants. These test cases are later referenced by other test suites: these are typically the `release` and the test suites of different tested components.
 
-Fieldcompare requires reference results in the artifact (unpacked by CI during the
-original run) or you must unpack them manually before that step.
+The available cases are listed in the `metadata.yaml` of each tutorial. To add a new tutorial case as a test, add it to `metadata.yaml` and then define a test using it. Include that test in the relevant test suites.
 
-## Adding new tests
+Use the `max_time` or `max_time_windows` parameters to restrict the runtime of the test to the first few coupling time windows, to save time. Aim for a runtime of less than a minute (assuming cached components), if possible.
 
-### Adding tutorials
+You will need to define a reference results file. The reference results can and should be generated on GitHub using the [Generate reference results (manual)](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) workflow for the respective test suite. You might want to temporarily set the `selected` test suite for requesting results only for a subset of test cases.
 
-In order for the systemtests to pick up the tutorial we need to define a `metadata.yaml` in the folder of the tutorial. There are a few `metadata.yaml` already present to get inspiration from. You can also have a look at the implementation details but normally the currently available ones should be easy to adopt. You can check your metadata parsing by `python print_metadata.py` and `python print_case_combinations.py`
+Note that you will need to define the `TUTORIALS_REF` in the file [`reference_versions.yaml`](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) to match the respective branch. Restore that to `develop` after that. See a [related issue](https://github.com/precice/tutorials/issues/844).
 
-### Adding testsuites
+The results will be added to a Git LFS, but you will need special push access: just use the aforementioned GitHub Actions workflow, instead.
 
-To add a testsuite just open the `tests.yaml` file and use the output of `python print_case_combinations.py` to add the right case combinations you want to test. Note that you can specify a `reference_result` which is not yet present. The `generate_reference_data.py` will pick that up and create it for you.
-Note that its important to carefully check the paths of the `reference_result` in order to not have typos in there. Also note that same cases in different testsuites should use the same `reference_result`.
+### Adding new components
 
-To cap the preCICE simulation time for a specific test without editing `precice-config.xml`, add an optional `max_time` (positive float, overrides `<max-time>`) or `max_time_windows` (positive integer, overrides `<max-time-windows>`) field to the tutorial entry. Applies to both test runs and reference result generation.
+To add a new component, a few changes are needed:
 
-### Generate reference results
+1. In the `components.yaml`, add a new component, defining all the parameters that it might need.
+    - Add these parameters into the `reference_versions.yaml`.
+    - Add fields for these parameters into the `system-tests-latest-components.yml` workflow.
+2. In the `dockerfiles/<platform>/Dockerfile`, define a new stage for building your new component. Use the parameters you defined above.
+    - Defining a `<component>_PR` variable will let you integrate the system tests into the respective component repository.
+3. In the `component_templates.yaml`, define a component template. These are Jinja templates that are used by Docker Compose, and the main detail is how to run a simulation using that component.
+4. Refer to the new component in the `metadata.yaml` of some tutorial and define some tests.
 
-Since we need data to compare against, you need to run `python generate_reference_data.py`. This process might take a while.
-Please include the generated reference results in the pull request as they are strongly connected to the new testsuites.
+### Adding new repositories that can trigger the tests
 
-## Adding repositories
+If you want to trigger the system tests from a new repository:
 
-If you want to trigger a testsuite from a new repository, you need to add a workflow file to that repository (under `.github/workflows/`). You can, for example, copy and adjust [the one from the OpenFOAM adapter](https://github.com/precice/openfoam-adapter/blob/develop/.github/workflows/system-tests.yaml). Then, you need a new label to trigger the workflow (e.g. `Issues`->`Labels`->`New label`). Last, in the [preCICE organization settings](https://github.com/organizations/precice/settings), you need to add the new repository to the action secret `WORKFLOW_DISPATCH_TOKEN` and to the default actions runner group. Adding the new label directly to the pull request in which you add the workflow should already trigger the system tests, compare the [pull request in the `precice` repository](https://github.com/precice/precice/pull/2052).
+1. Add a workflow file to that repository (under `.github/workflows/`). Example: [OpenFOAM adapter](https://github.com/precice/openfoam-adapter/blob/develop/.github/workflows/system-tests.yaml).
+2. Create label as a trigger for workflow (under `Issues`->`Labels`->`New label`).
+3. Give permissions: In the [preCICE organization settings](https://github.com/organizations/precice/settings), you need to add the new repository to the action secret `WORKFLOW_DISPATCH_TOKEN` and to the default actions runner group. Adding the new label directly to the pull request in which you add the workflow should already trigger the system tests.
 
 ## Implementation details
 
-Each tutorial contains automation scripts (mainly `run.sh` and `clean.sh`), as well as metadata (`metadata.yaml`). The metadata file describes the available cases, how to run them, as well as their dependencies. A central `tests.yaml` file in this directory defines test suites, which execute different combinations of cases. The Python script `systemtests.py` executes the tests, allowing to filter for specific components or test suites.
+Each tutorial contains automation scripts (mainly `run.sh` and `clean.sh`), as well as metadata (`metadata.yaml`). The metadata file describes the available cases, how to run them, as well as their dependencies. A central `tests.yaml` file defines test suites, which execute different combinations of cases. The Python script `systemtests.py` executes the tests, filter for specific test suites.
 
-Let's dive deeper into some of these aspects.
+Read more about the system tests in the publication [System Regression Tests for the preCICE Coupling Ecosystem](https://doi.org/10.14279/eceasst.v83.2614).
+
+[![ECEASST](https://img.shields.io/badge/DOI-10.14279%2Feceasst.v83.2614-green)](https://doi.org/10.14279/eceasst.v83.2614)
+
+<details markdown="1"><summary>Expand the implementation details...</summary>
 
 ### General architecture
 
@@ -194,15 +197,15 @@ Test steps include modifying the tutorial configuration files for the test syste
 
 Tests are executed by the `systemtests.py` script, which starts the Docker Compose. This can be executed locally, and it is the same script that GitHub Actions also execute.
 
-The multi-stage Docker build allows building each component separately from the same Dockerfile, while Docker reuses cached layers. The Docker Compose services consider GitHub Actions Cache when building the services, although the cache is currently only updated, but not hit (see https://github.com/precice/tutorials/pull/372#issuecomment-1748335750).
+The multi-stage Docker build allows building each component separately from the same Dockerfile, while Docker reuses cached layers. The Docker Compose services consider GitHub Actions Cache when building the services, although the cache is currently only updated, but not hit (see https://github.com/precice/tutorials/pull/372#issuecomment-1748335750). For this reason, we are running on a dedicated self-hosted runner.
 
 ### File structure
 
 Metadata and workflow/script files:
 
 - `.github/workflows/`
-  - `run_testsuite_workflow.yml`: workflow for running the tests, triggered by other workflows (e.g., other repositories)
-  - `run_testsuite_manual.yml`: manual triggering front-end for `run_testsuite_workflow.yml`
+  - `system-tests.yml`: workflow for running the tests, triggered by other workflows (e.g., other repositories)
+  - `system-tests-latest-components.yml`: manual triggering front-end for `system-tests.yml`
 - `flow-over-a-heated-plate/`
   - `fluid-openfoam/`
     - `run.sh`: describes how to execute the respective case
@@ -234,6 +237,7 @@ User-facing tools:
   - `print_case_combinations.py`: Prints all possible combinations of tutorial cases, using the `metadata.yaml` files.
   - `build_docker_images.py`: Build the Docker images for each test
   - `generate_reference_results.py`: Executes the system tests with the versions defined in `reference_versions.yaml` and generates the reference data archives, with the names described in `tests.yaml`. (should only be used by the CI Pipeline)
+  - `rerun_systemtest.sh`: Helper script copied into each run directory so CI artifacts can be replayed locally (see [#387](https://github.com/precice/tutorials/issues/387)).
 
 Implementation scripts:
 
@@ -293,47 +297,43 @@ Description:
 
 ### Components
 
-The components mentioned in the Metadata are defined in the central `components.yaml` file. This file also specifies some arguments and their default values. These arguments can be anything, but most often they are version-related information. For example, the version of the OpenFOAM library used by the openfoam-adapter component, or the openfoam-adapter component version itself. For example:
+The components mentioned in the Metadata are defined in the central `components.yaml` file. This file also specifies some arguments and their default values. These arguments can be anything, but most often they are version-related information. For example, the version of OpenFOAM used by the openfoam-adapter component, or the component version itself. For example:
 
 ```yaml
 openfoam-adapter:
-  repository: https://github.com/precice/openfoam-adapter
   template: component-templates/openfoam-adapter.yaml
   build_arguments:
-    PRECICE_REF:
-      description: Version of preCICE to use
-      default: "main"
-    PRECICE_PRESET:
-      description: CMake preset of preCICE
-      default: "production-audit"
     PLATFORM:
-      description: Dockerfile platform used
       default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PRESET:
+      default: "production-audit"
     TUTORIALS_REF:
-      description: Tutorial git reference to use
-      default: "master"
+      repository: https://github.com/precice/tutorials
+      default: "develop"
     OPENFOAM_EXECUTABLE:
-      description: exectuable of openfoam to use
       default: "openfoam2512"
     OPENFOAM_ADAPTER_REF:
-      description: Reference/tag of the actual OpenFOAM adapter
-      default: "master"
+      repository: https://github.com/precice/openfoam-adapter
+      default: "develop"
 ```
 
 This `openfoam-adapter` component has the following attributes:
 
-- `repository`: URL to the Git projects
 - `template`: A template for a Docker Compose service of this component
 - `build_arguments`: Arguments passed to the Docker Compose service (arbitrary)
 
 #### Naming schema for build_arguments
 
-Since the docker containers are still a bit mixed in terms of capabilities and support for different build_argument combinations the following rules apply:
+The following rules apply for the `build_arguments`:
 
-- A build argument ending in `_REF` refers to a git commit-ish (like a tag or commit) being used to build the image. It is important to not use branch names here as we heavily rely on Docker's build cache to speedup things. But since the input variable to the docker builder will not change, we might have wrong cache hits.
-- Some workflows set variables ending in `_PR`. These specify the GitHub pull request which provides the above `_REF` and can be on a fork.
+- A build argument ending in `_REF` refers to a git commit-ish (like a tag or commit) being used to build the image.
+- The `repository` parameter of any `_REF` argument points to the repository where the respective Git reference should be resolved. This is assumed to be consistent across components and the Dockerfile (and could be simplified).
+- Some workflows set variables ending in `_PR`. These specify the GitHub pull request, which provides the above `_REF` and can be on a fork.
 - A build argument ending in `_VERSION` refers to the version of a third-party dependency to use (e.g., DUNE).
-- All other build_arguments are free of rules and up to the container maintainer.
+- All other `build_arguments` are free of rules and up to the container maintainer.
 
 ### Component templates
 
@@ -354,61 +354,15 @@ command: >
 
 This template defines:
 
-- `image`: The base Docker image for this component, including a Git reference (tag), provided to the template as argument (e.g., by the `systemtests.py` script).
+- `image`: The base Docker image for this component, including a Git reference (tag), provided to the template as an argument (e.g., by the `systemtests.py` script).
 - `depends_on`: Other services this service depends upon, typically a preparation service that fetches all components and tutorials.
 - `volumes`: Directories mapped between the host and the container. Apart from directories relating to the users and groups, this also defines where to run the cases.
 - `command`: How to run a case depending on this component, including how and where to redirect any screen output.
 
-### Tests
+### Timeouts
 
-Concrete tests are specified centrally in the file `tests.yaml`. For example:
+A `GLOBAL_TIMEOUT` is used for all operations. Its default value is 600s (5min), it is set in the beginning of [`Systemtests.py`](https://github.com/precice/tutorials/blob/develop/tools/tests/systemtests/Systemtest.py), and it can be overridden via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable.
 
-```yaml
-test_suites:
-  openfoam_adapter_pr:
-    tutorials:
-      - path: flow-over-heated-plate
-        case_combination:
-          - fluid-openfoam
-          - solid-openfoam
-        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
-  openfoam_adapter_release:
-    tutorials:
-      - path: flow-over-heated-plate
-        case_combination:
-          - fluid-openfoam
-          - solid-openfoam
-        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
-      - path: flow-over-heated-plate
-        case_combination:
-          - fluid-openfoam
-          - solid-fenics
-        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz
-        timeout: 1200
-```
+Tests can define a different `timeout` in their `tests.yaml` entry, which applies to the running and results comparison steps.
 
-The optional `timeout` field (in seconds) sets the maximum time for the solver run and fieldcompare phases of that specific case. If omitted, it defaults to `GLOBAL_TIMEOUT` (currently 900s, overridable via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable).
-
-This defines two test suites, namely `openfoam_adapter_pr` and `openfoam_adapter_release`. Each of them defines which case combinations of which tutorials to run.
-
-### Generate Reference Results
-
-#### via GitHub workflow (recommended)
-
-The preferred way of adding reference results is via the manual `Generate reference results (manual)` workflow. This takes two inputs:
-
-- `from_ref`: branch where the new test configuration (e.g added tests, new reference_versions.yaml) is
-- `commit_msg`: commit message for adding the reference results into the branch
-
-The workflow will checkout the `from_ref`, take the status of the systemtests of that branch and execute `python generate_reference_results.py`, upload the LFS objects into the self-hosted LFS server and add a commit with `commit_msg` onto the `from_ref` branch.
-
-#### manually
-
-In order to generate the reference results edit the `reference_versions.yaml` to match the required `build_arguments` otherwise passed via the cli.
-Executing `generate_reference_results.py` will then generate the following files:
-
-- all distinct `.tar.gz` defined in the `tests.yaml`
-- a `reference_results.md` in the tutorial folder describing the arguments used and a sha-1 hash of the `tar.gz` archive.
-
-The reference result archive will later be unpacked again during the systemtest and compared using `fieldcompare`
-Please note that these files should always be kept in the git lfs.
+</details>

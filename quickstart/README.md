@@ -29,13 +29,13 @@ For this tutorial, we will mainly need to install preCICE, OpenFOAM, and the Ope
     sudo apt install ./libprecice3_3.4.1_resolute.deb
     ```
 
-    | OS                            | Package |
-    | ---                           | ---     |
-    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.4.1_jammy.deb`](https://github.com/precice/precice/releases/download/v3.4.1/libprecice3_3.4.1_jammy.deb) |
-    | Ubuntu 24.04 Noble Numbat     | [`libprecice3_3.4.1_noble.deb`](https://github.com/precice/precice/releases/download/v3.4.1/libprecice3_3.4.1_noble.deb) |
+    | OS                            | Package                                                                                                                        |
+    | ---                           | ---                                                                                                                            |
+    | Ubuntu 22.04 Jammy Jellyfish  | [`libprecice3_3.4.1_jammy.deb`](https://github.com/precice/precice/releases/download/v3.4.1/libprecice3_3.4.1_jammy.deb)       |
+    | Ubuntu 24.04 Noble Numbat     | [`libprecice3_3.4.1_noble.deb`](https://github.com/precice/precice/releases/download/v3.4.1/libprecice3_3.4.1_noble.deb)       |
     | Ubuntu 26.04 Resolute Raccoon | [`libprecice3_3.4.1_resolute.deb`](https://github.com/precice/precice/releases/download/v3.4.1/libprecice3_3.4.1_resolute.deb) |
-    | Debian 13 Trixie              | [`libprecice3_3.4.1_trixie.deb`](https://github.com/precice/precice/releases/download/v3.4.1/libprecice3_3.4.1_trixie.deb) |
-    | Something else                | See an [overview of options](https://precice.org/installation-overview.html) |
+    | Debian 13 Trixie              | [`libprecice3_3.4.1_trixie.deb`](https://github.com/precice/precice/releases/download/v3.4.1/libprecice3_3.4.1_trixie.deb)     |
+    | Something else                | See an [overview of options](https://precice.org/installation-overview.html)                                                   |
 
     Facing any problems? [Ask for help](https://precice.org/community-channels.html).
 2. We will use OpenFOAM here and in many of our tutorial cases, so [install OpenFOAM](https://precice.org/adapter-openfoam-support.html):
@@ -119,6 +119,12 @@ cd tutorials/quickstart/fluid-openfoam
 You can also run OpenFOAM in parallel: `./run.sh -parallel`.
 
 In serial, the simulation should take less than a minute to compute (simulated time: 2.5s).
+
+{% note %}
+While we recommend starting with the latest OpenFOAM version from openfoam.com,
+this case can alternatively be executed with foam-extend.
+For that, replace `run-openfoam.sh` with `run-foam-extend.sh` in the `run.sh` script.
+{% endnote %}
 
 ## Visualizing the results
 

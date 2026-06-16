@@ -1,9 +1,9 @@
 participants:
-    Calculix1:
+    Dirichlet:
         interfaces:
-        - nodes-mesh: Calculix-Mesh1
+        - nodes-mesh: Dirichlet-Mesh
           patch: surface
-          read-data: [Displacement0]
-          write-data: [Force0]
+          read-data: [Displacement]
+          write-data: [Force]
           
 precice-config-file: ../precice-config.xml

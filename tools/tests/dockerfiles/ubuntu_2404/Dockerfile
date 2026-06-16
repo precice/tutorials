@@ -38,7 +38,7 @@ USER precice
 
 FROM base_image AS precice_dependecies
 USER root
-# Installing necessary dependecies for preCICE
+# Dependencies for preCICE and common dependencies for the tutorials/tests
 RUN apt-get -qq update && \
     apt-get -qq -y install \
         build-essential \
@@ -61,7 +61,16 @@ RUN apt-get -qq update && \
         python3-pip \
         python3-venv \
         pkg-config \
-        wget
+        wget \
+        inotify-tools
+# The following are dependencies of gmsh, needed by some tutorials
+RUN apt-get -qq update && \
+    apt-get -qq install \
+    libglu1-mesa \
+    libxrender1 \
+    libxcursor1 \
+    libxft2 \
+    libxinerama1
 USER precice
 
 FROM precice_dependecies AS precice
@@ -125,6 +134,18 @@ RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
 
+FROM precice_dependecies AS fenicsx_adapter
+COPY --from=python_bindings /home/precice/.local /home/precice/.local
+USER root
+RUN add-apt-repository -y ppa:fenics-packages/fenics && \
+    apt-get -qq update && \
+    apt-get -qq install --no-install-recommends fenicsx
+USER precice
+ARG FENICSX_ADAPTER_REF
+# Building fenicsx-adapter
+RUN python3 -m venv --system-site-packages /home/precice/venv && \
+    . /home/precice/venv/bin/activate && \
+    pip3 install git+https://github.com/precice/fenicsx-adapter.git@${FENICSX_ADAPTER_REF}
 
 FROM precice_dependecies AS nutils_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
@@ -210,6 +231,19 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
     cmake . && \
     make -j $(nproc)
 
+FROM precice_dependecies AS mercurydpm_adapter
+USER precice
+COPY --from=precice /home/precice/.local /home/precice/.local
+WORKDIR /home/precice
+ENV PATH="/home/precice/mercurydpm/build/Drivers/PreCICE:$PATH"
+# The channel-transport-particles tutorial is hosted in a frozen fork of the MercuryDPM repository.
+# That's why there are no arguments for version, ref, or pr.
+RUN git clone https://bitbucket.org/davidscn/mercurydpm.git &&\
+    cd mercurydpm && \
+    git checkout channel-transport-tutorial && \
+    mkdir -p build && cd build && \
+    cmake -D MercuryDPM_PreCICE_COUPLING="ON" .. && \
+    make -j $(nproc) ChannelTransport
 
 FROM precice_dependecies AS micro_manager
 USER precice

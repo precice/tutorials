@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 if [ "${1:-}" = "" ]; then
     echo "No target directory specified. Please specify the directory of the participant containing the watchpoint, e.g. ./plot-displacement.sh coil-python."

@@ -1,0 +1,30 @@
+name: Flow over heated plate partitioned flow
+path: flow-over-heated-plate-partitioned-flow # relative to git repo 
+url: https://precice.org/tutorials-flow-over-heated-plate-partitioned-flow.html
+
+participants:
+  - Fluid1
+  - Fluid2
+  - Solid
+
+cases:
+  fluid1-openfoam:
+    participant: Fluid1
+    directory: ./fluid1-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+
+  fluid2-openfoam:
+    participant: Fluid2
+    directory: ./fluid2-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+
+  solid-openfoam:
+    participant: Solid
+    directory: ./solid-openfoam
+    run: ./run.sh
+    component: openfoam-adapter 
+
+
+

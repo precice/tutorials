@@ -10,32 +10,56 @@ cases:
   fluid-cpp:
     participant: Fluid
     directory: ./fluid-cpp
-    run: mkdir build && cmake -S . -B build && cmake --build build && ./run.sh
+    run: ./run.sh
     component: bare
   
-  solid-cpp:
-    participant: Solid
-    directory: ./solid-cpp
-    run: mkdir build && cmake -S . -B build && cmake --build build && ./run.sh
+  fluid-fortran:
+    participant: Fluid
+    directory: ./fluid-fortran
+    run: ./run.sh
     component: bare
-  
+
+  fluid-fortran-module:
+    participant: Fluid
+    directory: ./fluid-fortran-module
+    run: ./run.sh develop
+    component: bare
+
   fluid-python:
     participant: Fluid
     directory: ./fluid-python
     run: ./run.sh
     component: python-bindings
-  
-  solid-python:
-    participant: Solid
-    directory: ./solid-python
-    run: ./run.sh
-    component: python-bindings
-  
+
   fluid-rust:
     participant: Fluid
     directory: ./fluid-rust
     run: ./run.sh
     component: bare
+
+  solid-cpp:
+    participant: Solid
+    directory: ./solid-cpp
+    run: ./run.sh
+    component: bare
+
+  solid-fortran:
+    participant: Solid
+    directory: ./solid-fortran
+    run: ./run.sh
+    component: bare
+
+  solid-fortran-module:
+    participant: Solid
+    directory: ./solid-fortran-module
+    run: ./run.sh develop
+    component: bare
+
+  solid-python:
+    participant: Solid
+    directory: ./solid-python
+    run: ./run.sh
+    component: python-bindings
   
   solid-rust:
     participant: Solid
