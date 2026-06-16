@@ -1,0 +1,43 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      preciceDict;
+}
+
+preciceConfig "../precice-config.xml";
+
+participant Left;
+
+modules (generic);
+
+interfaces
+{
+  Interface1
+  {
+    mesh              Left-Mesh;
+    patches           (interface);
+    
+    readData
+    (
+      Sink-Temp
+      {
+        name        Temperature-Right;
+        solver_name T;
+        operation   ref-value;
+      }
+    );
+    
+    writeData
+    (
+      Write-Grad
+      {
+        name        Gradient-Left;
+        solver_name T;
+        operation   surface-normal-gradient;
+      }
+    );
+  };
+};
