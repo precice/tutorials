@@ -125,3 +125,7 @@ The script will produce the following output files in the `output/` directory:
 - `full-domain-evolution.png`: Time evolution of the solution
 
 ![Full Domain Evolution](images/tutorials-partitioned-burgers-1d-full-domain-evolution.png)
+
+## References
+
+Dagis Daniels Vidulejs. "Coupling Neural Surrogates with Traditional Solvers using preCICE." Master's thesis, Technical University of Munich, 2025.
