@@ -46,6 +46,8 @@ The conservative formulation of the Burgers' equation is implemented in the SciP
 
 Two pre-trained model checkpoints are provided in `neumann-surrogate/`, differing in how many unroll timesteps were used during the Backpropagation Through Time (BPTT) training phase. The two checkpoints, `CNN_RES_UNROLL_1.pth` and `CNN_RES_UNROLL_7.pth`, were trained, respectively, with a single-step prediction (rollout length 1) and a 7-step rollout, which improves stability over long autoregressive predictions. The checkpoint can be selected by changing `MODEL_NAME` in `neumann-surrogate/config.py`.
 
+The full training pipeline is available in a separate development repository: [github.com/vidulejs/neural-adapter](https://github.com/vidulejs/neural-adapter).
+
 {% note %}
 The surrogate participant requires PyTorch and related dependencies. By default, the CPU version is installed. If you wish to use the GPU version, see the comment in `neumann-surrogate/requirements.txt`. The GPU version requires several gigabytes of disk space (~6.2Gb).
 {% endnote %}
