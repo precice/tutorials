@@ -1,0 +1,5 @@
+numpy >1, <2
+matplotlib
+mesa>=3
+pyprecice~=3.0
+networkx

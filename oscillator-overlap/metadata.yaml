@@ -1,0 +1,20 @@
+name: Oscillator overlap
+path: oscillator-overlap
+url: https://precice.org/tutorials-oscillator-overlap.html
+
+participants:
+  - Mass-Left
+  - Mass-Right
+
+cases:
+  mass-left-python:
+    participant: Mass-Left
+    directory: ./mass-left-python
+    run: ./run.sh
+    component: python-bindings
+
+  mass-right-python:
+    participant: Mass-Right
+    directory: ./mass-right-python
+    run: ./run.sh
+    component: python-bindings

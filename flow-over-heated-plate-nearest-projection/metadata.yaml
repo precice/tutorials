@@ -10,11 +10,11 @@ cases:
   fluid-openfoam:
     participant: Fluid
     directory: ./fluid-openfoam
-    run: ./run.sh
+    run: ./run.sh -parallel
     component: openfoam-adapter
 
   solid-openfoam:
     participant: Solid
     directory: ./solid-openfoam
-    run: ./run.sh
+    run: ./run.sh -parallel
     component: openfoam-adapter

@@ -7,7 +7,18 @@ from systemtests.TestSuite import TestSuites
 from metadata_parser.metdata import Tutorials, Case
 import logging
 import time
+import os
+import sys
 from paths import PRECICE_TUTORIAL_DIR, PRECICE_TESTS_RUN_DIR, PRECICE_TESTS_DIR
+
+
+class _ConsoleLogFormatter(logging.Formatter):
+    """Omit level prefix for INFO/DEBUG; keep it for warnings and errors."""
+
+    def format(self, record: logging.LogRecord) -> str:
+        if record.levelno >= logging.WARNING:
+            return f"{record.levelname}: {record.getMessage()}"
+        return record.getMessage()
 
 
 def main():
@@ -19,22 +30,40 @@ def main():
     parser.add_argument(
         '--build_args',
         type=str,
-        help='Comma-separated list of arguments provided to the components like openfoam:2102,pythonbindings:latest')
+        help='Comma-separated list of component build arguments (e.g., "PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop")')
     parser.add_argument('--rundir', type=str, help='Directory to run the systemstests in.',
                         nargs='?', const=PRECICE_TESTS_RUN_DIR, default=PRECICE_TESTS_RUN_DIR)
 
-    parser.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-                        default='INFO', help='Set the logging level')
+    parser.add_argument('--log_level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+                        default='INFO', help='Set the logging level of the system tests scripts.')
 
     # Parse the command-line arguments
     args = parser.parse_args()
 
-    # Configure logging based on the provided log level
-    logging.basicConfig(level=args.log_level, format='%(levelname)s: %(message)s')
+    # Configure logging
+    handler = logging.StreamHandler()
+    handler.setFormatter(_ConsoleLogFormatter())
+    logging.basicConfig(level=args.log_level, handlers=[handler])
 
-    print(f"Using log-level: {args.log_level}")
+    gh_actions = os.environ.get("GITHUB_ACTIONS", "").lower() == "true"
+    # Skip ANSI colors when TERM is unset or "dumb" (minimal terminal, common in CI).
+    ansi_colors = sys.stdout.isatty() and os.environ.get("TERM", "") not in {"", "dumb"}
+
+    def _style(text: str, color_code: int | None) -> str:
+        if not ansi_colors or color_code is None:
+            return text
+        return f"\x1b[{color_code}m{text}\x1b[0m"
+
+    def _group_start(title: str) -> None:
+        if gh_actions:
+            print(f"::group::{title}", flush=True)
+
+    def _group_end() -> None:
+        if gh_actions:
+            print("::endgroup::", flush=True)
 
     systemtests_to_run = []
+    test_suites_to_execute = []
     available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
 
     build_args = SystemtestArguments.from_args(args.build_args)
@@ -43,7 +72,6 @@ def main():
         test_suites_requested = args.suites.split(',')
         available_testsuites = TestSuites.from_yaml(
             PRECICE_TESTS_DIR / "tests.yaml", available_tutorials)
-        test_suites_to_execute = []
         for test_suite_requested in test_suites_requested:
             test_suite_found = available_testsuites.get_by_name(
                 test_suite_requested)
@@ -72,24 +100,47 @@ def main():
     if not systemtests_to_run:
         raise RuntimeError("Did not find any Systemtests to execute.")
 
-    logging.info(f"About to run the following systemtest in the directory {run_directory}:\n {systemtests_to_run}")
+    total = len(systemtests_to_run)
+
+    if test_suites_to_execute:
+        print("Selected test suite(s):", flush=True)
+        print(flush=True)
+        for test_suite in test_suites_to_execute:
+            print(f"- {test_suite.name}", flush=True)
+        print(flush=True)
+
+    print(f"About to run {total} test(s) in the directory {run_directory}:", flush=True)
+    print(flush=True)
+    for number, systemtest in enumerate(systemtests_to_run, start=1):
+        print(f"{number}. {systemtest}", flush=True)
+    print(flush=True)
+    print(f"Using log_level: {args.log_level}", flush=True)
 
     results = []
     for number, systemtest in enumerate(systemtests_to_run, start=1):
-        logging.info(f"Started running {systemtest},  {number}/{len(systemtests_to_run)}")
-        t = time.perf_counter()
-        result = systemtest.run(run_directory)
-        elapsed_time = time.perf_counter() - t
-        logging.info(f"Running {systemtest} took {elapsed_time:^.1f} seconds")
+        print(flush=True)
+        started_header = f"[{number}/{total}] Started {systemtest}"
+        _group_start(started_header)
+        try:
+            if not gh_actions:
+                logging.info(started_header)
+            t = time.perf_counter()
+            result = systemtest.run(run_directory)
+            elapsed_time = time.perf_counter() - t
+
+            if result.success:
+                status_label = _style("✅ PASS", 32)
+            else:
+                status_label = _style("❌ FAIL", 31)
+        finally:
+            _group_end()
+
+        print(f"{status_label} Finished in {elapsed_time:.1f}s", flush=True)
+        print(flush=True)
         results.append(result)
 
-    system_test_success = True
-    for result in results:
-        if not result.success:
-            logging.error(f"Failed to run {result.systemtest}")
-            system_test_success = False
-        else:
-            logging.info(f"Success running {result.systemtest}")
+    print(flush=True)
+    system_test_success = all(result.success for result in results)
 
     display_systemtestresults_as_table(results)
     if system_test_success:
