@@ -22,7 +22,7 @@ on:
           default: 'TRUE'
           type: string
 jobs:
-  run_testsuite:
+  run_system_tests:
     runs-on: [self-hosted, linux, x64, precice-tests-vm]
     steps:
     - name: Display a quick job summary
