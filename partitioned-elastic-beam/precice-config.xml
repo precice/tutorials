@@ -9,57 +9,56 @@
 
   <profiling mode="fundamental" synchronize="false" />
 
-  <data:vector name="Force0" />
-  <data:vector name="Displacement0" />
+  <data:vector name="Force" />
+  <data:vector name="Displacement" />
 
-  <mesh name="Calculix-Mesh1" dimensions="3">
-    <use-data name="Force0" />
-    <use-data name="Displacement0" />
+  <mesh name="Dirichlet-Mesh" dimensions="3">
+    <use-data name="Force" />
+    <use-data name="Displacement" />
   </mesh>
 
-  <mesh name="Calculix-Mesh2" dimensions="3">
-    <use-data name="Displacement0" />
-    <use-data name="Force0" />
+  <mesh name="Neumann-Mesh" dimensions="3">
+    <use-data name="Displacement" />
+    <use-data name="Force" />
   </mesh>
 
-  <participant name="Calculix1">
-    <provide-mesh name="Calculix-Mesh1" />
-    <receive-mesh name="Calculix-Mesh2" from="Calculix2" />
-    <write-data name="Force0" mesh="Calculix-Mesh1" />
-    <read-data name="Displacement0" mesh="Calculix-Mesh1" />
+  <participant name="Dirichlet">
+    <provide-mesh name="Dirichlet-Mesh" />
+    <receive-mesh name="Neumann-Mesh" from="Neumann" />
+    <write-data name="Force" mesh="Dirichlet-Mesh" />
+    <read-data name="Displacement" mesh="Dirichlet-Mesh" />
     <mapping:nearest-neighbor
       direction="write"
-      from="Calculix-Mesh1"
-      to="Calculix-Mesh2"
+      from="Dirichlet-Mesh"
+      to="Neumann-Mesh"
       constraint="conservative" />
     <mapping:nearest-neighbor
       direction="read"
-      from="Calculix-Mesh2"
-      to="Calculix-Mesh1"
+      from="Neumann-Mesh"
+      to="Dirichlet-Mesh"
       constraint="consistent" />
   </participant>
 
-  <participant name="Calculix2">
-    <provide-mesh name="Calculix-Mesh2" />
-    <write-data name="Displacement0" mesh="Calculix-Mesh2" />
-    <read-data name="Force0" mesh="Calculix-Mesh2" />
+  <participant name="Neumann">
+    <provide-mesh name="Neumann-Mesh" />
+    <write-data name="Displacement" mesh="Neumann-Mesh" />
+    <read-data name="Force" mesh="Neumann-Mesh" />
   </participant>
 
-  <m2n:sockets acceptor="Calculix1" connector="Calculix2" exchange-directory="../" />
+  <m2n:sockets acceptor="Dirichlet" connector="Neumann" exchange-directory="../" />
 
   <coupling-scheme:parallel-implicit>
-    <participants first="Calculix1" second="Calculix2" />
+    <participants first="Dirichlet" second="Neumann" />
     <max-time-windows value="50" />
     <time-window-size value="1e-2" />
-    <exchange data="Displacement0" mesh="Calculix-Mesh2" from="Calculix2" to="Calculix1" />
-    <exchange data="Force0" mesh="Calculix-Mesh2" from="Calculix1" to="Calculix2" />
+    <exchange data="Displacement" mesh="Neumann-Mesh" from="Neumann" to="Dirichlet" />
+    <exchange data="Force" mesh="Neumann-Mesh" from="Dirichlet" to="Neumann" />
     <max-iterations value="50" />
-    <!--      	   <min-iteration-convergence-measure min-iterations="5" data="Displacement0" mesh="Calculix-Mesh2"/>-->
-    <relative-convergence-measure limit="1e-4" data="Displacement0" mesh="Calculix-Mesh2" />
-    <relative-convergence-measure limit="1e-4" data="Force0" mesh="Calculix-Mesh2" />
+    <relative-convergence-measure limit="1e-4" data="Displacement" mesh="Neumann-Mesh" />
+    <relative-convergence-measure limit="1e-4" data="Force" mesh="Neumann-Mesh" />
     <acceleration:IQN-ILS>
-      <data name="Displacement0" mesh="Calculix-Mesh2" />
-      <data name="Force0" mesh="Calculix-Mesh2" />
+      <data name="Displacement" mesh="Neumann-Mesh" />
+      <data name="Force" mesh="Neumann-Mesh" />
       <preconditioner type="residual-sum" />
       <filter type="QR2" limit="1e-3" />
       <initial-relaxation value="0.1" />

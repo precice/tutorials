@@ -1,0 +1,20 @@
+name: Partitioned heat conduction 3D
+path: partitioned-heat-conduction-3d # relative to git repo 
+url: https://precice.org/tutorials-partitioned-heat-conduction-3d.html
+
+participants:
+  - Dirichlet
+  - Neumann
+
+cases:
+  dirichlet-fenicsx:
+    participant: Dirichlet
+    directory: ./dirichlet-fenicsx
+    run: ./run.sh
+    component: fenicsx-adapter
+  
+  neumann-fenicsx:
+    participant: Neumann
+    directory: ./neumann-fenicsx
+    run: ./run.sh
+    component: fenicsx-adapter

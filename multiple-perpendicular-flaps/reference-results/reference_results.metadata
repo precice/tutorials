@@ -11,36 +11,36 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz | 2026-05-11 07:45:27 | ea2d5946f64667ba05ab3a3516cca7c3af3a59374ff22d0a69e0098c00c1ace1 |
+| fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz | 2026-05-28 11:46:06 | 53f71fb905f3714c4d30a963ba47139e1a93fa3ed3fc838856baa9fd81b949d7 |
 
 ## List of arguments used to generate the files
 
 | name | value |
 |------|------|
-| PRECICE_REF | d199bb3 |
-| PRECICE_PRESET | production-audit |
-| OPENFOAM_EXECUTABLE | openfoam2312 |
-| OPENFOAM_ADAPTER_REF | v1.3.1 |
-| PYTHON_BINDINGS_REF | v3.2.0 |
-| FENICS_ADAPTER_REF | v2.2.0 |
-| TUTORIALS_REF | b18b3ef |
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
-| CALCULIX_ADAPTER_REF | v2.20.1 |
-| SU2_VERSION | 7.5.1 |
-| SU2_ADAPTER_REF | 64d4aff |
-| DEALII_ADAPTER_REF | 02c5d18 |
 | DUNE_VERSION | 2.9 |
 | DUMUX_VERSION | 3.7 |
-| DUMUX_ADAPTER_REF | 0e914bb |
-| MICRO_MANAGER_REF | v0.8.0 |
+| OPENFOAM_EXECUTABLE | openfoam2512 |
+| SU2_VERSION | 7.5.1 |
+| FENICS_ADAPTER_REF | v2.3.0 |
+| CALCULIX_ADAPTER_REF | v2.20.1 |
+| DEALII_ADAPTER_REF | a421d92 |
+| DUMUX_ADAPTER_REF | 3f3f54f |
+| MICRO_MANAGER_REF | v0.10.1 |
+| OPENFOAM_ADAPTER_REF | 2c3062c |
+| PRECICE_REF | v3.4.1 |
+| PYTHON_BINDINGS_REF | v3.4.0 |
+| SU2_ADAPTER_REF | 5abe79b |
+| TUTORIALS_REF | 9cb7068 |
+| PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
 ## Information about the machine
 
 ### uname -a
 
-Linux precice-tests 5.15.0-177-generic #187-Ubuntu SMP Sat Apr 11 22:54:33 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Linux precice-tests 5.15.0-179-generic #189-Ubuntu SMP Tue May 5 18:20:56 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
 
 
 ### lscpu

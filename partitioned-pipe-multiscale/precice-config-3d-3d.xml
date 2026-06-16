@@ -32,7 +32,6 @@
       from="Fluid3DLeft-Mesh"
       to="Fluid3DRight-Mesh"
       constraint="consistent" />
-    <export:vtu directory="precice-exports" />
   </participant>
 
   <participant name="Fluid3DLeft">
@@ -45,7 +44,6 @@
       from="Fluid3DRight-Mesh"
       to="Fluid3DLeft-Mesh"
       constraint="consistent" />
-    <export:vtu directory="precice-exports" />
   </participant>
 
   <m2n:sockets acceptor="Fluid3DRight" connector="Fluid3DLeft" exchange-directory=".." />

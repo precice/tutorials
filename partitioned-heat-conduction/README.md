@@ -29,13 +29,13 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 ## Available solvers and dependencies
 
-You can either couple a solver with itself or different solvers with each other. In any case you will need to have preCICE and the python bindings installed on your system.
+You can either couple a solver with itself or different solvers with each other. Available solvers:
 
 * FEniCS. Install [FEniCS](https://fenicsproject.org/download/archive/) and the [FEniCS-adapter](https://github.com/precice/fenics-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
 
 * FEniCSx. Install [FEniCSx](https://fenicsproject.org/download/) and the [FEniCSx-adapter](https://github.com/precice/fenicsx-adapter). The code is largely based on this [fenics-tutorial](https://github.com/hplgit/fenics-tutorial/blob/master/pub/python/vol1/ft03_heat.py) from [1].
 
-* Nutils. Install [Nutils](https://nutils.org/install-nutils.html).
+* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
 * OpenFOAM. This case uses the custom [heatTransfer](https://github.com/precice/tutorials/blob/master/partitioned-heat-conduction/solver-openfoam/heatTransfer.C) solver (find it in `solver-openfoam` and build with `wmake`). Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
 
