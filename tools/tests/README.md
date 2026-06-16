@@ -154,7 +154,7 @@ Read more about the system tests in the publication [System Regression Tests for
 
 [![ECEASST](https://img.shields.io/badge/DOI-10.14279%2Feceasst.v83.2614-green)](https://doi.org/10.14279/eceasst.v83.2614)
 
-<details><summary>Expand the implementation details...</summary>
+<details markdown="1"><summary>Expand the implementation details...</summary>
 
 ### General architecture
 
