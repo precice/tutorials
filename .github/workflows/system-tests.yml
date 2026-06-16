@@ -1,4 +1,4 @@
-name: Run Testsuite reusable workflow 
+name: System tests (called)
 on:
   workflow_call:
     inputs:

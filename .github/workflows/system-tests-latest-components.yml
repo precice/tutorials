@@ -1,4 +1,4 @@
-name: System tests (latest components)
+name: System tests (manual/nightly)
 
 on:
   schedule:
