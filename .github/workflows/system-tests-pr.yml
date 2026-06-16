@@ -12,5 +12,3 @@ jobs:
     with:
       suites: release
       build_args: "TUTORIALS_REF:${{ github.event.pull_request.head.sha }}"
-      system_tests_branch: develop
-      log_level: "INFO"
