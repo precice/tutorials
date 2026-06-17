@@ -96,8 +96,10 @@ def main():
                     max_time = max_times[i] if i < len(max_times) else None
                     max_time_windows = mtw_list[i] if i < len(mtw_list) else None
                     timeout = timeouts[i] if i < len(timeouts) and timeouts[i] is not None else GLOBAL_TIMEOUT
-                    tolerance = tolerances[i] if i < len(tolerances) and tolerances[i] is not None else DEFAULT_FIELDCOMPARE_RTOL
-                    skip_compare = skip_compares[i] if i < len(skip_compares) and skip_compares[i] is not None else False
+                    tolerance = tolerances[i] if i < len(
+                        tolerances) and tolerances[i] is not None else DEFAULT_FIELDCOMPARE_RTOL
+                    skip_compare = skip_compares[i] if i < len(
+                        skip_compares) and skip_compares[i] is not None else False
                     systemtests_to_run.append(
                         Systemtest(tutorial, build_args, case, reference_result, max_time=max_time, max_time_windows=max_time_windows, timeout=timeout, tolerance=tolerance, skip_compare=skip_compare))
 
