@@ -1,0 +1,32 @@
+name: Check requirements-reference
+on:
+  push:
+    branches:
+      - master
+      - develop
+    paths:
+      - "**/requirements.txt"
+      - requirements-reference.txt
+      - tools/report_tutorial_requirements.py
+      - tools/validate_requirements_reference.py
+  pull_request:
+    branches:
+      - master
+      - develop
+    paths:
+      - "**/requirements.txt"
+      - requirements-reference.txt
+      - tools/report_tutorial_requirements.py
+      - tools/validate_requirements_reference.py
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install script dependency
+        run: pip install packaging
+      - name: Validate requirements-reference
+        run: python3 tools/validate_requirements_reference.py

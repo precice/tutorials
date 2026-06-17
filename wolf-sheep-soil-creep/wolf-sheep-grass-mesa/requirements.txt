@@ -1,5 +1,5 @@
 numpy >1, <2
-matplotlib
-mesa>=3
+matplotlib>=3.5,<4
+mesa>=3,<4
 pyprecice~=3.0
-networkx
+networkx>=3,<4

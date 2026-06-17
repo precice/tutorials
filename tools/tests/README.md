@@ -207,6 +207,19 @@ User-facing tools:
   - `build_docker_images.py`: Build the Docker images for each test
   - `generate_reference_results.py`: Executes the system tests with the versions defined in `reference_versions.yaml` and generates the reference data archives, with the names described in `tests.yaml`. (should only be used by the CI Pipeline)
 
+### Tutorial Python dependencies (issue [#610](https://github.com/precice/tutorials/issues/610))
+
+Each Python-based tutorial case has a `requirements.txt` with **loose version constraints** (e.g. `numpy >1, <2`, `pyprecice~=3.0`) so the latest compatible packages can be installed during development.
+
+For **distribution releases**, regenerate the root-level `requirements-reference.txt` lockfile manifest. This records the latest PyPI versions that satisfy each tutorial's constraints at release time, without pinning every tutorial file:
+
+```bash
+pip install packaging
+python3 tools/report_tutorial_requirements.py
+```
+
+CI validates the reference file with `python3 tools/validate_requirements_reference.py` (or `--check` on the report script).
+
 Implementation scripts:
 
 - `tools/tests/`

@@ -4,6 +4,8 @@ TODO: Summarize and motivate the changes, link to issues, remove the checklist e
 
 - [ ] I added a summary of any user-facing changes (compared to the last release) in the `changelog-entries/<PRnumber>.md`.
 
+For **release PRs** (new distribution): regenerate `requirements-reference.txt` after updating tutorial `requirements.txt` constraints (`python3 tools/report_tutorial_requirements.py`).
+
 For new tutorials or tutorial cases:
 
 - [ ] I followed the [tutorial folder structure](https://precice.org/community-contribute-to-precice.html#contributing-tutorials)

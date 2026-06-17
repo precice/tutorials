@@ -1,1 +1,1 @@
-fmiprecice
+fmiprecice~=0.2
