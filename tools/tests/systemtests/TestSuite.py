@@ -13,6 +13,8 @@ class TestSuite:
     max_times: Dict[Tutorial, list] = field(default_factory=dict)
     max_time_windows: Dict[Tutorial, list] = field(default_factory=dict)
     timeouts: Dict[Tutorial, List] = field(default_factory=dict)
+    tolerances: Dict[Tutorial, list] = field(default_factory=dict)
+    skip_compares: Dict[Tutorial, list] = field(default_factory=dict)
 
     def __repr__(self) -> str:
         return_string = f"Test suite: {self.name} contains:"
@@ -54,6 +56,8 @@ class TestSuites(list):
                 max_times_of_tutorial = {}
                 max_time_windows_of_tutorial = {}
                 timeouts_of_tutorial = {}
+                tolerances_of_tutorial = {}
+                skip_compares_of_tutorial = {}
                 # iterate over tutorials:
                 for tutorial_case in test_suites_raw[test_suite_name]['tutorials']:
                     tutorial = parsed_tutorials.get_by_path(tutorial_case['path'])
@@ -66,6 +70,8 @@ class TestSuites(list):
                         max_times_of_tutorial[tutorial] = []
                         max_time_windows_of_tutorial[tutorial] = []
                         timeouts_of_tutorial[tutorial] = []
+                        tolerances_of_tutorial[tutorial] = []
+                        skip_compares_of_tutorial[tutorial] = []
 
                     all_case_combinations = tutorial.case_combinations
                     case_combination_requested = CaseCombination.from_string_list(
@@ -91,12 +97,34 @@ class TestSuites(list):
                                 f"(value: {timeout_value}) in tutorial '{tutorial}'."
                             )
                         timeouts_of_tutorial[tutorial].append(timeout_value)
+
+                        tolerance_value = tutorial_case.get('tolerance', None)
+                        if tolerance_value is not None:
+                            if isinstance(tolerance_value, str):
+                                try:
+                                    tolerance_value = float(tolerance_value)
+                                except ValueError as exc:
+                                    raise ValueError(
+                                        f"tolerance must be a positive number, got {tolerance_value!r}") from exc
+                            if not isinstance(tolerance_value, (int, float)) or tolerance_value <= 0:
+                                raise ValueError(
+                                    f"tolerance must be a positive number, got {tolerance_value!r}")
+                        tolerances_of_tutorial[tutorial].append(tolerance_value)
+
+                        skip_compare_value = tutorial_case.get('skip_compare', None)
+                        if skip_compare_value is not None and not isinstance(skip_compare_value, bool):
+                            raise TypeError(
+                                f"Expected 'skip_compare' to be a boolean or None, but got "
+                                f"{type(skip_compare_value).__name__} (value: {skip_compare_value}) "
+                                f"in tutorial '{tutorial}'."
+                            )
+                        skip_compares_of_tutorial[tutorial].append(skip_compare_value)
                     else:
                         raise Exception(
                             f"Could not find the case combination {tutorial_case['case_combination']} in the current metadata of tutorial {tutorial.name}, or it does not define all necessary participants.")
 
                 testsuites.append(TestSuite(test_suite_name, case_combinations_of_tutorial,
-                                            reference_results_of_tutorial, max_times_of_tutorial, max_time_windows_of_tutorial, timeouts_of_tutorial))
+                                            reference_results_of_tutorial, max_times_of_tutorial, max_time_windows_of_tutorial, timeouts_of_tutorial, tolerances_of_tutorial, skip_compares_of_tutorial))
 
         return cls(testsuites)
 

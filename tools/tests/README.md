@@ -25,7 +25,7 @@ The available test suites are found in [`tests.yaml`](https://github.com/precice
 - `precice` is a subset of cases that cover a range of preCICE features
 - `release` is for all available but some very long or known to fail tests
 - `extra` is for some longer tests
-- `expected-to-fail`, `selected`, and `system-tests-dev` for some special cases
+- `selected` and `system-tests-dev` for some special cases
 
 The `Use workflow from` is a default option of GitHub Actions that concerns the GHA workflow file itself.
 
@@ -105,6 +105,8 @@ fieldcompare dir precice-exports/ reference-results-unpacked/<case>/ \
              --ignore-unsupported-file-formats \
              -rtol 3e-7
 ```
+
+The default relative tolerance is `3e-7`. Per-test overrides are available in `tests.yaml` via `tolerance` (passed to fieldcompare as `-rtol`). Set `skip_compare: true` to skip the comparison step and only verify that build and run succeed.
 
 The differences are only shown per file, and there is no global metric or other summary (see [related discussion in fieldcompare](https://gitlab.com/dglaeser/fieldcompare/-/work_items/69)).
 
@@ -332,5 +334,7 @@ This template defines:
 A `GLOBAL_TIMEOUT` is used for all operations. Its default value is 600s (5min), it is set in the beginning of [`Systemtests.py`](https://github.com/precice/tutorials/blob/develop/tools/tests/systemtests/Systemtest.py), and it can be overridden via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable.
 
 Tests can define a different `timeout` in their `tests.yaml` entry, which applies to the running and results comparison steps.
+
+Tests can define a different `tolerance` in their `tests.yaml` entry, which applies to the fieldcompare step (relative tolerance, `-rtol`). The default is `3e-7`. Use `skip_compare: true` to skip fieldcompare entirely.
 
 </details>
