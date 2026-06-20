@@ -97,6 +97,7 @@ class Component:
     name: str
     template: str
     parameters: BuildArguments
+    build_timeout: Optional[int] = None
 
     def __eq__(self, other):
         if isinstance(other, Component):
@@ -130,11 +131,17 @@ class Components(list):
         with open(path, 'r') as f:
             data = yaml.safe_load(f)
             for component_name in data:
-                parameters = BuildArguments.from_components_yaml(
-                    data[component_name])
-                template = data[component_name]["template"]
+                component_data = data[component_name]
+                parameters = BuildArguments.from_components_yaml(component_data)
+                template = component_data["template"]
+                build_timeout = component_data.get("build_timeout", None)
+                if build_timeout is not None:
+                    if not isinstance(build_timeout, int) or build_timeout <= 0:
+                        raise ValueError(
+                            f"build_timeout must be a positive integer for component "
+                            f"'{component_name}', got {build_timeout!r}")
                 components.append(
-                    Component(component_name, template, parameters))
+                    Component(component_name, template, parameters, build_timeout))
 
         return cls(components)
 

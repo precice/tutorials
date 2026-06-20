@@ -329,8 +329,10 @@ This template defines:
 
 ### Timeouts
 
-A `GLOBAL_TIMEOUT` is used for all operations. Its default value is 600s (5min), it is set in the beginning of [`Systemtests.py`](https://github.com/precice/tutorials/blob/develop/tools/tests/systemtests/Systemtest.py), and it can be overridden via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable.
+Build and run/compare use separate timeouts.
 
-Tests can define a different `timeout` in their `tests.yaml` entry, which applies to the running and results comparison steps.
+**Build:** Each component in `components.yaml` may define `build_timeout` (seconds). For a test, the build step uses the maximum `build_timeout` among its components; components without `build_timeout` use `DEFAULT_BUILD_TIMEOUT` (600s by default, same as `GLOBAL_TIMEOUT`). Override the default via `PRECICE_SYSTEMTESTS_BUILD_TIMEOUT`.
+
+**Run and compare:** `GLOBAL_TIMEOUT` defaults to 600s and can be overridden via `PRECICE_SYSTEMTESTS_TIMEOUT`. Tests can define a different `timeout` in their `tests.yaml` entry, which applies to the running and results comparison steps only.
 
 </details>

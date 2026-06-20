@@ -21,6 +21,8 @@ import os
 
 
 GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 600))
+DEFAULT_BUILD_TIMEOUT = int(
+    os.environ.get("PRECICE_SYSTEMTESTS_BUILD_TIMEOUT", GLOBAL_TIMEOUT))
 SHORT_TIMEOUT = 10
 
 DIFF_RESULTS_DIR = "diff-results"
@@ -236,6 +238,24 @@ class Systemtest:
     def __post_init__(self):
         self.__init_args_to_use()
         self.env = {}
+        self.build_timeout = self._resolve_build_timeout()
+
+    def _resolve_build_timeout(self) -> int:
+        """
+        Use the maximum build_timeout of the distinct components in this test.
+        Components without build_timeout use DEFAULT_BUILD_TIMEOUT.
+        """
+        timeouts = []
+        seen_components = set()
+        for case in self.case_combination.cases:
+            if case.component.name in seen_components:
+                continue
+            seen_components.add(case.component.name)
+            if case.component.build_timeout is not None:
+                timeouts.append(case.component.build_timeout)
+            else:
+                timeouts.append(DEFAULT_BUILD_TIMEOUT)
+        return max(timeouts) if timeouts else DEFAULT_BUILD_TIMEOUT
 
     def __init_args_to_use(self):
         """
@@ -714,6 +734,8 @@ class Systemtest:
         Builds the docker image
         """
         logging.debug(f"Building docker image for {self}")
+        logging.info(
+            f"Using build timeout {self.build_timeout}s for {self}")
         time_start = time.perf_counter()
         docker_compose_content = self.__get_docker_compose_file()
         with open(self.system_test_dir / "docker-compose.tutorial.yaml", 'w') as file:
@@ -729,7 +751,7 @@ class Systemtest:
                 'build',
             ],
             "build",
-            GLOBAL_TIMEOUT,
+            self.build_timeout,
         )
         elapsed_time = time.perf_counter() - time_start
         return DockerComposeResult(exit_code, stdout_data, stderr_data, self, elapsed_time)
