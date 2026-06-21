@@ -145,13 +145,20 @@ def main():
             max_times = test_suite.max_times.get(tutorial, [])
             mtw_list = test_suite.max_time_windows.get(tutorial, [])
             timeouts = test_suite.timeouts.get(tutorial, [])
+            run_befores = test_suite.run_befores.get(tutorial, [])
+            run_afters = test_suite.run_afters.get(tutorial, [])
             for i, (case, reference_result) in enumerate(zip(
                     test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial])):
                 max_time = max_times[i] if i < len(max_times) else None
                 max_time_windows = mtw_list[i] if i < len(mtw_list) else None
                 timeout = timeouts[i] if i < len(timeouts) and timeouts[i] is not None else GLOBAL_TIMEOUT
+                run_before = run_befores[i] if i < len(run_befores) else None
+                run_after = run_afters[i] if i < len(run_afters) else None
                 systemtests_to_run.add(
-                    Systemtest(tutorial, build_args, case, reference_result, max_time=max_time, max_time_windows=max_time_windows, timeout=timeout))
+                    Systemtest(
+                        tutorial, build_args, case, reference_result,
+                        max_time=max_time, max_time_windows=max_time_windows, timeout=timeout,
+                        run_before=run_before, run_after=run_after))
 
     reference_result_per_tutorial = {}
     current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')

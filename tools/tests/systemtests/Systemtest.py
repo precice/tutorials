@@ -219,6 +219,8 @@ class Systemtest:
     max_time: float | None = None
     max_time_windows: int | None = None
     timeout: int = GLOBAL_TIMEOUT
+    run_before: Optional[str] = None
+    run_after: Optional[str] = None
     params_to_use: Dict[str, str] = field(init=False)
     env: Dict[str, str] = field(init=False)
 
@@ -783,11 +785,42 @@ class Systemtest:
                 logging.info(f"Overwrote <max-time-windows> to {self.max_time_windows} in {config_path}")
         config_path.write_text(new_text)
 
+    def _run_hook(self, stage: str, command: Optional[str]) -> bool:
+        """
+        Run a shell command in the copied tutorial directory (e.g. run-before / run-after).
+        """
+        if not command:
+            return True
+        logging.info(f"Running {stage} for {self}: {command}")
+        try:
+            result = subprocess.run(
+                command,
+                shell=True,
+                cwd=self.system_test_dir,
+                capture_output=True,
+                text=True,
+                start_new_session=True,
+            )
+        except Exception as e:
+            logging.critical(f"Failed to start {stage} for {self}: {e}")
+            return False
+        if result.stdout:
+            logging.debug(f"{stage} stdout for {self}:\n{result.stdout.rstrip()}")
+        if result.stderr:
+            logging.debug(f"{stage} stderr for {self}:\n{result.stderr.rstrip()}")
+        if result.returncode != 0:
+            logging.critical(
+                f"{stage} for {self} failed with exit code {result.returncode}: {command}")
+            return False
+        return True
+
     def __prepare_for_run(self, run_directory: Path):
         """
         Prepares the run_directory with folders and datastructures needed for every systemtest execution
         """
         self.__copy_tutorial_into_directory(run_directory)
+        if not self._run_hook('run-before', self.run_before):
+            raise RuntimeError(f"run-before hook failed for {self}")
         self.__apply_max_time_override()
         self.__copy_tools(run_directory)
         self.__put_gitignore(run_directory)
@@ -799,7 +832,12 @@ class Systemtest:
         """
         Runs the system test by generating the Docker Compose file, copying everything into a run folder, and executing docker-compose up.
         """
-        self.__prepare_for_run(run_directory)
+        try:
+            self.__prepare_for_run(run_directory)
+        except RuntimeError as e:
+            logging.critical(str(e))
+            return SystemtestResult(False, [], [str(e)], self, build_time=0, solver_time=0, fieldcompare_time=0)
+
         self.__init_run_logs()
         std_out: List[str] = []
         std_err: List[str] = []
@@ -824,6 +862,17 @@ class Systemtest:
         std_err.extend(docker_run_result.stderr_data)
         if docker_run_result.exit_code != 0:
             logging.critical(f"Could not run the tutorial, {self} failed")
+            return SystemtestResult(
+                False,
+                std_out,
+                std_err,
+                self,
+                build_time=docker_build_result.runtime,
+                solver_time=docker_run_result.runtime,
+                fieldcompare_time=0)
+
+        if not self._run_hook('run-after', self.run_after):
+            logging.critical(f"run-after hook failed for {self}")
             return SystemtestResult(
                 False,
                 std_out,
@@ -863,7 +912,12 @@ class Systemtest:
         """
         Runs the system test by generating the Docker Compose files to generate the reference results
         """
-        self.__prepare_for_run(run_directory)
+        try:
+            self.__prepare_for_run(run_directory)
+        except RuntimeError as e:
+            logging.critical(str(e))
+            return SystemtestResult(False, [], [str(e)], self, build_time=0, solver_time=0, fieldcompare_time=0)
+
         self.__init_run_logs()
         std_out: List[str] = []
         std_err: List[str] = []
@@ -896,6 +950,17 @@ class Systemtest:
                 solver_time=docker_run_result.runtime,
                 fieldcompare_time=0)
 
+        if not self._run_hook('run-after', self.run_after):
+            logging.critical(f"run-after hook failed for {self}")
+            return SystemtestResult(
+                False,
+                std_out,
+                std_err,
+                self,
+                build_time=docker_build_result.runtime,
+                solver_time=docker_run_result.runtime,
+                fieldcompare_time=0)
+
         self._cleanup_docker_networks()
         return SystemtestResult(
             True,
@@ -910,7 +975,12 @@ class Systemtest:
         """
         Runs only the build commmand, for example to preheat the caches of the docker builder.
         """
-        self.__prepare_for_run(run_directory)
+        try:
+            self.__prepare_for_run(run_directory)
+        except RuntimeError as e:
+            logging.critical(str(e))
+            return SystemtestResult(False, [], [str(e)], self, build_time=0, solver_time=0, fieldcompare_time=0)
+
         self.__init_run_logs()
         std_out: List[str] = []
         std_err: List[str] = []

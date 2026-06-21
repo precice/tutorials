@@ -372,6 +372,7 @@ test_suites:
         case_combination:
           - fluid1d-left-nutils
           - fluid3d-right-openfoam
+        run-before: ./set-case.sh 1d3d
         max_time: 0.05
         reference_result: ./partitioned-pipe-multiscale/reference-results/fluid1d-left-nutils_fluid3d-right-openfoam.tar.gz
       # More case combinations are possible, but they requite calling set-case.sh
@@ -523,6 +524,7 @@ test_suites:
         case_combination:
           - fluid1d-left-nutils
           - fluid3d-right-openfoam
+        run-before: ./set-case.sh 1d3d
         max_time: 0.05
         reference_result: ./water-hammer/reference-results/fluid1d-left-nutils_fluid3d-right-openfoam.tar.gz
       # More case combinations are possible, but they requite calling set-case.sh
