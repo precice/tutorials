@@ -12,51 +12,52 @@
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-  argList::addNote(
-      "Dynamic scalar transport equation solver.");
+    argList::addNote(
+        "Dynamic scalar transport equation solver.");
 
 #include "addCheckCaseOptions.H"
 #include "setRootCaseLists.H"
 #include "createTime.H"
 #include "createMesh.H"
 
-  simpleControl simple(mesh);
+    simpleControl simple(mesh);
 
 #include "createFields.H"
 
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-  Info << "\nCalculating scalar transport\n"
-       << endl;
+    Info << "\nCalculating scalar transport\n"
+         << endl;
 
-  while (simple.loop()) {
-    Info << "Time = " << runTime.timeName() << nl << endl;
+    while (simple.loop())
+    {
+        Info << "Time = " << runTime.timeName() << nl << endl;
 
-    Info << "Recompute phi" << endl;
-    fvOptions.correct(U);
-    phi = fvc::flux(U);
+        Info << "Recompute phi" << endl;
+        fvOptions.correct(U);
+        phi = fvc::flux(U);
 #include "CourantNo.H"
 
-    while (simple.correctNonOrthogonal()) {
-      fvScalarMatrix TEqn(
-          fvm::ddt(T) + fvm::div(phi, T) - fvm::laplacian(DT, T) ==
-          fvOptions(T));
+        while (simple.correctNonOrthogonal())
+        {
+            fvScalarMatrix TEqn(
+                fvm::ddt(T) + fvm::div(phi, T) - fvm::laplacian(DT, T) == fvOptions(T));
 
-      TEqn.relax();
-      fvOptions.constrain(TEqn);
-      TEqn.solve();
-      fvOptions.correct(T);
+            TEqn.relax();
+            fvOptions.constrain(TEqn);
+            TEqn.solve();
+            fvOptions.correct(T);
+        }
+
+        runTime.write();
     }
 
-    runTime.write();
-  }
+    Info << "End\n"
+         << endl;
 
-  Info << "End\n"
-       << endl;
-
-  return 0;
+    return 0;
 }
 
 // ************************************************************************* //
