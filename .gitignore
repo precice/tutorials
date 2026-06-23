@@ -67,10 +67,9 @@ postProcessing/
 *.foam
 *.OpenFOAM
 dynamicCode
-Make/*
-!Make/files
-!Make/options
-lnInclude/
+**/Make/*
+!**/Make/files
+!**/Make/options
 
 # CalculiX
 spooles.out
@@ -138,8 +137,3 @@ runs/
 .project
 .settings/
 *.swp
-
-# OpenFOAM solvers
-**/Make/*
-!**/Make/files
-!**/Make/option
