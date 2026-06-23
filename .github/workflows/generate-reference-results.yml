@@ -1,4 +1,4 @@
-name: Generate reference results workflow
+name: Generate reference results (called)
 on:
   workflow_call:
     inputs:
@@ -35,7 +35,7 @@ jobs:
         echo "- Commit message:  \`${{ inputs.commit_msg }}\`"
         echo "- Run \`docker-system-prune\` before running tests: \`${{ inputs.clean_docker }}\`"
         echo "- Log level: \`${{ inputs.log_level }}\`"
-        echo "- Running \`generate_reference_results.py --suite ${{inputs.suites}} --log-level ${{inputs.log_level}}\`"
+        echo "- Running \`generate_reference_results.py --suite ${{inputs.suites}} --log_level ${{inputs.log_level}}\`"
         } >> "$GITHUB_STEP_SUMMARY"
     - name: Move LFS URL to local LFS server
       run: |
@@ -49,7 +49,7 @@ jobs:
         rm -rf ./.??*
         ls -la ./
     - name: Check out Tutorials for the system tests (tools/tests/)
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         ref: ${{ inputs.from_ref }}
         lfs: true
@@ -66,14 +66,11 @@ jobs:
     - name: Run tests
       run: |
         cd tools/tests
-        test -f generate_reference_results.py && export GENERATE_REF_RESULTS=generate_reference_results.py
-        test -f generate_reference_data.py && export GENERATE_REF_RESULTS=generate_reference_data.py
-        echo "Selected $GENERATE_REF_RESULTS to run"
         SUITES_ARGS=()
         if [ -n "${{ inputs.suites }}" ]; then
           SUITES_ARGS+=(--suites "${{ inputs.suites }}")
         fi
-        python "$GENERATE_REF_RESULTS" --log-level="${{inputs.log_level}}" "${SUITES_ARGS[@]}"
+        python generate_reference_results.py --log_level="${{inputs.log_level}}" "${SUITES_ARGS[@]}"
         cd ../../
     - name: Create commit
       if: success()
