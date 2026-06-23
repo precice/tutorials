@@ -107,7 +107,7 @@ cd solver-scipy
 
 ## Post-processing
 
-After both participants (and/or monolithic simulation) have finished, you can run the visualization script.
+After both participants have finished, you can run the visualization script.
 `visualize_partitioned_domain.py` generates plots comparing the partitioned and monolithic solutions. You can specify which timestep to plot. Call from the root of the tutorial:
 
 ```bash
