@@ -1,0 +1,4 @@
+numpy~=2.0      # Known to work with 2.3.5
+scipy~=1.0      # Known to work with 1.16.3
+matplotlib      # Known to work with 3.10.8
+pyprecice~=3.0
