@@ -6,6 +6,6 @@ exec > >(tee --append "$LOGFILE") 2>&1
 
 export OMP_NUM_THREADS=1
 export CCX_NPROC_EQUATION_SOLVER=1
-ccx_preCICE -i beam2 -precice-participant Calculix2
+ccx_preCICE -i beam2 -precice-participant Neumann
 
 close_log

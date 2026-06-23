@@ -19,12 +19,12 @@ def main():
     parser.add_argument(
         '--build_args',
         type=str,
-        help='Comma-separated list of arguments provided to the components like openfoam:2102,pythonbindings:latest')
+        help='Comma-separated list of component build arguments (e.g., "PRECICE_REF:develop,OPENFOAM_ADAPTER_REF:develop")')
     parser.add_argument('--rundir', type=str, help='Directory to run the systemstests in.',
                         nargs='?', const=PRECICE_TESTS_RUN_DIR, default=PRECICE_TESTS_RUN_DIR)
 
-    parser.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-                        default='INFO', help='Set the logging level')
+    parser.add_argument('--log_level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+                        default='INFO', help='Set the logging level of the system tests scripts.')
 
     # Parse the command-line arguments
     args = parser.parse_args()
@@ -32,7 +32,7 @@ def main():
     # Configure logging based on the provided log level
     logging.basicConfig(level=args.log_level, format='%(levelname)s: %(message)s')
 
-    print(f"Using log-level: {args.log_level}")
+    print(f"Using log_level: {args.log_level}")
 
     systemtests_to_run = []
     available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
@@ -69,7 +69,7 @@ def main():
     logging.info(f"About to build the images for the following systemtests:\n {systemtests_to_run}")
 
     results = []
-    for number, systemtest in enumerate(systemtests_to_run):
+    for number, systemtest in enumerate(systemtests_to_run, start=1):
         logging.info(f"Started building {systemtest},  {number}/{len(systemtests_to_run)}")
         t = time.perf_counter()
         result = systemtest.run_only_build(run_directory)

@@ -6,7 +6,7 @@ summary: This tutorial introduces an example simulation setup for a nearest-proj
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate-nearest-projection). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/flow-over-heated-plate-nearest-projection), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/flow-over-heated-plate-nearest-projection) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup

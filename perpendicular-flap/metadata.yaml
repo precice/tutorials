@@ -7,6 +7,12 @@ participants:
   - Solid 
 
 cases:
+  fluid-fake:
+    participant: Fluid
+    directory: ./fluid-fake
+    run: ./run.sh
+    component: bare
+
   fluid-nutils:
     participant: Fluid
     directory: ./fluid-nutils
@@ -16,7 +22,7 @@ cases:
   fluid-openfoam:
     participant: Fluid
     directory: ./fluid-openfoam
-    run: ./run.sh 
+    run: ./run.sh
     component: openfoam-adapter
   
   fluid-su2:
@@ -42,13 +48,25 @@ cases:
   #   directory: ./solid-dune
   #   run: ./run.sh
   #   component: dune-adapter
-  
+
+  solid-fake:
+    participant: Solid
+    directory: ./solid-fake
+    run: ./run.sh
+    component: bare
+
   solid-fenics:
     participant: Solid
     directory: ./solid-fenics
     run: ./run.sh
     component: fenics-adapter 
-  
+
+  solid-nutils:
+    participant: Solid
+    directory: ./solid-nutils
+    run: ./run.sh
+    component: nutils-adapter
+
   solid-openfoam:
     participant: Solid
     directory: ./solid-openfoam
@@ -60,5 +78,3 @@ cases:
   #   directory: ./solid-solids4foam
   #   run: ./run.sh
   #   component: openfoam-adapter
-
-

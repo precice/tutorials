@@ -41,8 +41,8 @@ def main():
     ns.uinitial = 0.5
 
     if is_coupled_case:
-        participant = precice.Participant("macro-heat", "../precice-config.xml", 0, 1)
-        mesh_name = "macro-mesh"
+        participant = precice.Participant("Macro", "../precice-config.xml", 0, 1)
+        mesh_name = "Macro-Mesh"
 
         # Define Gauss points on entire domain as coupling mesh (volume coupling from macro side)
         couplingsample = topo.sample('gauss', degree=2)  # mesh vertices are Gauss points
@@ -68,7 +68,7 @@ def main():
     if is_coupled_case:
         if participant.requires_initial_data():
             concentrations = couplingsample.eval('u' @ ns, solu=solu0)
-            participant.write_data(mesh_name, "concentration", vertex_ids, concentrations)
+            participant.write_data(mesh_name, "Concentration", vertex_ids, concentrations)
 
         participant.initialize()
         dt = solver_dt = participant.get_max_time_step_size()
@@ -107,16 +107,16 @@ def main():
             dt = min(precice_dt, solver_dt)
 
             # Read porosity and apply it to the existing solution
-            poro_data = participant.read_data(mesh_name, "porosity", vertex_ids, dt)
+            poro_data = participant.read_data(mesh_name, "Porosity", vertex_ids, dt)
             poro_coupledata = couplingsample.asfunction(poro_data)
             sqrphi = couplingsample.integral((ns.phi - poro_coupledata) ** 2)
             solphi = solver.optimize('solphi', sqrphi, droptol=1E-12)
 
             # Read conductivity and apply it to the existing solution
-            k_00_c = couplingsample.asfunction(participant.read_data(mesh_name, "k_00", vertex_ids, dt))
-            k_01_c = couplingsample.asfunction(participant.read_data(mesh_name, "k_01", vertex_ids, dt))
-            k_10_c = couplingsample.asfunction(participant.read_data(mesh_name, "k_10", vertex_ids, dt))
-            k_11_c = couplingsample.asfunction(participant.read_data(mesh_name, "k_11", vertex_ids, dt))
+            k_00_c = couplingsample.asfunction(participant.read_data(mesh_name, "K00", vertex_ids, dt))
+            k_01_c = couplingsample.asfunction(participant.read_data(mesh_name, "K01", vertex_ids, dt))
+            k_10_c = couplingsample.asfunction(participant.read_data(mesh_name, "K10", vertex_ids, dt))
+            k_11_c = couplingsample.asfunction(participant.read_data(mesh_name, "K11", vertex_ids, dt))
 
             conductivity = function.asarray([[k_00_c, k_01_c], [k_10_c, k_11_c]])
             sqrk = couplingsample.integral(((ns.k - conductivity) * (ns.k - conductivity)).sum([0, 1]))
@@ -128,7 +128,7 @@ def main():
         if is_coupled_case:
             # Collect values of field u and write them to preCICE
             concentration = couplingsample.eval('u' @ ns, solu=solu)
-            participant.write_data(mesh_name, "concentration", vertex_ids, concentration)
+            participant.write_data(mesh_name, "Concentration", vertex_ids, concentration)
 
             participant.advance(dt)
 

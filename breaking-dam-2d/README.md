@@ -6,7 +6,7 @@ summary: FSI simulation of a two-dimensional water column striking a flexible wa
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/breaking-dam-2d). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/breaking-dam-2d), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/breaking-dam-2d) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup

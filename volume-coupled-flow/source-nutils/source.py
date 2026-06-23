@@ -30,7 +30,7 @@ def main():
     ns.x = geom
 
     # preCICE setup
-    participant = precice.Participant("Source-Velocity", "../precice-config.xml", 0, 1)
+    participant = precice.Participant("Source", "../precice-config.xml", 0, 1)
 
     # define coupling mesh
     mesh_name = "Source-Mesh"

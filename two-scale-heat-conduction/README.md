@@ -6,7 +6,7 @@ summary: We solve a two-scale heat conduction problem with a predefined micro st
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/two-scale-heat-conduction). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/two-scale-heat-conduction), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/two-scale-heat-conduction) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -27,15 +27,15 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 ## Available solvers and dependencies
 
-* Both the macro and micro simulations can be solved using the finite element library [Nutils](https://nutils.org/install.html) v7 or the simulation framework [DuMu<sup>x</sup>](https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/).
+* Both the macro and micro simulations can be solved using the finite element library [Nutils](https://nutils.org/install.html) v7 or the simulation framework [DuMux](https://git.iws.uni-stuttgart.de/dumux-repositories/dumux/).
 * While using Nutils, the macro simulation is written in Python, so it requires the [Python bindings of preCICE](https://precice.org/installation-bindings-python.html).
 * The [Micro Manager](https://precice.org/tooling-micro-manager-installation.html) controls all micro-simulations and facilitates coupling via preCICE. Use the [develop](https://github.com/precice/micro-manager/tree/develop) branch of the Micro Manager.
 
-### DuMu<sup>x</sup> setup
+### DuMux setup
 
-To solve either the macro or micro simulations with the DuMu<sup>x</sup> framework, the necessary DUNE modules need to be downloaded and set up. This is done by running `sh setup-dumux.sh` in the tutorial folder.
+To solve either the macro or micro simulations with the DuMux framework, the necessary DUNE modules need to be downloaded and set up. This is done by running `sh setup-dumux.sh` in the tutorial folder.
 
-Note that if an existing installation of DUNE modules is detected in a default location, this may lead to problems in running the `setup-dumux.sh` script. The environment variable `DUNE_CONTROL_PATH` is suppressed by the script.
+If an existing path, containing compiled DUNE modules, DuMux and DuMux-adapter, is to be used for compiling the solvers, the path can be specified by setting the arguments while running the script `run.sh` with `-l <path-to-DUNE-common>` in each solver folder. The environment variable `DUNE_CONTROL_PATH` is suppressed by the script. The `run.sh` scripts in the DuMux solver folders will first compile the solver if not already compiled, and then run the simulation.
 
 ## Running the simulation
 
@@ -55,7 +55,18 @@ cd micro-nutils
 ./run.sh -s
 ```
 
-If you want to use DuMu<sup>x</sup>, use `cd macro-dumux` instead of `cd macro-nutils` and/or `cd micro-dumux` instead of `cd micro-nutils`.
+If you want to use DuMux, use `cd macro-dumux` instead of `cd macro-nutils` and/or `cd micro-dumux` instead of `cd micro-nutils`. For example, to run the macro simulation with DuMux in serial (default), run:
+
+```bash
+cd macro-dumux
+./run.sh -s
+```
+
+This assumes a DuMux and DUNE modules installation in the case folder. You can specify the path to an existing DUNE installation with `-l`:
+
+```bash
+./run.sh -s -l <path-to-DUNE-common>
+```
 
 ## Running the simulation in parallel
 
@@ -74,7 +85,7 @@ Running `micro-dumux` is much faster. A serial simulation takes approximately 2 
 
 ## Post-processing
 
-Here are the results from Nutils-Nutils and DuMu<sup>x</sup>-DuMu<sup>x</sup> combination:
+Here are the results from Nutils-Nutils and DuMux-DuMux combination:
 
 <img class="img-responsive" src="images/tutorials-two-scale-heat-conduction-results.png" alt="Macro and micro data of macro-nutils - micro-nutils simulation" width=50% height=30%/>
 
@@ -88,4 +99,4 @@ The participant `macro-nutils` outputs `macro-*.vtk` files which can be viewed i
 
 The micro simulations themselves have a circular micro structure which is resolved in every time step. To output VTK files for each micro simulation, uncomment the `output()` function in the file `micro-nutils/micro.py`. The figure above shows the changing phase field used to represent the circular micro structure and the diffuse interface width.
 
-Similar to the output data files from simulation with Nutils, the `VTU` files from macro and micro solvers, that are written in DuMu<sup>x</sup>, could also be rendered and inspected with ParaView with the mentioned method.
+Similar to the output data files from simulation with Nutils, the `VTU` files from macro and micro solvers, that are written in DuMux, could also be rendered and inspected with ParaView with the mentioned method.

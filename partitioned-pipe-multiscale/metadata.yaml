@@ -1,0 +1,34 @@
+name: Partitioned pipe multiscale
+path: partitioned-pipe-multiscale # relative to git repo 
+url: https://precice.org/tutorials-partitioned-pipe-multiscale.html
+
+participants:
+  - Fluid1DLeft
+  # - Fluid1DRight
+  # - Fluid3DLeft
+  - Fluid3DRight
+
+cases:
+  fluid1d-left-nutils:
+    participant: Fluid1DLeft
+    directory: ./fluid1d-left-nutils
+    run: ./run.sh
+    component: nutils-adapter
+
+  # fluid1d-right-nutils:
+  #   participant: Fluid1DRight
+  #   directory: ./fluid1d-right-nutils
+  #   run: ./run.sh
+  #   component: nutils-adapter
+
+  # fluid3d-left-openfoam:
+  #   participant: Fluid3DLeft
+  #   directory: ./fluid3d-left-openfoam
+  #   run: ./run.sh
+  #   component: openfoam-adapter
+
+  fluid3d-right-openfoam:
+    participant: Fluid3DRight
+    directory: ./fluid3d-right-openfoam
+    run: ./run.sh
+    component: openfoam-adapter

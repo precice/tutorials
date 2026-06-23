@@ -6,7 +6,7 @@ summary: Flow around a rigid moving cylinder. A FMI-based controller is used to 
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/flow-around-controlled-moving-cylinder). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/flow-around-controlled-moving-cylinder), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/flow-around-controlled-moving-cylinder) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -29,7 +29,7 @@ OpenFOAM is used for the `Fluid` participant. The spring-damper system is solved
 
 - *OpenFOAM*: To run this case, you need the preCICE [OpenFOAM Adapter](https://precice.org/adapter-openfoam-get.html). OpenFOAM is used to simulate the laminar flow around the cylinder with the solver `pimpleFoam`.
 - *FMI*: A solver using the [preCICE-FMI Runner](https://github.com/precice/fmi-runner) (requires at least v0.2). The Runner executes the FMU model `PIDcontroller.fmu` for computation. The provided run script (see below) builds this model if not already there. If you want to change the model parameters or simulation setup, have a look inside `fmi-settings.json` and `precice-settings.json` (see folder `controller-fmi`).
-- *Python*: A python script solving the spring damper system. It uses the preCICE [Python bindings](https://precice.org/installation-bindings-python.html) and depends on the Python library `numpy`. You can install `numpy` from your system package manager or with `pip3 install --user <package>`.
+- *Python*: A python script solving the spring damper system, using the preCICE [Python bindings](https://precice.org/installation-bindings-python.html). The run script installs the dependencies automatically via pip in a virtual environment.
 
 ## Running the simulation
 
@@ -115,6 +115,6 @@ Many thanks to [Mosayeb Shams](https://github.com/mosayebshams) from Herriot Wat
 
 [2] Placzek, A. and Sigrist, J.F. and Hamdouni, A. [Numerical Simulation of an oscillating cylinder in a cross-flow at low Reynolds number: Forced and free oscillations](https://dx.doi.org/10.1016/j.compfluid.2008.01.007), Computers and Fluids, 2009, 38 (1), pp.80-100
 
-[3] Anagnostopoulus, P. and Bearman, P.W. Response Characteristics of a vortex-excited cylinder at low Reynolds numbers, Journal of Fluids and Structures, January 1992, DOI: 10.1016/0889-9746(92)90054-7
+[3] Anagnostopoulos, P. and Bearman, P.W. Response Characteristics of a vortex-excited cylinder at low Reynolds numbers, Journal of Fluids and Structures, January 1992, DOI: 10.1016/0889-9746(92)90054-7
 
 [4] Sicklinger, S. [Stabilized Co-Simulation of Coupled Problems including Fields and Signals](https://www.researchgate.net/publication/269705153_Stabilized_Co-Simulation_of_Coupled_Problems_Including_Fields_and_Signals), Technical University of Munich, Dissertation

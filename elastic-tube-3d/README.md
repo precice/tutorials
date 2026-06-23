@@ -6,7 +6,7 @@ summary: Tutorial for an FSI simulation of a three-dimensional expanding tube sc
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/elastic-tube-3d). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/elastic-tube-3d), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/elastic-tube-3d) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -31,7 +31,7 @@ Solid participant:
 
 * CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html).
 
-* FEniCS. The structural model is currently limited to linear elasticity. Currently 3D functionality is experimental in the FEniCS adapter and more details can be found [here](https://github.com/precice/fenics-adapter/pull/133) For more information, have a look at the [FeniCS adapter documentation](https://precice.org/adapter-fenics.html).
+* FEniCS. The structural model is currently limited to linear elasticity. Currently 3D functionality is experimental in the FEniCS adapter and more details can be found [in this discussion](https://github.com/precice/fenics-adapter/pull/133). For more information, have a look at the [FeniCS adapter documentation](https://precice.org/adapter-fenics.html).
 
 ## Running the simulation
 

@@ -1,5 +1,6 @@
 import subprocess
-from typing import List, Dict, Optional
+import threading
+from typing import List, Dict, Optional, Tuple
 from jinja2 import Environment, FileSystemLoader
 from dataclasses import dataclass, field
 import shutil
@@ -19,8 +20,42 @@ import logging
 import os
 
 
-GLOBAL_TIMEOUT = 600
+GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 600))
 SHORT_TIMEOUT = 10
+
+DIFF_RESULTS_DIR = "diff-results"
+
+STAGE_LOG_FILES = {
+    "build": "system-tests-build.log",
+    "run": "system-tests-run.log",
+    "compare": "system-tests-compare.log",
+}
+
+FAILURE_LOG_TAIL_LINES = 100
+
+
+class _SystemtestLogSink:
+    """Writes subprocess output incrementally to per-stage log files."""
+
+    def __init__(self, system_test_dir: Path):
+        self._system_test_dir = system_test_dir
+        self._lock = threading.Lock()
+
+    def begin_stage(self, stage: str) -> None:
+        stage_path = self._system_test_dir / STAGE_LOG_FILES[stage]
+        stage_path.write_text(f"=== {stage} ===\n", encoding="utf-8")
+
+    def append_stdout(self, line: str, stage: str) -> None:
+        with self._lock:
+            stage_path = self._system_test_dir / STAGE_LOG_FILES[stage]
+            with stage_path.open("a", encoding="utf-8") as log_file:
+                log_file.write(line + "\n")
+
+    def append_stderr(self, line: str, stage: str) -> None:
+        with self._lock:
+            stage_path = self._system_test_dir / STAGE_LOG_FILES[stage]
+            with stage_path.open("a", encoding="utf-8") as log_file:
+                log_file.write(f"[stderr] {line}\n")
 
 
 def slugify(value, allow_unicode=False):
@@ -74,20 +109,65 @@ class SystemtestResult:
     fieldcompare_time: float  # in seconds
 
 
+def _success_status_symbol(success: bool) -> str:
+    return "✅" if success else "❌"
+
+
+def _read_log_tail(log_path: Path, max_lines: int = FAILURE_LOG_TAIL_LINES) -> str:
+    lines = log_path.read_text(encoding="utf-8", errors="replace").splitlines()
+    if not lines:
+        return "(log file is empty)"
+    return "\n".join(lines[-max_lines:])
+
+
+def _append_failure_log_tails_to_summary(results: List[SystemtestResult]) -> None:
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not summary_path:
+        return
+
+    failed_results = [result for result in results if not result.success]
+    if not failed_results:
+        return
+
+    with open(summary_path, "a", encoding="utf-8") as summary_file:
+        print("\n## Failed test logs\n", file=summary_file)
+        for result in failed_results:
+            print(
+                f"### {_success_status_symbol(False)} {result.systemtest}\n",
+                file=summary_file,
+            )
+            run_dir = result.systemtest.get_system_test_dir()
+            for log_name in STAGE_LOG_FILES.values():
+                log_path = run_dir / log_name
+                if not log_path.is_file():
+                    continue
+                tail = _read_log_tail(log_path)
+                print("<details>", file=summary_file)
+                print(f"<summary>{log_name} tail</summary>", file=summary_file)
+                print("", file=summary_file)
+                print("```text", file=summary_file)
+                print(tail, file=summary_file)
+                print("```", file=summary_file)
+                print("</details>", file=summary_file)
+                print("", file=summary_file)
+
+
 def display_systemtestresults_as_table(results: List[SystemtestResult]):
     """
     Prints the result in a nice tabluated way to get an easy overview
     """
+    print()
+
     def _get_length_of_name(results: List[SystemtestResult]) -> int:
         return max(len(str(result.systemtest)) for result in results)
 
     max_name_length = _get_length_of_name(results)
 
     header = f"| {'systemtest':<{max_name_length + 2}} "\
-             f"| {'success':^7} "\
-             f"| {'building time [s]':^17} "\
-             f"| {'solver time [s]':^15} "\
-             f"| {'fieldcompare time [s]':^21} |"
+        f"| {'status':^7} "\
+        f"| {'building time [s]':^17} "\
+        f"| {'solver time [s]':^15} "\
+        f"| {'fieldcompare time [s]':^21} |"
     separator_plaintext = "+-" + "-" * (max_name_length + 2) + \
         "-+---------+-------------------+-----------------+-----------------------+"
     separator_markdown = "| --- | --- | --- | --- | --- |"
@@ -103,21 +183,23 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
 
     for result in results:
         row = f"| {str(result.systemtest):<{max_name_length + 2}} "\
-              f"| {result.success:^7} "\
-              f"| {result.build_time:^17.1f} "\
-              f"| {result.solver_time:^15.1f} "\
-              f"| {result.fieldcompare_time:^21.1f} |"
+            f"| {_success_status_symbol(result.success):^7} "\
+            f"| {result.build_time:^17.1f} "\
+            f"| {result.solver_time:^15.1f} "\
+            f"| {result.fieldcompare_time:^21.1f} |"
         print(row)
         print(separator_plaintext)
         if "GITHUB_STEP_SUMMARY" in os.environ:
             with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
                 print(row, file=f)
 
+    _append_failure_log_tails_to_summary(results)
+
     if "GITHUB_STEP_SUMMARY" in os.environ:
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
             print("\n\n", file=f)
             print(
-                "In case a test fails, download the archive from the bottom of this page and look into each `stdout.log` and `stderr.log`. The time spent in each step might already give useful hints.",
+                "In case a test fails, download the archive from the bottom of this page and inspect the per-stage logs (`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`). The stage runtimes might already give useful hints.",
                 file=f)
             print(
                 "See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).",
@@ -134,6 +216,9 @@ class Systemtest:
     arguments: SystemtestArguments
     case_combination: CaseCombination
     reference_result: ReferenceResult
+    max_time: float | None = None
+    max_time_windows: int | None = None
+    timeout: int = GLOBAL_TIMEOUT
     params_to_use: Dict[str, str] = field(init=False)
     env: Dict[str, str] = field(init=False)
 
@@ -171,9 +256,21 @@ class Systemtest:
         # Substitute defaults for non-provided, needed arguments
         for needed_param in needed_parameters:
             if not needed_param.key in provided_arguments:
-                logging.warning(
-                    f"No argument provided for needed parameter {needed_param.key}. Substituting with {needed_param.default}")
+                logging.info(
+                    f"No argument provided for needed parameter {needed_param.key}. Substituting with {needed_param.default}.")
                 self.params_to_use[needed_param.key] = needed_param.default
+            if needed_param.key.endswith("_REF") and needed_param.key in provided_arguments:
+                logging.debug(
+                    f"The parameter {needed_param.key} points to the repository {needed_param.repository}.")
+                # If a commit has already been resolved and added to the params_to_use, it will be propagated to the next test in the test suite.
+                # To avoid resolving the same commit again, simply check if the key has the same length as the output of _resolve_branch_ref_to_commit.
+                # The whole process assumes that all components use the same refs.
+                if len(self.params_to_use[needed_param.key]) == 40:
+                    logging.debug(
+                        f"Git ref {self.params_to_use[needed_param.key]} is 40 characters long and probably already a commit.")
+                else:
+                    self.params_to_use[needed_param.key] = self._resolve_branch_ref_to_commit(
+                        needed_param.repository, self.params_to_use[needed_param.key])
 
     def __get_docker_services(self) -> Dict[str, str]:
         """
@@ -277,7 +374,32 @@ class Systemtest:
                 raise RuntimeError(f"git command returned code {result.returncode}")
 
         except Exception as e:
-            raise RuntimeError(f"An error occurred while fetching origin '{ref}':  {e}")
+            raise RuntimeError(
+                f"An error occurred while fetching origin '{ref}':  {e}. Do the values in reference_versions.yaml point to (still) valid Git refs?")
+
+    def _resolve_branch_ref_to_commit(self, repository: Path, ref: str) -> Optional[str]:
+        try:
+            git_ls_remote_output = subprocess.run([
+                "git",
+                "ls-remote",
+                os.fspath(repository),
+                ref,
+            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True, timeout=60)
+
+            # If an invalid ref is given, git ls-remote still returns success, but no list
+            git_remote_refs = git_ls_remote_output.stdout.strip()
+            if not git_remote_refs:
+                raise ValueError(f"The git ref {ref} does not appear in the repository {repository}.")
+
+            commit = git_remote_refs.split()[0]
+            # The output assumes a URL of the form <repository>/commits/<commit>. Works for GitHub and Bitbucket.
+            logging.info(
+                f"Resolved the git ref {ref} of the repository {repository} to {repository}/commits/{commit} .")
+            return commit if commit else ref
+        except Exception:
+            logging.warning(
+                f"Could not resolve git ref {ref} of the repository {repository} to a commit. Using the given git ref as-is.")
+            return ref
 
     def _checkout_ref_in_subfolder(self, repository: Path, subfolder: Path, ref: str):
         try:
@@ -353,65 +475,239 @@ class Systemtest:
             for key, value in self.env.items():
                 env_file.write(f"{key}={value}\n")
 
-    def __unpack_reference_results(self):
-        with tarfile.open(self.reference_result.path) as reference_results_tared:
-            # specify which folder to extract to
-            reference_results_tared.extractall(self.system_test_dir / PRECICE_REL_REFERENCE_DIR)
-        logging.debug(
-            f"extracting {self.reference_result.path} into {self.system_test_dir / PRECICE_REL_REFERENCE_DIR}")
+    def __unpack_reference_results(self) -> Tuple[bool, str]:
+        if not self.reference_result.path.exists():
+            error_message = (
+                f"Reference results archive was not found for {self}. "
+                f"Expected file: {self.reference_result.path}. "
+                "Please generate the reference results first or update tests.yaml accordingly.")
+            logging.error(error_message)
+            return False, error_message
 
-    def _run_field_compare(self):
+        try:
+            # Base directory where reference results should be extracted
+            dest_dir = self.system_test_dir / PRECICE_REL_REFERENCE_DIR
+            dest_dir.mkdir(parents=True, exist_ok=True)
+            dest_dir_resolved = dest_dir.resolve()
+
+            with tarfile.open(self.reference_result.path) as reference_results_tared:
+                # Validate that each member will be extracted within dest_dir
+                for member in reference_results_tared.getmembers():
+                    member_path = dest_dir / member.name
+                    member_path_resolved = member_path.resolve()
+                    # Ensure the resolved member path is within the destination directory
+                    if os.path.commonpath([str(dest_dir_resolved), str(
+                            member_path_resolved)]) != str(dest_dir_resolved):
+                        logging.error(
+                            f"Unsafe path detected in reference results archive {self.reference_result.path} "
+                            f"for {self}: {member.name}")
+                        return False
+
+                # All paths are safe; extract into the destination directory
+                reference_results_tared.extractall(dest_dir)
+
+            logging.debug(
+                f"extracting {self.reference_result.path} into {dest_dir}")
+            return True, ""
+        except (tarfile.TarError, OSError) as e:
+            error_message = (
+                f"Could not unpack reference results archive {self.reference_result.path} for {self}: {e}")
+            logging.error(error_message)
+            return False, error_message
+
+    def __init_run_logs(self) -> None:
+        self._log_sink = _SystemtestLogSink(self.system_test_dir)
+
+    def _run_docker_compose_subprocess(
+        self,
+        command: List[str],
+        stage: str,
+        timeout: int,
+    ) -> Tuple[int, List[str], List[str]]:
         """
-        Writes the Docker Compose file to disk, executes docker-compose up, and handles the process output.
-
-        Args:
-            docker_compose_content: The content of the Docker Compose file.
-
-        Returns:
-            A SystemtestResult object containing the state.
+        Run a docker compose command, streaming stdout/stderr to log files as they arrive.
         """
-        logging.debug(f"Running fieldcompare for {self}")
-        time_start = time.perf_counter()
-        self.__unpack_reference_results()
-        docker_compose_content = self.__get_field_compare_compose_file()
+        stdout_data: List[str] = []
+        stderr_data: List[str] = []
+        log_sink = getattr(self, "_log_sink", None)
+        if log_sink is not None:
+            log_sink.begin_stage(stage)
+        logging.info(f"Docker compose {stage} for {self}")
+
+        try:
+            process = subprocess.Popen(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                bufsize=1,
+                start_new_session=True,
+                cwd=self.system_test_dir,
+            )
+        except Exception as e:
+            logging.critical(f"Error starting docker compose {stage} command: {e}")
+            return 1, stdout_data, stderr_data
+
+        def read_stream(stream, is_stderr: bool) -> None:
+            if stream is None:
+                return
+            for line in stream:
+                line = line.rstrip("\n\r")
+                if is_stderr:
+                    stderr_data.append(line)
+                    if log_sink is not None:
+                        log_sink.append_stderr(line, stage)
+                else:
+                    stdout_data.append(line)
+                    if log_sink is not None:
+                        log_sink.append_stdout(line, stage)
+            stream.close()
+
+        stdout_thread = threading.Thread(
+            target=read_stream, args=(process.stdout, False), daemon=True)
+        stderr_thread = threading.Thread(
+            target=read_stream, args=(process.stderr, True), daemon=True)
+        stdout_thread.start()
+        stderr_thread.start()
+
+        try:
+            exit_code = process.wait(timeout=timeout)
+        except KeyboardInterrupt as k:
+            process.kill()
+            stdout_thread.join(timeout=SHORT_TIMEOUT)
+            stderr_thread.join(timeout=SHORT_TIMEOUT)
+            raise KeyboardInterrupt from k
+        except subprocess.TimeoutExpired:
+            logging.critical(
+                f"Systemtest {self} timed out during docker compose {stage} "
+                f"after {timeout}s. Killing the process.")
+            process.kill()
+            try:
+                process.wait(timeout=SHORT_TIMEOUT)
+            except subprocess.TimeoutExpired:
+                pass
+            exit_code = process.returncode if process.returncode is not None else 1
+        except Exception as e:
+            logging.critical(
+                f"Systemtest {self} had serious issues during docker compose {stage}: {e}")
+            process.kill()
+            try:
+                process.wait(timeout=SHORT_TIMEOUT)
+            except subprocess.TimeoutExpired:
+                pass
+            exit_code = process.returncode if process.returncode is not None else 1
+
+        stdout_thread.join(timeout=SHORT_TIMEOUT)
+        stderr_thread.join(timeout=SHORT_TIMEOUT)
+        if exit_code is None:
+            exit_code = process.poll() or 1
+        return exit_code, stdout_data, stderr_data
+
+    def _cleanup_docker_networks(self):
+        """
+        Prunes the unused Docker networks, since there is an upper limit on the number of custom networks defined.
+        """
+        logging.debug(f"Deleting unused Docker networks...")
         stdout_data = []
         stderr_data = []
-
-        with open(self.system_test_dir / "docker-compose.field_compare.yaml", 'w') as file:
-            file.write(docker_compose_content)
         try:
-            # Execute docker-compose command
+            # Execute docker-network-prune command
             process = subprocess.Popen(['docker',
-                                        'compose',
-                                        '--file',
-                                        'docker-compose.field_compare.yaml',
-                                        'up',
-                                        '--exit-code-from',
-                                        'field-compare'],
+                                        'network',
+                                        'prune',
+                                        '-f'],
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
                                        start_new_session=True,
                                        cwd=self.system_test_dir)
-
             try:
-                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
+                stdout, stderr = process.communicate(timeout=self.timeout)
             except KeyboardInterrupt as k:
                 process.kill()
                 raise KeyboardInterrupt from k
-            except Exception as e:
-                logging.critical(
-                    f"Systemtest {self} had serious issues executing the docker compose command about to kill the docker compose command. Please check the logs! {e}")
-                process.kill()
-                process.communicate(timeout=SHORT_TIMEOUT)
+        except Exception as e:
+            logging.critical(
+                f"Systemtest {self} could not prune the Docker networks. This might prevent tests from starting.")
             stdout_data.extend(stdout.decode().splitlines())
             stderr_data.extend(stderr.decode().splitlines())
             process.poll()
+
+    def _run_field_compare(self):
+        """
+        Executes the field comparison step after unpacking reference results.
+
+        Returns:
+            A FieldCompareResult object containing the command outcome and logs.
+        """
+        logging.debug(f"Running fieldcompare for {self}")
+        time_start = time.perf_counter()
+        unpack_success, unpack_error_message = self.__unpack_reference_results()
+        if not unpack_success:
+            log_sink = getattr(self, "_log_sink", None)
+            if log_sink is not None:
+                log_sink.begin_stage("compare")
+                log_sink.append_stderr(unpack_error_message, "compare")
             elapsed_time = time.perf_counter() - time_start
-            return FieldCompareResult(process.returncode, stdout_data, stderr_data, self, elapsed_time)
-        except Exception as e:
-            logging.CRITICAL("Error executing docker compose command:", e)
-            elapsed_time = time.perf_counter() - time_start
-            return FieldCompareResult(1, stdout_data, stderr_data, self, elapsed_time)
+            return FieldCompareResult(1, [], [unpack_error_message], self, elapsed_time)
+        docker_compose_content = self.__get_field_compare_compose_file()
+
+        with open(self.system_test_dir / "docker-compose.field_compare.yaml", 'w') as file:
+            file.write(docker_compose_content)
+        exit_code, stdout_data, stderr_data = self._run_docker_compose_subprocess(
+            [
+                'docker',
+                'compose',
+                '--file',
+                'docker-compose.field_compare.yaml',
+                'up',
+                '--exit-code-from',
+                'field-compare',
+            ],
+            "compare",
+            self.timeout,
+        )
+        elapsed_time = time.perf_counter() - time_start
+        return FieldCompareResult(exit_code, stdout_data, stderr_data, self, elapsed_time)
+
+    def __archive_fieldcompare_diffs(self) -> None:
+        """
+        Copy fieldcompare diff VTK files from precice-exports/ into diff-results/,
+        preserving paths under precice-exports/ so nested outputs are not skipped
+        and identical basenames in different folders do not overwrite each other.
+        """
+        exports_dir = self.system_test_dir / PRECICE_REL_OUTPUT_DIR
+        if not exports_dir.is_dir():
+            return
+        suffixes = (".vtu", ".vtk", ".vtp")
+        dest_root = self.system_test_dir / DIFF_RESULTS_DIR
+        seen_resolved: set[Path] = set()
+        archived_count = 0
+        for path in exports_dir.rglob("*"):
+            if not path.is_file():
+                continue
+            if path.suffix.lower() not in suffixes:
+                continue
+            if "diff" not in path.name.lower():
+                continue
+            resolved = path.resolve()
+            if resolved in seen_resolved:
+                continue
+            try:
+                rel = path.relative_to(exports_dir)
+            except ValueError:
+                continue
+            seen_resolved.add(resolved)
+            dest_path = dest_root / rel
+            dest_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, dest_path)
+            archived_count += 1
+        if archived_count:
+            logging.debug(
+                "Archived %d fieldcompare diff file(s) to %s for %s",
+                archived_count,
+                dest_root,
+                self,
+            )
 
     def _build_docker(self):
         """
@@ -423,41 +719,20 @@ class Systemtest:
         with open(self.system_test_dir / "docker-compose.tutorial.yaml", 'w') as file:
             file.write(docker_compose_content)
 
-        stdout_data = []
-        stderr_data = []
-
-        try:
-            # Execute docker-compose command
-            process = subprocess.Popen(['docker',
-                                        'compose',
-                                        '--file',
-                                        'docker-compose.tutorial.yaml',
-                                        'build'],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE,
-                                       start_new_session=True,
-                                       cwd=self.system_test_dir)
-
-            try:
-                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
-            except KeyboardInterrupt as k:
-                process.kill()
-                # process.send_signal(9)
-                raise KeyboardInterrupt from k
-            except Exception as e:
-                logging.critical(
-                    f"systemtest {self} had serious issues building the docker images via the `docker compose build` command. About to kill the docker compose command. Please check the logs! {e}")
-                process.communicate(timeout=SHORT_TIMEOUT)
-                process.kill()
-
-            stdout_data.extend(stdout.decode().splitlines())
-            stderr_data.extend(stderr.decode().splitlines())
-            elapsed_time = time.perf_counter() - time_start
-            return DockerComposeResult(process.returncode, stdout_data, stderr_data, self, elapsed_time)
-        except Exception as e:
-            logging.critical(f"Error executing docker compose build command: {e}")
-            elapsed_time = time.perf_counter() - time_start
-            return DockerComposeResult(1, stdout_data, stderr_data, self, elapsed_time)
+        exit_code, stdout_data, stderr_data = self._run_docker_compose_subprocess(
+            [
+                'docker',
+                'compose',
+                '--progress=plain',
+                '--file',
+                'docker-compose.tutorial.yaml',
+                'build',
+            ],
+            "build",
+            GLOBAL_TIMEOUT,
+        )
+        elapsed_time = time.perf_counter() - time_start
+        return DockerComposeResult(exit_code, stdout_data, stderr_data, self, elapsed_time)
 
     def _run_tutorial(self):
         """
@@ -468,56 +743,52 @@ class Systemtest:
         """
         logging.debug(f"Running tutorial {self}")
         time_start = time.perf_counter()
-        stdout_data = []
-        stderr_data = []
-        try:
-            # Execute docker-compose command
-            process = subprocess.Popen(['docker',
-                                        'compose',
-                                        '--file',
-                                        'docker-compose.tutorial.yaml',
-                                        'up'],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE,
-                                       start_new_session=True,
-                                       cwd=self.system_test_dir)
-
-            try:
-                stdout, stderr = process.communicate(timeout=GLOBAL_TIMEOUT)
-            except KeyboardInterrupt as k:
-                process.kill()
-                # process.send_signal(9)
-                raise KeyboardInterrupt from k
-            except Exception as e:
-                logging.critical(
-                    f"Systemtest {self} had serious issues executing the docker compose command about to kill the docker compose command. Please check the logs! {e}")
-                process.kill()
-                stdout, stderr = process.communicate(timeout=SHORT_TIMEOUT)
-                process.kill()
-
-            stdout_data.extend(stdout.decode().splitlines())
-            stderr_data.extend(stderr.decode().splitlines())
-            elapsed_time = time.perf_counter() - time_start
-            return DockerComposeResult(process.returncode, stdout_data, stderr_data, self, elapsed_time)
-        except Exception as e:
-            logging.critical(f"Error executing docker compose up command: {e}")
-            elapsed_time = time.perf_counter() - time_start
-            return DockerComposeResult(1, stdout_data, stderr_data, self, elapsed_time)
+        exit_code, stdout_data, stderr_data = self._run_docker_compose_subprocess(
+            [
+                'docker',
+                'compose',
+                '--file',
+                'docker-compose.tutorial.yaml',
+                'up',
+            ],
+            "run",
+            self.timeout,
+        )
+        elapsed_time = time.perf_counter() - time_start
+        return DockerComposeResult(exit_code, stdout_data, stderr_data, self, elapsed_time)
 
     def __repr__(self):
         return f"{self.tutorial.name} {self.case_combination}"
 
-    def __write_logs(self, stdout_data: List[str], stderr_data: List[str]):
-        with open(self.system_test_dir / "stdout.log", 'w') as stdout_file:
-            stdout_file.write("\n".join(stdout_data))
-        with open(self.system_test_dir / "stderr.log", 'w') as stderr_file:
-            stderr_file.write("\n".join(stderr_data))
+    def __apply_max_time_override(self):
+        """Overwrite <max-time> or <max-time-windows> value in precice-config.xml."""
+        if self.max_time is None and self.max_time_windows is None:
+            return
+        config_path = self.system_test_dir / "precice-config.xml"
+        text = config_path.read_text()
+        new_text = text
+        if self.max_time is not None:
+            pattern = r'(<max-time\s+value=")[^"]*(")'
+            new_text, count = re.subn(pattern, rf'\g<1>{self.max_time}\2', new_text)
+            if count == 0:
+                logging.warning(f"No <max-time> tag found in {config_path}")
+            else:
+                logging.info(f"Overwrote <max-time> to {self.max_time} in {config_path}")
+        if self.max_time_windows is not None:
+            pattern = r'(<max-time-windows\s+value=")[^"]*(")'
+            new_text, count = re.subn(pattern, rf'\g<1>{self.max_time_windows}\2', new_text)
+            if count == 0:
+                logging.warning(f"No <max-time-windows> tag found in {config_path}")
+            else:
+                logging.info(f"Overwrote <max-time-windows> to {self.max_time_windows} in {config_path}")
+        config_path.write_text(new_text)
 
     def __prepare_for_run(self, run_directory: Path):
         """
         Prepares the run_directory with folders and datastructures needed for every systemtest execution
         """
         self.__copy_tutorial_into_directory(run_directory)
+        self.__apply_max_time_override()
         self.__copy_tools(run_directory)
         self.__put_gitignore(run_directory)
         host_uid, host_gid = self.__get_uid_gid()
@@ -529,14 +800,15 @@ class Systemtest:
         Runs the system test by generating the Docker Compose file, copying everything into a run folder, and executing docker-compose up.
         """
         self.__prepare_for_run(run_directory)
+        self.__init_run_logs()
         std_out: List[str] = []
         std_err: List[str] = []
 
+        self._cleanup_docker_networks()
         docker_build_result = self._build_docker()
         std_out.extend(docker_build_result.stdout_data)
         std_err.extend(docker_build_result.stderr_data)
         if docker_build_result.exit_code != 0:
-            self.__write_logs(std_out, std_err)
             logging.critical(f"Could not build the docker images, {self} failed")
             return SystemtestResult(
                 False,
@@ -551,7 +823,6 @@ class Systemtest:
         std_out.extend(docker_run_result.stdout_data)
         std_err.extend(docker_run_result.stderr_data)
         if docker_run_result.exit_code != 0:
-            self.__write_logs(std_out, std_err)
             logging.critical(f"Could not run the tutorial, {self} failed")
             return SystemtestResult(
                 False,
@@ -566,7 +837,7 @@ class Systemtest:
         std_out.extend(fieldcompare_result.stdout_data)
         std_err.extend(fieldcompare_result.stderr_data)
         if fieldcompare_result.exit_code != 0:
-            self.__write_logs(std_out, std_err)
+            self.__archive_fieldcompare_diffs()
             logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
             return SystemtestResult(
                 False,
@@ -578,7 +849,7 @@ class Systemtest:
                 fieldcompare_time=fieldcompare_result.runtime)
 
         # self.__cleanup()
-        self.__write_logs(std_out, std_err)
+        self._cleanup_docker_networks()
         return SystemtestResult(
             True,
             std_out,
@@ -593,13 +864,14 @@ class Systemtest:
         Runs the system test by generating the Docker Compose files to generate the reference results
         """
         self.__prepare_for_run(run_directory)
+        self.__init_run_logs()
         std_out: List[str] = []
         std_err: List[str] = []
+        self._cleanup_docker_networks()
         docker_build_result = self._build_docker()
         std_out.extend(docker_build_result.stdout_data)
         std_err.extend(docker_build_result.stderr_data)
         if docker_build_result.exit_code != 0:
-            self.__write_logs(std_out, std_err)
             logging.critical(f"Could not build the docker images, {self} failed")
             return SystemtestResult(
                 False,
@@ -614,7 +886,6 @@ class Systemtest:
         std_out.extend(docker_run_result.stdout_data)
         std_err.extend(docker_run_result.stderr_data)
         if docker_run_result.exit_code != 0:
-            self.__write_logs(std_out, std_err)
             logging.critical(f"Could not run the tutorial, {self} failed")
             return SystemtestResult(
                 False,
@@ -625,7 +896,7 @@ class Systemtest:
                 solver_time=docker_run_result.runtime,
                 fieldcompare_time=0)
 
-        self.__write_logs(std_out, std_err)
+        self._cleanup_docker_networks()
         return SystemtestResult(
             True,
             std_out,
@@ -640,13 +911,13 @@ class Systemtest:
         Runs only the build commmand, for example to preheat the caches of the docker builder.
         """
         self.__prepare_for_run(run_directory)
+        self.__init_run_logs()
         std_out: List[str] = []
         std_err: List[str] = []
         docker_build_result = self._build_docker()
         std_out.extend(docker_build_result.stdout_data)
         std_err.extend(docker_build_result.stderr_data)
         if docker_build_result.exit_code != 0:
-            self.__write_logs(std_out, std_err)
             logging.critical(f"Could not build the docker images, {self} failed")
             return SystemtestResult(
                 False,
@@ -657,7 +928,6 @@ class Systemtest:
                 solver_time=0,
                 fieldcompare_time=0)
 
-        self.__write_logs(std_out, std_err)
         return SystemtestResult(
             True,
             std_out,

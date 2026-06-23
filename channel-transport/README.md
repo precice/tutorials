@@ -6,7 +6,7 @@ summary: A CFD problem is coupled to a transport (of, e.g., a chemistry species)
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/channel-transport). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/channel-transport), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/channel-transport) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -37,13 +37,13 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 Fluid participant:
 
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
+* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
 * OpenFOAM (pimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
 Transport participant:
 
-* Nutils with support for [adaptive mesh refinement](https://precice.org/couple-your-code-moving-or-changing-meshes.html#pseudo-reference-domain). For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0 and a preCICE release with [remeshing support](couple-your-code-moving-or-changing-meshes.html#remeshing-using-precice).
+* Nutils with support for [adaptive mesh refinement](https://precice.org/couple-your-code-moving-or-changing-meshes.html#pseudo-reference-domain). For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This solver requires a preCICE release with [remeshing support](couple-your-code-moving-or-changing-meshes.html#remeshing-using-precice).
 
 * OpenFOAM. This case uses a modified version of scalarTransportFoam, which recomputes `phi` after the preCICE adapter reads the velocity field. Find it in the `solver-openfoam` folder and build it with `wmake`. Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
 

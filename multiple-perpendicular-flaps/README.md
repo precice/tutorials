@@ -6,7 +6,7 @@ summary: In this case, a fluid and two solids are coupled together using a fully
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/multiple-perpendicular-flaps). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/multiple-perpendicular-flaps), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/multiple-perpendicular-flaps) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Case Setup
@@ -48,9 +48,9 @@ The participant that has the control is the one that it is connected to all othe
 
 ## About the Solvers
 
-For the fluid participant we use OpenFOAM. In particular, we use the application `pimpleFoam`. The geometry of the Fluid participant is defined in the file `Fluid/system/blockMeshDict`. Besides, we must specify where are we exchanging data with the other participants. The interfaces are set in the file `Fluid/system/preciceDict`. In this file, we set to exchange stress and displacement on the surface of each flap.
+For the fluid participant we use OpenFOAM. In particular, we use the application `pimpleFoam`. The geometry of the Fluid participant is defined in the file `Fluid/system/blockMeshDict`. Besides, we must specify where we are exchanging data with the other participants. The interfaces are set in the file `Fluid/system/preciceDict`. In this file, we set to exchange stress and displacement on the surface of each flap.
 
-Most of the coupling details are specified in the file `precice-config.xml`. Here we estipulate the order in which we read/write data from one participant to another or how we map from the fluid to the solid's mesh. In particular, we have chosen the nearest-neighbor mapping scheme.
+Most of the coupling details are specified in the file `precice-config.xml`. Here we set the order in which we read/write data from one participant to another or how we map from the fluid to the solid's mesh. In particular, we have chosen the nearest-neighbor mapping scheme.
 
 For the simulation of the solid participants we use the deal.II adapter. In deal.II, the geometry of the domain is specified directly on the solver. The two flaps in our case are essentially the same but for the x-coordinate. The flap geometry is given to the solver when we select the scenario in the `.prm` file.
 
