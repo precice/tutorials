@@ -98,4 +98,4 @@ m.modify_patch("upperWall", "wall")
 m.modify_patch("lowerWall", "wall")
 m.modify_patch("frontAndBack", "empty")
 
-m.write(pathlib.Path(__file__).parent / "system" / "blockMeshDict")
+m.write(pathlib.Path(__file__).parent.parent / "system" / "blockMeshDict")
