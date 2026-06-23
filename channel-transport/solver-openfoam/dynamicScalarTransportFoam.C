@@ -18,9 +18,9 @@ int main(int argc, char *argv[])
       "Dynamic scalar transport equation solver.");
 
 #include "addCheckCaseOptions.H"
-#include "createMesh.H"
-#include "createTime.H"
 #include "setRootCaseLists.H"
+#include "createTime.H"
+#include "createMesh.H"
 
   simpleControl simple(mesh);
 
