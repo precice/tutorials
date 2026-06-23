@@ -37,6 +37,13 @@ test_suites:
           - transport-nutils
         max_time: 0.1
         reference_result: ./channel-transport/reference-results/fluid-openfoam_transport-nutils.tar.gz
+      - &channel-transport_fluid-openfoam_transport-openfoam
+        path: channel-transport
+        case_combination:
+          - fluid-openfoam
+          - transport-openfoam
+        max_time: 0.5
+        reference_result: ./channel-transport/reference-results/fluid-openfoam_transport-openfoam.tar.gz
 
   channel-transport-reaction:
     tutorials:
@@ -544,6 +551,7 @@ test_suites:
     tutorials:
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
+      - *channel-transport_fluid-openfoam_transport-openfoam
       - *channel-transport-reaction_fluid-fenics_chemical-fenics
       - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
       - *channel-transport-particles_fluid-nutils_particles-mercurydpm
@@ -702,6 +710,7 @@ test_suites:
     tutorials:
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
+      - *channel-transport_fluid-openfoam_transport-openfoam
       - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
       - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
