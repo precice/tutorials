@@ -50,7 +50,7 @@ dealii-adapter:
 
 dumux-adapter:
   template: component-templates/dumux-adapter.yaml
-  build_timeout: 1800
+  build_timeout: 600
   build_arguments:
     PLATFORM:
       default: "ubuntu_2404"
@@ -196,6 +196,7 @@ python-bindings:
 
 su2-adapter:
   template: component-templates/su2-adapter.yaml
+  build_timeout: 600
   build_arguments:
     PLATFORM:
       default: "ubuntu_2404"

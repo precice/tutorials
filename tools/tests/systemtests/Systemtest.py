@@ -20,9 +20,9 @@ import logging
 import os
 
 
-GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 600))
+GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 300))
 DEFAULT_BUILD_TIMEOUT = int(
-    os.environ.get("PRECICE_SYSTEMTESTS_BUILD_TIMEOUT", GLOBAL_TIMEOUT))
+    os.environ.get("PRECICE_SYSTEMTESTS_BUILD_TIMEOUT", 600))
 SHORT_TIMEOUT = 10
 
 DIFF_RESULTS_DIR = "diff-results"
@@ -242,8 +242,11 @@ class Systemtest:
 
     def _resolve_build_timeout(self) -> int:
         """
-        Use the maximum build_timeout of the distinct components in this test.
-        Components without build_timeout use DEFAULT_BUILD_TIMEOUT.
+        Wall-clock limit for the single ``docker compose build`` subprocess.
+
+        Uses the maximum build_timeout of the distinct components in this test,
+        so the step can run long enough for the slowest adapter. Components
+        without build_timeout use DEFAULT_BUILD_TIMEOUT.
         """
         timeouts = []
         seen_components = set()

@@ -97,7 +97,7 @@ class Component:
     name: str
     template: str
     parameters: BuildArguments
-    build_timeout: Optional[int] = None
+    build_timeout: int | None = None
 
     def __eq__(self, other):
         if isinstance(other, Component):

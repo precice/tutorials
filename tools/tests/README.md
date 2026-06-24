@@ -329,10 +329,10 @@ This template defines:
 
 ### Timeouts
 
-Build and run/compare use separate timeouts.
+The build and the run/compare steps use separate timeouts.
 
-**Build:** Each component in `components.yaml` may define `build_timeout` (seconds). For a test, the build step uses the maximum `build_timeout` among its components; components without `build_timeout` use `DEFAULT_BUILD_TIMEOUT` (600s by default, same as `GLOBAL_TIMEOUT`). Override the default via `PRECICE_SYSTEMTESTS_BUILD_TIMEOUT`.
+**Build:** Each component in `components.yaml` may define `build_timeout` (seconds). The build step runs `docker compose build` once for all participant images, with one wall-clock subprocess timeout. That limit is the maximum `build_timeout` among the test's distinct components (so the slowest adapter, e.g. DuMuX or SU2, is not cut off early). Components without `build_timeout` contribute `DEFAULT_BUILD_TIMEOUT` (600s by default). Override the default via `PRECICE_SYSTEMTESTS_BUILD_TIMEOUT`.
 
-**Run and compare:** `GLOBAL_TIMEOUT` defaults to 600s and can be overridden via `PRECICE_SYSTEMTESTS_TIMEOUT`. Tests can define a different `timeout` in their `tests.yaml` entry, which applies to the running and results comparison steps only.
+**Run and compare:** `GLOBAL_TIMEOUT` defaults to 300s and can be overridden via `PRECICE_SYSTEMTESTS_TIMEOUT`. Tests can define a different `timeout` in their `tests.yaml` entry, which applies to the running and results comparison steps only.
 
 </details>
