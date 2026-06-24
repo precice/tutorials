@@ -2,12 +2,7 @@ import argparse
 from metadata_parser.metdata import Tutorials, ReferenceResult
 from systemtests.TestSuite import TestSuites
 from systemtests.SystemtestArguments import SystemtestArguments
-from systemtests.Systemtest import (
-    Systemtest,
-    GLOBAL_TIMEOUT,
-    ITERATIONS_LOGS_DIR,
-    reference_iterations_logs_tar_arcname,
-)
+from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT, ITERATIONS_LOGS_DIR
 from pathlib import Path
 from typing import List
 import shutil
@@ -47,7 +42,7 @@ def create_reference_tar_gz(
                     shutil.copy2(src, dest)
                 tar.add(
                     logs_staging,
-                    arcname=reference_iterations_logs_tar_arcname(stem),
+                    arcname=f"{stem}.{ITERATIONS_LOGS_DIR}",
                 )
     finally:
         shutil.rmtree(exports_staging, ignore_errors=True)
