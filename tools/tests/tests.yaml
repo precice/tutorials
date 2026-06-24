@@ -763,3 +763,26 @@ test_suites:
   selected:
     tutorials:
       - *elastic-tube-1d_fluid-python_solid-python
+
+  external:
+    tutorials:
+      - path: partitioned-heat-conduction-robin
+        source:
+          type: git
+          url: https://github.com/vidulejs/tutorials.git
+          ref: partitioned-heat-conduction-mixed-robin
+          subdir: .
+        case_combination:
+          - left-openfoam
+          - right-openfoam
+        reference_result: ./partitioned-heat-conduction-robin/reference_results/left-openfoam_right-openfoam.tar.gz
+      - path: partitioned-heat-conduction-mixedbc
+        source:
+          type: git
+          url: https://github.com/vidulejs/tutorials.git
+          ref: partitioned-heat-conduction-mixed-robin
+          subdir: .
+        case_combination:
+          - left-openfoam
+          - right-openfoam
+        reference_result: ./partitioned-heat-conduction-mixedbc/reference_results/left-openfoam_right-openfoam.tar.gz 
