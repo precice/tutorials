@@ -771,4 +771,4 @@ test_suites:
 
   selected:
     tutorials:
-      - *elastic-tube-1d_fluid-python_solid-python
+      - *channel-transport_fluid-openfoam_transport-openfoam
