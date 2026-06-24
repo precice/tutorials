@@ -106,7 +106,7 @@ fieldcompare dir precice-exports/ reference-results-unpacked/<case>/ \
              -rtol 3e-7
 ```
 
-The default relative tolerance is `3e-7`. Per-test overrides are available in `tests.yaml` via `tolerance` (passed to fieldcompare as `-rtol`). Set `skip_compare: true` to skip the comparison step and only verify that build and run succeed.
+The default relative tolerance (`-rtol`) is `3e-7`. Per-test overrides are possible in `tests.yaml` (e.g., `tolerance: 1e-2`). Set `skip_compare: true` to skip the comparison step and only verify that the build and run steps succeed.
 
 The differences are only shown per file, and there is no global metric or other summary (see [related discussion in fieldcompare](https://gitlab.com/dglaeser/fieldcompare/-/work_items/69)).
 

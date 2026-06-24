@@ -644,6 +644,7 @@ test_suites:
   fenics-adapter:
     tutorials:
       - *channel-transport-reaction_fluid-fenics_chemical-fenics
+      - *elastic-tube-3d_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction-complex_dirichlet-fenics_neumann-fenics
@@ -651,7 +652,6 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-su2_solid-fenics
       - *volume-coupled-diffusion_source-fenics_drain-fenics
-      - *elastic-tube-3d_fluid-openfoam_solid-fenics
 
   fenicsx-adapter:
     tutorials:
@@ -688,9 +688,9 @@ test_suites:
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
       - *perpendicular-flap_fluid-nutils_solid-calculix
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
+      - *two-scale-heat-conduction_macro-nutils_micro-nutils
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
-      - *two-scale-heat-conduction_macro-nutils_micro-nutils
 
   openfoam-adapter:
     tutorials:
@@ -698,6 +698,7 @@ test_suites:
       - *channel-transport_fluid-openfoam_transport-nutils
       - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
+      - *elastic-tube-3d_fluid-openfoam_solid-fenics
       - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
@@ -723,7 +724,6 @@ test_suites:
       - *quickstart_openfoam_cpp
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
-      - *elastic-tube-3d_fluid-openfoam_solid-fenics
 
   su2-adapter:
     tutorials:

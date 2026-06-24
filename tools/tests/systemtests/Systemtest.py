@@ -673,15 +673,6 @@ class Systemtest:
         elapsed_time = time.perf_counter() - time_start
         return FieldCompareResult(exit_code, stdout_data, stderr_data, self, elapsed_time)
 
-    def _log_skipped_fieldcompare(self) -> None:
-        log_sink = getattr(self, "_log_sink", None)
-        if log_sink is not None:
-            log_sink.begin_stage("compare")
-            log_sink.append_stdout(
-                f"(skipped: skip_compare=true, default rtol would be {DEFAULT_FIELDCOMPARE_RTOL})",
-                "compare",
-            )
-
     def __archive_fieldcompare_diffs(self) -> None:
         """
         Copy fieldcompare diff VTK files from precice-exports/ into diff-results/,
@@ -848,7 +839,6 @@ class Systemtest:
 
         if self.skip_compare:
             logging.info(f"Skipping fieldcompare for {self} (skip_compare=true)")
-            self._log_skipped_fieldcompare()
             fieldcompare_time = 0.0
         else:
             fieldcompare_result = self._run_field_compare()

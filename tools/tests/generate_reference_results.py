@@ -2,7 +2,7 @@ import argparse
 from metadata_parser.metdata import Tutorials, ReferenceResult
 from systemtests.TestSuite import TestSuites
 from systemtests.SystemtestArguments import SystemtestArguments
-from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT, DEFAULT_FIELDCOMPARE_RTOL
+from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT
 from pathlib import Path
 from typing import List
 from paths import PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
@@ -145,18 +145,13 @@ def main():
             max_times = test_suite.max_times.get(tutorial, [])
             mtw_list = test_suite.max_time_windows.get(tutorial, [])
             timeouts = test_suite.timeouts.get(tutorial, [])
-            tolerances = test_suite.tolerances.get(tutorial, [])
-            skip_compares = test_suite.skip_compares.get(tutorial, [])
             for i, (case, reference_result) in enumerate(zip(
                     test_suite.cases_of_tutorial[tutorial], test_suite.reference_results[tutorial])):
                 max_time = max_times[i] if i < len(max_times) else None
                 max_time_windows = mtw_list[i] if i < len(mtw_list) else None
                 timeout = timeouts[i] if i < len(timeouts) and timeouts[i] is not None else GLOBAL_TIMEOUT
-                tolerance = tolerances[i] if i < len(
-                    tolerances) and tolerances[i] is not None else DEFAULT_FIELDCOMPARE_RTOL
-                skip_compare = skip_compares[i] if i < len(skip_compares) and skip_compares[i] is not None else False
                 systemtests_to_run.add(
-                    Systemtest(tutorial, build_args, case, reference_result, max_time=max_time, max_time_windows=max_time_windows, timeout=timeout, tolerance=tolerance, skip_compare=skip_compare))
+                    Systemtest(tutorial, build_args, case, reference_result, max_time=max_time, max_time_windows=max_time_windows, timeout=timeout))
 
     reference_result_per_tutorial = {}
     current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
