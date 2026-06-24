@@ -126,6 +126,33 @@ Note that you will need to define the `TUTORIALS_REF` in the file [`reference_ve
 
 The results will be added to a Git LFS, but you will need special push access: just use the aforementioned GitHub Actions workflow, instead.
 
+#### External test sources
+
+Local tutorials use the `tutorials:` list. For tutorials maintained in other git repositories or archives, use an `external:` list instead (a test suite defines one or the other, not both):
+
+```yaml
+test_suites:
+  external:
+    external:
+      - source:
+          type: git
+          url: https://github.com/vidulejs/tutorials.git
+          ref: partitioned-heat-conduction-mixed-robin
+          subdir: .
+        path: partitioned-heat-conduction-robin
+        case_combination:
+          - left-openfoam
+          - right-openfoam
+        reference_result: ./partitioned-heat-conduction-robin/reference_results/left-openfoam_right-openfoam.tar.gz
+```
+
+Supported `source.type` values:
+
+- `git`: shallow-clone `url` at `ref` (cached under `~/.cache/precice-tutorials` or `PRECICE_EXTERNAL_CACHE_DIR`).
+- `archive`: download and extract a `.tar.gz` / `.zip` from `url`.
+
+The runner fetches the tutorial, copies it into the run directory, then continues with the usual Docker build/run and fieldcompare steps. `TUTORIALS_REF` / `TUTORIALS_PR` build arguments apply only to **local** tutorials; external tutorials are pinned by `source.ref`. Reference result paths are resolved relative to the fetched tutorial root.
+
 ### Adding new components
 
 To add a new component, a few changes are needed:
@@ -326,31 +353,6 @@ This template defines:
 - `depends_on`: Other services this service depends upon, typically a preparation service that fetches all components and tutorials.
 - `volumes`: Directories mapped between the host and the container. Apart from directories relating to the users and groups, this also defines where to run the cases.
 - `command`: How to run a case depending on this component, including how and where to redirect any screen output.
-
-#### External tutorial sources
-
-By default, every `path` must exist in the local `precice/tutorials` checkout. For tutorials maintained elsewhere, add an optional `source` block to the `tests.yaml` entry:
-
-```yaml
-- path: flow-over-heated-plate
-  source:
-    type: git
-    url: https://github.com/precice/tutorials.git
-    ref: develop
-    subdir: .   # optional subdirectory inside the repository
-  case_combination:
-    - fluid-openfoam
-    - solid-openfoam
-  reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
-```
-
-Supported `type` values:
-
-- `local` (default): use the tutorial from this repository.
-- `git`: shallow-clone `url` at `ref` (cached under `~/.cache/precice-tutorials` or `PRECICE_EXTERNAL_CACHE_DIR`).
-- `archive`: download and extract a `.tar.gz` / `.zip` from `url`.
-
-The runner copies the resolved tutorial into the run directory, then continues with the usual Docker build/run and fieldcompare steps. `TUTORIALS_REF` / `TUTORIALS_PR` build arguments still apply only to **local** tutorials; external tutorials are pinned by `source.ref`.
 
 ### Timeouts
 

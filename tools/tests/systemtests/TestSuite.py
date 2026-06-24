@@ -69,73 +69,136 @@ class TestSuites(list):
                 max_times_of_tutorial = {}
                 max_time_windows_of_tutorial = {}
                 timeouts_of_tutorial = {}
-                for tutorial_case in test_suites_raw[test_suite_name]['tutorials']:
-                    source = TutorialSource.from_dict(tutorial_case.get('source'))
-                    tutorial = parsed_tutorials.get_by_path(tutorial_case['path'])
-                    if not tutorial and source.type != "local":
-                        tutorial_root = resolve_tutorial_root(
-                            Path(tutorial_case['path']),
-                            source,
-                            PRECICE_EXTERNAL_CACHE_DIR,
-                        )
-                        metadata_path = tutorial_root / "metadata.yaml"
-                        if not metadata_path.exists():
-                            raise FileNotFoundError(
-                                f"No metadata.yaml found for external tutorial "
-                                f"{tutorial_case['path']} at {tutorial_root}"
-                            )
-                        tutorial = Tutorial.from_yaml(
-                            metadata_path,
-                            available_components,
-                            base_dir=tutorial_root.parent,
-                            source=source,
-                        )
-                        parsed_tutorials.tutorials.append(tutorial)
-                    if not tutorial:
-                        raise Exception(f"No tutorial with path {tutorial_case['path']} found.")
-                    if tutorial not in case_combinations_of_tutorial:
-                        case_combinations_of_tutorial[tutorial] = []
-                        reference_results_of_tutorial[tutorial] = []
-                        max_times_of_tutorial[tutorial] = []
-                        max_time_windows_of_tutorial[tutorial] = []
-                        timeouts_of_tutorial[tutorial] = []
+                suite_def = test_suites_raw[test_suite_name]
+                local_cases = suite_def.get('tutorials', [])
+                external_cases = suite_def.get('external', [])
+                if local_cases and external_cases:
+                    raise ValueError(
+                        f"Test suite '{test_suite_name}' must use either 'tutorials' or "
+                        f"'external', not both."
+                    )
+                if not local_cases and not external_cases:
+                    raise ValueError(
+                        f"Test suite '{test_suite_name}' must define 'tutorials' or 'external'."
+                    )
 
-                    all_case_combinations = tutorial.case_combinations
-                    case_combination_requested = CaseCombination.from_string_list(
-                        tutorial_case['case_combination'], tutorial)
-                    if case_combination_requested in all_case_combinations:
-                        case_combinations_of_tutorial[tutorial].append(case_combination_requested)
-                        ref_base = tutorial.path.parent if source.type != "local" else None
-                        reference_results_of_tutorial[tutorial].append(ReferenceResult(
-                            tutorial_case['reference_result'],
-                            case_combination_requested,
-                            base_dir=ref_base,
-                        ))
-                        max_time_raw = tutorial_case.get('max_time', None)
-                        if max_time_raw is not None and (not isinstance(
-                                max_time_raw, (int, float)) or max_time_raw <= 0):
-                            raise ValueError(f"max_time must be a positive number, got {max_time_raw!r}")
-                        max_times_of_tutorial[tutorial].append(max_time_raw)
-                        mtw_raw = tutorial_case.get('max_time_windows', None)
-                        if mtw_raw is not None and (not isinstance(mtw_raw, int) or mtw_raw <= 0):
-                            raise ValueError(f"max_time_windows must be a positive integer, got {mtw_raw!r}")
-                        max_time_windows_of_tutorial[tutorial].append(mtw_raw)
+                for tutorial_case in local_cases:
+                    cls._add_tutorial_case(
+                        tutorial_case,
+                        TutorialSource.local(),
+                        parsed_tutorials,
+                        available_components,
+                        case_combinations_of_tutorial,
+                        reference_results_of_tutorial,
+                        max_times_of_tutorial,
+                        max_time_windows_of_tutorial,
+                        timeouts_of_tutorial,
+                    )
 
-                        timeout_value = tutorial_case.get('timeout', None)
-                        if timeout_value is not None and not isinstance(timeout_value, int):
-                            raise TypeError(
-                                f"Expected 'timeout' to be an integer or None, but got {type(timeout_value).__name__} "
-                                f"(value: {timeout_value}) in tutorial '{tutorial}'."
-                            )
-                        timeouts_of_tutorial[tutorial].append(timeout_value)
-                    else:
-                        raise Exception(
-                            f"Could not find the case combination {tutorial_case['case_combination']} in the current metadata of tutorial {tutorial.name}, or it does not define all necessary participants.")
+                for tutorial_case in external_cases:
+                    source_raw = tutorial_case.get('source')
+                    if not source_raw:
+                        raise ValueError(
+                            f"External test entry in suite '{test_suite_name}' "
+                            f"requires a 'source' block."
+                        )
+                    source = TutorialSource.from_dict(source_raw)
+                    if source.type == "local":
+                        raise ValueError(
+                            f"External test entry in suite '{test_suite_name}' "
+                            f"must use a git or archive source."
+                        )
+                    cls._add_tutorial_case(
+                        tutorial_case,
+                        source,
+                        parsed_tutorials,
+                        available_components,
+                        case_combinations_of_tutorial,
+                        reference_results_of_tutorial,
+                        max_times_of_tutorial,
+                        max_time_windows_of_tutorial,
+                        timeouts_of_tutorial,
+                    )
 
                 testsuites.append(TestSuite(test_suite_name, case_combinations_of_tutorial,
                                             reference_results_of_tutorial, max_times_of_tutorial, max_time_windows_of_tutorial, timeouts_of_tutorial))
 
         return cls(testsuites)
+
+    @staticmethod
+    def _add_tutorial_case(
+        tutorial_case: dict,
+        source: TutorialSource,
+        parsed_tutorials: Tutorials,
+        available_components: Components,
+        case_combinations_of_tutorial: Dict[Tutorial, List[CaseCombination]],
+        reference_results_of_tutorial: Dict[Tutorial, List[ReferenceResult]],
+        max_times_of_tutorial: Dict[Tutorial, list],
+        max_time_windows_of_tutorial: Dict[Tutorial, list],
+        timeouts_of_tutorial: Dict[Tutorial, List],
+    ) -> None:
+        tutorial = parsed_tutorials.get_by_path(tutorial_case['path'])
+        if not tutorial and source.type != "local":
+            tutorial_root = resolve_tutorial_root(
+                Path(tutorial_case['path']),
+                source,
+                PRECICE_EXTERNAL_CACHE_DIR,
+            )
+            metadata_path = tutorial_root / "metadata.yaml"
+            if not metadata_path.exists():
+                raise FileNotFoundError(
+                    f"No metadata.yaml found for external tutorial "
+                    f"{tutorial_case['path']} at {tutorial_root}"
+                )
+            tutorial = Tutorial.from_yaml(
+                metadata_path,
+                available_components,
+                base_dir=tutorial_root.parent,
+                source=source,
+            )
+            parsed_tutorials.tutorials.append(tutorial)
+        if not tutorial:
+            raise Exception(f"No tutorial with path {tutorial_case['path']} found.")
+        if tutorial not in case_combinations_of_tutorial:
+            case_combinations_of_tutorial[tutorial] = []
+            reference_results_of_tutorial[tutorial] = []
+            max_times_of_tutorial[tutorial] = []
+            max_time_windows_of_tutorial[tutorial] = []
+            timeouts_of_tutorial[tutorial] = []
+
+        all_case_combinations = tutorial.case_combinations
+        case_combination_requested = CaseCombination.from_string_list(
+            tutorial_case['case_combination'], tutorial)
+        if case_combination_requested in all_case_combinations:
+            case_combinations_of_tutorial[tutorial].append(case_combination_requested)
+            ref_base = tutorial.path.parent if source.type != "local" else None
+            reference_results_of_tutorial[tutorial].append(ReferenceResult(
+                tutorial_case['reference_result'],
+                case_combination_requested,
+                base_dir=ref_base,
+            ))
+            max_time_raw = tutorial_case.get('max_time', None)
+            if max_time_raw is not None and (not isinstance(
+                    max_time_raw, (int, float)) or max_time_raw <= 0):
+                raise ValueError(f"max_time must be a positive number, got {max_time_raw!r}")
+            max_times_of_tutorial[tutorial].append(max_time_raw)
+            mtw_raw = tutorial_case.get('max_time_windows', None)
+            if mtw_raw is not None and (not isinstance(mtw_raw, int) or mtw_raw <= 0):
+                raise ValueError(f"max_time_windows must be a positive integer, got {mtw_raw!r}")
+            max_time_windows_of_tutorial[tutorial].append(mtw_raw)
+
+            timeout_value = tutorial_case.get('timeout', None)
+            if timeout_value is not None and not isinstance(timeout_value, int):
+                raise TypeError(
+                    f"Expected 'timeout' to be an integer or None, but got {type(timeout_value).__name__} "
+                    f"(value: {timeout_value}) in tutorial '{tutorial}'."
+                )
+            timeouts_of_tutorial[tutorial].append(timeout_value)
+        else:
+            raise Exception(
+                f"Could not find the case combination {tutorial_case['case_combination']} "
+                f"in the current metadata of tutorial {tutorial.name}, or it does not "
+                f"define all necessary participants.")
 
     def __iter__(self):
         return iter(self.testsuites)
