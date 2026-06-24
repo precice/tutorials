@@ -18,7 +18,7 @@ clean_tutorial() {
         fi
 
         for case in */; do
-            if [ "${case}" = images/ ] || [ "${case}" = reference-results/ ] || [ "${case}" = dumux/ ]; then
+            if [ "${case}" = images/ ] || [ "${case}" = reference-results/ ] || [ "${case}" = dumux/ ] || [ "${case}" = utils/ ] || [ "${case}" = output/ ]; then
                 continue
             fi
             case "${case}" in solver*)

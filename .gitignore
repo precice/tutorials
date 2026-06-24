@@ -44,6 +44,7 @@ Makefile
 __pycache__/
 *.pyc
 *.pyo
+*.npz
 
 # Rust
 Cargo.lock
