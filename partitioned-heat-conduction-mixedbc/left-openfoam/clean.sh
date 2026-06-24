@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-set -e
+set -e -u
 
 . ../../tools/cleaning-tools.sh
 
