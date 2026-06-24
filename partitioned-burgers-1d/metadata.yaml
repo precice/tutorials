@@ -1,0 +1,26 @@
+name: Partitioned Burgers' equation 1D
+path: partitioned-burgers-1d # relative to git repo 
+url: https://precice.org/tutorials-partitioned-burgers-1d.html
+
+participants:
+  - Dirichlet 
+  - Neumann 
+
+cases:
+  dirichlet-scipy:
+    participant: Dirichlet
+    directory: ./dirichlet-scipy
+    run: ./run.sh
+    component: python-bindings
+  
+  neumann-scipy:
+    participant: Neumann
+    directory: ./neumann-scipy
+    run: ./run.sh
+    component: python-bindings
+  
+  neumann-surrogate:
+    participant: Neumann
+    directory: neumann-surrogate
+    run: ./run.sh
+    component: python-bindings

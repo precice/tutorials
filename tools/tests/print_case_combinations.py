@@ -8,14 +8,14 @@ import logging
 
 def main():
     parser = argparse.ArgumentParser(description='Prints available Metadata for tutorials')
-    parser.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+    parser.add_argument('--log_level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
                         default='INFO', help='Set the logging level')
     args = parser.parse_args()
 
     # Configure logging based on the provided log level
     logging.basicConfig(level=args.log_level, format='%(levelname)s: %(message)s')
 
-    print(f"Using log-level: {args.log_level}")
+    print(f"Using log_level: {args.log_level}")
 
     available_tutorials = Tutorials.from_path(PRECICE_TUTORIAL_DIR)
 
