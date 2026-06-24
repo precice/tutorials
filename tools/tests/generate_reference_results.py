@@ -2,7 +2,7 @@ import argparse
 from metadata_parser.metdata import Tutorials, ReferenceResult
 from systemtests.TestSuite import TestSuites
 from systemtests.SystemtestArguments import SystemtestArguments
-from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT
+from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT, ITERATIONS_LOGS_DIR
 from pathlib import Path
 from typing import List
 import shutil
@@ -18,9 +18,25 @@ from paths import PRECICE_TUTORIAL_DIR, PRECICE_TESTS_RUN_DIR, PRECICE_TESTS_DIR
 import time
 
 
-def create_tar_gz(source_folder: Path, output_filename: Path):
+def create_reference_tar_gz(
+    system_test_dir: Path,
+    exports_dir: Path,
+    output_filename: Path,
+    iterations_logs: List[tuple[str, Path]],
+) -> None:
+    """Archive precice-exports and optional iterations logs into one reference tar."""
+    stem = output_filename.name.replace(".tar.gz", "")
+    staging = system_test_dir / f".{stem}_reference_tar_staging"
+    if staging.exists():
+        shutil.rmtree(staging)
+    shutil.copytree(exports_dir, staging)
+    for rel, src in iterations_logs:
+        dest = staging / ITERATIONS_LOGS_DIR / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dest)
     with tarfile.open(output_filename, "w:gz") as tar:
-        tar.add(source_folder, arcname=output_filename.name.replace(".tar.gz", ""))
+        tar.add(staging, arcname=stem)
+    shutil.rmtree(staging)
 
 
 def get_machine_informations():
@@ -175,24 +191,22 @@ def main():
         # create folder if needed
         systemtest.reference_result.path.parent.mkdir(parents=True, exist_ok=True)
         if reference_result_folder.exists():
-            create_tar_gz(reference_result_folder, systemtest.reference_result.path)
+            collected = systemtest._collect_iterations_logs(systemtest.get_system_test_dir())
+            create_reference_tar_gz(
+                systemtest.get_system_test_dir(),
+                reference_result_folder,
+                systemtest.reference_result.path,
+                collected,
+            )
+            if collected:
+                logging.info(
+                    "Archived %d iterations log(s) inside %s",
+                    len(collected),
+                    systemtest.reference_result.path.name,
+                )
         else:
             raise RuntimeError(
                 f"Error executing: \n {systemtest} \n Could not find result folder {reference_result_folder}\n Probably the tutorial did not run through properly. Please check corresponding logs")
-
-        collected = systemtest._collect_iterations_logs(systemtest.get_system_test_dir())
-        if collected:
-            ref_logs_dir = systemtest._iterations_logs_reference_dir()
-            ref_logs_dir.mkdir(parents=True, exist_ok=True)
-            for rel, src in collected:
-                dest = ref_logs_dir / rel
-                dest.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(src, dest)
-            logging.info(
-                "Wrote iterations logs for %s to %s",
-                systemtest.reference_result.path.name,
-                ref_logs_dir,
-            )
 
     # write readme
     for tutorial in reference_result_per_tutorial.keys():

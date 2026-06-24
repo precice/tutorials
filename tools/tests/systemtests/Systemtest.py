@@ -721,10 +721,15 @@ class Systemtest:
                 h.update(mv[:n])
         return h.hexdigest()
 
-    def _iterations_logs_reference_dir(self) -> Path:
-        """Directory next to the reference tar storing archived iterations.log files."""
+    def _unpacked_reference_iterations_logs_dir(self) -> Path:
+        """Iterations logs unpacked from the reference tar (fieldcompare runs first)."""
         stem = self.reference_result.path.name.replace(".tar.gz", "")
-        return self.reference_result.path.parent / f"{stem}.iterations-logs"
+        return (
+            self.system_test_dir
+            / PRECICE_REL_REFERENCE_DIR
+            / stem
+            / ITERATIONS_LOGS_DIR
+        )
 
     def _collect_iterations_logs(
         self, system_test_dir: Path
@@ -749,7 +754,7 @@ class Systemtest:
         Load expected iterations.log hashes from archived reference files.
         Returns None if no reference data is available.
         """
-        ref_dir = self._iterations_logs_reference_dir()
+        ref_dir = self._unpacked_reference_iterations_logs_dir()
         if not ref_dir.is_dir():
             return None
         ref_hashes = {}
