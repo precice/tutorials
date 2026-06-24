@@ -2,7 +2,12 @@ import argparse
 from metadata_parser.metdata import Tutorials, ReferenceResult
 from systemtests.TestSuite import TestSuites
 from systemtests.SystemtestArguments import SystemtestArguments
-from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT, ITERATIONS_LOGS_DIR
+from systemtests.Systemtest import (
+    Systemtest,
+    GLOBAL_TIMEOUT,
+    ITERATIONS_LOGS_DIR,
+    reference_iterations_logs_tar_arcname,
+)
 from pathlib import Path
 from typing import List
 import shutil
@@ -24,19 +29,29 @@ def create_reference_tar_gz(
     output_filename: Path,
     iterations_logs: List[tuple[str, Path]],
 ) -> None:
-    """Archive precice-exports and optional iterations logs into one reference tar."""
+    """Archive precice-exports and optional iterations logs as separate top-level tar members."""
     stem = output_filename.name.replace(".tar.gz", "")
-    staging = system_test_dir / f".{stem}_reference_tar_staging"
-    if staging.exists():
-        shutil.rmtree(staging)
-    shutil.copytree(exports_dir, staging)
-    for rel, src in iterations_logs:
-        dest = staging / ITERATIONS_LOGS_DIR / rel
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src, dest)
-    with tarfile.open(output_filename, "w:gz") as tar:
-        tar.add(staging, arcname=stem)
-    shutil.rmtree(staging)
+    exports_staging = system_test_dir / f".{stem}_reference_exports_staging"
+    logs_staging = system_test_dir / f".{stem}_reference_logs_staging"
+    for staging in (exports_staging, logs_staging):
+        if staging.exists():
+            shutil.rmtree(staging)
+    shutil.copytree(exports_dir, exports_staging)
+    try:
+        with tarfile.open(output_filename, "w:gz") as tar:
+            tar.add(exports_staging, arcname=stem)
+            if iterations_logs:
+                for rel, src in iterations_logs:
+                    dest = logs_staging / rel
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(src, dest)
+                tar.add(
+                    logs_staging,
+                    arcname=reference_iterations_logs_tar_arcname(stem),
+                )
+    finally:
+        shutil.rmtree(exports_staging, ignore_errors=True)
+        shutil.rmtree(logs_staging, ignore_errors=True)
 
 
 def get_machine_informations():

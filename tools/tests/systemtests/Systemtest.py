@@ -27,6 +27,12 @@ SHORT_TIMEOUT = 10
 DIFF_RESULTS_DIR = "diff-results"
 ITERATIONS_LOGS_DIR = "iterations-logs"
 
+
+def reference_iterations_logs_tar_arcname(stem: str) -> str:
+    """Top-level tar member name for reference iterations logs (separate from VTU data)."""
+    return f"{stem}.{ITERATIONS_LOGS_DIR}"
+
+
 STAGE_LOG_FILES = {
     "build": "system-tests-build.log",
     "run": "system-tests-run.log",
@@ -727,8 +733,7 @@ class Systemtest:
         return (
             self.system_test_dir
             / PRECICE_REL_REFERENCE_DIR
-            / stem
-            / ITERATIONS_LOGS_DIR
+            / reference_iterations_logs_tar_arcname(stem)
         )
 
     def _collect_iterations_logs(
