@@ -1,0 +1,31 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      setExprFieldsDict;
+}
+
+// Initializes the blob at coordinates (bx,by) with given radius.
+// The formula is consistent with the one used in the original nutils case.
+expressions
+(
+    T
+    {
+        field T;
+
+        variables
+        (
+            "x = pos().x()"
+            "y = pos().y()"
+            "r = 0.5"
+            "bx = 1"
+            "by = 1"
+        );
+
+        expression
+        #{
+            r - r * tanh(((x - bx)*(x - bx) + (y - by)*(y - by) - r) / 0.1)
+        #};
+    }
+);

@@ -68,10 +68,9 @@ postProcessing/
 *.foam
 *.OpenFOAM
 dynamicCode
-Make/*
-!Make/files
-!Make/options
-lnInclude/
+**/Make/*
+!**/Make/files
+!**/Make/options
 
 # CalculiX
 spooles.out
