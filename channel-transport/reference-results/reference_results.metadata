@@ -11,8 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-nutils_transport-nutils.tar.gz | 2026-05-29 09:34:06 | 88f14284c484db5e806a884bb6cddee4e583607cb71f01a3d6f367d6125a7aaa |
-| fluid-openfoam_transport-nutils.tar.gz | 2026-05-29 09:34:06 | 8ba1c8e6b8f1d7363189ece66db2ab5f0a88398a770c79736fb121d4ea3ecf6e |
+| fluid-openfoam_transport-openfoam.tar.gz | 2026-06-24 20:20:04 | d561ab66fcc88c0f9ff9749c921b9b09ea3a4ad25b441f74223dbfc1436e0486 |
 
 ## List of arguments used to generate the files
 
@@ -25,15 +24,16 @@ We also include some information on the machine used to generate them
 | OPENFOAM_EXECUTABLE | openfoam2512 |
 | SU2_VERSION | 7.5.1 |
 | FENICS_ADAPTER_REF | v2.3.0 |
+| FENICSX_ADAPTER_REF | v1.0.1 |
 | CALCULIX_ADAPTER_REF | v2.20.1 |
 | DEALII_ADAPTER_REF | a421d92 |
 | DUMUX_ADAPTER_REF | 3f3f54f |
 | MICRO_MANAGER_REF | v0.10.1 |
 | OPENFOAM_ADAPTER_REF | 2c3062c |
-| PRECICE_REF | v3.4.1 |
+| PRECICE_REF | b770460f2447b94da430086085d6b424e7c073e9 |
 | PYTHON_BINDINGS_REF | v3.4.0 |
 | SU2_ADAPTER_REF | 5abe79b |
-| TUTORIALS_REF | bf5323c |
+| TUTORIALS_REF | 15cf26bd153b0d1658faf9efd7d64db6d30520b2 |
 | PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
