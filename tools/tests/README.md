@@ -96,8 +96,8 @@ When the tests fail at the results comparison step, this typically means that th
 - `precice-exports/`: The coupling meshes of the test run.
 - `reference-results/`: The coupling meshes of the reference run, as stored on Git LFS, expanded into `reference-results-unpacked`.
 - `diff-results/`: Numerical difference of the results in the two directories (computed with `fieldcompare dir --diff precice-exports/ reference/`). These are only present on failed comparisons.
-- `iterations-logs/`: For implicit-coupling runs, archived `precice-*-iterations.log` files from the test run, compared by SHA-256 hash against reference copies.
-- `*.iterations-logs/`: Reference iterations logs stored next to each reference `.tar.gz` on Git LFS (e.g. `fluid-openfoam_solid-openfoam.iterations-logs/`).
+- `iterations-logs/`: The `precice-*-iterations.log` files of the test run. Only present in implicit coupling tests and compared by SHA-256 hash against reference copies.
+- `*.iterations-logs/`: The reference iterations log files, stored next to each reference results archive on Git LFS (e.g. `fluid-openfoam_solid-openfoam.iterations-logs/`).
 
 To reproduce the comparison locally, use the [same fieldcompare command](https://github.com/precice/tutorials/blob/develop/tools/tests/docker-compose.field_compare.template.yaml):
 
