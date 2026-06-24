@@ -132,8 +132,7 @@ RUN pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAP
     pip3 uninstall -y mpi4py
 
 
-FROM precice_dependecies AS nutils_adapter
-COPY --from=python_bindings /home/precice/.local /home/precice/.local
+FROM python_bindings AS nutils_adapter
 USER root
 # The following are dependencies of gmsh, needed by the turek-hron-fsi3 nutils participant
 RUN apt-get -qq update && \
@@ -227,6 +226,7 @@ RUN git clone https://github.com/precice/micro-manager.git && \
     git checkout ${MICRO_MANAGER_REF} && \
     pip3 install .
 RUN pip3 install pybind11
+RUN pip3 install nutils
 WORKDIR /home/precice
 
 FROM micro_manager AS dumux_adapter
