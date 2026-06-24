@@ -276,6 +276,21 @@ test_suites:
         max_time: 0.5
         reference_result: ./partitioned-backwards-facing-step/reference-results/fluid1-openfoam_fluid2-openfoam.tar.gz
 
+  partitioned-burgers-1d:
+    tutorials:
+      - &partitioned-burgers-1d_dirichlet-scipy_neumann-scipy
+        path: partitioned-burgers-1d
+        case_combination:
+          - dirichlet-scipy
+          - neumann-scipy
+        reference_result: ./partitioned-burgers-1d/reference-results/dirichlet-scipy_neumann-scipy.tar.gz
+      - &partitioned-burgers-1d_dirichlet-scipy_neumann-surrogate
+        path: partitioned-burgers-1d
+        case_combination:
+          - dirichlet-scipy
+          - neumann-surrogate
+        reference_result: ./partitioned-burgers-1d/reference-results/dirichlet-scipy_neumann-surrogate.tar.gz
+
   partitioned-elastic-beam:
     tutorials:
       - &partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
@@ -578,6 +593,8 @@ test_suites:
       - *oscillator_mass-left-python_mass-right-python
       - *oscillator-overlap_mass-left-python_mass-right-python
       - *partitioned-backwards-facing-step_fluid1-openfoam_fluid2-openfoam
+      - *partitioned-burgers-1d_dirichlet-scipy_neumann-scipy
+      - *partitioned-burgers-1d_dirichlet-scipy_neumann-surrogate
       - *partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
       - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction_dirichlet-fenicsx_neumann-fenicsx
