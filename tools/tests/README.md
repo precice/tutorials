@@ -123,8 +123,8 @@ runs/
 ├── tools/                              # Dockerfiles and helpers (shared)
 └── <tutorial>_<cases>_<timestamp>/     # one folder per system test
     ├── docker-compose.tutorial.yaml
-    ├── docker-compose.field_compare.yaml   # if fieldcompare ran
-    ├── rerun_systemtest.sh
+    ├── docker-compose.field_compare.yaml   # written at build time when compare is configured
+    ├── rerun-system-test.sh
     ├── system-tests-build.log
     ├── system-tests-run.log
     ├── system-tests-compare.log
@@ -135,11 +135,13 @@ To re-run one test locally:
 
 1. Extract the zip and keep the `runs/` layout (the test folder needs the sibling `tools/` directory).
 2. `cd` into the test folder.
-3. Run `./rerun_systemtest.sh` (or `sh rerun_systemtest.sh`).
+3. Run `./rerun-system-test.sh` (or `sh rerun-system-test.sh`).
 
 The script rebuilds images, runs the tutorial, and (if present) runs fieldcompare with `--exit-code-from field-compare`, matching the Python runner. Compose paths are relative to the test folder (`..` is the parent `runs/` directory), so you can move the extracted tree elsewhere on a Linux host with Docker.
 
-Fieldcompare requires reference results in the artifact (unpacked during the original CI run) or you must unpack them manually first.
+`docker-compose.field_compare.yaml` is written when the test is prepared for Docker build. If an older artifact omits it, the original run likely failed before compare. The replay script fixes common permission issues from extracted archives (`chmod` before compose).
+
+Fieldcompare requires reference results in the artifact. If not already unpacked during the original CI run, unpack them manually first.
 
 ## Extending
 
@@ -237,7 +239,7 @@ User-facing tools:
   - `print_case_combinations.py`: Prints all possible combinations of tutorial cases, using the `metadata.yaml` files.
   - `build_docker_images.py`: Build the Docker images for each test
   - `generate_reference_results.py`: Executes the system tests with the versions defined in `reference_versions.yaml` and generates the reference data archives, with the names described in `tests.yaml`. (should only be used by the CI Pipeline)
-  - `rerun_systemtest.sh`: Helper script copied into each run directory so CI artifacts can be replayed locally (see [#387](https://github.com/precice/tutorials/issues/387)).
+  - `rerun-system-test.sh`: Helper script copied into each run directory so CI artifacts can be replayed locally.
 
 Implementation scripts:
 

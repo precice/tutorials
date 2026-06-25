@@ -737,13 +737,13 @@ class Systemtest:
                 self,
             )
 
-    def __copy_rerun_systemtest_script(self) -> None:
-        """Copy tools/tests/rerun_systemtest.sh into the run directory for artifact replay."""
-        rerun_src = PRECICE_TESTS_DIR / "rerun_systemtest.sh"
+    def __copy_rerun_system_test_script(self) -> None:
+        """Copy tools/tests/rerun-system-test.sh into the run directory for artifact replay."""
+        rerun_src = PRECICE_TESTS_DIR / "rerun-system-test.sh"
         if not rerun_src.is_file():
             raise FileNotFoundError(
                 f"Missing {rerun_src}. It is required for portable CI artifact replay.")
-        rerun_dst = self.system_test_dir / "rerun_systemtest.sh"
+        rerun_dst = self.system_test_dir / "rerun-system-test.sh"
         shutil.copy2(rerun_src, rerun_dst)
         try:
             rerun_dst.chmod(rerun_dst.stat().st_mode | 0o111)
@@ -762,7 +762,11 @@ class Systemtest:
         with open(docker_compose_path, 'w') as file:
             file.write(docker_compose_content)
 
-        self.__copy_rerun_systemtest_script()
+        field_compare_compose_path = self.system_test_dir / "docker-compose.field_compare.yaml"
+        with open(field_compare_compose_path, 'w') as file:
+            file.write(self.__get_field_compare_compose_file())
+
+        self.__copy_rerun_system_test_script()
 
         exit_code, stdout_data, stderr_data = self._run_docker_compose_subprocess(
             [
