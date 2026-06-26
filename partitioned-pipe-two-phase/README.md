@@ -1,6 +1,8 @@
 ---
 title: Partitioned pipe two phase
 permalink: tutorials-partitioned-pipe-two-phase.html
+aliases:
+  - /tutorials-partitioned-pipe-two-phase.html
 keywords: tutorial, FF, fluid-fluid coupling, OpenFOAM, interFoam, multiphase
 summary: This tutorial describes how to run a partitioned two-phase fluid simulation using preCICE.
 ---

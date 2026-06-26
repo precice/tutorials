@@ -1,6 +1,8 @@
 ---
 title: Channel transport reaction
 permalink: tutorials-channel-transport-reaction.html
+aliases:
+  - /tutorials-channel-transport-reaction.html
 keywords: FEniCS, volumetric coupling, reaction, transport
 summary: We simulate an advection-diffusion-reaction scenario in a fluid in motion. One solver simulates the fluid flow and another handles the reactions.
 ---

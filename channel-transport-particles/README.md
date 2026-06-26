@@ -1,6 +1,8 @@
 ---
 title: Channel transport with particles
 permalink: tutorials-channel-transport-particles.html
+aliases:
+  - /tutorials-channel-transport-particles.html
 keywords: volume coupling, particles, OpenFOAM, MercuryDPM, transport, just-in-time mapping
 summary: A CFD problem is coupled to a particles in a uni-directional way for particles tracing.
 ---

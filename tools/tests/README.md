@@ -1,6 +1,8 @@
 ---
 title: preCICE system tests
 permalink: dev-docs-system-tests.html
+aliases:
+  - /dev-docs-system-tests.html
 sidebar: docs_sidebar
 keywords: pages, development, tests
 summary: "Test complete simulations combining preCICE components of specific versions."
