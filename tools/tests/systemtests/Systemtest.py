@@ -830,7 +830,7 @@ class Systemtest:
             logging.critical(message)
             self._append_compare_log(message, error=True)
             return False
-        self._append_compare_log("=== iterations.log hash check ===")
+        self._append_compare_log("=== Comparing the iterations.log files (checksums only) ===")
         for rel in sorted(ref_hashes):
             detail = f"  {rel}: sha256 ok"
             logging.debug(detail)
