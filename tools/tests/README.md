@@ -94,8 +94,9 @@ In addition, in the directories of the cases executed, you can find `system-test
 When the tests fail at the results comparison step, this typically means that there are numerical regressions (unless something wrong went undetected in a previous step). We use [fieldcompare](https://gitlab.com/dglaeser/fieldcompare) to compare all [preCICE exports](https://precice.org/configuration-export.html) to reference results generated from a previous run. Relevant files:
 
 - `precice-exports/`: The coupling meshes of the test run.
-- `reference-results/`: The coupling meshes of the reference run, as stored on Git LFS, expanded into `reference-results-unpacked`.
+- `reference-results/`: The coupling meshes of the reference run, as stored on Git LFS, expanded into `reference-results-unpacked`. For test cases using implicit coupling, the reference `.tar.gz` also contains the reference `precice-*-iterations.log` files.
 - `diff-results/`: Numerical difference of the results in the two directories (computed with `fieldcompare dir --diff precice-exports/ reference/`). These are only present on failed comparisons.
+- `iterations-logs/`: The `precice-*-iterations.log` files of the test run. Only present in test cases using implicit coupling. The comparisons to references only take into account the file SHA-256 checksums.
 
 To reproduce the comparison locally, use the [same fieldcompare command](https://github.com/precice/tutorials/blob/develop/tools/tests/docker-compose.field_compare.template.yaml):
 
