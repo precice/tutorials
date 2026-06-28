@@ -2,9 +2,10 @@ import argparse
 from metadata_parser.metdata import Tutorials, ReferenceResult
 from systemtests.TestSuite import TestSuites
 from systemtests.SystemtestArguments import SystemtestArguments
-from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT
+from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT, ITERATIONS_LOGS_DIR
 from pathlib import Path
 from typing import List
+import shutil
 from paths import PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
 import hashlib
 from jinja2 import Environment, FileSystemLoader
@@ -17,9 +18,35 @@ from paths import PRECICE_TUTORIAL_DIR, PRECICE_TESTS_RUN_DIR, PRECICE_TESTS_DIR
 import time
 
 
-def create_tar_gz(source_folder: Path, output_filename: Path):
-    with tarfile.open(output_filename, "w:gz") as tar:
-        tar.add(source_folder, arcname=output_filename.name.replace(".tar.gz", ""))
+def create_reference_tar_gz(
+    system_test_dir: Path,
+    exports_dir: Path,
+    output_filename: Path,
+    iterations_logs: List[tuple[str, Path]],
+) -> None:
+    """Archive precice-exports and optional iterations logs as separate top-level tar members."""
+    stem = output_filename.name.replace(".tar.gz", "")
+    exports_staging = system_test_dir / f".{stem}_reference_exports_staging"
+    logs_staging = system_test_dir / f".{stem}_reference_logs_staging"
+    for staging in (exports_staging, logs_staging):
+        if staging.exists():
+            shutil.rmtree(staging)
+    shutil.copytree(exports_dir, exports_staging)
+    try:
+        with tarfile.open(output_filename, "w:gz") as tar:
+            tar.add(exports_staging, arcname=stem)
+            if iterations_logs:
+                for rel, src in iterations_logs:
+                    dest = logs_staging / rel
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(src, dest)
+                tar.add(
+                    logs_staging,
+                    arcname=f"{stem}.{ITERATIONS_LOGS_DIR}",
+                )
+    finally:
+        shutil.rmtree(exports_staging, ignore_errors=True)
+        shutil.rmtree(logs_staging, ignore_errors=True)
 
 
 def get_machine_informations():
@@ -174,7 +201,19 @@ def main():
         # create folder if needed
         systemtest.reference_result.path.parent.mkdir(parents=True, exist_ok=True)
         if reference_result_folder.exists():
-            create_tar_gz(reference_result_folder, systemtest.reference_result.path)
+            collected = systemtest._collect_iterations_logs(systemtest.get_system_test_dir())
+            create_reference_tar_gz(
+                systemtest.get_system_test_dir(),
+                reference_result_folder,
+                systemtest.reference_result.path,
+                collected,
+            )
+            if collected:
+                logging.info(
+                    "Archived %d iterations log(s) inside %s",
+                    len(collected),
+                    systemtest.reference_result.path.name,
+                )
         else:
             raise RuntimeError(
                 f"Error executing: \n {systemtest} \n Could not find result folder {reference_result_folder}\n Probably the tutorial did not run through properly. Please check corresponding logs")

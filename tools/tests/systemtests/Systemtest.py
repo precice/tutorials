@@ -1,3 +1,4 @@
+import hashlib
 import subprocess
 import threading
 from typing import List, Dict, Optional, Tuple
@@ -26,6 +27,7 @@ DEFAULT_BUILD_TIMEOUT = int(
 SHORT_TIMEOUT = 10
 
 DIFF_RESULTS_DIR = "diff-results"
+ITERATIONS_LOGS_DIR = "iterations-logs"
 
 STAGE_LOG_FILES = {
     "build": "system-tests-build.log",
@@ -732,6 +734,137 @@ class Systemtest:
                 self,
             )
 
+    @staticmethod
+    def _sha256_file(path: Path) -> str:
+        """Compute SHA-256 hex digest of a file."""
+        h = hashlib.sha256()
+        mv = memoryview(bytearray(128 * 1024))
+        with open(path, 'rb', buffering=0) as f:
+            while n := f.readinto(mv):
+                h.update(mv[:n])
+        return h.hexdigest()
+
+    def _unpacked_reference_iterations_logs_dir(self) -> Path:
+        """Iterations logs unpacked from the reference tar (fieldcompare runs first)."""
+        stem = self.reference_result.path.name.replace(".tar.gz", "")
+        return (
+            self.system_test_dir
+            / PRECICE_REL_REFERENCE_DIR
+            / f"{stem}.{ITERATIONS_LOGS_DIR}"
+        )
+
+    def _collect_iterations_logs(
+        self, system_test_dir: Path
+    ) -> List[Tuple[str, Path]]:
+        """
+        Collect precice-*-iterations.log files from case dirs.
+        Returns list of (relative_path, absolute_path) e.g. ("solid-fenics/precice-Solid-iterations.log", path).
+        """
+        collected = []
+        for case in self.case_combination.cases:
+            case_dir = system_test_dir / Path(case.path).name
+            if not case_dir.exists():
+                continue
+            for log_file in case_dir.glob("precice-*-iterations.log"):
+                if log_file.is_file():
+                    rel = f"{Path(case.path).name}/{log_file.name}"
+                    collected.append((rel, log_file))
+        return collected
+
+    def _reference_iterations_hashes(self) -> Optional[Dict[str, str]]:
+        """
+        Load expected iterations.log hashes from archived reference files.
+        Returns None if no reference data is available.
+        """
+        ref_dir = self._unpacked_reference_iterations_logs_dir()
+        if not ref_dir.is_dir():
+            return None
+        ref_hashes = {}
+        for log_file in ref_dir.rglob("precice-*-iterations.log"):
+            if log_file.is_file():
+                rel = log_file.relative_to(ref_dir).as_posix()
+                ref_hashes[rel] = self._sha256_file(log_file)
+        return ref_hashes if ref_hashes else None
+
+    def __archive_iterations_logs(self) -> None:
+        """Copy precice-*-iterations.log from case dirs into iterations-logs/ for CI artifacts."""
+        collected = self._collect_iterations_logs(self.system_test_dir)
+        if not collected:
+            return
+        dest_dir = self.system_test_dir / ITERATIONS_LOGS_DIR
+        dest_dir.mkdir(exist_ok=True)
+        for rel, src in collected:
+            dest_name = Path(rel).name
+            if len(collected) > 1:
+                prefix = Path(rel).parent.name + "_"
+                dest_name = prefix + dest_name
+            shutil.copy2(src, dest_dir / dest_name)
+        logging.debug(
+            "Archived %d iterations log(s) to %s for %s",
+            len(collected),
+            dest_dir,
+            self,
+        )
+
+    def _append_compare_log(self, message: str, *, error: bool = False) -> None:
+        log_sink = getattr(self, "_log_sink", None)
+        if log_sink is None:
+            return
+        if error:
+            log_sink.append_stderr(message, "compare")
+        else:
+            log_sink.append_stdout(message, "compare")
+
+    def __compare_iterations_hashes(self) -> bool:
+        """
+        Compare current iterations.log hashes against reference data.
+        Returns True if comparison passes (or is skipped). Returns False if hashes differ.
+        """
+        ref_hashes = self._reference_iterations_hashes()
+        if ref_hashes is None:
+            message = (
+                f"Iterations.log hash check skipped (no reference data) for {self}"
+            )
+            logging.info(message)
+            self._append_compare_log(message)
+            return True
+        collected = self._collect_iterations_logs(self.system_test_dir)
+        current = {rel: self._sha256_file(p) for rel, p in collected}
+        for rel, expected in ref_hashes.items():
+            if rel not in current:
+                message = (
+                    f"Missing iterations log {rel} (expected from reference); "
+                    f"{self} fails"
+                )
+                logging.critical(message)
+                self._append_compare_log(message, error=True)
+                return False
+            if current[rel] != expected:
+                message = (
+                    f"Hash mismatch for {rel} (iterations.log regression); "
+                    f"{self} fails"
+                )
+                logging.critical(message)
+                self._append_compare_log(message, error=True)
+                return False
+        if len(current) != len(ref_hashes):
+            extra = set(current) - set(ref_hashes)
+            message = f"Unexpected iterations log(s) {extra}; {self} fails"
+            logging.critical(message)
+            self._append_compare_log(message, error=True)
+            return False
+        self._append_compare_log("=== Comparing the iterations.log files (checksums only) ===")
+        for rel in sorted(ref_hashes):
+            detail = f"  {rel}: sha256 ok"
+            logging.debug(detail)
+            self._append_compare_log(detail)
+        message = (
+            f"Iterations.log hash check passed for {self} ({len(ref_hashes)} file(s))"
+        )
+        logging.info(message)
+        self._append_compare_log(message)
+        return True
+
     def _build_docker(self):
         """
         Builds the docker image
@@ -864,6 +997,20 @@ class Systemtest:
         if fieldcompare_result.exit_code != 0:
             self.__archive_fieldcompare_diffs()
             logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
+            return SystemtestResult(
+                False,
+                std_out,
+                std_err,
+                self,
+                build_time=docker_build_result.runtime,
+                solver_time=docker_run_result.runtime,
+                fieldcompare_time=fieldcompare_result.runtime)
+
+        self.__archive_iterations_logs()
+        if not self.__compare_iterations_hashes():
+            logging.critical(
+                f"Iterations.log hash comparison failed (regression), {self} failed"
+            )
             return SystemtestResult(
                 False,
                 std_out,
