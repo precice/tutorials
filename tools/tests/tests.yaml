@@ -621,6 +621,7 @@ test_suites:
       - *quickstart_openfoam_cpp
       - *resonant-circuit_capacitor-python_coil-python
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux
       - *volume-coupled-diffusion_source-fenics_drain-fenics
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
@@ -634,6 +635,7 @@ test_suites:
       - *perpendicular-flap_fluid-nutils_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-nutils
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
+      - *two-scale-heat-conduction_macro-nutils_micro-nutils
 
   # A selection of tests that cover a wide range of main features, meant for quicker CI executions
   precice:
