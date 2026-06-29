@@ -24,6 +24,7 @@ import os
 GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 180))
 DEFAULT_BUILD_TIMEOUT = int(
     os.environ.get("PRECICE_SYSTEMTESTS_BUILD_TIMEOUT", 480))
+DEFAULT_FIELDCOMPARE_RTOL = 3e-7
 SHORT_TIMEOUT = 10
 
 DIFF_RESULTS_DIR = "diff-results"
@@ -223,6 +224,8 @@ class Systemtest:
     max_time: float | None = None
     max_time_windows: int | None = None
     timeout: int = GLOBAL_TIMEOUT
+    tolerance: float = DEFAULT_FIELDCOMPARE_RTOL
+    skip_compare: bool = False
     params_to_use: Dict[str, str] = field(init=False)
     env: Dict[str, str] = field(init=False)
 
@@ -355,6 +358,7 @@ class Systemtest:
             'tutorial_folder': self.tutorial_folder,
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
             'reference_output_folder': PRECICE_REL_REFERENCE_DIR + "/" + self.reference_result.path.name.replace(".tar.gz", ""),
+            'tolerance': self.tolerance,
         }
         jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
         template = jinja_env.get_template(
@@ -991,20 +995,25 @@ class Systemtest:
                 solver_time=docker_run_result.runtime,
                 fieldcompare_time=0)
 
-        fieldcompare_result = self._run_field_compare()
-        std_out.extend(fieldcompare_result.stdout_data)
-        std_err.extend(fieldcompare_result.stderr_data)
-        if fieldcompare_result.exit_code != 0:
-            self.__archive_fieldcompare_diffs()
-            logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
-            return SystemtestResult(
-                False,
-                std_out,
-                std_err,
-                self,
-                build_time=docker_build_result.runtime,
-                solver_time=docker_run_result.runtime,
-                fieldcompare_time=fieldcompare_result.runtime)
+        if self.skip_compare:
+            logging.info(f"Skipping fieldcompare for {self} (skip_compare=true)")
+            fieldcompare_time = 0.0
+        else:
+            fieldcompare_result = self._run_field_compare()
+            std_out.extend(fieldcompare_result.stdout_data)
+            std_err.extend(fieldcompare_result.stderr_data)
+            if fieldcompare_result.exit_code != 0:
+                self.__archive_fieldcompare_diffs()
+                logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
+                return SystemtestResult(
+                    False,
+                    std_out,
+                    std_err,
+                    self,
+                    build_time=docker_build_result.runtime,
+                    solver_time=docker_run_result.runtime,
+                    fieldcompare_time=fieldcompare_result.runtime)
+            fieldcompare_time = fieldcompare_result.runtime
 
         self.__archive_iterations_logs()
         if not self.__compare_iterations_hashes():
@@ -1029,7 +1038,7 @@ class Systemtest:
             self,
             build_time=docker_build_result.runtime,
             solver_time=docker_run_result.runtime,
-            fieldcompare_time=fieldcompare_result.runtime)
+            fieldcompare_time=fieldcompare_time)
 
     def run_for_reference_results(self, run_directory: Path):
         """
