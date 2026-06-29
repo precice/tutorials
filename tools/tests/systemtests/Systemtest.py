@@ -21,7 +21,7 @@ import logging
 import os
 
 
-GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 300))
+GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 180))
 DEFAULT_BUILD_TIMEOUT = int(
     os.environ.get("PRECICE_SYSTEMTESTS_BUILD_TIMEOUT", 480))
 SHORT_TIMEOUT = 10
