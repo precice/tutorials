@@ -332,9 +332,11 @@ This template defines:
 
 ### Timeouts
 
-A `GLOBAL_TIMEOUT` is used for all operations. Its default value is 600s (5min), it is set in the beginning of [`Systemtests.py`](https://github.com/precice/tutorials/blob/develop/tools/tests/systemtests/Systemtest.py), and it can be overridden via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable.
+The build and the run/compare steps use separate timeouts.
 
-Tests can define a different `timeout` in their `tests.yaml` entry, which applies to the running and results comparison steps.
+**Build:** Each component in `components.yaml` may set a `build_timeout` (default: 480s (8min)). The build step runs `docker compose build` once for all participant images, with one wall-clock subprocess timeout. That limit is the maximum `build_timeout` among the distinct components of the test (so that the slowest component is not cut off too early). You can override the default via the `PRECICE_SYSTEMTESTS_BUILD_TIMEOUT` environment variable.
+
+**Run and compare:** Each test in `tests.yaml` may set a `timeout` (default: 180s (3min)), which applies to the running and results comparison steps only. You can override the default via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable.
 
 Tests can define a different `tolerance` in their `tests.yaml` entry, which applies to the fieldcompare step (relative tolerance, `-rtol`). The default is `3e-7`. Use `skip_compare: true` to skip fieldcompare entirely.
 
