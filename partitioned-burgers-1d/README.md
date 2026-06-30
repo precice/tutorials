@@ -1,6 +1,8 @@
 ---
 title: Partitioned Burgers' equation 1D
 permalink: tutorials-partitioned-burgers-1d.html
+aliases:
+  - /tutorials-partitioned-burgers-1d.html
 keywords: Python, Neural Network, Surrogate, Burgers Equation, Finite Volume, CFD
 summary: This tutorial demonstrates the partitioned solution of the 1D Burgers' equation using preCICE and a neural network surrogate solver.
 ---

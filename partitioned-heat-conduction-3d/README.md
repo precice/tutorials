@@ -1,6 +1,8 @@
 ---
 title: 3D partitioned heat conduction
 permalink: tutorials-partitioned-heat-conduction-3d.html
+aliases:
+  - /tutorials-partitioned-heat-conduction-3d.html
 keywords: FEniCSx, Heat conduction
 summary: We solve a simple heat equation on a 3D domain. The domain is partitioned and the coupling is established in a Dirichlet-Neumann fashion.
 ---

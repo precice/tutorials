@@ -1,6 +1,8 @@
 ---
 title: Elastic tube 3D
 permalink: tutorials-elastic-tube-3d.html
+aliases:
+  - /tutorials-elastic-tube-3d.html
 keywords: FSI, OpenFOAM, CalculiX, FEniCS, nearest-projection, IMVJ
 summary: Tutorial for an FSI simulation of a three-dimensional expanding tube scenario
 ---

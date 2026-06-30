@@ -1,6 +1,8 @@
 ---
 title: Partitioned heat conduction
 permalink: tutorials-partitioned-heat-conduction.html
+aliases:
+  - /tutorials-partitioned-heat-conduction.html
 keywords: FEniCS, Nutils, G+Smo, Heat conduction
 summary: We solve a simple heat equation. The domain is partitioned and the coupling is established in a Dirichlet-Neumann fashion.
 ---
