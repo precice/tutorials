@@ -144,7 +144,7 @@ To re-run one test locally:
 
 The script rebuilds images, runs the tutorial, and (if present) runs fieldcompare with `--exit-code-from field-compare`, matching the Python runner. Compose paths are relative to the test folder (`..` is the parent `runs/` directory), so you can move the extracted tree elsewhere on a Linux host with Docker.
 
-`docker-compose.field_compare.yaml` is written when the test is prepared for Docker build. If an older artifact omits it, the original run likely failed before compare. The replay script fixes common permission issues from extracted archives (`chmod` before compose).
+`docker-compose.field_compare.yaml` is written when the test is prepared for Docker build. The replay script fixes common permission issues from extracted archives.
 
 Fieldcompare requires reference results in the artifact. If not already unpacked during the original CI run, unpack them manually first.
 
