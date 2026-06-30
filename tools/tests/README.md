@@ -125,6 +125,12 @@ The available cases are listed in the `metadata.yaml` of each tutorial. To add a
 
 Use the `max_time` or `max_time_windows` parameters to restrict the runtime of the test to the first few coupling time windows, to save time. Aim for a runtime of less than a minute (assuming cached components), if possible.
 
+Some tutorials require setup before the simulation (e.g. switching configuration files). Use optional `run-before` and `run-after` fields in `tests.yaml` to run shell commands in the copied tutorial directory after copying and before Docker build (`run-before`), or after the simulation and before field comparison (`run-after`). Example:
+
+```yaml
+run-before: ./set-case.sh 1d3d
+```
+
 You will need to define a reference results file. The reference results can and should be generated on GitHub using the [Generate reference results (manual)](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) workflow for the respective test suite. You might want to temporarily set the `selected` test suite for requesting results only for a subset of test cases.
 
 Note that you will need to define the `TUTORIALS_REF` in the file [`reference_versions.yaml`](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) to match the respective branch. Restore that to `develop` after that. See a [related issue](https://github.com/precice/tutorials/issues/844).

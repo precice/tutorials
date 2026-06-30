@@ -15,6 +15,8 @@ class TestSuite:
     timeouts: Dict[Tutorial, List] = field(default_factory=dict)
     tolerances: Dict[Tutorial, list] = field(default_factory=dict)
     skip_compares: Dict[Tutorial, list] = field(default_factory=dict)
+    run_befores: Dict[Tutorial, List] = field(default_factory=dict)
+    run_afters: Dict[Tutorial, List] = field(default_factory=dict)
 
     def __repr__(self) -> str:
         return_string = f"Test suite: {self.name} contains:"
@@ -58,6 +60,8 @@ class TestSuites(list):
                 timeouts_of_tutorial = {}
                 tolerances_of_tutorial = {}
                 skip_compares_of_tutorial = {}
+                run_befores_of_tutorial = {}
+                run_afters_of_tutorial = {}
                 # iterate over tutorials:
                 for tutorial_case in test_suites_raw[test_suite_name]['tutorials']:
                     tutorial = parsed_tutorials.get_by_path(tutorial_case['path'])
@@ -72,6 +76,8 @@ class TestSuites(list):
                         timeouts_of_tutorial[tutorial] = []
                         tolerances_of_tutorial[tutorial] = []
                         skip_compares_of_tutorial[tutorial] = []
+                        run_befores_of_tutorial[tutorial] = []
+                        run_afters_of_tutorial[tutorial] = []
 
                     all_case_combinations = tutorial.case_combinations
                     case_combination_requested = CaseCombination.from_string_list(
@@ -119,12 +125,31 @@ class TestSuites(list):
                                 f"in tutorial '{tutorial}'."
                             )
                         skip_compares_of_tutorial[tutorial].append(skip_compare_value)
+
+                        run_before_raw = tutorial_case.get('run-before', None)
+                        run_after_raw = tutorial_case.get('run-after', None)
+                        run_befores_of_tutorial[tutorial].append(
+                            run_before_raw.strip()
+                            if isinstance(run_before_raw, str) and run_before_raw.strip() else None)
+                        run_afters_of_tutorial[tutorial].append(
+                            run_after_raw.strip()
+                            if isinstance(run_after_raw, str) and run_after_raw.strip() else None)
                     else:
                         raise Exception(
                             f"Could not find the case combination {tutorial_case['case_combination']} in the current metadata of tutorial {tutorial.name}, or it does not define all necessary participants.")
 
-                testsuites.append(TestSuite(test_suite_name, case_combinations_of_tutorial,
-                                            reference_results_of_tutorial, max_times_of_tutorial, max_time_windows_of_tutorial, timeouts_of_tutorial, tolerances_of_tutorial, skip_compares_of_tutorial))
+                testsuites.append(TestSuite(
+                    test_suite_name,
+                    case_combinations_of_tutorial,
+                    reference_results_of_tutorial,
+                    max_times_of_tutorial,
+                    max_time_windows_of_tutorial,
+                    timeouts_of_tutorial,
+                    tolerances_of_tutorial,
+                    skip_compares_of_tutorial,
+                    run_befores_of_tutorial,
+                    run_afters_of_tutorial,
+                ))
 
         return cls(testsuites)
 
