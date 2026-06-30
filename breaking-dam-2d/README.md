@@ -1,6 +1,8 @@
 ---
 title: Breaking dam with flexible pillar 2D
 permalink: tutorials-breaking-dam-2d.html
+aliases:
+  - /tutorials-breaking-dam-2d.html
 keywords: FSI, OpenFOAM, CalculiX, IQN-ILS, two-phase flow, interFoam
 summary: FSI simulation of a two-dimensional water column striking a flexible wall
 ---

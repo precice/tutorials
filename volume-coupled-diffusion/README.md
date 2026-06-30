@@ -1,6 +1,8 @@
 ---
 title: Volume coupled diffusion
 permalink: tutorials-volume-coupled-diffusion.html
+aliases:
+  - /tutorials-volume-coupled-diffusion.html
 keywords: FEniCS, Diffusion, Volume Coupling
 summary: This tutorial illustrates volume coupling with a simple example.
 ---

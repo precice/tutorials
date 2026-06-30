@@ -1,6 +1,8 @@
 ---
 title: Partitioned heat conduction (direct access setup)
 permalink: tutorials-partitioned-heat-conduction-direct.html
+aliases:
+  - /tutorials-partitioned-heat-conduction-direct.html
 keywords: Nutils, Heat conduction, Direct mesh access
 summary: This tutorial is a modified version of the "partitioned heat conduction" tutorial showcasing direct mesh access.
 ---
