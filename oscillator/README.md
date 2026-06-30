@@ -1,6 +1,8 @@
 ---
 title: Oscillator
 permalink: tutorials-oscillator.html
+aliases:
+  - /tutorials-oscillator.html
 keywords: Python, ODE, FMI
 summary: We solve an oscillator with two masses in a partitioned fashion. Each mass is solved by an independent ODE.
 ---

@@ -1,6 +1,8 @@
 ---
 title: Channel transport
 permalink: tutorials-channel-transport.html
+aliases:
+  - /tutorials-channel-transport.html
 keywords: volume coupling, chemistry, OpenFOAM, Nutils, species, transport, remeshing
 summary: A CFD problem is coupled to a transport (of, e.g., a chemistry species) in a uni-directional way.
 ---

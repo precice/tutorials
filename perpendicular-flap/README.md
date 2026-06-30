@@ -1,6 +1,8 @@
 ---
 title: Perpendicular flap
 permalink: tutorials-perpendicular-flap.html
+aliases:
+  - /tutorials-perpendicular-flap.html
 keywords: fluid-structure interaction, FSI, OpenFOAM, FEniCS, Nutils, deal.II, Calculix, SU2,
 summary: This tutorial describes how to run a fluid-structure interaction using preCICE and any fluid-solid solver combination of our <a href="adapters-overview.html">officially provided adapter codes</a>.
 ---
