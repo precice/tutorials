@@ -5,15 +5,6 @@ from metadata_parser.metdata import Tutorials, Tutorial, Case, CaseCombination, 
 import yaml
 
 
-def _validate_hook_command(field_name: str, value, tutorial: Tutorial) -> Optional[str]:
-    if value is None:
-        return None
-    if not isinstance(value, str) or not value.strip():
-        raise ValueError(
-            f"{field_name} must be a non-empty string for tutorial '{tutorial}', got {value!r}")
-    return value
-
-
 @dataclass
 class TestSuite:
     name: str
@@ -22,6 +13,8 @@ class TestSuite:
     max_times: Dict[Tutorial, list] = field(default_factory=dict)
     max_time_windows: Dict[Tutorial, list] = field(default_factory=dict)
     timeouts: Dict[Tutorial, List] = field(default_factory=dict)
+    tolerances: Dict[Tutorial, list] = field(default_factory=dict)
+    skip_compares: Dict[Tutorial, list] = field(default_factory=dict)
     run_befores: Dict[Tutorial, List] = field(default_factory=dict)
     run_afters: Dict[Tutorial, List] = field(default_factory=dict)
 
@@ -65,6 +58,8 @@ class TestSuites(list):
                 max_times_of_tutorial = {}
                 max_time_windows_of_tutorial = {}
                 timeouts_of_tutorial = {}
+                tolerances_of_tutorial = {}
+                skip_compares_of_tutorial = {}
                 run_befores_of_tutorial = {}
                 run_afters_of_tutorial = {}
                 # iterate over tutorials:
@@ -79,6 +74,8 @@ class TestSuites(list):
                         max_times_of_tutorial[tutorial] = []
                         max_time_windows_of_tutorial[tutorial] = []
                         timeouts_of_tutorial[tutorial] = []
+                        tolerances_of_tutorial[tutorial] = []
+                        skip_compares_of_tutorial[tutorial] = []
                         run_befores_of_tutorial[tutorial] = []
                         run_afters_of_tutorial[tutorial] = []
 
@@ -106,12 +103,37 @@ class TestSuites(list):
                                 f"(value: {timeout_value}) in tutorial '{tutorial}'."
                             )
                         timeouts_of_tutorial[tutorial].append(timeout_value)
+
+                        tolerance_value = tutorial_case.get('tolerance', None)
+                        if tolerance_value is not None:
+                            if isinstance(tolerance_value, str):
+                                try:
+                                    tolerance_value = float(tolerance_value)
+                                except ValueError as exc:
+                                    raise ValueError(
+                                        f"tolerance must be a positive number, got {tolerance_value!r}") from exc
+                            if not isinstance(tolerance_value, (int, float)) or tolerance_value <= 0:
+                                raise ValueError(
+                                    f"tolerance must be a positive number, got {tolerance_value!r}")
+                        tolerances_of_tutorial[tutorial].append(tolerance_value)
+
+                        skip_compare_value = tutorial_case.get('skip_compare', None)
+                        if skip_compare_value is not None and not isinstance(skip_compare_value, bool):
+                            raise TypeError(
+                                f"Expected 'skip_compare' to be a boolean or None, but got "
+                                f"{type(skip_compare_value).__name__} (value: {skip_compare_value}) "
+                                f"in tutorial '{tutorial}'."
+                            )
+                        skip_compares_of_tutorial[tutorial].append(skip_compare_value)
+
+                        run_before_raw = tutorial_case.get('run-before', None)
+                        run_after_raw = tutorial_case.get('run-after', None)
                         run_befores_of_tutorial[tutorial].append(
-                            _validate_hook_command(
-                                'run-before', tutorial_case.get('run-before', None), tutorial))
+                            run_before_raw.strip()
+                            if isinstance(run_before_raw, str) and run_before_raw.strip() else None)
                         run_afters_of_tutorial[tutorial].append(
-                            _validate_hook_command(
-                                'run-after', tutorial_case.get('run-after', None), tutorial))
+                            run_after_raw.strip()
+                            if isinstance(run_after_raw, str) and run_after_raw.strip() else None)
                     else:
                         raise Exception(
                             f"Could not find the case combination {tutorial_case['case_combination']} in the current metadata of tutorial {tutorial.name}, or it does not define all necessary participants.")
@@ -123,6 +145,8 @@ class TestSuites(list):
                     max_times_of_tutorial,
                     max_time_windows_of_tutorial,
                     timeouts_of_tutorial,
+                    tolerances_of_tutorial,
+                    skip_compares_of_tutorial,
                     run_befores_of_tutorial,
                     run_afters_of_tutorial,
                 ))

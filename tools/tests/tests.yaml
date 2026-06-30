@@ -37,6 +37,13 @@ test_suites:
           - transport-nutils
         max_time: 0.1
         reference_result: ./channel-transport/reference-results/fluid-openfoam_transport-nutils.tar.gz
+      - &channel-transport_fluid-openfoam_transport-openfoam
+        path: channel-transport
+        case_combination:
+          - fluid-openfoam
+          - transport-openfoam
+        max_time: 0.5
+        reference_result: ./channel-transport/reference-results/fluid-openfoam_transport-openfoam.tar.gz
 
   channel-transport-reaction:
     tutorials:
@@ -114,7 +121,9 @@ test_suites:
           - fluid-openfoam
           - solid-fenics
         max_time_windows: 1
-        reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-fenics.tar.gz # Too small values, expected to fail the comparisons.
+        tolerance: 1e-2    # Some values are too close to zero
+        skip_compare: true # Comparison takes too
+        reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-fenics.tar.gz
 
   flow-around-controlled-moving-cylinder:
     tutorials:
@@ -268,6 +277,21 @@ test_suites:
           - fluid2-openfoam
         max_time: 0.5
         reference_result: ./partitioned-backwards-facing-step/reference-results/fluid1-openfoam_fluid2-openfoam.tar.gz
+
+  partitioned-burgers-1d:
+    tutorials:
+      - &partitioned-burgers-1d_dirichlet-scipy_neumann-scipy
+        path: partitioned-burgers-1d
+        case_combination:
+          - dirichlet-scipy
+          - neumann-scipy
+        reference_result: ./partitioned-burgers-1d/reference-results/dirichlet-scipy_neumann-scipy.tar.gz
+      - &partitioned-burgers-1d_dirichlet-scipy_neumann-surrogate
+        path: partitioned-burgers-1d
+        case_combination:
+          - dirichlet-scipy
+          - neumann-surrogate
+        reference_result: ./partitioned-burgers-1d/reference-results/dirichlet-scipy_neumann-surrogate.tar.gz
 
   partitioned-elastic-beam:
     tutorials:
@@ -488,14 +512,16 @@ test_suites:
         case_combination:
           - macro-dumux
           - micro-dumux
-        reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux.tar.gz # Too small values, expected to fail the comparisons.
+        skip_compare: true # Values too close to zero
+        reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux.tar.gz
       - &two-scale-heat-conduction_macro-nutils_micro-nutils
         path: two-scale-heat-conduction
         case_combination:
           - macro-nutils
           - micro-nutils
         max_time: 0.05
-        reference_result: ./two-scale-heat-conduction/reference-results/macro-nutils_micro-nutils.tar.gz # Too small values, expected to fail the comparisons.
+        skip_compare: true # Values too close to zero
+        reference_result: ./two-scale-heat-conduction/reference-results/macro-nutils_micro-nutils.tar.gz
 
   volume-coupled-diffusion:
     tutorials:
@@ -546,6 +572,7 @@ test_suites:
     tutorials:
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
+      - *channel-transport_fluid-openfoam_transport-openfoam
       - *channel-transport-reaction_fluid-fenics_chemical-fenics
       - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
       - *channel-transport-particles_fluid-nutils_particles-mercurydpm
@@ -555,6 +582,7 @@ test_suites:
       - *elastic-tube-1d_fluid-fortran-module_solid-fortran-module
       - *elastic-tube-1d_fluid-python_solid-python
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
+      - *elastic-tube-3d_fluid-openfoam_solid-fenics
       - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-fenicsx
@@ -572,6 +600,8 @@ test_suites:
       - *oscillator_mass-left-python_mass-right-python
       - *oscillator-overlap_mass-left-python_mass-right-python
       - *partitioned-backwards-facing-step_fluid1-openfoam_fluid2-openfoam
+      - *partitioned-burgers-1d_dirichlet-scipy_neumann-scipy
+      - *partitioned-burgers-1d_dirichlet-scipy_neumann-surrogate
       - *partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
       - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction_dirichlet-fenicsx_neumann-fenicsx
@@ -593,6 +623,7 @@ test_suites:
       - *quickstart_openfoam_cpp
       - *resonant-circuit_capacitor-python_coil-python
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux
       - *volume-coupled-diffusion_source-fenics_drain-fenics
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
@@ -606,11 +637,7 @@ test_suites:
       - *perpendicular-flap_fluid-nutils_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-nutils
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
-
-  expected-to-fail:
-    tutorials:
-      - *elastic-tube-3d_fluid-openfoam_solid-fenics # too small values to compare
-      - *two-scale-heat-conduction_macro-dumux_micro-dumux # too small values to compare
+      - *two-scale-heat-conduction_macro-nutils_micro-nutils
 
   # A selection of tests that cover a wide range of main features, meant for quicker CI executions
   precice:
@@ -648,6 +675,7 @@ test_suites:
   fenics-adapter:
     tutorials:
       - *channel-transport-reaction_fluid-fenics_chemical-fenics
+      - *elastic-tube-3d_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction-complex_dirichlet-fenics_neumann-fenics
@@ -655,9 +683,6 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-su2_solid-fenics
       - *volume-coupled-diffusion_source-fenics_drain-fenics
-
-      # Excluded:
-      # *elastic-tube-3d_fluid-openfoam_solid-fenics # too small values to compare
 
   fenicsx-adapter:
     tutorials:
@@ -680,8 +705,8 @@ test_suites:
 
   micro-manager:
     tutorials:
-      - *two-scale-heat-conduction_macro-dumux_micro-dumux # too small values to compare
-      - *two-scale-heat-conduction_macro-nutils_micro-nutils # too small values to compare
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux
+      - *two-scale-heat-conduction_macro-nutils_micro-nutils
 
   nutils-adapter: # Not a repository
     tutorials:
@@ -694,18 +719,18 @@ test_suites:
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
       - *perpendicular-flap_fluid-nutils_solid-calculix
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
+      - *two-scale-heat-conduction_macro-nutils_micro-nutils
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
-
-      # Excluded:
-      # *two-scale-heat-conduction_macro-nutils_micro-nutils # too small values to compare
 
   openfoam-adapter:
     tutorials:
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
+      - *channel-transport_fluid-openfoam_transport-openfoam
       - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
+      - *elastic-tube-3d_fluid-openfoam_solid-fenics
       - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
@@ -731,9 +756,6 @@ test_suites:
       - *quickstart_openfoam_cpp
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
-
-      # Excluded:
-      # *elastic-tube-3d_fluid-openfoam_solid-fenics # too small values to compare
 
   su2-adapter:
     tutorials:
