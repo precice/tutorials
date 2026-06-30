@@ -314,20 +314,37 @@ class Systemtest:
         except Exception as exc:
             raise KeyError("Please specify a PLATFORM argument") from exc
 
+        # Use an absolute path here only for validation that the requested
+        # dockerfile context exists on the machine running the system tests.
         self.dockerfile_context = PRECICE_TESTS_DIR / "dockerfiles" / Path(plaform_requested)
         if not self.dockerfile_context.exists():
             raise ValueError(
                 f"The path {self.dockerfile_context.resolve()} resulting from argument PLATFORM={plaform_requested} could not be found in the system")
 
         def render_service_template_per_case(case: Case, params_to_use: Dict[str, str]) -> str:
+            # Inside the individual system test directory (`self.system_test_dir`)
+            # we copy a full `tools/` tree into the parent run directory
+            # (see __copy_tools). From the point of view of the system test
+            # directory we therefore need to go one level up to reach the
+            # shared `tools/` folder:
+            #   <run_directory>/tools/tests/dockerfiles/<PLATFORM>
+            #   ^-------------^ parent of self.system_test_dir
+            dockerfile_context_relative = (
+                Path("..") / "tools" / "tests" / "dockerfiles" / Path(plaform_requested)
+            )
+
             render_dict = {
-                'run_directory': self.run_directory.resolve(),
+                # Use a relative path to the *parent* run directory so that
+                # containers still see /runs/<tutorial_folder> like before,
+                # while keeping the compose file independent of the CI
+                # runner's absolute paths.
+                'run_directory': "..",
                 'tutorial_folder': self.tutorial_folder,
                 'build_arguments': params_to_use,
                 'params': params_to_use,
                 'case_folder': case.path,
                 'run': case.run_cmd,
-                'dockerfile_context': self.dockerfile_context,
+                'dockerfile_context': dockerfile_context_relative,
             }
             jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
             template = jinja_env.get_template(case.component.template)
@@ -342,12 +359,20 @@ class Systemtest:
     def __get_docker_compose_file(self):
         rendered_services = self.__get_docker_services()
         render_dict = {
-            'run_directory': self.run_directory.resolve(),
+            # See __get_docker_services: keep the docker-compose file
+            # portable by referring to the parent run directory only.
+            'run_directory': "..",
             'tutorial_folder': self.tutorial_folder,
             'tutorial': self.tutorial.path.name,
             'services': rendered_services,
             'build_arguments': self.params_to_use,
-            'dockerfile_context': self.dockerfile_context,
+            # The dockerfile_context value inside the templates is only
+            # used as a build context path and does not need to be
+            # absolute – it will be resolved relative to the system test
+            # directory.
+            'dockerfile_context': (
+                Path("..") / "tools" / "tests" / "dockerfiles" / Path(self.params_to_use.get("PLATFORM"))
+            ),
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
         }
         jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
@@ -356,7 +381,10 @@ class Systemtest:
 
     def __get_field_compare_compose_file(self):
         render_dict = {
-            'run_directory': self.run_directory.resolve(),
+            # Fieldcompare should also use only relative paths from inside
+            # the system test directory so that the run directory can be
+            # moved and re-executed elsewhere.
+            'run_directory': "..",
             'tutorial_folder': self.tutorial_folder,
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
             'reference_output_folder': PRECICE_REL_REFERENCE_DIR + "/" + self.reference_result.path.name.replace(".tar.gz", ""),
@@ -740,6 +768,20 @@ class Systemtest:
                 self,
             )
 
+    def __copy_rerun_system_test_script(self) -> None:
+        """Copy tools/tests/rerun-system-test.sh into the run directory for artifact replay."""
+        rerun_src = PRECICE_TESTS_DIR / "rerun-system-test.sh"
+        if not rerun_src.is_file():
+            raise FileNotFoundError(
+                f"Missing {rerun_src}. It is required for portable CI artifact replay.")
+        rerun_dst = self.system_test_dir / "rerun-system-test.sh"
+        shutil.copy2(rerun_src, rerun_dst)
+        try:
+            rerun_dst.chmod(rerun_dst.stat().st_mode | 0o111)
+        except Exception:
+            logging.debug(
+                f"Could not mark {rerun_dst} as executable; continuing anyway.")
+
     @staticmethod
     def _sha256_file(path: Path) -> str:
         """Compute SHA-256 hex digest of a file."""
@@ -880,8 +922,15 @@ class Systemtest:
             f"Using build timeout {self.build_timeout}s for {self}")
         time_start = time.perf_counter()
         docker_compose_content = self.__get_docker_compose_file()
-        with open(self.system_test_dir / "docker-compose.tutorial.yaml", 'w') as file:
+        docker_compose_path = self.system_test_dir / "docker-compose.tutorial.yaml"
+        with open(docker_compose_path, 'w') as file:
             file.write(docker_compose_content)
+
+        field_compare_compose_path = self.system_test_dir / "docker-compose.field_compare.yaml"
+        with open(field_compare_compose_path, 'w') as file:
+            file.write(self.__get_field_compare_compose_file())
+
+        self.__copy_rerun_system_test_script()
 
         exit_code, stdout_data, stderr_data = self._run_docker_compose_subprocess(
             [
