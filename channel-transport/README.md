@@ -45,6 +45,8 @@ Transport participant:
 
 * Nutils with support for [adaptive mesh refinement](https://precice.org/couple-your-code-moving-or-changing-meshes.html#pseudo-reference-domain). For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This solver requires a preCICE release with [remeshing support](couple-your-code-moving-or-changing-meshes.html#remeshing-using-precice).
 
+* OpenFOAM. This case uses a modified version of scalarTransportFoam, which recomputes `phi` after the preCICE adapter reads the velocity field. Find it in the `solver-openfoam` folder. Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
+
 ## Running the simulation
 
 For the fluid solver, use Nutils for ease of installation and OpenFOAM for speed.

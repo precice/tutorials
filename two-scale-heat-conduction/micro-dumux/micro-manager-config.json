@@ -1,5 +1,5 @@
 {
-    "micro_file_name": "micro_sim",
+    "micro_file_names": ["micro_sim"],
     "coupling_params": {
             "participant_name": "Micro-Manager",
             "precice_config_file_name": "../precice-config.xml",
