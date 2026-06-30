@@ -1,6 +1,8 @@
 ---
 title: preCICE system tests
 permalink: dev-docs-system-tests.html
+aliases:
+  - /dev-docs-system-tests.html
 sidebar: docs_sidebar
 keywords: pages, development, tests
 summary: "Test complete simulations combining preCICE components of specific versions."
@@ -155,6 +157,12 @@ Tests and test suites are defined in [`tests.yaml`](https://github.com/precice/t
 The available cases are listed in the `metadata.yaml` of each tutorial. To add a new tutorial case as a test, add it to `metadata.yaml` and then define a test using it. Include that test in the relevant test suites.
 
 Use the `max_time` or `max_time_windows` parameters to restrict the runtime of the test to the first few coupling time windows, to save time. Aim for a runtime of less than a minute (assuming cached components), if possible.
+
+Some tutorials require setup before the simulation (e.g. switching configuration files). Use optional `run-before` and `run-after` fields in `tests.yaml` to run shell commands in the copied tutorial directory after copying and before Docker build (`run-before`), or after the simulation and before field comparison (`run-after`). Example:
+
+```yaml
+run-before: ./set-case.sh 1d3d
+```
 
 You will need to define a reference results file. The reference results can and should be generated on GitHub using the [Generate reference results (manual)](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) workflow for the respective test suite. You might want to temporarily set the `selected` test suite for requesting results only for a subset of test cases.
 

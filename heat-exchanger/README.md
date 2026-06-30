@@ -1,6 +1,8 @@
 ---
 title: Heat exchanger
 permalink: tutorials-heat-exchanger.html
+aliases:
+  - /tutorials-heat-exchanger.html
 keywords: CHT, OpenFOAM, CalculiX
 summary: Tutorial for a shell-and-tube heat exchanger, using OpenFOAM and CalculiX
 ---

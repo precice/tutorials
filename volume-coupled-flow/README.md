@@ -1,6 +1,8 @@
 ---
 title: Volume-coupled flow
 permalink: tutorials-volume-coupled-flow.html
+aliases:
+  - /tutorials-volume-coupled-flow.html
 keywords: volume coupling, OpenFOAM, source terms
 summary: A dummy source participant is coupled to a fluid in a uni-directional way over a region of the domain. The coupling enforces source terms on that region.
 ---

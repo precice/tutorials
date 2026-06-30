@@ -1,6 +1,8 @@
 ---
 title: Flow around controlled moving cylinder
 permalink: tutorials-flow-around-controlled-moving-cylinder.html
+aliases:
+  - /tutorials-flow-around-controlled-moving-cylinder.html
 keywords: FMI, FSI, OpenFOAM, controller, multi coupling, PID
 summary: Flow around a rigid moving cylinder. A FMI-based controller is used to dampen out the oscillation.
 ---

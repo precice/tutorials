@@ -1,6 +1,8 @@
 ---
 title: Partitioned flow over a backwards facing step
 permalink: tutorials-partitioned-backwards-facing-step.html
+aliases:
+  - /tutorials-partitioned-backwards-facing-step.html
 keywords: tutorial, FF, fluid-fluid coupling, OpenFOAM, pimpleFoam, inlet-outlet
 summary: This tutorial describes how to run a partitioned fluid simulation using the preCICE OpenFOAM adapter with its custom boundary conditions.
 ---
