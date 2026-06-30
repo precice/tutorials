@@ -13,20 +13,20 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 ## Setup
 
-We solve the 1D viscous Burgers' equation on the domain $[0,2]$:
+We solve the 1D viscous Burgers' equation on the domain $$[0,2]$$:
 
 $$
 \frac{\partial u}{\partial t} = \nu \frac{\partial^2 u}{\partial x^2} - u \frac{\partial u}{\partial x},
 $$
 
-where $u(x,t)$ is the scalar velocity field and $\nu$ is the viscosity. In this tutorial by default $\nu$ is very small ($10^{-12}$), but can be changed in the solver.
+where $$u(x,t)$$ is the scalar velocity field and $$\nu$$ is the viscosity. In this tutorial by default $$\nu$$ is very small ($$10^{-12}$$), but can be changed in the solver.
 
-The domain is partitioned into participants at $x=1$:
+The domain is partitioned into participants at $$x=1$$:
 
-- **Dirichlet**: Solves the left half $[0,1]$ and receives Dirichlet boundary conditions at the interface.
-- **Neumann**: Solves the right half $[1,2]$ and receives Neumann boundary conditions at the interface.
+- **Dirichlet**: Solves the left half $$[0,1]$$ and receives Dirichlet boundary conditions at the interface.
+- **Neumann**: Solves the right half $$[1,2]$$ and receives Neumann boundary conditions at the interface.
 
-Both outer boundaries use zero-gradient conditions $\frac{\partial u}{\partial x} = 0$. The problem can be solved for different initial conditions of superimposed sine waves, which can be generated using the provided script `utils/generate_ic.py`.
+Both outer boundaries use zero-gradient conditions $$\frac{\partial u}{\partial x} = 0$$. The problem can be solved for different initial conditions of superimposed sine waves, which can be generated using the provided script `utils/generate_ic.py`.
 
 ![Domain Diagram](images/tutorials-partitioned-burgers-1d-full-domain-diagram.png)
 Diagram of the partitioned domain with an example initial condition.
@@ -48,7 +48,7 @@ The conservative formulation of the Burgers' equation is implemented in the SciP
 
 Two pre-trained model checkpoints are provided in `neumann-surrogate/`, differing in how many unroll timesteps were used during the Backpropagation Through Time (BPTT) training phase. The two checkpoints, `CNN_RES_UNROLL_1.pth` and `CNN_RES_UNROLL_7.pth`, were trained, respectively, with a single-step prediction (rollout length 1) and a 7-step rollout, which improves stability over long autoregressive predictions. The checkpoint can be selected by changing `MODEL_NAME` in `neumann-surrogate/config.py`.
 
-The full training pipeline is available in a separate development repository: [github.com/vidulejs/neural-adapter](https://github.com/vidulejs/neural-adapter).
+The full training pipeline [1] is available in a [separate repository](https://github.com/vidulejs/neural-adapter).
 
 {% note %}
 The surrogate participant requires PyTorch and related dependencies. By default, the CPU version is installed. If you wish to use the GPU version, see the comment in `neumann-surrogate/requirements.txt`. The GPU version requires several gigabytes of disk space (~6.2Gb).
@@ -120,11 +120,11 @@ The final argument defines the coupling time step to plot (here, `10`). It can r
 
 The script will produce the following output files in the `output/` directory:
 
-- `full-domain-timestep-slice.png`: Solution $u$ at the selected timestep
+- `full-domain-timestep-slice.png`: Solution $$u$$ at the selected timestep
 
 ![Full Domain Timestep Slice](images/tutorials-partitioned-burgers-1d-full-domain-timestep-slice.png)
 
-- `gradient-timestep-slice.png`: Gradient $du/dx$ at the selected timestep
+- `gradient-timestep-slice.png`: Gradient $$du/dx$$ at the selected timestep
 
 - `full-domain-evolution.png`: Time evolution of the solution
 
@@ -132,4 +132,4 @@ The script will produce the following output files in the `output/` directory:
 
 ## References
 
-Dagis Daniels Vidulejs. "Coupling Neural Surrogates with Traditional Solvers using preCICE." Master's thesis, Technical University of Munich, 2025.
+[1] Dagis Daniels Vidulejs. "Coupling Neural Surrogates with Traditional Solvers using preCICE." Master's thesis, Technical University of Munich, 2025.

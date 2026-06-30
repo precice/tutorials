@@ -27,7 +27,7 @@ The available test suites are found in [`tests.yaml`](https://github.com/precice
 - `precice` is a subset of cases that cover a range of preCICE features
 - `release` is for all available but some very long or known to fail tests
 - `extra` is for some longer tests
-- `expected-to-fail`, `selected`, and `system-tests-dev` for some special cases
+- `selected` and `system-tests-dev` for some special cases
 
 The `Use workflow from` is a default option of GitHub Actions that concerns the GHA workflow file itself.
 
@@ -96,8 +96,9 @@ In addition, in the directories of the cases executed, you can find `system-test
 When the tests fail at the results comparison step, this typically means that there are numerical regressions (unless something wrong went undetected in a previous step). We use [fieldcompare](https://gitlab.com/dglaeser/fieldcompare) to compare all [preCICE exports](https://precice.org/configuration-export.html) to reference results generated from a previous run. Relevant files:
 
 - `precice-exports/`: The coupling meshes of the test run.
-- `reference-results/`: The coupling meshes of the reference run, as stored on Git LFS, expanded into `reference-results-unpacked`.
+- `reference-results/`: The coupling meshes of the reference run, as stored on Git LFS, expanded into `reference-results-unpacked`. For test cases using implicit coupling, the reference `.tar.gz` also contains the reference `precice-*-iterations.log` files.
 - `diff-results/`: Numerical difference of the results in the two directories (computed with `fieldcompare dir --diff precice-exports/ reference/`). These are only present on failed comparisons.
+- `iterations-logs/`: The `precice-*-iterations.log` files of the test run. Only present in test cases using implicit coupling. The comparisons to references only take into account the file SHA-256 checksums.
 
 To reproduce the comparison locally, use the [same fieldcompare command](https://github.com/precice/tutorials/blob/develop/tools/tests/docker-compose.field_compare.template.yaml):
 
@@ -107,6 +108,8 @@ fieldcompare dir precice-exports/ reference-results-unpacked/<case>/ \
              --ignore-unsupported-file-formats \
              -rtol 3e-7
 ```
+
+The default relative tolerance (`-rtol`) is `3e-7`. Per-test overrides are possible in `tests.yaml` (e.g., `tolerance: 1e-2`). Set `skip_compare: true` to skip the comparison step and only verify that the build and run steps succeed.
 
 The differences are only shown per file, and there is no global metric or other summary (see [related discussion in fieldcompare](https://gitlab.com/dglaeser/fieldcompare/-/work_items/69)).
 
@@ -331,8 +334,12 @@ This template defines:
 
 ### Timeouts
 
-A `GLOBAL_TIMEOUT` is used for all operations. Its default value is 600s (5min), it is set in the beginning of [`Systemtests.py`](https://github.com/precice/tutorials/blob/develop/tools/tests/systemtests/Systemtest.py), and it can be overridden via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable.
+The build and the run/compare steps use separate timeouts.
 
-Tests can define a different `timeout` in their `tests.yaml` entry, which applies to the running and results comparison steps.
+**Build:** Each component in `components.yaml` may set a `build_timeout` (default: 480s (8min)). The build step runs `docker compose build` once for all participant images, with one wall-clock subprocess timeout. That limit is the maximum `build_timeout` among the distinct components of the test (so that the slowest component is not cut off too early). You can override the default via the `PRECICE_SYSTEMTESTS_BUILD_TIMEOUT` environment variable.
+
+**Run and compare:** Each test in `tests.yaml` may set a `timeout` (default: 180s (3min)), which applies to the running and results comparison steps only. You can override the default via the `PRECICE_SYSTEMTESTS_TIMEOUT` environment variable.
+
+Tests can define a different `tolerance` in their `tests.yaml` entry, which applies to the fieldcompare step (relative tolerance, `-rtol`). The default is `3e-7`. Use `skip_compare: true` to skip fieldcompare entirely.
 
 </details>
