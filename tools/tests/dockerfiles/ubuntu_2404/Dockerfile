@@ -148,9 +148,13 @@ RUN add-apt-repository -y ppa:fenics-packages/fenics && \
 USER precice
 ARG FENICSX_ADAPTER_REF
 # Building fenicsx-adapter
-RUN python3 -m venv --system-site-packages /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
-    pip3 install git+https://github.com/precice/fenicsx-adapter.git@${FENICSX_ADAPTER_REF}
+# Uninstall the venv's pip-installed mpi4py afterwards: FEniCS/PETSc were
+# compiled against the system mpi4py, and the venv's mpi4py (a transitive
+# dependency of fenicsprecice) causes a binary incompatibility
+# (ValueError: mpi4py.MPI.Op size changed...). Removing it lets Python fall
+# through to the system mpi4py on sys.path, while pyprecice stays in the venv.
+RUN pip3 install git+https://github.com/precice/fenicsx-adapter.git@${FENICSX_ADAPTER_REF} && \
+    pip3 uninstall -y mpi4py
 
 FROM python_bindings AS nutils_adapter
 USER root
