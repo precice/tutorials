@@ -139,7 +139,7 @@ ARG FENICS_ADAPTER_REF
 RUN pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF} && \
     pip3 uninstall -y mpi4py
 
-FROM precice_dependecies AS fenicsx_adapter
+FROM python_bindings AS fenicsx_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
 USER root
 RUN add-apt-repository -y ppa:fenics-packages/fenics && \
