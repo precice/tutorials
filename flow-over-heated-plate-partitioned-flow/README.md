@@ -1,6 +1,8 @@
 ---
 title: Flow over heated plate with partitioned flow
 permalink: tutorials-flow-over-heated-plate-partitioned-flow.html
+aliases:
+  - /tutorials-flow-over-heated-plate-partitioned-flow.html
 keywords: tutorial, CHT, conjugate-heat transfer, OpenFOAM, FF, flow partitioning
 summary: This tutorial describes how to run a conjugate heat transfer coupled simulation using preCICE and any fluid-solid solver combination of our <a href="adapters-overview.html">officially provided adapter codes</a>.
 ---

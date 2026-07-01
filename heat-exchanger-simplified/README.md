@@ -1,6 +1,8 @@
 ---
 title: Heat exchanger (simplified)
 permalink: tutorials-heat-exchanger-simplified.html
+aliases:
+  - /tutorials-heat-exchanger-simplified.html
 keywords: tutorial, CHT, conjugate-heat transfer, OpenFOAM, CalculiX, multi-coupling
 summary: This tutorial describes how to run a conjugate heat transfer simulation with three participants, with CalculiX as solid solver and Dirichlet-Neumann coupling.
 ---

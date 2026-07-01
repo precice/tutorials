@@ -1,6 +1,8 @@
 ---
 title: Turek Hron FSI3
 permalink: tutorials-turek-hron-fsi3.html
+aliases:
+  - /tutorials-turek-hron-fsi3.html
 keywords: OpenFOAM, deal.II, Nutils, verification
 summary: The Turek-Hron FSI cases are well-established numerical benchmarks and, therefore, well suited for verification of preCICE itself and the used adapters. In this tutorial, we focus on the FSI3 case, which presents the most challenging case in terms of added mass. Please note that the meshes of this case are significantly finer than for other tutorials. Running the simulation might take a few hours. We do not recommend to run this tutorials as your first preCICE tutorial.
 ---

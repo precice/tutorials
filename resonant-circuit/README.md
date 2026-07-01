@@ -1,6 +1,8 @@
 ---
 title: Resonant circuit
 permalink: tutorials-resonant-circuit.html
+aliases:
+  - /tutorials-resonant-circuit.html
 keywords: MATLAB, Python, Julia
 summary: We simulate a two-element LC circuit (one inductor and one capacitor).
 ---

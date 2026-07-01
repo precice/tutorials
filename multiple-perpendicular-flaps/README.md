@@ -1,6 +1,8 @@
 ---
 title: Multiple perpendicular flaps
 permalink: tutorials-multiple-perpendicular-flaps.html
+aliases:
+  - /tutorials-multiple-perpendicular-flaps.html
 keywords: multi-coupling, OpenFOAM, deal.II, FSI
 summary: In this case, a fluid and two solids are coupled together using a fully-implicit multi-coupling scheme.
 ---

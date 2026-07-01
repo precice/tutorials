@@ -1,6 +1,8 @@
 ---
 title: preCICE system tests
 permalink: dev-docs-system-tests.html
+aliases:
+  - /dev-docs-system-tests.html
 sidebar: docs_sidebar
 keywords: pages, development, tests
 summary: "Test complete simulations combining preCICE components of specific versions."
@@ -113,6 +115,39 @@ The differences are only shown per file, and there is no global metric or other 
 
 Alternatively, [visualize the `precice-exports/diff_*.vtu` in ParaView](https://precice.org/configuration-export.html#visualization-with-paraview).
 
+### Re-running from CI artifacts
+
+When a system test fails in CI, download the **full** artifact:
+
+`system_tests_run_<run_id>_<run_attempt>_full`
+
+(a smaller `_logs` archive contains only log files). The archive contains a shared `runs/` directory:
+
+```text
+runs/
+├── tools/                              # Dockerfiles and helpers (shared)
+└── <tutorial>_<cases>_<timestamp>/     # one folder per system test
+    ├── docker-compose.tutorial.yaml
+    ├── docker-compose.field_compare.yaml   # written at build time when compare is configured
+    ├── rerun-system-test.sh
+    ├── system-tests-build.log
+    ├── system-tests-run.log
+    ├── system-tests-compare.log
+    └── …
+```
+
+To re-run one test locally:
+
+1. Extract the zip and keep the `runs/` layout (the test folder needs the sibling `tools/` directory).
+2. `cd` into the test folder.
+3. Run `./rerun-system-test.sh` (or `sh rerun-system-test.sh`).
+
+The script rebuilds images, runs the tutorial, and (if present) runs fieldcompare with `--exit-code-from field-compare`, matching the Python runner. Compose paths are relative to the test folder (`..` is the parent `runs/` directory), so you can move the extracted tree elsewhere on a Linux host with Docker.
+
+`docker-compose.field_compare.yaml` is written when the test is prepared for Docker build. The replay script fixes common permission issues from extracted archives.
+
+Fieldcompare requires reference results in the artifact. If not already unpacked during the original CI run, unpack them manually first.
+
 ## Extending
 
 ### Adding new tests
@@ -122,6 +157,12 @@ Tests and test suites are defined in [`tests.yaml`](https://github.com/precice/t
 The available cases are listed in the `metadata.yaml` of each tutorial. To add a new tutorial case as a test, add it to `metadata.yaml` and then define a test using it. Include that test in the relevant test suites.
 
 Use the `max_time` or `max_time_windows` parameters to restrict the runtime of the test to the first few coupling time windows, to save time. Aim for a runtime of less than a minute (assuming cached components), if possible.
+
+Some tutorials require setup before the simulation (e.g. switching configuration files). Use optional `run-before` and `run-after` fields in `tests.yaml` to run shell commands in the copied tutorial directory after copying and before Docker build (`run-before`), or after the simulation and before field comparison (`run-after`). Example:
+
+```yaml
+run-before: ./set-case.sh 1d3d
+```
 
 You will need to define a reference results file. The reference results can and should be generated on GitHub using the [Generate reference results (manual)](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) workflow for the respective test suite. You might want to temporarily set the `selected` test suite for requesting results only for a subset of test cases.
 
@@ -236,6 +277,7 @@ User-facing tools:
   - `print_case_combinations.py`: Prints all possible combinations of tutorial cases, using the `metadata.yaml` files.
   - `build_docker_images.py`: Build the Docker images for each test
   - `generate_reference_results.py`: Executes the system tests with the versions defined in `reference_versions.yaml` and generates the reference data archives, with the names described in `tests.yaml`. (should only be used by the CI Pipeline)
+  - `rerun-system-test.sh`: Helper script copied into each run directory so CI artifacts can be replayed locally.
 
 Implementation scripts:
 
