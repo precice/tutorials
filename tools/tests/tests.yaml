@@ -566,6 +566,36 @@ test_suites:
         reference_result: ./wolf-sheep-soil-creep/reference-results/soil-creep-landlab_wolf-sheep-grass-mesa.tar.gz
 
 #####################################################################
+## Externally-hosted test cases
+  partitioned-heat-conduction-robin:
+    external:
+      - &partitioned-heat-conduction-robin_lrft-openfoam_right-openfoam
+        source:
+          type: git
+          url: https://github.com/vidulejs/tutorials.git
+          ref: partitioned-heat-conduction-mixed-robin
+          subdir: .
+        path: partitioned-heat-conduction-robin
+        case_combination:
+          - left-openfoam
+          - right-openfoam
+        skip_compare: true
+        reference_result: ./partitioned-heat-conduction-robin/reference_results/left-openfoam_right-openfoam.tar.gz
+      - &partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
+        source:
+          type: git
+          url: https://github.com/vidulejs/tutorials.git
+          ref: partitioned-heat-conduction-mixed-robin
+          subdir: .
+        path: partitioned-heat-conduction-mixedbc
+        case_combination:
+          - left-openfoam
+          - right-openfoam
+        skip_compare: true
+        reference_result: ./partitioned-heat-conduction-mixedbc/reference_results/left-openfoam_right-openfoam.tar.gz
+
+
+#####################################################################
 ## Test suites referring to the test suites defined above
 
   release:
@@ -628,6 +658,9 @@ test_suites:
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
       - *wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
+    external:
+      - *partitioned-heat-conduction-robin_lrft-openfoam_right-openfoam
+      - *partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
 
   # These tests take longer to run. They are available, but not regularly executed.
   extra:
@@ -638,6 +671,11 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-nutils
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
       - *two-scale-heat-conduction_macro-nutils_micro-nutils
+
+  external:
+    external:
+      - *partitioned-heat-conduction-robin_lrft-openfoam_right-openfoam
+      - *partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
 
   # A selection of tests that cover a wide range of main features, meant for quicker CI executions
   precice:
@@ -770,28 +808,3 @@ test_suites:
   selected:
     tutorials:
       - *elastic-tube-1d_fluid-python_solid-python
-
-  external:
-    external:
-      - source:
-          type: git
-          url: https://github.com/vidulejs/tutorials.git
-          ref: partitioned-heat-conduction-mixed-robin
-          subdir: .
-        path: partitioned-heat-conduction-robin
-        case_combination:
-          - left-openfoam
-          - right-openfoam
-        skip_compare: true
-        reference_result: ./partitioned-heat-conduction-robin/reference_results/left-openfoam_right-openfoam.tar.gz
-      - source:
-          type: git
-          url: https://github.com/vidulejs/tutorials.git
-          ref: partitioned-heat-conduction-mixed-robin
-          subdir: .
-        path: partitioned-heat-conduction-mixedbc
-        case_combination:
-          - left-openfoam
-          - right-openfoam
-        skip_compare: true
-        reference_result: ./partitioned-heat-conduction-mixedbc/reference_results/left-openfoam_right-openfoam.tar.gz
