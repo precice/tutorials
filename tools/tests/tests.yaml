@@ -583,7 +583,7 @@ test_suites:
         reference_result: ./partitioned-heat-conduction-robin/reference_results/left-openfoam_right-openfoam.tar.gz
       - &partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
         source:
-          type: zip
+          type: archive
           url: https://github.com/vidulejs/tutorials/archive/refs/heads/partitioned-heat-conduction-mixed-robin.zip
           subdir: tutorials-partitioned-heat-conduction-mixed-robin
         path: partitioned-heat-conduction-mixedbc
