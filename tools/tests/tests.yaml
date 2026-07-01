@@ -582,6 +582,9 @@ test_suites:
         timeout: 480
         skip_compare: true
         reference_result: ./partitioned-heat-conduction-robin/reference_results/left-openfoam_right-openfoam.tar.gz
+    
+  partitioned-heat-conduction-mixedbc:
+    external:
       - &partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
         source:
           type: archive
