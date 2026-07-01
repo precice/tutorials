@@ -1,6 +1,8 @@
 ---
 title: Quickstart
 permalink: quickstart.html
+aliases:
+  - /quickstart.html
 keywords: tutorial, quickstart
 summary: "Install preCICE on Linux (e.g. via a Debian package) and couple an OpenFOAM fluid solver (using the OpenFOAM-preCICE adapter) with an example rigid body solver in C++."
 layout: "page"
