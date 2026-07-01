@@ -172,22 +172,22 @@ The results will be added to a Git LFS, but you will need special push access: j
 
 #### External test sources
 
-Local tutorials use the `tutorials:` list. For tutorials maintained in other git repositories or archives, use an `external:` list instead (a test suite defines one or the other, not both):
+Local test cases are defined in the `tutorials:` list. For test cases maintained in other git repositories or available as archives, use the `external:` list instead (a test suite defines one or the other, not both):
 
 ```yaml
 test_suites:
-  external:
+  some-external-test-case:
     external:
       - source:
           type: git
-          url: https://github.com/vidulejs/tutorials.git
-          ref: partitioned-heat-conduction-mixed-robin
+          url: https://github.com/some-user/tutorials.git
+          ref: some-branch
           subdir: .
-        path: partitioned-heat-conduction-robin
+        path: path-to-test-case
         case_combination:
           - left-openfoam
           - right-openfoam
-        reference_result: ./partitioned-heat-conduction-robin/reference_results/left-openfoam_right-openfoam.tar.gz
+        reference_result: ./path-to-test-case/reference_results/participant-combination.tar.gz
 ```
 
 Supported `source.type` values:
@@ -195,7 +195,7 @@ Supported `source.type` values:
 - `git`: shallow-clone `url` at `ref` (cached under `~/.cache/precice-tutorials` or `PRECICE_EXTERNAL_CACHE_DIR`).
 - `archive`: download and extract a `.tar.gz` / `.zip` from `url`.
 
-The runner fetches the tutorial, copies it into the run directory, then continues with the usual Docker build/run and fieldcompare steps. `TUTORIALS_REF` / `TUTORIALS_PR` build arguments apply only to **local** tutorials; external tutorials are pinned by `source.ref`. Reference result paths are resolved relative to the fetched tutorial root.
+The runner fetches the tutorial, copies it into the run directory, and then continues with the usual Docker build/run and fieldcompare steps. `TUTORIALS_REF` / `TUTORIALS_PR` build arguments apply only to test cases sourced from the tutorials repository; external test cases are pinned by `source.ref`. Reference result paths are resolved relative to the root directory of the fetched test case.
 
 ### Adding new components
 
