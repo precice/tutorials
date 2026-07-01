@@ -6,7 +6,6 @@ import yaml
 import itertools
 from paths import PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
 
-# Import TutorialSource from systemtests.sources (used for external tutorial sources).
 from systemtests.sources import TutorialSource
 
 
@@ -286,7 +285,7 @@ class CaseCombination:
 class ReferenceResult:
     path: Path
     case_combination: CaseCombination
-    base_dir: Optional[Path] = None
+    base_dir: Path | None = None
 
     def __repr__(self) -> str:
         return f"{self.path.as_posix()}"

@@ -6,12 +6,15 @@ import hashlib
 import logging
 import os
 import shutil
+import stat
 import subprocess
 import tarfile
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
+
+# Same env var as Systemtest.GLOBAL_TIMEOUT (not imported to avoid circular deps).
+_FETCH_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 180))
 
 # Cache directory for fetched tutorials. Can be overridden via PRECICE_EXTERNAL_CACHE_DIR env.
 _DEFAULT_CACHE = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "precice-tutorials"
@@ -20,12 +23,12 @@ PRECICE_EXTERNAL_CACHE_DIR = Path(os.environ.get("PRECICE_EXTERNAL_CACHE_DIR", _
 
 @dataclass
 class TutorialSource:
-    """Describes where a tutorial is sourced from."""
+    """Describes where a test case (tutorial) is sourced from (tutorials repository or external source)."""
 
     type: str  # "local" | "git" | "archive"
-    url: Optional[str] = None
-    ref: Optional[str] = None
-    subdir: Optional[str] = None
+    url: str | None = None
+    ref: str | None = None
+    subdir: str | None = None
 
     @classmethod
     def local(cls) -> "TutorialSource":
@@ -43,7 +46,7 @@ class TutorialSource:
         )
 
 
-def _cache_key(prefix: str, url: str, ref: Optional[str] = None, subdir: Optional[str] = None) -> str:
+def _cache_key(prefix: str, url: str, ref: str | None = None, subdir: str | None = None) -> str:
     """Generate a short content-addressable cache key."""
     parts = [url]
     if ref:
@@ -54,7 +57,13 @@ def _cache_key(prefix: str, url: str, ref: Optional[str] = None, subdir: Optiona
     return hashlib.sha256(raw.encode()).hexdigest()[:16]
 
 
-def fetch_git_repo(url: str, ref: str, cache_dir: Path, subdir: Optional[str] = None) -> Path:
+def _restore_shell_script_permissions(root: Path) -> None:
+    """Restore execute bits on shell scripts (zip extraction strips them)."""
+    for script in root.rglob("*.sh"):
+        script.chmod(script.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+
+
+def fetch_git_repo(url: str, ref: str, cache_dir: Path, subdir: str | None = None) -> Path:
     """
     Clone or update a git repository and return the path to the checkout.
     If subdir is given, returns the path to that subdirectory within the repo.
@@ -69,13 +78,13 @@ def fetch_git_repo(url: str, ref: str, cache_dir: Path, subdir: Optional[str] = 
                 ["git", "-C", str(checkout), "fetch", "origin", ref, "--depth", "1"],
                 check=True,
                 capture_output=True,
-                timeout=120,
+                timeout=_FETCH_TIMEOUT,
             )
             subprocess.run(
                 ["git", "-C", str(checkout), "checkout", "FETCH_HEAD"],
                 check=True,
                 capture_output=True,
-                timeout=60,
+                timeout=_FETCH_TIMEOUT,
             )
         except subprocess.CalledProcessError as e:
             logging.warning(f"Git fetch/checkout failed for {url}, recloning: {e}")
@@ -86,47 +95,13 @@ def fetch_git_repo(url: str, ref: str, cache_dir: Path, subdir: Optional[str] = 
             ["git", "clone", "--depth", "1", "--branch", ref, url, str(checkout)],
             capture_output=True,
             text=True,
-            timeout=300,
+            timeout=_FETCH_TIMEOUT,
         )
         if result.returncode != 0:
-            # Fallback: branch may not exist (e.g. repo uses develop/master instead of main)
-            # Clone without branch, then fetch and checkout ref (with common aliases)
             shutil.rmtree(checkout, ignore_errors=True)
-            logging.debug(
-                f"git clone --branch {ref} failed ({result.stderr}), trying clone + fetch"
+            raise RuntimeError(
+                f"git clone --branch {ref!r} failed for {url}: {result.stderr}"
             )
-            subprocess.run(
-                ["git", "clone", "--depth", "1", url, str(checkout)],
-                check=True,
-                capture_output=True,
-                timeout=300,
-            )
-            refs_to_try = [ref]
-            if ref == "main":
-                refs_to_try.extend(["develop", "master"])
-            elif ref == "master":
-                refs_to_try.extend(["main", "develop"])
-            last_err = None
-            for r in refs_to_try:
-                res = subprocess.run(
-                    ["git", "-C", str(checkout), "fetch", "origin", r, "--depth", "1"],
-                    capture_output=True,
-                    text=True,
-                    timeout=120,
-                )
-                if res.returncode == 0:
-                    subprocess.run(
-                        ["git", "-C", str(checkout), "checkout", "FETCH_HEAD"],
-                        check=True,
-                        capture_output=True,
-                        timeout=60,
-                    )
-                    break
-                last_err = res.stderr
-            else:
-                raise RuntimeError(
-                    f"Could not fetch ref '{ref}' (tried {refs_to_try}): {last_err}"
-                )
 
     if subdir:
         subpath = checkout / subdir
@@ -136,7 +111,7 @@ def fetch_git_repo(url: str, ref: str, cache_dir: Path, subdir: Optional[str] = 
     return checkout
 
 
-def fetch_archive(url: str, cache_dir: Path, subdir: Optional[str] = None) -> Path:
+def fetch_archive(url: str, cache_dir: Path, subdir: str | None = None) -> Path:
     """
     Download and extract an archive (tar.gz, tar, zip) and return the path.
     """
@@ -147,6 +122,7 @@ def fetch_archive(url: str, cache_dir: Path, subdir: Optional[str] = None) -> Pa
     extract_dir = cache_dir / key
 
     if extract_dir.exists():
+        _restore_shell_script_permissions(extract_dir)
         return extract_dir / subdir if subdir else extract_dir
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".tar.gz") as tmp:
@@ -164,6 +140,7 @@ def fetch_archive(url: str, cache_dir: Path, subdir: Optional[str] = None) -> Pa
 
             with zipfile.ZipFile(tmp_path, "r") as zf:
                 zf.extractall(extract_dir)
+        _restore_shell_script_permissions(extract_dir)
     finally:
         tmp_path.unlink(missing_ok=True)
 

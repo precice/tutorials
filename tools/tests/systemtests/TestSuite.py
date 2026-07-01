@@ -80,11 +80,6 @@ class TestSuites(list):
                 suite_def = test_suites_raw[test_suite_name]
                 local_cases = suite_def.get('tutorials', [])
                 external_cases = suite_def.get('external', [])
-                if local_cases and external_cases:
-                    raise ValueError(
-                        f"Test suite '{test_suite_name}' must use either 'tutorials' or "
-                        f"'external', not both."
-                    )
                 if not local_cases and not external_cases:
                     raise ValueError(
                         f"Test suite '{test_suite_name}' must define 'tutorials' or 'external'."

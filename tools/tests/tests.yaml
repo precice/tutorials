@@ -662,9 +662,9 @@ test_suites:
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
       - *wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
-    # external:
-    #   - *partitioned-heat-conduction-robin_lrft-openfoam_right-openfoam
-    #   - *partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
+    external:
+      - *partitioned-heat-conduction-robin_lrft-openfoam_right-openfoam
+      - *partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
 
   # These tests take longer to run. They are available, but not regularly executed.
   extra:
