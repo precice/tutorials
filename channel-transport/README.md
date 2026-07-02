@@ -1,6 +1,8 @@
 ---
 title: Channel transport
 permalink: tutorials-channel-transport.html
+aliases:
+  - /tutorials-channel-transport.html
 keywords: volume coupling, chemistry, OpenFOAM, Nutils, species, transport, remeshing
 summary: A CFD problem is coupled to a transport (of, e.g., a chemistry species) in a uni-directional way.
 ---
@@ -37,13 +39,15 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 Fluid participant:
 
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
+* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
 * OpenFOAM (pimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
 Transport participant:
 
-* Nutils with support for [adaptive mesh refinement](https://precice.org/couple-your-code-moving-or-changing-meshes.html#pseudo-reference-domain). For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0 and a preCICE release with [remeshing support](couple-your-code-moving-or-changing-meshes.html#remeshing-using-precice).
+* Nutils with support for [adaptive mesh refinement](https://precice.org/couple-your-code-moving-or-changing-meshes.html#pseudo-reference-domain). For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This solver requires a preCICE release with [remeshing support](couple-your-code-moving-or-changing-meshes.html#remeshing-using-precice).
+
+* OpenFOAM. This case uses a modified version of scalarTransportFoam, which recomputes `phi` after the preCICE adapter reads the velocity field. Find it in the `solver-openfoam` folder. Read more details in the [OpenFOAM adapter](https://precice.org/adapter-openfoam-overview.html).
 
 ## Running the simulation
 

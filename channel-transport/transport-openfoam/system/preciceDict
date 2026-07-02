@@ -1,0 +1,37 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      preciceDict;
+}
+
+preciceConfig "../precice-config.xml";
+
+participant Transport;
+
+modules (FF);
+
+interfaces
+{
+  Interface1
+  {
+    mesh              Transport-Mesh;
+    patches           ();
+    locations         volumeCenters;
+    
+    readData
+    (
+      Velocity
+    );
+
+    writeData
+    (
+    );
+  };
+};
+
+FF
+{
+  solverType incompressible;
+}

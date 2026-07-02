@@ -27,14 +27,18 @@ for tutorial in $tutorials; do
           echo -e "$img:$RED $actualsize kb exceeds the limit of $MAXIMUMGIFSIZE kb. $NOCOLOR"
           CODE=1
       else
+        if [ "${1:-}" = "-v" ]; then
           echo -e "$img: $actualsize kb (Ok)."
+        fi
       fi
     else
       if [ "${actualsize}" -ge "${MAXIMUMSIZE}" ]; then
          echo -e "$img:$RED $actualsize kb exceeds the limit of $MAXIMUMSIZE kb. $NOCOLOR"
          CODE=1
       else
-        echo -e "$img: $actualsize kb (Ok)."
+        if [ "${1:-}" = "-v" ]; then
+          echo -e "$img: $actualsize kb (Ok)."
+        fi
       fi
     fi
   done

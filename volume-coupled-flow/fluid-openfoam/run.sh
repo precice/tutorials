@@ -11,3 +11,7 @@ topoSet
 . ../../tools/openfoam-remove-empty-dirs.sh && openfoam_remove_empty_dirs
 
 close_log
+
+# Necessary signal file for the system tests,
+# to keep the Source container running till the end
+date > ../fluid-participant-finished.log

@@ -1,6 +1,8 @@
 ---
 title: Perpendicular flap with stresses
 permalink: tutorials-perpendicular-flap-stress.html
+aliases:
+  - /tutorials-perpendicular-flap-stress.html
 keywords: G+Smo, fluid-structure interaction, FSI, OpenFOAM
 summary: This tutorial is a modified version of the “perpendicular flap” tutorial coupling stress instead of force.
 ---
@@ -27,7 +29,7 @@ Fluid participant:
 
 Solid participant:
 
-* G+Smo (perpendicular-flap-vertex-gismo). This solver includes both linear and nonlinear versions of the Newmark time integrator for time-dependent structural problems. The linear version iterates using a constant stiffness matrix. The nonlinear version iterates using an updated Jacobian matrix to account for material or geometric nonlinearity. By default, the solver runs in linear mode. To switch to nonlinear mode, add `--nonlinear` as option in `run.sh`. For more information, have a look at the [G+Smo adapter documentation](https://precice.org/adapter-gismo-overview.html).
+* G+Smo (perpendicular-flap-vertex-gismo). This solver includes both linear and nonlinear versions of the Newmark time integrator for time-dependent structural problems. The linear version iterates using a constant stiffness matrix. The nonlinear version iterates using an updated Jacobian matrix to account for material or geometric nonlinearity. By default, the solver runs in linear mode. To switch to nonlinear mode, add `--nonlinear` as option in `run.sh`. For more information, have a look at the [G+Smo adapter documentation](https://precice.org/adapter-gismo.html).
 
 ## Running the simulation
 

@@ -1,6 +1,8 @@
 ---
 title: Volume-coupled flow
 permalink: tutorials-volume-coupled-flow.html
+aliases:
+  - /tutorials-volume-coupled-flow.html
 keywords: volume coupling, OpenFOAM, source terms
 summary: A dummy source participant is coupled to a fluid in a uni-directional way over a region of the domain. The coupling enforces source terms on that region.
 ---
@@ -33,7 +35,7 @@ Fluid participant:
 
 Source participant:
 
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v7.0.
+* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
 ## Running the simulation
 

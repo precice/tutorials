@@ -1,6 +1,8 @@
 ---
 title: Partitioned elastic beam
 permalink: tutorials-partitioned-elastic-beam.html
+aliases:
+  - /tutorials-partitioned-elastic-beam.html
 keywords: Structure-Structure Coupling, CalculiX, solid mechanics
 summary: This tutorial describes how to run a structure-structure interaction simulation with CalculiX running on both sides.
 ---

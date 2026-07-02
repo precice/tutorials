@@ -1,6 +1,8 @@
 ---
 title: Turek Hron FSI3
 permalink: tutorials-turek-hron-fsi3.html
+aliases:
+  - /tutorials-turek-hron-fsi3.html
 keywords: OpenFOAM, deal.II, Nutils, verification
 summary: The Turek-Hron FSI cases are well-established numerical benchmarks and, therefore, well suited for verification of preCICE itself and the used adapters. In this tutorial, we focus on the FSI3 case, which presents the most challenging case in terms of added mass. Please note that the meshes of this case are significantly finer than for other tutorials. Running the simulation might take a few hours. We do not recommend to run this tutorials as your first preCICE tutorial.
 ---
@@ -28,12 +30,12 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 Fluid participant:
 
 * OpenFOAM (pimpleFoam). In case you are using a very old OpenFOAM version, you will need to adjust the solver to `pimpleDyMFoam` in the `Fluid/system/controlDict` file. For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v9.0. This case takes significantly longer to run than the OpenFOAM case, see [related issue](https://github.com/precice/tutorials/issues/506).
+* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This case takes significantly longer to run than the OpenFOAM case, see [related issue](https://github.com/precice/tutorials/issues/506).
 
 Solid participant:
 
 * deal.II. For more information, have a look at the [deal.II adapter documentation](https://precice.org/adapter-dealii-overview.html). This tutorial requires the nonlinear solid solver. Please copy the nonlinear solver executable to the `solid-dealii` folder or make it discoverable at runtime and update the `solid-dealii/run.sh` script.
-* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This Nutils solver requires at least Nutils v9.0.
+* Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 
 ## Running the Simulation
 

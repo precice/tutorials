@@ -1,6 +1,8 @@
 ---
 title: 1D Elastic Tube
 permalink: tutorials-elastic-tube-1d.html
+aliases:
+  - /tutorials-elastic-tube-1d.html
 keywords: OpenFOAM, python
 summary: The 1D Elastic Tube is a FSI case, that consists of an internal flow in a flexible tube. The flow is unsteady and incompressible. This tutorial contains C++ and Python variants of the fluid and solid solvers. Running the simulation takes just 1-2 minutes.  
 ---
@@ -45,7 +47,7 @@ Both fluid and solid participant are supported in:
 
 ## Running the Simulation
 
-Choose one solver for each pariticipant, then open two separate terminals and start each soler by calling the respective run script.
+Choose one solver for each participant, then open two separate terminals and start each solver by calling the respective run script.
 Here we use both C++ solvers:
 
 ```bash

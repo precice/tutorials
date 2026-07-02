@@ -1,6 +1,8 @@
 ---
 title: Free flow over porous media
 permalink: tutorials-free-flow-over-porous-media.html
+aliases:
+  - /tutorials-free-flow-over-porous-media.html
 keywords: DuMux, porous media
 summary: Flow-flow coupling example with porous media field and free flow field.
 ---
@@ -53,7 +55,7 @@ cd porous-media-dumux
 ./run.sh
 ```
 
-This assumes a DuMux and DUNE modules installation in the case folder. You can specify the path to an existing DUNE installation with with `-l`:
+This assumes a DuMux and DUNE modules installation in the case folder. You can specify the path to an existing DUNE installation with `-l`:
 
 ```bash
 ./run.sh -l <path-to-DUNE-common>

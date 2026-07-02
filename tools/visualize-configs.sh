@@ -30,9 +30,16 @@ visualize_config(){
 
 export -f visualize_config
 
-python3 -m venv .venv
-. .venv/bin/activate
-pip install precice-config-visualizer
+if [ ! -v PRECICE_TUTORIALS_NO_VENV ]
+then
+    if [ ! -d ".venv" ]; then
+        python3 -m venv .venv
+        source .venv/bin/activate
+        pip install precice-config-visualizer
+    else
+        source .venv/bin/activate
+    fi
+fi
 
 tutorials=$(find . -maxdepth 1 -type d -not -name ".*" | sed "s/^.\///")
 

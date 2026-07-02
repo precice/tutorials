@@ -1,6 +1,8 @@
 ---
 title: Two-scale heat conduction
 permalink: tutorials-two-scale-heat-conduction.html
+aliases:
+  - /tutorials-two-scale-heat-conduction.html
 keywords: Macro-micro, Micro Manager, Nutils, DuMuX, Heat conduction
 summary: We solve a two-scale heat conduction problem with a predefined micro structure of two materials. One macro simulation is coupled to several micro simulations using the Micro Manager.
 ---
@@ -62,7 +64,7 @@ cd macro-dumux
 ./run.sh -s
 ```
 
-This assumes a DuMux and DUNE modules installation in the case folder. You can specify the path to an existing DUNE installation with with `-l`:
+This assumes a DuMux and DUNE modules installation in the case folder. You can specify the path to an existing DUNE installation with `-l`:
 
 ```bash
 ./run.sh -s -l <path-to-DUNE-common>

@@ -1,6 +1,8 @@
 ---
 title: Flow over heated plate with two meshes
 permalink: tutorials-flow-over-heated-plate-two-meshes.html
+aliases:
+  - /tutorials-flow-over-heated-plate-two-meshes.html
 keywords: tutorial, CHT, conjugate-heat transfer, OpenFOAM, CalculiX
 summary: This tutorial describes how to run a conjugate heat transfer coupled simulation using preCICE and CalculiX as solid solver, which requires two meshes instead of one.
 ---
@@ -27,7 +29,7 @@ By default, the fluid participant reads heat-flux values and the solid participa
 Fluid participant:
 
 * OpenFOAM (buoyantPimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
-* SU2 (copy the `fluid-su2` directory from the `flow-over-heated-plate` tutorial as-is). For more information, have a look at the [SU2 adapter docmentation](https://precice.org/adapter-su2-overview.html).
+* SU2 (copy the `fluid-su2` directory from the `flow-over-heated-plate` tutorial as-is). For more information, have a look at the [SU2 adapter documentation](https://precice.org/adapter-su2-overview.html).
 
 Solid participant:
 

@@ -1,6 +1,8 @@
 ---
 title: Oscillator (overlapping domain decomposition)
 permalink: tutorials-oscillator-overlap.html
+aliases:
+  - /tutorials-oscillator-overlap.html
 keywords: Python, ODE
 summary: We solve an oscillator with two masses in a partitioned fashion with overlapping domain decomposition. Each mass is solved by an independent ODE.
 ---
