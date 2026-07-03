@@ -181,6 +181,7 @@ class TestSuites(list):
                 base_dir=tutorial_root.parent,
                 source=source,
             )
+            tutorial.resolved_root = tutorial_root
             parsed_tutorials.tutorials.append(tutorial)
         if not tutorial:
             raise Exception(f"No tutorial with path {tutorial_case['path']} found.")

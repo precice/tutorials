@@ -308,6 +308,9 @@ class Tutorial:
     participants: List[str]
     cases: List[Case]
     source: "TutorialSource" = field(default_factory=TutorialSource.local)
+    # Filesystem path to the fetched external tutorial, resolved once at parse
+    # time and reused when copying into the run directory (None for local).
+    resolved_root: "Path | None" = None
     case_combinations: List[CaseCombination] = field(init=False)
 
     def __post_init__(self):

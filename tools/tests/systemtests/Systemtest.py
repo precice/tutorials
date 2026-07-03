@@ -500,7 +500,9 @@ class Systemtest:
         self.tutorial_folder = slugify(
             f'{self.tutorial.path.name}_{self.case_combination.cases}_{current_time_string}')
         destination = run_directory / self.tutorial_folder
-        src = resolve_tutorial_root(
+        # External sources are fetched and resolved once at parse time; reuse
+        # that path here to avoid a redundant fetch (and duplicate log line).
+        src = self.tutorial.resolved_root or resolve_tutorial_root(
             self.tutorial.path,
             self.tutorial.source,
             PRECICE_EXTERNAL_CACHE_DIR,
