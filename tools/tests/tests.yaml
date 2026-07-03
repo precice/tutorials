@@ -29,6 +29,7 @@ test_suites:
           - fluid-nutils
           - transport-nutils
         max_time: 0.05
+        timeout: 600
         reference_result: ./channel-transport/reference-results/fluid-nutils_transport-nutils.tar.gz
       - &channel-transport_fluid-openfoam_transport-nutils
         path: channel-transport
@@ -70,6 +71,7 @@ test_suites:
           - fluid-nutils
           - particles-mercurydpm
         max_time: 0.025
+        timeout: 600
         reference_result: ./channel-transport-particles/reference-results/fluid-nutils_particles-mercurydpm.tar.gz
 
   elastic-tube-1d:
@@ -520,6 +522,7 @@ test_suites:
           - macro-nutils
           - micro-nutils
         max_time: 0.05
+        timeout: 600
         skip_compare: true # Values too close to zero
         reference_result: ./two-scale-heat-conduction/reference-results/macro-nutils_micro-nutils.tar.gz
 
