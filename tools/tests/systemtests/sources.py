@@ -57,8 +57,14 @@ def _cache_key(prefix: str, url: str, ref: str | None = None, subdir: str | None
     return hashlib.sha256(raw.encode()).hexdigest()[:16]
 
 
-def _restore_shell_script_permissions(root: Path) -> None:
-    """Restore execute bits on shell scripts (zip extraction strips them)."""
+def _ensure_shell_scripts_executable(root: Path) -> None:
+    """Mark all .sh files under root as executable.
+
+    ZIP extraction does not preserve Unix permission bits, so run.sh and other
+    tutorial scripts lose their execute bit. The original modes are not known,
+    so this unconditionally adds execute bits to every .sh file. Intended only
+    for extracted tutorial/test-case archives.
+    """
     for script in root.rglob("*.sh"):
         script.chmod(script.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
@@ -122,7 +128,7 @@ def fetch_archive(url: str, cache_dir: Path, subdir: str | None = None) -> Path:
     extract_dir = cache_dir / key
 
     if extract_dir.exists():
-        _restore_shell_script_permissions(extract_dir)
+        _ensure_shell_scripts_executable(extract_dir)
         return extract_dir / subdir if subdir else extract_dir
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".tar.gz") as tmp:
@@ -140,7 +146,7 @@ def fetch_archive(url: str, cache_dir: Path, subdir: str | None = None) -> Path:
 
             with zipfile.ZipFile(tmp_path, "r") as zf:
                 zf.extractall(extract_dir)
-        _restore_shell_script_permissions(extract_dir)
+        _ensure_shell_scripts_executable(extract_dir)
     finally:
         tmp_path.unlink(missing_ok=True)
 
