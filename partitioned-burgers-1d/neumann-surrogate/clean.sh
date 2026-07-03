@@ -7,3 +7,4 @@ set -e -u
 clean_precice_logs .
 clean_case_logs .
 rm -f surrogate.npz
+rm -f ../initial_condition.npz
