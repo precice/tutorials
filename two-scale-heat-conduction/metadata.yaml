@@ -28,5 +28,5 @@ cases:
   micro-nutils:
     participant: Micro-Manager
     directory: ./micro-nutils
-    run: source /home/precice/venv/bin/activate && ./run.sh -s
-    component: nutils-adapter
+    run: ./run.sh -s
+    component: micro-manager
