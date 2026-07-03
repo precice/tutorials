@@ -29,6 +29,7 @@ test_suites:
           - fluid-nutils
           - transport-nutils
         max_time: 0.05
+        timeout: 600
         reference_result: ./channel-transport/reference-results/fluid-nutils_transport-nutils.tar.gz
       - &channel-transport_fluid-openfoam_transport-nutils
         path: channel-transport
@@ -36,7 +37,6 @@ test_suites:
           - fluid-openfoam
           - transport-nutils
         max_time: 0.1
-        timeout: 600
         reference_result: ./channel-transport/reference-results/fluid-openfoam_transport-nutils.tar.gz
       - &channel-transport_fluid-openfoam_transport-openfoam
         path: channel-transport
