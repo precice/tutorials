@@ -6,3 +6,4 @@ set -e -u
 
 clean_case_logs .
 rm -f full_domain.npz
+rm -f ../initial_condition.npz

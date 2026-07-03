@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e -u
 
 if [ "$1" = "1d3d" ]; then
