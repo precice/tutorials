@@ -170,6 +170,40 @@ Note that you will need to define the `TUTORIALS_REF` in the file [`reference_ve
 
 The results will be added to a Git LFS, but you will need special push access: just use the aforementioned GitHub Actions workflow, instead.
 
+#### External test sources
+
+Local test cases are defined in the `tutorials:` list. For test cases maintained in other git repositories or available as archives, use the `external:` list. A test suite may define both lists so that external cases can be referenced via YAML anchors alongside local tutorials (for example in the `release` suite).
+
+```yaml
+test_suites:
+  some-external-test-case:
+    external:
+      - &some-external-test-case
+        source:
+          type: git
+          url: https://github.com/some-user/tutorials.git
+          ref: some-branch
+          subdir: .
+        path: path-to-test-case
+        case_combination:
+          ...
+
+  release:
+    tutorials:
+      - *quickstart_openfoam_cpp
+    external:
+      - *some-external-test-case
+```
+
+Supported `source.type` values:
+
+- `git`: shallow-clone `url` at `ref`. The `ref` must exist on the remote; clone failures are reported as errors.
+- `archive`: download and extract a `.tar.gz` / `.zip` from `url`.
+
+Fetched external sources are cached under `~/.cache/precice-tutorials` (or `PRECICE_EXTERNAL_CACHE_DIR`) so that repeated test runs and CI matrix jobs do not re-download the same repository or archive every time. The cache key is derived from the source URL, ref, and optional subdir.
+
+The runner fetches the tutorial, copies it into the run directory, and then continues with the usual Docker build/run and fieldcompare steps. `TUTORIALS_REF` / `TUTORIALS_PR` build arguments apply only to test cases sourced from the tutorials repository; external test cases are pinned by `source.ref`. Reference result paths are resolved relative to the root directory of the fetched test case.
+
 ### Adding new components
 
 To add a new component, a few changes are needed:
@@ -299,7 +333,7 @@ cases:
 Description:
 
 - `name`: A human-readable, descriptive name
-- `path`: Where the tutorial is located, relative to the tutorials repository
+- `path`: Where the tutorial is located, relative to the tutorials repository (or the tutorial folder name for external sources)
 - `url`: A web page with more information on the tutorial
 - `participants`: A list of preCICE participants, typically corresponding to different domains of the simulation
 - `cases`: A list of solver configuration directories. Each element of the list includes:

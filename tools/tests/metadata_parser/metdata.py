@@ -6,6 +6,8 @@ import yaml
 import itertools
 from paths import PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
 
+from systemtests.sources import TutorialSource
+
 
 @dataclass
 class BuildArgument:
@@ -283,13 +285,15 @@ class CaseCombination:
 class ReferenceResult:
     path: Path
     case_combination: CaseCombination
+    base_dir: Path | None = None
 
     def __repr__(self) -> str:
         return f"{self.path.as_posix()}"
 
     def __post_init__(self):
         # built full path
-        self.path = PRECICE_TUTORIAL_DIR / self.path
+        base = self.base_dir if self.base_dir is not None else PRECICE_TUTORIAL_DIR
+        self.path = Path(base) / self.path
 
 
 @dataclass
@@ -303,6 +307,10 @@ class Tutorial:
     url: str
     participants: List[str]
     cases: List[Case]
+    source: "TutorialSource" = field(default_factory=TutorialSource.local)
+    # Filesystem path to the fetched external tutorial, resolved once at parse
+    # time and reused when copying into the run directory (None for local).
+    resolved_root: "Path | None" = None
     case_combinations: List[CaseCombination] = field(init=False)
 
     def __post_init__(self):
@@ -359,13 +367,16 @@ class Tutorial:
         return None
 
     @classmethod
-    def from_yaml(cls, path, available_components):
+    def from_yaml(cls, path, available_components, base_dir=None, source=None):
         """
         Creates a Tutorial instance from a YAML file.
 
         Args:
-            path: The path to the YAML file.
+            path: The path to the metadata.yaml file.
             available_components: The Components instance containing available components.
+            base_dir: Optional base directory for resolving tutorial path (for external sources).
+                      Defaults to PRECICE_TUTORIAL_DIR.
+            source: Optional TutorialSource (for external tutorials).
 
         Returns:
             An instance of Tutorial.
@@ -373,7 +384,8 @@ class Tutorial:
         with open(path, 'r') as f:
             data = yaml.safe_load(f)
             name = data['name']
-            path = PRECICE_TUTORIAL_DIR / data['path']
+            base = base_dir if base_dir is not None else PRECICE_TUTORIAL_DIR
+            tutorial_path = Path(base) / data['path']
             url = data['url']
             participants = data.get('participants', [])
             cases_raw = data.get('cases', {})
@@ -381,7 +393,10 @@ class Tutorial:
             for case_name in cases_raw.keys():
                 cases.append(Case.from_dict(
                     case_name, cases_raw[case_name], available_components))
-            return cls(name, path, url, participants, cases)
+            tut = cls(name, tutorial_path, url, participants, cases)
+            if source is not None:
+                tut.source = source
+            return tut
 
 
 class Tutorials(list):

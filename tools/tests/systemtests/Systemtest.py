@@ -1,6 +1,7 @@
 import hashlib
 import subprocess
 import threading
+from .sources import resolve_tutorial_root, PRECICE_EXTERNAL_CACHE_DIR
 from typing import List, Dict, Optional, Tuple
 from jinja2 import Environment, FileSystemLoader
 from dataclasses import dataclass, field
@@ -480,24 +481,36 @@ class Systemtest:
         """
         current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.run_directory = run_directory
-        pr_requested = self.params_to_use.get("TUTORIALS_PR")
-        if pr_requested:
-            logging.debug(f"Fetching the PR {pr_requested} HEAD reference")
-            self._fetch_pr(PRECICE_TUTORIAL_DIR, pr_requested)
-        current_ref = self._get_git_ref(PRECICE_TUTORIAL_DIR)
-        ref_requested = self.params_to_use.get("TUTORIALS_REF")
-        if ref_requested:
-            logging.debug(f"Checking out tutorials {ref_requested} before copying")
-            self._fetch_ref(PRECICE_TUTORIAL_DIR, ref_requested)
-            self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR, self.tutorial.path, ref_requested)
+        current_ref = None
+        ref_requested = None
 
-        self.tutorial_folder = slugify(f'{self.tutorial.path.name}_{self.case_combination.cases}_{current_time_string}')
+        if self.tutorial.source.type == "local":
+            pr_requested = self.params_to_use.get("TUTORIALS_PR")
+            if pr_requested:
+                logging.debug(f"Fetching the PR {pr_requested} HEAD reference")
+                self._fetch_pr(PRECICE_TUTORIAL_DIR, pr_requested)
+            current_ref = self._get_git_ref(PRECICE_TUTORIAL_DIR)
+            ref_requested = self.params_to_use.get("TUTORIALS_REF")
+            if ref_requested:
+                logging.debug(f"Checking out tutorials {ref_requested} before copying")
+                self._fetch_ref(PRECICE_TUTORIAL_DIR, ref_requested)
+                self._checkout_ref_in_subfolder(
+                    PRECICE_TUTORIAL_DIR, self.tutorial.path, ref_requested)
+
+        self.tutorial_folder = slugify(
+            f'{self.tutorial.path.name}_{self.case_combination.cases}_{current_time_string}')
         destination = run_directory / self.tutorial_folder
-        src = self.tutorial.path
+        # External sources are fetched and resolved once at parse time; reuse
+        # that path here to avoid a redundant fetch (and duplicate log line).
+        src = self.tutorial.resolved_root or resolve_tutorial_root(
+            self.tutorial.path,
+            self.tutorial.source,
+            PRECICE_EXTERNAL_CACHE_DIR,
+        )
         self.system_test_dir = destination
         shutil.copytree(src, destination)
 
-        if ref_requested:
+        if self.tutorial.source.type == "local" and ref_requested:
             with open(destination / "tutorials_ref", 'w') as file:
                 file.write(ref_requested)
             self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR, self.tutorial.path, current_ref)
@@ -971,7 +984,8 @@ class Systemtest:
         return DockerComposeResult(exit_code, stdout_data, stderr_data, self, elapsed_time)
 
     def __repr__(self):
-        return f"{self.tutorial.name} {self.case_combination}"
+        prefix = "External: " if getattr(self.tutorial.source, "type", "local") != "local" else ""
+        return f"{prefix}{self.tutorial.name} {self.case_combination}"
 
     def __apply_max_time_override(self):
         """Overwrite <max-time> or <max-time-windows> value in precice-config.xml."""
