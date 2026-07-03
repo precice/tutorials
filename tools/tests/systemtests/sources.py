@@ -79,6 +79,7 @@ def fetch_git_repo(url: str, ref: str, cache_dir: Path, subdir: str | None = Non
     checkout = cache_dir / key
 
     if checkout.exists():
+        logging.info(f"Using cached external git source {url} (ref {ref}) from {checkout}")
         try:
             subprocess.run(
                 ["git", "-C", str(checkout), "fetch", "origin", ref, "--depth", "1"],
@@ -97,6 +98,7 @@ def fetch_git_repo(url: str, ref: str, cache_dir: Path, subdir: str | None = Non
             shutil.rmtree(checkout, ignore_errors=True)
 
     if not checkout.exists():
+        logging.info(f"Fetching external git source {url} (ref {ref}) into {checkout}")
         result = subprocess.run(
             ["git", "clone", "--depth", "1", "--branch", ref, url, str(checkout)],
             capture_output=True,
@@ -128,13 +130,14 @@ def fetch_archive(url: str, cache_dir: Path, subdir: str | None = None) -> Path:
     extract_dir = cache_dir / key
 
     if extract_dir.exists():
+        logging.info(f"Using cached external archive {url} from {extract_dir}")
         _ensure_shell_scripts_executable(extract_dir)
         return extract_dir / subdir if subdir else extract_dir
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".tar.gz") as tmp:
         tmp_path = Path(tmp.name)
     try:
-        logging.info(f"Downloading {url}")
+        logging.info(f"Fetching external archive {url} into {extract_dir}")
         urllib.request.urlretrieve(url, tmp_path)
 
         extract_dir.mkdir(parents=True, exist_ok=True)

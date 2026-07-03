@@ -982,7 +982,8 @@ class Systemtest:
         return DockerComposeResult(exit_code, stdout_data, stderr_data, self, elapsed_time)
 
     def __repr__(self):
-        return f"{self.tutorial.name} {self.case_combination}"
+        prefix = "External: " if getattr(self.tutorial.source, "type", "local") != "local" else ""
+        return f"{prefix}{self.tutorial.name} {self.case_combination}"
 
     def __apply_max_time_override(self):
         """Overwrite <max-time> or <max-time-windows> value in precice-config.xml."""
