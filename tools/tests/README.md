@@ -178,7 +178,7 @@ Local test cases are defined in the `tutorials:` list. For test cases maintained
 test_suites:
   some-external-test-case:
     external:
-      - &some-external-test-case_left-openfoam_right-openfoam
+      - &some-external-test-case
         source:
           type: git
           url: https://github.com/some-user/tutorials.git
@@ -186,15 +186,13 @@ test_suites:
           subdir: .
         path: path-to-test-case
         case_combination:
-          - left-openfoam
-          - right-openfoam
-        reference_result: ./path-to-test-case/reference_results/participant-combination.tar.gz
+          ...
 
   release:
     tutorials:
       - *quickstart_openfoam_cpp
     external:
-      - *some-external-test-case_left-openfoam_right-openfoam
+      - *some-external-test-case
 ```
 
 Supported `source.type` values:
