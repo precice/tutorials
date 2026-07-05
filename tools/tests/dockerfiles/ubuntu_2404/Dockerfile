@@ -147,14 +147,6 @@ RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/fenicsx-adapter.git@${FENICSX_ADAPTER_REF}
 
-FROM precice_dependecies AS nutils_adapter
-COPY --from=python_bindings /home/precice/.local /home/precice/.local
-USER precice
-# Installing nutils - There is no adapter
-RUN python3 -m venv /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
-    pip3 install nutils
-
 
 FROM precice_dependecies AS calculix_adapter
 COPY --from=precice /home/precice/.local /home/precice/.local

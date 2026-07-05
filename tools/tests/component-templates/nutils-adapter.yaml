@@ -4,7 +4,7 @@ build:
     {% for key, value in build_arguments.items() %}
       - {{key}}={{value}}
     {% endfor %}
-  target: nutils_adapter
+  target: python_bindings
 depends_on:    
   prepare:
     condition: service_completed_successfully
