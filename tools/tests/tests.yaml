@@ -679,6 +679,7 @@ test_suites:
       - *volume-coupled-diffusion_source-fenics_drain-fenics
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *water-hammer_fluid3d-left-openfoam_fluid1d-right-nutils
       - *wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
     external:
       - *partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
@@ -784,6 +785,7 @@ test_suites:
       - *two-scale-heat-conduction_macro-nutils_micro-nutils
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *water-hammer_fluid3d-left-openfoam_fluid1d-right-nutils
 
   openfoam-adapter:
     tutorials:
@@ -819,6 +821,7 @@ test_suites:
       - *quickstart_openfoam_cpp
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *water-hammer_fluid3d-left-openfoam_fluid1d-right-nutils
     external:
       - *partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
       - *partitioned-heat-conduction-robin_left-openfoam_right-openfoam
