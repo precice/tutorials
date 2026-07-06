@@ -124,7 +124,7 @@ test_suites:
           - solid-fenics
         max_time_windows: 1
         tolerance: 1e-2    # Some values are too close to zero
-        skip_compare: true # Comparison takes too
+        skip_compare: true # Comparison takes too long, see https://github.com/precice/tutorials/issues/853
         reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-fenics.tar.gz
 
   flow-around-controlled-moving-cylinder:
@@ -523,7 +523,7 @@ test_suites:
           - micro-nutils
         max_time: 0.01
         timeout: 1200
-        skip_compare: true # Values too close to zero
+        # skip_compare: true # Values too close to zero
         reference_result: ./two-scale-heat-conduction/reference-results/macro-nutils_micro-nutils.tar.gz
 
   volume-coupled-diffusion:
@@ -583,7 +583,7 @@ test_suites:
           - left-openfoam
           - right-openfoam
         timeout: 480
-        skip_compare: true
+        skip_compare: true # No reference results available (could generate)
         reference_result: ./partitioned-heat-conduction-robin/reference_results/left-openfoam_right-openfoam.tar.gz
     
   partitioned-heat-conduction-mixedbc:
@@ -598,7 +598,7 @@ test_suites:
           - left-openfoam
           - right-openfoam
         timeout: 480
-        skip_compare: true
+        skip_compare: true # No reference results available (could generate)
         reference_result: ./partitioned-heat-conduction-mixedbc/reference_results/left-openfoam_right-openfoam.tar.gz
 
 
@@ -818,4 +818,4 @@ test_suites:
 
   selected:
     tutorials:
-      - *elastic-tube-1d_fluid-python_solid-python
+      - *two-scale-heat-conduction_macro-nutils_micro-nutils
