@@ -10,7 +10,7 @@ if [ ! -v PRECICE_TUTORIALS_NO_VENV ]; then
     if [ ! -d ".venv" ]; then
         python3 -m venv .venv
         source .venv/bin/activate
-        pip install -r requirements.txt && pip freeze > pip-installed-packages.log
+        pip install -r requirements.txt --no-cache-dir && pip freeze > pip-installed-packages.log
     else
         source .venv/bin/activate
     fi

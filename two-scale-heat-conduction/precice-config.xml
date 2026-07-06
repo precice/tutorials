@@ -10,8 +10,6 @@
   <profiling mode="fundamental" synchronize="false" />
 
   <data:scalar name="K00" />
-  <data:scalar name="K01" />
-  <data:scalar name="K10" />
   <data:scalar name="K11" />
   <data:scalar name="Porosity" />
   <data:scalar name="Concentration" />
@@ -21,8 +19,6 @@
 
   <mesh name="Macro-Mesh" dimensions="2">
     <use-data name="K00" />
-    <use-data name="K01" />
-    <use-data name="K10" />
     <use-data name="K11" />
     <use-data name="Porosity" />
     <use-data name="Concentration" />
@@ -34,8 +30,6 @@
   <participant name="Macro">
     <provide-mesh name="Macro-Mesh" />
     <read-data name="K00" mesh="Macro-Mesh" />
-    <read-data name="K01" mesh="Macro-Mesh" />
-    <read-data name="K10" mesh="Macro-Mesh" />
     <read-data name="K11" mesh="Macro-Mesh" />
     <read-data name="Porosity" mesh="Macro-Mesh" />
     <write-data name="Concentration" mesh="Macro-Mesh" />
@@ -45,8 +39,6 @@
     <receive-mesh name="Macro-Mesh" from="Macro" direct-access="true" safety-factor="0.0" />
     <read-data name="Concentration" mesh="Macro-Mesh" />
     <write-data name="K00" mesh="Macro-Mesh" />
-    <write-data name="K01" mesh="Macro-Mesh" />
-    <write-data name="K10" mesh="Macro-Mesh" />
     <write-data name="K11" mesh="Macro-Mesh" />
     <write-data name="Porosity" mesh="Macro-Mesh" />
     <write-data name="Grain-Size" mesh="Macro-Mesh" />
@@ -63,8 +55,6 @@
     <time-window-size value="1.0e-2" />
     <max-iterations value="30" />
     <exchange data="K00" mesh="Macro-Mesh" from="Micro-Manager" to="Macro" />
-    <exchange data="K01" mesh="Macro-Mesh" from="Micro-Manager" to="Macro" />
-    <exchange data="K10" mesh="Macro-Mesh" from="Micro-Manager" to="Macro" />
     <exchange data="K11" mesh="Macro-Mesh" from="Micro-Manager" to="Macro" />
     <exchange data="Porosity" mesh="Macro-Mesh" from="Micro-Manager" to="Macro" />
     <exchange

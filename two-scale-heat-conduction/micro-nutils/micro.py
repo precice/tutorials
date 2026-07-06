@@ -70,7 +70,6 @@ class MicroSimulation:
 
         # Initialize phase field once more on refined topology
         solphi = self._get_analytical_phasefield(self._topo, self._ns, self._degree_phi, self._ns.lam, self._r_initial)
-
         self._solphi = solphi  # Save solution of phi
         psi = self._get_avg_porosity(self._topo, solphi)
         self._psi_nm1 = psi  # Average porosity value of last time step
@@ -132,12 +131,15 @@ class MicroSimulation:
     #      export.vtk("micro-heat-{}".format(self._sim_id), bezier.tri, x, T=u, phi=phi)
 
     def get_state(self):
+        if self._solphi is None:
+            print("Micro sim {} has no phase field state to save".format(self._sim_id))
         return [self._solphi.copy(), deepcopy(self._topo)]
 
     def set_state(self, state):
         self._solphi = state[0]
         self._topo = state[1]
         self._reinitialize_namespace(self._topo)  # The namespace also needs to reloaded to its earlier state
+        print("Micro sim {} has set its state".format(self._sim_id))
 
     def _refine_mesh(self, topo_nm1, solphi_nm1):
         """
@@ -256,8 +258,8 @@ class MicroSimulation:
 
         output_data = dict()
         output_data["K00"] = k[0][0]
-        output_data["K01"] = k[0][1]
-        output_data["K10"] = k[1][0]
+        # output_data["K01"] = k[0][1] off-diagonal terms are not sent back as they are zero in this case
+        # output_data["K10"] = k[1][0]
         output_data["K11"] = k[1][1]
         output_data["Porosity"] = psi
         output_data["Grain-Size"] = math.sqrt((1 - psi) / math.pi)
