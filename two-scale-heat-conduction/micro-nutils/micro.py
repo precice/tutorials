@@ -138,8 +138,8 @@ class MicroSimulation:
         self._topo = state[1]
         self._psi_nm1 = state[2]
         self._k_nm1 = state[3]
+        self._initial_condition_is_set = True  # state comes from a fully initialized sim, use the 'else' branch in _refine_mesh
         self._reinitialize_namespace(self._topo)  # The namespace also needs to reloaded to its earlier state
-        print("Micro sim {} has set its state".format(self._sim_id))
 
     def _refine_mesh(self, topo_nm1, solphi_nm1):
         """
