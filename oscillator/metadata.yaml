@@ -11,7 +11,7 @@ cases:
     participant: Mass-Left
     directory: ./mass-left-fmi
     run: ./run.sh
-    component: python-bindings
+    component: fmi-runner
   
   mass-left-python:
     participant: Mass-Left
@@ -23,7 +23,7 @@ cases:
     participant: Mass-Right
     directory: ./mass-right-fmi
     run: ./run.sh
-    component: python-bindings
+    component: fmi-runner
 
   mass-right-python:
     participant: Mass-Right

@@ -110,6 +110,26 @@ fenicsx-adapter:
       repository: https://github.com/precice/fenicsx-adapter
       default: "develop"
 
+fmi-runner:
+  template: component-templates/fmi-runner.yaml
+  build_arguments:
+    PLATFORM:
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PRESET:
+      default: "production-audit"
+    TUTORIALS_REF:
+      repository: https://github.com/precice/tutorials
+      default: "develop"
+    PYTHON_BINDINGS_REF:
+      repository: https://github.com/precice/python-bindings
+      default: "develop"
+    FMI_RUNNER_REF:
+      repository: https://github.com/precice/fmi-runner
+      default: "main"
+
 mercurydpm-adapter:
   template: component-templates/mercurydpm-adapter.yaml
   build_arguments:
