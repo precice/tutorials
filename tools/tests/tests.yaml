@@ -401,7 +401,14 @@ test_suites:
         run-before: ./set-case.sh 1d3d
         max_time: 0.05
         reference_result: ./partitioned-pipe-multiscale/reference-results/fluid1d-left-nutils_fluid3d-right-openfoam.tar.gz
-      # More case combinations are possible, but they requite calling set-case.sh
+      - &partitioned-pipe-multiscale_fluid3d-left-openfoam_fluid1d-right-nutils
+        path: partitioned-pipe-multiscale
+        case_combination:
+          - fluid3d-left-openfoam
+          - fluid1d-right-nutils
+        run-before: ./set-case.sh 3d1d
+        max_time: 0.05
+        reference_result: ./partitioned-pipe-multiscale/reference-results/fluid3d-left-openfoam_fluid1d-right-nutils.tar.gz
 
   partitioned-pipe-two-phase:
     tutorials:
@@ -556,7 +563,14 @@ test_suites:
         run-before: ./set-case.sh 1d3d
         max_time: 0.05
         reference_result: ./water-hammer/reference-results/fluid1d-left-nutils_fluid3d-right-openfoam.tar.gz
-      # More case combinations are possible, but they requite calling set-case.sh
+      - &water-hammer_fluid3d-left-openfoam_fluid1d-right-nutils
+        path: water-hammer
+        case_combination:
+          - fluid3d-left-openfoam
+          - fluid1d-right-nutils
+        run-before: ./set-case.sh 3d1d
+        max_time: 0.05
+        reference_result: ./water-hammer/reference-results/fluid3d-left-openfoam_fluid1d-right-nutils.tar.gz
 
   wolf-sheep-soil-creep:
     tutorials:
@@ -650,6 +664,7 @@ test_suites:
       - *partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam
       - *partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *partitioned-pipe-multiscale_fluid3d-left-openfoam_fluid1d-right-nutils
       - *partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam
       - *perpendicular-flap_fluid-fake_solid-fake
       - *perpendicular-flap_fluid-openfoam_solid-calculix
@@ -664,6 +679,7 @@ test_suites:
       - *volume-coupled-diffusion_source-fenics_drain-fenics
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *water-hammer_fluid3d-left-openfoam_fluid1d-right-nutils
       - *wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
     external:
       - *partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
@@ -763,11 +779,13 @@ test_suites:
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *partitioned-heat-conduction-direct_dirichlet-nutils_neumann-nutils
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *partitioned-pipe-multiscale_fluid3d-left-openfoam_fluid1d-right-nutils
       - *perpendicular-flap_fluid-nutils_solid-calculix
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
       - *two-scale-heat-conduction_macro-nutils_micro-nutils
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *water-hammer_fluid3d-left-openfoam_fluid1d-right-nutils
 
   openfoam-adapter:
     tutorials:
@@ -793,6 +811,7 @@ test_suites:
       - *partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam
       - *partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *partitioned-pipe-multiscale_fluid3d-left-openfoam_fluid1d-right-nutils
       - *partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam
       - *perpendicular-flap_fluid-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-dealii
@@ -802,6 +821,7 @@ test_suites:
       - *quickstart_openfoam_cpp
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *water-hammer_fluid3d-left-openfoam_fluid1d-right-nutils
     external:
       - *partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
       - *partitioned-heat-conduction-robin_left-openfoam_right-openfoam

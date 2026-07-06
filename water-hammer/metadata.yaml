@@ -3,32 +3,30 @@ path: water-hammer # relative to git repo
 url: https://precice.org/tutorials-water-hammer.html
 
 participants:
-  - Fluid1DLeft
-  # - Fluid1DRight
-  # - Fluid3DLeft
-  - Fluid3DRight
+  - Left
+  - Right
 
 cases:
   fluid1d-left-nutils:
-    participant: Fluid1DLeft
+    participant: Left
     directory: ./fluid1d-left-nutils
     run: ./run.sh
     component: nutils-adapter
 
-  # fluid1d-right-nutils:
-  #   participant: Fluid1DRight
-  #   directory: ./fluid1d-right-nutils
-  #   run: ./run.sh
-  #   component: nutils-adapter
+  fluid3d-left-openfoam:
+    participant: Left
+    directory: ./fluid3d-left-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
 
-  # fluid3d-left-openfoam:
-  #   participant: Fluid3DLeft
-  #   directory: ./fluid3d-left-openfoam
-  #   run: ./run.sh
-  #   component: openfoam-adapter
+  fluid1d-right-nutils:
+    participant: Right
+    directory: ./fluid1d-right-nutils
+    run: ./run.sh
+    component: nutils-adapter
 
   fluid3d-right-openfoam:
-    participant: Fluid3DRight
+    participant: Right
     directory: ./fluid3d-right-openfoam
     run: ./run.sh
     component: openfoam-adapter
