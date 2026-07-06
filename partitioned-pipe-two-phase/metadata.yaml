@@ -30,6 +30,6 @@ cases:
     component: openfoam-adapter
   none:
     participant: Fluid2
-    directory: ./monolithic
+    directory: .
     run: # Noop
     component: bare
