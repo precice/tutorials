@@ -19,11 +19,11 @@ cases:
     run: ./run.sh
     component: su2-adapter
 
-  # solid-dunefem:
-  #   partitipant: Solid
-  #   directory: ./solid-dunefem
-  #   run: ./run.sh
-  #   component: ?
+  solid-dunefem:
+    partitipant: Solid
+    directory: ./solid-dunefem
+    run: ./run.sh
+    component: python-bindings
 
   solid-fenics:
     participant: Solid
