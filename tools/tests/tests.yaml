@@ -294,6 +294,13 @@ test_suites:
           - dirichlet-scipy
           - neumann-surrogate
         reference_result: ./partitioned-burgers-1d/reference-results/dirichlet-scipy_neumann-surrogate.tar.gz
+      - &partitioned-burgers-1d_monolithic-scipy
+        path: partitioned-burgers-1d
+        case_combination:
+          - monolithic-scipy
+          - none
+        skip_compare: true     # Not a coupled case, no preCICE exports
+        reference_result: none # Not a coupled case, no preCICE exports
 
   partitioned-elastic-beam:
     tutorials:
@@ -419,6 +426,13 @@ test_suites:
           - fluid2-openfoam
         max_time: 0.1
         reference_result: ./partitioned-pipe-two-phase/reference-results/fluid1-openfoam_fluid2-openfoam.tar.gz
+      - &partitioned-pipe-two-phase_monolithic-openfoam
+        path: partitioned-pipe-two-phase
+        case_combination:
+          - monolithic-openfoam
+          - none
+        skip_compare: true     # Not a coupled case, no preCICE exports
+        reference_result: none # Not a coupled case, no preCICE exports
 
   perpendicular-flap:
     tutorials:
@@ -653,6 +667,7 @@ test_suites:
       - *partitioned-backwards-facing-step_fluid1-openfoam_fluid2-openfoam
       - *partitioned-burgers-1d_dirichlet-scipy_neumann-scipy
       - *partitioned-burgers-1d_dirichlet-scipy_neumann-surrogate
+      - *partitioned-burgers-1d_monolithic-scipy
       - *partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
       - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
       - *partitioned-heat-conduction_dirichlet-fenicsx_neumann-fenicsx
@@ -666,6 +681,7 @@ test_suites:
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
       - *partitioned-pipe-multiscale_fluid3d-left-openfoam_fluid1d-right-nutils
       - *partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam
+      - *partitioned-pipe-two-phase_monolithic-openfoam
       - *perpendicular-flap_fluid-fake_solid-fake
       - *perpendicular-flap_fluid-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-dealii
@@ -813,6 +829,7 @@ test_suites:
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
       - *partitioned-pipe-multiscale_fluid3d-left-openfoam_fluid1d-right-nutils
       - *partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam
+      - *partitioned-pipe-two-phase_monolithic-openfoam
       - *perpendicular-flap_fluid-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-dealii
       - *perpendicular-flap_fluid-openfoam_solid-fenics
@@ -830,6 +847,11 @@ test_suites:
     tutorials:
       - *flow-over-heated-plate_fluid-su2_solid-openfoam
       - *perpendicular-flap_fluid-su2_solid-fenics
+
+  uncoupled:
+    tutorials:
+      - *partitioned-pipe-two-phase_monolithic-openfoam
+      - *partitioned-burgers-1d_monolithic-scipy
 
   # A test suite used for the system tests development
   system-tests-dev:
