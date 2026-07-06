@@ -20,7 +20,7 @@ cases:
     component: su2-adapter
 
   solid-dunefem:
-    partitipant: Solid
+    participant: Solid
     directory: ./solid-dunefem
     run: ./run.sh
     component: python-bindings
