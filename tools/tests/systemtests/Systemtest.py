@@ -199,9 +199,9 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
 
         row = f"| {str(result.systemtest):<{max_name_length + 2}} "\
             f"| {_success_status_symbol(result.success):^5} "\
-            f"|    {build_time_m:^3}m {build_time_s:02d}s "\
-            f"|    {solver_time_m:^3}m {solver_time_s:02d}s "\
-            f"|    {fieldcompare_time_m:^3}m {fieldcompare_time_s:02d}s |"
+            f"|      {build_time_m:^2}m {build_time_s:02d}s "\
+            f"|      {solver_time_m:^2}m {solver_time_s:02d}s "\
+            f"|      {fieldcompare_time_m:^2}m {fieldcompare_time_s:02d}s |"
         print(row)
         print(separator_plaintext)
         if "GITHUB_STEP_SUMMARY" in os.environ:
