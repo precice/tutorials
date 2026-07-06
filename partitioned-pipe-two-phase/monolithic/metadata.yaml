@@ -1,0 +1,13 @@
+name: Partitioned pipe two phase (monolithic)
+path: partitioned-pipe-two-phase/monolithic
+url: https://precice.org/tutorials-partitioned-pipe-two-phase.html
+
+participants:
+  - Monolithic
+
+cases:
+  monolthic-openfoam:
+    participant: Monolithic
+    directory: .
+    run: ./run.sh
+    component: openfoam-adapter

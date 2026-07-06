@@ -419,6 +419,14 @@ test_suites:
           - fluid2-openfoam
         max_time: 0.1
         reference_result: ./partitioned-pipe-two-phase/reference-results/fluid1-openfoam_fluid2-openfoam.tar.gz
+  
+  partitioned-pipe-two-phase-monolithic:
+    tutorials:
+      - &partitioned-pipe-two-phase_monolithic-openfoam
+        path: partitioned-pipe-two-phase/monolithic
+        case_combination:
+          - monolithic-openfoam
+        skip_compare: true # Not a coupled case, no preCICE exports
 
   perpendicular-flap:
     tutorials:
@@ -666,6 +674,7 @@ test_suites:
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
       - *partitioned-pipe-multiscale_fluid3d-left-openfoam_fluid1d-right-nutils
       - *partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam
+      - *partitioned-pipe-two-phase_monolithic-openfoam
       - *perpendicular-flap_fluid-fake_solid-fake
       - *perpendicular-flap_fluid-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-dealii
@@ -813,6 +822,7 @@ test_suites:
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
       - *partitioned-pipe-multiscale_fluid3d-left-openfoam_fluid1d-right-nutils
       - *partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam
+      - *partitioned-pipe-two-phase_monolithic-openfoam
       - *perpendicular-flap_fluid-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-dealii
       - *perpendicular-flap_fluid-openfoam_solid-fenics
@@ -830,6 +840,10 @@ test_suites:
     tutorials:
       - *flow-over-heated-plate_fluid-su2_solid-openfoam
       - *perpendicular-flap_fluid-su2_solid-fenics
+
+  uncoupled:
+    tutorials:
+      - *partitioned-pipe-two-phase_monolithic-openfoam
 
   # A test suite used for the system tests development
   system-tests-dev:
