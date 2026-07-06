@@ -427,8 +427,8 @@ test_suites:
         case_combination:
           - monolithic-openfoam
           - none
-        skip_compare: true # Not a coupled case, no preCICE exports
-        reference_result:  # Not a coupled case, no preCICE exports
+        skip_compare: true     # Not a coupled case, no preCICE exports
+        reference_result: none # Not a coupled case, no preCICE exports
 
   perpendicular-flap:
     tutorials:
