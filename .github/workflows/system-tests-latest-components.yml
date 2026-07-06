@@ -36,6 +36,9 @@ on:
       ref-fenicsx-adapter:
         description: 'fenicsx-adapter ref'
         type: string
+      ref-fmi-runner:
+        description: 'fmi-runner ref'
+        type: string
       ref-micro-manager:
         description: 'micro-manager ref'
         type: string
@@ -62,6 +65,7 @@ jobs:
         DUMUX_ADAPTER_REF:${{ inputs.ref-dumux-adapter }},\
         FENICS_ADAPTER_REF:${{ inputs.ref-fenics-adapter }},\
         FENICSX_ADAPTER_REF:${{ inputs.ref-fenicsx-adapter }},\
+        FMI_RUNNER_REF:${{ inputs.ref-fmi-runner }},\
         MICRO_MANAGER_REF:${{ inputs.ref-micro-manager }},\
         OPENFOAM_ADAPTER_REF:${{ inputs.ref-openfoam-adapter }},\
         SU2_ADAPTER_REF:${{ inputs.ref-su2-adapter }},\

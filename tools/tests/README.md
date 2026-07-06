@@ -216,6 +216,8 @@ To add a new component, a few changes are needed:
 3. In the `component_templates.yaml`, define a component template. These are Jinja templates that are used by Docker Compose, and the main detail is how to run a simulation using that component.
 4. Refer to the new component in the `metadata.yaml` of some tutorial and define some tests.
 
+Some components might require injecting further changes to the configuration files of a tutorial, to make them use the testing setup (e.g., install specific versions of dependencies). You can set such steps for the `prepare:` service in the `docker-compose.template.yaml` file.
+
 ### Adding new repositories that can trigger the tests
 
 If you want to trigger the system tests from a new repository:

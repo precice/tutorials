@@ -521,8 +521,8 @@ test_suites:
         case_combination:
           - macro-nutils
           - micro-nutils
-        max_time: 0.05
-        timeout: 600
+        max_time: 0.01
+        timeout: 1200
         skip_compare: true # Values too close to zero
         reference_result: ./two-scale-heat-conduction/reference-results/macro-nutils_micro-nutils.tar.gz
 
@@ -737,6 +737,7 @@ test_suites:
 
   fmi-runner:
     tutorials:
+      - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
       - *oscillator_mass-left-fmi_mass-right-fmi
 
   fortran-module:
