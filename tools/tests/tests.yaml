@@ -423,7 +423,7 @@ test_suites:
   partitioned-pipe-two-phase-monolithic:
     tutorials:
       - &partitioned-pipe-two-phase_monolithic-openfoam
-        path: partitioned-pipe-two-phase/monolithic
+        path: partitioned-pipe-two-phase
         case_combination:
           - monolithic-openfoam
           - none
