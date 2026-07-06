@@ -12,7 +12,7 @@ from paths import PRECICE_REL_OUTPUT_DIR, PRECICE_TOOLS_DIR, PRECICE_REL_REFEREN
 from metadata_parser.metdata import Tutorial, CaseCombination, Case, ReferenceResult
 from .SystemtestArguments import SystemtestArguments
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import tarfile
 import time
 
@@ -171,11 +171,11 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
 
     header = f"| {'systemtest':<{max_name_length + 2}} "\
         f"| {'status':^7} "\
-        f"| {'building time [s]':^17} "\
-        f"| {'solver time [s]':^15} "\
-        f"| {'fieldcompare time [s]':^21} |"
+        f"| {'build':^11} "\
+        f"| {'run':^11} "\
+        f"| {'compare':^11} |"
     separator_plaintext = "+-" + "-" * (max_name_length + 2) + \
-        "-+---------+-------------------+-----------------+-----------------------+"
+        "-+---------+-------------+-------------+-------------+"
     separator_markdown = "| --- | --- | --- | --- | --- |"
 
     print(separator_plaintext)
@@ -188,11 +188,20 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
             print(separator_markdown, file=f)
 
     for result in results:
+        build_time = int(timedelta(seconds=result.build_time).total_seconds())
+        build_time_m, build_time_s = divmod(build_time, 60)
+
+        solver_time = int(timedelta(seconds=result.solver_time).total_seconds())
+        solver_time_m, solver_time_s = divmod(solver_time, 60)
+
+        fieldcompare_time = int(timedelta(seconds=result.fieldcompare_time).total_seconds())
+        fieldcompare_time_m, fieldcompare_time_s = divmod(fieldcompare_time, 60)
+
         row = f"| {str(result.systemtest):<{max_name_length + 2}} "\
-            f"| {_success_status_symbol(result.success):^7} "\
-            f"| {result.build_time:^17.1f} "\
-            f"| {result.solver_time:^15.1f} "\
-            f"| {result.fieldcompare_time:^21.1f} |"
+            f"| {_success_status_symbol(result.success):^5} "\
+            f"|    {build_time_m}m {build_time_s:02d}s   "\
+            f"|    {solver_time_m}m {solver_time_s:02d}s   "\
+            f"|    {fieldcompare_time_m}m {fieldcompare_time_s:02d}s   |"
         print(row)
         print(separator_plaintext)
         if "GITHUB_STEP_SUMMARY" in os.environ:
