@@ -131,13 +131,13 @@ class MicroSimulation:
     #      export.vtk("micro-heat-{}".format(self._sim_id), bezier.tri, x, T=u, phi=phi)
 
     def get_state(self):
-        if self._solphi is None:
-            print("Micro sim {} has no phase field state to save".format(self._sim_id))
-        return [self._solphi.copy(), deepcopy(self._topo)]
+        return [self._solphi.copy(), deepcopy(self._topo), self._psi_nm1, self._k_nm1]
 
     def set_state(self, state):
         self._solphi = state[0]
         self._topo = state[1]
+        self._psi_nm1 = state[2]
+        self._k_nm1 = state[3]
         self._reinitialize_namespace(self._topo)  # The namespace also needs to reloaded to its earlier state
         print("Micro sim {} has set its state".format(self._sim_id))
 
