@@ -426,6 +426,7 @@ test_suites:
         path: partitioned-pipe-two-phase/monolithic
         case_combination:
           - monolithic-openfoam
+          - none
         skip_compare: true # Not a coupled case, no preCICE exports
 
   perpendicular-flap:
