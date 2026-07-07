@@ -300,7 +300,7 @@ RUN for i in $(seq 1 3); do \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone -b cell_problems https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git; then break; fi; \
+        if git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git -b cell_problems; then break; fi; \
         rm -rf dumux-phasefield; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
