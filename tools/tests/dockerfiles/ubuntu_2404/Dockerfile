@@ -316,8 +316,8 @@ RUN for i in $(seq 1 3); do \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
-# Up to here, all the dependencies are intended for dumux. Build it.
-# DUNE module needed for the dune adapter:
+# Up to here, all the dependencies are intended for dumux.
+# DUNE modules needed for the dune adapter:
 RUN for i in $(seq 1 3); do \
         if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION}; then break; fi; \
         rm -rf dune-foamgrid; \
