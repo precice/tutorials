@@ -149,18 +149,14 @@ int main(int argc, char **argv)
 
   // initialize the coupling data
   std::string readDatak00;
-  std::string readDatak01;
-  std::string readDatak10;
   std::string readDatak11;
   std::string readDataPorosity;
   std::string writeDataConcentration;
 
   if (runWithCoupling) {
     readDatak00            = couplingParticipant.getReadDataNamesOnMesh(meshName)[0];
-    readDatak01            = couplingParticipant.getReadDataNamesOnMesh(meshName)[1];
-    readDatak10            = couplingParticipant.getReadDataNamesOnMesh(meshName)[2];
-    readDatak11            = couplingParticipant.getReadDataNamesOnMesh(meshName)[3];
-    readDataPorosity       = couplingParticipant.getReadDataNamesOnMesh(meshName)[4];
+    readDatak11            = couplingParticipant.getReadDataNamesOnMesh(meshName)[1];
+    readDataPorosity       = couplingParticipant.getReadDataNamesOnMesh(meshName)[2];
     writeDataConcentration = couplingParticipant.getWriteDataNamesOnMesh(meshName)[0];
   }
 
@@ -191,8 +187,6 @@ int main(int argc, char **argv)
     std::vector<double> kInitial(numberOfElements, 1.0);
     std::vector<double> porosityInitial(numberOfElements, 0.5);
     couplingParticipant.writeQuantityVector(meshName, readDatak00, kInitial);
-    couplingParticipant.writeQuantityVector(meshName, readDatak01, kInitial);
-    couplingParticipant.writeQuantityVector(meshName, readDatak10, kInitial);
     couplingParticipant.writeQuantityVector(meshName, readDatak11, kInitial);
     couplingParticipant.writeQuantityVector(meshName, readDataPorosity,
                                             porosityInitial);
@@ -211,8 +205,6 @@ int main(int argc, char **argv)
   // add model specific output fields
   vtkWriter.addField(problem->getPorosity(), "Porosity");
   vtkWriter.addField(problem->getK00(), "K00");
-  vtkWriter.addField(problem->getK01(), "K01");
-  vtkWriter.addField(problem->getK10(), "K10");
   vtkWriter.addField(problem->getK11(), "K11");
   problem->updateVtkOutput(x);
   vtkWriter.write(0.0);
@@ -285,10 +277,6 @@ int main(int argc, char **argv)
       // TODO: data needs to be updated if Newton solver adapts time-step size
       // and coupling data is interpolated in time
       couplingParticipant.readQuantityFromOtherSolver(meshName, readDatak00,
-                                                      dt);
-      couplingParticipant.readQuantityFromOtherSolver(meshName, readDatak01,
-                                                      dt);
-      couplingParticipant.readQuantityFromOtherSolver(meshName, readDatak10,
                                                       dt);
       couplingParticipant.readQuantityFromOtherSolver(meshName, readDatak11,
                                                       dt);

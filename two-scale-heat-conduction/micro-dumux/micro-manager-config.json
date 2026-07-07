@@ -4,7 +4,7 @@
             "participant_name": "Micro-Manager",
             "precice_config_file_name": "../precice-config.xml",
             "macro_mesh_name": "Macro-Mesh",
-            "write_data_names": ["K00", "K01", "K10", "K11", "Porosity"],
+            "write_data_names": ["K00", "K11", "Porosity"],
             "read_data_names": ["Concentration"]
     },
     "simulation_params": {
@@ -18,7 +18,8 @@
             "history_param": 0.1,
             "coarsening_constant": 0.2,
             "refining_constant": 0.05,
-            "similarity_measure": "L2rel"
+            "similarity_measure": "L2rel",
+            "lazy_initialization": true
         }
     },
     "diagnostics": {
