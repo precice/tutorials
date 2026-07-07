@@ -43,11 +43,11 @@ cases:
     run: ./run.sh
     component: dealii-adapter
   
-  # solid-dune:
-  #   participant: Solid
-  #   directory: ./solid-dune
-  #   run: ./run.sh
-  #   component: dune-adapter
+  solid-dune:
+    participant: Solid
+    directory: ./solid-dune
+    run: ./run.sh
+    component: dune
 
   solid-fake:
     participant: Solid

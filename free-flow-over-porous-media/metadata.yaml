@@ -11,10 +11,10 @@ cases:
     participant: Free-Flow
     directory: ./free-flow-dumux
     run: ./run.sh -l /home/precice/dumux
-    component: dumux-adapter
+    component: dune
 
   porous-media-dumux:
     participant: Porous-Media
     directory: ./porous-media-dumux
     run: ./run.sh -l /home/precice/dumux
-    component: dumux-adapter
+    component: dune
