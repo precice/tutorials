@@ -880,4 +880,4 @@ test_suites:
 
   selected:
     tutorials:
-      - *free-flow-over-porous-media_free-flow-dumux_porous-media-dumux
+      - *elastic-tube-1d_fluid-python_solid-python
