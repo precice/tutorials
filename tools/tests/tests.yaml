@@ -868,4 +868,4 @@ test_suites:
 
   selected:
     tutorials:
-      - *flow-over-heated-plate_fluid-openfoam_solid-dunefem
+      - *elastic-tube-1d_fluid-python_solid-python
