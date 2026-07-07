@@ -317,10 +317,7 @@ RUN for i in $(seq 1 3); do \
         sleep 10; \
     done
 # Up to here, all the dependencies are intended for dumux. Build it.
-RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
-    ./dune-common/bin/dunecontrol make -j $(nproc)
-
-# Dependencies intended for the dune adapter
+# DUNE module needed for the dune adapter:
 RUN for i in $(seq 1 3); do \
         if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION}; then break; fi; \
         rm -rf dune-foamgrid; \
@@ -351,6 +348,7 @@ RUN for i in $(seq 1 3); do \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
+# Modules specific to the dune adapter:
 RUN for i in $(seq 1 3); do \
         if git clone --depth 1 https://github.com/maxfirmbach/dune-elastodynamics.git -b master; then break; fi; \
         rm -rf dune-elastodynamics; \
@@ -363,8 +361,7 @@ RUN for i in $(seq 1 3); do \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
-RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
-    ./dune-common/bin/dunecontrol make -j $(nproc)
+RUN ./dune-common/bin/dunecontrol all
 
 FROM dune AS dumux_adapter
 USER root
@@ -381,5 +378,4 @@ RUN git clone https://github.com/precice/dumux-adapter.git &&\
     if [ -n "${DUMUX_ADAPTER_PR}" ]; then git fetch origin pull/${DUMUX_ADAPTER_PR}/head; fi && \
     git checkout ${DUMUX_ADAPTER_REF} && \
     cd .. &&\
-    ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
-    ./dune-common/bin/dunecontrol make -j $(nproc)
+    ./dune-common/bin/dunecontrol all
