@@ -140,6 +140,13 @@ test_suites:
 
   flow-over-heated-plate:
     tutorials:
+      - &flow-over-heated-plate_fluid-openfoam_solid-dunefem
+        path: flow-over-heated-plate
+        case_combination:
+         - fluid-openfoam
+         - solid-dunefem
+        timeout: 1200
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-dunefem.tar.gz
       - &flow-over-heated-plate_fluid-openfoam_solid-fenics
         path: flow-over-heated-plate
         case_combination:
@@ -705,6 +712,7 @@ test_suites:
   extra:
     tutorials:
       - *channel-transport_fluid-nutils_transport-nutils
+      - *flow-over-heated-plate_fluid-openfoam_solid-dunefem
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *perpendicular-flap_fluid-nutils_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-nutils
