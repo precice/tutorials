@@ -249,20 +249,17 @@ RUN python3 -m venv /home/precice/venv && \
     cd micro-manager && \
     if [ -n "${MICRO_MANAGER_PR}" ]; then git fetch origin pull/${MICRO_MANAGER_PR}/head; fi && \
     git checkout ${MICRO_MANAGER_REF} && \
-    pip3 install .
+    pip3 install . && \
+    pip3 install pybind11
 WORKDIR /home/precice
-RUN python3 -m venv /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
-    pip3 install pybind11    
 
-FROM micro_manager AS dumux_adapter
+FROM precice_dependencies AS dune
 USER root
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DUNE_VERSION
-ARG DUMUX_VERSION
 USER precice
-WORKDIR /home/precice/dumux
-ENV PATH="/home/precice/dumux/dune-common/bin:${PATH}"
+WORKDIR /home/precice/dune
+ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
 # This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
 RUN for i in $(seq 1 3); do \
         if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION}; then break; fi; \
@@ -318,6 +315,15 @@ RUN for i in $(seq 1 3); do \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
+RUN ./dune-common/bin/dunecontrol all
+
+FROM dune AS dumux_adapter
+USER root
+COPY --from=micro_manager /home/precice/venv /home/precice/venv
+RUN . /home/precice/venv/bin/activate
+ARG DUMUX_VERSION
+USER precice
+WORKDIR /home/precice/dune
 # build core DUNE, DuMuX and the adapter
 ARG DUMUX_ADAPTER_PR
 ARG DUMUX_ADAPTER_REF
