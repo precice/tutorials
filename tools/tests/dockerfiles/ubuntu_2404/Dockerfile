@@ -379,4 +379,5 @@ RUN git clone https://github.com/precice/dumux-adapter.git &&\
     cd dumux-adapter && \
     if [ -n "${DUMUX_ADAPTER_PR}" ]; then git fetch origin pull/${DUMUX_ADAPTER_PR}/head; fi && \
     git checkout ${DUMUX_ADAPTER_REF} && \
-    ../dune-common/bin/dunecontrol --only=dumux-precice
+    cd .. && \
+    ./dune-common/bin/dunecontrol --only=dumux-precice all
