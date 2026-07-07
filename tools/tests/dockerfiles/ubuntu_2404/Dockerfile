@@ -358,7 +358,7 @@ RUN for i in $(seq 1 3); do \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 git clone --depth 1 https://github.com/precice/dune-adapter.git -b main; then break; fi; \
+        if git clone --depth 1 https://github.com/precice/dune-adapter.git -b main; then break; fi; \
         rm -rf dune-adapter; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
