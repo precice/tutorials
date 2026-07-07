@@ -361,6 +361,8 @@ RUN for i in $(seq 1 3); do \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
+# Make dune-adapter/dune-precice-howto/build-cmake/examples/dune-perpendicular-flap discoverable
+ENV PATH="/home/precice/dune/dune-adapter/dune-precice-howto/build-cmake/examples/:${PATH}"
 RUN ./dune-common/bin/dunecontrol all
 
 FROM dune AS dumux_adapter
