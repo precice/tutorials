@@ -253,7 +253,7 @@ RUN python3 -m venv /home/precice/venv && \
     pip3 install pybind11
 WORKDIR /home/precice
 
-FROM precice_dependecies AS dune
+FROM micro_manager AS dune
 USER root
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DUNE_VERSION
@@ -376,4 +376,4 @@ RUN git clone https://github.com/precice/dumux-adapter.git &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
 
 # The micro-manager is needed for some dumux-adapter cases
-COPY --from=micro_manager /home/precice/venv /home/precice/venv
+# COPY --from=micro_manager /home/precice/venv /home/precice/venv
