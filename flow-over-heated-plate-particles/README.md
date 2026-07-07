@@ -13,7 +13,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 This scenario consists of one fluid and one solid participant and it is inspired by Vynnycky et al. [1]. A fluid enters a channel with temperature $$ T_\infty $$, where it comes in contact with a solid plate. The plate is heated at its bottom and has a constant temperature of $$ T_{hot} $$. The scenario differs from the flow-over-heated-plate tutorial by adding a basicReactingCloud of particles to the fluid (OpenFOAM) participant.  
 
-![img](images/tutorials-flow-over-heated-plate-example.png)
+![img](images/tutorials-flow-over-heated-plate-particles-example.png)
 
 The test case is two-dimensional and a serial-implicit coupling with Aitken underrelaxation is used for the coupling.
 
@@ -70,7 +70,7 @@ In case of OpenFOAM, you can open the `.foam` file with ParaView, or create VTK 
 
 An example of the visualized expected results looks as follows:
 
-![result](fluid-openfoam/paraview/images/temperature_with_particles/temperature_with_particles.gif)
+![result](images/temperature_with_particles.gif)
 
 ## References
 
