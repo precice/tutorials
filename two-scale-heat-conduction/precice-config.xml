@@ -36,7 +36,7 @@
   </participant>
 
   <participant name="Micro-Manager">
-    <receive-mesh name="Macro-Mesh" from="Macro" direct-access="true" safety-factor="0.0" />
+    <receive-mesh name="Macro-Mesh" from="Macro" api-access="true" safety-factor="0.0" />
     <read-data name="Concentration" mesh="Macro-Mesh" />
     <write-data name="K00" mesh="Macro-Mesh" />
     <write-data name="K11" mesh="Macro-Mesh" />
