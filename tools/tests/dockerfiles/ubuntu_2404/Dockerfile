@@ -254,6 +254,7 @@ RUN python3 -m venv /home/precice/venv && \
 WORKDIR /home/precice
 
 FROM micro_manager AS dune
+# The micro-manager is needed for some dumux-adapter cases
 USER root
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DUNE_VERSION
@@ -375,6 +376,3 @@ RUN git clone https://github.com/precice/dumux-adapter.git &&\
     cd .. && \
     ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
-
-# The micro-manager is needed for some dumux-adapter cases
-# COPY --from=micro_manager /home/precice/venv /home/precice/venv
