@@ -365,16 +365,6 @@ RUN for i in $(seq 1 3); do \
 ENV PATH="/home/precice/dune/dune-adapter/dune-precice-howto/build-cmake/examples/:${PATH}"
 RUN ./dune-common/bin/dunecontrol all
 
-FROM dune AS dumux_adapter
-USER root
-# COPY --from=precice /home/precice/.local/ /home/precice/.local/
-COPY --from=micro_manager /home/precice/venv /home/precice/venv
-# RUN . /home/precice/venv/bin/activate
-ARG DUMUX_VERSION
-USER precice
-WORKDIR /home/precice/dune
-ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
-# build core DUNE, DuMuX and the adapter
 ARG DUMUX_ADAPTER_PR
 ARG DUMUX_ADAPTER_REF
 RUN git clone https://github.com/precice/dumux-adapter.git &&\
@@ -384,3 +374,6 @@ RUN git clone https://github.com/precice/dumux-adapter.git &&\
     cd .. && \
     ./dune-common/bin/dunecontrol cmake &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
+
+# The micro-manager is needed for some dumux-adapter cases
+COPY --from=micro_manager /home/precice/venv /home/precice/venv
