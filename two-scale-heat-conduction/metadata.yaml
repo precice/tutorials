@@ -11,7 +11,7 @@ cases:
     participant: Macro
     directory: ./macro-dumux
     run: ./run.sh -l /home/precice/dumux
-    component: dumux-adapter
+    component: dune
   
   macro-nutils:
     participant: Macro
@@ -23,7 +23,7 @@ cases:
     participant: Micro-Manager
     directory: ./micro-dumux
     run: source /home/precice/venv/bin/activate && ./run.sh -s -l /home/precice/dumux
-    component: dumux-adapter
+    component: dune
 
   micro-nutils:
     participant: Micro-Manager

@@ -48,8 +48,8 @@ dealii-adapter:
       repository: https://github.com/precice/dealii-adapter
       default: "develop"
 
-dumux-adapter:
-  template: component-templates/dumux-adapter.yaml
+dune:
+  template: component-templates/dune.yaml
   build_timeout: 900
   build_arguments:
     PLATFORM:

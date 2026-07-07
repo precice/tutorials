@@ -47,7 +47,7 @@ cases:
     participant: Solid
     directory: ./solid-dune
     run: ./run.sh
-    component: dumux-adapter # dumux is not necessary, a slimmer component would also do
+    component: dune
 
   solid-fake:
     participant: Solid
