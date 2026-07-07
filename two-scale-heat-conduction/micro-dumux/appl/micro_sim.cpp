@@ -76,8 +76,6 @@ public:
 private:
   const double pi_ = 3.14159265358979323846;
   double       _k_00;
-  double       _k_01;
-  double       _k_10;
   double       _k_11;
   double       _porosity;
   int          sim_id;
@@ -244,16 +242,12 @@ py::dict MicroSimulation::solve(py::dict macro_write_data, double dt)
 
   // calculate the conductivity tensor
   _k_00 = _cpProblem->calculateConductivityTensorComponent(0, 0);
-  _k_10 = _cpProblem->calculateConductivityTensorComponent(1, 0);
-  _k_01 = _cpProblem->calculateConductivityTensorComponent(0, 1);
   _k_11 = _cpProblem->calculateConductivityTensorComponent(1, 1);
 
   py::dict micro_write_data;
 
   // add micro_scalar_data and micro_vector_data to micro_write_data
   micro_write_data["K00"]        = _k_00;
-  micro_write_data["K10"]        = _k_10;
-  micro_write_data["K01"]        = _k_01;
   micro_write_data["K11"]        = _k_11;
   micro_write_data["Porosity"]   = _porosity;
   micro_write_data["Grain-Size"] = std::sqrt((1 - _porosity) / pi_);
