@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-dune.tar.gz | 2026-07-07 16:57:57 | 9aca3b7ff513c40e034ace2d298bdbc7e41a4d43d40c0cdaccc8d1da13005e10 |
+| fluid-openfoam_solid-dune.tar.gz | 2026-07-07 22:39:34 | e1cea2b6eeda9b3911dde549f9ca9185a17a1134b5431d34ebc8fb392b05c91d |
 
 ## List of arguments used to generate the files
 
@@ -34,7 +34,7 @@ We also include some information on the machine used to generate them
 | PRECICE_REF | b770460f2447b94da430086085d6b424e7c073e9 |
 | PYTHON_BINDINGS_REF | v3.4.0 |
 | SU2_ADAPTER_REF | 5abe79b |
-| TUTORIALS_REF | 0f02e230c8cffed6ed15b11e5d3dda853de0b32c |
+| TUTORIALS_REF | d5a22716e03818496086d25a2d505c128c442dba |
 | PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
