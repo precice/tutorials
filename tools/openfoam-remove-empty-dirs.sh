@@ -11,7 +11,7 @@ openfoam_remove_empty_dirs() {
 				rm -rf "${f}"
 			fi
 		done
-		if [ -d processor0 ]; then
+		if [ -d processor0 ] || [ -d processor* ]; then
 			for d in processor*; do
 				cd "${d}"
 				for f in [0-9]* [0-9]*.[0-9]*; do
