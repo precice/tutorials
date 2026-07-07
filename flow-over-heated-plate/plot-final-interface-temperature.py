@@ -32,6 +32,7 @@ def vtk_to_dict(case):
 def main():
     case_labels = {
         'fenics': 'Fluid-FEniCS',
+        'fenicsx': 'Fluid-FEniCSx',
         'openfoam': 'Fluid-OpenFOAM',
         'nutils': 'Fluid-Nutils',
         'dunefem': 'Fluid-DuneFem'}
