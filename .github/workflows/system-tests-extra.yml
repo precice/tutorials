@@ -1,0 +1,13 @@
+name: System tests (extra cases)
+
+on:
+  schedule:
+    - cron: "0 3 * * WED"
+      timezone: "Europe/Berlin"
+
+jobs:
+  run-system-tests:
+    name: Trigger system tests
+    uses: precice/tutorials/.github/workflows/system-tests.yml@develop
+    with:
+      suites: 'extra'

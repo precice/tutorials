@@ -2,7 +2,7 @@ name: System tests (manual/nightly)
 
 on:
   schedule:
-    - cron: "0 4 * * *"
+    - cron: "0 2 * * *"
       timezone: "Europe/Berlin"
   workflow_dispatch:
     inputs:
