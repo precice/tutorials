@@ -470,6 +470,12 @@ test_suites:
           - fluid-openfoam
           - solid-dealii
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-dealii.tar.gz
+      - &perpendicular-flap_fluid-openfoam_solid-dune
+        path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-dune
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-dune.tar.gz
       - &perpendicular-flap_fluid-openfoam_solid-fenics
         path: perpendicular-flap
         case_combination:
@@ -692,6 +698,7 @@ test_suites:
       - *perpendicular-flap_fluid-fake_solid-fake
       - *perpendicular-flap_fluid-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-dealii
+      - *perpendicular-flap_fluid-openfoam_solid-dune
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
       - *perpendicular-flap_fluid-su2_solid-fenics
@@ -756,6 +763,10 @@ test_suites:
     tutorials:
       - *free-flow-over-porous-media_free-flow-dumux_porous-media-dumux
       - *two-scale-heat-conduction_macro-dumux_micro-dumux
+
+  dune-adapter:
+    tutorials:
+      - *perpendicular-flap_fluid-openfoam_solid-dune
 
   fenics-adapter:
     tutorials:
@@ -840,6 +851,7 @@ test_suites:
       - *partitioned-pipe-two-phase_monolithic-openfoam
       - *perpendicular-flap_fluid-openfoam_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-dealii
+      - *perpendicular-flap_fluid-openfoam_solid-dune
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
