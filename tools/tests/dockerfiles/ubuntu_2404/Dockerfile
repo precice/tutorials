@@ -316,6 +316,53 @@ RUN for i in $(seq 1 3); do \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
+# Up to here, all the dependencies are intended for dumux. Build it.
+RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
+    ./dune-common/bin/dunecontrol make -j $(nproc)
+
+# Dependencies intended for the dune adapter
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        rm -rf dune-foamgrid; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        rm -rf dune-foamgrid; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION}; then break; fi; \
+        rm -rf dune-functions; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION}; then break; fi; \
+        rm -rf dune-typetree; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        rm -rf dune-uggrid; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://github.com/maxfirmbach/dune-elastodynamics.git -b releases/${DUNE_VERSION}; then break; fi; \
+        rm -rf dune-elastodynamics; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 git clone --depth 1 --branch main https://github.com/precice/dune-adapter.git -b main; then break; fi; \
+        rm -rf dune-adapter; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
 RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
 
