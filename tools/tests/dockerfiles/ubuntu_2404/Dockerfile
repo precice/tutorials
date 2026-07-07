@@ -257,6 +257,7 @@ FROM precice_dependecies AS dune
 USER root
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DUNE_VERSION
+ARG DUMUX_VERSION
 USER precice
 WORKDIR /home/precice/dune
 ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
@@ -315,7 +316,8 @@ RUN for i in $(seq 1 3); do \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
-RUN ./dune-common/bin/dunecontrol all
+RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
+    ./dune-common/bin/dunecontrol make -j $(nproc)
 
 FROM dune AS dumux_adapter
 USER root
