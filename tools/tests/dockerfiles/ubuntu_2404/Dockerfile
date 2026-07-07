@@ -367,6 +367,7 @@ RUN ./dune-common/bin/dunecontrol all
 
 FROM dune AS dumux_adapter
 USER root
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
 COPY --from=micro_manager /home/precice/venv /home/precice/venv
 RUN . /home/precice/venv/bin/activate
 ARG DUMUX_VERSION
