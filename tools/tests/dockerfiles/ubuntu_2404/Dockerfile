@@ -253,7 +253,7 @@ RUN python3 -m venv /home/precice/venv && \
     pip3 install pybind11
 WORKDIR /home/precice
 
-FROM precice_dependencies AS dune
+FROM precice_dependecies AS dune
 USER root
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DUNE_VERSION
