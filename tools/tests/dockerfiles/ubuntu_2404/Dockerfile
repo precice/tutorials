@@ -373,6 +373,7 @@ RUN . /home/precice/venv/bin/activate
 ARG DUMUX_VERSION
 USER precice
 WORKDIR /home/precice/dune
+ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
 # build core DUNE, DuMuX and the adapter
 ARG DUMUX_ADAPTER_PR
 ARG DUMUX_ADAPTER_REF
