@@ -10,7 +10,7 @@ cases:
   macro-dumux:
     participant: Macro
     directory: ./macro-dumux
-    run: ./run.sh -l /home/precice/dumux
+    run: ./run.sh
     component: dune
   
   macro-nutils:
@@ -22,7 +22,7 @@ cases:
   micro-dumux:
     participant: Micro-Manager
     directory: ./micro-dumux
-    run: source /home/precice/venv/bin/activate && ./run.sh -s -l /home/precice/dumux
+    run: source /home/precice/venv/bin/activate && ./run.sh -s
     component: dune
 
   micro-nutils:
