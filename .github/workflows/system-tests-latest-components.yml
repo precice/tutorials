@@ -30,6 +30,9 @@ on:
       ref-dumux-adapter:
         description: 'dumux-adapter ref'
         type: string
+      ref-dune-adapter:
+        description: 'dune-adapter ref'
+        type: string
       ref-fenics-adapter:
         description: 'fenics-adapter ref'
         type: string
@@ -63,6 +66,7 @@ jobs:
         CALCULIX_ADAPTER_REF:${{ inputs.ref-calculix-adapter }},\
         DEALII_ADAPTER_REF:${{ inputs.ref-dealii-adapter }},\
         DUMUX_ADAPTER_REF:${{ inputs.ref-dumux-adapter }},\
+        DUNE_ADAPTER_REF:${{ inputs.ref-dune-adapter }},\
         FENICS_ADAPTER_REF:${{ inputs.ref-fenics-adapter }},\
         FENICSX_ADAPTER_REF:${{ inputs.ref-fenicsx-adapter }},\
         FMI_RUNNER_REF:${{ inputs.ref-fmi-runner }},\

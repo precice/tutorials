@@ -86,6 +86,9 @@ dune-adapter:
       default: "develop"
     DUNE_VERSION:
       default: "2.9"
+    DUNE_ADAPTER_REF:
+      repository: https://github.com/precice/dune-adapter
+      default: "main"
 
 fenics-adapter:
   template: component-templates/fenics-adapter.yaml

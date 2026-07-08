@@ -397,19 +397,20 @@ RUN for i in $(seq 1 3); do \
     done
 
 # Modules specific to the dune adapter:
+ARG DUNE_ADAPTER_PR
+ARG DUNE_ADAPTER_REF
 RUN for i in $(seq 1 3); do \
         if git clone --depth 1 https://github.com/maxfirmbach/dune-elastodynamics.git -b master; then break; fi; \
         rm -rf dune-elastodynamics; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://github.com/precice/dune-adapter.git -b main; then break; fi; \
-        rm -rf dune-adapter; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
+RUN git clone https://github.com/precice/dune-adapter.git&&\
+    cd dune-adapter && \
+    if [ -n "${DUNE_ADAPTER_PR}" ]; then git fetch origin pull/${DUNE_ADAPTER_PR}/head; fi && \
+    git checkout ${DUNE_ADAPTER_REF} && \
+    cd .. &&\
+    ./dune-common/bin/dunecontrol all
 
 # Make dune-adapter/dune-precice-howto/build-cmake/examples/dune-perpendicular-flap discoverable
 ENV PATH="/home/precice/dune/dune-adapter/dune-precice-howto/build-cmake/examples/:${PATH}"
-RUN ./dune-common/bin/dunecontrol all
