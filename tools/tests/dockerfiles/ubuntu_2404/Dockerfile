@@ -2,10 +2,10 @@ FROM ubuntu:24.04 AS base_image
 USER root
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
-# We set a sensical value, but still have the possibilty to influence this via the build time arguments. 
-# When the dockerfile is built using the systemtests.py we set the PRECICE_UID and PRECICE_GID to the user executing the systemtests.
-# This ensures no file ownership problems down the line and is the most easy fix, as we normally built the containers locally
-# If not built via the systemtests.py its either possible to specify manually but 1000 would be the default anyway.
+# We set a senseful value, but still have the possibility to influence this via the build time arguments. 
+# When the dockerfile is built using the systemtests.py we set the PRECICE_UID and PRECICE_GID to the user executing the system tests.
+# This ensures no file ownership problems down the line and is the easiest fix, as we normally build the containers locally
+# If not built via the systemtests.py, it is possible to specify it manually, but 1000 would be the default anyway.
 ARG PRECICE_UID=1000
 ARG PRECICE_GID=1000
 RUN set -eux; \
@@ -115,7 +115,7 @@ ARG PYTHON_BINDINGS_REF
 USER precice
 WORKDIR /home/precice
 # Builds the precice python bindings for python3
-# Installs also matplotlib as its needed for the elastic-tube 1d fluid-python participant.
+# Installs also matplotlib as it is needed for the elastic-tube 1d fluid-python participant.
 RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
