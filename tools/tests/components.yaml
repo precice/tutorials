@@ -48,8 +48,8 @@ dealii-adapter:
       repository: https://github.com/precice/dealii-adapter
       default: "develop"
 
-dune:
-  template: component-templates/dune.yaml
+dumux-adapter:
+  template: component-templates/dumux-adapter.yaml
   build_timeout: 900
   build_arguments:
     PLATFORM:
@@ -69,6 +69,23 @@ dune:
     DUMUX_ADAPTER_REF:
       repository: https://github.com/precice/dumux-adapter
       default: "develop"
+
+dune-adapter:
+  template: component-templates/dune-adapter.yaml
+  build_timeout: 900
+  build_arguments:
+    PLATFORM:
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PRESET:
+      default: "production-audit"
+    TUTORIALS_REF:
+      repository: https://github.com/precice/tutorials
+      default: "develop"
+    DUNE_VERSION:
+      default: "2.9"
 
 fenics-adapter:
   template: component-templates/fenics-adapter.yaml
