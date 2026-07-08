@@ -7,16 +7,16 @@ on:
   workflow_dispatch:
     inputs:
       suites:
-        description: 'Test suites to execute (comma-separated)'
+        description: 'Test suites to execute (comma-separated,no-spaces)'
         default: 'release'
         required: true
         type: string
       system_tests_branch:
-        description: 'Branch to take the system tests from'
+        description: 'Use the system tests from'
         default: 'develop'
         type: string
       ref-tutorials:
-        description: 'tutorials Git ref (override latest)'
+        description: 'tutorials ref (default: latest develop)'
         type: string
       ref-precice:
         description: 'precice ref'
