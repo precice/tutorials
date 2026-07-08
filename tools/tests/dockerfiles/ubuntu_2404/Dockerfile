@@ -36,6 +36,7 @@ ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
 ENV CMAKE_PREFIX_PATH="/home/precice/.local:$CMAKE_PREFIX_PATH"
 USER precice
 
+
 FROM base_image AS precice_dependencies
 USER root
 # Dependencies for preCICE and common dependencies for the tutorials/tests
@@ -73,6 +74,7 @@ RUN apt-get -qq update && \
     libxinerama1
 USER precice
 
+
 FROM precice_dependencies AS precice
 # Install & build precice into /home/precice/precice
 ARG PRECICE_PR
@@ -88,64 +90,10 @@ RUN git clone https://github.com/precice/precice.git precice && \
     cmake .. --preset=${PRECICE_PRESET} -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DBUILD_TESTING=OFF && \
     make all install -j $(nproc)
 
-FROM precice_dependencies AS openfoam_adapter
-ARG OPENFOAM_EXECUTABLE
-USER root
-RUN apt-get update &&\
-    wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | bash &&\
-    apt-get -qq install ${OPENFOAM_EXECUTABLE}-dev &&\
-    ln -s $(which ${OPENFOAM_EXECUTABLE} ) /usr/bin/openfoam
-USER precice
-COPY --from=precice /home/precice/.local/ /home/precice/.local/
-ARG OPENFOAM_ADAPTER_PR
-ARG OPENFOAM_ADAPTER_REF
-# Build the OpenFOAM adapter 
-USER precice
-WORKDIR /home/precice
-RUN git clone https://github.com/precice/openfoam-adapter.git &&\
-    cd openfoam-adapter && \
-    if [ -n "${OPENFOAM_ADAPTER_PR}" ]; then git fetch origin pull/${OPENFOAM_ADAPTER_PR}/head; fi && \
-    git checkout ${OPENFOAM_ADAPTER_REF} && \
-    /usr/bin/${OPENFOAM_EXECUTABLE} ./Allwmake -j $(nproc)
 
-
-FROM precice_dependencies AS python_bindings
-COPY --from=precice /home/precice/.local/ /home/precice/.local/
-ARG PYTHON_BINDINGS_REF
-USER precice
-WORKDIR /home/precice
-# Builds the precice python bindings for python3
-# Installs also matplotlib as it is needed for the elastic-tube 1d fluid-python participant.
-RUN python3 -m venv /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
-    pip3 install git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
-    pip3 install matplotlib 
-
-FROM precice_dependencies AS fenics_adapter
-COPY --from=python_bindings /home/precice/.local /home/precice/.local
-USER root
-RUN add-apt-repository -y ppa:fenics-packages/fenics && \
-    apt-get -qq update && \
-    apt-get -qq install --no-install-recommends fenics
-USER precice
-ARG FENICS_ADAPTER_REF
-# Building fenics-adapter
-RUN python3 -m venv --system-site-packages /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
-    pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
-
-FROM precice_dependencies AS fenicsx_adapter
-COPY --from=python_bindings /home/precice/.local /home/precice/.local
-USER root
-RUN add-apt-repository -y ppa:fenics-packages/fenics && \
-    apt-get -qq update && \
-    apt-get -qq install --no-install-recommends fenicsx
-USER precice
-ARG FENICSX_ADAPTER_REF
-# Building fenicsx-adapter
-RUN python3 -m venv --system-site-packages /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
-    pip3 install git+https://github.com/precice/fenicsx-adapter.git@${FENICSX_ADAPTER_REF}
+#####################################################################
+#   Adapters and other components - Order stages alphabetically     #
+#####################################################################
 
 
 FROM precice_dependencies AS calculix_adapter
@@ -171,38 +119,6 @@ RUN git clone https://github.com/precice/calculix-adapter.git && \
     make CXX_VERSION=${CALCULIX_VERSION} ADDITIONAL_FFLAGS="-fallow-argument-mismatch" -j $(nproc) && \
     ln -s /home/precice/calculix-adapter/bin/ccx_preCICE /home/precice/.local/bin/ccx_preCICE
 
-FROM python_bindings AS su2_adapter
-COPY --from=precice /home/precice/.local /home/precice/.local
-USER root
-RUN apt-get -qq update && \
-    apt-get -qq install swig python3-mpi4py python3-setuptools
-ARG SU2_VERSION
-USER precice
-
-# Download and build SU2 (We could also use pre-built binaries from the SU2 releases)
-# The sed command applies a patch needed for Ubuntu 24.04.
-WORKDIR /home/precice
-RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
-    tar xvzf v${SU2_VERSION}.tar.gz && \
-    rm -fv v${SU2_VERSION}.tar.gz
-RUN python3 -m venv /home/precice/venv && \
-    . /home/precice/venv/bin/activate
-ARG SU2_ADAPTER_PR
-ARG SU2_ADAPTER_REF
-WORKDIR /home/precice
-ENV SU2_RUN="/home/precice/SU2_RUN" 
-ENV SU2_HOME="/home/precice/SU2-${SU2_VERSION}"
-ENV PATH="/home/precice/su2-adapter/run:$SU2_RUN:$PATH"
-ENV PYTHONPATH="$SU2_RUN:$PYTHONPATH"
-RUN git clone https://github.com/precice/su2-adapter.git && \
-    cd su2-adapter &&\
-    if [ -n "${SU2_ADAPTER_PR}" ]; then git fetch origin pull/${SU2_ADAPTER_PR}/head; fi && \
-    git checkout ${SU2_ADAPTER_REF} &&\
-    ./su2AdapterInstall
-RUN cd "${SU2_HOME}" &&\
-    sed -i '1s/^/#include <cstdint>\n/' SU2_CFD/src/output/filewriter/CParaviewXMLFileWriter.cpp &&\
-    ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN &&\
-    ./ninja -C build install
 
 FROM precice_dependencies AS dealii_adapter
 USER root
@@ -222,37 +138,6 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
     git checkout ${DEALII_ADAPTER_REF} && \
     cmake . && \
     make -j $(nproc)
-
-FROM precice_dependencies AS mercurydpm_adapter
-USER precice
-COPY --from=precice /home/precice/.local /home/precice/.local
-WORKDIR /home/precice
-ENV PATH="/home/precice/mercurydpm/build/Drivers/PreCICE:$PATH"
-# The channel-transport-particles tutorial is hosted in a frozen fork of the MercuryDPM repository.
-# That's why there are no arguments for version, ref, or pr.
-RUN git clone https://bitbucket.org/davidscn/mercurydpm.git &&\
-    cd mercurydpm && \
-    git checkout channel-transport-tutorial && \
-    mkdir -p build && cd build && \
-    cmake -D MercuryDPM_PreCICE_COUPLING="ON" .. && \
-    make -j $(nproc) ChannelTransport
-
-FROM precice_dependencies AS micro_manager
-USER precice
-WORKDIR /home/precice
-COPY --from=precice /home/precice/.local/ /home/precice/.local/
-
-ARG MICRO_MANAGER_REF
-RUN python3 -m venv /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
-    git clone https://github.com/precice/micro-manager.git && \
-    cd micro-manager && \
-    if [ -n "${MICRO_MANAGER_PR}" ]; then git fetch origin pull/${MICRO_MANAGER_PR}/head; fi && \
-    git checkout ${MICRO_MANAGER_REF} && \
-    pip3 install . && \
-    pip3 install pybind11
-WORKDIR /home/precice
-
 
 FROM micro_manager AS dumux_adapter
 # The micro-manager is needed for some dumux-adapter cases
@@ -414,3 +299,132 @@ RUN git clone https://github.com/precice/dune-adapter.git&&\
 
 # Make dune-adapter/dune-precice-howto/build-cmake/examples/dune-perpendicular-flap discoverable
 ENV PATH="/home/precice/dune/dune-adapter/dune-precice-howto/build-cmake/examples/:${PATH}"
+
+
+FROM precice_dependencies AS fenics_adapter
+COPY --from=python_bindings /home/precice/.local /home/precice/.local
+USER root
+RUN add-apt-repository -y ppa:fenics-packages/fenics && \
+    apt-get -qq update && \
+    apt-get -qq install --no-install-recommends fenics
+USER precice
+ARG FENICS_ADAPTER_REF
+# Building fenics-adapter
+RUN python3 -m venv --system-site-packages /home/precice/venv && \
+    . /home/precice/venv/bin/activate && \
+    pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
+
+
+FROM precice_dependencies AS fenicsx_adapter
+COPY --from=python_bindings /home/precice/.local /home/precice/.local
+USER root
+RUN add-apt-repository -y ppa:fenics-packages/fenics && \
+    apt-get -qq update && \
+    apt-get -qq install --no-install-recommends fenicsx
+USER precice
+ARG FENICSX_ADAPTER_REF
+# Building fenicsx-adapter
+RUN python3 -m venv --system-site-packages /home/precice/venv && \
+    . /home/precice/venv/bin/activate && \
+    pip3 install git+https://github.com/precice/fenicsx-adapter.git@${FENICSX_ADAPTER_REF}
+
+
+FROM precice_dependencies AS mercurydpm_adapter
+USER precice
+COPY --from=precice /home/precice/.local /home/precice/.local
+WORKDIR /home/precice
+ENV PATH="/home/precice/mercurydpm/build/Drivers/PreCICE:$PATH"
+# The channel-transport-particles tutorial is hosted in a frozen fork of the MercuryDPM repository.
+# That's why there are no arguments for version, ref, or pr.
+RUN git clone https://bitbucket.org/davidscn/mercurydpm.git &&\
+    cd mercurydpm && \
+    git checkout channel-transport-tutorial && \
+    mkdir -p build && cd build && \
+    cmake -D MercuryDPM_PreCICE_COUPLING="ON" .. && \
+    make -j $(nproc) ChannelTransport
+
+
+FROM precice_dependencies AS micro_manager
+USER precice
+WORKDIR /home/precice
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
+
+ARG MICRO_MANAGER_REF
+RUN python3 -m venv /home/precice/venv && \
+    . /home/precice/venv/bin/activate && \
+    git clone https://github.com/precice/micro-manager.git && \
+    cd micro-manager && \
+    if [ -n "${MICRO_MANAGER_PR}" ]; then git fetch origin pull/${MICRO_MANAGER_PR}/head; fi && \
+    git checkout ${MICRO_MANAGER_REF} && \
+    pip3 install . && \
+    pip3 install pybind11
+WORKDIR /home/precice
+
+
+FROM precice_dependencies AS openfoam_adapter
+ARG OPENFOAM_EXECUTABLE
+USER root
+RUN apt-get update &&\
+    wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | bash &&\
+    apt-get -qq install ${OPENFOAM_EXECUTABLE}-dev &&\
+    ln -s $(which ${OPENFOAM_EXECUTABLE} ) /usr/bin/openfoam
+USER precice
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
+ARG OPENFOAM_ADAPTER_PR
+ARG OPENFOAM_ADAPTER_REF
+# Build the OpenFOAM adapter 
+USER precice
+WORKDIR /home/precice
+RUN git clone https://github.com/precice/openfoam-adapter.git &&\
+    cd openfoam-adapter && \
+    if [ -n "${OPENFOAM_ADAPTER_PR}" ]; then git fetch origin pull/${OPENFOAM_ADAPTER_PR}/head; fi && \
+    git checkout ${OPENFOAM_ADAPTER_REF} && \
+    /usr/bin/${OPENFOAM_EXECUTABLE} ./Allwmake -j $(nproc)
+
+
+FROM precice_dependencies AS python_bindings
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
+ARG PYTHON_BINDINGS_REF
+USER precice
+WORKDIR /home/precice
+# Builds the precice python bindings for python3
+# Installs also matplotlib as it is needed for the elastic-tube 1d fluid-python participant.
+RUN python3 -m venv /home/precice/venv && \
+    . /home/precice/venv/bin/activate && \
+    pip3 install git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
+    pip3 install matplotlib 
+
+
+FROM python_bindings AS su2_adapter
+COPY --from=precice /home/precice/.local /home/precice/.local
+USER root
+RUN apt-get -qq update && \
+    apt-get -qq install swig python3-mpi4py python3-setuptools
+ARG SU2_VERSION
+USER precice
+
+# Download and build SU2 (We could also use pre-built binaries from the SU2 releases)
+# The sed command applies a patch needed for Ubuntu 24.04.
+WORKDIR /home/precice
+RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
+    tar xvzf v${SU2_VERSION}.tar.gz && \
+    rm -fv v${SU2_VERSION}.tar.gz
+RUN python3 -m venv /home/precice/venv && \
+    . /home/precice/venv/bin/activate
+ARG SU2_ADAPTER_PR
+ARG SU2_ADAPTER_REF
+WORKDIR /home/precice
+ENV SU2_RUN="/home/precice/SU2_RUN" 
+ENV SU2_HOME="/home/precice/SU2-${SU2_VERSION}"
+ENV PATH="/home/precice/su2-adapter/run:$SU2_RUN:$PATH"
+ENV PYTHONPATH="$SU2_RUN:$PYTHONPATH"
+RUN git clone https://github.com/precice/su2-adapter.git && \
+    cd su2-adapter &&\
+    if [ -n "${SU2_ADAPTER_PR}" ]; then git fetch origin pull/${SU2_ADAPTER_PR}/head; fi && \
+    git checkout ${SU2_ADAPTER_REF} &&\
+    ./su2AdapterInstall
+RUN cd "${SU2_HOME}" &&\
+    sed -i '1s/^/#include <cstdint>\n/' SU2_CFD/src/output/filewriter/CParaviewXMLFileWriter.cpp &&\
+    ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN &&\
+    ./ninja -C build install
+
