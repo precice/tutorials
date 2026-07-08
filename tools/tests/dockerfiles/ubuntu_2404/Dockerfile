@@ -99,8 +99,39 @@ ENV CMAKE_PREFIX_PATH="/home/precice/.local:$CMAKE_PREFIX_PATH"
 ### end of precice stage ###
 
 
+FROM precice AS python_bindings
+ARG PYTHON_BINDINGS_REF
+
+USER precice
+WORKDIR /home/precice
+# Builds the precice python bindings for python3
+# Installs also matplotlib as it is needed for the elastic-tube 1d fluid-python participant.
+RUN python3 -m venv /home/precice/venv && \
+    . /home/precice/venv/bin/activate && \
+    pip3 install git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
+    pip3 install matplotlib 
+### end of python_bindings stage ###
+
+
+FROM precice AS micro_manager
+ARG MICRO_MANAGER_REF
+
+USER precice
+WORKDIR /home/precice
+RUN python3 -m venv /home/precice/venv && \
+    . /home/precice/venv/bin/activate && \
+    git clone https://github.com/precice/micro-manager.git && \
+    cd micro-manager && \
+    if [ -n "${MICRO_MANAGER_PR}" ]; then git fetch origin pull/${MICRO_MANAGER_PR}/head; fi && \
+    git checkout ${MICRO_MANAGER_REF} && \
+    pip3 install . && \
+    cd .. && \
+    pip3 install pybind11
+### end of micro_manager stage ###
+
+
 #####################################################################
-#   Adapters and other components - Order stages alphabetically     #
+#   Non-dependent adapter build stages - Order alphabetically       #
 #####################################################################
 
 FROM precice AS calculix_adapter
@@ -362,23 +393,6 @@ ENV PATH="/home/precice/mercurydpm/build/Drivers/PreCICE:$PATH"
 ### end of mercurydpm_adapter stage ###
 
 
-FROM precice AS micro_manager
-ARG MICRO_MANAGER_REF
-
-USER precice
-WORKDIR /home/precice
-RUN python3 -m venv /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
-    git clone https://github.com/precice/micro-manager.git && \
-    cd micro-manager && \
-    if [ -n "${MICRO_MANAGER_PR}" ]; then git fetch origin pull/${MICRO_MANAGER_PR}/head; fi && \
-    git checkout ${MICRO_MANAGER_REF} && \
-    pip3 install . && \
-    cd .. && \
-    pip3 install pybind11
-### end of micro_manager stage ###
-
-
 FROM precice AS openfoam_adapter
 ARG OPENFOAM_EXECUTABLE
 ARG OPENFOAM_ADAPTER_PR
@@ -398,20 +412,6 @@ RUN git clone https://github.com/precice/openfoam-adapter.git &&\
     git checkout ${OPENFOAM_ADAPTER_REF} && \
     /usr/bin/${OPENFOAM_EXECUTABLE} ./Allwmake -j $(nproc)
 ### end of openfoam_adapter stage ###
-
-
-FROM precice AS python_bindings
-ARG PYTHON_BINDINGS_REF
-
-USER precice
-WORKDIR /home/precice
-# Builds the precice python bindings for python3
-# Installs also matplotlib as it is needed for the elastic-tube 1d fluid-python participant.
-RUN python3 -m venv /home/precice/venv && \
-    . /home/precice/venv/bin/activate && \
-    pip3 install git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
-    pip3 install matplotlib 
-### end of python_bindings stage ###
 
 
 FROM python_bindings AS su2_adapter
