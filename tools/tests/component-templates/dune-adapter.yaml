@@ -4,7 +4,7 @@ build:
     {% for key, value in build_arguments.items() %}
       - {{key}}={{value}}
     {% endfor %}
-  target: dune
+  target: dune_adapter
 depends_on:    
   prepare:
     condition: service_completed_successfully

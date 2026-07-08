@@ -548,8 +548,13 @@ test_suites:
         case_combination:
           - macro-dumux
           - micro-dumux
-        skip_compare: true # Values too close to zero
         reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux.tar.gz
+      - &two-scale-heat-conduction_macro-dumux_micro-dumux_parallel
+        path: two-scale-heat-conduction
+        case_combination:
+          - macro-dumux
+          - micro-dumux_parallel
+        reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux_parallel.tar.gz
       - &two-scale-heat-conduction_macro-nutils_micro-nutils
         path: two-scale-heat-conduction
         case_combination:
@@ -557,7 +562,6 @@ test_suites:
           - micro-nutils
         max_time: 0.01
         timeout: 1200
-        skip_compare: true # Values too close to zero
         reference_result: ./two-scale-heat-conduction/reference-results/macro-nutils_micro-nutils.tar.gz
 
   volume-coupled-diffusion:
@@ -706,6 +710,7 @@ test_suites:
       - *resonant-circuit_capacitor-python_coil-python
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
       - *two-scale-heat-conduction_macro-dumux_micro-dumux
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux_parallel
       - *volume-coupled-diffusion_source-fenics_drain-fenics
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
@@ -763,6 +768,7 @@ test_suites:
     tutorials:
       - *free-flow-over-porous-media_free-flow-dumux_porous-media-dumux
       - *two-scale-heat-conduction_macro-dumux_micro-dumux
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux_parallel
 
   dune-adapter:
     tutorials:
@@ -880,4 +886,4 @@ test_suites:
 
   selected:
     tutorials:
-      - *elastic-tube-1d_fluid-python_solid-python
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux_parallel

@@ -47,7 +47,7 @@ cases:
     participant: Solid
     directory: ./solid-dune
     run: ./run.sh
-    component: dune
+    component: dune-adapter
 
   solid-fake:
     participant: Solid

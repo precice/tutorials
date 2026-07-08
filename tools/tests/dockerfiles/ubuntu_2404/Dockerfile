@@ -2,10 +2,10 @@ FROM ubuntu:24.04 AS base_image
 USER root
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
-# We set a sensical value, but still have the possibilty to influence this via the build time arguments. 
-# When the dockerfile is built using the systemtests.py we set the PRECICE_UID and PRECICE_GID to the user executing the systemtests.
-# This ensures no file ownership problems down the line and is the most easy fix, as we normally built the containers locally
-# If not built via the systemtests.py its either possible to specify manually but 1000 would be the default anyway.
+# We set a senseful value, but still have the possibility to influence this via the build time arguments. 
+# When the dockerfile is built using the systemtests.py we set the PRECICE_UID and PRECICE_GID to the user executing the system tests.
+# This ensures no file ownership problems down the line and is the easiest fix, as we normally build the containers locally
+# If not built via the systemtests.py, it is possible to specify it manually, but 1000 would be the default anyway.
 ARG PRECICE_UID=1000
 ARG PRECICE_GID=1000
 RUN set -eux; \
@@ -36,7 +36,7 @@ ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
 ENV CMAKE_PREFIX_PATH="/home/precice/.local:$CMAKE_PREFIX_PATH"
 USER precice
 
-FROM base_image AS precice_dependecies
+FROM base_image AS precice_dependencies
 USER root
 # Dependencies for preCICE and common dependencies for the tutorials/tests
 RUN apt-get -qq update && \
@@ -73,7 +73,7 @@ RUN apt-get -qq update && \
     libxinerama1
 USER precice
 
-FROM precice_dependecies AS precice
+FROM precice_dependencies AS precice
 # Install & build precice into /home/precice/precice
 ARG PRECICE_PR
 ARG PRECICE_REF
@@ -88,7 +88,7 @@ RUN git clone https://github.com/precice/precice.git precice && \
     cmake .. --preset=${PRECICE_PRESET} -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DBUILD_TESTING=OFF && \
     make all install -j $(nproc)
 
-FROM precice_dependecies AS openfoam_adapter
+FROM precice_dependencies AS openfoam_adapter
 ARG OPENFOAM_EXECUTABLE
 USER root
 RUN apt-get update &&\
@@ -109,19 +109,19 @@ RUN git clone https://github.com/precice/openfoam-adapter.git &&\
     /usr/bin/${OPENFOAM_EXECUTABLE} ./Allwmake -j $(nproc)
 
 
-FROM precice_dependecies AS python_bindings
+FROM precice_dependencies AS python_bindings
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG PYTHON_BINDINGS_REF
 USER precice
 WORKDIR /home/precice
 # Builds the precice python bindings for python3
-# Installs also matplotlib as its needed for the elastic-tube 1d fluid-python participant.
+# Installs also matplotlib as it is needed for the elastic-tube 1d fluid-python participant.
 RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
     pip3 install matplotlib 
 
-FROM precice_dependecies AS fenics_adapter
+FROM precice_dependencies AS fenics_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
 USER root
 RUN add-apt-repository -y ppa:fenics-packages/fenics && \
@@ -134,7 +134,7 @@ RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
 
-FROM precice_dependecies AS fenicsx_adapter
+FROM precice_dependencies AS fenicsx_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
 USER root
 RUN add-apt-repository -y ppa:fenics-packages/fenics && \
@@ -148,7 +148,7 @@ RUN python3 -m venv --system-site-packages /home/precice/venv && \
     pip3 install git+https://github.com/precice/fenicsx-adapter.git@${FENICSX_ADAPTER_REF}
 
 
-FROM precice_dependecies AS calculix_adapter
+FROM precice_dependencies AS calculix_adapter
 COPY --from=precice /home/precice/.local /home/precice/.local
 USER root
 RUN apt-get -qq update && \
@@ -204,7 +204,7 @@ RUN cd "${SU2_HOME}" &&\
     ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN &&\
     ./ninja -C build install
 
-FROM precice_dependecies AS dealii_adapter
+FROM precice_dependencies AS dealii_adapter
 USER root
 RUN apt-get update &&\
     apt-get -qq install libdeal.ii-dev libdeal.ii-doc cmake make g++
@@ -223,7 +223,7 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
     cmake . && \
     make -j $(nproc)
 
-FROM precice_dependecies AS mercurydpm_adapter
+FROM precice_dependencies AS mercurydpm_adapter
 USER precice
 COPY --from=precice /home/precice/.local /home/precice/.local
 WORKDIR /home/precice
@@ -237,7 +237,7 @@ RUN git clone https://bitbucket.org/davidscn/mercurydpm.git &&\
     cmake -D MercuryDPM_PreCICE_COUPLING="ON" .. && \
     make -j $(nproc) ChannelTransport
 
-FROM precice_dependecies AS micro_manager
+FROM precice_dependencies AS micro_manager
 USER precice
 WORKDIR /home/precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
@@ -253,42 +253,43 @@ RUN python3 -m venv /home/precice/venv && \
     pip3 install pybind11
 WORKDIR /home/precice
 
-FROM micro_manager AS dune
+
+FROM micro_manager AS dumux_adapter
 # The micro-manager is needed for some dumux-adapter cases
 USER root
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
-ARG DUNE_VERSION
+ARG DUNE_VERSION_DUMUX
 ARG DUMUX_VERSION
 USER precice
-WORKDIR /home/precice/dune
-ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
+WORKDIR /home/precice/dumux
+ENV PATH="/home/precice/dumux/dune-common/bin:${PATH}"
 # This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-common; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-geometry; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-grid; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-istl; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-subgrid; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
@@ -306,64 +307,17 @@ RUN for i in $(seq 1 3); do \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-SPGrid; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-localfunctions; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
-# Up to here, all the dependencies are intended for dumux.
-# DUNE modules needed for the dune adapter:
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION}; then break; fi; \
-        rm -rf dune-foamgrid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION}; then break; fi; \
-        rm -rf dune-foamgrid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION}; then break; fi; \
-        rm -rf dune-functions; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION}; then break; fi; \
-        rm -rf dune-typetree; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION}; then break; fi; \
-        rm -rf dune-uggrid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-# Modules specific to the dune adapter:
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://github.com/maxfirmbach/dune-elastodynamics.git -b master; then break; fi; \
-        rm -rf dune-elastodynamics; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://github.com/precice/dune-adapter.git -b main; then break; fi; \
-        rm -rf dune-adapter; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-# Make dune-adapter/dune-precice-howto/build-cmake/examples/dune-perpendicular-flap discoverable
-ENV PATH="/home/precice/dune/dune-adapter/dune-precice-howto/build-cmake/examples/:${PATH}"
 RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
 
@@ -376,3 +330,87 @@ RUN git clone https://github.com/precice/dumux-adapter.git &&\
     cd .. &&\
     ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
+
+
+FROM precice_dependencies AS dune_adapter
+USER precice
+WORKDIR /home/precice
+COPY --from=precice /home/precice/.local/ /home/precice/.local/
+ARG DUNE_VERSION_DUNE
+WORKDIR /home/precice/dune
+ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
+
+# This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
+        rm -rf dune-common; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
+        rm -rf dune-geometry; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
+        rm -rf dune-grid; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
+        rm -rf dune-istl; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
+        rm -rf dune-localfunctions; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
+        rm -rf dune-foamgrid; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
+        rm -rf dune-functions; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
+        rm -rf dune-typetree; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
+        rm -rf dune-uggrid; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+
+# Modules specific to the dune adapter:
+ARG DUNE_ADAPTER_PR
+ARG DUNE_ADAPTER_REF
+RUN for i in $(seq 1 3); do \
+        if git clone --depth 1 https://github.com/maxfirmbach/dune-elastodynamics.git -b master; then break; fi; \
+        rm -rf dune-elastodynamics; \
+        if [[ $i -eq 3 ]]; then exit 1; fi; \
+        sleep 10; \
+    done
+RUN git clone https://github.com/precice/dune-adapter.git&&\
+    cd dune-adapter && \
+    if [ -n "${DUNE_ADAPTER_PR}" ]; then git fetch origin pull/${DUNE_ADAPTER_PR}/head; fi && \
+    git checkout ${DUNE_ADAPTER_REF} && \
+    cd .. &&\
+    ./dune-common/bin/dunecontrol all
+
+# Make dune-adapter/dune-precice-howto/build-cmake/examples/dune-perpendicular-flap discoverable
+ENV PATH="/home/precice/dune/dune-adapter/dune-precice-howto/build-cmake/examples/:${PATH}"
