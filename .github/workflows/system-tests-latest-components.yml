@@ -16,10 +16,10 @@ on:
         default: 'develop'
         type: string
       ref-tutorials:
-        description: 'tutorials ref'
+        description: 'tutorials Git ref (override latest)'
         type: string
       ref-precice:
-        description: 'precice Git ref (override latest)'
+        description: 'precice ref'
         type: string
       ref-python-bindings:
         description: 'python-bindings ref'
