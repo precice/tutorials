@@ -29,6 +29,10 @@ on:
         options:
             - 'INFO'
             - 'DEBUG'
+      build_args:
+        description: 'Optional overrides for reference_versions.yaml (e.g. TUTORIALS_REF:my-branch). Leave empty to use TUTORIALS_REF:from_ref.'
+        required: false
+        type: string
 
 jobs:
   generate_reference_results_manual:
@@ -39,3 +43,4 @@ jobs:
       suites: ${{ inputs.suites }}
       clean_docker: ${{ inputs.clean_docker }}
       log_level: ${{ inputs.log_level }}
+      build_args: ${{ inputs.build_args }}

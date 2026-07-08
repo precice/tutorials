@@ -22,6 +22,10 @@ on:
         description: 'Logging verbosity of systemtests.py'
         required: true
         type: string
+      build_args:
+        description: 'Comma-separated overrides for reference_versions.yaml (e.g. TUTORIALS_REF:my-branch). Defaults to TUTORIALS_REF:from_ref when empty.'
+        default: ''
+        type: string
 jobs:
   generate_reference_results:
     runs-on: [self-hosted, linux, x64, precice-tests-vm]
@@ -35,7 +39,12 @@ jobs:
         echo "- Commit message:  \`${{ inputs.commit_msg }}\`"
         echo "- Run \`docker-system-prune\` before running tests: \`${{ inputs.clean_docker }}\`"
         echo "- Log level: \`${{ inputs.log_level }}\`"
-        echo "- Running \`generate_reference_results.py --suite ${{inputs.suites}} --log_level ${{inputs.log_level}}\`"
+        if [ -n "${{ inputs.build_args }}" ]; then
+          echo "- Build args override: \`${{ inputs.build_args }}\`"
+        else
+          echo "- Build args override: \`TUTORIALS_REF:${{ inputs.from_ref }}\` (default from from_ref)"
+        fi
+        echo "- Running \`generate_reference_results.py --suites ${{ inputs.suites }} --log_level ${{ inputs.log_level }}\`"
         } >> "$GITHUB_STEP_SUMMARY"
     - name: Move LFS URL to local LFS server
       run: |
@@ -70,7 +79,12 @@ jobs:
         if [ -n "${{ inputs.suites }}" ]; then
           SUITES_ARGS+=(--suites "${{ inputs.suites }}")
         fi
-        python generate_reference_results.py --log_level="${{inputs.log_level}}" "${SUITES_ARGS[@]}"
+        BUILD_ARGS_STR="${{ inputs.build_args }}"
+        if [ -z "$BUILD_ARGS_STR" ]; then
+          BUILD_ARGS_STR="TUTORIALS_REF:${{ inputs.from_ref }}"
+        fi
+        BUILD_ARGS=(--build_args "$BUILD_ARGS_STR")
+        python generate_reference_results.py --log_level="${{ inputs.log_level }}" "${BUILD_ARGS[@]}" "${SUITES_ARGS[@]}"
         cd ../../
     - name: Create commit
       if: success()
