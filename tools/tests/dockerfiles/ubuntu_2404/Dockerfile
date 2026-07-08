@@ -36,7 +36,7 @@ ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
 ENV CMAKE_PREFIX_PATH="/home/precice/.local:$CMAKE_PREFIX_PATH"
 USER precice
 
-FROM base_image AS precice_dependecies
+FROM base_image AS precice_dependencies
 USER root
 # Dependencies for preCICE and common dependencies for the tutorials/tests
 RUN apt-get -qq update && \
@@ -73,7 +73,7 @@ RUN apt-get -qq update && \
     libxinerama1
 USER precice
 
-FROM precice_dependecies AS precice
+FROM precice_dependencies AS precice
 # Install & build precice into /home/precice/precice
 ARG PRECICE_PR
 ARG PRECICE_REF
@@ -88,7 +88,7 @@ RUN git clone https://github.com/precice/precice.git precice && \
     cmake .. --preset=${PRECICE_PRESET} -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DBUILD_TESTING=OFF && \
     make all install -j $(nproc)
 
-FROM precice_dependecies AS openfoam_adapter
+FROM precice_dependencies AS openfoam_adapter
 ARG OPENFOAM_EXECUTABLE
 USER root
 RUN apt-get update &&\
@@ -109,7 +109,7 @@ RUN git clone https://github.com/precice/openfoam-adapter.git &&\
     /usr/bin/${OPENFOAM_EXECUTABLE} ./Allwmake -j $(nproc)
 
 
-FROM precice_dependecies AS python_bindings
+FROM precice_dependencies AS python_bindings
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG PYTHON_BINDINGS_REF
 USER precice
@@ -121,7 +121,7 @@ RUN python3 -m venv /home/precice/venv && \
     pip3 install git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
     pip3 install matplotlib 
 
-FROM precice_dependecies AS fenics_adapter
+FROM precice_dependencies AS fenics_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
 USER root
 RUN add-apt-repository -y ppa:fenics-packages/fenics && \
@@ -134,7 +134,7 @@ RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
 
-FROM precice_dependecies AS fenicsx_adapter
+FROM precice_dependencies AS fenicsx_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
 USER root
 RUN add-apt-repository -y ppa:fenics-packages/fenics && \
@@ -148,7 +148,7 @@ RUN python3 -m venv --system-site-packages /home/precice/venv && \
     pip3 install git+https://github.com/precice/fenicsx-adapter.git@${FENICSX_ADAPTER_REF}
 
 
-FROM precice_dependecies AS calculix_adapter
+FROM precice_dependencies AS calculix_adapter
 COPY --from=precice /home/precice/.local /home/precice/.local
 USER root
 RUN apt-get -qq update && \
@@ -204,7 +204,7 @@ RUN cd "${SU2_HOME}" &&\
     ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN &&\
     ./ninja -C build install
 
-FROM precice_dependecies AS dealii_adapter
+FROM precice_dependencies AS dealii_adapter
 USER root
 RUN apt-get update &&\
     apt-get -qq install libdeal.ii-dev libdeal.ii-doc cmake make g++
@@ -223,7 +223,7 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
     cmake . && \
     make -j $(nproc)
 
-FROM precice_dependecies AS mercurydpm_adapter
+FROM precice_dependencies AS mercurydpm_adapter
 USER precice
 COPY --from=precice /home/precice/.local /home/precice/.local
 WORKDIR /home/precice
@@ -237,7 +237,7 @@ RUN git clone https://bitbucket.org/davidscn/mercurydpm.git &&\
     cmake -D MercuryDPM_PreCICE_COUPLING="ON" .. && \
     make -j $(nproc) ChannelTransport
 
-FROM precice_dependecies AS micro_manager
+FROM precice_dependencies AS micro_manager
 USER precice
 WORKDIR /home/precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
@@ -332,7 +332,7 @@ RUN git clone https://github.com/precice/dumux-adapter.git &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
 
 
-FROM precice_dependecies AS dune_adapter
+FROM precice_dependencies AS dune_adapter
 USER precice
 WORKDIR /home/precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
