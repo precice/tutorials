@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| macro-dumux_micro-dumux.tar.gz | 2026-07-08 08:41:59 | a0cd2e0c15d99384747c88dc141e43dd92c7b68a262d5de1e599c2562bca8757 |
+| macro-dumux_micro-dumux_parallel.tar.gz | 2026-07-08 10:57:57 | 3fda5478108936f89b3973b4c0347ea442b3aaf3e683f92c85cada5dc18c5c6e |
 
 ## List of arguments used to generate the files
 
@@ -34,7 +34,7 @@ We also include some information on the machine used to generate them
 | PRECICE_REF | b770460f2447b94da430086085d6b424e7c073e9 |
 | PYTHON_BINDINGS_REF | v3.4.0 |
 | SU2_ADAPTER_REF | 5abe79b |
-| TUTORIALS_REF | 7a600029c8fde512f3817dbc36c22aa0f27839b3 |
+| TUTORIALS_REF | 5fb9cb7bd897b8455bac843ac155bebf1722bcb0 |
 | PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
