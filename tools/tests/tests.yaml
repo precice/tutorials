@@ -878,4 +878,4 @@ test_suites:
 
   selected:
     tutorials:
-      - *elastic-tube-1d_fluid-python_solid-python
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux
