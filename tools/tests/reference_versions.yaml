@@ -6,8 +6,9 @@ PLATFORM: "ubuntu_2404"
 
 # Third-party dependencies
 CALCULIX_VERSION: "2.20"
-DUNE_VERSION: "2.9"
 DUMUX_VERSION: "3.7"
+DUNE_VERSION_DUMUX: "2.9"      # Version of DUNE modules used by the dumux-adapter
+DUNE_VERSION_DUNE: "2.9"       # Version of DUNE modules used by the dune-adapter
 OPENFOAM_EXECUTABLE: "openfoam2512"
 SU2_VERSION: "7.5.1"
 

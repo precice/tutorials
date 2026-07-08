@@ -62,7 +62,7 @@ dumux-adapter:
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
-    DUNE_VERSION:
+    DUNE_VERSION_DUMUX:
       default: "2.9"
     DUMUX_VERSION:
       default: "3.7"
@@ -84,7 +84,7 @@ dune-adapter:
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
-    DUNE_VERSION:
+    DUNE_VERSION_DUNE:
       default: "2.9"
     DUNE_ADAPTER_REF:
       repository: https://github.com/precice/dune-adapter

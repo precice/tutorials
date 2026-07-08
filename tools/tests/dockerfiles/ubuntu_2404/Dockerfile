@@ -258,38 +258,38 @@ FROM micro_manager AS dumux_adapter
 # The micro-manager is needed for some dumux-adapter cases
 USER root
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
-ARG DUNE_VERSION
+ARG DUNE_VERSION_DUMUX
 ARG DUMUX_VERSION
 USER precice
 WORKDIR /home/precice/dumux
 ENV PATH="/home/precice/dumux/dune-common/bin:${PATH}"
 # This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-common; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-geometry; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-grid; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-istl; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-subgrid; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
@@ -307,13 +307,13 @@ RUN for i in $(seq 1 3); do \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-SPGrid; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
         rm -rf dune-localfunctions; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
@@ -336,61 +336,61 @@ FROM precice_dependencies AS dune_adapter
 USER precice
 WORKDIR /home/precice
 COPY --from=precice /home/precice/.local/ /home/precice/.local/
-ARG DUNE_VERSION
+ARG DUNE_VERSION_DUNE
 WORKDIR /home/precice/dune
 ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
 
 # This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
         rm -rf dune-common; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
         rm -rf dune-geometry; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
         rm -rf dune-grid; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
         rm -rf dune-istl; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
         rm -rf dune-localfunctions; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
         rm -rf dune-foamgrid; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
         rm -rf dune-functions; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
         rm -rf dune-typetree; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
 RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION}; then break; fi; \
+        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
         rm -rf dune-uggrid; \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
