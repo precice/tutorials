@@ -25,6 +25,12 @@ cases:
     run: source /home/precice/venv/bin/activate && ./run.sh -s
     component: dune
 
+  micro-dumux_parallel:
+    participant: Micro-Manager
+    directory: ./micro-dumux
+    run: source /home/precice/venv/bin/activate && ./run.sh -p 2
+    component: dune
+
   micro-nutils:
     participant: Micro-Manager
     directory: ./micro-nutils
