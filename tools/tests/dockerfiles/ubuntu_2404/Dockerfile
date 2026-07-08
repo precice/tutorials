@@ -1,13 +1,15 @@
 FROM ubuntu:24.04 AS base_image
-USER root
-SHELL ["/bin/bash", "-c"]
-ENV DEBIAN_FRONTEND=noninteractive
 # We set a senseful value, but still have the possibility to influence this via the build time arguments. 
 # When the dockerfile is built using the systemtests.py we set the PRECICE_UID and PRECICE_GID to the user executing the system tests.
 # This ensures no file ownership problems down the line and is the easiest fix, as we normally build the containers locally
 # If not built via the systemtests.py, it is possible to specify it manually, but 1000 would be the default anyway.
 ARG PRECICE_UID=1000
 ARG PRECICE_GID=1000
+
+USER root
+SHELL ["/bin/bash", "-c"]
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN set -eux; \
     if getent group "${PRECICE_GID}" >/dev/null; then \
         existing_group="$(getent group "${PRECICE_GID}" | cut -d: -f1)"; \
@@ -28,13 +30,8 @@ RUN set -eux; \
     fi; \
     mkdir -p /home/precice; \
     chown -R "${PRECICE_UID}:${PRECICE_GID}" /home/precice
-ENV PATH="${PATH}:/home/precice/.local/bin" 
-ENV LD_LIBRARY_PATH="/home/precice/.local/lib:${LD_LIBRARY_PATH}" 
-ENV CPATH="/home/precice/.local/include:$CPATH"
-# Enable detection with pkg-config and CMake
-ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
-ENV CMAKE_PREFIX_PATH="/home/precice/.local:$CMAKE_PREFIX_PATH"
 USER precice
+### end of base_image stage ###
 
 
 FROM base_image AS precice_dependencies
@@ -73,6 +70,7 @@ RUN apt-get -qq update && \
     libxft2 \
     libxinerama1
 USER precice
+### end of precice_dependencies stage ###
 
 
 FROM precice_dependencies AS precice
@@ -80,37 +78,46 @@ FROM precice_dependencies AS precice
 ARG PRECICE_PR
 ARG PRECICE_REF
 ARG PRECICE_PRESET
+
 USER precice
 WORKDIR /home/precice
+
 RUN git clone https://github.com/precice/precice.git precice && \
     cd precice && \
     if [ -n "${PRECICE_PR}" ]; then git fetch origin pull/${PRECICE_PR}/head; fi && \
     git checkout ${PRECICE_REF} && \
     mkdir build && cd build &&\
     cmake .. --preset=${PRECICE_PRESET} -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DBUILD_TESTING=OFF && \
-    make all install -j $(nproc)
+    make all install -j $(nproc) && \
+    cd ../.. && rm -rf precice
+
+ENV PATH="${PATH}:/home/precice/.local/bin" 
+ENV LD_LIBRARY_PATH="/home/precice/.local/lib:${LD_LIBRARY_PATH}" 
+ENV CPATH="/home/precice/.local/include:$CPATH"
+ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
+ENV CMAKE_PREFIX_PATH="/home/precice/.local:$CMAKE_PREFIX_PATH"
+### end of precice stage ###
 
 
 #####################################################################
 #   Adapters and other components - Order stages alphabetically     #
 #####################################################################
 
+FROM precice AS calculix_adapter
+ARG CALCULIX_VERSION
+ARG CALCULIX_ADAPTER_PR
+ARG CALCULIX_ADAPTER_REF
 
-FROM precice_dependencies AS calculix_adapter
-COPY --from=precice /home/precice/.local /home/precice/.local
 USER root
 RUN apt-get -qq update && \
     apt-get -qq install libarpack2-dev libspooles-dev libyaml-cpp-dev
-ARG CALCULIX_VERSION
 USER precice
-#Download Calculix
+
 WORKDIR /home/precice
 RUN wget http://www.dhondt.de/ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
     tar xvjf ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
     rm -fv ccx_${CALCULIX_VERSION}.src.tar.bz2
 
-ARG CALCULIX_ADAPTER_PR
-ARG CALCULIX_ADAPTER_REF
 WORKDIR /home/precice
 RUN git clone https://github.com/precice/calculix-adapter.git && \
     cd calculix-adapter && \
@@ -118,20 +125,19 @@ RUN git clone https://github.com/precice/calculix-adapter.git && \
     git checkout ${CALCULIX_ADAPTER_REF} &&\
     make CXX_VERSION=${CALCULIX_VERSION} ADDITIONAL_FFLAGS="-fallow-argument-mismatch" -j $(nproc) && \
     ln -s /home/precice/calculix-adapter/bin/ccx_preCICE /home/precice/.local/bin/ccx_preCICE
+### end of calculix_adapter stage ###
 
 
-FROM precice_dependencies AS dealii_adapter
+FROM precice AS dealii_adapter
+ARG DEALII_ADAPTER_PR
+ARG DEALII_ADAPTER_REF
+
 USER root
 RUN apt-get update &&\
     apt-get -qq install libdeal.ii-dev libdeal.ii-doc cmake make g++
-USER precice
-COPY --from=precice /home/precice/.local/ /home/precice/.local/
-ARG DEALII_ADAPTER_PR
-ARG DEALII_ADAPTER_REF
-# Build the deal.II adapter 
+
 USER precice
 WORKDIR /home/precice
-ENV PATH="/home/precice/dealii-adapter/:$PATH"
 RUN git clone https://github.com/precice/dealii-adapter.git &&\
     cd dealii-adapter && \
     if [ -n "${DEALII_ADAPTER_PR}" ]; then git fetch origin pull/${DEALII_ADAPTER_PR}/head; fi && \
@@ -139,15 +145,20 @@ RUN git clone https://github.com/precice/dealii-adapter.git &&\
     cmake . && \
     make -j $(nproc)
 
+ENV PATH="/home/precice/dealii-adapter/:$PATH"
+### end of dealii_adapter stage ###
+
+
 FROM micro_manager AS dumux_adapter
 # The micro-manager is needed for some dumux-adapter cases
-USER root
-COPY --from=precice /home/precice/.local/ /home/precice/.local/
 ARG DUNE_VERSION_DUMUX
 ARG DUMUX_VERSION
+ARG DUMUX_ADAPTER_PR
+ARG DUMUX_ADAPTER_REF
+
 USER precice
 WORKDIR /home/precice/dumux
-ENV PATH="/home/precice/dumux/dune-common/bin:${PATH}"
+
 # This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
 RUN for i in $(seq 1 3); do \
         if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
@@ -206,8 +217,6 @@ RUN for i in $(seq 1 3); do \
 RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
 
-ARG DUMUX_ADAPTER_PR
-ARG DUMUX_ADAPTER_REF
 RUN git clone https://github.com/precice/dumux-adapter.git &&\
     cd dumux-adapter && \
     if [ -n "${DUMUX_ADAPTER_PR}" ]; then git fetch origin pull/${DUMUX_ADAPTER_PR}/head; fi && \
@@ -216,12 +225,16 @@ RUN git clone https://github.com/precice/dumux-adapter.git &&\
     ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
 
+ENV PATH="/home/precice/dumux/dune-common/bin:${PATH}"
+### end of dumux_adapter stage ###
 
-FROM precice_dependencies AS dune_adapter
-USER precice
-WORKDIR /home/precice
-COPY --from=precice /home/precice/.local/ /home/precice/.local/
+
+FROM precice AS dune_adapter
 ARG DUNE_VERSION_DUNE
+ARG DUNE_ADAPTER_PR
+ARG DUNE_ADAPTER_REF
+
+USER precice
 WORKDIR /home/precice/dune
 ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
 
@@ -282,8 +295,6 @@ RUN for i in $(seq 1 3); do \
     done
 
 # Modules specific to the dune adapter:
-ARG DUNE_ADAPTER_PR
-ARG DUNE_ADAPTER_REF
 RUN for i in $(seq 1 3); do \
         if git clone --depth 1 https://github.com/maxfirmbach/dune-elastodynamics.git -b master; then break; fi; \
         rm -rf dune-elastodynamics; \
@@ -299,41 +310,45 @@ RUN git clone https://github.com/precice/dune-adapter.git&&\
 
 # Make dune-adapter/dune-precice-howto/build-cmake/examples/dune-perpendicular-flap discoverable
 ENV PATH="/home/precice/dune/dune-adapter/dune-precice-howto/build-cmake/examples/:${PATH}"
+### end of dune_adapter stage ###
 
 
-FROM precice_dependencies AS fenics_adapter
+FROM precice AS fenics_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
+ARG FENICS_ADAPTER_REF
+
 USER root
 RUN add-apt-repository -y ppa:fenics-packages/fenics && \
     apt-get -qq update && \
     apt-get -qq install --no-install-recommends fenics
+
 USER precice
-ARG FENICS_ADAPTER_REF
-# Building fenics-adapter
 RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/fenics-adapter.git@${FENICS_ADAPTER_REF}
+### end of fenics_adapter stage ###
 
 
-FROM precice_dependencies AS fenicsx_adapter
+FROM precice AS fenicsx_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
+ARG FENICSX_ADAPTER_REF
+
 USER root
 RUN add-apt-repository -y ppa:fenics-packages/fenics && \
     apt-get -qq update && \
     apt-get -qq install --no-install-recommends fenicsx
+
 USER precice
-ARG FENICSX_ADAPTER_REF
-# Building fenicsx-adapter
 RUN python3 -m venv --system-site-packages /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/fenicsx-adapter.git@${FENICSX_ADAPTER_REF}
+### end of fenicsx_adapter stage ###
 
 
-FROM precice_dependencies AS mercurydpm_adapter
+FROM precice AS mercurydpm_adapter
+
 USER precice
-COPY --from=precice /home/precice/.local /home/precice/.local
 WORKDIR /home/precice
-ENV PATH="/home/precice/mercurydpm/build/Drivers/PreCICE:$PATH"
 # The channel-transport-particles tutorial is hosted in a frozen fork of the MercuryDPM repository.
 # That's why there are no arguments for version, ref, or pr.
 RUN git clone https://bitbucket.org/davidscn/mercurydpm.git &&\
@@ -343,13 +358,15 @@ RUN git clone https://bitbucket.org/davidscn/mercurydpm.git &&\
     cmake -D MercuryDPM_PreCICE_COUPLING="ON" .. && \
     make -j $(nproc) ChannelTransport
 
+ENV PATH="/home/precice/mercurydpm/build/Drivers/PreCICE:$PATH"
+### end of mercurydpm_adapter stage ###
 
-FROM precice_dependencies AS micro_manager
+
+FROM precice AS micro_manager
+ARG MICRO_MANAGER_REF
+
 USER precice
 WORKDIR /home/precice
-COPY --from=precice /home/precice/.local/ /home/precice/.local/
-
-ARG MICRO_MANAGER_REF
 RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     git clone https://github.com/precice/micro-manager.git && \
@@ -357,22 +374,22 @@ RUN python3 -m venv /home/precice/venv && \
     if [ -n "${MICRO_MANAGER_PR}" ]; then git fetch origin pull/${MICRO_MANAGER_PR}/head; fi && \
     git checkout ${MICRO_MANAGER_REF} && \
     pip3 install . && \
+    cd .. && \
     pip3 install pybind11
-WORKDIR /home/precice
+### end of micro_manager stage ###
 
 
-FROM precice_dependencies AS openfoam_adapter
+FROM precice AS openfoam_adapter
 ARG OPENFOAM_EXECUTABLE
+ARG OPENFOAM_ADAPTER_PR
+ARG OPENFOAM_ADAPTER_REF
+
 USER root
 RUN apt-get update &&\
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | bash &&\
     apt-get -qq install ${OPENFOAM_EXECUTABLE}-dev &&\
     ln -s $(which ${OPENFOAM_EXECUTABLE} ) /usr/bin/openfoam
-USER precice
-COPY --from=precice /home/precice/.local/ /home/precice/.local/
-ARG OPENFOAM_ADAPTER_PR
-ARG OPENFOAM_ADAPTER_REF
-# Build the OpenFOAM adapter 
+
 USER precice
 WORKDIR /home/precice
 RUN git clone https://github.com/precice/openfoam-adapter.git &&\
@@ -380,11 +397,12 @@ RUN git clone https://github.com/precice/openfoam-adapter.git &&\
     if [ -n "${OPENFOAM_ADAPTER_PR}" ]; then git fetch origin pull/${OPENFOAM_ADAPTER_PR}/head; fi && \
     git checkout ${OPENFOAM_ADAPTER_REF} && \
     /usr/bin/${OPENFOAM_EXECUTABLE} ./Allwmake -j $(nproc)
+### end of openfoam_adapter stage ###
 
 
-FROM precice_dependencies AS python_bindings
-COPY --from=precice /home/precice/.local/ /home/precice/.local/
+FROM precice AS python_bindings
 ARG PYTHON_BINDINGS_REF
+
 USER precice
 WORKDIR /home/precice
 # Builds the precice python bindings for python3
@@ -393,31 +411,35 @@ RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
     pip3 install git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
     pip3 install matplotlib 
+### end of python_bindings stage ###
 
 
 FROM python_bindings AS su2_adapter
-COPY --from=precice /home/precice/.local /home/precice/.local
+ARG SU2_VERSION
+ARG SU2_ADAPTER_PR
+ARG SU2_ADAPTER_REF
+
 USER root
 RUN apt-get -qq update && \
     apt-get -qq install swig python3-mpi4py python3-setuptools
-ARG SU2_VERSION
-USER precice
 
+USER precice
+WORKDIR /home/precice
 # Download and build SU2 (We could also use pre-built binaries from the SU2 releases)
 # The sed command applies a patch needed for Ubuntu 24.04.
-WORKDIR /home/precice
 RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
     tar xvzf v${SU2_VERSION}.tar.gz && \
     rm -fv v${SU2_VERSION}.tar.gz
 RUN python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate
-ARG SU2_ADAPTER_PR
-ARG SU2_ADAPTER_REF
+
+# Some of these variables are used by the scripts that follow
 WORKDIR /home/precice
 ENV SU2_RUN="/home/precice/SU2_RUN" 
 ENV SU2_HOME="/home/precice/SU2-${SU2_VERSION}"
 ENV PATH="/home/precice/su2-adapter/run:$SU2_RUN:$PATH"
 ENV PYTHONPATH="$SU2_RUN:$PYTHONPATH"
+
 RUN git clone https://github.com/precice/su2-adapter.git && \
     cd su2-adapter &&\
     if [ -n "${SU2_ADAPTER_PR}" ]; then git fetch origin pull/${SU2_ADAPTER_PR}/head; fi && \
@@ -427,4 +449,4 @@ RUN cd "${SU2_HOME}" &&\
     sed -i '1s/^/#include <cstdint>\n/' SU2_CFD/src/output/filewriter/CParaviewXMLFileWriter.cpp &&\
     ./meson.py build -Denable-pywrapper=true --prefix=$SU2_RUN &&\
     ./ninja -C build install
-
+### end of su2_adapter stage ###
