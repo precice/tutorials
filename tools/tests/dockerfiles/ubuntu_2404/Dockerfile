@@ -364,8 +364,8 @@ RUN for i in $(seq 1 3); do \
 #     done
 # Make dune-adapter/dune-precice-howto/build-cmake/examples/dune-perpendicular-flap discoverable
 ENV PATH="/home/precice/dune/dune-adapter/dune-precice-howto/build-cmake/examples/:${PATH}"
-# RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
-#     ./dune-common/bin/dunecontrol make -j $(nproc)
+RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
+    ./dune-common/bin/dunecontrol make -j $(nproc)
 
 ARG DUMUX_ADAPTER_PR
 ARG DUMUX_ADAPTER_REF
