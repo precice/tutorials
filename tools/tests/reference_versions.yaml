@@ -6,8 +6,9 @@ PLATFORM: "ubuntu_2404"
 
 # Third-party dependencies
 CALCULIX_VERSION: "2.20"
-DUNE_VERSION: "2.9"
 DUMUX_VERSION: "3.7"
+DUNE_VERSION_DUMUX: "2.9"      # Version of DUNE modules used by the dumux-adapter
+DUNE_VERSION_DUNE: "2.9"       # Version of DUNE modules used by the dune-adapter
 OPENFOAM_EXECUTABLE: "openfoam2512"
 SU2_VERSION: "7.5.1"
 
@@ -17,8 +18,9 @@ FENICSX_ADAPTER_REF: "v1.0.1"
 FMI_RUNNER_REF: "v0.2.1"
 CALCULIX_ADAPTER_REF: "v2.20.1"
 DEALII_ADAPTER_REF: "a421d92"   # develop, May 27, 2026
+DUNE_ADAPTER_REF: "778d3bb"     # main,    July 8, 2026
 DUMUX_ADAPTER_REF: "3f3f54f"    # develop, May 27, 2026
-MICRO_MANAGER_REF: "v0.10.1"
+MICRO_MANAGER_REF: "bf5ea7b"    # develop, July 7, 2026
 OPENFOAM_ADAPTER_REF: "2c3062c" # develop, May 27, 2026
 PRECICE_REF: "v3.4.1"
 PYTHON_BINDINGS_REF: "v3.4.0"
