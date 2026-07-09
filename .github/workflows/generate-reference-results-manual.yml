@@ -45,10 +45,10 @@ jobs:
   generate_reference_results_manual:
     uses: ./.github/workflows/generate-reference-results.yml
     with: 
+      suites: ${{ inputs.suites }}
       from_ref: ${{ inputs.from_ref }}
       commit_msg: ${{ inputs.commit_msg }}
-      suites: ${{ inputs.suites }}
-      clean_docker: ${{ inputs.clean_docker }}
-      log_level: ${{ inputs.log_level }}
       tutorials_ref_source: ${{ inputs.tutorials_ref_source }}
       build_args: ${{ inputs.build_args }}
+      clean_docker: ${{ inputs.clean_docker }}
+      log_level: ${{ inputs.log_level }}
