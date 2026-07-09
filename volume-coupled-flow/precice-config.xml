@@ -21,7 +21,7 @@
 
   <participant name="Fluid">
     <provide-mesh name="Fluid-Mesh" />
-    <receive-mesh name="Source-Mesh" from="Source-Velocity" />
+    <receive-mesh name="Source-Mesh" from="Source" />
     <mapping:nearest-neighbor
       direction="read"
       from="Source-Mesh"
@@ -30,17 +30,17 @@
     <read-data name="Velocity" mesh="Fluid-Mesh" />
   </participant>
 
-  <participant name="Source-Velocity">
+  <participant name="Source">
     <provide-mesh name="Source-Mesh" />
     <write-data name="Velocity" mesh="Source-Mesh" />
   </participant>
 
-  <m2n:sockets acceptor="Source-Velocity" connector="Fluid" exchange-directory=".." />
+  <m2n:sockets acceptor="Source" connector="Fluid" exchange-directory=".." />
 
   <coupling-scheme:serial-explicit>
     <time-window-size value="0.005" />
     <max-time value="4.0" />
-    <participants first="Source-Velocity" second="Fluid" />
-    <exchange data="Velocity" mesh="Source-Mesh" from="Source-Velocity" to="Fluid" />
+    <participants first="Source" second="Fluid" />
+    <exchange data="Velocity" mesh="Source-Mesh" from="Source" to="Fluid" />
   </coupling-scheme:serial-explicit>
 </precice-configuration>

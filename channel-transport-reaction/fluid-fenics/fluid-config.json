@@ -1,8 +1,8 @@
 {
-    "participant_name": "Flow",
+    "participant_name": "Fluid",
     "config_file_name": "../precice-config.xml",
     "interface": {
-        "coupling_mesh_name": "Flow-Mesh",
+        "coupling_mesh_name": "Fluid-Mesh",
         "write_data_name": "Velocity"
     }
 }

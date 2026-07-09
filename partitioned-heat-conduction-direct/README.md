@@ -1,12 +1,14 @@
 ---
 title: Partitioned heat conduction (direct access setup)
 permalink: tutorials-partitioned-heat-conduction-direct.html
+aliases:
+  - /tutorials-partitioned-heat-conduction-direct.html
 keywords: Nutils, Heat conduction, Direct mesh access
 summary: This tutorial is a modified version of the "partitioned heat conduction" tutorial showcasing direct mesh access.
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-direct). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/partitioned-heat-conduction-direct), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-direct) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup
@@ -23,9 +25,15 @@ preCICE configuration (image generated using the [precice-config-visualizer](htt
 
 ![preCICE configuration visualization](images/tutorials-partitioned-heat-conduction-direct-precice-config.png)
 
+The data mapping is computed by directly sampling the FEM function representation at the inquired locations.
+
 ## Available solvers
 
-Currently only `nutils` is provided as a solver. The data mapping is computed by directly sampling the FEM function representation at the inquired locations.
+You can either couple a solver with itself or different solvers with each other. Available solvers:
+
+- Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
+
+- G+Smo. Install the [G+Smo adapter](https://precice.org/adapter-gismo.html).
 
 ## Running the simulation
 

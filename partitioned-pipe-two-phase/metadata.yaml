@@ -1,0 +1,35 @@
+name: Partitioned pipe two phase
+path: partitioned-pipe-two-phase # relative to git repo 
+url: https://precice.org/tutorials-partitioned-pipe-two-phase.html
+
+participants:
+  - Fluid1
+  - Fluid2
+
+cases:
+  fluid1-openfoam:
+    participant: Fluid1
+    directory: ./fluid1-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+
+  fluid2-openfoam:
+    participant: Fluid2
+    directory: ./fluid2-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+
+
+  # Options for all participants needs to provided for a well-defined test.
+  # Workaround to test the (unusual) monolithic case:
+  # Run it in place of the one participant, do nothing in the other.
+  monolithic-openfoam:
+    participant: Fluid1
+    directory: ./monolithic
+    run: ./run.sh
+    component: openfoam-adapter
+  none:
+    participant: Fluid2
+    directory: .
+    run: # Noop
+    component: bare

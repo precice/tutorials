@@ -11,13 +11,13 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz | 2026-01-19 17:58:00 | f2067df84bbb3d5c0a8e5f1c0cce09763809bb8eaa1be4a714babeb9f8ec6b6a |
+| fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz | 2026-01-20 18:43:46 | 8519683febf6d16be13f8be0db49e0a3f04b9e16780cdab5440ba0ee01f4ac12 |
 
 ## List of arguments used to generate the files
 
 | name | value |
 |------|------|
-| PRECICE_REF | 40a98c3 |
+| PRECICE_REF | d199bb3 |
 | PRECICE_PRESET | production-audit |
 | OPENFOAM_EXECUTABLE | openfoam2312 |
 | OPENFOAM_ADAPTER_REF | v1.3.1 |

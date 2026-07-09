@@ -1,0 +1,20 @@
+name: Partitioned heat conduction overlap
+path: partitioned-heat-conduction-overlap # relative to git repo 
+url: https://precice.org/tutorials-partitioned-heat-conduction-overlap.html
+
+participants:
+  - Left
+  - Right
+
+cases:
+  left-fenics:
+    participant: Left
+    directory: ./left-fenics
+    run: ./run.sh
+    component: fenics-adapter
+
+  right-fenics:
+    participant: Right
+    directory: ./right-fenics
+    run: ./run.sh
+    component: fenics-adapter

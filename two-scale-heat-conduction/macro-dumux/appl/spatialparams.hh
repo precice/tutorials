@@ -89,15 +89,16 @@ public:
   {
     DimWorldMatrix K;
 
+    // Off-diagonal terms of K are always zero because the grain microstructure is circular.
+    K[0][1] = 0.0;
+    K[1][0] = 0.0;
+
     if (getParam<bool>("Precice.RunWithCoupling") == true) {
       K[0][0] = couplingData_[scv.elementIndex()][1];
-      K[0][1] = couplingData_[scv.elementIndex()][2];
-      K[1][0] = couplingData_[scv.elementIndex()][3];
-      K[1][1] = couplingData_[scv.elementIndex()][4];
+      K[1][1] = couplingData_[scv.elementIndex()][2];
+
     } else {
       K[0][0] = getParam<Scalar>("Component.SolidThermalConductivity");
-      K[0][1] = 0.0;
-      K[1][0] = 0.0;
       K[1][1] = getParam<Scalar>("Component.SolidThermalConductivity");
     }
     return K;
@@ -115,10 +116,6 @@ public:
         couplingData_[elementIdx][1] =
             couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "K00", elementIdx);
         couplingData_[elementIdx][2] =
-            couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "K01", elementIdx);
-        couplingData_[elementIdx][3] =
-            couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "K10", elementIdx);
-        couplingData_[elementIdx][4] =
             couplingParticipant_.getScalarQuantityOnFace("Macro-Mesh", "K11", elementIdx);
       }
     }
@@ -131,10 +128,10 @@ public:
 
 private:
   Dumux::Precice::CouplingAdapter                &couplingParticipant_;
-  Dune::BlockVector<Dune::FieldVector<double, 5>> couplingData_;
+  Dune::BlockVector<Dune::FieldVector<double, 3>> couplingData_;
   Dumux::VectorCommDataHandleEqual<
       typename GridGeometry::ElementMapper,
-      Dune::BlockVector<Dune::FieldVector<double, 5>>,
+      Dune::BlockVector<Dune::FieldVector<double, 3>>,
       /* Entity codimension = */ 0>
       couplingDataHandle_;
 };

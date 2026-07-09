@@ -353,11 +353,10 @@ int main(int argc, char **argv)
   std::string preciceConfigFilename = "../precice-config.xml";
 
   auto &couplingParticipant = Dumux::Precice::CouplingAdapter::getInstance();
-  couplingParticipant.announceSolver("Free-Flow", preciceConfigFilename,
-                                     mpiHelper.rank(), mpiHelper.size());
+  couplingParticipant.announceConfig(mpiHelper.rank(), mpiHelper.size());
 
-  const std::string meshName("Free-Flow-Mesh"); // mesh name
-  const int         dim = couplingParticipant.getMeshDimensions(meshName);
+  const std::string meshName = couplingParticipant.getMeshNames()[0]; // mesh name
+  const int         dim      = couplingParticipant.getMeshDimensions(meshName);
   std::cout << dim << "  " << int(MassGridGeometry::GridView::dimension)
             << std::endl;
   if (dim != int(MassGridGeometry::GridView::dimension))
@@ -393,10 +392,8 @@ int main(int argc, char **argv)
   couplingParticipant.setMesh(meshName, coords);
   couplingParticipant.createIndexMapping(coupledScvfIndices);
 
-  const std::string dataNameV("Velocity");
-  const std::string dataNameP("Pressure");
-  couplingParticipant.announceQuantity(meshName, dataNameV);
-  couplingParticipant.announceQuantity(meshName, dataNameP);
+  const std::string dataNameV = couplingParticipant.getReadDataNamesOnMesh(meshName)[0];
+  const std::string dataNameP = couplingParticipant.getWriteDataNamesOnMesh(meshName)[0];
 
   // apply initial solution for instationary problems
   momentumProblem->applyInitialSolution(sol[momentumIdx]);

@@ -1,8 +1,1 @@
-#!/usr/bin/env sh
-set -e -u
-
-# shellcheck disable=SC1091
-. ../tools/cleaning-tools.sh
-
-clean_tutorial .
-clean_precice_logs .
+../tools/clean-tutorial-base.sh

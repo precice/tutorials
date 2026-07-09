@@ -47,7 +47,7 @@ if __name__ == '__main__':
     space = solutionSpace(mesh, order=1)
     u = ufl.TrialFunction(space)
     v = ufl.TestFunction(space)
-    x = ufl.SpatialCoordinate(ufl.triangle)
+    x = ufl.SpatialCoordinate(space)
     n = ufl.FacetNormal(space)
 
     u0 = uflFunction(mesh, name="u0", order=space.order,

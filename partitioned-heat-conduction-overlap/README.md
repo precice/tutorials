@@ -1,12 +1,14 @@
 ---
 title: Partitioned heat conduction with overlapping Schwarz-type domain decomposition
 permalink: tutorials-partitioned-heat-conduction-overlap.html
+aliases:
+  - /tutorials-partitioned-heat-conduction-overlap.html
 keywords: FEniCS, heat conduction, overlap
 summary: We solve a simple heat equation. The domain is partitioned and the coupling is established in an overlapping-Schwarz-type domain decomposition.
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-overlap). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/partitioned-heat-conduction-overlap), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-overlap) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup

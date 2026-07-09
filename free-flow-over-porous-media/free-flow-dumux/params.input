@@ -35,3 +35,10 @@ AddVelocity = 1
 
 [Output]
 EnableCSVWriter = false
+
+[precice-adapter-config]
+participant_name = Free-Flow
+precice_config_file_path = ../precice-config.xml
+interfaces.1.mesh_name = Free-Flow-Mesh
+interfaces.1.read_data.1.name = Velocity
+interfaces.1.write_data.1.name = Pressure

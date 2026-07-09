@@ -1,12 +1,14 @@
 ---
 title: Partitioned heat conduction (complex setup)
 permalink: tutorials-partitioned-heat-conduction-complex.html
+aliases:
+  - /tutorials-partitioned-heat-conduction-complex.html
 keywords: FEniCS, Heat conduction
 summary: This tutorial is the advanced version of the "partitioned heat conduction" tutorial, showcasing more advanced features and geometries.
 ---
 
 {% note %}
-Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-complex). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
+Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/develop/partitioned-heat-conduction-complex), as continuously rendered here, or see the [latest released version](https://github.com/precice/tutorials/tree/master/partitioned-heat-conduction-complex) (if there is already one). Read how in the [tutorials introduction](https://precice.org/tutorials.html).
 {% endnote %}
 
 ## Setup

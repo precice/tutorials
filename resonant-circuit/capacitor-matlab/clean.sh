@@ -1,8 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e -u
 
-rm ./*.png ./*.mat
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR"
 
 . ../../tools/cleaning-tools.sh
 
 clean_matlab .
+rm -f ./*.png ./*.mat
