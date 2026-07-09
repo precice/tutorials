@@ -1,6 +1,6 @@
-setuptools # required by nutils
+setuptools>=69.0.0  # required by nutils
 nutils~=9.0
 numpy >1, <2
 pyprecice~=3.0
-matplotlib
-treelog
+matplotlib>=3.5,<4
+treelog>=1,<2

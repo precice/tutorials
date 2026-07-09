@@ -1,5 +1,5 @@
-setuptools # required by nutils
+setuptools>=69.0.0  # required by nutils
 nutils~=7.3
 numpy >1, <2
 pyprecice >=3.2 # Remeshing support is available since preCICE version 3.2
-setuptools
+setuptools>=69.0.0

@@ -1,5 +1,5 @@
 numpy >1, <2
-fenicsxprecice
-scipy
-sympy
+fenicsxprecice~=1.0
+scipy>=1.10,<2
+sympy>=1.10,<2
 mpi4py>=3

@@ -3,6 +3,7 @@ TODO: Summarize and motivate the changes, link to issues, remove the checklist e
 ## Checklist
 
 - [ ] I added a summary of any user-facing changes (compared to the last release) in the `changelog-entries/<PRnumber>.md`.
+- [ ] If I changed tutorial `requirements.txt` files, I regenerated `requirements-reference.txt` with `python3 tools/report_tutorial_requirements.py`.
 
 For new tutorials or tutorial cases:
 

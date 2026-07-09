@@ -1,6 +1,6 @@
 fenicsprecice~=2.2
 numpy >1, <2
-matplotlib
+matplotlib>=3.5,<4
 
 # Assuming FEniCS from ppa:fenics-packages/fenics was installed https://fenicsproject.org/download/archive/
 # Use --system-site-packages in venv

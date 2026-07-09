@@ -1,0 +1,32 @@
+name: Check requirements-reference
+on:
+  push:
+    branches:
+      - master
+      - develop
+    paths:
+      - '**/requirements.txt'
+      - requirements-reference.txt
+      - tools/report_tutorial_requirements.py
+  pull_request:
+    branches:
+      - master
+      - develop
+    paths:
+      - '**/requirements.txt'
+      - requirements-reference.txt
+      - tools/report_tutorial_requirements.py
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v7
+      - name: Setup python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+      - name: Install packaging
+        run: pip install packaging
+      - name: Check requirements-reference.txt
+        run: python3 tools/report_tutorial_requirements.py --check
