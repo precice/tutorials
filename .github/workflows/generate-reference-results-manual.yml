@@ -29,8 +29,15 @@ on:
         options:
             - 'INFO'
             - 'DEBUG'
+      tutorials_ref_source:
+        description: 'Use tutorials from'
+        default: 'reference_versions.yaml'
+        type: choice
+        options:
+            - 'reference_versions.yaml'
+            - 'workflow branch'
       build_args:
-        description: 'Optional overrides for reference_versions.yaml (e.g. TUTORIALS_REF:my-branch). Leave empty to use TUTORIALS_REF:from_ref.'
+        description: 'Optional overrides for reference_versions.yaml (e.g. TUTORIALS_REF:my-branch)'
         required: false
         type: string
 
@@ -43,4 +50,5 @@ jobs:
       suites: ${{ inputs.suites }}
       clean_docker: ${{ inputs.clean_docker }}
       log_level: ${{ inputs.log_level }}
+      tutorials_ref_source: ${{ inputs.tutorials_ref_source }}
       build_args: ${{ inputs.build_args }}
