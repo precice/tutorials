@@ -166,7 +166,7 @@ run-before: ./set-case.sh 1d3d
 
 You will need to define a reference results file. The reference results can and should be generated on GitHub using the [Generate reference results (manual)](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) workflow for the respective test suite. You might want to temporarily set the `selected` test suite for requesting results only for a subset of test cases.
 
-By default, the [Generate reference results (manual)](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) workflow uses `TUTORIALS_REF` from [`reference_versions.yaml`](reference_versions.yaml). For a feature branch, set **Use tutorials from** to `workflow branch`, or pass `TUTORIALS_REF` via `--build_args` (locally) or the optional `build_args` workflow input.
+By default, the [Generate reference results (manual)](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) workflow uses `TUTORIALS_REF` from [`reference_versions.yaml`](https://github.com/precice/tutorials/blob/develop/tools/tests/reference_versions.yaml). For a feature branch, set Use tutorials from to `workflow branch`, or pass `TUTORIALS_REF` via `--build_args` (locally) or the optional `build_args` workflow input.
 
 The results will be added to a Git LFS, but you will need special push access: just use the aforementioned GitHub Actions workflow, instead.
 

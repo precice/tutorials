@@ -15,6 +15,17 @@ on:
         description: 'Commit message'
         default: "Add reference results"
         type: string
+      tutorials_ref_source:
+        description: 'Use tutorials from'
+        default: 'reference_versions.yaml'
+        type: choice
+        options:
+            - 'reference_versions.yaml'
+            - 'workflow branch'
+      build_args:
+        description: 'Optional overrides for reference_versions.yaml (e.g. TUTORIALS_REF:my-branch)'
+        required: false
+        type: string
       clean_docker:
         description: 'Run docker-system-prune before running tests'
         default: 'FALSE'
@@ -29,17 +40,6 @@ on:
         options:
             - 'INFO'
             - 'DEBUG'
-      tutorials_ref_source:
-        description: 'Use tutorials from'
-        default: 'reference_versions.yaml'
-        type: choice
-        options:
-            - 'reference_versions.yaml'
-            - 'workflow branch'
-      build_args:
-        description: 'Optional overrides for reference_versions.yaml (e.g. TUTORIALS_REF:my-branch)'
-        required: false
-        type: string
 
 jobs:
   generate_reference_results_manual:
