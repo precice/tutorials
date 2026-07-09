@@ -30,4 +30,3 @@ This reference manifest is for documentation and reproducibility; it is not used
 Legacy FEniCS packages (for example `fenics-dolfin`) are installed from the system or PPA in several tutorials and are listed in the reference file as non-PyPI dependencies.
 
 When preparing a release pull request to `master`, regenerate and commit `requirements-reference.txt` so the pinned snapshot matches the current tutorial constraints.
-
