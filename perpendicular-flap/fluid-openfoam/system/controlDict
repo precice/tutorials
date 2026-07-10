@@ -6,7 +6,8 @@ FoamFile
     object      controlDict;
 }
 
-application     pimpleFoam;       // latest OpenFOAM
+application     foamRun;
+solver          incompressibleFluid; //pimpleFoam;       // latest OpenFOAM
 // application     pimpleDyMFoam; // OpenFOAM v1712, OpenFOAM 5.x, or older
 
 startFrom       startTime;
@@ -43,4 +44,6 @@ functions
         type preciceAdapterFunctionObject;
         errors strict; // Available since OpenFOAM v2012
     }
+
+	#includeFunc forcesIncompressible(name=forcesFlap, patches=("flap"),rhoInf=1.0,CofR=(0 0 0),pitchAxis=(0 1 0))
 }

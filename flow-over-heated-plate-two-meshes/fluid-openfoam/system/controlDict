@@ -6,7 +6,9 @@ FoamFile
     object      controlDict;
 }
 
-application     buoyantPimpleFoam;
+application     foamRun;
+
+solver          fluid; // buoyantPimpleFoam;
 
 startFrom       startTime;
 

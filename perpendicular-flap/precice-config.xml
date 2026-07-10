@@ -27,6 +27,9 @@
     <receive-mesh name="Solid-Mesh" from="Solid" />
     <write-data name="Force" mesh="Fluid-Mesh" />
     <read-data name="Displacement" mesh="Fluid-Mesh" />
+    <watch-point mesh="Fluid-Mesh" name="Flap-Tip" coordinate="0.0;1" />
+    <watch-point mesh="Fluid-Mesh" name="Flap-050l" coordinate="-0.05;0.5" />
+    <watch-point mesh="Fluid-Mesh" name="Flap-050r" coordinate="0.05;0.5" />
     <mapping:rbf direction="write" from="Fluid-Mesh" to="Solid-Mesh" constraint="conservative">
       <basis-function:compact-polynomial-c6 support-radius="1." />
     </mapping:rbf>
@@ -40,6 +43,8 @@
     <write-data name="Displacement" mesh="Solid-Mesh" />
     <read-data name="Force" mesh="Solid-Mesh" />
     <watch-point mesh="Solid-Mesh" name="Flap-Tip" coordinate="0.0;1" />
+    <watch-point mesh="Solid-Mesh" name="Flap-050l" coordinate="-0.05;0.5" />
+    <watch-point mesh="Solid-Mesh" name="Flap-050r" coordinate="0.05;0.5" />
   </participant>
 
   <m2n:sockets acceptor="Fluid" connector="Solid" exchange-directory=".." />
