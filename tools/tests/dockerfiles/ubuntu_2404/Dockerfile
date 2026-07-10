@@ -98,6 +98,7 @@ ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
 ENV CMAKE_PREFIX_PATH="/home/precice/.local:$CMAKE_PREFIX_PATH"
 ### end of precice stage ###
 
+
 FROM precice AS python_bindings
 ARG PYTHON_BINDINGS_REF
 
