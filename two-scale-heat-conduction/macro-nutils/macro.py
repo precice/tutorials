@@ -46,6 +46,7 @@ def main():
 
         # Define Gauss points on entire domain as coupling mesh (volume coupling from macro side)
         couplingsample = topo.sample('gauss', degree=2)  # mesh vertices are Gauss points
+        n_gp = couplingsample.eval('x_i' @ ns).shape[0]  # number of gauss points
         vertex_ids = participant.set_mesh_vertices(mesh_name, couplingsample.eval(ns.x))
     else:
         sqrphi = topo.integral((ns.phi - phi) ** 2, degree=1)
@@ -114,9 +115,14 @@ def main():
 
             # Read conductivity and apply it to the existing solution
             k_00_c = couplingsample.asfunction(participant.read_data(mesh_name, "K00", vertex_ids, dt))
-            k_01_c = couplingsample.asfunction(participant.read_data(mesh_name, "K01", vertex_ids, dt))
-            k_10_c = couplingsample.asfunction(participant.read_data(mesh_name, "K10", vertex_ids, dt))
             k_11_c = couplingsample.asfunction(participant.read_data(mesh_name, "K11", vertex_ids, dt))
+
+            # Not read from preCICE as the values are zero. Instead, they are set to zero directly.
+            # k_01_c = couplingsample.asfunction(participant.read_data(mesh_name, "K01", vertex_ids, dt))
+            # k_10_c = couplingsample.asfunction(participant.read_data(mesh_name, "K10", vertex_ids, dt))
+
+            k_01_c = couplingsample.asfunction(np.zeros(n_gp))
+            k_10_c = couplingsample.asfunction(np.zeros(n_gp))
 
             conductivity = function.asarray([[k_00_c, k_01_c], [k_10_c, k_11_c]])
             sqrk = couplingsample.integral(((ns.k - conductivity) * (ns.k - conductivity)).sum([0, 1]))

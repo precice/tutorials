@@ -1,0 +1,12 @@
+{
+  "initial_conditions": {
+    "type": "sinusoidal",
+    "wavenumber_range": [1, 7],
+    "num_modes": 4
+  },
+  "domain": {
+    "nelems_total": 256,
+    "full_domain_min": 0.0,
+    "full_domain_max": 2.0
+  }
+}

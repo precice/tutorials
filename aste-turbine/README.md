@@ -1,6 +1,8 @@
 ---
 title: ASTE (artificial solver testing environment) wind turbine blade tutorial
 permalink: tutorials-aste-turbine.html
+aliases:
+  - /tutorials-aste-turbine.html
 keywords: ASTE, mapping, data mapping, mapping configuration, turbine
 summary: This tutorial is an example case for ASTE, where we investigate different preCICE mappings using ASTE.
 ---

@@ -6,4 +6,4 @@ services:
     command:
       - /runs/{{ tutorial_folder }}/{{ precice_output_folder }}
       - /runs/{{ tutorial_folder }}/{{ reference_output_folder }}
-      - "-rtol 3e-7 --ignore-missing-reference-files --diff"
+      - "-rtol {{ tolerance }} --ignore-missing-reference-files --diff"

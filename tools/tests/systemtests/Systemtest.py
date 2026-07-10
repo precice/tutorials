@@ -1,5 +1,7 @@
+import hashlib
 import subprocess
 import threading
+from .sources import resolve_tutorial_root, PRECICE_EXTERNAL_CACHE_DIR
 from typing import List, Dict, Optional, Tuple
 from jinja2 import Environment, FileSystemLoader
 from dataclasses import dataclass, field
@@ -10,7 +12,7 @@ from paths import PRECICE_REL_OUTPUT_DIR, PRECICE_TOOLS_DIR, PRECICE_REL_REFEREN
 from metadata_parser.metdata import Tutorial, CaseCombination, Case, ReferenceResult
 from .SystemtestArguments import SystemtestArguments
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import tarfile
 import time
 
@@ -20,10 +22,14 @@ import logging
 import os
 
 
-GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 600))
+GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 180))
+DEFAULT_BUILD_TIMEOUT = int(
+    os.environ.get("PRECICE_SYSTEMTESTS_BUILD_TIMEOUT", 480))
+DEFAULT_FIELDCOMPARE_RTOL = 3e-7
 SHORT_TIMEOUT = 10
 
 DIFF_RESULTS_DIR = "diff-results"
+ITERATIONS_LOGS_DIR = "iterations-logs"
 
 STAGE_LOG_FILES = {
     "build": "system-tests-build.log",
@@ -165,11 +171,11 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
 
     header = f"| {'systemtest':<{max_name_length + 2}} "\
         f"| {'status':^7} "\
-        f"| {'building time [s]':^17} "\
-        f"| {'solver time [s]':^15} "\
-        f"| {'fieldcompare time [s]':^21} |"
+        f"| {'build':^11} "\
+        f"| {'run':^11} "\
+        f"| {'compare':^11} |"
     separator_plaintext = "+-" + "-" * (max_name_length + 2) + \
-        "-+---------+-------------------+-----------------+-----------------------+"
+        "-+---------+-------------+-------------+-------------+"
     separator_markdown = "| --- | --- | --- | --- | --- |"
 
     print(separator_plaintext)
@@ -182,11 +188,20 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
             print(separator_markdown, file=f)
 
     for result in results:
+        build_time = int(timedelta(seconds=result.build_time).total_seconds())
+        build_time_m, build_time_s = divmod(build_time, 60)
+
+        solver_time = int(timedelta(seconds=result.solver_time).total_seconds())
+        solver_time_m, solver_time_s = divmod(solver_time, 60)
+
+        fieldcompare_time = int(timedelta(seconds=result.fieldcompare_time).total_seconds())
+        fieldcompare_time_m, fieldcompare_time_s = divmod(fieldcompare_time, 60)
+
         row = f"| {str(result.systemtest):<{max_name_length + 2}} "\
-            f"| {_success_status_symbol(result.success):^7} "\
-            f"| {result.build_time:^17.1f} "\
-            f"| {result.solver_time:^15.1f} "\
-            f"| {result.fieldcompare_time:^21.1f} |"
+            f"| {_success_status_symbol(result.success):^5} "\
+            f"|     {build_time_m:>2}m {build_time_s:02d}s "\
+            f"|     {solver_time_m:>2}m {solver_time_s:02d}s "\
+            f"|     {fieldcompare_time_m:>2}m {fieldcompare_time_s:02d}s |"
         print(row)
         print(separator_plaintext)
         if "GITHUB_STEP_SUMMARY" in os.environ:
@@ -219,6 +234,10 @@ class Systemtest:
     max_time: float | None = None
     max_time_windows: int | None = None
     timeout: int = GLOBAL_TIMEOUT
+    tolerance: float = DEFAULT_FIELDCOMPARE_RTOL
+    skip_compare: bool = False
+    run_before: str | None = None
+    run_after: str | None = None
     params_to_use: Dict[str, str] = field(init=False)
     env: Dict[str, str] = field(init=False)
 
@@ -236,6 +255,27 @@ class Systemtest:
     def __post_init__(self):
         self.__init_args_to_use()
         self.env = {}
+        self.build_timeout = self._resolve_build_timeout()
+
+    def _resolve_build_timeout(self) -> int:
+        """
+        Wall-clock limit for the single ``docker compose build`` subprocess.
+
+        Uses the maximum build_timeout of the distinct components in this test,
+        so the step can run long enough for the slowest adapter. Components
+        without build_timeout use DEFAULT_BUILD_TIMEOUT.
+        """
+        timeouts = []
+        seen_components = set()
+        for case in self.case_combination.cases:
+            if case.component.name in seen_components:
+                continue
+            seen_components.add(case.component.name)
+            if case.component.build_timeout is not None:
+                timeouts.append(case.component.build_timeout)
+            else:
+                timeouts.append(DEFAULT_BUILD_TIMEOUT)
+        return max(timeouts) if timeouts else DEFAULT_BUILD_TIMEOUT
 
     def __init_args_to_use(self):
         """
@@ -256,9 +296,21 @@ class Systemtest:
         # Substitute defaults for non-provided, needed arguments
         for needed_param in needed_parameters:
             if not needed_param.key in provided_arguments:
-                logging.warning(
-                    f"No argument provided for needed parameter {needed_param.key}. Substituting with {needed_param.default}")
+                logging.info(
+                    f"No argument provided for needed parameter {needed_param.key}. Substituting with {needed_param.default}.")
                 self.params_to_use[needed_param.key] = needed_param.default
+            if needed_param.key.endswith("_REF") and needed_param.key in provided_arguments:
+                logging.debug(
+                    f"The parameter {needed_param.key} points to the repository {needed_param.repository}.")
+                # If a commit has already been resolved and added to the params_to_use, it will be propagated to the next test in the test suite.
+                # To avoid resolving the same commit again, simply check if the key has the same length as the output of _resolve_branch_ref_to_commit.
+                # The whole process assumes that all components use the same refs.
+                if len(self.params_to_use[needed_param.key]) == 40:
+                    logging.debug(
+                        f"Git ref {self.params_to_use[needed_param.key]} is 40 characters long and probably already a commit.")
+                else:
+                    self.params_to_use[needed_param.key] = self._resolve_branch_ref_to_commit(
+                        needed_param.repository, self.params_to_use[needed_param.key])
 
     def __get_docker_services(self) -> Dict[str, str]:
         """
@@ -272,20 +324,37 @@ class Systemtest:
         except Exception as exc:
             raise KeyError("Please specify a PLATFORM argument") from exc
 
+        # Use an absolute path here only for validation that the requested
+        # dockerfile context exists on the machine running the system tests.
         self.dockerfile_context = PRECICE_TESTS_DIR / "dockerfiles" / Path(plaform_requested)
         if not self.dockerfile_context.exists():
             raise ValueError(
                 f"The path {self.dockerfile_context.resolve()} resulting from argument PLATFORM={plaform_requested} could not be found in the system")
 
         def render_service_template_per_case(case: Case, params_to_use: Dict[str, str]) -> str:
+            # Inside the individual system test directory (`self.system_test_dir`)
+            # we copy a full `tools/` tree into the parent run directory
+            # (see __copy_tools). From the point of view of the system test
+            # directory we therefore need to go one level up to reach the
+            # shared `tools/` folder:
+            #   <run_directory>/tools/tests/dockerfiles/<PLATFORM>
+            #   ^-------------^ parent of self.system_test_dir
+            dockerfile_context_relative = (
+                Path("..") / "tools" / "tests" / "dockerfiles" / Path(plaform_requested)
+            )
+
             render_dict = {
-                'run_directory': self.run_directory.resolve(),
+                # Use a relative path to the *parent* run directory so that
+                # containers still see /runs/<tutorial_folder> like before,
+                # while keeping the compose file independent of the CI
+                # runner's absolute paths.
+                'run_directory': "..",
                 'tutorial_folder': self.tutorial_folder,
                 'build_arguments': params_to_use,
                 'params': params_to_use,
                 'case_folder': case.path,
                 'run': case.run_cmd,
-                'dockerfile_context': self.dockerfile_context,
+                'dockerfile_context': dockerfile_context_relative,
             }
             jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
             template = jinja_env.get_template(case.component.template)
@@ -300,12 +369,20 @@ class Systemtest:
     def __get_docker_compose_file(self):
         rendered_services = self.__get_docker_services()
         render_dict = {
-            'run_directory': self.run_directory.resolve(),
+            # See __get_docker_services: keep the docker-compose file
+            # portable by referring to the parent run directory only.
+            'run_directory': "..",
             'tutorial_folder': self.tutorial_folder,
             'tutorial': self.tutorial.path.name,
             'services': rendered_services,
             'build_arguments': self.params_to_use,
-            'dockerfile_context': self.dockerfile_context,
+            # The dockerfile_context value inside the templates is only
+            # used as a build context path and does not need to be
+            # absolute – it will be resolved relative to the system test
+            # directory.
+            'dockerfile_context': (
+                Path("..") / "tools" / "tests" / "dockerfiles" / Path(self.params_to_use.get("PLATFORM"))
+            ),
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
         }
         jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
@@ -314,10 +391,14 @@ class Systemtest:
 
     def __get_field_compare_compose_file(self):
         render_dict = {
-            'run_directory': self.run_directory.resolve(),
+            # Fieldcompare should also use only relative paths from inside
+            # the system test directory so that the run directory can be
+            # moved and re-executed elsewhere.
+            'run_directory': "..",
             'tutorial_folder': self.tutorial_folder,
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
             'reference_output_folder': PRECICE_REL_REFERENCE_DIR + "/" + self.reference_result.path.name.replace(".tar.gz", ""),
+            'tolerance': self.tolerance,
         }
         jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
         template = jinja_env.get_template(
@@ -365,6 +446,30 @@ class Systemtest:
             raise RuntimeError(
                 f"An error occurred while fetching origin '{ref}':  {e}. Do the values in reference_versions.yaml point to (still) valid Git refs?")
 
+    def _resolve_branch_ref_to_commit(self, repository: Path, ref: str) -> Optional[str]:
+        try:
+            git_ls_remote_output = subprocess.run([
+                "git",
+                "ls-remote",
+                os.fspath(repository),
+                ref,
+            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True, timeout=60)
+
+            # If an invalid ref is given, git ls-remote still returns success, but no list
+            git_remote_refs = git_ls_remote_output.stdout.strip()
+            if not git_remote_refs:
+                raise ValueError(f"The git ref {ref} does not appear in the repository {repository}.")
+
+            commit = git_remote_refs.split()[0]
+            # The output assumes a URL of the form <repository>/commits/<commit>. Works for GitHub and Bitbucket.
+            logging.info(
+                f"Resolved the git ref {ref} of the repository {repository} to {repository}/commits/{commit} .")
+            return commit if commit else ref
+        except Exception:
+            logging.warning(
+                f"Could not resolve git ref {ref} of the repository {repository} to a commit. Using the given git ref as-is.")
+            return ref
+
     def _checkout_ref_in_subfolder(self, repository: Path, subfolder: Path, ref: str):
         try:
             result = subprocess.run([
@@ -385,24 +490,36 @@ class Systemtest:
         """
         current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.run_directory = run_directory
-        pr_requested = self.params_to_use.get("TUTORIALS_PR")
-        if pr_requested:
-            logging.debug(f"Fetching the PR {pr_requested} HEAD reference")
-            self._fetch_pr(PRECICE_TUTORIAL_DIR, pr_requested)
-        current_ref = self._get_git_ref(PRECICE_TUTORIAL_DIR)
-        ref_requested = self.params_to_use.get("TUTORIALS_REF")
-        if ref_requested:
-            logging.debug(f"Checking out tutorials {ref_requested} before copying")
-            self._fetch_ref(PRECICE_TUTORIAL_DIR, ref_requested)
-            self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR, self.tutorial.path, ref_requested)
+        current_ref = None
+        ref_requested = None
 
-        self.tutorial_folder = slugify(f'{self.tutorial.path.name}_{self.case_combination.cases}_{current_time_string}')
+        if self.tutorial.source.type == "local":
+            pr_requested = self.params_to_use.get("TUTORIALS_PR")
+            if pr_requested:
+                logging.debug(f"Fetching the PR {pr_requested} HEAD reference")
+                self._fetch_pr(PRECICE_TUTORIAL_DIR, pr_requested)
+            current_ref = self._get_git_ref(PRECICE_TUTORIAL_DIR)
+            ref_requested = self.params_to_use.get("TUTORIALS_REF")
+            if ref_requested:
+                logging.debug(f"Checking out tutorials {ref_requested} before copying")
+                self._fetch_ref(PRECICE_TUTORIAL_DIR, ref_requested)
+                self._checkout_ref_in_subfolder(
+                    PRECICE_TUTORIAL_DIR, self.tutorial.path, ref_requested)
+
+        self.tutorial_folder = slugify(
+            f'{self.tutorial.path.name}_{self.case_combination.cases}_{current_time_string}')
         destination = run_directory / self.tutorial_folder
-        src = self.tutorial.path
+        # External sources are fetched and resolved once at parse time; reuse
+        # that path here to avoid a redundant fetch (and duplicate log line).
+        src = self.tutorial.resolved_root or resolve_tutorial_root(
+            self.tutorial.path,
+            self.tutorial.source,
+            PRECICE_EXTERNAL_CACHE_DIR,
+        )
         self.system_test_dir = destination
         shutil.copytree(src, destination)
 
-        if ref_requested:
+        if self.tutorial.source.type == "local" and ref_requested:
             with open(destination / "tutorials_ref", 'w') as file:
                 file.write(ref_requested)
             self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR, self.tutorial.path, current_ref)
@@ -673,15 +790,169 @@ class Systemtest:
                 self,
             )
 
+    def __copy_rerun_system_test_script(self) -> None:
+        """Copy tools/tests/rerun-system-test.sh into the run directory for artifact replay."""
+        rerun_src = PRECICE_TESTS_DIR / "rerun-system-test.sh"
+        if not rerun_src.is_file():
+            raise FileNotFoundError(
+                f"Missing {rerun_src}. It is required for portable CI artifact replay.")
+        rerun_dst = self.system_test_dir / "rerun-system-test.sh"
+        shutil.copy2(rerun_src, rerun_dst)
+        try:
+            rerun_dst.chmod(rerun_dst.stat().st_mode | 0o111)
+        except Exception:
+            logging.debug(
+                f"Could not mark {rerun_dst} as executable; continuing anyway.")
+
+    @staticmethod
+    def _sha256_file(path: Path) -> str:
+        """Compute SHA-256 hex digest of a file."""
+        h = hashlib.sha256()
+        mv = memoryview(bytearray(128 * 1024))
+        with open(path, 'rb', buffering=0) as f:
+            while n := f.readinto(mv):
+                h.update(mv[:n])
+        return h.hexdigest()
+
+    def _unpacked_reference_iterations_logs_dir(self) -> Path:
+        """Iterations logs unpacked from the reference tar (fieldcompare runs first)."""
+        stem = self.reference_result.path.name.replace(".tar.gz", "")
+        return (
+            self.system_test_dir
+            / PRECICE_REL_REFERENCE_DIR
+            / f"{stem}.{ITERATIONS_LOGS_DIR}"
+        )
+
+    def _collect_iterations_logs(
+        self, system_test_dir: Path
+    ) -> List[Tuple[str, Path]]:
+        """
+        Collect precice-*-iterations.log files from case dirs.
+        Returns list of (relative_path, absolute_path) e.g. ("solid-fenics/precice-Solid-iterations.log", path).
+        """
+        collected = []
+        for case in self.case_combination.cases:
+            case_dir = system_test_dir / Path(case.path).name
+            if not case_dir.exists():
+                continue
+            for log_file in case_dir.glob("precice-*-iterations.log"):
+                if log_file.is_file():
+                    rel = f"{Path(case.path).name}/{log_file.name}"
+                    collected.append((rel, log_file))
+        return collected
+
+    def _reference_iterations_hashes(self) -> Optional[Dict[str, str]]:
+        """
+        Load expected iterations.log hashes from archived reference files.
+        Returns None if no reference data is available.
+        """
+        ref_dir = self._unpacked_reference_iterations_logs_dir()
+        if not ref_dir.is_dir():
+            return None
+        ref_hashes = {}
+        for log_file in ref_dir.rglob("precice-*-iterations.log"):
+            if log_file.is_file():
+                rel = log_file.relative_to(ref_dir).as_posix()
+                ref_hashes[rel] = self._sha256_file(log_file)
+        return ref_hashes if ref_hashes else None
+
+    def __archive_iterations_logs(self) -> None:
+        """Copy precice-*-iterations.log from case dirs into iterations-logs/ for CI artifacts."""
+        collected = self._collect_iterations_logs(self.system_test_dir)
+        if not collected:
+            return
+        dest_dir = self.system_test_dir / ITERATIONS_LOGS_DIR
+        dest_dir.mkdir(exist_ok=True)
+        for rel, src in collected:
+            dest_name = Path(rel).name
+            if len(collected) > 1:
+                prefix = Path(rel).parent.name + "_"
+                dest_name = prefix + dest_name
+            shutil.copy2(src, dest_dir / dest_name)
+        logging.debug(
+            "Archived %d iterations log(s) to %s for %s",
+            len(collected),
+            dest_dir,
+            self,
+        )
+
+    def _append_compare_log(self, message: str, *, error: bool = False) -> None:
+        log_sink = getattr(self, "_log_sink", None)
+        if log_sink is None:
+            return
+        if error:
+            log_sink.append_stderr(message, "compare")
+        else:
+            log_sink.append_stdout(message, "compare")
+
+    def __compare_iterations_hashes(self) -> bool:
+        """
+        Compare current iterations.log hashes against reference data.
+        Returns True if comparison passes (or is skipped). Returns False if hashes differ.
+        """
+        ref_hashes = self._reference_iterations_hashes()
+        if ref_hashes is None:
+            message = (
+                f"Iterations.log hash check skipped (no reference data) for {self}"
+            )
+            logging.info(message)
+            self._append_compare_log(message)
+            return True
+        collected = self._collect_iterations_logs(self.system_test_dir)
+        current = {rel: self._sha256_file(p) for rel, p in collected}
+        for rel, expected in ref_hashes.items():
+            if rel not in current:
+                message = (
+                    f"Missing iterations log {rel} (expected from reference); "
+                    f"{self} fails"
+                )
+                logging.critical(message)
+                self._append_compare_log(message, error=True)
+                return False
+            if current[rel] != expected:
+                message = (
+                    f"Hash mismatch for {rel} (iterations.log regression); "
+                    f"{self} fails"
+                )
+                logging.critical(message)
+                self._append_compare_log(message, error=True)
+                return False
+        if len(current) != len(ref_hashes):
+            extra = set(current) - set(ref_hashes)
+            message = f"Unexpected iterations log(s) {extra}; {self} fails"
+            logging.critical(message)
+            self._append_compare_log(message, error=True)
+            return False
+        self._append_compare_log("=== Comparing the iterations.log files (checksums only) ===")
+        for rel in sorted(ref_hashes):
+            detail = f"  {rel}: sha256 ok"
+            logging.debug(detail)
+            self._append_compare_log(detail)
+        message = (
+            f"Iterations.log hash check passed for {self} ({len(ref_hashes)} file(s))"
+        )
+        logging.info(message)
+        self._append_compare_log(message)
+        return True
+
     def _build_docker(self):
         """
         Builds the docker image
         """
         logging.debug(f"Building docker image for {self}")
+        logging.info(
+            f"Using build timeout {self.build_timeout}s for {self}")
         time_start = time.perf_counter()
         docker_compose_content = self.__get_docker_compose_file()
-        with open(self.system_test_dir / "docker-compose.tutorial.yaml", 'w') as file:
+        docker_compose_path = self.system_test_dir / "docker-compose.tutorial.yaml"
+        with open(docker_compose_path, 'w') as file:
             file.write(docker_compose_content)
+
+        field_compare_compose_path = self.system_test_dir / "docker-compose.field_compare.yaml"
+        with open(field_compare_compose_path, 'w') as file:
+            file.write(self.__get_field_compare_compose_file())
+
+        self.__copy_rerun_system_test_script()
 
         exit_code, stdout_data, stderr_data = self._run_docker_compose_subprocess(
             [
@@ -693,7 +964,7 @@ class Systemtest:
                 'build',
             ],
             "build",
-            GLOBAL_TIMEOUT,
+            self.build_timeout,
         )
         elapsed_time = time.perf_counter() - time_start
         return DockerComposeResult(exit_code, stdout_data, stderr_data, self, elapsed_time)
@@ -722,7 +993,8 @@ class Systemtest:
         return DockerComposeResult(exit_code, stdout_data, stderr_data, self, elapsed_time)
 
     def __repr__(self):
-        return f"{self.tutorial.name} {self.case_combination}"
+        prefix = "External: " if getattr(self.tutorial.source, "type", "local") != "local" else ""
+        return f"{prefix}{self.tutorial.name} {self.case_combination}"
 
     def __apply_max_time_override(self):
         """Overwrite <max-time> or <max-time-windows> value in precice-config.xml."""
@@ -747,11 +1019,41 @@ class Systemtest:
                 logging.info(f"Overwrote <max-time-windows> to {self.max_time_windows} in {config_path}")
         config_path.write_text(new_text)
 
+    def _run_hook(self, stage: str, command: str | None) -> bool:
+        """
+        Run a shell command in the copied tutorial directory (e.g. run-before / run-after).
+        """
+        if not command:
+            return True
+        logging.info(f"Running {stage} for {self}: {command}")
+        try:
+            result = subprocess.run(
+                command,
+                shell=True,
+                cwd=self.system_test_dir,
+                capture_output=True,
+                text=True,
+                start_new_session=True,
+            )
+        except Exception as e:
+            logging.critical(f"Failed to start {stage} for {self}: {e}")
+            return False
+        hook_output = (result.stdout or '') + (result.stderr or '')
+        if hook_output.strip():
+            logging.debug(f"{stage} output for {self}:\n{hook_output.rstrip()}")
+        if result.returncode != 0:
+            logging.critical(
+                f"{stage} for {self} failed with exit code {result.returncode}: {command}")
+            return False
+        return True
+
     def __prepare_for_run(self, run_directory: Path):
         """
         Prepares the run_directory with folders and datastructures needed for every systemtest execution
         """
         self.__copy_tutorial_into_directory(run_directory)
+        if not self._run_hook('run-before', self.run_before):
+            raise RuntimeError(f"run-before hook failed for {self}")
         self.__apply_max_time_override()
         self.__copy_tools(run_directory)
         self.__put_gitignore(run_directory)
@@ -763,7 +1065,12 @@ class Systemtest:
         """
         Runs the system test by generating the Docker Compose file, copying everything into a run folder, and executing docker-compose up.
         """
-        self.__prepare_for_run(run_directory)
+        try:
+            self.__prepare_for_run(run_directory)
+        except RuntimeError as e:
+            logging.critical(str(e))
+            return SystemtestResult(False, [], [str(e)], self, build_time=0, solver_time=0, fieldcompare_time=0)
+
         self.__init_run_logs()
         std_out: List[str] = []
         std_err: List[str] = []
@@ -797,12 +1104,8 @@ class Systemtest:
                 solver_time=docker_run_result.runtime,
                 fieldcompare_time=0)
 
-        fieldcompare_result = self._run_field_compare()
-        std_out.extend(fieldcompare_result.stdout_data)
-        std_err.extend(fieldcompare_result.stderr_data)
-        if fieldcompare_result.exit_code != 0:
-            self.__archive_fieldcompare_diffs()
-            logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
+        if not self._run_hook('run-after', self.run_after):
+            logging.critical(f"run-after hook failed for {self}")
             return SystemtestResult(
                 False,
                 std_out,
@@ -810,7 +1113,41 @@ class Systemtest:
                 self,
                 build_time=docker_build_result.runtime,
                 solver_time=docker_run_result.runtime,
-                fieldcompare_time=fieldcompare_result.runtime)
+                fieldcompare_time=0)
+
+        if self.skip_compare:
+            logging.info(f"Skipping fieldcompare for {self} (skip_compare=true)")
+            fieldcompare_time = 0.0
+        else:
+            fieldcompare_result = self._run_field_compare()
+            std_out.extend(fieldcompare_result.stdout_data)
+            std_err.extend(fieldcompare_result.stderr_data)
+            if fieldcompare_result.exit_code != 0:
+                self.__archive_fieldcompare_diffs()
+                logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
+                return SystemtestResult(
+                    False,
+                    std_out,
+                    std_err,
+                    self,
+                    build_time=docker_build_result.runtime,
+                    solver_time=docker_run_result.runtime,
+                    fieldcompare_time=fieldcompare_result.runtime)
+            fieldcompare_time = fieldcompare_result.runtime
+
+        self.__archive_iterations_logs()
+        if not self.__compare_iterations_hashes():
+            logging.critical(
+                f"Iterations.log hash comparison failed (regression), {self} failed"
+            )
+            return SystemtestResult(
+                False,
+                std_out,
+                std_err,
+                self,
+                build_time=docker_build_result.runtime,
+                solver_time=docker_run_result.runtime,
+                fieldcompare_time=fieldcompare_time)
 
         # self.__cleanup()
         self._cleanup_docker_networks()
@@ -821,13 +1158,18 @@ class Systemtest:
             self,
             build_time=docker_build_result.runtime,
             solver_time=docker_run_result.runtime,
-            fieldcompare_time=fieldcompare_result.runtime)
+            fieldcompare_time=fieldcompare_time)
 
     def run_for_reference_results(self, run_directory: Path):
         """
         Runs the system test by generating the Docker Compose files to generate the reference results
         """
-        self.__prepare_for_run(run_directory)
+        try:
+            self.__prepare_for_run(run_directory)
+        except RuntimeError as e:
+            logging.critical(str(e))
+            return SystemtestResult(False, [], [str(e)], self, build_time=0, solver_time=0, fieldcompare_time=0)
+
         self.__init_run_logs()
         std_out: List[str] = []
         std_err: List[str] = []
@@ -851,6 +1193,17 @@ class Systemtest:
         std_err.extend(docker_run_result.stderr_data)
         if docker_run_result.exit_code != 0:
             logging.critical(f"Could not run the tutorial, {self} failed")
+            return SystemtestResult(
+                False,
+                std_out,
+                std_err,
+                self,
+                build_time=docker_build_result.runtime,
+                solver_time=docker_run_result.runtime,
+                fieldcompare_time=0)
+
+        if not self._run_hook('run-after', self.run_after):
+            logging.critical(f"run-after hook failed for {self}")
             return SystemtestResult(
                 False,
                 std_out,
@@ -874,7 +1227,12 @@ class Systemtest:
         """
         Runs only the build commmand, for example to preheat the caches of the docker builder.
         """
-        self.__prepare_for_run(run_directory)
+        try:
+            self.__prepare_for_run(run_directory)
+        except RuntimeError as e:
+            logging.critical(str(e))
+            return SystemtestResult(False, [], [str(e)], self, build_time=0, solver_time=0, fieldcompare_time=0)
+
         self.__init_run_logs()
         std_out: List[str] = []
         std_err: List[str] = []
