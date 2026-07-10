@@ -124,7 +124,6 @@ test_suites:
           - solid-fenics
         max_time_windows: 1
         tolerance: 1e-2    # Some values are too close to zero
-        skip_compare: true # Comparison takes too
         reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-fenics.tar.gz
 
   flow-around-controlled-moving-cylinder:
@@ -664,7 +663,6 @@ test_suites:
       - *elastic-tube-1d_fluid-fortran-module_solid-fortran-module
       - *elastic-tube-1d_fluid-python_solid-python
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
-      - *elastic-tube-3d_fluid-openfoam_solid-fenics
       - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-fenicsx
@@ -724,6 +722,7 @@ test_suites:
   extra:
     tutorials:
       - *channel-transport_fluid-nutils_transport-nutils
+      - *elastic-tube-3d_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-dunefem
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *perpendicular-flap_fluid-nutils_solid-calculix
