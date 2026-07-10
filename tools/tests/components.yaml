@@ -97,8 +97,7 @@ solids4foam:
   build_arguments:
     PLATFORM:
       description: Dockerfile platform used
-      default: "ubuntu_2404"
-      # The name "PLATFORM" is misleading: For this component, we use a different base image.
+      default: "ubuntu_2204_solids4foam"
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
