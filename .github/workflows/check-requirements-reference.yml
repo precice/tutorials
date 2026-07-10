@@ -6,16 +6,16 @@ on:
       - develop
     paths:
       - '**/requirements.txt'
-      - requirements-reference.txt
-      - tools/report_tutorial_requirements.py
+      - '**/requirements-reference.txt'
+      - tools/releasing/report_tutorial_requirements.py
   pull_request:
     branches:
       - master
       - develop
     paths:
       - '**/requirements.txt'
-      - requirements-reference.txt
-      - tools/report_tutorial_requirements.py
+      - '**/requirements-reference.txt'
+      - tools/releasing/report_tutorial_requirements.py
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -28,5 +28,5 @@ jobs:
           python-version: '3.10'
       - name: Install packaging
         run: pip install packaging
-      - name: Check requirements-reference.txt
-        run: python3 tools/report_tutorial_requirements.py --check
+      - name: Check requirements-reference.txt files
+        run: python3 tools/releasing/report_tutorial_requirements.py --check

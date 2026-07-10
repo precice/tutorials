@@ -1,2 +1,2 @@
-numpy~=2.0      # Known to work with 2.3.5
-matplotlib~=3.0  # Known to work with 3.10.8
+numpy~=2.0
+matplotlib>=3,<4
