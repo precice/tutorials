@@ -98,18 +98,10 @@ solids4foam:
     PLATFORM:
       description: Dockerfile platform used
       default: "ubuntu_2404"
-    PRECICE_REF:
-      description: Version of preCICE to use
-      default: "main"
-    PRECICE_PRESET:
-      description: CMake preset of preCICE
-      default: "production-audit"
+      # The name "PLATFORM" is misleading: For this component, we use a different base image.
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "master"
-    OPENFOAM_EXECUTABLE:
-      description: exectuable of openfoam to use
-      default: "openfoam2512"
     OPENFOAM_ADAPTER_REF:
       description: Reference/tag of the OpenFOAM adapter to use
       default: "master"
