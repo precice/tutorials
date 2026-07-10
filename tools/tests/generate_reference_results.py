@@ -118,6 +118,11 @@ def main():
                              'If not specified, all suites are used.')
     parser.add_argument('--log_level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
                         default='INFO', help='Set the logging level')
+    parser.add_argument(
+        '--build_args',
+        type=str,
+        help='Comma-separated overrides for reference_versions.yaml '
+             '(e.g., "TUTORIALS_REF:my-feature-branch")')
 
     args = parser.parse_args()
 
@@ -162,8 +167,13 @@ def main():
         test_suites = all_test_suites
         logging.info("No --suites filter specified, generating reference results for all suites.")
 
-    # Read in parameters
+    # Read in parameters from reference_versions.yaml, applying any CLI overrides.
     build_args = SystemtestArguments.from_yaml(PRECICE_TESTS_DIR / "reference_versions.yaml")
+    overrides = SystemtestArguments.from_args(args.build_args)
+    if overrides.arguments:
+        build_args = SystemtestArguments(
+            {**build_args.arguments, **overrides.arguments})
+        logging.info(f"Applied build argument overrides: {overrides}")
     systemtests_to_run = set()
 
     for test_suite in test_suites:
