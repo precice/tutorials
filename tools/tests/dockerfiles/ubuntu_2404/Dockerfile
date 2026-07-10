@@ -462,7 +462,7 @@ FROM solids4foam/solids4foam:v2.3-openfoam-v2412-latest as solids4foam
 ARG PRECICE_UID=1000
 ARG PRECICE_GID=1000
 ARG OPENFOAM_ADAPTER_PR
-ARG OPENFOAM_ADAPTER_REF=v1.3.1
+ARG OPENFOAM_ADAPTER_REF
 
 USER root
 SHELL ["/bin/bash", "-c"]
