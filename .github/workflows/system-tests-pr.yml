@@ -11,4 +11,5 @@ jobs:
     uses: ./.github/workflows/system-tests.yml
     with:
       suites: release
-      build_args: "TUTORIALS_REF:${{ github.event.pull_request.head.sha }}"
+      build_args: "TUTORIALS_PR:${{ github.event.number }},\
+                   TUTORIALS_REF:${{ github.event.pull_request.head.sha }}"
