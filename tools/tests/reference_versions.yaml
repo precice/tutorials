@@ -13,6 +13,7 @@ OPENFOAM_EXECUTABLE: "openfoam2512"
 SU2_VERSION: "7.5.1"
 
 # Tested components
+ASTE_REF: "4e32a4f"             # develop, July 12, 2026
 FENICS_ADAPTER_REF: "v2.3.0"
 FENICSX_ADAPTER_REF: "v1.0.1"
 FMI_RUNNER_REF: "v0.2.1"
