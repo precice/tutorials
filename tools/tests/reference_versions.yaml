@@ -23,7 +23,7 @@ DUNE_ADAPTER_REF: "778d3bb"     # main,    July 8, 2026
 DUMUX_ADAPTER_REF: "3f3f54f"    # develop, May 27, 2026
 MICRO_MANAGER_REF: "bf5ea7b"    # develop, July 7, 2026
 OPENFOAM_ADAPTER_REF: "2c3062c" # develop, May 27, 2026
-PRECICE_REF: "v3.4.1"
+PRECICE_REF: "a5eefcd"
 PYTHON_BINDINGS_REF: "v3.4.0"
 SU2_ADAPTER_REF: "5abe79b"      # develop, May 27, 2026
 TUTORIALS_REF: "develop"
