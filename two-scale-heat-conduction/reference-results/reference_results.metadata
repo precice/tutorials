@@ -11,8 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| macro-dumux_micro-dumux_parallel.tar.gz | 2026-07-08 13:13:57 | a13fd12e315be9177f3724589a923a81ed57e086301f033a7713e9c33b13ea2f |
-| macro-dumux_micro-dumux.tar.gz | 2026-07-08 13:13:57 | ff660fc906f3d41b23aa5d0a530dc92fb0ddf9533719881e085f220dcf18fc30 |
+| macro-nutils_micro-nutils.tar.gz | 2026-07-12 13:40:45 | 54bb45dc3820ff57734f143f396120c0f5744afa5c770cf03bc4d35fb232e26c |
 
 ## List of arguments used to generate the files
 
@@ -20,8 +19,9 @@ We also include some information on the machine used to generate them
 |------|------|
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
-| DUNE_VERSION | 2.9 |
 | DUMUX_VERSION | 3.7 |
+| DUNE_VERSION_DUMUX | 2.9 |
+| DUNE_VERSION_DUNE | 2.9 |
 | OPENFOAM_EXECUTABLE | openfoam2512 |
 | SU2_VERSION | 7.5.1 |
 | FENICS_ADAPTER_REF | v2.3.0 |
@@ -29,13 +29,14 @@ We also include some information on the machine used to generate them
 | FMI_RUNNER_REF | v0.2.1 |
 | CALCULIX_ADAPTER_REF | v2.20.1 |
 | DEALII_ADAPTER_REF | a421d92 |
+| DUNE_ADAPTER_REF | 778d3bb |
 | DUMUX_ADAPTER_REF | 3f3f54f |
 | MICRO_MANAGER_REF | bf5ea7b |
 | OPENFOAM_ADAPTER_REF | 2c3062c |
 | PRECICE_REF | b770460f2447b94da430086085d6b424e7c073e9 |
-| PYTHON_BINDINGS_REF | v3.4.0 |
+| PYTHON_BINDINGS_REF | 1a469788eec0a3de1a00691bdf5e5b0b25a2ae97 |
 | SU2_ADAPTER_REF | 5abe79b |
-| TUTORIALS_REF | 54cd04a8e5aa8f4efdce53785d298c115e7e287a |
+| TUTORIALS_REF | 2f71e1e3e99b8b291e78b6bbb26d3f18f0378b6c |
 | PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
