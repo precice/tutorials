@@ -1,0 +1,75 @@
+name: System tests (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      suites:
+        description: 'Test suites to execute (comma-separated,no-spaces)'
+        default: 'release'
+        required: true
+        type: string
+      system_tests_branch:
+        description: 'Use the system tests from'
+        default: 'develop'
+        type: string
+      ref-tutorials:
+        description: 'tutorials ref (default: latest develop)'
+        type: string
+      ref-precice:
+        description: 'precice ref'
+        type: string
+      ref-python-bindings:
+        description: 'python-bindings ref'
+        type: string
+      ref-calculix-adapter:
+        description: 'calculix-adapter ref'
+        type: string
+      ref-dealii-adapter:
+        description: 'dealii-adapter ref'
+        type: string
+      ref-dumux-adapter:
+        description: 'dumux-adapter ref'
+        type: string
+      ref-dune-adapter:
+        description: 'dune-adapter ref'
+        type: string
+      ref-fenics-adapter:
+        description: 'fenics-adapter ref'
+        type: string
+      ref-fenicsx-adapter:
+        description: 'fenicsx-adapter ref'
+        type: string
+      ref-fmi-runner:
+        description: 'fmi-runner ref'
+        type: string
+      ref-micro-manager:
+        description: 'micro-manager ref'
+        type: string
+      ref-openfoam-adapter:
+        description: 'openfoam-adapter ref'
+        type: string
+      ref-su2-adapter:
+        description: 'su2-adapter ref'
+        type: string
+
+jobs:
+  run-system-tests:
+    name: Trigger system tests
+    uses: ./.github/workflows/system-tests.yml
+    with:
+      suites: ${{ inputs.suites || 'release' }}
+      build_args: "TUTORIALS_REF:${{ inputs.ref-tutorials }},\
+        PRECICE_REF:${{ inputs.ref-precice }},\
+        PYTHON_BINDINGS_REF:${{ inputs.ref-python-bindings }},\
+        CALCULIX_ADAPTER_REF:${{ inputs.ref-calculix-adapter }},\
+        DEALII_ADAPTER_REF:${{ inputs.ref-dealii-adapter }},\
+        DUMUX_ADAPTER_REF:${{ inputs.ref-dumux-adapter }},\
+        DUNE_ADAPTER_REF:${{ inputs.ref-dune-adapter }},\
+        FENICS_ADAPTER_REF:${{ inputs.ref-fenics-adapter }},\
+        FENICSX_ADAPTER_REF:${{ inputs.ref-fenicsx-adapter }},\
+        FMI_RUNNER_REF:${{ inputs.ref-fmi-runner }},\
+        MICRO_MANAGER_REF:${{ inputs.ref-micro-manager }},\
+        OPENFOAM_ADAPTER_REF:${{ inputs.ref-openfoam-adapter }},\
+        SU2_ADAPTER_REF:${{ inputs.ref-su2-adapter }}"
+      system_tests_branch: ${{ inputs.system_tests_branch || 'develop' }}
+      log_level: "INFO"
