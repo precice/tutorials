@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| aste-turbine.tar.gz | 2026-07-12 18:38:48 | 6f6b6fc3c94268b1db6c03dff0069238242d765429d0c8693515bb276470e208 |
+| aste-turbine.tar.gz | 2026-07-12 18:47:57 | ff82c177d573329d2965196c311eda53e60e58f3ae9b833df235a9b9c364ef8b |
 
 ## List of arguments used to generate the files
 
@@ -24,6 +24,7 @@ We also include some information on the machine used to generate them
 | DUNE_VERSION_DUNE | 2.9 |
 | OPENFOAM_EXECUTABLE | openfoam2512 |
 | SU2_VERSION | 7.5.1 |
+| ASTE_REF | 4e32a4f |
 | FENICS_ADAPTER_REF | v2.3.0 |
 | FENICSX_ADAPTER_REF | v1.0.1 |
 | FMI_RUNNER_REF | v0.2.1 |
@@ -33,12 +34,11 @@ We also include some information on the machine used to generate them
 | DUMUX_ADAPTER_REF | 3f3f54f |
 | MICRO_MANAGER_REF | bf5ea7b |
 | OPENFOAM_ADAPTER_REF | 2c3062c |
-| PRECICE_REF | b770460f2447b94da430086085d6b424e7c073e9 |
+| PRECICE_REF | a5eefcd |
 | PYTHON_BINDINGS_REF | v3.4.0 |
 | SU2_ADAPTER_REF | 5abe79b |
-| TUTORIALS_REF | 31a92ede499cf4703e6f019710863b4206804bb5 |
+| TUTORIALS_REF | 4bd437045855f00a2748063e0fcaf57481757a1f |
 | PRECICE_PRESET | production-audit |
-| ASTE_REF | 4e32a4f942e0b96f56095cea653d4af470dee1d4 |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
 ## Information about the machine
