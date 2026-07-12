@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| aste-turbine.tar.gz | 2026-07-12 18:47:57 | ff82c177d573329d2965196c311eda53e60e58f3ae9b833df235a9b9c364ef8b |
+| aste-turbine.tar.gz | 2026-07-12 19:25:48 | d7fcd67871487fad7339837f29a1919b54d34960cc846075c24f4cf8bb54a271 |
 
 ## List of arguments used to generate the files
 
@@ -34,10 +34,10 @@ We also include some information on the machine used to generate them
 | DUMUX_ADAPTER_REF | 3f3f54f |
 | MICRO_MANAGER_REF | bf5ea7b |
 | OPENFOAM_ADAPTER_REF | 2c3062c |
-| PRECICE_REF | a5eefcd |
+| PRECICE_REF | b770460f2447b94da430086085d6b424e7c073e9 |
 | PYTHON_BINDINGS_REF | v3.4.0 |
 | SU2_ADAPTER_REF | 5abe79b |
-| TUTORIALS_REF | 4bd437045855f00a2748063e0fcaf57481757a1f |
+| TUTORIALS_REF | b32f576419eb40a68627e704becc3893a3eb1bb6 |
 | PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
