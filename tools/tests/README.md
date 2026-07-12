@@ -31,7 +31,7 @@ The available test suites are found in [`tests.yaml`](https://github.com/precice
 
 The `Use workflow from` is a default option of GitHub Actions that concerns the GHA workflow file itself.
 
-The [System tests (nightly)](https://github.com/precice/tutorials/actions/workflows/system-tests-nightly.yml) executes the `release` test suite every night. The [System tests (weekly)](https://github.com/precice/tutorials/actions/workflows/system-tests-nightly.yml) executes the `extra` test suite once per week.
+The [System tests (nightly)](https://github.com/precice/tutorials/actions/workflows/system-tests-nightly.yml) executes the `release` test suite every night. The [System tests (weekly)](https://github.com/precice/tutorials/actions/workflows/system-tests-weekly.yml) executes the `extra` test suite once per week.
 
 ### Running from a pull request
 
