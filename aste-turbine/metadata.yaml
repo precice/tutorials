@@ -1,0 +1,14 @@
+name: ASTE turbine
+path: aste-turbine
+url: https://precice.org/tutorials-aste-turbine.html
+
+participants:
+  - ASTE
+
+cases:
+  aste:
+    participant: ASTE
+    directory: .
+    run: ./run.sh
+    component: aste
+  
