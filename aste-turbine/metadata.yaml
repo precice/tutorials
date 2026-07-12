@@ -5,10 +5,11 @@ url: https://precice.org/tutorials-aste-turbine.html
 participants:
   - ASTE
 
+# This test case only needs one ASTE instance, and is structured differently than most tutorials
 cases:
   aste:
     participant: ASTE
     directory: .
-    run: ./run.sh
+    run: sed -i 's|../precice-exports|precice-exports|g' precice-config.xml && ./run.sh
     component: aste
   
