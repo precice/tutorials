@@ -8,7 +8,7 @@ jobs:
   run-system-tests:
     name: Trigger system tests
     if: ${{ github.event.label.name == 'trigger-system-tests' }}
-    uses: precice/tutorials/.github/workflows/system-tests.yml@develop
+    uses: ./.github/workflows/system-tests.yml
     with:
       suites: release
       build_args: "TUTORIALS_REF:${{ github.event.pull_request.head.sha }}"
