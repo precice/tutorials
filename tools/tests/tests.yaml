@@ -11,6 +11,15 @@
 #   Skipped components are still mentioned in a comment.
 
 test_suites:
+  aste-turbine:
+    tutorials:
+      - &aste-turbine
+        path: aste-turbine
+        case_combination:
+          - aste
+        skip_compare: true # partitioning the mesh differently in each run
+        reference_result: ./aste-turbine/reference-results/aste-turbine.tar.gz
+  
   breaking-dam-2d:
     tutorials:
       - &breaking-dam-2d_fluid-openfoam_solid-calculix
@@ -658,6 +667,7 @@ test_suites:
 
   release:
     tutorials:
+      - *aste-turbine
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
       - *channel-transport_fluid-openfoam_transport-openfoam
@@ -753,7 +763,11 @@ test_suites:
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam  # parallel-implicit (IQN-ILS), axial-geometric-multiscale
       - *elastic-tube-1d_fluid-fortran-module_solid-fortran-module               # integration with Fortran (module)
       - *perpendicular-flap_fluid-openfoam_solid-calculix                        # integration with C
-      
+
+  aste:
+    tutorials:
+      - *aste-turbine
+
   calculix-adapter:
     tutorials:
       - *breaking-dam-2d_fluid-openfoam_solid-calculix

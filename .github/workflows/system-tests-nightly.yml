@@ -1,0 +1,13 @@
+name: System tests (nightly)
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+      timezone: "Europe/Berlin"
+
+jobs:
+  run-system-tests:
+    name: Trigger system tests
+    uses: ./.github/workflows/system-tests.yml
+    with:
+      suites: 'release'
