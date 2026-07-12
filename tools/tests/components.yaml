@@ -256,6 +256,7 @@ su2-adapter:
 
 aste:
   template: component-templates/aste.yaml
+  build_timeout: 600
   build_arguments:
     PLATFORM:
       default: "ubuntu_2404"
