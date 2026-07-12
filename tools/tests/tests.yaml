@@ -17,6 +17,7 @@ test_suites:
         path: aste-turbine
         case_combination:
           - aste
+        skip_compare: true # partitioning the mesh differently in each run
         reference_result: ./aste-turbine/reference-results/aste-turbine.tar.gz
   
   breaking-dam-2d:
