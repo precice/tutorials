@@ -13,10 +13,12 @@
 test_suites:
   aste-turbine:
     tutorials:
+      # This test case only needs one ASTE instance, and is structured differently than most tutorials
       - &aste-turbine
         path: aste-turbine
         case_combination:
           - aste
+        run-before: sed -i 's|../precice-exports|precice-exports|g' precice-config.xml
         reference_result: ./aste-turbine/reference-results/aste-turbine.tar.gz
   
   breaking-dam-2d:
