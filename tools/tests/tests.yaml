@@ -885,4 +885,4 @@ test_suites:
 
   selected:
     tutorials:
-      - *two-scale-heat-conduction_macro-nutils_micro-nutils
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux_parallel
