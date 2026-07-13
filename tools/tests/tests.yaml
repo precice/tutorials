@@ -822,6 +822,7 @@ test_suites:
   micro-manager:
     tutorials:
       - *two-scale-heat-conduction_macro-dumux_micro-dumux
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux_parallel
       - *two-scale-heat-conduction_macro-nutils_micro-nutils
 
   nutils-adapter: # Not a repository
