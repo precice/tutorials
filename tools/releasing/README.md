@@ -10,12 +10,23 @@ Next to each `requirements.txt`, a sibling `requirements-reference.txt` records 
 pip install -r requirements-reference.txt
 ```
 
-Regenerate all reference files after changing tutorial requirements:
+This tool lives under `tools/releasing/` and depends on:
 
 ```bash
-python3 tools/releasing/report_tutorial_requirements.py
-python3 tools/releasing/report_tutorial_requirements.py --check   # CI-style check
+pip install -r tools/releasing/requirements.txt
 ```
+
+Update reference files after changing `requirements.txt` files. By default, only files whose resolved package pins changed are rewritten (timestamps alone do not create a diff). Use `--all` to force a full refresh, or pass a path to limit the update to one directory:
+
+```bash
+python3 tools/releasing/update-requirements-reference.py
+python3 tools/releasing/update-requirements-reference.py path/to/participant
+python3 tools/releasing/update-requirements-reference.py --all
+python3 tools/releasing/update-requirements-reference.py --check
+python3 tools/releasing/update-requirements-reference.py --check --fail-on-outdated
+```
+
+`--check` fails when a sibling `requirements-reference.txt` is missing, and warns when pins are outdated. `--fail-on-outdated` turns outdated pins into errors (used for release PRs to `master`).
 
 Legacy FEniCS packages (for example `fenics-dolfin`) are installed from the system or PPA in several tutorials and appear in the reference files as non-PyPI dependencies.
 
