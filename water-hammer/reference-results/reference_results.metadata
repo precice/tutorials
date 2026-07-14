@@ -11,7 +11,8 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| fluid1d-left-nutils_fluid3d-right-openfoam.tar.gz | 2026-05-31 00:21:36 | b3c96d4bcd10a6447e39b2918c94753cd9f1994cba89abf713b21869fc78c7dd |
+| fluid1d-left-nutils_fluid3d-right-openfoam.tar.gz | 2026-07-06 19:59:34 | e957dca70ad86b2dd38c0f3a16cac61199751d50c4c6716da58b417a34725e29 |
+| fluid3d-left-openfoam_fluid1d-right-nutils.tar.gz | 2026-07-06 19:59:34 | 9fff2e33eb48e1c50d18fd6d3a57d7b8b151de8bdf0f9787c1495733032b78cb |
 
 ## List of arguments used to generate the files
 
@@ -24,15 +25,17 @@ We also include some information on the machine used to generate them
 | OPENFOAM_EXECUTABLE | openfoam2512 |
 | SU2_VERSION | 7.5.1 |
 | FENICS_ADAPTER_REF | v2.3.0 |
+| FENICSX_ADAPTER_REF | v1.0.1 |
+| FMI_RUNNER_REF | v0.2.1 |
 | CALCULIX_ADAPTER_REF | v2.20.1 |
 | DEALII_ADAPTER_REF | a421d92 |
 | DUMUX_ADAPTER_REF | 3f3f54f |
 | MICRO_MANAGER_REF | v0.10.1 |
 | OPENFOAM_ADAPTER_REF | 2c3062c |
-| PRECICE_REF | v3.4.1 |
-| PYTHON_BINDINGS_REF | v3.4.0 |
+| PRECICE_REF | b770460f2447b94da430086085d6b424e7c073e9 |
+| PYTHON_BINDINGS_REF | 1a469788eec0a3de1a00691bdf5e5b0b25a2ae97 |
 | SU2_ADAPTER_REF | 5abe79b |
-| TUTORIALS_REF | more-tests |
+| TUTORIALS_REF | 36294ae3063177c50717d9acd7e5fdae14e07bf5 |
 | PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
@@ -40,7 +43,7 @@ We also include some information on the machine used to generate them
 
 ### uname -a
 
-Linux precice-tests 5.15.0-179-generic #189-Ubuntu SMP Tue May 5 18:20:56 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Linux precice-tests 5.15.0-185-generic #195-Ubuntu SMP Fri Jun 19 17:11:50 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
 
 
 ### lscpu

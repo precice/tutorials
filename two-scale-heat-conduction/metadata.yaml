@@ -10,23 +10,29 @@ cases:
   macro-dumux:
     participant: Macro
     directory: ./macro-dumux
-    run: ./run.sh -l /home/precice/dumux
+    run: ./run.sh
     component: dumux-adapter
   
   macro-nutils:
     participant: Macro
     directory: ./macro-nutils
-    run: ./run.sh -l /home/precice/nutils
+    run: ./run.sh
     component: nutils-adapter
 
   micro-dumux:
     participant: Micro-Manager
     directory: ./micro-dumux
-    run: source /home/precice/venv/bin/activate && ./run.sh -l /home/precice/dumux
+    run: source /home/precice/venv/bin/activate && ./run.sh -s
+    component: dumux-adapter
+
+  micro-dumux_parallel:
+    participant: Micro-Manager
+    directory: ./micro-dumux
+    run: source /home/precice/venv/bin/activate && ./run.sh -p 2
     component: dumux-adapter
 
   micro-nutils:
     participant: Micro-Manager
     directory: ./micro-nutils
-    run: source /home/precice/venv/bin/activate && ./run.sh -l /home/precice/nutils
-    component: nutils-adapter
+    run: ./run.sh -s
+    component: micro-manager

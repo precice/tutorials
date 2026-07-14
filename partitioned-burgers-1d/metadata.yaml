@@ -1,0 +1,41 @@
+name: Partitioned Burgers' equation 1D
+path: partitioned-burgers-1d # relative to git repo 
+url: https://precice.org/tutorials-partitioned-burgers-1d.html
+
+participants:
+  - Dirichlet 
+  - Neumann 
+
+cases:
+  dirichlet-scipy:
+    participant: Dirichlet
+    directory: ./dirichlet-scipy
+    run: ./run.sh
+    component: python-bindings
+  
+  neumann-scipy:
+    participant: Neumann
+    directory: ./neumann-scipy
+    run: ./run.sh
+    component: python-bindings
+  
+  neumann-surrogate:
+    participant: Neumann
+    directory: neumann-surrogate
+    run: ./run.sh
+    component: python-bindings
+  
+  
+  # Options for all participants needs to provided for a well-defined test.
+  # Workaround to test the (unusual) monolithic case:
+  # Run it in place of the one participant, do nothing in the other.
+  monolithic-scipy:
+    participant: Dirichlet
+    directory: ./solver-scipy
+    run: ./run.sh
+    component: python-bindings
+  none:
+    participant: Neumann
+    directory: .
+    run: # Noop
+    component: bare

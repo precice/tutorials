@@ -1,6 +1,8 @@
 ---
 title: Partitioned pipe flow
 permalink: tutorials-partitioned-pipe.html
+aliases:
+  - /tutorials-partitioned-pipe.html
 keywords: tutorial, FF, fluid-fluid coupling, OpenFOAM, pimpleFoam, sonicLiquidFoam
 summary: This tutorial describes how to run a partitioned fluid simulation using preCICE.
 ---

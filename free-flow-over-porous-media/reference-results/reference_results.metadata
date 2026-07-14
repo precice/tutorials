@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| free-flow-dumux_porous-media-dumux.tar.gz | 2026-05-28 11:46:06 | 376f19f23b29d97dee96c0f6eda00d892a3bddd1deed521c919cc65b8c041f64 |
+| free-flow-dumux_porous-media-dumux.tar.gz | 2026-07-08 13:13:57 | 4a84c0e9b2cab3df26506393f94487a9f0cf7dda9ab4ee3bec6bb27f4990bfc6 |
 
 ## List of arguments used to generate the files
 
@@ -24,15 +24,17 @@ We also include some information on the machine used to generate them
 | OPENFOAM_EXECUTABLE | openfoam2512 |
 | SU2_VERSION | 7.5.1 |
 | FENICS_ADAPTER_REF | v2.3.0 |
+| FENICSX_ADAPTER_REF | v1.0.1 |
+| FMI_RUNNER_REF | v0.2.1 |
 | CALCULIX_ADAPTER_REF | v2.20.1 |
 | DEALII_ADAPTER_REF | a421d92 |
 | DUMUX_ADAPTER_REF | 3f3f54f |
-| MICRO_MANAGER_REF | v0.10.1 |
+| MICRO_MANAGER_REF | bf5ea7b |
 | OPENFOAM_ADAPTER_REF | 2c3062c |
-| PRECICE_REF | v3.4.1 |
+| PRECICE_REF | b770460f2447b94da430086085d6b424e7c073e9 |
 | PYTHON_BINDINGS_REF | v3.4.0 |
 | SU2_ADAPTER_REF | 5abe79b |
-| TUTORIALS_REF | 9cb7068 |
+| TUTORIALS_REF | 54cd04a8e5aa8f4efdce53785d298c115e7e287a |
 | PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
@@ -40,7 +42,7 @@ We also include some information on the machine used to generate them
 
 ### uname -a
 
-Linux precice-tests 5.15.0-179-generic #189-Ubuntu SMP Tue May 5 18:20:56 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Linux precice-tests 5.15.0-185-generic #195-Ubuntu SMP Fri Jun 19 17:11:50 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
 
 
 ### lscpu

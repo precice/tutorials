@@ -12,7 +12,7 @@ cases:
     participant: Controller
     directory: ./controller-fmi
     run: ./run.sh
-    component: python-bindings
+    component: fmi-runner
   
   fluid-openfoam:
     participant: Fluid

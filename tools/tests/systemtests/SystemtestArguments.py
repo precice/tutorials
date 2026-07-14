@@ -16,7 +16,8 @@ class SystemtestArguments:
         arguments = {}
         for param in params_provided:
             key, value = param.split(":")
-            arguments[key] = value
+            if len(value) > 0:
+                arguments[key] = value
 
         return cls(arguments)
 
