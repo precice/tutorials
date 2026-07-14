@@ -29,7 +29,7 @@ writeFormat ascii;
 
 writePrecision 14;
 
-writeCompression uncompressed;
+writeCompression off;
 
 timeFormat general;
 
