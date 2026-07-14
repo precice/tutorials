@@ -6,7 +6,7 @@ FoamFile
     object      blockMeshDict;
 }
 
-convertToMeters 0.01;
+scale 0.01;
 
 vertices
 (
