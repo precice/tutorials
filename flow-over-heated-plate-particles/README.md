@@ -70,7 +70,7 @@ In case of OpenFOAM, you can open the `.foam` file with ParaView, or create VTK 
 
 An example of the visualized expected results looks as follows:
 
-![result](images/temperature_with_particles.gif)
+![result](images/tutorials-flow-over-heated-plate-particles-temperature-with-particles.gif)
 
 ## References
 
