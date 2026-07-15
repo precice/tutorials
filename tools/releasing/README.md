@@ -4,7 +4,7 @@
 
 Each Python participant lists dependencies in its local `requirements.txt` using loose version ranges (for example `numpy >1, <2`, `pyprecice~=3.0`). Tutorial `run.sh` scripts install from these files as before.
 
-Next to each `requirements.txt`, a sibling `requirements-reference.txt` records the latest PyPI versions that satisfy those constraints at generation time. Use it for reproducible installs:
+Next to each `requirements.txt`, a sibling `requirements-reference.txt` records the latest PyPI versions that satisfy those constraints at generation time. Use it for reproducible installations:
 
 ```bash
 pip install -r requirements-reference.txt
@@ -26,8 +26,8 @@ python3 tools/releasing/update-requirements-reference.py --check
 python3 tools/releasing/update-requirements-reference.py --check --fail-on-outdated
 ```
 
-`--check` fails when a sibling `requirements-reference.txt` is missing, and warns when pins are outdated. `--fail-on-outdated` turns outdated pins into errors (used for release PRs to `master`).
+With `--check`, the tool fails when a sibling `requirements-reference.txt` is missing, and warns when pins are outdated. The `--fail-on-outdated` option turns outdated pins into errors (used for release PRs to `master`).
 
-Legacy FEniCS packages (for example `fenics-dolfin`) are installed from the system or PPA in several tutorials and appear in the reference files as non-PyPI dependencies.
+Legacy FEniCS packages (for example, `fenics-dolfin`) are installed from the system or PPA in several tutorials and appear in the reference files as non-PyPI dependencies.
 
-When preparing a release pull request to `master`, regenerate and commit the sibling `requirements-reference.txt` files so the pinned snapshots match the current tutorial constraints.
+When preparing a release pull request to `master`, regenerate and commit the sibling `requirements-reference.txt` files, so the pinned snapshots match the current tutorial constraints.
