@@ -1,9 +1,9 @@
-#! /bin/sh
+#!/usr/bin/env bash
 
 # Cleaning up stray functionObjectProperties files, see https://github.com/precice/openfoam-adapter/issues/26
 openfoam_remove_empty_dirs() {
 	(
-		set -e -u
+		set -e -u -pipefail
 		echo "Cleaning up any time directories without results"
 
 		for f in [0-9]* [0-9]*.[0-9]*; do
@@ -11,7 +11,7 @@ openfoam_remove_empty_dirs() {
 				rm -rf "${f}"
 			fi
 		done
-		if [ -d processor0 ]; then
+		if [[ $(("ls | grep processor | wc -l")) -gt 0 ]]; then
 			for d in processor*; do
 				cd "${d}"
 				for f in [0-9]* [0-9]*.[0-9]*; do
