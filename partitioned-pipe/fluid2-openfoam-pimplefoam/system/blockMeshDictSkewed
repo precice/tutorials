@@ -7,9 +7,6 @@ FoamFile
     object      blockMeshDict;
 }
 
-convertToMeters 1;
-
-
 zmin  20;
 zmax  40;
 zmid  #calc "$zmin+0.5*($zmax-$zmin)"; 

@@ -85,17 +85,6 @@ solidDisplacementFoamForceFvPatchVectorField::
 {
 }
 
-#ifndef OPENFOAMFOUNDATION
-solidDisplacementFoamForceFvPatchVectorField::solidDisplacementFoamForceFvPatchVectorField(
-    const solidDisplacementFoamForceFvPatchVectorField &stpvf)
-    : fixedGradientFvPatchVectorField(stpvf),
-      force_(stpvf.force_),
-      forceFieldPtr_(),
-      curTimeIndex_(stpvf.curTimeIndex_)
-{
-}
-#endif
-
 solidDisplacementFoamForceFvPatchVectorField::solidDisplacementFoamForceFvPatchVectorField(
     const solidDisplacementFoamForceFvPatchVectorField &stpvf,
     const DimensionedField<vector, volMesh>            &iF)

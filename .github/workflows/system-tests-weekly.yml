@@ -1,4 +1,4 @@
-name: System tests (extra cases)
+name: System tests (weekly - extra)
 
 on:
   schedule:
@@ -8,6 +8,6 @@ on:
 jobs:
   run-system-tests:
     name: Trigger system tests
-    uses: precice/tutorials/.github/workflows/system-tests.yml@develop
+    uses: ./.github/workflows/system-tests.yml
     with:
       suites: 'extra'

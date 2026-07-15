@@ -89,19 +89,7 @@ public:
 
   //- Construct as copy
   solidDisplacementFoamForceFvPatchVectorField(
-      const solidDisplacementFoamForceFvPatchVectorField &
-#ifdef OPENFOAMFOUNDATION
-      ) = delete;
-#else
-  );
-
-  //- Construct and return a clone
-  virtual tmp<fvPatchVectorField> clone() const
-  {
-    return tmp<fvPatchVectorField>(
-        new solidDisplacementFoamForceFvPatchVectorField(*this));
-  }
-#endif
+      const solidDisplacementFoamForceFvPatchVectorField &) = delete;
 
   //- Construct as copy setting internal field reference
   solidDisplacementFoamForceFvPatchVectorField(
