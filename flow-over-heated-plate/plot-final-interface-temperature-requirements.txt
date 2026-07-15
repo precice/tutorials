@@ -1,4 +1,0 @@
-vtk
-numpy
-matplotlib
-os

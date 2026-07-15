@@ -1,6 +1,7 @@
 # preCICE tutorials
 
-[![System tests (latest components)](https://github.com/precice/tutorials/actions/workflows/system-tests-latest-components.yml/badge.svg)](https://github.com/precice/tutorials/actions/workflows/system-tests-latest-components.yml)
+[![System tests (nightly)](https://github.com/precice/tutorials/actions/workflows/system-tests-nightly.yml/badge.svg)](https://github.com/precice/tutorials/actions/workflows/system-tests-nightly.yml)
+[![System tests (weekly - extra)](https://github.com/precice/tutorials/actions/workflows/system-tests-weekly.yml/badge.svg)](https://github.com/precice/tutorials/actions/workflows/system-tests-weekly.yml)
 
 > [!IMPORTANT]  
 > This repository is aimed for development purposes and the default branch is `develop`. If you want to use the tutorials, switch to the [`master` branch](https://github.com/precice/tutorials/tree/master) or download the latest [release](https://github.com/precice/tutorials/releases).
@@ -13,3 +14,5 @@ As a general rule, you can start each participant from inside their `<tutorial>/
 Contributions to this repository are very welcome. Please refer to the page [Contribute to preCICE](https://precice.org/community-contribute-to-precice.html) for a few guidelines and hints to help you in this direction.
 
 Note that we use [Git LFS](https://git-lfs.com/) to version reference results. These will appear as seemingly empty files containing URLs if you don't have Git LFS installed (optional, mainly useful for our system tests).
+
+For Python dependency ranges and the sibling `requirements-reference.txt` files used for reproducible installs, see [`tools/releasing/README.md`](tools/releasing/README.md).

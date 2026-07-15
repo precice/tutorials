@@ -6,7 +6,6 @@ FoamFile
     location    "system";
     object      fvSchemes;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 ddtSchemes
 {
@@ -39,6 +38,3 @@ snGradSchemes
 {
     default         corrected;
 }
-
-
-// ************************************************************************* //

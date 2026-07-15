@@ -6,7 +6,6 @@ FoamFile
     location    "system";
     object      fvSolution;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 solvers
 {
@@ -23,6 +22,3 @@ SIMPLE
 {
     nNonOrthogonalCorrectors 2;
 }
-
-
-// ************************************************************************* //

@@ -1,0 +1,29 @@
+name: Check requirements-reference
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+    paths:
+      - '**/requirements.txt'
+      - '**/requirements-reference.txt'
+      - tools/releasing/update-requirements-reference.py
+      - tools/releasing/requirements.txt
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v7
+      - name: Setup python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+      - name: Install packaging
+        run: pip install -r tools/releasing/requirements.txt
+      - name: Check requirements-reference.txt files exist
+        if: github.base_ref == 'develop'
+        run: python3 tools/releasing/update-requirements-reference.py --check
+      - name: Check requirements-reference.txt files are up to date
+        if: github.base_ref == 'master'
+        run: python3 tools/releasing/update-requirements-reference.py --check --fail-on-outdated
