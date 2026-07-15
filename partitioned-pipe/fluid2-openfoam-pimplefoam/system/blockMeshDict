@@ -7,9 +7,6 @@ FoamFile
     object      blockMeshDict;
 }
 
-convertToMeters 1;
-
-
 zmin  20;
 zmax  40;
 

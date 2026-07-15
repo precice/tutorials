@@ -12,7 +12,7 @@ FoamFile
 // The format of the file (e.g., linked libraries in one line each) is at parts important to the script.
 
 application     pimpleFoam;       // latest OpenFOAM
-// application     pimpleDyMFoam; // OpenFOAM v1712, OpenFOAM 5.x, or older
+// application     pimpleDyMFoam; // foam-extend, OpenFOAM v1712, OpenFOAM 5.x, or older
 
 startFrom           startTime;
 

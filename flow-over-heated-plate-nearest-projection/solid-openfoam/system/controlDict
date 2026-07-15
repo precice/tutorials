@@ -6,7 +6,6 @@ FoamFile
     location    "system";
     object      controlDict;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 application     laplacianFoam;
 
@@ -47,7 +46,3 @@ functions
         errors strict; // Available since OpenFOAM v2012
     }
 }
-
-
-
-// ************************************************************************* //

@@ -1,2 +1,2 @@
 pyprecice~=3.0
-fmiprecice
+fmiprecice~=0.2

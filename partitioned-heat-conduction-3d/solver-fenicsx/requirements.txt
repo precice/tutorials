@@ -1,5 +1,5 @@
 numpy >1, <2
-fenicsxprecice
-scipy
-sympy
-gmsh
+fenicsxprecice~=1.0
+scipy>=1.10,<2
+sympy>=1.10,<2
+gmsh>=4,<5

@@ -145,7 +145,7 @@ RUN apt-get -qq update && \
 USER precice
 
 WORKDIR /home/precice
-RUN wget http://www.dhondt.de/ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
+RUN wget -nv http://www.dhondt.de/ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
     tar xvjf ccx_${CALCULIX_VERSION}.src.tar.bz2 && \
     rm -fv ccx_${CALCULIX_VERSION}.src.tar.bz2
 
@@ -427,7 +427,7 @@ USER precice
 WORKDIR /home/precice
 # Download and build SU2 (We could also use pre-built binaries from the SU2 releases)
 # The sed command applies a patch needed for Ubuntu 24.04.
-RUN wget https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
+RUN wget -nv https://github.com/su2code/SU2/archive/refs/tags/v${SU2_VERSION}.tar.gz && \
     tar xvzf v${SU2_VERSION}.tar.gz && \
     rm -fv v${SU2_VERSION}.tar.gz
 RUN python3 -m venv /home/precice/venv && \

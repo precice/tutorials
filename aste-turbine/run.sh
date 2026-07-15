@@ -4,7 +4,7 @@ set -e -x
 # This script assumes the ASTE binaries and python scripts are in $PATH or ASTE installed on your system
 
 # Download the meshes
-test -f meshes.tar.gz  || wget https://gitlab.lrz.de/precice/precice2-ref-paper-setup/-/raw/main/meshes/meshes.tar.gz
+test -f meshes.tar.gz  || wget -nv https://gitlab.lrz.de/precice/precice2-ref-paper-setup/-/raw/main/meshes/meshes.tar.gz
 
 mkdir -p meshes
 

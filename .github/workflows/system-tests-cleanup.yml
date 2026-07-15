@@ -20,3 +20,7 @@ jobs:
       - name: Report disk usage after cleanup
         run: |
           df -h | grep -E '(Filesystem|/var)'
+      - name: Restart the Git LFS server
+        run: |
+          restart-lfs-server
+
