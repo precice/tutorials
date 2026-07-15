@@ -6,17 +6,17 @@ openfoam_remove_empty_dirs() {
 		set -e -u -pipefail
 		echo "Cleaning up any time directories without results"
 
-		for f in [0-9]* [0-9]*.[0-9]*; do
-                        if ! [ -f "${f}/U" ] && ! [ -f "${f}/T" ] && ! [ -f "${f}/U.gz" ] && ! [ -f "${f}/T.gz" ] && ! [ -f "${f}/D" ] && ! [ -f "${f}/pointD" ] && ! [ -f "${f}/DD" ] && ! [ -f "${f}/pointDD" ] && ! [ -f "${f}/D.gz" ] && ! [ -f "${f}/pointD.gz" ] && ! [ -f "${f}/DD.gz" ] && ! [ -f "${f}/pointDD.gz" ]; then
-				rm -rf "${f}"
+		for d in [0-9]* [0-9]*.[0-9]*; do
+                        if ! [ -f "${d}/U" ] && ! [ -f "${d}/T" ] && ! [ -f "${d}/U.gz" ] && ! [ -f "${d}/T.gz" ] && ! [ -f "${d}/D" ] && ! [ -f "${d}/pointD" ] && ! [ -f "${d}/DD" ] && ! [ -f "${d}/pointDD" ] && ! [ -f "${d}/D.gz" ] && ! [ -f "${d}/pointD.gz" ] && ! [ -f "${d}/DD.gz" ] && ! [ -f "${d}/pointDD.gz" ]; then
+				rm -rf "${d}"
 			fi
 		done
 		if [[ $(("ls | grep processor | wc -l")) -gt 0 ]]; then
-			for d in processor*; do
-				cd "${d}"
-				for f in [0-9]* [0-9]*.[0-9]*; do
-                                        if ! [ -f "${f}/U" ] && ! [ -f "${f}/T" ] && ! [ -f "${f}/U.gz" ] && ! [ -f "${f}/T.gz" ] && ! [ -f "${f}/D" ] && ! [ -f "${f}/pointD" ] && ! [ -f "${f}/DD" ] && ! [ -f "${f}/pointDD" ] && ! [ -f "${f}/D.gz" ] && ! [ -f "${f}/pointD.gz" ] && ! [ -f "${f}/DD.gz" ] && ! [ -f "${f}/pointDD.gz" ]; then
-						rm -rf "${f}"
+			for pd in processor*; do
+				cd "${pd}"
+				for d in [0-9]* [0-9]*.[0-9]*; do
+                                        if ! [ -f "${d}/U" ] && ! [ -f "${d}/T" ] && ! [ -f "${d}/U.gz" ] && ! [ -f "${d}/T.gz" ] && ! [ -f "${d}/D" ] && ! [ -f "${d}/pointD" ] && ! [ -f "${d}/DD" ] && ! [ -f "${d}/pointDD" ] && ! [ -f "${d}/D.gz" ] && ! [ -f "${d}/pointD.gz" ] && ! [ -f "${d}/DD.gz" ] && ! [ -f "${d}/pointDD.gz" ]; then
+						rm -rf "${d}"
 					fi
 				done
 				cd ..
