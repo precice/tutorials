@@ -5,10 +5,14 @@
 openfoam_remove_empty_dirs() {
 	(
 		set -e -u
-		echo "Cleaning up any time directories without results to make post-processing easier..."
 
 		DIRECTORIES_TO_CHECK=("." "processor"*)
 		OPENFOAM_RESULT_FILES=("p" "U" "T" "D" "pointD" "DD" "pointDD")
+
+		echo "Cleaning up any time directories without results to make post-processing easier."
+		echo "Searching in the following directories: " "${DIRECTORIES_TO_CHECK[@]}"
+		echo "Keeping all time directories that include any of the following files: " "${OPENFOAM_RESULT_FILES[@]}"
+		echo "and removing the rest..."
 
 		# Search the current and every processor* directory for common results files.
 		# If there are none, remove the directory.
