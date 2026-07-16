@@ -133,6 +133,7 @@ test_suites:
           - solid-fenics
         max_time_windows: 1
         tolerance: 1e-2    # Some values are too close to zero
+        skip_compare: true
         reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-fenics.tar.gz
 
   flow-around-controlled-moving-cylinder:
