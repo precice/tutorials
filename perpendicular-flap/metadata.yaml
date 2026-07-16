@@ -73,8 +73,8 @@ cases:
     run: ./run.sh
     component: openfoam-adapter
   
-  # solid-solids4foam:
-  #   participant: Solid
-  #   directory: ./solid-solids4foam
-  #   run: ./run.sh
-  #   component: openfoam-adapter
+  solid-solids4foam:
+    participant: Solid
+    directory: ./solid-solids4foam
+    run: ./run.sh
+    component: solids4foam
