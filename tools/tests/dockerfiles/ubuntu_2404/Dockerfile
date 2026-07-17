@@ -108,7 +108,7 @@ WORKDIR /home/precice
 
 # Builds the precice python bindings for python3
 # Installs also matplotlib as it is needed for the elastic-tube 1d fluid-python participant.
-RUN git clone https://github.com/precice/python-bindings.git precice && \
+RUN git clone https://github.com/precice/python-bindings.git python-bindings && \
     cd python-bindings && \
     if [ -n "${PYTHON_BINDINGS_PR}" ]; then git fetch origin pull/${PYTHON_BINDINGS_PR}/head; fi && \
     git checkout ${PYTHON_BINDINGS_REF} && \
