@@ -20,6 +20,7 @@ import unicodedata
 import re
 import logging
 import os
+import sys
 
 
 GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 180))
@@ -805,6 +806,40 @@ class Systemtest:
                 self,
             )
 
+    def __visualize_fieldcompare_diffs(self) -> None:
+        """Best-effort rendering of archived fieldcompare diff VTK files."""
+        diff_results_dir = self.system_test_dir / DIFF_RESULTS_DIR
+        if not diff_results_dir.is_dir():
+            return
+
+        visualizer = PRECICE_TESTS_DIR / "visualize_fieldcompare_diffs.py"
+        try:
+            result = subprocess.run(
+                [sys.executable, str(visualizer), str(diff_results_dir)],
+                capture_output=True,
+                text=True,
+                timeout=300,
+                check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired) as error:
+            logging.warning(
+                "Could not render fieldcompare diff visualizations for %s: %s",
+                self,
+                error,
+            )
+            return
+
+        if result.returncode != 0:
+            details = result.stderr.strip() or result.stdout.strip()
+            logging.warning(
+                "Rendering fieldcompare diff visualizations failed for %s: %s",
+                self,
+                details,
+            )
+            return
+        if result.stdout.strip():
+            logging.info(result.stdout.strip())
+
     def __copy_rerun_system_test_script(self) -> None:
         """Copy tests/rerun-system-test.sh into the run directory for artifact replay."""
         rerun_src = PRECICE_TESTS_DIR / "rerun-system-test.sh"
@@ -1139,6 +1174,7 @@ class Systemtest:
             std_err.extend(fieldcompare_result.stderr_data)
             if fieldcompare_result.exit_code != 0:
                 self.__archive_fieldcompare_diffs()
+                self.__visualize_fieldcompare_diffs()
                 logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
                 return SystemtestResult(
                     False,
