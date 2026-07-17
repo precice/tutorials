@@ -1,5 +1,5 @@
 import argparse
-from metadata_parser.metdata import Tutorials, ReferenceResult
+from metadata_parser.metdata import Tutorials
 from systemtests.TestSuite import TestSuites
 from systemtests.SystemtestArguments import SystemtestArguments
 from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT, ITERATIONS_LOGS_DIR
@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import List
 import shutil
 from paths import PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
-import hashlib
 from jinja2 import Environment, FileSystemLoader
 import tarfile
 import subprocess
@@ -23,8 +22,9 @@ def create_reference_tar_gz(
     exports_dir: Path,
     output_filename: Path,
     iterations_logs: List[tuple[str, Path]],
+    metadata: str,
 ) -> None:
-    """Archive precice-exports and optional iterations logs as separate top-level tar members."""
+    """Archive precice-exports, metadata, and optional iterations logs."""
     stem = output_filename.name.replace(".tar.gz", "")
     exports_staging = system_test_dir / f".{stem}_reference_exports_staging"
     logs_staging = system_test_dir / f".{stem}_reference_logs_staging"
@@ -33,6 +33,7 @@ def create_reference_tar_gz(
             shutil.rmtree(staging)
     shutil.copytree(exports_dir, exports_staging)
     try:
+        (exports_staging / "reference_results.metadata").write_text(metadata)
         with tarfile.open(output_filename, "w:gz") as tar:
             tar.add(exports_staging, arcname=stem)
             if iterations_logs:
@@ -75,30 +76,14 @@ def get_machine_informations():
 
 
 def render_reference_results_info(
-        reference_results: List[ReferenceResult],
+        archive_name: str,
         arguments_used: SystemtestArguments,
         time: str):
-    def sha256sum(filename):
-        # Implementation from https://stackoverflow.com/a/44873382/2254346,
-        # compatible with Python 3.10.
-        h = hashlib.sha256()
-        mv = memoryview(bytearray(128 * 1024))
-        with open(filename, 'rb', buffering=0) as f:
-            while n := f.readinto(mv):
-                h.update(mv[:n])
-        return h.hexdigest()
-
-    files = []
-    for reference_result in reference_results:
-        files.append({
-            'sha256': sha256sum(reference_result.path),
-            'time': time,
-            'name': reference_result.path.name,
-        })
     uname, lscpu = get_machine_informations()
     render_dict = {
         'arguments': arguments_used.arguments,
-        'files': files,
+        'archive_name': archive_name,
+        'time': time,
         'uname': uname,
         'lscpu': lscpu,
     }
@@ -197,7 +182,6 @@ def main():
                         max_time=max_time, max_time_windows=max_time_windows, timeout=timeout,
                         run_before=run_before, run_after=run_after))
 
-    reference_result_per_tutorial = {}
     current_time_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     logging.info(f"About to run the following tests {systemtests_to_run}")
@@ -209,21 +193,25 @@ def main():
         logging.info(f"Running {systemtest} took {elapsed_time:^.1f} seconds")
         if not result.success:
             raise RuntimeError(f"Failed to execute {systemtest}")
-        reference_result_per_tutorial[systemtest.tutorial] = []
 
     # Put the tar.gz in there
     for systemtest in systemtests_to_run:
         reference_result_folder = systemtest.get_system_test_dir() / PRECICE_REL_OUTPUT_DIR
-        reference_result_per_tutorial[systemtest.tutorial].append(systemtest.reference_result)
         # create folder if needed
         systemtest.reference_result.path.parent.mkdir(parents=True, exist_ok=True)
         if reference_result_folder.exists():
             collected = systemtest._collect_iterations_logs(systemtest.get_system_test_dir())
+            metadata = render_reference_results_info(
+                systemtest.reference_result.path.name,
+                build_args,
+                current_time_string,
+            )
             create_reference_tar_gz(
                 systemtest.get_system_test_dir(),
                 reference_result_folder,
                 systemtest.reference_result.path,
                 collected,
+                metadata,
             )
             if collected:
                 logging.info(
@@ -235,15 +223,6 @@ def main():
             raise RuntimeError(
                 f"Error executing: \n {systemtest} \n Could not find result folder {reference_result_folder}\n Probably the tutorial did not run through properly. Please check corresponding logs")
 
-    # write readme
-    for tutorial in reference_result_per_tutorial.keys():
-        reference_results_dir = tutorial.path / "reference-results"
-        reference_results_dir.mkdir(parents=True, exist_ok=True)
-        with open(reference_results_dir / "reference_results.metadata", 'w') as file:
-            ref_results_info = render_reference_results_info(
-                reference_result_per_tutorial[tutorial], build_args, current_time_string)
-            logging.info(f"Writing results for {tutorial.name}")
-            file.write(ref_results_info)
     logging.info(f"Done. Please make sure to manually have a look into the reference results before making a PR.")
 
 

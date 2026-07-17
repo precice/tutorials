@@ -176,6 +176,10 @@ The two options cannot be combined: defining any overrides to `reference_version
 
 The results will be added to a Git LFS, but you will need special push access: just use the aforementioned GitHub Actions workflow, instead.
 
+Each generated reference archive contains a `reference_results.metadata` file
+inside its case directory. This file records the component versions and machine
+information used to generate that archive.
+
 #### External test sources
 
 Local test cases are defined in the `tutorials:` list. For test cases maintained in other git repositories or available as archives, use the `external:` list. A test suite may define both lists so that external cases can be referenced via YAML anchors alongside local tutorials (for example in the `release` suite).
@@ -284,7 +288,7 @@ Metadata and workflow/script files:
   - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Compose service template)
   - `docker-compose.field_compare.template.yaml`: Describes how to compare results with fieldcompare (Docker Compose service template)
   - `components.yaml`: Declares the available components and their parameters/options
-  - `reference_results.metadata.template`: Template for reporting the versions used to generate the reference results
+  - `reference_results.metadata.template`: Template for reporting the versions and machine used to generate each reference results archive
   - `reference_versions.yaml`: List of arguments to use for generating the reference results
   - `tests.yaml`: Declares the available tests, grouped in test suites
 
