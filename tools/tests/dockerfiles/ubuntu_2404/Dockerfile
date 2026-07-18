@@ -100,15 +100,21 @@ ENV CMAKE_PREFIX_PATH="/home/precice/.local"
 
 
 FROM precice AS python_bindings
+ARG PYTHON_BINDINGS_PR
 ARG PYTHON_BINDINGS_REF
 
 USER precice
 WORKDIR /home/precice
+
 # Builds the precice python bindings for python3
 # Installs also matplotlib as it is needed for the elastic-tube 1d fluid-python participant.
-RUN python3 -m venv /home/precice/venv && \
+RUN git clone https://github.com/precice/python-bindings.git python-bindings && \
+    cd python-bindings && \
+    if [ -n "${PYTHON_BINDINGS_PR}" ]; then git fetch origin pull/${PYTHON_BINDINGS_PR}/head; fi && \
+    git checkout ${PYTHON_BINDINGS_REF} && \
+    python3 -m venv /home/precice/venv && \
     . /home/precice/venv/bin/activate && \
-    pip3 install git+https://github.com/precice/python-bindings.git@${PYTHON_BINDINGS_REF} && \
+    pip3 install . && \
     pip3 install matplotlib 
 ### end of python_bindings stage ###
 
