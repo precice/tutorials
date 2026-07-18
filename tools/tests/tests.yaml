@@ -891,6 +891,15 @@ test_suites:
       - *partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
       - *partitioned-heat-conduction-robin_left-openfoam_right-openfoam
 
+  python-bindings:
+    tutorials:
+      - *elastic-tube-1d_fluid-python_solid-python
+      - *oscillator_mass-left-fmi_mass-right-fmi
+      - *partitioned-heat-conduction_dirichlet-fenicsx_neumann-fenicsx
+      - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
+      - *perpendicular-flap_fluid-su2_solid-fenics
+      - *two-scale-heat-conduction_macro-nutils_micro-nutils
+
   solids4foam:
     tutorials:
       - *perpendicular-flap_fluid-openfoam_solid-solids4foam
