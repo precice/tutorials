@@ -730,7 +730,6 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
       - *perpendicular-flap_fluid-su2_solid-fenics
       - *quickstart_openfoam_cpp
-      - *resonant-circuit_capacitor-julia_coil-julia
       - *resonant-circuit_capacitor-python_coil-python
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
       - *two-scale-heat-conduction_macro-dumux_micro-dumux
@@ -753,6 +752,7 @@ test_suites:
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *perpendicular-flap_fluid-nutils_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-nutils
+      - *resonant-circuit_capacitor-julia_coil-julia
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
       - *two-scale-heat-conduction_macro-nutils_micro-nutils
 
