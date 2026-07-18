@@ -229,8 +229,11 @@ Some components might require injecting further changes to the configuration fil
 If you want to trigger the system tests from a new repository:
 
 1. Add a workflow file to that repository (under `.github/workflows/`). Example: [OpenFOAM adapter](https://github.com/precice/openfoam-adapter/blob/develop/.github/workflows/system-tests.yaml).
-2. Create label as a trigger for workflow (under `Issues`->`Labels`->`New label`).
-3. Give permissions: In the [preCICE organization settings](https://github.com/organizations/precice/settings), you need to add the new repository to the action secret `WORKFLOW_DISPATCH_TOKEN` and to the default actions runner group. Adding the new label directly to the pull request in which you add the workflow should already trigger the system tests.
+2. Create label as a trigger for workflow (under `Issues`->`Labels`->`New label`) with name `trigger-system-tests`. For consistency, set the color to `#34495E`.
+3. Give permissions to trigger workflows: In the [organization actions sercets](https://github.com/organizations/precice/settings/secrets/actions), you need to add the new repository to the action secret `WORKFLOW_DISPATCH_TOKEN`.
+4. Give permissions to use the runner: In the [organization runner groups settings](https://github.com/organizations/precice/settings/actions/runner-groups/), you need to add the new repository to the respective runner group.
+
+After these steps, adding the new label directly to the pull request in which you add the workflow should already trigger the system tests.
 
 ## Implementation details
 
