@@ -116,6 +116,13 @@ test_suites:
           - fluid-python
           - solid-python
         reference_result: ./elastic-tube-1d/reference-results/fluid-python_solid-python.tar.gz
+      - &elastic-tube-1d_fluid-rust_solid-rust
+        path: elastic-tube-1d
+        case_combination:
+          - fluid-rust
+          - solid-rust
+        reference_result: ./elastic-tube-1d/reference-results/fluid-rust_solid-rust.tar.gz
+      
 
   elastic-tube-3d:
     tutorials:
@@ -680,6 +687,7 @@ test_suites:
       - *elastic-tube-1d_fluid-fortran_solid-fortran
       - *elastic-tube-1d_fluid-fortran-module_solid-fortran-module
       - *elastic-tube-1d_fluid-python_solid-python
+      - *elastic-tube-1d_fluid-rust_solid-rust
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
       - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
@@ -899,6 +907,10 @@ test_suites:
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *perpendicular-flap_fluid-su2_solid-fenics
       - *two-scale-heat-conduction_macro-nutils_micro-nutils
+
+  rust-bindings:
+    tutorials:
+      - *elastic-tube-1d_fluid-rust_solid-rust
 
   solids4foam:
     tutorials:
