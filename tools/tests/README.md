@@ -364,7 +364,7 @@ openfoam-adapter:
   template: component-templates/openfoam-adapter.yaml
   build_arguments:
     PLATFORM:
-      default: "ubuntu_2404"
+      default: "ubuntu_2604"
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
