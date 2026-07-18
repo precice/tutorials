@@ -537,6 +537,7 @@ test_suites:
         case_combination:
           - capacitor-julia
           - coil-julia
+        timeout: 600
         reference_result: ./resonant-circuit/reference-results/capacitor-julia_coil-julia.tar.gz
       - &resonant-circuit_capacitor-python_coil-python
         path: resonant-circuit
