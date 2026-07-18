@@ -33,7 +33,7 @@ def create_reference_tar_gz(
             shutil.rmtree(staging)
     shutil.copytree(exports_dir, exports_staging)
     try:
-        (exports_staging / "reference_results.metadata").write_text(metadata)
+        (exports_staging / "reference-results-metadata.txt").write_text(metadata)
         with tarfile.open(output_filename, "w:gz") as tar:
             tar.add(exports_staging, arcname=stem)
             if iterations_logs:
@@ -89,7 +89,7 @@ def render_reference_results_info(
     }
 
     jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
-    template = jinja_env.get_template("reference_results.metadata.template")
+    template = jinja_env.get_template("reference-results-metadata.txt.template")
     return template.render(render_dict)
 
 
