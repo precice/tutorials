@@ -406,9 +406,8 @@ COPY --from=python_bindings /home/precice/.local /home/precice/.local
 ARG FENICSX_ADAPTER_REF
 
 USER root
-RUN add-apt-repository -y ppa:fenics-packages/fenics && \
-    apt-get -qq update && \
-    apt-get -qq install --no-install-recommends fenicsx
+RUN apt-get -qq update && \
+    apt-get -qq install fenicsx
 
 USER precice
 RUN python3 -m venv --system-site-packages /home/precice/venv && \
@@ -500,7 +499,7 @@ RUN cd "${SU2_HOME}" &&\
 #####################################################################
 
 
-FROM solids4foam/solids4foam:v2.3-openfoam-v2412-latest as solids4foam
+FROM solids4foam/solids4foam:v2.3-openfoam-v2412-latest AS solids4foam
 
 ARG PRECICE_UID=1000
 ARG PRECICE_GID=1000
