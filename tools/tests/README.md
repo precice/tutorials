@@ -107,7 +107,7 @@ To reproduce the comparison locally, use the [same fieldcompare command](https:/
 ```bash
 fieldcompare dir precice-exports/ reference-results-unpacked/<case>/ \
              --ignore-missing-reference-files \
-             --ignore-missing-source-files \
+             --exclude-files reference-results-metadata.txt \
              --ignore-unsupported-file-formats \
              -rtol 3e-7
 ```
