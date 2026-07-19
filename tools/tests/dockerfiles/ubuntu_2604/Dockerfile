@@ -285,6 +285,8 @@ RUN for i in $(seq 1 3); do \
         if [[ $i -eq 3 ]]; then exit 1; fi; \
         sleep 10; \
     done
+# Patch dumux-phasefield for Ubuntu 26.04
+RUN sed -i s/VERSION\ 3.1/VERSION\ 3.13/g dumux-phasefield/CMakeLists.txt
 RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
 
