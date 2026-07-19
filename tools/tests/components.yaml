@@ -108,6 +108,7 @@ solids4foam:
 
 fenics-adapter:
   template: component-templates/fenics-adapter.yaml
+  build_timeout: 600
   build_arguments:
     PLATFORM:
       default: "ubuntu_2604"
@@ -148,6 +149,7 @@ fenicsx-adapter:
 
 fmi-runner:
   template: component-templates/fmi-runner.yaml
+  build_timeout: 600
   build_arguments:
     PLATFORM:
       default: "ubuntu_2604"
@@ -199,6 +201,7 @@ micro-manager:
 
 nutils-adapter:
   template: component-templates/nutils-adapter.yaml
+  build_timeout: 600
   build_arguments:
     PLATFORM:
       default: "ubuntu_2604"
@@ -235,6 +238,7 @@ openfoam-adapter:
 
 python-bindings:
   template: component-templates/python-bindings.yaml
+  build_timeout: 600
   build_arguments:
     PLATFORM:
       default: "ubuntu_2604"
@@ -252,7 +256,7 @@ python-bindings:
 
 su2-adapter:
   template: component-templates/su2-adapter.yaml
-  build_timeout: 600
+  build_timeout: 900
   build_arguments:
     PLATFORM:
       default: "ubuntu_2604"
