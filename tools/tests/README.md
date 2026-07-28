@@ -155,8 +155,11 @@ Fieldcompare requires reference results in the artifact. If not already unpacked
 ### Adding new tests
 
 Tests and test suites are defined in [`tests.yaml`](https://github.com/precice/tutorials/blob/develop/tools/tests/tests.yaml). By convention, every tutorial defines a test suite with the same name as its directory, and several test cases using combinations of the available participants. These test cases are later referenced by other test suites: these are typically the `release` and the test suites of different tested components.
+For a quick coverage overview while planning additions, see
+`tools/tests/system-tests-coverage-matrix.md` (tracked in
+[#448](https://github.com/precice/tutorials/issues/448)).
 
-The available cases are listed in the `metadata.yaml` of each tutorial. To add a new tutorial case as a test, add it to `metadata.yaml` and then define a test using it. Include that test in the relevant test suites.
+The available cases are listed in the `metadata.yaml` of each tutorial. To add a new tutorial case as a test, add it to `metadata.yaml` and then define a test using it. Include that test in the relevant test suites. To add a new tutorial case as a test, add it to `metadata.yaml` and then define a test using it. Include that test in the relevant test suites.
 
 Use the `max_time` or `max_time_windows` parameters to restrict the runtime of the test to the first few coupling time windows, to save time. Aim for a runtime of less than a minute (assuming cached components), if possible.
 
