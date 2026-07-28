@@ -99,7 +99,7 @@ When the tests fail at the results comparison step, this typically means that th
 
 - `precice-exports/`: The coupling meshes of the test run.
 - `reference-results/`: The coupling meshes of the reference run, as stored on Git LFS, expanded into `reference-results-unpacked`. For test cases using implicit coupling, the reference `.tar.gz` also contains the reference `precice-*-iterations.log` files.
-- `diff-results/`: Numerical difference of the results in the two directories (computed with `fieldcompare dir --diff precice-exports/ reference/`). These are only present on failed comparisons. The `visualizations/` subdirectory contains one PNG per numeric point field, rendered as sphere glyphs and colored by the difference values.
+- `diff-results/`: Numerical difference of the results in the two directories (computed with `fieldcompare dir --diff precice-exports/ reference/`). These are only present on failed comparisons. The `visualizations/` subdirectory contains one PNG per numeric point field, rendered as sphere glyphs and colored by the difference values (via the `diff_visualizer` Docker stage using OSMesa, so no display server is required).
 - `iterations-logs/`: The `precice-*-iterations.log` files of the test run. Only present in test cases using implicit coupling. The comparisons to references only take into account the file SHA-256 checksums.
 
 To reproduce the comparison locally, use the [same fieldcompare command](https://github.com/precice/tutorials/blob/develop/tests/docker-compose.field_compare.template.yaml):
@@ -126,7 +126,7 @@ When a system test fails in CI, download the **full** artifact:
 
 `system_tests_run_<run_id>_<run_attempt>_full`
 
-(a smaller `_logs` archive contains only log files). The archive contains a shared `runs/` directory:
+(a smaller `_logs` archive contains the stage log files and, on comparison failures, the PNG diff visualizations under `runs/*/diff-results/visualizations/`). The archive contains a shared `runs/` directory:
 
 ```text
 runs/
@@ -290,6 +290,7 @@ Metadata and workflow/script files:
     - Multi-stage build Dockerfiles that define how to build each component, in a layered approach
   - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Compose service template)
   - `docker-compose.field_compare.template.yaml`: Describes how to compare results with fieldcompare (Docker Compose service template)
+  - `docker-compose.diff_visualizer.template.yaml`: Describes how to render fieldcompare diff VTK files to PNG images on failure
   - `components.yaml`: Declares the available components and their parameters/options
   - `reference-results-metadata.md.template`: Template for reporting the versions and machine used to generate each reference results archive
   - `reference_versions.yaml`: List of arguments to use for generating the reference results
@@ -310,7 +311,8 @@ Implementation scripts:
 
 - `tests/`
   - `systemtests.py`: Main entry point
-  - `requirements.txt`: Dependencies (jinja2, pyyaml)
+  - `requirements.txt`: Dependencies (jinja2, pyyaml, pyvista for optional local use of the visualizer script)
+  - `visualize_fieldcompare_diffs.py`: Renders archived fieldcompare diff VTK files to PNG images (normally run via the `diff_visualizer` Docker stage)
   - `metadata_parser/`: Reads the YAML files into Python objects (defines the schema)
   - `systemtests/`: Main implementation classes
     - `Systemtest.py`

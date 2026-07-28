@@ -20,7 +20,6 @@ import unicodedata
 import re
 import logging
 import os
-import sys
 
 
 GLOBAL_TIMEOUT = int(os.environ.get("PRECICE_SYSTEMTESTS_TIMEOUT", 180))
@@ -806,16 +805,42 @@ class Systemtest:
                 self,
             )
 
+    def __get_diff_visualizer_compose_file(self) -> str:
+        platform = self.params_to_use.get("PLATFORM")
+        render_dict = {
+            'dockerfile_context': (
+                Path("..") / "tools" / "tests" / "dockerfiles" / Path(platform)
+            ),
+            'build_arguments': self.params_to_use,
+            'diff_results_folder': DIFF_RESULTS_DIR,
+        }
+        jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
+        template = jinja_env.get_template(
+            "docker-compose.diff_visualizer.template.yaml")
+        return template.render(render_dict)
+
     def __visualize_fieldcompare_diffs(self) -> None:
-        """Best-effort rendering of archived fieldcompare diff VTK files."""
+        """Best-effort rendering of archived fieldcompare diff VTK files via Docker."""
         diff_results_dir = self.system_test_dir / DIFF_RESULTS_DIR
         if not diff_results_dir.is_dir():
             return
 
-        visualizer = PRECICE_TESTS_DIR / "visualize_fieldcompare_diffs.py"
+        compose_path = self.system_test_dir / "docker-compose.diff_visualizer.yaml"
         try:
+            compose_path.write_text(
+                self.__get_diff_visualizer_compose_file(), encoding="utf-8")
             result = subprocess.run(
-                [sys.executable, str(visualizer), str(diff_results_dir)],
+                [
+                    "docker",
+                    "compose",
+                    "--file",
+                    compose_path.name,
+                    "up",
+                    "--exit-code-from",
+                    "diff-visualizer",
+                    "--abort-on-container-exit",
+                ],
+                cwd=self.system_test_dir,
                 capture_output=True,
                 text=True,
                 timeout=300,
