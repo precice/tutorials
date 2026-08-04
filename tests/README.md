@@ -99,7 +99,7 @@ When the tests fail at the results comparison step, this typically means that th
 
 - `precice-exports/`: The coupling meshes of the test run.
 - `reference-results/`: The coupling meshes of the reference run, as stored on Git LFS, expanded into `reference-results-unpacked`. For test cases using implicit coupling, the reference `.tar.gz` also contains the reference `precice-*-iterations.log` files.
-- `diff-results/`: Numerical difference of the results in the two directories (computed with `fieldcompare dir --diff precice-exports/ reference/`). These are only present on failed comparisons. The `visualizations/` subdirectory contains one PNG per numeric point field, rendered as sphere glyphs and colored by the difference values (via the `diff_visualizer` Docker stage using OSMesa, so no display server is required).
+- `diff-results/`: Numerical difference of the results in the two directories (computed with `fieldcompare dir --diff precice-exports/ reference/`). These are only present on failed comparisons and accompanied by visualization in `diff-results/visualizations/`.
 - `iterations-logs/`: The `precice-*-iterations.log` files of the test run. Only present in test cases using implicit coupling. The comparisons to references only take into account the file SHA-256 checksums.
 
 To reproduce the comparison locally, use the [same fieldcompare command](https://github.com/precice/tutorials/blob/develop/tests/docker-compose.field_compare.template.yaml):
@@ -126,7 +126,7 @@ When a system test fails in CI, download the **full** artifact:
 
 `system_tests_run_<run_id>_<run_attempt>_full`
 
-(a smaller `_logs` archive contains the stage log files and, on comparison failures, the PNG diff visualizations under `runs/*/diff-results/visualizations/`). The archive contains a shared `runs/` directory:
+(a smaller `_logs` archive contains the stage log files and, on comparison failures, difference visualizations. The archive contains a shared `runs/` directory:
 
 ```text
 runs/

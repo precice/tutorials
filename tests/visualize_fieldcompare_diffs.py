@@ -17,23 +17,6 @@ SUPPORTED_SUFFIXES = {".vtk", ".vtp", ".vtu"}
 WINDOW_SIZE = (1024, 768)
 
 
-def discover_diff_files(diff_results_dir: Path) -> list[Path]:
-    """Return supported fieldcompare diff files below a results directory."""
-    return sorted(
-        path
-        for path in diff_results_dir.rglob("*")
-        if path.is_file()
-        and path.suffix.lower() in SUPPORTED_SUFFIXES
-        and "diff" in path.name.lower()
-    )
-
-
-def _safe_name(value: str) -> str:
-    """Return a filesystem-safe part of an output filename."""
-    cleaned = re.sub(r"[^\w.-]+", "_", value, flags=re.UNICODE)
-    return cleaned.strip("_.") or "unnamed"
-
-
 def _scalar_values(values: np.ndarray) -> np.ndarray | None:
     """Return scalar values, using the magnitude for vectors and tensors."""
     array = np.asarray(values)
@@ -144,10 +127,18 @@ def visualize_diff_file(
         raise TypeError(f"Unsupported VTK dataset in {diff_file}")
 
     relative = diff_file.relative_to(diff_results_dir)
-    file_output_dir = output_dir / relative.parent / _safe_name(relative.stem)
+    safe_stem = (
+        re.sub(r"[^\w.-]+", "_", relative.stem, flags=re.UNICODE).strip("_.")
+        or "unnamed"
+    )
+    file_output_dir = output_dir / relative.parent / safe_stem
     generated: list[Path] = []
     for field_name, points, values in _fields(dataset):
-        output_file = file_output_dir / f"point_{_safe_name(field_name)}.png"
+        safe_field = (
+            re.sub(r"[^\w.-]+", "_", field_name, flags=re.UNICODE).strip("_.")
+            or "unnamed"
+        )
+        output_file = file_output_dir / f"point_{safe_field}.png"
         render_field(diff_file, output_file, field_name, points, values)
         generated.append(output_file)
     if not generated:
@@ -163,7 +154,14 @@ def visualize_diff_results(
     output_dir = diff_results_dir / "visualizations"
     generated: list[Path] = []
     errors: list[str] = []
-    for diff_file in discover_diff_files(diff_results_dir):
+    diff_files = sorted(
+        path
+        for path in diff_results_dir.rglob("*")
+        if path.is_file()
+        and path.suffix.lower() in SUPPORTED_SUFFIXES
+        and "diff" in path.name.lower()
+    )
+    for diff_file in diff_files:
         try:
             generated.extend(
                 visualize_diff_file(diff_file, diff_results_dir, output_dir)
