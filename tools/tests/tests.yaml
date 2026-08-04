@@ -921,4 +921,4 @@ test_suites:
 
   selected:
     tutorials:
-      - *two-scale-heat-conduction_macro-dumux_micro-dumux_parallel
+      - *perpendicular-flap_fluid-openfoam_solid-calculix
