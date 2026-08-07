@@ -1,15 +1,15 @@
 {
-    "micro_file_name": "micro_sim",
+    "micro_file_names": ["micro_sim"],
     "coupling_params": {
-            "parameter_file_name": "input_samples.hdf5",
-            "read_data_names": ["concentration"],
-            "write_data_names": ["k_00", "k_01", "k_10", "k_11", "porosity"]
+            "parameter_file_name": "macro-concentration-samples.hdf5",
+            "write_data_names": ["K00", "K11", "Porosity"],
+            "read_data_names": ["Concentration"]
     },
     "simulation_params": {
       "micro_dt": 0.01
     },
     "snapshot_params": {
+      "output_file_name": "micro-dumux-snapshots",
       "initialize_once": false
-    }, 
-    "output_directory": "output"
+    }
 }
