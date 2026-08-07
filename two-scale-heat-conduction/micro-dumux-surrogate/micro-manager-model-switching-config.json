@@ -13,7 +13,7 @@
       "adaptivity": false,
       "model_adaptivity": true,
       "model_adaptivity_settings": {
-         "switching_function": "switch.py"
+         "switching_function": "switch-model.py"
       }
     },
     "diagnostics": {
