@@ -48,8 +48,8 @@ dealii-adapter:
       repository: https://github.com/precice/dealii-adapter
       default: "develop"
 
-dune:
-  template: component-templates/dune.yaml
+dumux-adapter:
+  template: component-templates/dumux-adapter.yaml
   build_timeout: 900
   build_arguments:
     PLATFORM:
@@ -62,13 +62,49 @@ dune:
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
-    DUNE_VERSION:
+    DUNE_VERSION_DUMUX:
       default: "2.9"
     DUMUX_VERSION:
       default: "3.7"
     DUMUX_ADAPTER_REF:
       repository: https://github.com/precice/dumux-adapter
       default: "develop"
+
+dune-adapter:
+  template: component-templates/dune-adapter.yaml
+  build_timeout: 900
+  build_arguments:
+    PLATFORM:
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PRESET:
+      default: "production-audit"
+    TUTORIALS_REF:
+      repository: https://github.com/precice/tutorials
+      default: "develop"
+    DUNE_VERSION_DUNE:
+      default: "2.9"
+    DUNE_ADAPTER_REF:
+      repository: https://github.com/precice/dune-adapter
+      default: "main"
+
+
+solids4foam:
+  repository: https://github.com/solids4foam/solids4foam
+  template: component-templates/solids4foam.yaml
+  build_arguments:
+    PLATFORM:
+      description: Dockerfile platform used
+      default: "ubuntu_2404"
+      # The name "PLATFORM" is misleading: For this component, we use a different base image.
+    TUTORIALS_REF:
+      description: Tutorial git reference to use
+      default: "master"
+    OPENFOAM_ADAPTER_REF:
+      description: Reference/tag of the OpenFOAM adapter to use
+      default: "master"
 
 fenics-adapter:
   template: component-templates/fenics-adapter.yaml
@@ -232,4 +268,23 @@ su2-adapter:
       default: "7.5.1"
     SU2_ADAPTER_REF:
       repository: https://github.com/precice/su2-adapter
+      default: "develop"
+
+aste:
+  template: component-templates/aste.yaml
+  build_timeout: 600
+  build_arguments:
+    PLATFORM:
+      default: "ubuntu_2404"
+      # The name "PLATFORM" is misleading: For this component, we use a different base image.
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PRESET:
+      default: "production-audit"
+    TUTORIALS_REF:
+      repository: https://github.com/precice/tutorials
+      default: "develop"
+    ASTE_REF:
+      repository: https://github.com/precice/aste
       default: "develop"

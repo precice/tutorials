@@ -6,7 +6,6 @@ FoamFile
     location    "system";
     object      fvSolution;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 solvers
 {
@@ -42,6 +41,3 @@ PIMPLE
     nCorrectors      2;
     nNonOrthogonalCorrectors 0;
 }
-
-
-// ************************************************************************* //

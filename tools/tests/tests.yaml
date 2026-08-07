@@ -11,6 +11,15 @@
 #   Skipped components are still mentioned in a comment.
 
 test_suites:
+  aste-turbine:
+    tutorials:
+      - &aste-turbine
+        path: aste-turbine
+        case_combination:
+          - aste
+        skip_compare: true # partitioning the mesh differently in each run
+        reference_result: ./aste-turbine/reference-results/aste-turbine.tar.gz
+  
   breaking-dam-2d:
     tutorials:
       - &breaking-dam-2d_fluid-openfoam_solid-calculix
@@ -124,7 +133,7 @@ test_suites:
           - solid-fenics
         max_time_windows: 1
         tolerance: 1e-2    # Some values are too close to zero
-        skip_compare: true # Comparison takes too
+        skip_compare: true
         reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-fenics.tar.gz
 
   flow-around-controlled-moving-cylinder:
@@ -497,6 +506,13 @@ test_suites:
           - solid-openfoam
         max_time: 0.03
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+      - &perpendicular-flap_fluid-openfoam_solid-solids4foam
+        path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-solids4foam
+        max_time: 0.1
+        reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-solids4foam.tar.gz
       - &perpendicular-flap_fluid-su2_solid-fenics
         path: perpendicular-flap
         case_combination:
@@ -548,8 +564,13 @@ test_suites:
         case_combination:
           - macro-dumux
           - micro-dumux
-        skip_compare: true # Values too close to zero
         reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux.tar.gz
+      - &two-scale-heat-conduction_macro-dumux_micro-dumux_parallel
+        path: two-scale-heat-conduction
+        case_combination:
+          - macro-dumux
+          - micro-dumux_parallel
+        reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux_parallel.tar.gz
       - &two-scale-heat-conduction_macro-nutils_micro-nutils
         path: two-scale-heat-conduction
         case_combination:
@@ -557,7 +578,6 @@ test_suites:
           - micro-nutils
         max_time: 0.01
         timeout: 1200
-        skip_compare: true # Values too close to zero
         reference_result: ./two-scale-heat-conduction/reference-results/macro-nutils_micro-nutils.tar.gz
 
   volume-coupled-diffusion:
@@ -648,6 +668,7 @@ test_suites:
 
   release:
     tutorials:
+      - *aste-turbine
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
       - *channel-transport_fluid-openfoam_transport-openfoam
@@ -660,7 +681,6 @@ test_suites:
       - *elastic-tube-1d_fluid-fortran-module_solid-fortran-module
       - *elastic-tube-1d_fluid-python_solid-python
       - *elastic-tube-3d_fluid-openfoam_solid-calculix
-      - *elastic-tube-3d_fluid-openfoam_solid-fenics
       - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-fenicsx
@@ -706,6 +726,7 @@ test_suites:
       - *resonant-circuit_capacitor-python_coil-python
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
       - *two-scale-heat-conduction_macro-dumux_micro-dumux
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux_parallel
       - *volume-coupled-diffusion_source-fenics_drain-fenics
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
@@ -719,6 +740,7 @@ test_suites:
   extra:
     tutorials:
       - *channel-transport_fluid-nutils_transport-nutils
+      - *elastic-tube-3d_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-dunefem
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *perpendicular-flap_fluid-nutils_solid-calculix
@@ -742,7 +764,11 @@ test_suites:
       - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam  # parallel-implicit (IQN-ILS), axial-geometric-multiscale
       - *elastic-tube-1d_fluid-fortran-module_solid-fortran-module               # integration with Fortran (module)
       - *perpendicular-flap_fluid-openfoam_solid-calculix                        # integration with C
-      
+
+  aste:
+    tutorials:
+      - *aste-turbine
+
   calculix-adapter:
     tutorials:
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
@@ -763,6 +789,7 @@ test_suites:
     tutorials:
       - *free-flow-over-porous-media_free-flow-dumux_porous-media-dumux
       - *two-scale-heat-conduction_macro-dumux_micro-dumux
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux_parallel
 
   dune-adapter:
     tutorials:
@@ -803,6 +830,7 @@ test_suites:
   micro-manager:
     tutorials:
       - *two-scale-heat-conduction_macro-dumux_micro-dumux
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux_parallel
       - *two-scale-heat-conduction_macro-nutils_micro-nutils
 
   nutils-adapter: # Not a repository
@@ -863,6 +891,19 @@ test_suites:
       - *partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
       - *partitioned-heat-conduction-robin_left-openfoam_right-openfoam
 
+  python-bindings:
+    tutorials:
+      - *elastic-tube-1d_fluid-python_solid-python
+      - *oscillator_mass-left-fmi_mass-right-fmi
+      - *partitioned-heat-conduction_dirichlet-fenicsx_neumann-fenicsx
+      - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
+      - *perpendicular-flap_fluid-su2_solid-fenics
+      - *two-scale-heat-conduction_macro-nutils_micro-nutils
+
+  solids4foam:
+    tutorials:
+      - *perpendicular-flap_fluid-openfoam_solid-solids4foam
+
   su2-adapter:
     tutorials:
       - *flow-over-heated-plate_fluid-su2_solid-openfoam
@@ -880,4 +921,4 @@ test_suites:
 
   selected:
     tutorials:
-      - *elastic-tube-1d_fluid-python_solid-python
+      - *perpendicular-flap_fluid-openfoam_solid-calculix

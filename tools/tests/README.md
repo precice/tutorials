@@ -12,11 +12,11 @@ The tutorials repository hosts cases that need multiple components from the preC
 
 ## Running
 
-The main workflow for the user is executing the `systemtests.py` script, which is the same that the [GitHub Actions workflow](https://github.com/precice/tutorials/actions/workflows/system-tests-latest-components.yml) executes. Depending on the options given to the script, it reads in the respective metadata files and generates `docker-compose.yaml` files that can start a fully-defined coupled simulation. For arguments that are not provided, default values from `components.yaml` are used.
+The main workflow for the user is executing the `systemtests.py` script, which is the same that the [GitHub Actions workflow](https://github.com/precice/tutorials/actions/workflows/system-tests.yml) executes. Depending on the options given to the script, it reads in the respective metadata files and generates `docker-compose.yaml` files that can start a fully-defined coupled simulation. For arguments that are not provided, default values from `components.yaml` are used.
 
-### Manual and nightly runs on GitHub
+### Manual and scheduled runs on GitHub
 
-The [System tests (manual/nightly)](https://github.com/precice/tutorials/actions/workflows/system-tests-latest-components.yml) workflow executes the `release` test suite nightly and can also be triggered manually.
+The [System tests (manual)](https://github.com/precice/tutorials/actions/workflows/system-tests-manual.yml) workflow can execute any test suite (default: `release`) with any versions of the involved components (default: latest development branches).
 
 On the workflow page, click `Run workflow`. The default values will execute the `release` test suite using the latest `develop` branches of every component. If you want to override the version of some component, specify it in the respective field. Commit hashes, branches, and tags are all accepted. Branches and tags will get automatically resolved to their current commit on GitHub before starting any test, and all tests will use the same version of any common component.
 
@@ -31,6 +31,8 @@ The available test suites are found in [`tests.yaml`](https://github.com/precice
 
 The `Use workflow from` is a default option of GitHub Actions that concerns the GHA workflow file itself.
 
+The [System tests (nightly)](https://github.com/precice/tutorials/actions/workflows/system-tests-nightly.yml) executes the `release` test suite every night. The [System tests (weekly)](https://github.com/precice/tutorials/actions/workflows/system-tests-weekly.yml) executes the `extra` test suite once per week.
+
 ### Running from a pull request
 
 Several repositories include a workflow that allows triggering the system tests by adding the `trigger-system-tests` label to the pull request. The event is triggered only at the moment of adding the label, so you need to remove the label and add it again if needed.
@@ -42,13 +44,13 @@ See the [system tests workflow in the OpenFOAM adapter](https://github.com/preci
 The [GitHub CLI](https://cli.github.com/) allows triggering workflows of a GitHub project. For example:
 
 ```bash
-gh workflow run system-tests-latest-components.yml -f suites=release
+gh workflow run system-tests-manual.yml -f suites=release
 ```
 
 More arguments are available, for example:
 
 ```bash
-gh workflow run system-tests-latest-components.yml -f suites=release -f build_args="PLATFORM:ubuntu2404,PRECICE_REF:develop" -f log_level="DEBUG" --ref=develop
+gh workflow run system-tests-manual.yml -f suites=release -f build_args="PLATFORM:ubuntu2404,PRECICE_REF:develop" -f log_level="DEBUG" --ref=develop
 ```
 
 The `build_args` override the defaults set in `tools/tests/components.yaml`.
@@ -166,7 +168,11 @@ run-before: ./set-case.sh 1d3d
 
 You will need to define a reference results file. The reference results can and should be generated on GitHub using the [Generate reference results (manual)](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) workflow for the respective test suite. You might want to temporarily set the `selected` test suite for requesting results only for a subset of test cases.
 
-Note that you will need to define the `TUTORIALS_REF` in the file [`reference_versions.yaml`](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) to match the respective branch. Restore that to `develop` after that. See a [related issue](https://github.com/precice/tutorials/issues/844).
+By default, the [Generate reference results (manual)](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) workflow uses `TUTORIALS_REF` from [`reference_versions.yaml`](https://github.com/precice/tutorials/blob/develop/tools/tests/reference_versions.yaml). For a feature branch, set Use tutorials from to `workflow branch`, or pass `TUTORIALS_REF` via `--build_args` (locally) or the optional `build_args` workflow input.
+
+{% note %}
+The two options cannot be combined: defining any overrides to `reference_versions.yaml` will ignore the option to use the tutorials from the workflow branch.
+{% endnote %}
 
 The results will be added to a Git LFS, but you will need special push access: just use the aforementioned GitHub Actions workflow, instead.
 
@@ -210,7 +216,7 @@ To add a new component, a few changes are needed:
 
 1. In the `components.yaml`, add a new component, defining all the parameters that it might need.
     - Add these parameters into the `reference_versions.yaml`.
-    - Add fields for these parameters into the `system-tests-latest-components.yml` workflow.
+    - Add fields for these parameters into the `system-tests-manual.yml` workflow.
 2. In the `dockerfiles/<platform>/Dockerfile`, define a new stage for building your new component. Use the parameters you defined above.
     - Defining a `<component>_PR` variable will let you integrate the system tests into the respective component repository.
 3. In the `component_templates.yaml`, define a component template. These are Jinja templates that are used by Docker Compose, and the main detail is how to run a simulation using that component.
@@ -223,8 +229,11 @@ Some components might require injecting further changes to the configuration fil
 If you want to trigger the system tests from a new repository:
 
 1. Add a workflow file to that repository (under `.github/workflows/`). Example: [OpenFOAM adapter](https://github.com/precice/openfoam-adapter/blob/develop/.github/workflows/system-tests.yaml).
-2. Create label as a trigger for workflow (under `Issues`->`Labels`->`New label`).
-3. Give permissions: In the [preCICE organization settings](https://github.com/organizations/precice/settings), you need to add the new repository to the action secret `WORKFLOW_DISPATCH_TOKEN` and to the default actions runner group. Adding the new label directly to the pull request in which you add the workflow should already trigger the system tests.
+2. Create label as a trigger for workflow (under `Issues`->`Labels`->`New label`) with name `trigger-system-tests`. For consistency, set the color to `#34495E`.
+3. Give permissions to trigger workflows: In the [organization actions sercets](https://github.com/organizations/precice/settings/secrets/actions), you need to add the new repository to the action secret `WORKFLOW_DISPATCH_TOKEN`.
+4. Give permissions to use the runner: In the [organization runner groups settings](https://github.com/organizations/precice/settings/actions/runner-groups/), you need to add the new repository to the respective runner group.
+
+After these steps, adding the new label directly to the pull request in which you add the workflow should already trigger the system tests.
 
 ## Implementation details
 
@@ -254,7 +263,9 @@ Metadata and workflow/script files:
 
 - `.github/workflows/`
   - `system-tests.yml`: workflow for running the tests, triggered by other workflows (e.g., other repositories)
-  - `system-tests-latest-components.yml`: manual triggering front-end for `system-tests.yml`
+  - `system-tests-manual.yml`: manual triggering front-end for `system-tests.yml`
+  - `system-tests-nightly.yml`: scheduled run of `system-tests.yml` (every night)
+  - `system-tests-weekly.yml`: scheduled run of `system-tests.yml` (once per week)
 - `flow-over-a-heated-plate/`
   - `fluid-openfoam/`
     - `run.sh`: describes how to execute the respective case
