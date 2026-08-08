@@ -20,7 +20,7 @@ def create_snapshots() -> None:
 
     # Run the Micro Manager to create snapshot database
     subprocess.run(
-        ["micro-manager-precice", "--snapshot", "micro-manager-snapshot-config.json"],
+        ["mpiexec", "-n", "2", "micro-manager-precice", "--snapshot", "micro-manager-snapshot-config.json"],
         check=True,
     )
 
