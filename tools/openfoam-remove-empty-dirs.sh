@@ -1,27 +1,37 @@
-#! /bin/sh
+#!/usr/bin/env bash
 
-# Cleaning up stray functionObjectProperties files, see https://github.com/precice/openfoam-adapter/issues/26
+# Cleaning up stray functionObjectProperties files to not polute the post-processed time steps,
+# see https://github.com/precice/openfoam-adapter/issues/26
 openfoam_remove_empty_dirs() {
 	(
 		set -e -u
-		echo "Cleaning up any time directories without results"
 
-		for f in [0-9]* [0-9]*.[0-9]*; do
-                        if ! [ -f "${f}/U" ] && ! [ -f "${f}/T" ] && ! [ -f "${f}/U.gz" ] && ! [ -f "${f}/T.gz" ] && ! [ -f "${f}/D" ] && ! [ -f "${f}/pointD" ] && ! [ -f "${f}/DD" ] && ! [ -f "${f}/pointDD" ] && ! [ -f "${f}/D.gz" ] && ! [ -f "${f}/pointD.gz" ] && ! [ -f "${f}/DD.gz" ] && ! [ -f "${f}/pointDD.gz" ]; then
-				rm -rf "${f}"
-			fi
-		done
-		if [ -d processor0 ]; then
-			for d in processor*; do
-				cd "${d}"
-				for f in [0-9]* [0-9]*.[0-9]*; do
-                                        if ! [ -f "${f}/U" ] && ! [ -f "${f}/T" ] && ! [ -f "${f}/U.gz" ] && ! [ -f "${f}/T.gz" ] && ! [ -f "${f}/D" ] && ! [ -f "${f}/pointD" ] && ! [ -f "${f}/DD" ] && ! [ -f "${f}/pointDD" ] && ! [ -f "${f}/D.gz" ] && ! [ -f "${f}/pointD.gz" ] && ! [ -f "${f}/DD.gz" ] && ! [ -f "${f}/pointDD.gz" ]; then
-						rm -rf "${f}"
+		DIRECTORIES_TO_CHECK=("." "processor"*)
+		OPENFOAM_RESULT_FILES=("p" "U" "T" "D" "pointD" "DD" "pointDD")
+
+		echo "Cleaning up any time directories without results to make post-processing easier."
+		echo "Searching in the following directories: " "${DIRECTORIES_TO_CHECK[@]}"
+		echo "Keeping all time directories that include any of the following files: " "${OPENFOAM_RESULT_FILES[@]}"
+		echo "and removing the rest..."
+
+		# Search the current and every processor* directory for common results files.
+		# If there are none, remove the directory.
+		for pd in "${DIRECTORIES_TO_CHECK[@]}"; do
+				for d in "${pd}"/[0-9]* "${pd}"/[0-9]*.[0-9]*; do
+					KEEP_DIRECTORY=false
+					for r in "${OPENFOAM_RESULT_FILES[@]}"; do
+						# OpenFOAM can be configured to store files either as compressed or uncompressed
+						if [[ -f "${d}/${r}" ]] || [[ -f "${d}/${r}.gz" ]]; then
+							KEEP_DIRECTORY=true
+							break;
+						fi
+					done
+					if ! [[ ${KEEP_DIRECTORY} == true ]]; then
+						# None of the expected result files found - delete the directory
+						rm -rfv "${d}"
 					fi
 				done
-				cd ..
-			done
-		fi
-                echo "Done."
+		done
+		echo "Done."
 	)
 }
