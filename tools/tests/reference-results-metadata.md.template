@@ -27,7 +27,3 @@ the arguments and machine used to generate them.
 ### uname -a
 
 {{ uname }}
-
-### lscpu
-
-{{ lscpu }}
