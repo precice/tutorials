@@ -50,7 +50,7 @@ def create_reference_tar_gz(
         shutil.rmtree(logs_staging, ignore_errors=True)
 
 
-def get_machine_informations():
+def get_machine_information():
     def command_is_avail(command: str):
         try:
             rc = subprocess.call(['which', command], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -71,7 +71,7 @@ def render_reference_results_info(
         archive_name: str,
         arguments_used: SystemtestArguments,
         time: str):
-    uname = get_machine_informations()
+    uname = get_machine_information()
     render_dict = {
         'arguments': arguments_used.arguments,
         'archive_name': archive_name,
