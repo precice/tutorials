@@ -6,4 +6,4 @@ services:
     command:
       - /runs/{{ tutorial_folder }}/{{ precice_output_folder }}
       - /runs/{{ tutorial_folder }}/{{ reference_output_folder }}
-      - "-rtol {{ tolerance }} --ignore-missing-reference-files --exclude-files reference-results-metadata.txt --ignore-unsupported-file-formats --diff"
+      - "-rtol {{ tolerance }} --ignore-missing-reference-files --exclude-files reference-results-metadata.md --ignore-unsupported-file-formats --diff"
