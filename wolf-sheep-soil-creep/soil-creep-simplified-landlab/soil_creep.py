@@ -9,6 +9,8 @@ class LandlabLinearDiffuserClone:
     FIXED_VALUE = 1 # Dirichlet fixed elevation
     CLOSED = 4 # Neumann zero-flux
 
+    ALPHA = 0.15  # time-step stability factor
+
     def __init__(self, z, D, dx):
         self.z = z # grid
         self.D = D # linear diffusivity
@@ -65,7 +67,7 @@ class LandlabLinearDiffuserClone:
             for n1, n2 in self.links
         ])
 
-        internal_dt = 0.15 * self.dx * self.dx / np.nanmax(active_D)
+        internal_dt = ALPHA * self.dx * self.dx / np.nanmax(active_D)
 
         repeats = int(dt // internal_dt)
         remainder = dt - repeats * internal_dt
