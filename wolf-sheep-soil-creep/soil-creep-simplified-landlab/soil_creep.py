@@ -67,6 +67,8 @@ class LandlabLinearDiffuserClone:
             for n1, n2 in self.links
         ])
 
+        # Divide the timestep dt passed to the diffuser into internal stability-limited substeps. 
+        # Perform as many full substeps as possible (repeats), followed by one smaller substep for the remainder.
         internal_dt = ALPHA * self.dx * self.dx / np.nanmax(active_D)
 
         repeats = int(dt // internal_dt)
