@@ -1,3 +1,0 @@
-numpy >1, <2
-fenicsxprecice~=1.0
-matplotlib>=3,<4
