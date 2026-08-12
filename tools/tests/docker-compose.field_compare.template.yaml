@@ -6,6 +6,8 @@ services:
     volumes:
       - {{ run_directory }}:/runs
     command:
+      - fieldcompare
+      - dir
       - /runs/{{ tutorial_folder }}/{{ precice_output_folder }}
       - /runs/{{ tutorial_folder }}/{{ reference_output_folder }}
       - "-rtol {{ tolerance }} --ignore-missing-reference-files --exclude-files reference-results-metadata.txt --ignore-unsupported-file-formats --diff"

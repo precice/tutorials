@@ -629,4 +629,3 @@ RUN git clone https://github.com/precice/openfoam-adapter.git &&\
 
 FROM python:3.14 AS fieldcompare
 RUN pip install fieldcompare[all]==0.5.0
-ENTRYPOINT ["fieldcompare", "dir"]
