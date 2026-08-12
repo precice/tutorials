@@ -93,20 +93,25 @@ def render_field(
     glyphs = point_cloud.glyph(orient=False, scale=False, geom=sphere)
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
+    vmin = float(np.min(values))
+    vmax = float(np.max(values))
     plotter = pv.Plotter(off_screen=True, window_size=WINDOW_SIZE)
     try:
         plotter.set_background("white")
-        max_abs_value = float(np.max(np.abs(values)))
-        color_limit = max_abs_value if max_abs_value > 0 else 1.0
         plotter.add_mesh(
             glyphs,
             scalars=scalar_name,
             cmap="coolwarm",
-            clim=(-color_limit, color_limit),
+            clim=(vmin, vmax),
             scalar_bar_args={"title": field_name},
         )
         plotter.add_text(
-            f"{source_file.name}\npoint field: {field_name}",
+            (
+                f"{source_file.name}\n"
+                f"point field: {field_name}\n"
+                f"Difference: computed - reference\n"
+                f"range: {vmin:.6e} to {vmax:.6e}"
+            ),
             font_size=10,
             color="black",
         )

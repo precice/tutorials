@@ -120,13 +120,23 @@ The differences are only shown per file, and there is no global metric or other 
 
 Alternatively, [visualize the `precice-exports/diff_*.vtu` in ParaView](https://precice.org/configuration-export.html#visualization-with-paraview).
 
+To regenerate the PNG visualizations locally from an archived `diff-results/` folder (for example after downloading a CI artifact):
+
+```bash
+python3 visualize_fieldcompare_diffs.py /path/to/diff-results
+```
+
+The default image size is set by `WINDOW_SIZE` in `visualize_fieldcompare_diffs.py` (currently `1024 x 768`). Increase it for higher-resolution PNGs, e.g. `WINDOW_SIZE = (1920, 1080)`.
+
+For PDF output instead of PNG, replace the `plotter.show(screenshot=...)` call in `render_field()` with `plotter.render()` followed by `plotter.save_graphic(str(output_file.with_suffix(".pdf")))`.
+
 ### Re-running from CI artifacts
 
 When a system test fails in CI, download the **full** artifact:
 
 `system_tests_run_<run_id>_<run_attempt>_full`
 
-(a smaller `_logs` archive contains the stage log files and, on comparison failures, difference visualizations. The archive contains a shared `runs/` directory:
+(a smaller `_logs` archive contains the stage log files; on comparison failures, difference visualizations are in a separate `_diffs` archive. The archives contain a shared `runs/` directory:
 
 ```text
 runs/
