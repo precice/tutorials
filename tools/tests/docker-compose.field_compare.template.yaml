@@ -1,6 +1,8 @@
 services:
   field-compare:
-    build: https://github.com/dglaeser/fieldcompare-action.git # use the docker container provided by fieldcompare
+    build: 
+      context: {{ dockerfile_context }}
+      target: fieldcompare
     volumes:
       - {{ run_directory }}:/runs
     command:
