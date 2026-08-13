@@ -33,7 +33,7 @@ def create_reference_tar_gz(
             shutil.rmtree(staging)
     shutil.copytree(exports_dir, exports_staging)
     try:
-        (exports_staging / "reference-results-metadata.md").write_text(metadata)
+        (exports_staging / ".reference-results-metadata.md").write_text(metadata)
         with tarfile.open(output_filename, "w:gz") as tar:
             tar.add(exports_staging, arcname=stem)
             if iterations_logs:

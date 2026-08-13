@@ -105,11 +105,13 @@ When the tests fail at the results comparison step, this typically means that th
 To reproduce the comparison locally, use the [same fieldcompare command](https://github.com/precice/tutorials/blob/develop/tools/tests/docker-compose.field_compare.template.yaml):
 
 ```bash
-fieldcompare dir precice-exports/ reference-results-unpacked/<case>/ \
+fieldcompare dir \
              --ignore-missing-reference-files \
-             --exclude-files reference-results-metadata.md \
+             --exclude-files .reference-results-metadata.md \
              --ignore-unsupported-file-formats \
-             -rtol 3e-7
+             -rtol 3e-7 \
+             precice-exports/ \
+             reference-results-unpacked/<case>/
 ```
 
 The default relative tolerance (`-rtol`) is `3e-7`. Per-test overrides are possible in `tests.yaml` (e.g., `tolerance: 1e-2`). Set `skip_compare: true` to skip the comparison step and only verify that the build and run steps succeed.
@@ -177,7 +179,7 @@ The two options cannot be combined: defining any overrides to `reference_version
 
 The results will be added to a Git LFS, but you will need special push access: just use the aforementioned GitHub Actions workflow, instead.
 
-Each generated reference archive contains a `reference-results-metadata.md` file
+Each generated reference archive contains a `.reference-results-metadata.md` file
 inside its case directory. This file records the component versions and machine
 information used to generate that archive.
 
