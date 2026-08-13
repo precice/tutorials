@@ -33,7 +33,7 @@ def create_reference_tar_gz(
             shutil.rmtree(staging)
     shutil.copytree(exports_dir, exports_staging)
     try:
-        (exports_staging / "reference-results-metadata.txt").write_text(metadata)
+        (exports_staging / ".reference-results-metadata.md").write_text(metadata)
         with tarfile.open(output_filename, "w:gz") as tar:
             tar.add(exports_staging, arcname=stem)
             if iterations_logs:
@@ -50,7 +50,7 @@ def create_reference_tar_gz(
         shutil.rmtree(logs_staging, ignore_errors=True)
 
 
-def get_machine_informations():
+def get_machine_information():
     def command_is_avail(command: str):
         try:
             rc = subprocess.call(['which', command], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -59,37 +59,28 @@ def get_machine_informations():
 
         return rc == 0
     uname_info = "uname not available on the machine the systemtests were executed."
-    lscpu_info = "lscpu not available on the machine the systemtests were executed."
     if (command_is_avail("uname")):
         result = subprocess.run(["uname", "-a"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if result.returncode == 0:
             uname_info = result.stdout
 
-    if (command_is_avail("lscpu") and command_is_avail("grep")):
-        result_lscpu = subprocess.run(["lscpu"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        result = subprocess.run(["grep", "-v", "Vulner"], input=result_lscpu.stdout,
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        if result.returncode == 0:
-            lscpu_info = result.stdout
-
-    return (uname_info, lscpu_info)
+    return uname_info
 
 
 def render_reference_results_info(
         archive_name: str,
         arguments_used: SystemtestArguments,
         time: str):
-    uname, lscpu = get_machine_informations()
+    uname = get_machine_information()
     render_dict = {
         'arguments': arguments_used.arguments,
         'archive_name': archive_name,
         'time': time,
         'uname': uname,
-        'lscpu': lscpu,
     }
 
     jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
-    template = jinja_env.get_template("reference-results-metadata.txt.template")
+    template = jinja_env.get_template("reference-results-metadata.md.template")
     return template.render(render_dict)
 
 

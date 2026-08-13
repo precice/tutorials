@@ -1,0 +1,13 @@
+# Reference results
+
+- Archive: `{{ archive_name }}`
+- Generated at: {{ time }}
+- Host: {{ uname }}
+
+## System tests arguments used to generate the results
+
+| name | value |
+| --- | --- |
+{% for name,value in arguments.items() -%}
+| `{{ name }}` | `{{ value }}` |
+{% endfor -%}
