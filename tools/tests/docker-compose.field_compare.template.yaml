@@ -1,9 +1,13 @@
 services:
   field-compare:
-    build: https://github.com/dglaeser/fieldcompare-action.git # use the docker container provided by fieldcompare
+    build: 
+      context: {{ dockerfile_context }}
+      target: fieldcompare
     volumes:
       - {{ run_directory }}:/runs
-    command:
-      - /runs/{{ tutorial_folder }}/{{ precice_output_folder }}
-      - /runs/{{ tutorial_folder }}/{{ reference_output_folder }}
-      - "-rtol {{ tolerance }} --ignore-missing-reference-files --exclude-files reference-results-metadata.md --ignore-unsupported-file-formats --diff"
+    command: >
+      /bin/bash -c "fieldcompare dir \
+      --ignore-missing-reference-files --exclude-files reference-results-metadata.md --ignore-unsupported-file-formats --diff \
+      -rtol {{ tolerance }} \
+      /runs/{{ tutorial_folder }}/{{ precice_output_folder }} \
+      /runs/{{ tutorial_folder }}/{{ reference_output_folder }}"
