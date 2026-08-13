@@ -4,7 +4,7 @@ import basix.ufl
 from petsc4py import PETSc
 import ufl
 from dolfinx import fem, io, mesh as msh, default_scalar_type
-from dolfinx.fem.petsc import assemble_matrix, assemble_vector, apply_lifting, create_vector, set_bc, LinearProblem
+from dolfinx.fem.petsc import assemble_matrix, assemble_vector, apply_lifting, create_vector, set_bc
 from dolfinx.mesh import create_rectangle
 import basix
 from fenicsxprecice import Adapter, CouplingMesh

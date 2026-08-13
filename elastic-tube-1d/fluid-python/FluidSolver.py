@@ -1,9 +1,7 @@
 from __future__ import division, print_function
-import os
-import sys
 import argparse
 import outputConfiguration as config
-from thetaScheme import perform_partitioned_implicit_trapezoidal_rule_step, perform_partitioned_implicit_euler_step
+from thetaScheme import perform_partitioned_implicit_euler_step
 import numpy as np
 import tubePlotting
 import matplotlib.pyplot as plt
