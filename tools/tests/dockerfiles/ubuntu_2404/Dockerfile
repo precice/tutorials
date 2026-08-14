@@ -99,6 +99,21 @@ ENV CMAKE_PREFIX_PATH="/home/precice/.local"
 ### end of precice stage ###
 
 
+FROM precice AS julia_bindings
+ARG JULIA_BINDINGS_REF
+
+USER root
+RUN apt-get -qq update && \
+    apt-get -qq install pipx
+
+USER precice
+WORKDIR /home/precice
+
+RUN pipx install jill && \
+    jill install --confirm
+### end of julia_bindings stage ###
+
+
 FROM precice AS python_bindings
 ARG PYTHON_BINDINGS_PR
 ARG PYTHON_BINDINGS_REF
