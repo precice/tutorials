@@ -399,6 +399,13 @@ class Systemtest:
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
             'reference_output_folder': PRECICE_REL_REFERENCE_DIR + "/" + self.reference_result.path.name.replace(".tar.gz", ""),
             'tolerance': self.tolerance,
+            # The dockerfile_context value inside the templates is only
+            # used as a build context path and does not need to be
+            # absolute – it will be resolved relative to the system test
+            # directory.
+            'dockerfile_context': (
+                Path("..") / "tools" / "tests" / "dockerfiles" / Path(self.params_to_use.get("PLATFORM"))
+            ),
         }
         jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
         template = jinja_env.get_template(
