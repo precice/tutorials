@@ -336,11 +336,11 @@ class Systemtest:
             # we copy a full `tools/` tree into the parent run directory
             # (see __copy_tools). From the point of view of the system test
             # directory we therefore need to go one level up to reach the
-            # shared `tools/` folder:
+            # shared `tests/` folder:
             #   <run_directory>/tests/dockerfiles/<PLATFORM>
             #   ^-------------^ parent of self.system_test_dir
             dockerfile_context_relative = (
-                Path("..") / "tools" / "tests" / "dockerfiles" / Path(plaform_requested)
+                Path("..") / "tests" / "dockerfiles" / Path(plaform_requested)
             )
 
             render_dict = {
