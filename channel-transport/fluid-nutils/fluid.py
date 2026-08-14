@@ -8,7 +8,6 @@ from nutils import function, mesh, cli, solver, export
 import treelog as log
 import numpy as np
 import precice
-from mpi4py import MPI
 
 
 def main():

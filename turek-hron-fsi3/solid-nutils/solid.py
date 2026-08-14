@@ -7,11 +7,10 @@ from precice import Participant
 from nutils import cli, export, function
 from nutils.mesh import gmsh
 from nutils.solver import System
-from nutils.SI import Length, Density, Viscosity, Velocity, Time, Stress, Acceleration, Pressure
+from nutils.SI import Length, Density, Time, Stress, Acceleration, Pressure
 from nutils.expression_v2 import Namespace
 from collections import defaultdict, deque
 from dataclasses import dataclass
-from typing import Optional
 from pathlib import Path
 from itertools import count
 import treelog as log

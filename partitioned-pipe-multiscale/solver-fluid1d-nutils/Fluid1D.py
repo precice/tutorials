@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import treelog
 import precice
 from nutils import mesh, function, solver, cli

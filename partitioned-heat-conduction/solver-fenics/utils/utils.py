@@ -6,7 +6,6 @@ The core functionality of weak_lhs and get_variational_problem were taken from:
 import numpy as np
 import scipy.interpolate as interpol
 from fenics import *
-from sympy import ccode, diff
 
 
 def b_splines(precice, degree, dt):

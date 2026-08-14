@@ -2,10 +2,9 @@
 
 import vtk
 import numpy as np
-import os
 import sys
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 - registers projection='3d' on Matplotlib <3.2
 
 T = 100  # number of timesteps performed
 

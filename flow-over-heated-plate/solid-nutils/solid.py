@@ -4,7 +4,6 @@ from nutils import cli, mesh, function, solver, export
 import treelog
 import numpy as np
 import precice
-from mpi4py import MPI
 
 
 def main():

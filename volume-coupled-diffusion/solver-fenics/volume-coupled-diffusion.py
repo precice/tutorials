@@ -1,7 +1,6 @@
 from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, File, \
     solve, lhs, rhs, dx, UnitSquareMesh, SubDomain, inner, grad, MeshFunction, MPI, interpolate
 from fenicsprecice import Adapter
-import numpy as np
 import argparse
 
 

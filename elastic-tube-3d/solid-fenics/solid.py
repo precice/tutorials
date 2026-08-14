@@ -1,6 +1,5 @@
 # Import required libs
-from fenics import Constant, Function, AutoSubDomain, VectorFunctionSpace, interpolate, \
-    TrialFunction, TestFunction, Point, Expression, DirichletBC, \
+from fenics import Constant, Function, AutoSubDomain, VectorFunctionSpace, TrialFunction, TestFunction, Point, DirichletBC, \
     Identity, inner, dx, ds, sym, grad, div, lhs, rhs, dot, File, solve, assemble_system
 from mshr import Cylinder, generate_mesh
 import numpy as np
