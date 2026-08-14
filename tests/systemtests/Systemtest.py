@@ -337,7 +337,7 @@ class Systemtest:
             # (see __copy_tools). From the point of view of the system test
             # directory we therefore need to go one level up to reach the
             # shared `tools/` folder:
-            #   <run_directory>/tools/tests/dockerfiles/<PLATFORM>
+            #   <run_directory>/tests/dockerfiles/<PLATFORM>
             #   ^-------------^ parent of self.system_test_dir
             dockerfile_context_relative = (
                 Path("..") / "tools" / "tests" / "dockerfiles" / Path(plaform_requested)
@@ -798,7 +798,7 @@ class Systemtest:
             )
 
     def __copy_rerun_system_test_script(self) -> None:
-        """Copy tools/tests/rerun-system-test.sh into the run directory for artifact replay."""
+        """Copy tests/rerun-system-test.sh into the run directory for artifact replay."""
         rerun_src = PRECICE_TESTS_DIR / "rerun-system-test.sh"
         if not rerun_src.is_file():
             raise FileNotFoundError(
