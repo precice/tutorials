@@ -35,7 +35,7 @@ cases:
     participant: Fluid
     directory: ./fluid-rust
     run: ./run.sh
-    component: bare
+    component: rust-bindings
 
   solid-cpp:
     participant: Solid
@@ -65,4 +65,4 @@ cases:
     participant: Solid
     directory: ./solid-rust
     run: ./run.sh
-    component: bare
+    component: rust-bindings

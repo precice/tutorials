@@ -134,6 +134,26 @@ RUN git clone https://github.com/precice/python-bindings.git python-bindings && 
 ### end of python_bindings stage ###
 
 
+FROM precice AS rust_bindings
+ARG RUST_BINDINGS_PR
+ARG RUST_BINDINGS_REF
+
+USER root
+RUN apt-get -qq update && \
+    apt-get -qq install rustup
+
+USER precice
+WORKDIR /home/precice
+
+RUN rustup default stable && \
+    git clone https://github.com/precice/rust-bindings.git rust-bindings && \
+    cd rust-bindings && \
+    if [ -n "${RUST_BINDINGS_PR}" ]; then git fetch origin pull/${RUST_BINDINGS_PR}/head; fi && \
+    git checkout ${RUST_BINDINGS_REF} && \
+    cargo build
+### end of rust_bindings stage ###
+
+
 FROM precice AS micro_manager
 ARG MICRO_MANAGER_REF
 
