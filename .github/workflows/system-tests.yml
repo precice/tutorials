@@ -29,7 +29,7 @@ jobs:
       run: |
         echo "Initiated by: ${{ github.actor }}"
         echo "Test suites: ${{ inputs.suites}}"
-        echo "System tests branch (tools/): ${{ inputs.system_tests_branch }}"
+        echo "System tests branch (tests/): ${{ inputs.system_tests_branch }}"
         echo "System tests log level: ${{ inputs.log_level }}"
         echo "Uploading the runs folder on success: ${{ inputs.upload_artifacts }}"
         echo "Running the following command inside tutorials/tests/:"
@@ -41,7 +41,7 @@ jobs:
           echo "Job inputs:"
           echo "- Initiated by: @${{ github.actor }}"
           echo "- Test suites: \`${{ inputs.suites}}\`"
-          echo "- System tests branch (\`tools/\`): [\`${{ inputs.system_tests_branch }}\`](https://github.com/precice/tutorials/tree/${{ inputs.system_tests_branch }})"
+          echo "- System tests branch (\`tests/\`): [\`${{ inputs.system_tests_branch }}\`](https://github.com/precice/tutorials/tree/${{ inputs.system_tests_branch }})"
           echo "- System tests log level: \`${{ inputs.log_level }}\`"
           echo "- Uploading the runs folder on success: \`${{ inputs.upload_artifacts }}\`"
           echo ""
