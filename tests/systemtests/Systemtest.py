@@ -7,7 +7,7 @@ from jinja2 import Environment, FileSystemLoader
 from dataclasses import dataclass, field
 import shutil
 from pathlib import Path
-from paths import PRECICE_REL_OUTPUT_DIR, PRECICE_TOOLS_DIR, PRECICE_REL_REFERENCE_DIR, PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
+from paths import PRECICE_REL_OUTPUT_DIR, PRECICE_REL_REFERENCE_DIR, PRECICE_TESTS_DIR, PRECICE_TUTORIAL_DIR
 
 from metadata_parser.metdata import Tutorial, CaseCombination, Case, ReferenceResult
 from .SystemtestArguments import SystemtestArguments
@@ -333,8 +333,8 @@ class Systemtest:
 
         def render_service_template_per_case(case: Case, params_to_use: Dict[str, str]) -> str:
             # Inside the individual system test directory (`self.system_test_dir`)
-            # we copy a full `tools/` tree into the parent run directory
-            # (see __copy_tools). From the point of view of the system test
+            # we copy a full `tests/` tree into the parent run directory
+            # (see __copy_tests). From the point of view of the system test
             # directory we therefore need to go one level up to reach the
             # shared `tests/` folder:
             #   <run_directory>/tests/dockerfiles/<PLATFORM>
@@ -531,15 +531,15 @@ class Systemtest:
                 file.write(ref_requested)
             self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR, self.tutorial.path, current_ref)
 
-    def __copy_tools(self, run_directory: Path):
+    def __copy_tests(self, run_directory: Path):
         destination = run_directory
-        src = PRECICE_TOOLS_DIR
+        src = PRECICE_TESTS_DIR
         try:
             shutil.copytree(src, destination)
         except FileExistsError as e:
-            logging.debug(f"Tools directory has already been copied to the workspace - skipping.")
+            logging.debug(f"Tests directory has already been copied to the workspace - skipping.")
         except Exception as e:
-            logging.warning(f"Something went wrong while copying the tools directory to the workspace: {e}")
+            logging.warning(f"Something went wrong while copying the tests directory to the workspace: {e}")
 
     def __put_gitignore(self, run_directory: Path):
         # Create the .gitignore file with a single asterisk
@@ -1062,7 +1062,7 @@ class Systemtest:
         if not self._run_hook('run-before', self.run_before):
             raise RuntimeError(f"run-before hook failed for {self}")
         self.__apply_max_time_override()
-        self.__copy_tools(run_directory)
+        self.__copy_tests(run_directory)
         self.__put_gitignore(run_directory)
         host_uid, host_gid = self.__get_uid_gid()
         self.params_to_use['PRECICE_UID'] = host_uid

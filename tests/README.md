@@ -130,7 +130,7 @@ When a system test fails in CI, download the **full** artifact:
 
 ```text
 runs/
-├── tools/                              # Dockerfiles and helpers (shared)
+├── tests/                              # Dockerfiles and helpers (shared)
 └── <tutorial>_<cases>_<timestamp>/     # one folder per system test
     ├── docker-compose.tutorial.yaml
     ├── docker-compose.field_compare.yaml   # written at build time when compare is configured
@@ -143,7 +143,7 @@ runs/
 
 To re-run one test locally:
 
-1. Extract the zip and keep the `runs/` layout (the test folder needs the sibling `tools/` directory).
+1. Extract the zip and keep the `runs/` layout (the test folder needs the sibling `tests/` directory).
 2. `cd` into the test folder.
 3. Run `./rerun-system-test.sh` (or `sh rerun-system-test.sh`).
 
