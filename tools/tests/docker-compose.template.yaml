@@ -15,6 +15,7 @@ services:
       sed -i 's|</log>|<sink type=\"file\" output=\"precice-debug.log\" filter=\"%Severity% >= debug and %Rank% = 0\" enabled=\"true\" /></log>|g' precice-config.xml &&
       sed -i 's%</participant>%<export:vtu directory=\"../{{precice_output_folder}}\" /> </participant>%g' precice-config.xml &&
       sed -i 's|m2n:sockets |m2n:sockets network=\"eth0\" |g' precice-config.xml &&
+      sed -i 's|Pkg.add(\"PreCICE\")|Pkg.add(url=\"https://github.com/precice/PreCICE.jl.git\",rev=\"{{build_arguments.JULIA_BINDINGS_REF}}\")|g' $(grep -r --include run.sh 'Pkg.add(\"PreCICE\")' -l .) &&
       echo -e '\ngit+https://github.com/precice/fmi-runner@{{build_arguments.FMI_RUNNER_REF}}' | tee -a $(grep -r --include requirements.txt 'fmiprecice' -l .) > /dev/null &&
       echo -e '\ngit+https://github.com/precice/micro-manager.git@{{build_arguments.MICRO_MANAGER_REF}}' | tee -a $(grep -r --include requirements.txt 'micro-manager-precice' -l .) > /dev/null &&
       echo -e '\ngit+https://github.com/precice/fenicsx-adapter.git@{{build_arguments.FENICSX_ADAPTER_REF}}' | tee -a $(grep -r --include requirements.txt 'fenicsxprecice' -l .) > /dev/null &&
