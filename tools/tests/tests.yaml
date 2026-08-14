@@ -532,6 +532,13 @@ test_suites:
 
   resonant-circuit:
     tutorials:
+      - &resonant-circuit_capacitor-julia_coil-julia
+        path: resonant-circuit
+        case_combination:
+          - capacitor-julia
+          - coil-julia
+        timeout: 900
+        reference_result: ./resonant-circuit/reference-results/capacitor-julia_coil-julia.tar.gz
       - &resonant-circuit_capacitor-python_coil-python
         path: resonant-circuit
         case_combination:
@@ -745,6 +752,7 @@ test_suites:
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *perpendicular-flap_fluid-nutils_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-nutils
+      - *resonant-circuit_capacitor-julia_coil-julia
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
       - *two-scale-heat-conduction_macro-nutils_micro-nutils
 
@@ -890,6 +898,10 @@ test_suites:
     external:
       - *partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
       - *partitioned-heat-conduction-robin_left-openfoam_right-openfoam
+
+  julia-bindings:
+    tutorials:
+      - *resonant-circuit_capacitor-julia_coil-julia
 
   python-bindings:
     tutorials:

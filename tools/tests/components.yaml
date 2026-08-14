@@ -166,6 +166,23 @@ fmi-runner:
       repository: https://github.com/precice/fmi-runner
       default: "main"
 
+julia-bindings:
+  template: component-templates/julia-bindings.yaml
+  build_arguments:
+    PLATFORM:
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PRESET:
+      default: "production-audit"
+    TUTORIALS_REF:
+      repository: https://github.com/precice/tutorials
+      default: "develop"
+    JULIA_BINDINGS_REF:
+      repository: https://github.com/precice/PreCICE.jl
+      default: "develop"
+
 mercurydpm-adapter:
   template: component-templates/mercurydpm-adapter.yaml
   build_arguments:
