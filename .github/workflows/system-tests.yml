@@ -78,7 +78,7 @@ jobs:
         pip install --user -r tests/requirements.txt
     - name: Run tests
       run: |
-        cd tools/tests
+        cd tests
         python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log_level=${{ inputs.log_level}}
         cd ../../
     - name: Archive system test logs

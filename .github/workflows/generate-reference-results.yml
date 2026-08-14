@@ -80,7 +80,7 @@ jobs:
         docker system prune --all --force
     - name: Run tests
       run: |
-        cd tools/tests
+        cd tests
         SUITES_ARGS=()
         if [ -n "${{ inputs.suites }}" ]; then
           SUITES_ARGS+=(--suites "${{ inputs.suites }}")
