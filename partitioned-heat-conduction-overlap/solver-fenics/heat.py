@@ -23,7 +23,7 @@
 # The alternating Schwarz method is applied in the overlap domain where $x \in \left[1-\delta, 1+\delta\right]$.
 
 from __future__ import print_function, division
-from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, ds, interpolate
+from fenics import Function, FunctionSpace, Expression, Constant, DirichletBC, TrialFunction, TestFunction, File, solve, lhs, rhs, grad, dot, dx, interpolate
 from fenics import SubDomain, Point, RectangleMesh, near, Function, Expression
 from fenicsprecice import Adapter
 from errorcomputation import compute_errors
@@ -31,7 +31,6 @@ import argparse
 import numpy as np
 from dolfin import dot
 from enum import Enum
-import sys
 
 
 class Participant(Enum):

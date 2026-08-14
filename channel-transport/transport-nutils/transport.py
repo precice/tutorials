@@ -6,11 +6,9 @@
 
 from nutils import function, mesh, cli, solver, export
 import treelog as log
-import argparse
 import numpy as np
 import json
 import precice
-from mpi4py import MPI
 
 
 def reinitialize_namespace(domain, geom):

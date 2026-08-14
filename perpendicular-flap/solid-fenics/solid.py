@@ -7,12 +7,9 @@ See also:
 
 # Import required libs
 from fenics import Constant, Function, AutoSubDomain, RectangleMesh, VectorFunctionSpace, interpolate, \
-    TrialFunction, TestFunction, Point, Expression, DirichletBC, project, \
-    Identity, inner, dx, ds, sym, grad, div, lhs, rhs, dot, File, solve, assemble_system
+    TrialFunction, TestFunction, Point, Expression, DirichletBC, Identity, inner, dx, ds, sym, grad, div, lhs, rhs, dot, File, solve, assemble_system
 import numpy as np
-import matplotlib.pyplot as plt
 from fenicsprecice import Adapter
-from enum import Enum
 
 
 # define the two kinds of boundary: clamped and coupling Neumann Boundary
