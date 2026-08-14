@@ -266,7 +266,7 @@ rust-bindings:
       default: "develop"
     RUST_BINDINGS_REF:
       repository: https://github.com/precice/rust-bindings
-      default: "develop"
+      default: "main"
 
 solids4foam:
   repository: https://github.com/solids4foam/solids4foam
