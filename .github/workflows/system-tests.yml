@@ -98,3 +98,11 @@ jobs:
         name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_full
         path: |
           runs/*
+    - name: Notify maintainers
+      if: ${{ failure() }}
+      uses: precice/notify-action@v1
+      with:
+        homeserver: ${{ vars.MATRIX_BOT_HOMESERVER }}
+        login: ${{ vars.MATRIX_BOT_LOGIN }}
+        password: ${{ secrets.MATRIX_BOT_PASSWORD }}
+        room_id: ${{ vars.MATRIX_BOT_ROOMID }}
