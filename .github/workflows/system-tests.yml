@@ -21,6 +21,10 @@ on:
           description: 'TRUE or FALSE (FALSE -> Upload only when the workflow fails)'
           default: 'TRUE'
           type: string
+    secrets:
+      MATRIX_BOT_PASSWORD:
+        required: true
+
 jobs:
   run_system_tests:
     runs-on: [self-hosted, linux, x64, precice-tests-vm]
