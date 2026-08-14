@@ -381,7 +381,7 @@ class Systemtest:
             # absolute – it will be resolved relative to the system test
             # directory.
             'dockerfile_context': (
-                Path("..") / "tools" / "tests" / "dockerfiles" / Path(self.params_to_use.get("PLATFORM"))
+                Path("..") / "tests" / "dockerfiles" / Path(self.params_to_use.get("PLATFORM"))
             ),
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
         }
@@ -404,7 +404,7 @@ class Systemtest:
             # absolute – it will be resolved relative to the system test
             # directory.
             'dockerfile_context': (
-                Path("..") / "tools" / "tests" / "dockerfiles" / Path(self.params_to_use.get("PLATFORM"))
+                Path("..") / "tests" / "dockerfiles" / Path(self.params_to_use.get("PLATFORM"))
             ),
         }
         jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
@@ -532,7 +532,7 @@ class Systemtest:
             self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR, self.tutorial.path, current_ref)
 
     def __copy_tools(self, run_directory: Path):
-        destination = run_directory / "tools"
+        destination = run_directory
         src = PRECICE_TOOLS_DIR
         try:
             shutil.copytree(src, destination)
