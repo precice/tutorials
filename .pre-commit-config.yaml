@@ -31,22 +31,22 @@ repos:
     - id: check-image-naming
       name: check image names
       language: python
-      entry: tools/linting/check-image-names.py
+      entry: .dev-tools/linting/check-image-names.py
       files: ".*/images/.*"
     - id: check-size
       name: check sizes
       language: script
-      entry: tools/linting/check-size.sh
+      entry: .dev-tools/linting/check-size.sh
       pass_filenames: false
     - id: check-names
       name: check file names
       language: script
-      entry: tools/linting/check-filenames-permalinks.sh
+      entry: .dev-tools/linting/check-filenames-permalinks.sh
       pass_filenames: false
     - id: check-links-to-precice
       name: check links to precice.org
       language: script
-      entry: tools/linting/check-links-to-precice.sh
+      entry: .dev-tools/linting/check-links-to-precice.sh
       types_or: ["markdown", "html"]
 - repo: https://github.com/rhysd/actionlint
   rev: v1.7.12

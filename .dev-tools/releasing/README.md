@@ -18,20 +18,20 @@ Next to each `requirements.txt`, a sibling `requirements-reference.txt` records 
 pip install -r requirements-reference.txt
 ```
 
-This tool lives under `tools/releasing/` and depends on:
+This tool lives under `.dev-tools/releasing/` and depends on:
 
 ```bash
-pip install -r tools/releasing/requirements.txt
+pip install -r .dev-tools/releasing/requirements.txt
 ```
 
 Update reference files after changing `requirements.txt` files. By default, only files whose resolved package pins changed are rewritten (timestamps alone do not create a diff). Use `--all` to force a full refresh, or pass a path to limit the update to one directory:
 
 ```bash
-python3 tools/releasing/update-requirements-reference.py
-python3 tools/releasing/update-requirements-reference.py path/to/participant
-python3 tools/releasing/update-requirements-reference.py --all
-python3 tools/releasing/update-requirements-reference.py --check
-python3 tools/releasing/update-requirements-reference.py --check --fail-on-outdated
+python3 .dev-tools/releasing/update-requirements-reference.py
+python3 .dev-tools/releasing/update-requirements-reference.py path/to/participant
+python3 .dev-tools/releasing/update-requirements-reference.py --all
+python3 .dev-tools/releasing/update-requirements-reference.py --check
+python3 .dev-tools/releasing/update-requirements-reference.py --check --fail-on-outdated
 ```
 
 With `--check`, the tool fails when a sibling `requirements-reference.txt` is missing, and warns when pins are outdated. The `--fail-on-outdated` option turns outdated pins into errors (used for release PRs to `master`).
