@@ -97,7 +97,7 @@
       from="Solid-to-Fluid-Outer" />
   </participant>
 
-  <m2n:sockets connector="Fluid-Inner" acceptor="Solid" exchange-directory=".." />
+  <m2n:sockets acceptor="Solid" connector="Fluid-Inner" exchange-directory=".." />
 
   <coupling-scheme:parallel-explicit>
     <time-window-size value="1" />
@@ -129,7 +129,7 @@
       initialize="yes" />
   </coupling-scheme:parallel-explicit>
 
-  <m2n:sockets connector="Fluid-Outer" acceptor="Solid" exchange-directory=".." />
+  <m2n:sockets acceptor="Solid" connector="Fluid-Outer" exchange-directory=".." />
 
   <coupling-scheme:parallel-explicit>
     <time-window-size value="1" />
