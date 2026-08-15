@@ -319,17 +319,14 @@ class Systemtest:
         Returns:
             A dictionary of rendered services per case name.
         """
-        try:
-            plaform_requested = self.params_to_use.get("PLATFORM")
-        except Exception as exc:
-            raise KeyError("Please specify a PLATFORM argument") from exc
+        platform_requested = self.params_to_use.get("PLATFORM")
 
         # Use an absolute path here only for validation that the requested
         # dockerfile context exists on the machine running the system tests.
-        self.dockerfile_context = PRECICE_TESTS_DIR / "dockerfiles" / Path(plaform_requested)
+        self.dockerfile_context = PRECICE_TESTS_DIR / "dockerfiles" / Path(platform_requested)
         if not self.dockerfile_context.exists():
             raise ValueError(
-                f"The path {self.dockerfile_context.resolve()} resulting from argument PLATFORM={plaform_requested} could not be found in the system")
+                f"The path {self.dockerfile_context.resolve()} resulting from argument PLATFORM={platform_requested} could not be found in the system")
 
         def render_service_template_per_case(case: Case, params_to_use: Dict[str, str]) -> str:
             # Inside the individual system test directory (`self.system_test_dir`)
@@ -340,7 +337,7 @@ class Systemtest:
             #   <run_directory>/tests/dockerfiles/<PLATFORM>
             #   ^-------------^ parent of self.system_test_dir
             dockerfile_context_relative = (
-                Path("..") / "tests" / "dockerfiles" / Path(plaform_requested)
+                Path("..") / "tests" / "dockerfiles" / Path(platform_requested)
             )
 
             render_dict = {
