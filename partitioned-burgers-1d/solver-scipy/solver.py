@@ -10,7 +10,6 @@ The two participants:
 # | bc_left |                          <u_interface>     |    <u_interface>                        | bc_right |
 """
 import numpy as np
-from scipy.integrate import solve_ivp
 from scipy.sparse import diags, identity
 from scipy.optimize import root
 import precice

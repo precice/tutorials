@@ -319,28 +319,25 @@ class Systemtest:
         Returns:
             A dictionary of rendered services per case name.
         """
-        try:
-            plaform_requested = self.params_to_use.get("PLATFORM")
-        except Exception as exc:
-            raise KeyError("Please specify a PLATFORM argument") from exc
+        platform_requested = self.params_to_use.get("PLATFORM")
 
         # Use an absolute path here only for validation that the requested
         # dockerfile context exists on the machine running the system tests.
-        self.dockerfile_context = PRECICE_TESTS_DIR / "dockerfiles" / Path(plaform_requested)
+        self.dockerfile_context = PRECICE_TESTS_DIR / "dockerfiles" / Path(platform_requested)
         if not self.dockerfile_context.exists():
             raise ValueError(
-                f"The path {self.dockerfile_context.resolve()} resulting from argument PLATFORM={plaform_requested} could not be found in the system")
+                f"The path {self.dockerfile_context.resolve()} resulting from argument PLATFORM={platform_requested} could not be found in the system")
 
         def render_service_template_per_case(case: Case, params_to_use: Dict[str, str]) -> str:
             # Inside the individual system test directory (`self.system_test_dir`)
-            # we copy a full `tools/` tree into the parent run directory
-            # (see __copy_tools). From the point of view of the system test
+            # we copy a full `tests/` tree into the parent run directory
+            # (see __copy_tools_and_tests). From the point of view of the system test
             # directory we therefore need to go one level up to reach the
-            # shared `tools/` folder:
-            #   <run_directory>/tools/tests/dockerfiles/<PLATFORM>
+            # shared `tests/` folder:
+            #   <run_directory>/tests/dockerfiles/<PLATFORM>
             #   ^-------------^ parent of self.system_test_dir
             dockerfile_context_relative = (
-                Path("..") / "tools" / "tests" / "dockerfiles" / Path(plaform_requested)
+                Path("..") / "tests" / "dockerfiles" / Path(platform_requested)
             )
 
             render_dict = {
@@ -381,7 +378,7 @@ class Systemtest:
             # absolute – it will be resolved relative to the system test
             # directory.
             'dockerfile_context': (
-                Path("..") / "tools" / "tests" / "dockerfiles" / Path(self.params_to_use.get("PLATFORM"))
+                Path("..") / "tests" / "dockerfiles" / Path(self.params_to_use.get("PLATFORM"))
             ),
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
         }
@@ -399,6 +396,13 @@ class Systemtest:
             'precice_output_folder': PRECICE_REL_OUTPUT_DIR,
             'reference_output_folder': PRECICE_REL_REFERENCE_DIR + "/" + self.reference_result.path.name.replace(".tar.gz", ""),
             'tolerance': self.tolerance,
+            # The dockerfile_context value inside the templates is only
+            # used as a build context path and does not need to be
+            # absolute – it will be resolved relative to the system test
+            # directory.
+            'dockerfile_context': (
+                Path("..") / "tests" / "dockerfiles" / Path(self.params_to_use.get("PLATFORM"))
+            ),
         }
         jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
         template = jinja_env.get_template(
@@ -524,15 +528,26 @@ class Systemtest:
                 file.write(ref_requested)
             self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR, self.tutorial.path, current_ref)
 
-    def __copy_tools(self, run_directory: Path):
-        destination = run_directory / "tools"
+    def __copy_tools_and_tests(self, run_directory: Path):
         src = PRECICE_TOOLS_DIR
+        destination = run_directory / "tools"
+        logging.debug(f"Copying tools from {src} to {destination}")
         try:
             shutil.copytree(src, destination)
         except FileExistsError as e:
             logging.debug(f"Tools directory has already been copied to the workspace - skipping.")
         except Exception as e:
             logging.warning(f"Something went wrong while copying the tools directory to the workspace: {e}")
+
+        src = PRECICE_TESTS_DIR
+        destination = run_directory / "tests"
+        logging.debug(f"Copying tests from {src} to {destination}")
+        try:
+            shutil.copytree(src, destination)
+        except FileExistsError as e:
+            logging.debug(f"Tests directory has already been copied to the workspace - skipping.")
+        except Exception as e:
+            logging.warning(f"Something went wrong while copying the tests directory to the workspace: {e}")
 
     def __put_gitignore(self, run_directory: Path):
         # Create the .gitignore file with a single asterisk
@@ -791,7 +806,7 @@ class Systemtest:
             )
 
     def __copy_rerun_system_test_script(self) -> None:
-        """Copy tools/tests/rerun-system-test.sh into the run directory for artifact replay."""
+        """Copy tests/rerun-system-test.sh into the run directory for artifact replay."""
         rerun_src = PRECICE_TESTS_DIR / "rerun-system-test.sh"
         if not rerun_src.is_file():
             raise FileNotFoundError(
@@ -1055,7 +1070,7 @@ class Systemtest:
         if not self._run_hook('run-before', self.run_before):
             raise RuntimeError(f"run-before hook failed for {self}")
         self.__apply_max_time_override()
-        self.__copy_tools(run_directory)
+        self.__copy_tools_and_tests(run_directory)
         self.__put_gitignore(run_directory)
         host_uid, host_gid = self.__get_uid_gid()
         self.params_to_use['PRECICE_UID'] = host_uid

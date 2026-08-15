@@ -29,7 +29,7 @@ from mpi4py import MPI
 import basix.ufl
 from petsc4py import PETSc
 import ufl
-from dolfinx import fem, io, mesh as msh, geometry
+from dolfinx import fem, io, geometry
 from dolfinx.fem.petsc import assemble_matrix, assemble_vector, apply_lifting, create_vector, set_bc
 import basix
 from fenicsxprecice import Adapter, CouplingMesh

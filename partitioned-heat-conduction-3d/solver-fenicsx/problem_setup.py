@@ -2,11 +2,8 @@
 Problem setup for partitioned-heat-conduction/fenicsx tutorial
 """
 from dolfinx.io import gmsh as gmshio
-from dolfinx.mesh import DiagonalType, create_box
-import dolfinx.mesh
 from my_enums import DomainPart
 import numpy as np
-from mpi4py import MPI
 import gmsh
 
 

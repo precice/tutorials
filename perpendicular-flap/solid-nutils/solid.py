@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-from nutils import mesh, function, solver, export, cli
+from nutils import mesh, function, solver, cli
 from nutils.expression_v2 import Namespace
 import numpy
 import treelog

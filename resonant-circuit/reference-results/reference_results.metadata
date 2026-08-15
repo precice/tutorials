@@ -11,7 +11,7 @@ We also include some information on the machine used to generate them
 
 | name | time | sha256 |
 |------|------|-------|
-| capacitor-python_coil-python.tar.gz | 2026-05-30 14:00:24 | 5f86feb2df61aff94c0bada250a8574f65b671d88af0431683e19e2f1730991e |
+| capacitor-julia_coil-julia.tar.gz | 2026-07-18 22:56:32 | 9883bd675df44bc9f5a0b15096ca559d9a85e616893a1b8c4b9d50b0a92a0a58 |
 
 ## List of arguments used to generate the files
 
@@ -19,20 +19,26 @@ We also include some information on the machine used to generate them
 |------|------|
 | PLATFORM | ubuntu_2404 |
 | CALCULIX_VERSION | 2.20 |
-| DUNE_VERSION | 2.9 |
 | DUMUX_VERSION | 3.7 |
+| DUNE_VERSION_DUMUX | 2.9 |
+| DUNE_VERSION_DUNE | 2.9 |
 | OPENFOAM_EXECUTABLE | openfoam2512 |
 | SU2_VERSION | 7.5.1 |
-| FENICS_ADAPTER_REF | v2.3.0 |
+| ASTE_REF | 4e32a4f |
 | CALCULIX_ADAPTER_REF | v2.20.1 |
 | DEALII_ADAPTER_REF | a421d92 |
+| DUNE_ADAPTER_REF | 778d3bb |
 | DUMUX_ADAPTER_REF | 3f3f54f |
-| MICRO_MANAGER_REF | v0.10.1 |
+| FENICS_ADAPTER_REF | v2.3.0 |
+| FENICSX_ADAPTER_REF | v1.0.1 |
+| FMI_RUNNER_REF | v0.2.1 |
+| JULIA_BINDINGS_REF | 6a9fc24b6f9b6f6efd60cca76ba07ef82b0aafd1 |
+| MICRO_MANAGER_REF | bf5ea7b |
 | OPENFOAM_ADAPTER_REF | 2c3062c |
-| PRECICE_REF | v3.4.1 |
+| PRECICE_REF | b770460f2447b94da430086085d6b424e7c073e9 |
 | PYTHON_BINDINGS_REF | v3.4.0 |
 | SU2_ADAPTER_REF | 5abe79b |
-| TUTORIALS_REF | 89c82d5 |
+| TUTORIALS_REF | 53f45b5f17e831ff690a22b3e34cde9e3c1bb888 |
 | PRECICE_PRESET | production-audit |
 | PRECICE_UID | 1003 |
 | PRECICE_GID | 1003 |
@@ -40,7 +46,7 @@ We also include some information on the machine used to generate them
 
 ### uname -a
 
-Linux precice-tests 5.15.0-179-generic #189-Ubuntu SMP Tue May 5 18:20:56 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Linux precice-tests 5.15.0-185-generic #195-Ubuntu SMP Fri Jun 19 17:11:50 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
 
 
 ### lscpu
