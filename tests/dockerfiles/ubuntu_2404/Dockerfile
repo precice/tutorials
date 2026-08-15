@@ -99,6 +99,21 @@ ENV CMAKE_PREFIX_PATH="/home/precice/.local"
 ### end of precice stage ###
 
 
+FROM precice AS julia_bindings
+ARG JULIA_BINDINGS_REF
+
+USER root
+RUN apt-get -qq update && \
+    apt-get -qq install pipx
+
+USER precice
+WORKDIR /home/precice
+
+RUN pipx install jill && \
+    jill install --confirm
+### end of julia_bindings stage ###
+
+
 FROM precice AS python_bindings
 ARG PYTHON_BINDINGS_PR
 ARG PYTHON_BINDINGS_REF
@@ -117,6 +132,26 @@ RUN git clone https://github.com/precice/python-bindings.git python-bindings && 
     pip3 install . && \
     pip3 install matplotlib 
 ### end of python_bindings stage ###
+
+
+FROM precice AS rust_bindings
+ARG RUST_BINDINGS_PR
+ARG RUST_BINDINGS_REF
+
+USER root
+RUN apt-get -qq update && \
+    apt-get -qq install rustup
+
+USER precice
+WORKDIR /home/precice
+
+RUN rustup default stable && \
+    git clone https://github.com/precice/rust-bindings.git rust-bindings && \
+    cd rust-bindings && \
+    if [ -n "${RUST_BINDINGS_PR}" ]; then git fetch origin pull/${RUST_BINDINGS_PR}/head; fi && \
+    git checkout ${RUST_BINDINGS_REF} && \
+    cargo build
+### end of rust_bindings stage ###
 
 
 FROM precice AS micro_manager
@@ -569,7 +604,7 @@ RUN cd /home/precice/aste && \
 WORKDIR /home/precice
 
 
-FROM solids4foam/solids4foam:v2.3-openfoam-v2412-latest as solids4foam
+FROM solids4foam/solids4foam:v2.3-openfoam-v2412-latest AS solids4foam
 
 ARG PRECICE_UID=1000
 ARG PRECICE_GID=1000
@@ -626,3 +661,6 @@ RUN git clone https://github.com/precice/openfoam-adapter.git &&\
     if [ -n "${OPENFOAM_ADAPTER_PR}" ]; then git fetch origin pull/${OPENFOAM_ADAPTER_PR}/head; fi && \
     git checkout ${OPENFOAM_ADAPTER_REF} && \
     /usr/bin/openfoam2412 ./Allwmake -j $(nproc)
+
+FROM python:3.14 AS fieldcompare
+RUN pip install fieldcompare[all]==0.5.0

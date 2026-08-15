@@ -7,11 +7,11 @@ participants:
   - Coil
 
 cases:
-  # capacitor-julia:
-  #   participant: Capacitor
-  #   directory: ./capacitor-julia
-  #   run: ./run.sh
-  #   component: julia-bindings
+  capacitor-julia:
+    participant: Capacitor
+    directory: ./capacitor-julia
+    run: ./run.sh
+    component: julia-bindings
   
   # capacitor-matlab:
   #   participant: Capacitor
@@ -25,11 +25,11 @@ cases:
     run: ./run.sh
     component: python-bindings
   
-  # coil-julia:
-  #   participant: Coil
-  #   directory: ./coil-julia
-  #   run: ./run.sh
-  #   component: julia-bindings
+  coil-julia:
+    participant: Coil
+    directory: ./coil-julia
+    run: ./run.sh
+    component: julia-bindings
   
   # coil-matlab:
   #   participant: Coil

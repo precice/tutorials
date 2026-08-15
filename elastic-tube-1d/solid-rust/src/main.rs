@@ -3,14 +3,14 @@ use std::process::ExitCode;
 
 mod solver;
 
-fn main() -> ExitCode {
+fn main() -> Result<ExitCode, precice::Error> {
     println!("Starting Solid Solver...");
 
     let args: Vec<_> = env::args().collect();
 
     if args.len() != 2 {
         println!("Fluid: Usage: {} <configurationFileName>", args[0]);
-        return ExitCode::from(1);
+        return Ok(ExitCode::from(1));
     }
 
     let config = &args[1];
@@ -19,14 +19,14 @@ fn main() -> ExitCode {
     const CHUNK_SIZE: usize = DOMAIN_SIZE + 1;
     const TUBE_LENGTH: f64 = 10.0;
 
-    let mut participant = precice::Participant::new("Solid", config, 0, 1);
+    let mut participant = precice::Participant::new("Solid", config, 0, 1)?;
 
     println!("preCICE configured...");
 
     let mesh_name = "Solid-Nodes-Mesh";
-    let dimensions = participant.get_mesh_dimensions(mesh_name);
-    assert!(participant.get_data_dimensions(mesh_name, "CrossSectionLength") == 1);
-    assert!(participant.get_data_dimensions(mesh_name, "Pressure") == 1);
+    let dimensions = participant.get_mesh_dimensions(mesh_name)?;
+    assert!(participant.get_data_dimensions(mesh_name, "CrossSectionLength")? == 1);
+    assert!(participant.get_data_dimensions(mesh_name, "Pressure")? == 1);
 
     let mut pressure: Vec<f64> = vec![0.0; CHUNK_SIZE];
     let mut cross_section_length: Vec<f64> = vec![1.0; CHUNK_SIZE];
@@ -43,30 +43,30 @@ fn main() -> ExitCode {
 
     let vertex_ids = {
         let mut ids = vec![-1; CHUNK_SIZE];
-        participant.set_mesh_vertices(mesh_name, &grid[..], &mut ids[..]);
+        participant.set_mesh_vertices(mesh_name, &grid[..], &mut ids[..])?;
         ids
     };
 
-    if participant.requires_initial_data() {
+    if participant.requires_initial_data()? {
         participant.write_data(
             mesh_name,
             "CrossSectionLength",
             &vertex_ids[..],
             &cross_section_length[..],
-        );
+        )?;
     }
 
     println!("Initializing preCICE...");
 
-    participant.initialize();
+    participant.initialize()?;
 
     let mut t = 0.0;
-    while participant.is_coupling_ongoing() {
-        if participant.requires_writing_checkpoint() {
+    while participant.is_coupling_ongoing()? {
+        if participant.requires_writing_checkpoint()? {
             // no nothing
         }
 
-        let dt = participant.get_max_time_step_size();
+        let dt = participant.get_max_time_step_size()?;
 
         participant.read_data(
             mesh_name,
@@ -74,7 +74,7 @@ fn main() -> ExitCode {
             &vertex_ids[..],
             dt,
             &mut pressure[..],
-        );
+        )?;
 
         solver::solid_compute_solution(&pressure, &mut cross_section_length);
 
@@ -83,11 +83,11 @@ fn main() -> ExitCode {
             "CrossSectionLength",
             &vertex_ids[..],
             &cross_section_length[..],
-        );
+        )?;
 
-        participant.advance(dt);
+        participant.advance(dt)?;
 
-        if participant.requires_reading_checkpoint() {
+        if participant.requires_reading_checkpoint()? {
             // i.e. fluid not yet converged
             // do nothing
         } else {
@@ -96,7 +96,7 @@ fn main() -> ExitCode {
     }
 
     println!("Exiting SolidSolver at t={}", t);
-    participant.finalize();
+    participant.finalize()?;
 
-    ExitCode::SUCCESS
+    Ok(ExitCode::SUCCESS)
 }

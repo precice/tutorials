@@ -20,7 +20,7 @@ The [System tests (manual)](https://github.com/precice/tutorials/actions/workflo
 
 On the workflow page, click `Run workflow`. The default values will execute the `release` test suite using the latest `develop` branches of every component. If you want to override the version of some component, specify it in the respective field. Commit hashes, branches, and tags are all accepted. Branches and tags will get automatically resolved to their current commit on GitHub before starting any test, and all tests will use the same version of any common component.
 
-The available test suites are found in [`tests.yaml`](https://github.com/precice/tutorials/blob/develop/tools/tests/tests.yaml) and common values are:
+The available test suites are found in [`tests.yaml`](https://github.com/precice/tutorials/blob/develop/tests/tests.yaml) and common values are:
 
 - `quickstart`, `elastic-tube-1d`, or any other tutorial (see [exceptions](https://github.com/precice/tutorials/issues/448))
 - `openfoam-adapter`, `micro-manager`, `fmi-runner`, or similar test cases involving the respective component
@@ -53,13 +53,13 @@ More arguments are available, for example:
 gh workflow run system-tests-manual.yml -f suites=release -f build_args="PLATFORM:ubuntu2404,PRECICE_REF:develop" -f log_level="DEBUG" --ref=develop
 ```
 
-The `build_args` override the defaults set in `tools/tests/components.yaml`.
+The `build_args` override the defaults set in `tests/components.yaml`.
 
 ### Running locally
 
 To run locally, you will need Docker, Docker Compose, and Python 3.
 
-Navigate into the directory `tools/tests/` of the tutorials, make a Python virtual environment, and install the dependencies:
+Navigate into the directory `tests/` of the tutorials, make a Python virtual environment, and install the dependencies:
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
@@ -102,13 +102,16 @@ When the tests fail at the results comparison step, this typically means that th
 - `diff-results/`: Numerical difference of the results in the two directories (computed with `fieldcompare dir --diff precice-exports/ reference/`). These are only present on failed comparisons.
 - `iterations-logs/`: The `precice-*-iterations.log` files of the test run. Only present in test cases using implicit coupling. The comparisons to references only take into account the file SHA-256 checksums.
 
-To reproduce the comparison locally, use the [same fieldcompare command](https://github.com/precice/tutorials/blob/develop/tools/tests/docker-compose.field_compare.template.yaml):
+To reproduce the comparison locally, use the [same fieldcompare command](https://github.com/precice/tutorials/blob/develop/tests/docker-compose.field_compare.template.yaml):
 
 ```bash
-fieldcompare dir precice-exports/ reference-results-unpacked/<case>/ \
+fieldcompare dir \
              --ignore-missing-reference-files \
+             --exclude-files .reference-results-metadata.md \
              --ignore-unsupported-file-formats \
-             -rtol 3e-7
+             -rtol 3e-7 \
+             precice-exports/ \
+             reference-results-unpacked/<case>/
 ```
 
 The default relative tolerance (`-rtol`) is `3e-7`. Per-test overrides are possible in `tests.yaml` (e.g., `tolerance: 1e-2`). Set `skip_compare: true` to skip the comparison step and only verify that the build and run steps succeed.
@@ -127,7 +130,7 @@ When a system test fails in CI, download the **full** artifact:
 
 ```text
 runs/
-├── tools/                              # Dockerfiles and helpers (shared)
+├── tests/                              # Dockerfiles and helpers (shared)
 └── <tutorial>_<cases>_<timestamp>/     # one folder per system test
     ├── docker-compose.tutorial.yaml
     ├── docker-compose.field_compare.yaml   # written at build time when compare is configured
@@ -140,7 +143,7 @@ runs/
 
 To re-run one test locally:
 
-1. Extract the zip and keep the `runs/` layout (the test folder needs the sibling `tools/` directory).
+1. Extract the zip and keep the `runs/` layout (the test folder needs the sibling `tests/` directory).
 2. `cd` into the test folder.
 3. Run `./rerun-system-test.sh` (or `sh rerun-system-test.sh`).
 
@@ -154,7 +157,7 @@ Fieldcompare requires reference results in the artifact. If not already unpacked
 
 ### Adding new tests
 
-Tests and test suites are defined in [`tests.yaml`](https://github.com/precice/tutorials/blob/develop/tools/tests/tests.yaml). By convention, every tutorial defines a test suite with the same name as its directory, and several test cases using combinations of the available participants. These test cases are later referenced by other test suites: these are typically the `release` and the test suites of different tested components.
+Tests and test suites are defined in [`tests.yaml`](https://github.com/precice/tutorials/blob/develop/tests/tests.yaml). By convention, every tutorial defines a test suite with the same name as its directory, and several test cases using combinations of the available participants. These test cases are later referenced by other test suites: these are typically the `release` and the test suites of different tested components.
 
 The available cases are listed in the `metadata.yaml` of each tutorial. To add a new tutorial case as a test, add it to `metadata.yaml` and then define a test using it. Include that test in the relevant test suites.
 
@@ -168,13 +171,17 @@ run-before: ./set-case.sh 1d3d
 
 You will need to define a reference results file. The reference results can and should be generated on GitHub using the [Generate reference results (manual)](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) workflow for the respective test suite. You might want to temporarily set the `selected` test suite for requesting results only for a subset of test cases.
 
-By default, the [Generate reference results (manual)](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) workflow uses `TUTORIALS_REF` from [`reference_versions.yaml`](https://github.com/precice/tutorials/blob/develop/tools/tests/reference_versions.yaml). For a feature branch, set Use tutorials from to `workflow branch`, or pass `TUTORIALS_REF` via `--build_args` (locally) or the optional `build_args` workflow input.
+By default, the [Generate reference results (manual)](https://github.com/precice/tutorials/actions/workflows/generate-reference-results-manual.yml) workflow uses `TUTORIALS_REF` from [`reference_versions.yaml`](https://github.com/precice/tutorials/blob/develop/tests/reference_versions.yaml). For a feature branch, set Use tutorials from to `workflow branch`, or pass `TUTORIALS_REF` via `--build_args` (locally) or the optional `build_args` workflow input.
 
 {% note %}
 The two options cannot be combined: defining any overrides to `reference_versions.yaml` will ignore the option to use the tutorials from the workflow branch.
 {% endnote %}
 
 The results will be added to a Git LFS, but you will need special push access: just use the aforementioned GitHub Actions workflow, instead.
+
+Each generated reference archive contains a `.reference-results-metadata.md` file
+inside its case directory. This file records the component versions and machine
+information used to generate that archive.
 
 #### External test sources
 
@@ -273,7 +280,7 @@ Metadata and workflow/script files:
   - `solid-openfoam/`
   - ...
   - `metadata.yml`: describes each case directory (which participant, which component, which script to run, ...)
-- `tools/tests/`
+- `tests/`
   - `component-templates/`: jinja2 templates for Docker Compose services for the components
     - `calculix-adapter.yaml`
     - `fenics-adapter.yaml`
@@ -284,13 +291,13 @@ Metadata and workflow/script files:
   - `docker-compose.template.yaml`: Describes how to prepare each test (Docker Compose service template)
   - `docker-compose.field_compare.template.yaml`: Describes how to compare results with fieldcompare (Docker Compose service template)
   - `components.yaml`: Declares the available components and their parameters/options
-  - `reference_results.metadata.template`: Template for reporting the versions used to generate the reference results
+  - `reference-results-metadata.md.template`: Template for reporting the versions and machine used to generate each reference results archive
   - `reference_versions.yaml`: List of arguments to use for generating the reference results
   - `tests.yaml`: Declares the available tests, grouped in test suites
 
 User-facing tools:
 
-- `tools/tests/`
+- `tests/`
   - `systemtests.py`: Executes the system tests, starting Docker Compose services of each required component (after building them), running each test, and comparing the results to reference results.
   - `print_test_suites.py`: Prints the available tests.
   - `print_metadata.py`: Prints the metadata of each tutorial that contains a `metadata.yaml` file.
@@ -301,7 +308,7 @@ User-facing tools:
 
 Implementation scripts:
 
-- `tools/tests/`
+- `tests/`
   - `systemtests.py`: Main entry point
   - `requirements.txt`: Dependencies (jinja2, pyyaml)
   - `metadata_parser/`: Reads the YAML files into Python objects (defines the schema)

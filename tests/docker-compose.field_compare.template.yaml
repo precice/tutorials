@@ -1,0 +1,13 @@
+services:
+  field-compare:
+    build: 
+      context: {{ dockerfile_context }}
+      target: fieldcompare
+    volumes:
+      - {{ run_directory }}:/runs
+    command: >
+      /bin/bash -c "fieldcompare dir \
+      --ignore-missing-reference-files --exclude-files .reference-results-metadata.md --ignore-unsupported-file-formats --diff \
+      -rtol {{ tolerance }} \
+      /runs/{{ tutorial_folder }}/{{ precice_output_folder }} \
+      /runs/{{ tutorial_folder }}/{{ reference_output_folder }}"

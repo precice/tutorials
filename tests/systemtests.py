@@ -4,7 +4,7 @@ from pathlib import Path
 from systemtests.SystemtestArguments import SystemtestArguments
 from systemtests.Systemtest import Systemtest, GLOBAL_TIMEOUT, DEFAULT_FIELDCOMPARE_RTOL, display_systemtestresults_as_table
 from systemtests.TestSuite import TestSuites
-from metadata_parser.metdata import Tutorials, Case
+from metadata_parser.metdata import Tutorials
 import logging
 import time
 import os

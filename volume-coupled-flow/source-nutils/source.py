@@ -1,11 +1,9 @@
 #! /usr/bin/env python3
 
 
-from nutils import function, mesh, cli, solver, export
-import treelog as log
+from nutils import function, mesh, cli
 import numpy as np
 import precice
-from mpi4py import MPI
 
 
 def main():

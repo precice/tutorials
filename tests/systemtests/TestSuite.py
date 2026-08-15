@@ -4,7 +4,6 @@ from typing import Optional, List, Dict
 from metadata_parser.metdata import (
     Tutorials,
     Tutorial,
-    Case,
     CaseCombination,
     ReferenceResult,
     Components,

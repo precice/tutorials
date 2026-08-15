@@ -3,10 +3,9 @@ Solid plate participant in flow-over-plate tutorial using FEniCS
 """
 
 from __future__ import print_function, division
-from fenics import Function, SubDomain, RectangleMesh, BoxMesh, FunctionSpace, VectorFunctionSpace, Point, \
-    Expression, Constant, DirichletBC, \
-    TrialFunction, TestFunction, File, solve, plot, lhs, rhs, grad, inner, dot, dx, ds, interpolate, project, \
-    near, MeshFunction, MPI
+from fenics import Function, SubDomain, RectangleMesh, FunctionSpace, VectorFunctionSpace, Point, \
+    Constant, DirichletBC, \
+    TrialFunction, TestFunction, File, solve, lhs, rhs, grad, inner, dot, dx, interpolate, near, MeshFunction, MPI
 from fenicsprecice import Adapter
 import numpy as np
 

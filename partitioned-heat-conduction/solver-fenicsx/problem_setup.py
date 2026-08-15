@@ -1,12 +1,11 @@
 """
 Problem setup for partitioned-heat-conduction/fenicsx tutorial
 """
-from dolfinx.mesh import DiagonalType, create_rectangle
+from dolfinx.mesh import create_rectangle
 import dolfinx.mesh
 import dolfinx.cpp
 from my_enums import DomainPart
 import numpy as np
-from mpi4py import MPI
 
 
 y_bottom, y_top = 0, 1
