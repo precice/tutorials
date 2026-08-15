@@ -532,8 +532,9 @@ class Systemtest:
             self._checkout_ref_in_subfolder(PRECICE_TUTORIAL_DIR, self.tutorial.path, current_ref)
 
     def __copy_tests(self, run_directory: Path):
-        destination = run_directory
+        destination = run_directory / "tests"
         src = PRECICE_TESTS_DIR
+        logging.info(f"src = {src}, destination = {destination}")
         try:
             shutil.copytree(src, destination)
         except FileExistsError as e:
