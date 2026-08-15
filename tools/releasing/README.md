@@ -1,5 +1,13 @@
 # Releasing helpers
 
+## Config visualization
+
+The `visualize-configs.sh` script iterates over all tutorial cases and updates the visualizations of the `precice-config.xml` files.
+
+Run it from the root tutorials directory in serial (`./visualize-configs.sh`) or in parallel (`./visualize-configs.sh -parallel`).
+
+If not already available, the script will install the `precice-config-visualizer` in a Python virtual environment.
+
 ## Python dependency reference files
 
 Each Python participant lists dependencies in its local `requirements.txt` using loose version ranges (for example `numpy >1, <2`, `pyprecice~=3.0`). Tutorial `run.sh` scripts install from these files as before.
