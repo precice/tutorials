@@ -14,7 +14,7 @@ services:
       cd '/runs/{{ tutorial_folder }}' && 
       sed -i 's|</log>|<sink type=\"file\" output=\"precice-debug.log\" filter=\"%Severity% >= debug and %Rank% = 0\" enabled=\"true\" /></log>|g' precice-config.xml &&
       sed -i 's%</participant>%<export:vtu directory=\"../{{precice_output_folder}}\" /> </participant>%g' precice-config.xml &&
-      sed -i 's|m2n:sockets |m2n:sockets network=\"eth0\" |g' precice-config.xml &&
+      sed -i 's|m2n:sockets acceptor|m2n:sockets network=\"eth0\" acceptor|g' precice-config.xml &&
       grep -r --include Cargo.toml '\"precice\" = \"3.2\"' -l . | xargs -r sed -i 's|\"precice\" = \"3.2\"|\"precice\" = { git = \"https://github.com/precice/rust-bindings\", rev = \"{{build_arguments.RUST_BINDINGS_REF}}\"}|g' &&
       grep -r --include run.sh 'Pkg.add(\"PreCICE\")' -l . | xargs -r  sed -i 's|Pkg.add(\"PreCICE\")|Pkg.add(url=\"https://github.com/precice/PreCICE.jl.git\",rev=\"{{build_arguments.JULIA_BINDINGS_REF}}\")|g' &&
       echo -e '\ngit+https://github.com/precice/fmi-runner@{{build_arguments.FMI_RUNNER_REF}}' | tee -a $(grep -r --include requirements.txt 'fmiprecice' -l .) > /dev/null &&
