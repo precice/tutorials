@@ -534,7 +534,7 @@ class Systemtest:
     def __copy_tests(self, run_directory: Path):
         destination = run_directory / "tests"
         src = PRECICE_TESTS_DIR
-        logging.info(f"src = {src}, destination = {destination}")
+        logging.debug(f"Copying tests from {src} to {destination}")
         try:
             shutil.copytree(src, destination)
         except FileExistsError as e:
