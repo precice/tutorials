@@ -90,7 +90,7 @@ Each of these directories includes the usual tutorial case files and logs, as we
 1. `system-tests-build.log`: The logs of building the respective components.
 2. `system-tests-run.log`: The logs of running the simulation (intermixed, from all participants).
 3. `system-tests-compare.log`: The logs for the comparison to the reference results.
-4. `system-tests-compare-diff.log`: Progress and errors from rendering fieldcompare diff visualizations. Only present when comparison fails and visualization ran.
+4. `system-tests-compare-diff.log`: Progress and errors from rendering fieldcompare diff visualizations (on comparison failures).
 
 In addition, in the directories of the cases executed, you can find `system-tests-<case>.log` files.
 
@@ -151,7 +151,7 @@ runs/
     ├── system-tests-build.log
     ├── system-tests-run.log
     ├── system-tests-compare.log
-    ├── system-tests-compare-diff.log   # on comparison failures, when visualization ran
+    ├── system-tests-compare-diff.log   # on comparison failures
     └── …
 ```
 
