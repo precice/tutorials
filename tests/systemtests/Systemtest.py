@@ -282,6 +282,8 @@ class Systemtest:
         """
         Resolve build arguments per component from components.yaml defaults and
         global CLI overrides, then merge them for shared stages (prepare).
+
+        Previously, this function was also checking if all required parameters were provided, and was raising exceptions for parameters not provided and not having a default value. This check made adding optional parameters with empty defaults (e.g., the TUTORIALS_PR) complicated, and it was removed.
         """
         provided_arguments = self.arguments.arguments
         self.build_arguments_by_component = {}
@@ -306,7 +308,15 @@ class Systemtest:
                     logging.debug(
                         f"The parameter {param.key} on component {component.name} "
                         f"points to the repository {param.repository}.")
-                    if value and len(value) != 40:
+                    # If a commit has already been resolved and added to the build
+                    # arguments, it will be propagated to the next test in the test suite.
+                    # To avoid resolving the same commit again, simply check if the key
+                    # has the same length as the output of _resolve_branch_ref_to_commit.
+                    # The whole process assumes that all components use the same refs.
+                    if value and len(value) == 40:
+                        logging.debug(
+                            f"Git ref {value} is 40 characters long and probably already a commit.")
+                    elif value and len(value) != 40:
                         value = self._resolve_branch_ref_to_commit(
                             param.repository, value)
                         provided_arguments[param.key] = value
@@ -343,6 +353,8 @@ class Systemtest:
         return merged
 
     def _validate_dockerfile_platform(self, platform: str, context: str = "") -> None:
+        # Use an absolute path here only for validation that the requested
+        # dockerfile context exists on the machine running the system tests.
         dockerfile_context = PRECICE_TESTS_DIR / "dockerfiles" / Path(platform)
         if not dockerfile_context.exists():
             suffix = f" for {context}" if context else ""
@@ -381,14 +393,27 @@ class Systemtest:
                     f"Please specify a PLATFORM argument for component "
                     f"{case.component.name}")
 
+            # Inside the individual system test directory (`self.system_test_dir`)
+            # we copy a full `tests/` tree into the parent run directory
+            # (see __copy_tools_and_tests). From the point of view of the system test
+            # directory we therefore need to go one level up to reach the
+            # shared `tests/` folder:
+            #   <run_directory>/tests/dockerfiles/<PLATFORM>
+            #   ^-------------^ parent of self.system_test_dir
+            dockerfile_context_relative = self._dockerfile_context_relative(platform)
+
             render_dict = {
+                # Use a relative path to the *parent* run directory so that
+                # containers still see /runs/<tutorial_folder> like before,
+                # while keeping the compose file independent of the CI
+                # runner's absolute paths.
                 'run_directory': "..",
                 'tutorial_folder': self.tutorial_folder,
                 'build_arguments': build_arguments,
                 'params': build_arguments,
                 'case_folder': case.path,
                 'run': case.run_cmd,
-                'dockerfile_context': self._dockerfile_context_relative(platform),
+                'dockerfile_context': dockerfile_context_relative,
             }
             jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
             template = jinja_env.get_template(case.component.template)
