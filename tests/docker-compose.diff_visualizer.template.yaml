@@ -10,10 +10,11 @@ services:
         {% endfor %}
     volumes:
       - ./{{ diff_results_folder }}:/diff-results
-      - ../tools/tests/visualize_fieldcompare_diffs.py:/home/precice/visualize_fieldcompare_diffs.py:ro
+      - ../tests/visualize_fieldcompare_diffs.py:/home/precice/visualize_fieldcompare_diffs.py:ro
     environment:
       VTK_DEFAULT_OPENGL_WINDOW: vtkOSOpenGLRenderWindow
       PYVISTA_OFF_SCREEN: "true"
+      PYTHONUNBUFFERED: "1"
     command:
       - /home/precice/venv/bin/python
       - /home/precice/visualize_fieldcompare_diffs.py

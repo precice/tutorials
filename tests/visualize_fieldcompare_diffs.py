@@ -4,9 +4,12 @@
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
 from collections.abc import Iterator
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from multiprocessing import get_context
 from pathlib import Path
 
 import numpy as np
@@ -15,6 +18,11 @@ import pyvista as pv
 
 SUPPORTED_SUFFIXES = {".vtk", ".vtp", ".vtu"}
 WINDOW_SIZE = (1024, 768)
+
+
+def _log(message: str) -> None:
+    """Print immediately so CI and redirected local runs show progress."""
+    print(message, flush=True)
 
 
 def _scalar_values(values: np.ndarray) -> np.ndarray | None:
@@ -43,23 +51,14 @@ def _fields(
             yield field_name, locations[finite], values[finite]
 
 
-def _glyph_radius(points: np.ndarray) -> float:
-    """Return a radius based on representative nearest-neighbor distances."""
-    if len(points) < 2:
-        return 1.0
+def _point_size(n_points: int) -> float:
+    """Screen-space point size that stays visible without filling the window."""
+    return float(max(4.0, min(18.0, 350.0 / max(np.sqrt(n_points), 1.0))))
 
-    extent = float(np.max(np.ptp(points, axis=0)))
-    if extent <= 0:
-        return 1.0
 
-    sample = points[np.linspace(0, len(points) - 1, min(len(points), 64), dtype=int)]
-    nearest_distances = []
-    for point in sample:
-        distances = np.linalg.norm(points - point, axis=1)
-        distances = distances[distances > extent * 1e-12]
-        if len(distances):
-            nearest_distances.append(np.min(distances))
-    return 0.2 * float(np.median(nearest_distances)) if nearest_distances else 1.0
+def _has_nonzero_diff(values: np.ndarray) -> bool:
+    """Return whether the field contains any non-zero difference."""
+    return bool(np.any(np.abs(values) > 0))
 
 
 def _set_camera(plotter: pv.Plotter, points: np.ndarray) -> None:
@@ -80,17 +79,14 @@ def render_field(
     field_name: str,
     points: np.ndarray,
     values: np.ndarray,
-) -> None:
-    """Render one field using sphere glyphs colored by its diff values."""
+) -> bool:
+    """Render one field as colored point sprites. Returns True if a PNG was written."""
+    if not _has_nonzero_diff(values):
+        return False
+
     point_cloud = pv.PolyData(points)
     scalar_name = "difference"
     point_cloud.point_data[scalar_name] = values
-    sphere = pv.Sphere(
-        radius=_glyph_radius(points),
-        theta_resolution=8,
-        phi_resolution=8,
-    )
-    glyphs = point_cloud.glyph(orient=False, scale=False, geom=sphere)
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
     vmin = float(np.min(values))
@@ -99,11 +95,13 @@ def render_field(
     try:
         plotter.set_background("white")
         plotter.add_mesh(
-            glyphs,
+            point_cloud,
             scalars=scalar_name,
             cmap="coolwarm",
             clim=(vmin, vmax),
             scalar_bar_args={"title": field_name},
+            render_points_as_spheres=True,
+            point_size=_point_size(len(points)),
         )
         plotter.add_text(
             (
@@ -119,6 +117,7 @@ def render_field(
         plotter.show(screenshot=str(output_file))
     finally:
         plotter.close()
+    return True
 
 
 def visualize_diff_file(
@@ -126,7 +125,7 @@ def visualize_diff_file(
     diff_results_dir: Path,
     output_dir: Path,
 ) -> list[Path]:
-    """Render every numeric point field in one diff VTK file."""
+    """Render every numeric point field with a non-zero diff in one VTK file."""
     dataset = pv.read(diff_file)
     if not isinstance(dataset, pv.DataSet):
         raise TypeError(f"Unsupported VTK dataset in {diff_file}")
@@ -138,17 +137,56 @@ def visualize_diff_file(
     )
     file_output_dir = output_dir / relative.parent / safe_stem
     generated: list[Path] = []
+    saw_fields = False
     for field_name, points, values in _fields(dataset):
+        saw_fields = True
         safe_field = (
             re.sub(r"[^\w.-]+", "_", field_name, flags=re.UNICODE).strip("_.")
             or "unnamed"
         )
         output_file = file_output_dir / f"point_{safe_field}.png"
-        render_field(diff_file, output_file, field_name, points, values)
-        generated.append(output_file)
-    if not generated:
+        if render_field(diff_file, output_file, field_name, points, values):
+            generated.append(output_file)
+    if not saw_fields:
         raise ValueError(f"No numeric point fields found in {diff_file}")
     return generated
+
+
+def _worker_count() -> int:
+    cpu_count = os.cpu_count() or 1
+    return max(1, min(cpu_count, 8))
+
+
+def _visualize_one_file(
+    diff_file: str,
+    diff_results_dir: str,
+    output_dir: str,
+    index: int,
+    total: int,
+) -> tuple[list[str], str | None]:
+    """Render one file in a worker process. Returns (output paths, error)."""
+    path = Path(diff_file)
+    _log(f"[{index}/{total}] Rendering {path.name}")
+    try:
+        generated = visualize_diff_file(
+            path, Path(diff_results_dir), Path(output_dir)
+        )
+        if generated:
+            names = ", ".join(p.name for p in generated)
+            _log(
+                f"[{index}/{total}] Wrote {len(generated)} image(s) from "
+                f"{path.name}: {names}"
+            )
+        else:
+            _log(
+                f"[{index}/{total}] Skipped {path.name} "
+                "(only zero-difference fields)"
+            )
+        return [str(p) for p in generated], None
+    except Exception as error:
+        message = f"Could not visualize {path}: {error}"
+        _log(f"[{index}/{total}] WARNING: {message}")
+        return [], message
 
 
 def visualize_diff_results(
@@ -166,13 +204,52 @@ def visualize_diff_results(
         and path.suffix.lower() in SUPPORTED_SUFFIXES
         and "diff" in path.name.lower()
     )
-    for diff_file in diff_files:
-        try:
-            generated.extend(
-                visualize_diff_file(diff_file, diff_results_dir, output_dir)
+    total = len(diff_files)
+    workers = min(_worker_count(), total) if total else 1
+    _log(f"Found {total} fieldcompare diff VTK file(s), using {workers} worker(s)")
+    if not diff_files:
+        return generated, errors
+
+    if workers == 1:
+        for index, diff_file in enumerate(diff_files, start=1):
+            paths, error = _visualize_one_file(
+                str(diff_file),
+                str(diff_results_dir),
+                str(output_dir),
+                index,
+                total,
             )
-        except Exception as error:
-            errors.append(f"Could not visualize {diff_file}: {error}")
+            generated.extend(Path(p) for p in paths)
+            if error:
+                errors.append(error)
+        return generated, errors
+
+    with ProcessPoolExecutor(
+        max_workers=workers,
+        mp_context=get_context("spawn"),
+    ) as executor:
+        futures = {
+            executor.submit(
+                _visualize_one_file,
+                str(diff_file),
+                str(diff_results_dir),
+                str(output_dir),
+                index,
+                total,
+            ): diff_file
+            for index, diff_file in enumerate(diff_files, start=1)
+        }
+        for future in as_completed(futures):
+            diff_file = futures[future]
+            try:
+                paths, error = future.result()
+            except Exception as error:
+                errors.append(f"Could not visualize {diff_file}: {error}")
+                continue
+            generated.extend(Path(p) for p in paths)
+            if error:
+                errors.append(error)
+    generated.sort()
     return generated, errors
 
 
@@ -191,15 +268,13 @@ def main() -> int:
         parser.error(f"Not a directory: {args.diff_results_dir}")
 
     generated, errors = visualize_diff_results(args.diff_results_dir)
-    for output_file in generated:
-        print(f"Wrote {output_file}")
     for error in errors:
-        print(f"WARNING: {error}", file=sys.stderr)
+        print(f"WARNING: {error}", file=sys.stderr, flush=True)
 
     if generated:
-        print(f"Wrote {len(generated)} diff visualization(s)")
+        _log(f"Wrote {len(generated)} diff visualization(s)")
     elif not errors:
-        print("No fieldcompare diff VTK files found")
+        _log("No fieldcompare diff VTK files found")
     return 1 if errors else 0
 
 

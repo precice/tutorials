@@ -30,6 +30,10 @@ SHORT_TIMEOUT = 10
 
 DIFF_RESULTS_DIR = "diff-results"
 ITERATIONS_LOGS_DIR = "iterations-logs"
+DIFF_VISUALIZER_LOG = "system-tests-compare-diff.log"
+DIFF_VISUALIZER_TIMEOUT = int(
+    os.environ.get("PRECICE_SYSTEMTESTS_DIFF_VISUALIZER_TIMEOUT", 900)
+)
 
 STAGE_LOG_FILES = {
     "build": "system-tests-build.log",
@@ -214,7 +218,7 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
             print("\n\n", file=f)
             print(
-                "In case a test fails, download the archive from the bottom of this page and inspect the per-stage logs (`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`). The stage runtimes might already give useful hints.",
+                "In case a test fails, download the archive from the bottom of this page and inspect the per-stage logs (`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`, and `system-tests-compare-diff.log`). The stage runtimes might already give useful hints.",
                 file=f)
             print(
                 "See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).",
@@ -809,7 +813,7 @@ class Systemtest:
         platform = self.params_to_use.get("PLATFORM")
         render_dict = {
             'dockerfile_context': (
-                Path("..") / "tools" / "tests" / "dockerfiles" / Path(platform)
+                Path("..") / "tests" / "dockerfiles" / Path(platform)
             ),
             'build_arguments': self.params_to_use,
             'diff_results_folder': DIFF_RESULTS_DIR,
@@ -819,6 +823,11 @@ class Systemtest:
             "docker-compose.diff_visualizer.template.yaml")
         return template.render(render_dict)
 
+    def __append_diff_visualizer_status(self, status: str, elapsed_s: float) -> None:
+        log_path = self.system_test_dir / DIFF_VISUALIZER_LOG
+        with log_path.open("a", encoding="utf-8") as log_file:
+            log_file.write(f"\nstatus: {status}\nelapsed_s: {elapsed_s:.1f}\n")
+
     def __visualize_fieldcompare_diffs(self) -> None:
         """Best-effort rendering of archived fieldcompare diff VTK files via Docker."""
         diff_results_dir = self.system_test_dir / DIFF_RESULTS_DIR
@@ -826,10 +835,32 @@ class Systemtest:
             return
 
         compose_path = self.system_test_dir / "docker-compose.diff_visualizer.yaml"
+        log_path = self.system_test_dir / DIFF_VISUALIZER_LOG
+        log_path.write_text("=== compare-diff ===\n", encoding="utf-8")
+        log_lock = threading.Lock()
+        time_start = time.perf_counter()
+
         try:
             compose_path.write_text(
                 self.__get_diff_visualizer_compose_file(), encoding="utf-8")
-            result = subprocess.run(
+        except OSError as error:
+            elapsed_s = time.perf_counter() - time_start
+            self.__append_diff_visualizer_status(f"error: {error}", elapsed_s)
+            logging.warning(
+                "Could not render fieldcompare diff visualizations for %s: %s",
+                self,
+                error,
+            )
+            return
+
+        logging.info(
+            "Rendering fieldcompare diff visualizations for %s "
+            "(timeout %ss)",
+            self,
+            DIFF_VISUALIZER_TIMEOUT,
+        )
+        try:
+            process = subprocess.Popen(
                 [
                     "docker",
                     "compose",
@@ -841,12 +872,14 @@ class Systemtest:
                     "--abort-on-container-exit",
                 ],
                 cwd=self.system_test_dir,
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
                 text=True,
-                timeout=300,
-                check=False,
+                bufsize=1,
             )
-        except (OSError, subprocess.TimeoutExpired) as error:
+        except OSError as error:
+            elapsed_s = time.perf_counter() - time_start
+            self.__append_diff_visualizer_status(f"error: {error}", elapsed_s)
             logging.warning(
                 "Could not render fieldcompare diff visualizations for %s: %s",
                 self,
@@ -854,16 +887,74 @@ class Systemtest:
             )
             return
 
-        if result.returncode != 0:
-            details = result.stderr.strip() or result.stdout.strip()
+        def read_stream(stream, prefix: str) -> None:
+            if stream is None:
+                return
+            for line in stream:
+                line = line.rstrip("\n\r")
+                with log_lock:
+                    with log_path.open("a", encoding="utf-8") as log_file:
+                        log_file.write(f"{prefix}{line}\n")
+            stream.close()
+
+        stdout_thread = threading.Thread(
+            target=read_stream, args=(process.stdout, ""), daemon=True)
+        stderr_thread = threading.Thread(
+            target=read_stream, args=(process.stderr, "[stderr] "), daemon=True)
+        stdout_thread.start()
+        stderr_thread.start()
+
+        timed_out = False
+        try:
+            exit_code = process.wait(timeout=DIFF_VISUALIZER_TIMEOUT)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            process.kill()
+            try:
+                process.wait(timeout=SHORT_TIMEOUT)
+            except subprocess.TimeoutExpired:
+                pass
+            exit_code = process.returncode if process.returncode is not None else 1
+
+        stdout_thread.join(timeout=SHORT_TIMEOUT)
+        stderr_thread.join(timeout=SHORT_TIMEOUT)
+        elapsed_s = time.perf_counter() - time_start
+
+        if timed_out:
+            self.__append_diff_visualizer_status(
+                f"timed out after {DIFF_VISUALIZER_TIMEOUT}s", elapsed_s
+            )
             logging.warning(
-                "Rendering fieldcompare diff visualizations failed for %s: %s",
+                "Could not render fieldcompare diff visualizations for %s: "
+                "timed out after %ss (visualizer ran %.1fs). "
+                "See %s",
                 self,
-                details,
+                DIFF_VISUALIZER_TIMEOUT,
+                elapsed_s,
+                DIFF_VISUALIZER_LOG,
             )
             return
-        if result.stdout.strip():
-            logging.info(result.stdout.strip())
+
+        if exit_code != 0:
+            self.__append_diff_visualizer_status(
+                f"failed (exit {exit_code})", elapsed_s
+            )
+            logging.warning(
+                "Rendering fieldcompare diff visualizations failed for %s "
+                "after %.1fs (exit %s). See %s",
+                self,
+                elapsed_s,
+                exit_code,
+                DIFF_VISUALIZER_LOG,
+            )
+            return
+
+        self.__append_diff_visualizer_status("ok", elapsed_s)
+        logging.info(
+            "Diff visualizations for %s took %.1fs",
+            self,
+            elapsed_s,
+        )
 
     def __copy_rerun_system_test_script(self) -> None:
         """Copy tests/rerun-system-test.sh into the run directory for artifact replay."""

@@ -90,6 +90,7 @@ Each of these directories includes the usual tutorial case files and logs, as we
 1. `system-tests-build.log`: The logs of building the respective components.
 2. `system-tests-run.log`: The logs of running the simulation (intermixed, from all participants).
 3. `system-tests-compare.log`: The logs for the comparison to the reference results.
+4. `system-tests-compare-diff.log`: Progress and errors from rendering fieldcompare diff visualizations. Only present when comparison fails and visualization ran.
 
 In addition, in the directories of the cases executed, you can find `system-tests-<case>.log` files.
 
@@ -126,6 +127,8 @@ To regenerate the PNG visualizations locally from an archived `diff-results/` fo
 python3 visualize_fieldcompare_diffs.py /path/to/diff-results
 ```
 
+The script prints progress per file, and processes files in parallel. Point sprites are used for all meshes. Fields with zero difference are skipped.
+
 The default image size is set by `WINDOW_SIZE` in `visualize_fieldcompare_diffs.py` (currently `1024 x 768`). Increase it for higher-resolution PNGs, e.g. `WINDOW_SIZE = (1920, 1080)`.
 
 For PDF output instead of PNG, replace the `plotter.show(screenshot=...)` call in `render_field()` with `plotter.render()` followed by `plotter.save_graphic(str(output_file.with_suffix(".pdf")))`.
@@ -148,6 +151,7 @@ runs/
     ├── system-tests-build.log
     ├── system-tests-run.log
     ├── system-tests-compare.log
+    ├── system-tests-compare-diff.log   # on comparison failures, when visualization ran
     └── …
 ```
 
