@@ -31,6 +31,8 @@ Soil-Creep PDE participant:
 
 * Landlab. Numerical modeling of Earth surface dynamics. For more information, have a look at the [Landlab documentation](https://landlab.csdms.io/index.html).
 
+* Standalone reimplementation of the Landlab participant, tailored to this example.
+
 * FEniCSx. For more information, have a look at the [FEniCSx adapter](https://precice.org/adapter-fenicsx.html).
 
 Wolf-Sheep-Grass ABM participant:
@@ -43,6 +45,13 @@ Open two separate terminals and start the soil creep and wolf sheep participants
 
 ```bash
 cd soil-creep-landlab
+./run.sh
+```
+
+or
+
+```bash
+cd soil-creep-simplified-landlab
 ./run.sh
 ```
 
