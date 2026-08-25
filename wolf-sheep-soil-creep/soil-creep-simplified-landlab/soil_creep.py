@@ -21,7 +21,7 @@ class LandlabLinearDiffuserClone:
         self.status = np.full((self.ny, self.nx), self.FIXED_VALUE, dtype=np.uint8)
         self.status[1:-1, 1:-1] = self.CORE
 
-        # Have one open boundary on the south side
+        # Leave one open boundary on the south side
         # Corresponds to Landlab's rmg.set_closed_boundaries_at_grid_edges(True, True, True, False)
         # with the boundary order: right, top, left, bottom
         self.status[:, -1] = self.CLOSED
@@ -69,7 +69,7 @@ class LandlabLinearDiffuserClone:
 
         # Divide the timestep dt passed to the diffuser into internal stability-limited substeps. 
         # Perform as many full substeps as possible (repeats), followed by one smaller substep for the remainder.
-        internal_dt = ALPHA * self.dx * self.dx / np.nanmax(active_D)
+        internal_dt = self.ALPHA * self.dx * self.dx / np.nanmax(active_D)
 
         repeats = int(dt // internal_dt)
         remainder = dt - repeats * internal_dt
