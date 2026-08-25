@@ -2,7 +2,7 @@
 Problem setup for partitioned-heat-conduction/fenics tutorial
 """
 
-from fenics import SubDomain, Point, RectangleMesh, near, Function, Expression
+from fenics import SubDomain, Point, RectangleMesh, near
 from my_enums import DomainPart
 
 

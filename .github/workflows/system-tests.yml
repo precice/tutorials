@@ -29,10 +29,10 @@ jobs:
       run: |
         echo "Initiated by: ${{ github.actor }}"
         echo "Test suites: ${{ inputs.suites}}"
-        echo "System tests branch (tools/): ${{ inputs.system_tests_branch }}"
+        echo "System tests branch (tests/): ${{ inputs.system_tests_branch }}"
         echo "System tests log level: ${{ inputs.log_level }}"
         echo "Uploading the runs folder on success: ${{ inputs.upload_artifacts }}"
-        echo "Running the following command inside tutorials/tools/tests/:"
+        echo "Running the following command inside tutorials/tests/:"
         echo "python3 systemtests.py --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}"
         echo "All workflow inputs: ${{ toJSON(github.event.inputs) }}"
     - name: Prepare the Markdown step summary
@@ -41,11 +41,11 @@ jobs:
           echo "Job inputs:"
           echo "- Initiated by: @${{ github.actor }}"
           echo "- Test suites: \`${{ inputs.suites}}\`"
-          echo "- System tests branch (\`tools/\`): [\`${{ inputs.system_tests_branch }}\`](https://github.com/precice/tutorials/tree/${{ inputs.system_tests_branch }})"
+          echo "- System tests branch (\`tests/\`): [\`${{ inputs.system_tests_branch }}\`](https://github.com/precice/tutorials/tree/${{ inputs.system_tests_branch }})"
           echo "- System tests log level: \`${{ inputs.log_level }}\`"
           echo "- Uploading the runs folder on success: \`${{ inputs.upload_artifacts }}\`"
           echo ""
-          echo "Running the following command inside \`tutorials/tools/tests/\`:"
+          echo "Running the following command inside \`tutorials/tests/\`:"
           echo "\`\`\`"
           echo "python3 systemtests.py --build_args=${{inputs.build_args}} --suites=${{ inputs.suites}}"
           echo "\`\`\`"
@@ -63,7 +63,7 @@ jobs:
         rm -rf ./*
         rm -rf ./.??*
         ls -la ./
-    - name: Check out Tutorials for the system tests (tools/tests/)
+    - name: Check out Tutorials for the system tests (tests/)
       uses: actions/checkout@v7
       with:
         repository: precice/tutorials
@@ -75,10 +75,10 @@ jobs:
         /home/precice/runners_root/scripts/map_origin_to_local.sh ./
     - name: Install Python dependencies
       run: |
-        pip install --user -r tools/tests/requirements.txt
+        pip install --user -r tests/requirements.txt
     - name: Run tests
       run: |
-        cd tools/tests
+        cd tests
         python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log_level=${{ inputs.log_level}}
         cd ../../
     - name: Archive system test logs

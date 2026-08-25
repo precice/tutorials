@@ -63,7 +63,7 @@ jobs:
         rm -rf ./*
         rm -rf ./.??*
         ls -la ./
-    - name: Check out Tutorials for the system tests (tools/tests/)
+    - name: Check out Tutorials for the system tests (tests/)
       uses: actions/checkout@v7
       with:
         ref: ${{ inputs.from_ref }}
@@ -71,7 +71,7 @@ jobs:
         fetch-depth: 0
     - name: Install Python dependencies
       run: |
-        pip install --user -r tools/tests/requirements.txt
+        pip install --user -r tests/requirements.txt
     - name: Cleanup Docker cache
       if: ${{  inputs.clean_docker == 'TRUE' }}
       # Remove all Docker containers, images, and build caches
@@ -80,7 +80,7 @@ jobs:
         docker system prune --all --force
     - name: Run tests
       run: |
-        cd tools/tests
+        cd tests
         SUITES_ARGS=()
         if [ -n "${{ inputs.suites }}" ]; then
           SUITES_ARGS+=(--suites "${{ inputs.suites }}")

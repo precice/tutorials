@@ -2,10 +2,9 @@
 Problem setup for HT fenics-fenics tutorial
 """
 
-from fenics import SubDomain, Point, RectangleMesh, near, Function, VectorFunctionSpace, Expression
+from fenics import SubDomain, Point, RectangleMesh, near
 from my_enums import DomainPart, ProblemType
 import mshr
-import numpy as np
 
 y_bottom, y_top = 0, 1
 x_left, x_right = 0, 2

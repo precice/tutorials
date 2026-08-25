@@ -4,7 +4,7 @@
 CODE=0
 
 # Check tutorials
-IGNORE="tools|quickstart"
+IGNORE="tests|tools|quickstart"
 tutorials=$(find . -maxdepth 1 -type d -not -name ".*" | grep -vE $IGNORE | sed "s/^.\///")
 
 for tutorial in $tutorials; do
