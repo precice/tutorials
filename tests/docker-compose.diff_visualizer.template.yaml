@@ -1,0 +1,21 @@
+services:
+  diff-visualizer:
+    build:
+      context: {{ dockerfile_context }}
+      dockerfile: Dockerfile
+      target: diff_visualizer
+      args:
+        {% for key, value in build_arguments.items() %}
+        - {{ key }}={{ value }}
+        {% endfor %}
+    volumes:
+      - ./{{ diff_results_folder }}:/diff-results
+      - ../tests/visualize_fieldcompare_diffs.py:/home/precice/visualize_fieldcompare_diffs.py:ro
+    environment:
+      VTK_DEFAULT_OPENGL_WINDOW: vtkOSOpenGLRenderWindow
+      PYVISTA_OFF_SCREEN: "true"
+      PYTHONUNBUFFERED: "1"
+    command:
+      - /home/precice/venv/bin/python
+      - /home/precice/visualize_fieldcompare_diffs.py
+      - /diff-results
