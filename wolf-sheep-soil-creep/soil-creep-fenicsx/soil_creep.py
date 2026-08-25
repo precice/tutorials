@@ -1,7 +1,7 @@
 """
 Linear diffusion equation of soil with Dirichlet boundary.
-  z' = div(D*grad(z))    in the square [0,19] x [0,19]
-  z = 0                  on the bottom boundary
+  u' = div(D*grad(u))    in the square [0,19] x [0,19]
+  u = 0                  on the bottom boundary at y=0
 """
 
 import copy
