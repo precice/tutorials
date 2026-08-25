@@ -21,7 +21,7 @@ class LandlabLinearDiffuserClone:
         self.status = np.full((self.ny, self.nx), self.FIXED_VALUE, dtype=np.uint8)
         self.status[1:-1, 1:-1] = self.CORE
 
-        # Leave one open boundary on the south side
+        # Leave the south boundary open and close the others
         # Corresponds to Landlab's rmg.set_closed_boundaries_at_grid_edges(True, True, True, False)
         # with the boundary order: right, top, left, bottom
         self.status[:, -1] = self.CLOSED
