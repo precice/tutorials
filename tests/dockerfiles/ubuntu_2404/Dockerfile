@@ -617,7 +617,7 @@ RUN cd /home/precice/aste && \
 WORKDIR /home/precice
 
 
-FROM solids4foam/solids4foam:v2.3-openfoam-v2412-latest AS solids4foam
+FROM solids4foam/solids4foam:v2.4-openfoam-v2412-latest AS solids4foam
 
 ARG PRECICE_UID=1000
 ARG PRECICE_GID=1000
