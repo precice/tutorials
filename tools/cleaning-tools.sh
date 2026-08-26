@@ -151,6 +151,8 @@ clean_openfoam() {
             . "${WM_PROJECT_DIR}/bin/tools/CleanFunctions"
             region="*" cleanCase > /dev/null
             rm -rfv 0/uniform/functionObjects/functionObjectProperties history
+            # solids4foam writes copies of its dictionaries with the default values filled in
+            rm -fv constant/*.withDefaultValues
         fi
         clean_precice_logs .
         clean_case_logs .
