@@ -1,0 +1,49 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+
+application     solids4Foam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         1;
+
+deltaT          2e-3;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.02;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+libs ("libpreciceAdapterFunctionObject.so");
+functions
+{
+    preCICE_Adapter
+    {
+        type preciceAdapterFunctionObject;
+        errors strict; // Available since OpenFOAM v2012
+    }
+}
+
+
+

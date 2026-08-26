@@ -29,6 +29,13 @@ test_suites:
           - solid-calculix
         max_time: 0.2
         reference_result: ./breaking-dam-2d/reference-results/fluid-openfoam_solid-calculix.tar.gz
+      - &breaking-dam-2d_fluid-openfoam_solid-solids4foam
+        path: breaking-dam-2d
+        case_combination:
+          - fluid-openfoam
+          - solid-solids4foam
+        max_time: 0.2
+        reference_result: ./breaking-dam-2d/reference-results/fluid-openfoam_solid-solids4foam.tar.gz
 
   channel-transport:
     tutorials:
@@ -926,6 +933,7 @@ test_suites:
 
   solids4foam:
     tutorials:
+      - *breaking-dam-2d_fluid-openfoam_solid-solids4foam
       - *perpendicular-flap_fluid-openfoam_solid-solids4foam
 
   su2-adapter:
