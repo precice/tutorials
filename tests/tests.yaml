@@ -945,4 +945,6 @@ test_suites:
 
   selected:
     tutorials:
-      - *perpendicular-flap_fluid-openfoam_solid-calculix
+      - *elastic-tube-1d_fluid-rust_solid-rust
+      - *flow-over-heated-plate_fluid-su2_solid-openfoam
+      - *perpendicular-flap_fluid-fake_solid-fake
