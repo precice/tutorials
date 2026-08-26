@@ -22,6 +22,7 @@ On the workflow page, click `Run workflow`. The default values will execute the 
 
 The available test suites are found in [`tests.yaml`](https://github.com/precice/tutorials/blob/develop/tests/tests.yaml) and common values are:
 
+- `quickstart_openfoam_cpp`, or several other tutorial case combinations
 - `quickstart`, `elastic-tube-1d`, or any other tutorial (see [exceptions](https://github.com/precice/tutorials/issues/448))
 - `openfoam-adapter`, `micro-manager`, `fmi-runner`, or similar test cases involving the respective component
 - `precice` is a subset of cases that cover a range of preCICE features
