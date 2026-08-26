@@ -290,7 +290,9 @@ class Systemtest:
         Previously, this function was also checking if all required parameters were provided, and was raising exceptions for parameters not provided and not having a default value. This check made adding optional parameters with empty defaults (e.g., the TUTORIALS_PR) complicated, and it was removed.
         """
         provided_arguments = self.arguments.arguments
+        explicit_cli_keys = frozenset(provided_arguments.keys())
         self.build_arguments_by_component = {}
+        resolved_ref_cache: Dict[Tuple[str, str], str] = {}
 
         for case in self.case_combination.cases:
             component = case.component
@@ -299,30 +301,39 @@ class Systemtest:
 
             component_args: Dict[str, str] = {}
             for param in component.parameters:
-                if param.key not in provided_arguments:
+                if param.key in explicit_cli_keys:
+                    value = provided_arguments[param.key]
+                elif (
+                    param.key in provided_arguments
+                    and len(provided_arguments[param.key]) == 40
+                ):
+                    value = provided_arguments[param.key]
+                else:
                     logging.info(
                         f"No argument provided for needed parameter {param.key} "
                         f"on component {component.name}. "
                         f"Substituting with {param.default}.")
                     value = param.default
-                else:
-                    value = provided_arguments[param.key]
 
-                if param.key.endswith("_REF") and param.key in provided_arguments:
+                if param.key.endswith("_REF") and param.repository and value:
                     logging.debug(
                         f"The parameter {param.key} on component {component.name} "
                         f"points to the repository {param.repository}.")
-                    # If a commit has already been resolved and added to the build
-                    # arguments, it will be propagated to the next test in the test suite.
-                    # To avoid resolving the same commit again, simply check if the key
-                    # has the same length as the output of _resolve_branch_ref_to_commit.
-                    # The whole process assumes that all components use the same refs.
-                    if value and len(value) == 40:
+                    # If a commit has already been resolved, it will be propagated to
+                    # the next test in the test suite. To avoid resolving the same
+                    # commit again, check if the value has the same length as the
+                    # output of _resolve_branch_ref_to_commit.
+                    cache_key = (str(param.repository), value)
+                    if len(value) == 40:
                         logging.debug(
                             f"Git ref {value} is 40 characters long and probably already a commit.")
-                    elif value and len(value) != 40:
+                    elif cache_key in resolved_ref_cache:
+                        value = resolved_ref_cache[cache_key]
+                    else:
                         value = self._resolve_branch_ref_to_commit(
                             param.repository, value)
+                        resolved_ref_cache[cache_key] = value
+                    if param.key in explicit_cli_keys:
                         provided_arguments[param.key] = value
 
                 component_args[param.key] = value
