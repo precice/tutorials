@@ -123,7 +123,7 @@ USER precice
 WORKDIR /home/precice
 
 RUN pipx install jill && \
-    jill install --confirm
+    jill install 1.12.6 --confirm
 ### end of julia_bindings stage ###
 
 
