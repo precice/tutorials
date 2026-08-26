@@ -17,7 +17,13 @@ cases:
     participant: Solid
     directory: ./solid-calculix
     run: ./run.sh
-    component: calculix-adapter 
+    component: calculix-adapter
+
+  solid-solids4foam:
+    participant: Solid
+    directory: ./solid-solids4foam
+    run: ./run.sh
+    component: solids4foam 
 
 
 

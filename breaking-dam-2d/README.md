@@ -3,7 +3,7 @@ title: Breaking dam with flexible pillar 2D
 permalink: tutorials-breaking-dam-2d.html
 aliases:
   - /tutorials-breaking-dam-2d.html
-keywords: FSI, OpenFOAM, CalculiX, IQN-ILS, two-phase flow, interFoam
+keywords: FSI, OpenFOAM, CalculiX, solids4foam, IQN-ILS, two-phase flow, interFoam
 summary: FSI simulation of a two-dimensional water column striking a flexible wall
 ---
 
@@ -34,6 +34,8 @@ Fluid participant:
 Solid participant:
 
 * CalculiX. For more information, have a look at the [CalculiX adapter documentation](https://precice.org/adapter-calculix-overview.html). This is a modified setup of the one used in the `perpendicular-flap` tutorial.
+
+* solids4foam. This case uses the nonlinear-geometry (large-strain) total-Lagrangian solid model (`solidModel nonLinearGeometryTotalLagrangianTotalDisplacement`) with a St. Venant-Kirchhoff material, matching the large-deformation (`NLGEOM`) formulation used by the CalculiX case, together with the high-order (polynomial reconstruction) solid discretisation and the PETSc SNES solution algorithm, as in the [perpendicular flap tutorial](https://precice.org/tutorials-perpendicular-flap.html). Gravity is not applied to the solid, to be consistent with the other solid participants. This case requires solids4foam v2.4 or later, built with PETSc, as well as the OpenFOAM-preCICE adapter v1.2.0 or later. For more information, see the [solids4foam documentation](https://solids4foam.github.io/documentation/overview.html).
 
 ## Running the simulation
 
