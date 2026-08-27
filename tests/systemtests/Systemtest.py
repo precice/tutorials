@@ -294,11 +294,15 @@ class Systemtest:
         self.build_arguments_by_component = {}
         resolved_ref_cache: Dict[Tuple[str, str], str] = {}
 
+        logging.info(
+            f"Substituting default build arguments and resolving git refs for {self}.")
+
         for case in self.case_combination.cases:
             component = case.component
             if component.name in self.build_arguments_by_component:
                 continue
 
+            logging.debug(f"Resolving build arguments for component {component.name}.")
             component_args: Dict[str, str] = {}
             for param in component.parameters:
                 if param.key in explicit_cli_keys:
@@ -309,7 +313,7 @@ class Systemtest:
                 ):
                     value = provided_arguments[param.key]
                 else:
-                    logging.info(
+                    logging.debug(
                         f"No argument provided for needed parameter {param.key} "
                         f"on component {component.name}. "
                         f"Substituting with {param.default}.")
@@ -540,7 +544,7 @@ class Systemtest:
 
             commit = git_remote_refs.split()[0]
             # The output assumes a URL of the form <repository>/commits/<commit>. Works for GitHub and Bitbucket.
-            logging.info(
+            logging.debug(
                 f"Resolved the git ref {ref} of the repository {repository} to {repository}/commits/{commit} .")
             return commit if commit else ref
         except Exception:
