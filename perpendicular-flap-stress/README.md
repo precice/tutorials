@@ -31,6 +31,8 @@ Solid participant:
 
 * G+Smo (perpendicular-flap-vertex-gismo). This solver includes both linear and nonlinear versions of the Newmark time integrator for time-dependent structural problems. The linear version iterates using a constant stiffness matrix. The nonlinear version iterates using an updated Jacobian matrix to account for material or geometric nonlinearity. By default, the solver runs in linear mode. To switch to nonlinear mode, add `--nonlinear` as option in `run.sh`. For more information, have a look at the [G+Smo adapter documentation](https://precice.org/adapter-gismo.html).
 
+* solids4foam (OpenFOAM). A linear-elastic, small-strain solid model, using the same flap geometry and material properties as the [perpendicular flap tutorial](https://precice.org/tutorials-perpendicular-flap.html). The `interface` patch uses the solids4foam `solidTraction` boundary condition, reading the coupled traction from the `solidTraction` field that the adapter fills. This requires solids4foam v2.2 or later and an OpenFOAM-preCICE adapter with support for reading `Stress` in solid participants. For more information, have a look at the [solids4foam documentation](https://solids4foam.github.io/).
+
 ## Running the simulation
 
 Open two separate terminals and start the desired fluid and solid participants by calling the respective run scripts `run.sh` located in the participants' directories. For example:
@@ -53,7 +55,7 @@ On the OpenFOAM side, you can open the `.foam` file with ParaView, or create VTK
 
 On the G+Smo side, you can open the `.pvd` file located in the `solid-gismo/output` folder using ParaView. If you prefer not to plot the simulation, simply edit the `run.sh` script and remove the  `--plot` option.
 
-As we defined a watchpoint on the 'Solid' participant at the flap tip (see `precice-config.xml`), we can plot it with gnuplot using the script `plot-displacement.sh.` You need to specify the directory of the selected solid participant as a command line argument, so that the script can pick-up the desired watchpoint file, e.g. `plot-displacement.sh solid-gismo`. The resulting graph shows the x displacement of the flap tip. You can modify the script to plot the force instead.
+As we defined a watchpoint on the 'Solid' participant at the flap tip (see `precice-config.xml`), we can plot it with gnuplot using the script `plot-displacement.sh.` You need to specify the directory of the selected solid participant as a command line argument, so that the script can pick-up the desired watchpoint file, e.g. `plot-displacement.sh solid-gismo` or `plot-displacement.sh solid-solids4foam`. The resulting graph shows the x displacement of the flap tip. You can modify the script to plot the force instead.
 
 ![Flap watchpoint](images/tutorials-perpendicular-flap-stress-displacement-watchpoint.png)
 
