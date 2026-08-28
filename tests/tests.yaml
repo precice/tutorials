@@ -623,6 +623,15 @@ test_suites:
         max_time: 0.1
         reference_result: ./perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz
 
+  quickstart_openfoam_cpp:
+    tutorials:
+      - &quickstart_openfoam_cpp
+        path: quickstart
+        case_combination:
+          - fluid-openfoam
+          - solid-cpp
+        reference_result: ./quickstart/reference-results/fluid-openfoam_solid-cpp.tar.gz
+
   resonant-circuit_capacitor-julia_coil-julia:
     tutorials:
       - &resonant-circuit_capacitor-julia_coil-julia
@@ -691,15 +700,6 @@ test_suites:
         max_time: 0.01
         timeout: 1200
         reference_result: ./two-scale-heat-conduction/reference-results/macro-nutils_micro-nutils.tar.gz
-
-  quickstart_openfoam_cpp:
-    tutorials:
-      - &quickstart_openfoam_cpp
-        path: quickstart
-        case_combination:
-          - fluid-openfoam
-          - solid-cpp
-        reference_result: ./quickstart/reference-results/fluid-openfoam_solid-cpp.tar.gz
 
   volume-coupled-diffusion_source-fenics_drain-fenics:
     tutorials:
