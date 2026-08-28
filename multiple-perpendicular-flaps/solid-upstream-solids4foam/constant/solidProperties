@@ -10,16 +10,38 @@ solidModel    linearGeometryTotalDisplacement;
 
 linearGeometryTotalDisplacementCoeffs
 {
-    // Maximum number of momentum correctors
-    nCorrectors     1000;
+    solutionAlgorithm PETScSNES;
 
-    // Solution tolerance for displacement
-    solutionTolerance 1e-08;
+    highOrderCoeffs
+    {
+        highOrderJacobian false;
+        highOrderResidual true;
 
-    // Alternative solution tolerance for displacement
-    alternativeTolerance 1e-08;
+        displacement
+        {
+            // Polynomial order of displacement field
+            polynomialOrder 3;
 
-    // Write frequency for the residuals
-    infoFrequency   100;
+            // Extra cells in minimum size stencil
+            faceStencilExtraCells 15;
+
+            // Weight function for least square systems
+            weightFunctionCoeffs
+            {
+                type radiallySymmetricExponential;
+                k 6;
+            }
+            calcConditionNumber false;
+        }
+    }
+
+    stabilisation
+    {
+        momentum
+        {
+            type        alpha;
+            scaleFactor 1.0;
+        }
+    }
 }
 

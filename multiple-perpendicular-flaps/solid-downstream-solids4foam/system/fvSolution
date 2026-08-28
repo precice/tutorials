@@ -9,30 +9,31 @@ FoamFile
 
 solvers
 {
-    "D|DD"
+    D
     {
-        solver          PCG;
-        preconditioner  FDIC;
-        tolerance       1e-09;
-        relTol          0.1;
+        solver    petsc;
+
+        options
+        {
+            snes_type newtonls;
+            snes_linesearch_type basic;
+            snes_max_it "100";
+            snes_monitor;
+            snes_converged_reason;
+
+            snes_mf;
+            snes_mf_operator;
+
+            ksp_type lgmres;
+            ksp_gmres_restart "200";
+            ksp_converged_reason;
+            ksp_rtol "1e-3";
+
+            pc_type bjacobi;
+            sub_pc_type lu;
+
+            snes_lag_preconditioner_persists true;
+            snes_lag_preconditioner "-2";
+        }
     }
 }
-
-relaxationFactors
-{
-    // Under-relaxating the D equation by 0.99-0.9999 can improve convergence in
-    // some cases, in particular when there are solidContact boundaries
-    equations
-    {
-        //D   0.999;
-    }
-
-    // Under-relaxating the D field by 0.1-0.9 can improve convergence in some
-    // cases
-    fields
-    {
-        //D      0.9;
-    }
-}
-
-
