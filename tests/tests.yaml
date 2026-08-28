@@ -528,6 +528,16 @@ test_suites:
         max_time: 0.1
         reference_result: ./perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz
 
+  perpendicular-flap-stress:
+    tutorials:
+      - &perpendicular-flap-stress_fluid-openfoam_solid-solids4foam
+        path: perpendicular-flap-stress
+        case_combination:
+          - fluid-openfoam
+          - solid-solids4foam
+        max_time: 0.1
+        reference_result: ./perpendicular-flap-stress/reference-results/fluid-openfoam_solid-solids4foam.tar.gz
+
   quickstart:
     tutorials:
       - &quickstart_openfoam_cpp
@@ -927,6 +937,7 @@ test_suites:
   solids4foam:
     tutorials:
       - *perpendicular-flap_fluid-openfoam_solid-solids4foam
+      - *perpendicular-flap-stress_fluid-openfoam_solid-solids4foam
 
   su2-adapter:
     tutorials:
