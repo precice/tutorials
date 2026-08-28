@@ -623,9 +623,9 @@ test_suites:
         max_time: 0.1
         reference_result: ./perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz
 
-  quickstart_openfoam_cpp:
+  quickstart_fluid-openfoam_solid-cpp:
     tutorials:
-      - &quickstart_openfoam_cpp
+      - &quickstart_fluid-openfoam_solid-cpp
         path: quickstart
         case_combination:
           - fluid-openfoam
@@ -909,7 +909,7 @@ test_suites:
 
   quickstart:
     tutorials:
-      - *quickstart_openfoam_cpp
+      - *quickstart_fluid-openfoam_solid-cpp
 
   resonant-circuit:
     tutorials:
@@ -1039,7 +1039,7 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
       - *perpendicular-flap_fluid-su2_solid-fenics
-      - *quickstart_openfoam_cpp
+      - *quickstart_fluid-openfoam_solid-cpp
       - *resonant-circuit_capacitor-python_coil-python
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
       - *two-scale-heat-conduction_macro-dumux_micro-dumux
@@ -1074,7 +1074,7 @@ test_suites:
   # A selection of tests that cover a wide range of main features, meant for quicker CI executions
   precice:
     tutorials:
-      - *quickstart_openfoam_cpp                                                 # serial-explicit, RBF
+      - *quickstart_fluid-openfoam_solid-cpp                                     # serial-explicit, RBF
       - *channel-transport_fluid-openfoam_transport-nutils                       # parallel-explicit, RBF, python bindings
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam                    # serial-implicit (Aitken), nearest-neighbor
       - *flow-over-heated-plate-nearest-projection_fluid-openfoam_solid-openfoam # serial-implicit (IQN-ILS), nearest-projection
@@ -1201,7 +1201,7 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
-      - *quickstart_openfoam_cpp
+      - *quickstart_fluid-openfoam_solid-cpp
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
       - *water-hammer_fluid3d-left-openfoam_fluid1d-right-nutils
