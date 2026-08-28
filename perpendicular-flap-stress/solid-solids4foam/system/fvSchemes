@@ -28,24 +28,16 @@ divSchemes
 
 laplacianSchemes
 {
-    default            none;
-    laplacian(DD,D)    Gauss linear corrected;
-    laplacian(DDD,DD)  Gauss linear corrected;
+    default            Gauss linear corrected;
 }
 
 snGradSchemes
 {
-    default            none;
-    snGrad(D)          corrected;
-    snGrad(DD)         corrected;
+    default            corrected;
 }
 
 interpolationSchemes
 {
-    default            none;
-    interpolate(impK)  linear;
-    interpolate(grad(D)) linear;
-    interpolate(grad(DD)) linear;
-    interpolate(sigma) linear;
+    default            linear;
 }
 
