@@ -268,6 +268,14 @@ test_suites:
           - solid-downstream-dealii
         max_time: 0.1
         reference_result: ./multiple-perpendicular-flaps/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz
+      - &multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-solids4foam_solid-downstream-solids4foam
+        path: multiple-perpendicular-flaps
+        case_combination:
+          - fluid-openfoam
+          - solid-upstream-solids4foam
+          - solid-downstream-solids4foam
+        max_time: 0.1
+        reference_result: ./multiple-perpendicular-flaps/reference-results/fluid-openfoam_solid-upstream-solids4foam_solid-downstream-solids4foam.tar.gz
 
   oscillator:
     tutorials:
@@ -927,6 +935,7 @@ test_suites:
   solids4foam:
     tutorials:
       - *perpendicular-flap_fluid-openfoam_solid-solids4foam
+      - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-solids4foam_solid-downstream-solids4foam
 
   su2-adapter:
     tutorials:
