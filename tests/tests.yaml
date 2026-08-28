@@ -11,16 +11,16 @@
 #   Skipped components are still mentioned in a comment.
 
 test_suites:
-  aste-turbine:
+  aste-turbine_aste:
     tutorials:
-      - &aste-turbine
+      - &aste-turbine_aste
         path: aste-turbine
         case_combination:
           - aste
         skip_compare: true # partitioning the mesh differently in each run
         reference_result: ./aste-turbine/reference-results/aste-turbine.tar.gz
   
-  breaking-dam-2d:
+  breaking-dam-2d_fluid-openfoam_solid-calculix:
     tutorials:
       - &breaking-dam-2d_fluid-openfoam_solid-calculix
         path: breaking-dam-2d
@@ -29,8 +29,8 @@ test_suites:
           - solid-calculix
         max_time: 0.2
         reference_result: ./breaking-dam-2d/reference-results/fluid-openfoam_solid-calculix.tar.gz
-
-  channel-transport:
+  
+  channel-transport_fluid-nutils_transport-nutils:
     tutorials:
       - &channel-transport_fluid-nutils_transport-nutils
         path: channel-transport
@@ -40,6 +40,9 @@ test_suites:
         max_time: 0.05
         timeout: 600
         reference_result: ./channel-transport/reference-results/fluid-nutils_transport-nutils.tar.gz
+
+  channel-transport_fluid-openfoam_transport-nutils:
+    tutorials:
       - &channel-transport_fluid-openfoam_transport-nutils
         path: channel-transport
         case_combination:
@@ -47,6 +50,9 @@ test_suites:
           - transport-nutils
         max_time: 0.1
         reference_result: ./channel-transport/reference-results/fluid-openfoam_transport-nutils.tar.gz
+
+  channel-transport_fluid-openfoam_transport-openfoam:
+    tutorials:
       - &channel-transport_fluid-openfoam_transport-openfoam
         path: channel-transport
         case_combination:
@@ -55,17 +61,7 @@ test_suites:
         max_time: 0.5
         reference_result: ./channel-transport/reference-results/fluid-openfoam_transport-openfoam.tar.gz
 
-  channel-transport-reaction:
-    tutorials:
-      - &channel-transport-reaction_fluid-fenics_chemical-fenics
-        path: channel-transport-reaction
-        case_combination:
-          - fluid-fenics
-          - chemical-fenics
-        max_time: 0.5
-        reference_result: ./channel-transport-reaction/reference-results/fluid-fenics_chemical-fenics.tar.gz
-
-  channel-transport-particles:
+  channel-transport-particles_fluid-openfoam_particles-mercurydpm:
     tutorials:
       - &channel-transport-particles_fluid-openfoam_particles-mercurydpm
         path: channel-transport-particles
@@ -74,6 +70,9 @@ test_suites:
           - particles-mercurydpm
         max_time: 0.025
         reference_result: ./channel-transport-particles/reference-results/fluid-openfoam_particles-mercurydpm.tar.gz
+
+  channel-transport-particles_fluid-nutils_particles-mercurydpm:
+    tutorials:
       - &channel-transport-particles_fluid-nutils_particles-mercurydpm
         path: channel-transport-particles
         case_combination:
@@ -83,7 +82,17 @@ test_suites:
         timeout: 600
         reference_result: ./channel-transport-particles/reference-results/fluid-nutils_particles-mercurydpm.tar.gz
 
-  elastic-tube-1d:
+  channel-transport-reaction_fluid-fenics_chemical-fenics:
+    tutorials:
+      - &channel-transport-reaction_fluid-fenics_chemical-fenics
+        path: channel-transport-reaction
+        case_combination:
+          - fluid-fenics
+          - chemical-fenics
+        max_time: 0.5
+        reference_result: ./channel-transport-reaction/reference-results/fluid-fenics_chemical-fenics.tar.gz
+  
+  elastic-tube-1d_fluid-cpp_solid-cpp:
     tutorials:
       - &elastic-tube-1d_fluid-cpp_solid-cpp
         path: elastic-tube-1d
@@ -91,6 +100,9 @@ test_suites:
           - fluid-cpp
           - solid-cpp
         reference_result: ./elastic-tube-1d/reference-results/fluid-cpp_solid-cpp.tar.gz
+  
+  elastic-tube-1d_fluid-cpp_solid-python:
+    tutorials:
       - &elastic-tube-1d_fluid-cpp_solid-python
         path: elastic-tube-1d
         case_combination:
@@ -98,33 +110,44 @@ test_suites:
           - solid-python
         max_time: 0.1
         reference_result: ./elastic-tube-1d/reference-results/fluid-cpp_solid-python.tar.gz
+  
+  elastic-tube-1d_fluid-fortran_solid-fortran:
+    tutorials:
       - &elastic-tube-1d_fluid-fortran_solid-fortran
         path: elastic-tube-1d
         case_combination:
           - fluid-fortran
           - solid-fortran
         reference_result: ./elastic-tube-1d/reference-results/fluid-fortran_solid-fortran.tar.gz
+  
+  elastic-tube-1d_fluid-fortran-module_solid-fortran-module:
+    tutorials:
       - &elastic-tube-1d_fluid-fortran-module_solid-fortran-module
         path: elastic-tube-1d
         case_combination:
           - fluid-fortran-module
           - solid-fortran-module
         reference_result: ./elastic-tube-1d/reference-results/fluid-fortran-module_solid-fortran-module.tar.gz
+
+  elastic-tube-1d_fluid-python_solid-python:
+    tutorials:
       - &elastic-tube-1d_fluid-python_solid-python
         path: elastic-tube-1d
         case_combination:
           - fluid-python
           - solid-python
         reference_result: ./elastic-tube-1d/reference-results/fluid-python_solid-python.tar.gz
+  
+  elastic-tube-1d_fluid-rust_solid-rust:
+    tutorials:
       - &elastic-tube-1d_fluid-rust_solid-rust
         path: elastic-tube-1d
         case_combination:
           - fluid-rust
           - solid-rust
         reference_result: ./elastic-tube-1d/reference-results/fluid-rust_solid-rust.tar.gz
-      
 
-  elastic-tube-3d:
+  elastic-tube-3d_fluid-openfoam_solid-calculix:
     tutorials:
       - &elastic-tube-3d_fluid-openfoam_solid-calculix
         path: elastic-tube-3d
@@ -133,6 +156,9 @@ test_suites:
           - solid-calculix
         max_time_windows: 3
         reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-calculix.tar.gz
+
+  elastic-tube-3d_fluid-openfoam_solid-fenics:
+    tutorials:
       - &elastic-tube-3d_fluid-openfoam_solid-fenics
         path: elastic-tube-3d
         case_combination:
@@ -143,7 +169,7 @@ test_suites:
         skip_compare: true
         reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-fenics.tar.gz
 
-  flow-around-controlled-moving-cylinder:
+  flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python:
     tutorials:
       - &flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
         path: flow-around-controlled-moving-cylinder
@@ -154,27 +180,36 @@ test_suites:
         max_time: 0.01
         reference_result: ./flow-around-controlled-moving-cylinder/reference-results/controller-fmi_fluid-openfoam_solid-python.tar.gz
 
-  flow-over-heated-plate:
+  flow-over-heated-plate_fluid-openfoam_solid-dunefem:
     tutorials:
       - &flow-over-heated-plate_fluid-openfoam_solid-dunefem
         path: flow-over-heated-plate
         case_combination:
-         - fluid-openfoam
-         - solid-dunefem
+          - fluid-openfoam
+          - solid-dunefem
         timeout: 1200
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-dunefem.tar.gz
+
+  flow-over-heated-plate_fluid-openfoam_solid-fenics:
+    tutorials:
       - &flow-over-heated-plate_fluid-openfoam_solid-fenics
         path: flow-over-heated-plate
         case_combination:
-         - fluid-openfoam
-         - solid-fenics
+          - fluid-openfoam
+          - solid-fenics
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz
+
+  flow-over-heated-plate_fluid-openfoam_solid-fenicsx:
+    tutorials:
       - &flow-over-heated-plate_fluid-openfoam_solid-fenicsx
         path: flow-over-heated-plate
         case_combination:
-         - fluid-openfoam
-         - solid-fenicsx
+          - fluid-openfoam
+          - solid-fenicsx
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenicsx.tar.gz
+
+  flow-over-heated-plate_fluid-openfoam_solid-nutils:
+    tutorials:
       - &flow-over-heated-plate_fluid-openfoam_solid-nutils
         path: flow-over-heated-plate
         case_combination:
@@ -182,21 +217,27 @@ test_suites:
           - solid-nutils
         max_time: 0.05
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-nutils.tar.gz
+
+  flow-over-heated-plate_fluid-openfoam_solid-openfoam:
+    tutorials:
       - &flow-over-heated-plate_fluid-openfoam_solid-openfoam
         path: flow-over-heated-plate
         case_combination:
           - fluid-openfoam
           - solid-openfoam
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+
+  flow-over-heated-plate_fluid-su2_solid-openfoam:
+    tutorials:
       - &flow-over-heated-plate_fluid-su2_solid-openfoam
         path: flow-over-heated-plate
         case_combination:
-         - fluid-su2
-         - solid-openfoam
+          - fluid-su2
+          - solid-openfoam
         max_time: 0.1
         reference_result: ./flow-over-heated-plate/reference-results/fluid-su2_solid-openfoam.tar.gz
 
-  flow-over-heated-plate-nearest-projection:
+  flow-over-heated-plate-nearest-projection_fluid-openfoam_solid-openfoam:
     tutorials:
       - &flow-over-heated-plate-nearest-projection_fluid-openfoam_solid-openfoam
         path: flow-over-heated-plate-nearest-projection
@@ -206,7 +247,7 @@ test_suites:
         max_time: 0.1
         reference_result: ./flow-over-heated-plate-nearest-projection/reference-results/fluid-openfoam_solid-openfoam.tar.gz
 
-  flow-over-heated-plate-partitioned-flow:
+  flow-over-heated-plate-partitioned-flow_fluid1-openfoam_fluid2-openfoam_solid-openfoam:
     tutorials:
       - &flow-over-heated-plate-partitioned-flow_fluid1-openfoam_fluid2-openfoam_solid-openfoam
         path: flow-over-heated-plate-partitioned-flow
@@ -217,7 +258,7 @@ test_suites:
         max_time: 0.1
         reference_result: ./flow-over-heated-plate-partitioned-flow/reference-results/fluid1-openfoam_fluid2-openfoam_solid-openfoam.tar.gz
 
-  flow-over-heated-plate-two-meshes:
+  flow-over-heated-plate-two-meshes_fluid-openfoam_solid-calculix:
     tutorials:
       - &flow-over-heated-plate-two-meshes_fluid-openfoam_solid-calculix
         path: flow-over-heated-plate-two-meshes
@@ -225,9 +266,9 @@ test_suites:
           - fluid-openfoam
           - solid-calculix
         max_time: 0.1
-        reference_result: ./flow-over-heated-plate-two-meshes/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+        reference_result: ./flow-over-heated-plate-two-meshes/reference-results/fluid-openfoam_solid-calculix.tar.gz
 
-  free-flow-over-porous-media:
+  free-flow-over-porous-media_free-flow-dumux_porous-media-dumux:
     tutorials:
       - &free-flow-over-porous-media_free-flow-dumux_porous-media-dumux
         path: free-flow-over-porous-media
@@ -236,7 +277,7 @@ test_suites:
           - porous-media-dumux
         reference_result: ./free-flow-over-porous-media/reference-results/free-flow-dumux_porous-media-dumux.tar.gz
 
-  heat-exchanger:
+  heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam:
     tutorials:
       - &heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam
         path: heat-exchanger
@@ -247,7 +288,7 @@ test_suites:
         max_time: 3
         reference_result: ./heat-exchanger/reference-results/fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam.tar.gz
 
-  heat-exchanger-simplified:
+  heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix:
     tutorials:
       - &heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
         path: heat-exchanger-simplified
@@ -258,7 +299,7 @@ test_suites:
         max_time: 0.05
         reference_result: ./heat-exchanger-simplified/reference-results/fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix.tar.gz
 
-  multiple-perpendicular-flaps:
+  multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii:
     tutorials:
       - &multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
         path: multiple-perpendicular-flaps
@@ -269,7 +310,7 @@ test_suites:
         max_time: 0.1
         reference_result: ./multiple-perpendicular-flaps/reference-results/fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii.tar.gz
 
-  oscillator:
+  oscillator_mass-left-fmi_mass-right-fmi:
     tutorials:
       - &oscillator_mass-left-fmi_mass-right-fmi
         path: oscillator
@@ -277,6 +318,9 @@ test_suites:
           - mass-left-fmi
           - mass-right-fmi
         reference_result: ./oscillator/reference-results/mass-left-fmi_mass-right-fmi.tar.gz
+
+  oscillator_mass-left-python_mass-right-python:
+    tutorials:
       - &oscillator_mass-left-python_mass-right-python
         path: oscillator
         case_combination:
@@ -284,7 +328,7 @@ test_suites:
           - mass-right-python
         reference_result: ./oscillator/reference-results/mass-left-python_mass-right-python.tar.gz
 
-  oscillator-overlap:
+  oscillator-overlap_mass-left-python_mass-right-python:
     tutorials:
       - &oscillator-overlap_mass-left-python_mass-right-python
         path: oscillator-overlap
@@ -293,7 +337,7 @@ test_suites:
           - mass-right-python
         reference_result: ./oscillator-overlap/reference-results/mass-left-python_mass-right-python.tar.gz
 
-  partitioned-backwards-facing-step:
+  partitioned-backwards-facing-step_fluid1-openfoam_fluid2-openfoam:
     tutorials:
       - &partitioned-backwards-facing-step_fluid1-openfoam_fluid2-openfoam
         path: partitioned-backwards-facing-step
@@ -303,29 +347,7 @@ test_suites:
         max_time: 0.5
         reference_result: ./partitioned-backwards-facing-step/reference-results/fluid1-openfoam_fluid2-openfoam.tar.gz
 
-  partitioned-burgers-1d:
-    tutorials:
-      - &partitioned-burgers-1d_dirichlet-scipy_neumann-scipy
-        path: partitioned-burgers-1d
-        case_combination:
-          - dirichlet-scipy
-          - neumann-scipy
-        reference_result: ./partitioned-burgers-1d/reference-results/dirichlet-scipy_neumann-scipy.tar.gz
-      - &partitioned-burgers-1d_dirichlet-scipy_neumann-surrogate
-        path: partitioned-burgers-1d
-        case_combination:
-          - dirichlet-scipy
-          - neumann-surrogate
-        reference_result: ./partitioned-burgers-1d/reference-results/dirichlet-scipy_neumann-surrogate.tar.gz
-      - &partitioned-burgers-1d_monolithic-scipy
-        path: partitioned-burgers-1d
-        case_combination:
-          - monolithic-scipy
-          - none
-        skip_compare: true     # Not a coupled case, no preCICE exports
-        reference_result: none # Not a coupled case, no preCICE exports
-
-  partitioned-elastic-beam:
+  partitioned-elastic-beam_dirichlet-calculix_neumann-calculix:
     tutorials:
       - &partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
         path: partitioned-elastic-beam
@@ -335,7 +357,35 @@ test_suites:
         max_time_windows: 10
         reference_result: ./partitioned-elastic-beam/reference-results/dirichlet-calculix_neumann-calculix.tar.gz
 
-  partitioned-heat-conduction:
+  partitioned-burgers-1d_dirichlet-scipy_neumann-scipy:
+    tutorials:
+      - &partitioned-burgers-1d_dirichlet-scipy_neumann-scipy
+        path: partitioned-burgers-1d
+        case_combination:
+          - dirichlet-scipy
+          - neumann-scipy
+        reference_result: ./partitioned-burgers-1d/reference-results/dirichlet-scipy_neumann-scipy.tar.gz
+
+  partitioned-burgers-1d_dirichlet-scipy_neumann-surrogate:
+    tutorials:
+      - &partitioned-burgers-1d_dirichlet-scipy_neumann-surrogate
+        path: partitioned-burgers-1d
+        case_combination:
+          - dirichlet-scipy
+          - neumann-surrogate
+        reference_result: ./partitioned-burgers-1d/reference-results/dirichlet-scipy_neumann-surrogate.tar.gz
+
+  partitioned-burgers-1d_monolithic-scipy:
+    tutorials:
+      - &partitioned-burgers-1d_monolithic-scipy
+        path: partitioned-burgers-1d
+        case_combination:
+          - monolithic-scipy
+          - none
+        skip_compare: true     # Not a coupled case, no preCICE exports
+        reference_result: none # Not a coupled case, no preCICE exports
+
+  partitioned-heat-conduction_dirichlet-fenics_neumann-fenics:
     tutorials:
       - &partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
         path: partitioned-heat-conduction
@@ -344,6 +394,9 @@ test_suites:
           - neumann-fenics
         max_time: 0.3
         reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-fenics_neumann-fenics.tar.gz
+
+  partitioned-heat-conduction_dirichlet-fenicsx_neumann-fenicsx:
+    tutorials:
       - &partitioned-heat-conduction_dirichlet-fenicsx_neumann-fenicsx
         path: partitioned-heat-conduction
         case_combination:
@@ -351,6 +404,9 @@ test_suites:
           - neumann-fenicsx
         max_time: 0.3
         reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-fenicsx_neumann-fenicsx.tar.gz
+
+  partitioned-heat-conduction_dirichlet-nutils_neumann-nutils:
+    tutorials:
       - &partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
         path: partitioned-heat-conduction
         case_combination:
@@ -358,6 +414,9 @@ test_suites:
           - neumann-nutils
         max_time: 0.3
         reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-nutils_neumann-nutils.tar.gz
+
+  partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam:
+    tutorials:
       - &partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam
         path: partitioned-heat-conduction
         case_combination:
@@ -366,7 +425,7 @@ test_suites:
         max_time: 0.3
         reference_result: ./partitioned-heat-conduction/reference-results/dirichlet-openfoam_neumann-openfoam.tar.gz
 
-  partitioned-heat-conduction-3d:
+  partitioned-heat-conduction-3d_dirichlet-fenicsx_neumann-fenicsx:
     tutorials:
       - &partitioned-heat-conduction-3d_dirichlet-fenicsx_neumann-fenicsx
         path: partitioned-heat-conduction-3d
@@ -376,7 +435,7 @@ test_suites:
         max_time: 0.3
         reference_result: ./partitioned-heat-conduction-3d/reference-results/dirichlet-fenicsx_neumann-fenicsx.tar.gz
 
-  partitioned-heat-conduction-complex:
+  partitioned-heat-conduction-complex_dirichlet-fenics_neumann-fenics:
     tutorials:
       - &partitioned-heat-conduction-complex_dirichlet-fenics_neumann-fenics
         path: partitioned-heat-conduction-complex
@@ -385,7 +444,7 @@ test_suites:
           - neumann-fenics
         reference_result: ./partitioned-heat-conduction-complex/reference-results/dirichlet-fenics_neumann-fenics.tar.gz
 
-  partitioned-heat-conduction-direct:
+  partitioned-heat-conduction-direct_dirichlet-nutils_neumann-nutils:
     tutorials:
       - &partitioned-heat-conduction-direct_dirichlet-nutils_neumann-nutils
         path: partitioned-heat-conduction-direct
@@ -395,7 +454,7 @@ test_suites:
         max_time: 0.3
         reference_result: ./partitioned-heat-conduction-direct/reference-results/dirichlet-nutils_neumann-nutils.tar.gz
 
-  partitioned-heat-conduction-overlap:
+  partitioned-heat-conduction-overlap_left-fenics_right-fenics:
     tutorials:
       - &partitioned-heat-conduction-overlap_left-fenics_right-fenics
         path: partitioned-heat-conduction-overlap
@@ -404,7 +463,7 @@ test_suites:
           - right-fenics
         reference_result: ./partitioned-heat-conduction-overlap/reference-results/left-fenics_right-fenics.tar.gz
 
-  partitioned-pipe:
+  partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam:
     tutorials:
       - &partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam
         path: partitioned-pipe
@@ -413,6 +472,9 @@ test_suites:
           - fluid2-openfoam-pimplefoam
         max_time: 0.1
         reference_result: ./partitioned-pipe/reference-results/fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam.tar.gz
+
+  partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam:
+    tutorials:
       - &partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
         path: partitioned-pipe
         case_combination:
@@ -421,7 +483,7 @@ test_suites:
         max_time: 0.1
         reference_result: ./partitioned-pipe/reference-results/fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam.tar.gz
 
-  partitioned-pipe-multiscale:
+  partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam:
     tutorials:
       - &partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
         path: partitioned-pipe-multiscale
@@ -431,6 +493,9 @@ test_suites:
         run-before: ./set-case.sh 1d3d
         max_time: 0.05
         reference_result: ./partitioned-pipe-multiscale/reference-results/fluid1d-left-nutils_fluid3d-right-openfoam.tar.gz
+
+  partitioned-pipe-multiscale_fluid3d-left-openfoam_fluid1d-right-nutils:
+    tutorials:
       - &partitioned-pipe-multiscale_fluid3d-left-openfoam_fluid1d-right-nutils
         path: partitioned-pipe-multiscale
         case_combination:
@@ -440,7 +505,7 @@ test_suites:
         max_time: 0.05
         reference_result: ./partitioned-pipe-multiscale/reference-results/fluid3d-left-openfoam_fluid1d-right-nutils.tar.gz
 
-  partitioned-pipe-two-phase:
+  partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam:
     tutorials:
       - &partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam
         path: partitioned-pipe-two-phase
@@ -449,6 +514,9 @@ test_suites:
           - fluid2-openfoam
         max_time: 0.1
         reference_result: ./partitioned-pipe-two-phase/reference-results/fluid1-openfoam_fluid2-openfoam.tar.gz
+
+  partitioned-pipe-two-phase_monolithic-openfoam:
+    tutorials:
       - &partitioned-pipe-two-phase_monolithic-openfoam
         path: partitioned-pipe-two-phase
         case_combination:
@@ -457,7 +525,7 @@ test_suites:
         skip_compare: true     # Not a coupled case, no preCICE exports
         reference_result: none # Not a coupled case, no preCICE exports
 
-  perpendicular-flap:
+  perpendicular-flap_fluid-fake_solid-fake:
     tutorials:
       - &perpendicular-flap_fluid-fake_solid-fake
         path: perpendicular-flap
@@ -466,6 +534,9 @@ test_suites:
           - solid-fake
         max_time: 0.1
         reference_result: ./perpendicular-flap/reference-results/fluid-fake_solid-fake.tar.gz
+
+  perpendicular-flap_fluid-nutils_solid-calculix:
+    tutorials:
       - &perpendicular-flap_fluid-nutils_solid-calculix
         path: perpendicular-flap
         case_combination:
@@ -474,24 +545,36 @@ test_suites:
         max_time: 0.1
         timeout: 1200
         reference_result: ./perpendicular-flap/reference-results/fluid-nutils_solid-calculix.tar.gz
+
+  perpendicular-flap_fluid-openfoam_solid-calculix:
+    tutorials:
       - &perpendicular-flap_fluid-openfoam_solid-calculix
         path: perpendicular-flap
         case_combination:
           - fluid-openfoam
           - solid-calculix
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-calculix.tar.gz
+
+  perpendicular-flap_fluid-openfoam_solid-dealii:
+    tutorials:
       - &perpendicular-flap_fluid-openfoam_solid-dealii
         path: perpendicular-flap
         case_combination:
           - fluid-openfoam
           - solid-dealii
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-dealii.tar.gz
+
+  perpendicular-flap_fluid-openfoam_solid-dune:
+    tutorials:
       - &perpendicular-flap_fluid-openfoam_solid-dune
         path: perpendicular-flap
         case_combination:
           - fluid-openfoam
           - solid-dune
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-dune.tar.gz
+
+  perpendicular-flap_fluid-openfoam_solid-fenics:
+    tutorials:
       - &perpendicular-flap_fluid-openfoam_solid-fenics
         path: perpendicular-flap
         case_combination:
@@ -499,6 +582,9 @@ test_suites:
           - solid-fenics
         max_time: 0.1
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-fenics.tar.gz
+
+  perpendicular-flap_fluid-openfoam_solid-nutils:
+    tutorials:
       - &perpendicular-flap_fluid-openfoam_solid-nutils
         path: perpendicular-flap
         case_combination:
@@ -506,6 +592,9 @@ test_suites:
           - solid-nutils
         max_time: 0.1
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-nutils.tar.gz
+
+  perpendicular-flap_fluid-openfoam_solid-openfoam:
+    tutorials:
       - &perpendicular-flap_fluid-openfoam_solid-openfoam
         path: perpendicular-flap
         case_combination:
@@ -513,6 +602,9 @@ test_suites:
           - solid-openfoam
         max_time: 0.03
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+
+  perpendicular-flap_fluid-openfoam_solid-solids4foam:
+    tutorials:
       - &perpendicular-flap_fluid-openfoam_solid-solids4foam
         path: perpendicular-flap
         case_combination:
@@ -520,6 +612,9 @@ test_suites:
           - solid-solids4foam
         max_time: 0.1
         reference_result: ./perpendicular-flap/reference-results/fluid-openfoam_solid-solids4foam.tar.gz
+
+  perpendicular-flap_fluid-su2_solid-fenics:
+    tutorials:
       - &perpendicular-flap_fluid-su2_solid-fenics
         path: perpendicular-flap
         case_combination:
@@ -528,16 +623,16 @@ test_suites:
         max_time: 0.1
         reference_result: ./perpendicular-flap/reference-results/fluid-su2_solid-fenics.tar.gz
 
-  quickstart:
+  quickstart_fluid-openfoam_solid-cpp:
     tutorials:
-      - &quickstart_openfoam_cpp
+      - &quickstart_fluid-openfoam_solid-cpp
         path: quickstart
         case_combination:
           - fluid-openfoam
           - solid-cpp
         reference_result: ./quickstart/reference-results/fluid-openfoam_solid-cpp.tar.gz
 
-  resonant-circuit:
+  resonant-circuit_capacitor-julia_coil-julia:
     tutorials:
       - &resonant-circuit_capacitor-julia_coil-julia
         path: resonant-circuit
@@ -546,6 +641,9 @@ test_suites:
           - coil-julia
         timeout: 900
         reference_result: ./resonant-circuit/reference-results/capacitor-julia_coil-julia.tar.gz
+
+  resonant-circuit_capacitor-python_coil-python:
+    tutorials:
       - &resonant-circuit_capacitor-python_coil-python
         path: resonant-circuit
         case_combination:
@@ -553,7 +651,7 @@ test_suites:
           - coil-python
         reference_result: ./resonant-circuit/reference-results/capacitor-python_coil-python.tar.gz
 
-  turek-hron-fsi3:
+  turek-hron-fsi3_fluid-nutils_solid-nutils:
     tutorials:
       - &turek-hron-fsi3_fluid-nutils_solid-nutils
         path: turek-hron-fsi3
@@ -563,6 +661,9 @@ test_suites:
         max_time: 0.003
         timeout: 1200
         reference_result: ./turek-hron-fsi3/reference-results/fluid-nutils_solid-nutils.tar.gz
+
+  turek-hron-fsi3_fluid-openfoam_solid-dealii:
+    tutorials:
       - &turek-hron-fsi3_fluid-openfoam_solid-dealii
         path: turek-hron-fsi3
         case_combination:
@@ -571,7 +672,7 @@ test_suites:
         max_time: 0.003
         reference_result: ./turek-hron-fsi3/reference-results/fluid-openfoam_solid-dealii.tar.gz
 
-  two-scale-heat-conduction:
+  two-scale-heat-conduction_macro-dumux_micro-dumux:
     tutorials:
       - &two-scale-heat-conduction_macro-dumux_micro-dumux
         path: two-scale-heat-conduction
@@ -579,12 +680,18 @@ test_suites:
           - macro-dumux
           - micro-dumux
         reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux.tar.gz
+
+  two-scale-heat-conduction_macro-dumux_micro-dumux_parallel:
+    tutorials:
       - &two-scale-heat-conduction_macro-dumux_micro-dumux_parallel
         path: two-scale-heat-conduction
         case_combination:
           - macro-dumux
           - micro-dumux_parallel
         reference_result: ./two-scale-heat-conduction/reference-results/macro-dumux_micro-dumux_parallel.tar.gz
+
+  two-scale-heat-conduction_macro-nutils_micro-nutils:
+    tutorials:
       - &two-scale-heat-conduction_macro-nutils_micro-nutils
         path: two-scale-heat-conduction
         case_combination:
@@ -594,7 +701,7 @@ test_suites:
         timeout: 1200
         reference_result: ./two-scale-heat-conduction/reference-results/macro-nutils_micro-nutils.tar.gz
 
-  volume-coupled-diffusion:
+  volume-coupled-diffusion_source-fenics_drain-fenics:
     tutorials:
       - &volume-coupled-diffusion_source-fenics_drain-fenics
         path: volume-coupled-diffusion
@@ -604,7 +711,7 @@ test_suites:
         max_time: 1.0
         reference_result: ./volume-coupled-diffusion/reference-results/source-fenics_drain-fenics.tar.gz
 
-  volume-coupled-flow:
+  volume-coupled-flow_fluid-openfoam_source-nutils:
     tutorials:
       - &volume-coupled-flow_fluid-openfoam_source-nutils
         path: volume-coupled-flow
@@ -614,7 +721,7 @@ test_suites:
         max_time: 0.05
         reference_result: ./volume-coupled-flow/reference-results/fluid-openfoam_source-nutils.tar.gz
 
-  water-hammer:
+  water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam:
     tutorials:
       - &water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
         path: water-hammer
@@ -624,6 +731,9 @@ test_suites:
         run-before: ./set-case.sh 1d3d
         max_time: 0.05
         reference_result: ./water-hammer/reference-results/fluid1d-left-nutils_fluid3d-right-openfoam.tar.gz
+
+  water-hammer_fluid3d-left-openfoam_fluid1d-right-nutils:
+    tutorials:
       - &water-hammer_fluid3d-left-openfoam_fluid1d-right-nutils
         path: water-hammer
         case_combination:
@@ -633,7 +743,7 @@ test_suites:
         max_time: 0.05
         reference_result: ./water-hammer/reference-results/fluid3d-left-openfoam_fluid1d-right-nutils.tar.gz
 
-  wolf-sheep-soil-creep:
+  wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa:
     tutorials:
       - &wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
         path: wolf-sheep-soil-creep
@@ -642,6 +752,198 @@ test_suites:
           - wolf-sheep-grass-mesa
         max_time: 20
         reference_result: ./wolf-sheep-soil-creep/reference-results/soil-creep-landlab_wolf-sheep-grass-mesa.tar.gz
+
+  #####################################################################
+  ## Test suites per tutorial, referring to the tests defined above
+  aste-turbine:
+    tutorials:
+      - *aste-turbine_aste
+
+  breaking-dam-2d:
+    tutorials:
+      - *breaking-dam-2d_fluid-openfoam_solid-calculix
+  
+  channel-transport:
+    tutorials:
+      - *channel-transport_fluid-nutils_transport-nutils
+      - *channel-transport_fluid-openfoam_transport-nutils
+      - *channel-transport_fluid-openfoam_transport-openfoam
+
+  channel-transport-particles:
+    tutorials:
+      - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
+      - *channel-transport-particles_fluid-nutils_particles-mercurydpm
+
+  channel-transport-reaction:
+    tutorials:
+      - *channel-transport-reaction_fluid-fenics_chemical-fenics
+
+  elastic-tube-1d:
+    tutorials:
+      - *elastic-tube-1d_fluid-cpp_solid-cpp
+      - *elastic-tube-1d_fluid-cpp_solid-python
+      - *elastic-tube-1d_fluid-fortran_solid-fortran
+      - *elastic-tube-1d_fluid-fortran-module_solid-fortran-module
+      - *elastic-tube-1d_fluid-python_solid-python
+      - *elastic-tube-1d_fluid-rust_solid-rust
+
+  elastic-tube-3d:
+    tutorials:
+      - *elastic-tube-3d_fluid-openfoam_solid-calculix
+      - *elastic-tube-3d_fluid-openfoam_solid-fenics
+
+  flow-around-controlled-moving-cylinder:
+    tutorials:
+      - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
+
+  flow-over-heated-plate:
+    tutorials:
+      - *flow-over-heated-plate_fluid-openfoam_solid-dunefem
+      - *flow-over-heated-plate_fluid-openfoam_solid-fenics
+      - *flow-over-heated-plate_fluid-openfoam_solid-fenicsx
+      - *flow-over-heated-plate_fluid-openfoam_solid-nutils
+      - *flow-over-heated-plate_fluid-openfoam_solid-openfoam
+      - *flow-over-heated-plate_fluid-su2_solid-openfoam
+
+  flow-over-heated-plate-nearest-projection:
+    tutorials:
+      - *flow-over-heated-plate-nearest-projection_fluid-openfoam_solid-openfoam
+
+  flow-over-heated-plate-partitioned-flow:
+    tutorials:
+      - *flow-over-heated-plate-partitioned-flow_fluid1-openfoam_fluid2-openfoam_solid-openfoam
+
+  flow-over-heated-plate-two-meshes:
+    tutorials:
+      - *flow-over-heated-plate-two-meshes_fluid-openfoam_solid-calculix
+
+  free-flow-over-porous-media:
+    tutorials:
+      - *free-flow-over-porous-media_free-flow-dumux_porous-media-dumux
+
+  heat-exchanger:
+    tutorials:
+      - *heat-exchanger_fluid-inner-openfoam_solid-calculix_fluid-outer-openfoam
+
+  heat-exchanger-simplified:
+    tutorials:
+      - *heat-exchanger-simplified_fluid-top-openfoam_fluid-bottom-openfoam_solid-calculix
+
+  multiple-perpendicular-flaps:
+    tutorials:
+      - *multiple-perpendicular-flaps_fluid-openfoam_solid-upstream-dealii_solid-downstream-dealii
+
+  oscillator:
+    tutorials:
+      - *oscillator_mass-left-fmi_mass-right-fmi
+      - *oscillator_mass-left-python_mass-right-python
+
+  oscillator-overlap:
+    tutorials:
+      - *oscillator-overlap_mass-left-python_mass-right-python
+
+  partitioned-backwards-facing-step:
+    tutorials:
+      - *partitioned-backwards-facing-step_fluid1-openfoam_fluid2-openfoam
+
+  partitioned-burgers-1d:
+    tutorials:
+      - *partitioned-burgers-1d_dirichlet-scipy_neumann-scipy
+      - *partitioned-burgers-1d_dirichlet-scipy_neumann-surrogate
+      - *partitioned-burgers-1d_monolithic-scipy
+
+  partitioned-elastic-beam:
+    tutorials:
+      - *partitioned-elastic-beam_dirichlet-calculix_neumann-calculix
+
+  partitioned-heat-conduction:
+    tutorials:
+      - *partitioned-heat-conduction_dirichlet-fenics_neumann-fenics
+      - *partitioned-heat-conduction_dirichlet-fenicsx_neumann-fenicsx
+      - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
+      - *partitioned-heat-conduction_dirichlet-openfoam_neumann-openfoam
+
+  partitioned-heat-conduction-3d:
+    tutorials:
+      - *partitioned-heat-conduction-3d_dirichlet-fenicsx_neumann-fenicsx
+
+  partitioned-heat-conduction-complex:
+    tutorials:
+      - *partitioned-heat-conduction-complex_dirichlet-fenics_neumann-fenics
+
+  partitioned-heat-conduction-direct:
+    tutorials:
+      - *partitioned-heat-conduction-direct_dirichlet-nutils_neumann-nutils
+
+  partitioned-heat-conduction-overlap:
+    tutorials:
+      - *partitioned-heat-conduction-overlap_left-fenics_right-fenics
+
+  partitioned-pipe:
+    tutorials:
+      - *partitioned-pipe_fluid1-openfoam-pimplefoam_fluid2-openfoam-pimplefoam
+      - *partitioned-pipe_fluid1-openfoam-sonicliquidfoam_fluid2-openfoam-sonicliquidfoam
+
+  partitioned-pipe-multiscale:
+    tutorials:
+      - *partitioned-pipe-multiscale_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *partitioned-pipe-multiscale_fluid3d-left-openfoam_fluid1d-right-nutils
+
+  partitioned-pipe-two-phase:
+    tutorials:
+      - *partitioned-pipe-two-phase_fluid1-openfoam_fluid2-openfoam
+      - *partitioned-pipe-two-phase_monolithic-openfoam
+
+  perpendicular-flap:
+    tutorials:
+      - *perpendicular-flap_fluid-fake_solid-fake
+      - *perpendicular-flap_fluid-nutils_solid-calculix
+      - *perpendicular-flap_fluid-openfoam_solid-calculix
+      - *perpendicular-flap_fluid-openfoam_solid-dealii
+      - *perpendicular-flap_fluid-openfoam_solid-dune
+      - *perpendicular-flap_fluid-openfoam_solid-fenics
+      - *perpendicular-flap_fluid-openfoam_solid-nutils
+      - *perpendicular-flap_fluid-openfoam_solid-openfoam
+      - *perpendicular-flap_fluid-openfoam_solid-solids4foam
+      - *perpendicular-flap_fluid-su2_solid-fenics
+
+  quickstart:
+    tutorials:
+      - *quickstart_fluid-openfoam_solid-cpp
+
+  resonant-circuit:
+    tutorials:
+      - *resonant-circuit_capacitor-julia_coil-julia
+      - *resonant-circuit_capacitor-python_coil-python
+
+  turek-hron-fsi3:
+    tutorials:
+      - *turek-hron-fsi3_fluid-nutils_solid-nutils
+      - *turek-hron-fsi3_fluid-openfoam_solid-dealii
+
+  two-scale-heat-conduction:
+    tutorials:
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux
+      - *two-scale-heat-conduction_macro-dumux_micro-dumux_parallel
+      - *two-scale-heat-conduction_macro-nutils_micro-nutils
+
+  volume-coupled-diffusion:
+    tutorials:
+      - *volume-coupled-diffusion_source-fenics_drain-fenics
+
+  volume-coupled-flow:
+    tutorials:
+      - *volume-coupled-flow_fluid-openfoam_source-nutils
+
+  water-hammer:
+    tutorials:
+      - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
+      - *water-hammer_fluid3d-left-openfoam_fluid1d-right-nutils
+
+  wolf-sheep-soil-creep:
+    tutorials:
+      - *wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
+
 
 #####################################################################
 ## Externally-hosted test cases
@@ -682,7 +984,7 @@ test_suites:
 
   release:
     tutorials:
-      - *aste-turbine
+      - *aste-turbine_aste
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
       - *channel-transport_fluid-openfoam_transport-openfoam
@@ -737,7 +1039,7 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
       - *perpendicular-flap_fluid-su2_solid-fenics
-      - *quickstart_openfoam_cpp
+      - *quickstart_fluid-openfoam_solid-cpp
       - *resonant-circuit_capacitor-python_coil-python
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
       - *two-scale-heat-conduction_macro-dumux_micro-dumux
@@ -760,6 +1062,7 @@ test_suites:
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *perpendicular-flap_fluid-nutils_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-nutils
+      - *perpendicular-flap_fluid-openfoam_solid-solids4foam
       - *resonant-circuit_capacitor-julia_coil-julia
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
       - *two-scale-heat-conduction_macro-nutils_micro-nutils
@@ -772,7 +1075,7 @@ test_suites:
   # A selection of tests that cover a wide range of main features, meant for quicker CI executions
   precice:
     tutorials:
-      - *quickstart_openfoam_cpp                                                 # serial-explicit, RBF
+      - *quickstart_fluid-openfoam_solid-cpp                                     # serial-explicit, RBF
       - *channel-transport_fluid-openfoam_transport-nutils                       # parallel-explicit, RBF, python bindings
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam                    # serial-implicit (Aitken), nearest-neighbor
       - *flow-over-heated-plate-nearest-projection_fluid-openfoam_solid-openfoam # serial-implicit (IQN-ILS), nearest-projection
@@ -783,7 +1086,7 @@ test_suites:
 
   aste:
     tutorials:
-      - *aste-turbine
+      - *aste-turbine_aste
 
   calculix-adapter:
     tutorials:
@@ -898,8 +1201,9 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-dune
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
+      - *perpendicular-flap_fluid-openfoam_solid-solids4foam
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
-      - *quickstart_openfoam_cpp
+      - *quickstart_fluid-openfoam_solid-cpp
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
       - *water-hammer_fluid3d-left-openfoam_fluid1d-right-nutils
