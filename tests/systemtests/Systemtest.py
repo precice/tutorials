@@ -294,7 +294,7 @@ class Systemtest:
         self.build_arguments_by_component = {}
         resolved_ref_cache: Dict[Tuple[str, str], str] = {}
 
-        logging.info(
+        logging.debug(
             f"Substituting default build arguments and resolving git refs for {self}.")
 
         for case in self.case_combination.cases:
