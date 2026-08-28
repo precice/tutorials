@@ -142,6 +142,13 @@ test_suites:
         tolerance: 1e-2    # Some values are too close to zero
         skip_compare: true
         reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-fenics.tar.gz
+      - &elastic-tube-3d_fluid-openfoam_solid-solids4foam
+        path: elastic-tube-3d
+        case_combination:
+          - fluid-openfoam
+          - solid-solids4foam
+        max_time_windows: 3
+        reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-solids4foam.tar.gz
 
   flow-around-controlled-moving-cylinder:
     tutorials:
@@ -927,6 +934,7 @@ test_suites:
   solids4foam:
     tutorials:
       - *perpendicular-flap_fluid-openfoam_solid-solids4foam
+      - *elastic-tube-3d_fluid-openfoam_solid-solids4foam
 
   su2-adapter:
     tutorials:
