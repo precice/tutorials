@@ -36,6 +36,7 @@ Solid participant:
 
 * deal.II. For more information, have a look at the [deal.II adapter documentation](https://precice.org/adapter-dealii-overview.html). This tutorial requires the nonlinear solid solver. Please copy the nonlinear solver executable to the `solid-dealii` folder or make it discoverable at runtime and update the `solid-dealii/run.sh` script.
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
+* solids4foam (OpenFOAM). A neo-Hookean, nonlinear-geometry total-Lagrangian solid model with the same material properties as the deal.II case (E = 5.6 MPa, nu = 0.4, rho = 1000 kg/m^3), solved with PETSc SNES. The `interface` patch uses the solids4foam `solidTraction` boundary condition, reading the coupled traction from the `solidTraction` field that the adapter fills. This requires solids4foam v2.4 or later built with PETSc, and an OpenFOAM-preCICE adapter with support for reading `Stress` in solid participants. For more information, have a look at the [solids4foam documentation](https://solids4foam.github.io/).
 
 ## Running the Simulation
 
