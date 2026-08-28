@@ -13,7 +13,7 @@
 test_suites:
   aste-turbine_aste:
     tutorials:
-      - &aste-turbine
+      - &aste-turbine_aste
         path: aste-turbine
         case_combination:
           - aste
@@ -50,7 +50,7 @@ test_suites:
           - transport-nutils
         max_time: 0.1
         reference_result: ./channel-transport/reference-results/fluid-openfoam_transport-nutils.tar.gz
-  
+
   channel-transport_fluid-openfoam_transport-openfoam:
     tutorials:
       - &channel-transport_fluid-openfoam_transport-openfoam
@@ -757,7 +757,7 @@ test_suites:
   ## Test suites per tutorial, referring to the tests defined above
   aste-turbine:
     tutorials:
-      - *aste-turbine
+      - *aste-turbine_aste
 
   breaking-dam-2d:
     tutorials:
@@ -984,7 +984,7 @@ test_suites:
 
   release:
     tutorials:
-      - *aste-turbine
+      - *aste-turbine_aste
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
       - *channel-transport_fluid-openfoam_transport-nutils
       - *channel-transport_fluid-openfoam_transport-openfoam
@@ -1085,7 +1085,7 @@ test_suites:
 
   aste:
     tutorials:
-      - *aste-turbine
+      - *aste-turbine_aste
 
   calculix-adapter:
     tutorials:
