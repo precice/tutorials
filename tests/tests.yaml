@@ -185,8 +185,8 @@ test_suites:
       - &flow-over-heated-plate_fluid-openfoam_solid-dunefem
         path: flow-over-heated-plate
         case_combination:
-         - fluid-openfoam
-         - solid-dunefem
+          - fluid-openfoam
+          - solid-dunefem
         timeout: 1200
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-dunefem.tar.gz
 
@@ -195,8 +195,8 @@ test_suites:
       - &flow-over-heated-plate_fluid-openfoam_solid-fenics
         path: flow-over-heated-plate
         case_combination:
-         - fluid-openfoam
-         - solid-fenics
+          - fluid-openfoam
+          - solid-fenics
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenics.tar.gz
 
   flow-over-heated-plate_fluid-openfoam_solid-fenicsx:
@@ -204,8 +204,8 @@ test_suites:
       - &flow-over-heated-plate_fluid-openfoam_solid-fenicsx
         path: flow-over-heated-plate
         case_combination:
-         - fluid-openfoam
-         - solid-fenicsx
+          - fluid-openfoam
+          - solid-fenicsx
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenicsx.tar.gz
 
   flow-over-heated-plate_fluid-openfoam_solid-nutils:
@@ -232,8 +232,8 @@ test_suites:
       - &flow-over-heated-plate_fluid-su2_solid-openfoam
         path: flow-over-heated-plate
         case_combination:
-         - fluid-su2
-         - solid-openfoam
+          - fluid-su2
+          - solid-openfoam
         max_time: 0.1
         reference_result: ./flow-over-heated-plate/reference-results/fluid-su2_solid-openfoam.tar.gz
 
