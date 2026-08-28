@@ -178,7 +178,7 @@ test_suites:
           - fluid-openfoam
           - solid-python
         max_time: 0.01
-        reference_result: ./flow-around-controlled-moving-cylinder/reference-results/controller-fmi_fluid-openfoam_solid-python.tar.gz  
+        reference_result: ./flow-around-controlled-moving-cylinder/reference-results/controller-fmi_fluid-openfoam_solid-python.tar.gz
 
   flow-over-heated-plate_fluid-openfoam_solid-dunefem:
     tutorials:
