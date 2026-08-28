@@ -721,16 +721,6 @@ test_suites:
         max_time: 0.05
         reference_result: ./volume-coupled-flow/reference-results/fluid-openfoam_source-nutils.tar.gz
 
-  wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa:
-    tutorials:
-      - &wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
-        path: wolf-sheep-soil-creep
-        case_combination:
-          - soil-creep-landlab
-          - wolf-sheep-grass-mesa
-        max_time: 20
-        reference_result: ./wolf-sheep-soil-creep/reference-results/soil-creep-landlab_wolf-sheep-grass-mesa.tar.gz
-
   water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam:
     tutorials:
       - &water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
@@ -752,6 +742,16 @@ test_suites:
         run-before: ./set-case.sh 3d1d
         max_time: 0.05
         reference_result: ./water-hammer/reference-results/fluid3d-left-openfoam_fluid1d-right-nutils.tar.gz
+
+  wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa:
+    tutorials:
+      - &wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
+        path: wolf-sheep-soil-creep
+        case_combination:
+          - soil-creep-landlab
+          - wolf-sheep-grass-mesa
+        max_time: 20
+        reference_result: ./wolf-sheep-soil-creep/reference-results/soil-creep-landlab_wolf-sheep-grass-mesa.tar.gz
 
   #####################################################################
   ## Test suites per tutorial, referring to the tests defined above
