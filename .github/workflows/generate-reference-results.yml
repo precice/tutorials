@@ -106,9 +106,8 @@ jobs:
         if [ -z "${{ inputs.suites }}" ]; then
           git add ./*/*/*.tar.gz
           git add ./*/*.tar.gz
-          git add ./*/reference-results/*.metadata
         else
-          git add -A -- '**/reference-results/*.tar.gz' '**/reference-results/*.metadata'
+          git add -A -- '**/reference-results/*.tar.gz'
         fi
         git commit -m "${{inputs.commit_msg}}"
         git push
