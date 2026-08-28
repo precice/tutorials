@@ -1062,6 +1062,7 @@ test_suites:
       - *partitioned-heat-conduction_dirichlet-nutils_neumann-nutils
       - *perpendicular-flap_fluid-nutils_solid-calculix
       - *perpendicular-flap_fluid-openfoam_solid-nutils
+      - *perpendicular-flap_fluid-openfoam_solid-solids4foam
       - *resonant-circuit_capacitor-julia_coil-julia
       - *turek-hron-fsi3_fluid-nutils_solid-nutils
       - *two-scale-heat-conduction_macro-nutils_micro-nutils
@@ -1200,6 +1201,7 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-dune
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
+      - *perpendicular-flap_fluid-openfoam_solid-solids4foam
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
       - *quickstart_fluid-openfoam_solid-cpp
       - *volume-coupled-flow_fluid-openfoam_source-nutils
