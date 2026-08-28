@@ -62,7 +62,7 @@ def main():
         if gh_actions:
             print("::endgroup::", flush=True)
 
-    logging.info(f"Setting up the tests to run... (might take a couple of minutes)")
+    logging.info(f"Configuring the tests to run... (might take a couple of minutes)")
 
     systemtests_to_run = []
     test_suites_to_execute = []
