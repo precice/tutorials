@@ -50,7 +50,7 @@ test_suites:
           - transport-nutils
         max_time: 0.1
         reference_result: ./channel-transport/reference-results/fluid-openfoam_transport-nutils.tar.gz
-
+  
   channel-transport_fluid-openfoam_transport-openfoam:
     tutorials:
       - &channel-transport_fluid-openfoam_transport-openfoam
@@ -60,16 +60,6 @@ test_suites:
           - transport-openfoam
         max_time: 0.5
         reference_result: ./channel-transport/reference-results/fluid-openfoam_transport-openfoam.tar.gz
-
-  channel-transport-reaction_fluid-fenics_chemical-fenics:
-    tutorials:
-      - &channel-transport-reaction_fluid-fenics_chemical-fenics
-        path: channel-transport-reaction
-        case_combination:
-          - fluid-fenics
-          - chemical-fenics
-        max_time: 0.5
-        reference_result: ./channel-transport-reaction/reference-results/fluid-fenics_chemical-fenics.tar.gz
 
   channel-transport-particles_fluid-openfoam_particles-mercurydpm:
     tutorials:
@@ -91,6 +81,16 @@ test_suites:
         max_time: 0.025
         timeout: 600
         reference_result: ./channel-transport-particles/reference-results/fluid-nutils_particles-mercurydpm.tar.gz
+
+  channel-transport-reaction_fluid-fenics_chemical-fenics:
+    tutorials:
+      - &channel-transport-reaction_fluid-fenics_chemical-fenics
+        path: channel-transport-reaction
+        case_combination:
+          - fluid-fenics
+          - chemical-fenics
+        max_time: 0.5
+        reference_result: ./channel-transport-reaction/reference-results/fluid-fenics_chemical-fenics.tar.gz
   
   elastic-tube-1d_fluid-cpp_solid-cpp:
     tutorials:
@@ -758,7 +758,7 @@ test_suites:
   aste-turbine:
     tutorials:
       - *aste-turbine
-          
+
   breaking-dam-2d:
     tutorials:
       - *breaking-dam-2d_fluid-openfoam_solid-calculix
@@ -769,14 +769,14 @@ test_suites:
       - *channel-transport_fluid-openfoam_transport-nutils
       - *channel-transport_fluid-openfoam_transport-openfoam
 
-  channel-transport-reaction:
-    tutorials:
-      - *channel-transport-reaction_fluid-fenics_chemical-fenics
-
   channel-transport-particles:
     tutorials:
       - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
       - *channel-transport-particles_fluid-nutils_particles-mercurydpm
+
+  channel-transport-reaction:
+    tutorials:
+      - *channel-transport-reaction_fluid-fenics_chemical-fenics
 
   elastic-tube-1d:
     tutorials:
