@@ -38,6 +38,16 @@ Solid participant:
 * Nutils. For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html).
 * solids4foam (OpenFOAM). A neo-Hookean, nonlinear-geometry total-Lagrangian solid model with the same material properties as the deal.II case (E = 5.6 MPa, nu = 0.4, rho = 1000 kg/m^3), solved with PETSc SNES. The `interface` patch uses the solids4foam `solidTraction` boundary condition, reading the coupled traction from the `solidTraction` field that the adapter fills. This requires solids4foam v2.4 or later built with PETSc, and an OpenFOAM-preCICE adapter with support for reading `Stress` in solid participants. For more information, have a look at the [solids4foam documentation](https://solids4foam.github.io/).
 
+  This case uses the high-order (polynomial reconstruction) solid discretisation with `polynomialOrder 3`, set in `constant/solidProperties`. Lowering the order, or removing the `highOrderCoeffs` sub-dictionary altogether, trades accuracy for a cheaper solid solve. The values below are measured over the settled limit cycle (t = 8 to 15 s) of the full 15 s simulation, against the benchmark value of uy = 1.48 +/- 34.38 mm:
+
+  | `polynomialOrder` | amplitude [mm] | amplitude error | solid solver cost | end-to-end runtime |
+  | --- | --- | --- | --- | --- |
+  | (no `highOrderCoeffs`) | 32.59 | -5.2% | 1.0x | 1.00x |
+  | 2 | 33.34 | -3.0% | 1.8x | 0.96x |
+  | 3 (default here) | 34.50 | +0.3% | 3.2x | 1.03x |
+
+  The solid solver itself is markedly more expensive at higher polynomial order, but the end-to-end runtime is almost unaffected: in this tutorial the fluid participant dominates, so the extra solid work is largely hidden behind the coupling. If you run this case with a solid participant that is the bottleneck, `polynomialOrder 2` is a reasonable compromise.
+
 ## Running the Simulation
 
 Open two separate terminals and start each participant by calling the respective run script. For example:
