@@ -642,7 +642,7 @@ test_suites:
           - fluid-openfoam
           - solid-calculix
         max_time: 0.1
-        reference_result: ./flow-over-heated-plate-two-meshes/reference-results/fluid-openfoam_solid-openfoam.tar.gz
+        reference_result: ./flow-over-heated-plate-two-meshes/reference-results/fluid-openfoam_solid-calculix.tar.gz
 
   free-flow-over-porous-media_free-flow-dumux_porous-media-dumux:
     tutorials:
