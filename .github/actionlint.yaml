@@ -4,6 +4,7 @@ self-hosted-runner:
 # actionlint doesn't yet understand the `$/` self-repository `uses:` syntax.
 # See https://github.com/rhysd/actionlint/issues/711.
 paths:
-  .github/workflows/**:
+  .github/workflows/**/*.{yaml,yml}:
     ignore:
-      - 'specifying action "\$/[^"]+" in invalid format because ref is missing'
+      - reusable workflow call "\$/.+" at "uses" is not following the format
+      - specifying action "\$/.+" in invalid format because ref is missing
