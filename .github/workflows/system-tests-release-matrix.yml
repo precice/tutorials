@@ -1,0 +1,57 @@
+name: System tests (release matrix)
+
+on:
+  workflow_call:
+    inputs:
+      build_args:
+        description: 'Build arguments'
+        type: string
+        default: ''
+      system_tests_branch:
+        description: 'Branch to take the system tests from'
+        default: 'develop'
+        type: string
+      log_level:
+        description: 'Logging verbosity level used for the systemtests'
+        default: 'INFO'
+        type: string
+      upload_artifacts:
+        description: 'TRUE or FALSE (FALSE -> Upload only when the workflow fails)'
+        default: 'TRUE'
+        type: string
+
+jobs:
+  prepare-matrix:
+    name: Prepare release matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - name: Check out tutorials
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.system_tests_branch }}
+      - name: Install Python dependencies
+        run: pip install --user -r tests/requirements.txt
+      - name: Build matrix from release suite
+        id: matrix
+        working-directory: tests
+        run: |
+          python3 prepare_matrix.py --source-suite release --format=github > matrix.json
+          echo "matrix=$(cat matrix.json)" >> "$GITHUB_OUTPUT"
+
+  run-system-tests:
+    name: Trigger system tests (${{ matrix.tutorial }})
+    needs: prepare-matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
+    uses: $/.github/workflows/system-tests.yml
+    with:
+      suites: ${{ matrix.suites }}
+      build_args: ${{ inputs.build_args }}
+      system_tests_branch: ${{ inputs.system_tests_branch }}
+      log_level: ${{ inputs.log_level }}
+      upload_artifacts: ${{ inputs.upload_artifacts }}
+      job_label: ${{ matrix.tutorial }}
