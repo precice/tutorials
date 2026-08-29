@@ -19,10 +19,6 @@ on:
         description: 'TRUE or FALSE (FALSE -> Upload only when the workflow fails)'
         default: 'TRUE'
         type: string
-      max_parallel:
-        description: 'Maximum number of parallel matrix jobs'
-        default: '4'
-        type: string
 
 jobs:
   prepare-matrix:
@@ -49,13 +45,13 @@ jobs:
     needs: prepare-matrix
     strategy:
       fail-fast: false
-      max-parallel: ${{ fromJSON(inputs.max_parallel) }}
       matrix:
         include: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
-    uses: ./.github/workflows/system-tests.yml
+    uses: $/.github/workflows/system-tests.yml
     with:
       suites: ${{ matrix.suites }}
       build_args: ${{ inputs.build_args }}
       system_tests_branch: ${{ inputs.system_tests_branch }}
       log_level: ${{ inputs.log_level }}
       upload_artifacts: ${{ inputs.upload_artifacts }}
+      job_label: ${{ matrix.tutorial }}

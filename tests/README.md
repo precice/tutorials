@@ -32,9 +32,9 @@ The available test suites are found in [`tests.yaml`](https://github.com/precice
 
 The `Use workflow from` is a default option of GitHub Actions that concerns the GHA workflow file itself.
 
-The [System tests (nightly)](https://github.com/precice/tutorials/actions/workflows/system-tests-nightly.yml) executes the `release` test suite every night as a GitHub Actions matrix with one job per tutorial. The [System tests (weekly)](https://github.com/precice/tutorials/actions/workflows/system-tests-weekly.yml) executes the `extra` test suite once per week.
+The [System tests (nightly)](https://github.com/precice/tutorials/actions/workflows/system-tests-nightly.yml) executes the `release` test suite every night. The [System tests (weekly)](https://github.com/precice/tutorials/actions/workflows/system-tests-weekly.yml) executes the `extra` test suite once per week.
 
-When the manual workflow runs `release`, it uses the same per-tutorial matrix. Other suite selections still run as a single job. If a matrix job fails, re-run only that tutorial job from the Actions run page.
+When the manual workflow runs `release`, it uses a single serial job by default. Enable the `parallel` input to split `release` into one job per tutorial. Other suite selections always run as a single job. If a parallel matrix job fails, re-run only that tutorial job from the Actions run page.
 
 ### Running from a pull request
 

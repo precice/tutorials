@@ -8,4 +8,6 @@ on:
 jobs:
   run-system-tests:
     name: Trigger system tests
-    uses: ./.github/workflows/system-tests-release-matrix.yml
+    uses: $/.github/workflows/system-tests.yml
+    with:
+      suites: 'release'

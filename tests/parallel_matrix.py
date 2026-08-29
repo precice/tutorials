@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Sequence, Tuple
+from typing import Dict, List, Tuple
 
 import yaml
 
@@ -130,23 +130,13 @@ def build_parallel_matrix(
 def matrix_jobs_for_github(
     source_suite_name: str = "release",
     tests_yaml: Path | None = None,
+    matrix_jobs: List[MatrixJob] | None = None,
 ) -> List[dict]:
+    jobs = (
+        matrix_jobs
+        if matrix_jobs is not None
+        else build_parallel_matrix(source_suite_name, tests_yaml))
     return [
         {"tutorial": job.tutorial, "suites": job.suites}
-        for job in build_parallel_matrix(source_suite_name, tests_yaml)
+        for job in jobs
     ]
-
-
-def release_case_suite_names(
-    source_suite_name: str = "release",
-    tests_yaml: Path | None = None,
-) -> List[str]:
-    test_suites = load_test_suites(tests_yaml)
-    case_lookup = build_case_suite_lookup(test_suites)
-    external_lookup = build_external_suite_lookup(test_suites)
-    entries = _release_case_entries(
-        test_suites[source_suite_name],
-        case_lookup,
-        external_lookup,
-    )
-    return sorted(suite for _, suite in entries)
