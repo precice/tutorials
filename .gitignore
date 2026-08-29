@@ -139,3 +139,8 @@ runs/
 .project
 .settings/
 *.swp
+
+# OpenFOAM solvers
+**/Make/*
+!**/Make/files
+!**/Make/option
