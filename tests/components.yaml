@@ -297,6 +297,9 @@ su2-adapter:
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    PYTHON_BINDINGS_REF:
+      repository: https://github.com/precice/python-bindings
+      default: "develop"
     SU2_VERSION:
       default: "7.5.1"
     SU2_ADAPTER_REF:
