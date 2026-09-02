@@ -671,6 +671,13 @@ test_suites:
           - solid-dealii
         max_time: 0.003
         reference_result: ./turek-hron-fsi3/reference-results/fluid-openfoam_solid-dealii.tar.gz
+      - &turek-hron-fsi3_fluid-openfoam_solid-solids4foam
+        path: turek-hron-fsi3
+        case_combination:
+          - fluid-openfoam
+          - solid-solids4foam
+        max_time: 0.003
+        reference_result: ./turek-hron-fsi3/reference-results/fluid-openfoam_solid-solids4foam.tar.gz
 
   two-scale-heat-conduction_macro-dumux_micro-dumux:
     tutorials:
@@ -1231,6 +1238,7 @@ test_suites:
   solids4foam:
     tutorials:
       - *perpendicular-flap_fluid-openfoam_solid-solids4foam
+      - *turek-hron-fsi3_fluid-openfoam_solid-solids4foam
 
   su2-adapter:
     tutorials:
