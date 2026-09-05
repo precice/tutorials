@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <precice-configuration>
+
   <log>
     <sink
       filter="%Severity% > debug"
@@ -7,44 +8,37 @@
       enabled="true" />
   </log>
 
+
   <data:scalar name="Grass" />
   <data:scalar name="Soil" />
 
   <mesh name="Wolf-Sheep-Grass-Mesh" dimensions="2">
     <use-data name="Grass" />
+    <use-data name="Soil" />
   </mesh>
 
   <mesh name="Soil-Creep-Mesh" dimensions="2">
     <use-data name="Grass" />
-  </mesh>
-
-  <mesh name="Soil-Grass-Mesh" dimensions="2">
-    <use-data name="Soil" />
-  </mesh>
-
-  <mesh name="Soil-Depth-Mesh" dimensions="2">
     <use-data name="Soil" />
   </mesh>
 
   <participant name="Wolf-Sheep-Grass">
-    <receive-mesh name="Soil-Depth-Mesh" from="Soil-Creep" />
+    <receive-mesh name="Soil-Creep-Mesh" from="Soil-Creep" />
     <provide-mesh name="Wolf-Sheep-Grass-Mesh" />
-    <provide-mesh name="Soil-Grass-Mesh" />
     <write-data name="Grass" mesh="Wolf-Sheep-Grass-Mesh" />
-    <read-data name="Soil" mesh="Soil-Grass-Mesh" />
+    <read-data name="Soil" mesh="Wolf-Sheep-Grass-Mesh" />
     <mapping:nearest-neighbor
       direction="read"
-      from="Soil-Depth-Mesh"
-      to="Soil-Grass-Mesh"
+      from="Soil-Creep-Mesh"
+      to="Wolf-Sheep-Grass-Mesh"
       constraint="consistent" />
   </participant>
 
   <participant name="Soil-Creep">
     <receive-mesh name="Wolf-Sheep-Grass-Mesh" from="Wolf-Sheep-Grass" />
     <provide-mesh name="Soil-Creep-Mesh" />
-    <provide-mesh name="Soil-Depth-Mesh" />
     <read-data name="Grass" mesh="Soil-Creep-Mesh" />
-    <write-data name="Soil" mesh="Soil-Depth-Mesh" />
+    <write-data name="Soil" mesh="Soil-Creep-Mesh" />
     <mapping:nearest-neighbor
       direction="read"
       from="Wolf-Sheep-Grass-Mesh"
@@ -52,18 +46,16 @@
       constraint="consistent" />
   </participant>
 
+
   <m2n:sockets acceptor="Wolf-Sheep-Grass" connector="Soil-Creep" exchange-directory=".." />
+
 
   <coupling-scheme:serial-explicit>
     <participants first="Soil-Creep" second="Wolf-Sheep-Grass" />
     <time-window-size value="2" />
     <max-time value="100" />
-    <exchange
-      data="Grass"
-      mesh="Wolf-Sheep-Grass-Mesh"
-      from="Wolf-Sheep-Grass"
-      to="Soil-Creep"
-      initialize="true" />
-    <exchange data="Soil" mesh="Soil-Depth-Mesh" from="Soil-Creep" to="Wolf-Sheep-Grass" />
+    <exchange data="Grass" mesh="Wolf-Sheep-Grass-Mesh" from="Wolf-Sheep-Grass" to="Soil-Creep" initialize="true"/>
+    <exchange data="Soil" mesh="Soil-Creep-Mesh" from="Soil-Creep" to="Wolf-Sheep-Grass" />
   </coupling-scheme:serial-explicit>
+
 </precice-configuration>

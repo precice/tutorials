@@ -1,0 +1,19 @@
+{
+  "participant_name": "Soil-Creep",
+  "precice_config_file_path": "../precice-config.xml",
+  "interfaces": [
+    {
+      "mesh_name": "Soil-Creep-Mesh",
+      "write_data": [
+        {
+          "name": "Soil"
+        }
+      ],
+      "read_data": [
+        {
+          "name": "Grass"
+        }
+      ]
+    }
+  ]
+}

@@ -24,7 +24,6 @@ ws = WolfSheep(wss)
 
 ground_cover_cmap = copy.copy(mpl.colormaps["YlGn"])
 
-
 def generate_grass_map(model):
     grass_map = np.zeros((model.grid.width, model.grid.height))
     for cell in model.grid:
@@ -43,7 +42,6 @@ def plot_grass_map(grass_map):
     plt.imshow(grass_map, interpolation="nearest", cmap=ground_cover_cmap)
     plt.colorbar()
 
-
 def limit_grass_by_soil(wsg_model, soil, min_soil_depth):
     soilmatrix = soil.reshape((wsg_model.width, wsg_model.height))
     for cell in wsg_model.grid:
@@ -53,7 +51,6 @@ def limit_grass_by_soil(wsg_model, soil, min_soil_depth):
             for agent in cell_content:
                 if type(agent) is GrassPatch:
                     agent.fully_grown = False
-
 
 width = ws.grid.width
 height = ws.grid.height
@@ -65,23 +62,22 @@ solver_process_index = 0
 solver_process_size = 1
 participant = precice.Participant(participant_name, config_file_name, solver_process_index, solver_process_size)
 
-positions = [[x, y] for x in range(width) for y in range(height)]
-vertex_gm_ids = participant.set_mesh_vertices("Wolf-Sheep-Grass-Mesh", positions)
-vertex_soil_ids = participant.set_mesh_vertices("Soil-Grass-Mesh", positions)
+positions = [[x, y] for y in range(height) for x in range(width)]
 
-soil = np.zeros([width * height])
+vertex_ids = participant.set_mesh_vertices("Wolf-Sheep-Grass-Mesh", positions)
 
 if participant.requires_initial_data():
     gm = generate_grass_map(ws)
-    participant.write_data("Wolf-Sheep-Grass-Mesh", "Grass", vertex_gm_ids, gm.flatten())
+    participant.write_data("Wolf-Sheep-Grass-Mesh", "Grass", vertex_ids, gm.flatten())
 
 participant.initialize()
+
 
 while participant.is_coupling_ongoing():
     precice_dt = participant.get_max_time_step_size()
     dt = np.minimum(solver_dt, precice_dt)
 
-    soil = participant.read_data("Soil-Grass-Mesh", "Soil", vertex_soil_ids, dt)
+    soil = participant.read_data("Wolf-Sheep-Grass-Mesh", "Soil", vertex_ids, dt)
 
     # Update the grass cover
     limit_grass_by_soil(ws, soil, min_depth_for_grass)
@@ -90,8 +86,9 @@ while participant.is_coupling_ongoing():
     ws.step()
 
     gm = generate_grass_map(ws)
-    participant.write_data("Wolf-Sheep-Grass-Mesh", "Grass", vertex_gm_ids, gm.flatten())
+    participant.write_data("Wolf-Sheep-Grass-Mesh", "Grass", vertex_ids, gm.flatten())
 
     participant.advance(dt)
+
 
 participant.finalize()
