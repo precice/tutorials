@@ -1,0 +1,26 @@
+{
+    "microstructure": {
+        "filepath": "sphere32.h5",
+        "datasetname": "/sphere/32x32x32/ms",
+        "L": [1.0, 1.0, 1.0]
+    },
+    "problem_type": "mechanical",
+    "matmodel": "LinearElasticIsotropic",
+    "material_properties":{
+        "bulk_modulus": [62.5000, 222.222],
+        "shear_modulus": [28.8462, 166.6667]
+    },
+
+    "method": "cg",
+    "error_parameters":{
+        "measure": "Linfinity",
+        "type": "absolute",
+        "tolerance": 1e-10
+    },
+    "n_it": 100,
+    "macroscale_loading":   [
+                                [[0,0,0,0,0,0]]
+                            ],
+
+    "results": []
+}
