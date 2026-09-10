@@ -118,7 +118,8 @@ ARG JULIA_BINDINGS_REF
 USER precice
 WORKDIR /home/precice
 
-RUN curl -fsSL https://install.julialang.org | sh -s -- --default-channel=lts --yes
+RUN curl -fsSL https://install.julialang.org | sh -s -- --yes
+ENV PATH="/home/precice/.juliaup/bin:$PATH"
 ### end of julia_bindings stage ###
 
 
