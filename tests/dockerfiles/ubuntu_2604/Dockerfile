@@ -149,15 +149,11 @@ WORKDIR /home/precice
 FROM precice AS julia_bindings
 ARG JULIA_BINDINGS_REF
 
-USER root
-RUN apt-get -qq update && \
-    apt-get -qq install pipx
-
 USER precice
 WORKDIR /home/precice
 
-RUN pipx install jill && \
-    jill install 1.12.6 --confirm
+RUN curl -fsSL https://install.julialang.org | sh -s -- --yes
+ENV PATH="/home/precice/.juliaup/bin:$PATH"
 ### end of julia_bindings stage ###
 
 
