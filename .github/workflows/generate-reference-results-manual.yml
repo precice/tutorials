@@ -43,7 +43,7 @@ on:
 
 jobs:
   generate_reference_results_manual:
-    uses: ./.github/workflows/generate-reference-results.yml
+    uses: $/.github/workflows/generate-reference-results.yml
     with: 
       suites: ${{ inputs.suites }}
       from_ref: ${{ inputs.from_ref }}

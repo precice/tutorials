@@ -30,6 +30,10 @@ SHORT_TIMEOUT = 10
 
 DIFF_RESULTS_DIR = "diff-results"
 ITERATIONS_LOGS_DIR = "iterations-logs"
+DIFF_VISUALIZER_LOG = "system-tests-compare-diff.log"
+DIFF_VISUALIZER_TIMEOUT = int(
+    os.environ.get("PRECICE_SYSTEMTESTS_DIFF_VISUALIZER_TIMEOUT", 900)
+)
 
 STAGE_LOG_FILES = {
     "build": "system-tests-build.log",
@@ -214,7 +218,7 @@ def display_systemtestresults_as_table(results: List[SystemtestResult]):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
             print("\n\n", file=f)
             print(
-                "In case a test fails, download the archive from the bottom of this page and inspect the per-stage logs (`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`). The stage runtimes might already give useful hints.",
+                "In case a test fails, download the archive from the bottom of this page and inspect the per-stage logs (`system-tests-build.log`, `system-tests-run.log`, `system-tests-compare.log`, and `system-tests-compare-diff.log`). The stage runtimes might already give useful hints.",
                 file=f)
             print(
                 "See the [documentation](https://precice.org/dev-docs-system-tests.html#understanding-what-went-wrong).",
@@ -286,39 +290,54 @@ class Systemtest:
         Previously, this function was also checking if all required parameters were provided, and was raising exceptions for parameters not provided and not having a default value. This check made adding optional parameters with empty defaults (e.g., the TUTORIALS_PR) complicated, and it was removed.
         """
         provided_arguments = self.arguments.arguments
+        explicit_cli_keys = frozenset(provided_arguments.keys())
         self.build_arguments_by_component = {}
+        resolved_ref_cache: Dict[Tuple[str, str], str] = {}
+
+        logging.debug(
+            f"Substituting default build arguments and resolving git refs for {self}.")
 
         for case in self.case_combination.cases:
             component = case.component
             if component.name in self.build_arguments_by_component:
                 continue
 
+            logging.debug(f"Resolving build arguments for component {component.name}.")
             component_args: Dict[str, str] = {}
             for param in component.parameters:
-                if param.key not in provided_arguments:
-                    logging.info(
+                if param.key in explicit_cli_keys:
+                    value = provided_arguments[param.key]
+                elif (
+                    param.key in provided_arguments
+                    and len(provided_arguments[param.key]) == 40
+                ):
+                    value = provided_arguments[param.key]
+                else:
+                    logging.debug(
                         f"No argument provided for needed parameter {param.key} "
                         f"on component {component.name}. "
                         f"Substituting with {param.default}.")
                     value = param.default
-                else:
-                    value = provided_arguments[param.key]
 
-                if param.key.endswith("_REF") and param.key in provided_arguments:
+                if param.key.endswith("_REF") and param.repository and value:
                     logging.debug(
                         f"The parameter {param.key} on component {component.name} "
                         f"points to the repository {param.repository}.")
-                    # If a commit has already been resolved and added to the build
-                    # arguments, it will be propagated to the next test in the test suite.
-                    # To avoid resolving the same commit again, simply check if the key
-                    # has the same length as the output of _resolve_branch_ref_to_commit.
-                    # The whole process assumes that all components use the same refs.
-                    if value and len(value) == 40:
+                    # If a commit has already been resolved, it will be propagated to
+                    # the next test in the test suite. To avoid resolving the same
+                    # commit again, check if the value has the same length as the
+                    # output of _resolve_branch_ref_to_commit.
+                    cache_key = (str(param.repository), value)
+                    if len(value) == 40:
                         logging.debug(
                             f"Git ref {value} is 40 characters long and probably already a commit.")
-                    elif value and len(value) != 40:
+                    elif cache_key in resolved_ref_cache:
+                        value = resolved_ref_cache[cache_key]
+                    else:
                         value = self._resolve_branch_ref_to_commit(
                             param.repository, value)
+                        resolved_ref_cache[cache_key] = value
+                    if param.key in explicit_cli_keys:
                         provided_arguments[param.key] = value
 
                 component_args[param.key] = value
@@ -525,7 +544,7 @@ class Systemtest:
 
             commit = git_remote_refs.split()[0]
             # The output assumes a URL of the form <repository>/commits/<commit>. Works for GitHub and Bitbucket.
-            logging.info(
+            logging.debug(
                 f"Resolved the git ref {ref} of the repository {repository} to {repository}/commits/{commit} .")
             return commit if commit else ref
         except Exception:
@@ -864,6 +883,153 @@ class Systemtest:
                 self,
             )
 
+    def __get_diff_visualizer_compose_file(self) -> str:
+        platform = self.params_to_use.get("PLATFORM")
+        render_dict = {
+            'dockerfile_context': (
+                Path("..") / "tests" / "dockerfiles" / Path(platform)
+            ),
+            'build_arguments': self.params_to_use,
+            'diff_results_folder': DIFF_RESULTS_DIR,
+        }
+        jinja_env = Environment(loader=FileSystemLoader(PRECICE_TESTS_DIR))
+        template = jinja_env.get_template(
+            "docker-compose.diff_visualizer.template.yaml")
+        return template.render(render_dict)
+
+    def __append_diff_visualizer_status(self, status: str, elapsed_s: float) -> None:
+        log_path = self.system_test_dir / DIFF_VISUALIZER_LOG
+        with log_path.open("a", encoding="utf-8") as log_file:
+            log_file.write(f"\nstatus: {status}\nelapsed_s: {elapsed_s:.1f}\n")
+
+    def __visualize_fieldcompare_diffs(self) -> None:
+        """Best-effort rendering of archived fieldcompare diff VTK files via Docker."""
+        diff_results_dir = self.system_test_dir / DIFF_RESULTS_DIR
+        if not diff_results_dir.is_dir():
+            return
+
+        compose_path = self.system_test_dir / "docker-compose.diff_visualizer.yaml"
+        log_path = self.system_test_dir / DIFF_VISUALIZER_LOG
+        log_path.write_text("=== compare-diff ===\n", encoding="utf-8")
+        log_lock = threading.Lock()
+        time_start = time.perf_counter()
+
+        try:
+            compose_path.write_text(
+                self.__get_diff_visualizer_compose_file(), encoding="utf-8")
+        except OSError as error:
+            elapsed_s = time.perf_counter() - time_start
+            self.__append_diff_visualizer_status(f"error: {error}", elapsed_s)
+            logging.warning(
+                "Could not render fieldcompare diff visualizations for %s: %s",
+                self,
+                error,
+            )
+            return
+
+        logging.info(
+            "Rendering fieldcompare diff visualizations for %s "
+            "(timeout %ss)",
+            self,
+            DIFF_VISUALIZER_TIMEOUT,
+        )
+        try:
+            process = subprocess.Popen(
+                [
+                    "docker",
+                    "compose",
+                    "--file",
+                    compose_path.name,
+                    "up",
+                    "--exit-code-from",
+                    "diff-visualizer",
+                    "--abort-on-container-exit",
+                ],
+                cwd=self.system_test_dir,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                bufsize=1,
+            )
+        except OSError as error:
+            elapsed_s = time.perf_counter() - time_start
+            self.__append_diff_visualizer_status(f"error: {error}", elapsed_s)
+            logging.warning(
+                "Could not render fieldcompare diff visualizations for %s: %s",
+                self,
+                error,
+            )
+            return
+
+        def read_stream(stream, prefix: str) -> None:
+            if stream is None:
+                return
+            for line in stream:
+                line = line.rstrip("\n\r")
+                with log_lock:
+                    with log_path.open("a", encoding="utf-8") as log_file:
+                        log_file.write(f"{prefix}{line}\n")
+            stream.close()
+
+        stdout_thread = threading.Thread(
+            target=read_stream, args=(process.stdout, ""), daemon=True)
+        stderr_thread = threading.Thread(
+            target=read_stream, args=(process.stderr, "[stderr] "), daemon=True)
+        stdout_thread.start()
+        stderr_thread.start()
+
+        timed_out = False
+        try:
+            exit_code = process.wait(timeout=DIFF_VISUALIZER_TIMEOUT)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            process.kill()
+            try:
+                process.wait(timeout=SHORT_TIMEOUT)
+            except subprocess.TimeoutExpired:
+                pass
+            exit_code = process.returncode if process.returncode is not None else 1
+
+        stdout_thread.join(timeout=SHORT_TIMEOUT)
+        stderr_thread.join(timeout=SHORT_TIMEOUT)
+        elapsed_s = time.perf_counter() - time_start
+
+        if timed_out:
+            self.__append_diff_visualizer_status(
+                f"timed out after {DIFF_VISUALIZER_TIMEOUT}s", elapsed_s
+            )
+            logging.warning(
+                "Could not render fieldcompare diff visualizations for %s: "
+                "timed out after %ss (visualizer ran %.1fs). "
+                "See %s",
+                self,
+                DIFF_VISUALIZER_TIMEOUT,
+                elapsed_s,
+                DIFF_VISUALIZER_LOG,
+            )
+            return
+
+        if exit_code != 0:
+            self.__append_diff_visualizer_status(
+                f"failed (exit {exit_code})", elapsed_s
+            )
+            logging.warning(
+                "Rendering fieldcompare diff visualizations failed for %s "
+                "after %.1fs (exit %s). See %s",
+                self,
+                elapsed_s,
+                exit_code,
+                DIFF_VISUALIZER_LOG,
+            )
+            return
+
+        self.__append_diff_visualizer_status("ok", elapsed_s)
+        logging.info(
+            "Diff visualizations for %s took %.1fs",
+            self,
+            elapsed_s,
+        )
+
     def __copy_rerun_system_test_script(self) -> None:
         """Copy tests/rerun-system-test.sh into the run directory for artifact replay."""
         rerun_src = PRECICE_TESTS_DIR / "rerun-system-test.sh"
@@ -1201,6 +1367,7 @@ class Systemtest:
             std_err.extend(fieldcompare_result.stderr_data)
             if fieldcompare_result.exit_code != 0:
                 self.__archive_fieldcompare_diffs()
+                self.__visualize_fieldcompare_diffs()
                 logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
                 return SystemtestResult(
                     False,
