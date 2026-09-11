@@ -21,10 +21,13 @@ from dolfinx.fem.petsc import (
 )
 from fenicsxprecice import Adapter, CouplingMesh
 
+
 def bottom_boundary(x):
     return np.isclose(x[1], 0)
 
 # Volume coupling
+
+
 def coupling_boundary(x):
     return np.ones(x.shape[1], dtype=bool)
 
@@ -164,8 +167,8 @@ while participant.is_coupling_ongoing():
 participant.finalize()
 
 
-
 dofs_coupling_coordinates = V.tabulate_dof_coordinates()[:, :2].copy()
+
 
 def values_to_grid(values):
     grid = np.full((ny, nx), np.nan)

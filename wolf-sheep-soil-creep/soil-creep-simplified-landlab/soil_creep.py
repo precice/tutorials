@@ -4,18 +4,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 import precice
 
+
 class LandlabLinearDiffuserClone:
-    CORE = 0 # regular node
-    FIXED_VALUE = 1 # Dirichlet fixed elevation
-    CLOSED = 4 # Neumann zero-flux
+    CORE = 0  # regular node
+    FIXED_VALUE = 1  # Dirichlet fixed elevation
+    CLOSED = 4  # Neumann zero-flux
 
     ALPHA = 0.15  # time-step stability factor
 
     def __init__(self, z, D, dx):
-        self.z = z # grid
-        self.D = D # linear diffusivity
-        self.dx = dx # node spacing
-        self.ny, self.nx = z.shape # grid height and width
+        self.z = z  # grid
+        self.D = D  # linear diffusivity
+        self.dx = dx  # node spacing
+        self.ny, self.nx = z.shape  # grid height and width
         self.id = np.arange(self.nx * self.ny).reshape(self.ny, self.nx)
 
         self.status = np.full((self.ny, self.nx), self.FIXED_VALUE, dtype=np.uint8)
@@ -30,7 +31,7 @@ class LandlabLinearDiffuserClone:
 
         self._build_links()
 
-    def _build_links(self): # Initalize list of active links: between two core nodes or between core and fixed
+    def _build_links(self):  # Initalize list of active links: between two core nodes or between core and fixed
         ny, nx = self.ny, self.nx
         links = []
 
@@ -67,7 +68,7 @@ class LandlabLinearDiffuserClone:
             for n1, n2 in self.links
         ])
 
-        # Divide the timestep dt passed to the diffuser into internal stability-limited substeps. 
+        # Divide the timestep dt passed to the diffuser into internal stability-limited substeps.
         # Perform as many full substeps as possible (repeats), followed by one smaller substep for the remainder.
         internal_dt = self.ALPHA * self.dx * self.dx / np.nanmax(active_D)
 
@@ -87,8 +88,8 @@ class LandlabLinearDiffuserClone:
 
         dzdt = np.zeros_like(z)
 
-        for n1, n2 in self.links: # Iterate over all active links (tuples)
-            Dk = np.maximum(D[n1], D[n2]) # max link diffusivity
+        for n1, n2 in self.links:  # Iterate over all active links (tuples)
+            Dk = np.maximum(D[n1], D[n2])  # max link diffusivity
             q = -Dk * (z[n2] - z[n1]) / self.dx
 
             if status[n1] == self.CORE:
@@ -98,6 +99,7 @@ class LandlabLinearDiffuserClone:
 
         z[status == self.CORE] += dt * dzdt[status == self.CORE]
         self.z = z.reshape(self.ny, self.nx)
+
 
 initial_soil_depth = 0.3
 
@@ -113,26 +115,26 @@ slow_creep = 0.001
 ny = nx = 20
 length_x = 19
 length_y = 19
-dx = length_x/(nx-1)
+dx = length_x / (nx - 1)
 
 solver_dt = 0.2 * dx * dx / fast_creep
 
 # Grass map field for plotting
-gm = np.zeros((ny,nx))
+gm = np.zeros((ny, nx))
 
 # Create elevation field and have it slope down to the south at 10% gradient
 y = np.arange(ny)[:, None] * np.ones((ny, nx)) * dx
 elev = 0.1 * y
 
 # Remember the starting elevation so we can calculate cumulative erosion/deposition
-initial_elev = np.zeros((ny,nx))
+initial_elev = np.zeros((ny, nx))
 initial_elev[:] = elev
 
 # Also remember the elevation of the prior time step, so we can difference
-prior_elev = np.zeros((ny,nx))
+prior_elev = np.zeros((ny, nx))
 
 # Create a field for the creep coefficient
-creep_coef = np.zeros((ny,nx))
+creep_coef = np.zeros((ny, nx))
 
 # Create a soil-thickness field
 soil = np.full((ny, nx), initial_soil_depth)
@@ -164,7 +166,7 @@ while participant.is_coupling_ongoing():
     dt = np.minimum(solver_dt, precice_dt)
 
     gm_flat = participant.read_data("Soil-Creep-Mesh", "Grass", vertex_ids, dt)
-    gm[:,:] = np.asarray(gm_flat).reshape(ny, nx)
+    gm[:, :] = np.asarray(gm_flat).reshape(ny, nx)
 
     # Assign the higher creep coefficient to cells where the grass has
     # been eaten and not yet recovered; the slower value is assigned to
