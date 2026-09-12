@@ -83,6 +83,7 @@ jobs:
         cd ../../
     - name: Archive system test logs
       if: ${{ always() }}
+      id: archive-logs
       uses: actions/upload-artifact@v7
       with:
         name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_logs
@@ -90,7 +91,28 @@ jobs:
           runs/*/system-tests-build.log
           runs/*/system-tests-run.log
           runs/*/system-tests-compare.log
+          runs/*/system-tests-compare-diff.log
           runs/*/*/system-tests_*.log
+        if-no-files-found: warn
+    - name: Archive fieldcompare diff visualizations
+      if: ${{ always() }}
+      id: archive-diffs
+      uses: actions/upload-artifact@v7
+      with:
+        name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_diffs
+        path: |
+          runs/*/diff-results/visualizations/**/*.png
+        if-no-files-found: ignore
+    - name: Link diff visualizations in the job summary
+      if: ${{ always() && steps.archive-diffs.outputs.artifact-url != '' }}
+      run: |
+        {
+          echo ""
+          echo "## Diff visualizations"
+          echo ""
+          echo "When fieldcompare fails, PNG renders of the archived diff VTK fields are included in the [\`_diffs\` artifact](${{ steps.archive-diffs.outputs.artifact-url }})."
+          echo "Look under \`runs/*/diff-results/visualizations/\`."
+        } >> "$GITHUB_STEP_SUMMARY"
     - name: Archive run files
       if: ${{ failure() || inputs.upload_artifacts == 'TRUE' }}
       uses: actions/upload-artifact@v7
