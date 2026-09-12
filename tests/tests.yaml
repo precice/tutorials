@@ -165,7 +165,6 @@ test_suites:
           - fluid-openfoam
           - solid-fenics
         max_time_windows: 1
-        skip_compare: true
         reference_result: ./elastic-tube-3d/reference-results/fluid-openfoam_solid-fenics.tar.gz
 
   flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python:
