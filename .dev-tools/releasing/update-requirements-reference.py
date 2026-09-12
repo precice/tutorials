@@ -7,11 +7,11 @@ latest version satisfying each constraint, and writes a sibling
 requirements-reference.txt next to each file.
 
 Run from the repository root:
-  python3 tools/releasing/update-requirements-reference.py
-  python3 tools/releasing/update-requirements-reference.py --all
-  python3 tools/releasing/update-requirements-reference.py path/to/dir
-  python3 tools/releasing/update-requirements-reference.py --check
-  python3 tools/releasing/update-requirements-reference.py --check --fail-on-outdated
+  python3 .dev-tools/releasing/update-requirements-reference.py
+  python3 .dev-tools/releasing/update-requirements-reference.py --all
+  python3 .dev-tools/releasing/update-requirements-reference.py path/to/dir
+  python3 .dev-tools/releasing/update-requirements-reference.py --check
+  python3 .dev-tools/releasing/update-requirements-reference.py --check --fail-on-outdated
 """
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ from packaging.version import Version
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 REFERENCE_NAME = "requirements-reference.txt"
-SCRIPT_RELATIVE = "tools/releasing/update-requirements-reference.py"
+SCRIPT_RELATIVE = ".dev-tools/releasing/update-requirements-reference.py"
 # Empty by default: every tracked requirements.txt gets a sibling reference file.
 EXCLUDED_RELATIVE: set[str] = set()
 
