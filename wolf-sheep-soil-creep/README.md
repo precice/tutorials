@@ -48,20 +48,6 @@ cd soil-creep-landlab
 ./run.sh
 ```
 
-or
-
-```bash
-cd soil-creep-simplified-landlab
-./run.sh
-```
-
-or
-
-```bash
-cd soil-creep-fenicsx
-./run.sh
-```
-
 and
 
 ```bash
