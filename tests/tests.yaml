@@ -742,6 +742,16 @@ test_suites:
         max_time: 0.05
         reference_result: ./water-hammer/reference-results/fluid3d-left-openfoam_fluid1d-right-nutils.tar.gz
 
+  wolf-sheep-soil-creep_soil-creep-fenicsx_wolf-sheep-grass-mesa:
+    tutorials:
+      - &wolf-sheep-soil-creep_soil-creep-fenicsx_wolf-sheep-grass-mesa
+        path: wolf-sheep-soil-creep
+        case_combination:
+          - soil-creep-fenicsx
+          - wolf-sheep-grass-mesa
+        max_time: 20
+        reference_result: ./wolf-sheep-soil-creep/reference-results/soil-creep-fenicsx_wolf-sheep-grass-mesa.tar.gz
+
   wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa:
     tutorials:
       - &wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
@@ -751,6 +761,16 @@ test_suites:
           - wolf-sheep-grass-mesa
         max_time: 20
         reference_result: ./wolf-sheep-soil-creep/reference-results/soil-creep-landlab_wolf-sheep-grass-mesa.tar.gz
+
+  wolf-sheep-soil-creep_soil-creep-simplified-landlab_wolf-sheep-grass-mesa:
+    tutorials:
+      - &wolf-sheep-soil-creep_soil-creep-simplified-landlab_wolf-sheep-grass-mesa
+        path: wolf-sheep-soil-creep
+        case_combination:
+          - soil-creep-simplified-landlab
+          - wolf-sheep-grass-mesa
+        max_time: 20
+        reference_result: ./wolf-sheep-soil-creep/reference-results/soil-creep-simplified-landlab_wolf-sheep-grass-mesa.tar.gz
 
   #####################################################################
   ## Test suites per tutorial, referring to the tests defined above
@@ -941,7 +961,9 @@ test_suites:
 
   wolf-sheep-soil-creep:
     tutorials:
+      - *wolf-sheep-soil-creep_soil-creep-fenicsx_wolf-sheep-grass-mesa
       - *wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
+      - *wolf-sheep-soil-creep_soil-creep-simplified-landlab_wolf-sheep-grass-mesa
 
 
 #####################################################################
@@ -1047,7 +1069,9 @@ test_suites:
       - *volume-coupled-flow_fluid-openfoam_source-nutils
       - *water-hammer_fluid1d-left-nutils_fluid3d-right-openfoam
       - *water-hammer_fluid3d-left-openfoam_fluid1d-right-nutils
+      - *wolf-sheep-soil-creep_soil-creep-fenicsx_wolf-sheep-grass-mesa
       - *wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa
+      - *wolf-sheep-soil-creep_soil-creep-simplified-landlab_wolf-sheep-grass-mesa
     external:
       - *partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
       - *partitioned-heat-conduction-robin_left-openfoam_right-openfoam
