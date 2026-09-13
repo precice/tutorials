@@ -33,7 +33,7 @@ Soil-Creep PDE participant:
 
 * Standalone reimplementation of the Landlab participant, tailored to this example.
 
-* FEniCSx. For more information, have a look at the [FEniCSx adapter](https://precice.org/adapter-fenicsx.html).
+* FEniCSx. For more information, have a look at the [FEniCSx adapter](https://precice.org/adapter-fenicsx.html). This solver shows noticeably different results than the Landlab solver ([more details](https://github.com/precice/tutorials/pull/889)).
 
 Wolf-Sheep-Grass ABM participant:
 
