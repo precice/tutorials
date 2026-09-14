@@ -1,0 +1,1 @@
+- Added a solids4foam solid participant to the `turek-hron-fsi3` tutorial, reading `Stress` via the solids4foam `solidTraction` boundary condition.
