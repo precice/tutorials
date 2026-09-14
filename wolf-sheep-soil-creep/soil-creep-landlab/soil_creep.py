@@ -23,6 +23,8 @@ height = 20
 
 rmg = RasterModelGrid((width, height))
 
+solver_dt = 0.2 * rmg.dx * rmg.dx / fast_creep
+
 # Create elevation field and have it slope down to the south at 10% gradient
 elev = rmg.add_zeros("topographic__elevation", at="node")
 elev[:] = 0.1 * rmg.y_of_node
@@ -54,24 +56,22 @@ solver_process_index = 0
 solver_process_size = 1
 participant = precice.Participant(participant_name, config_file_name, solver_process_index, solver_process_size)
 
-positions = [[x, y] for x in range(width) for y in range(height)]
-vertex_gm_ids = participant.set_mesh_vertices("Soil-Creep-Mesh", positions)
-vertex_soil_ids = participant.set_mesh_vertices("Soil-Depth-Mesh", positions)
+positions = [[x, y] for y in range(height) for x in range(width)]
+vertex_ids = participant.set_mesh_vertices("Soil-Creep-Mesh", positions)
 
 participant.initialize()
 
 while participant.is_coupling_ongoing():
-    solver_dt = 0.2 * rmg.dx * rmg.dx / fast_creep
     precice_dt = participant.get_max_time_step_size()
     dt = np.minimum(solver_dt, precice_dt)
 
-    gm = participant.read_data("Soil-Creep-Mesh", "Grass", vertex_gm_ids, dt)
+    gm = participant.read_data("Soil-Creep-Mesh", "Grass", vertex_ids, dt)
 
     # Assign the higher creep coefficient to cells where the grass has
     # been eaten and not yet recovered; the slower value is assigned to
     # "fully grown" grass patches.
-    creep_coef[gm.flatten() == 1] = fast_creep
-    creep_coef[gm.flatten() == 2] = slow_creep
+    creep_coef[gm == 1] = fast_creep
+    creep_coef[gm == 2] = slow_creep
 
     # Limit the creep coefficient according to the soil-thickness field, so absent soil cannot move.
     creep_coef *= 1.0 - np.exp(-soil / hstar)
@@ -86,7 +86,7 @@ while participant.is_coupling_ongoing():
     # Update the soil cover
     soil += elev - prior_elev
 
-    participant.write_data("Soil-Depth-Mesh", "Soil", vertex_soil_ids, soil)
+    participant.write_data("Soil-Creep-Mesh", "Soil", vertex_ids, soil)
 
     participant.advance(dt)
 
