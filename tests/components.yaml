@@ -282,10 +282,10 @@ solids4foam:
       # The name "PLATFORM" is misleading: For this component, we use a different base image.
     TUTORIALS_REF:
       description: Tutorial git reference to use
-      default: "master"
+      default: "develop"
     OPENFOAM_ADAPTER_REF:
       description: Reference/tag of the OpenFOAM adapter to use
-      default: "master"
+      default: "develop"
 
 su2-adapter:
   template: component-templates/su2-adapter.yaml
