@@ -1265,6 +1265,186 @@ test_suites:
       - *partitioned-pipe-two-phase_monolithic-openfoam
       - *partitioned-burgers-1d_monolithic-scipy
 
+#####################################################################
+## Special-purpose cases
+
+  # Produce the watchpoints for fluid-fake x (solid)
+  perpendicular-flap-watchpoints-fluid-fake:
+    tutorials:
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-calculix
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-dealii
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-dune
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-fake
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-fenics
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-nutils
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-openfoam
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-solids4foam
+        skip_compare: true
+
+  # Produce the watchpoints for fluid-nutils x (solid)
+  perpendicular-flap-watchpoints-fluid-nutils:
+    tutorials:
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-calculix
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-dealii
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-dune
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-fake
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-fenics
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-nutils
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-openfoam
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-fake
+          - solid-solids4foam
+        skip_compare: true
+
+  # Produce the watchpoints for fluid-openfoam x (solid)
+  perpendicular-flap-watchpoints-fluid-openfoam:
+    tutorials:
+      # OpenFOAM x (solid)
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-calculix
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-dealii
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-dune
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-fake
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-fenics
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-nutils
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-openfoam
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-openfoam
+          - solid-solids4foam
+        skip_compare: true
+      
+  # Produce the watchpoints for fluid-su2 x (solid)
+  perpendicular-flap-watchpoints-fluid-su2:
+    tutorials:
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-su2
+          - solid-calculix
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-su2
+          - solid-dealii
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-su2
+          - solid-dune
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-su2
+          - solid-fake
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-su2
+          - solid-fenics
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-su2
+          - solid-nutils
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-su2
+          - solid-openfoam
+        skip_compare: true
+      - path: perpendicular-flap
+        case_combination:
+          - fluid-su2
+          - solid-solids4foam
+        skip_compare: true
+
   # A test suite used for the system tests development
   system-tests-dev:
     tutorials:
