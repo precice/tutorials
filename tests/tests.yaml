@@ -1325,49 +1325,49 @@ test_suites:
     tutorials:
       - path: perpendicular-flap
         case_combination:
-          - fluid-fake
+          - fluid-nutils
           - solid-calculix
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
-          - fluid-fake
+          - fluid-nutils
           - solid-dealii
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
-          - fluid-fake
+          - fluid-nutils
           - solid-dune
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
-          - fluid-fake
+          - fluid-nutils
           - solid-fake
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
-          - fluid-fake
+          - fluid-nutils
           - solid-fenics
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
-          - fluid-fake
+          - fluid-nutils
           - solid-nutils
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
-          - fluid-fake
+          - fluid-nutils
           - solid-openfoam
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
-          - fluid-fake
+          - fluid-nutils
           - solid-solids4foam
         skip_compare: true
         reference_result: none
