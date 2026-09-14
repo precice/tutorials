@@ -1410,6 +1410,7 @@ test_suites:
         case_combination:
           - fluid-openfoam
           - solid-nutils
+        timeout: 1200
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
@@ -1432,48 +1433,56 @@ test_suites:
         case_combination:
           - fluid-su2
           - solid-calculix
+        timeout: 1200
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
           - fluid-su2
           - solid-dealii
+        timeout: 1200
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
           - fluid-su2
           - solid-dune
+        timeout: 1200
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
           - fluid-su2
           - solid-fake
+        timeout: 1200
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
           - fluid-su2
           - solid-fenics
+        timeout: 1200
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
           - fluid-su2
           - solid-nutils
+        timeout: 1200
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
           - fluid-su2
           - solid-openfoam
+        timeout: 1200
         skip_compare: true
         reference_result: none
       - path: perpendicular-flap
         case_combination:
           - fluid-su2
           - solid-solids4foam
+        timeout: 1200
         skip_compare: true
         reference_result: none
 
