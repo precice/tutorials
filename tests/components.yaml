@@ -24,11 +24,15 @@ calculix-adapter:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     CALCULIX_VERSION:
       default: "2.20"
     CALCULIX_ADAPTER_REF:
@@ -45,11 +49,15 @@ dealii-adapter:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     DEALII_ADAPTER_REF:
       repository: https://github.com/precice/dealii-adapter
       default: "develop"
@@ -65,11 +73,15 @@ dumux-adapter:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     DUNE_VERSION_DUMUX:
       default: "2.9"
     DUMUX_VERSION:
@@ -89,11 +101,15 @@ dune-adapter:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     DUNE_VERSION_DUNE:
       default: "2.9"
     DUNE_ADAPTER_REF:
@@ -110,14 +126,20 @@ fenics-adapter:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     PYTHON_BINDINGS_REF:
       repository: https://github.com/precice/python-bindings
       default: "develop"
+    PYTHON_BINDINGS_PR:
+      default: ""
     FENICS_ADAPTER_REF:
       repository: https://github.com/precice/fenics-adapter
       default: "develop"
@@ -132,14 +154,20 @@ fenicsx-adapter:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     PYTHON_BINDINGS_REF:
       repository: https://github.com/precice/python-bindings
       default: "develop"
+    PYTHON_BINDINGS_REF:
+      default: ""
     FENICSX_ADAPTER_REF:
       repository: https://github.com/precice/fenicsx-adapter
       default: "develop"
@@ -154,14 +182,20 @@ fmi-runner:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     PYTHON_BINDINGS_REF:
       repository: https://github.com/precice/python-bindings
       default: "develop"
+    PYTHON_BINDINGS_PR:
+      default: ""
     FMI_RUNNER_REF:
       repository: https://github.com/precice/fmi-runner
       default: "main"
@@ -176,11 +210,15 @@ julia-bindings:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     JULIA_BINDINGS_REF:
       repository: https://github.com/precice/PreCICE.jl
       default: "develop"
@@ -195,11 +233,15 @@ mercurydpm-adapter:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
 
 micro-manager:
   template: component-templates/micro-manager.yaml
@@ -209,11 +251,15 @@ micro-manager:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     MICRO_MANAGER_REF:
       repository: https://github.com/precice/micro-manager
       default: "develop"
@@ -228,11 +274,15 @@ nutils-adapter:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     PYTHON_BINDINGS_REF:
       repository: https://github.com/precice/python-bindings
       default: "develop"
@@ -245,11 +295,15 @@ openfoam-adapter:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     OPENFOAM_EXECUTABLE:
       default: "openfoam2512"
     OPENFOAM_ADAPTER_REF:
@@ -266,11 +320,15 @@ python-bindings:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     PYTHON_BINDINGS_REF:
       repository: https://github.com/precice/python-bindings
       default: "develop"
@@ -285,11 +343,15 @@ rust-bindings:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     RUST_BINDINGS_REF:
       repository: https://github.com/precice/rust-bindings
       default: "main"
@@ -307,9 +369,13 @@ solids4foam:
     TUTORIALS_REF:
       description: Tutorial git reference to use
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     OPENFOAM_ADAPTER_REF:
       description: Reference/tag of the OpenFOAM adapter to use
       default: "develop"
+    OPENFOAM_ADAPTER_PR:
+      default: ""
 
 su2-adapter:
   template: component-templates/su2-adapter.yaml
@@ -320,14 +386,20 @@ su2-adapter:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     PYTHON_BINDINGS_REF:
       repository: https://github.com/precice/python-bindings
       default: "develop"
+    PYTHON_BINDINGS_PR:
+      default: ""
     SU2_VERSION:
       default: "7.5.1"
     SU2_ADAPTER_REF:
@@ -346,11 +418,15 @@ aste:
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
+      default: ""
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
+      default: ""
     ASTE_REF:
       repository: https://github.com/precice/aste
       default: "develop"
