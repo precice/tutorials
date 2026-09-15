@@ -6,11 +6,13 @@ bare: # A default component used when the solver does not have any dependencies 
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"
+    PRECICE_PR:
     PRECICE_PRESET:
       default: "production-audit"
     TUTORIALS_REF:
       repository: https://github.com/precice/tutorials
       default: "develop"
+    TUTORIALS_PR:
 
 calculix-adapter:
   template: component-templates/calculix-adapter.yaml
@@ -30,6 +32,7 @@ calculix-adapter:
     CALCULIX_ADAPTER_REF:
       repository: https://github.com/precice/calculix-adapter
       default: "develop"
+    CALCULIX_ADAPTER_PR:
 
 dealii-adapter:
   template: component-templates/dealii-adapter.yaml
@@ -47,6 +50,7 @@ dealii-adapter:
     DEALII_ADAPTER_REF:
       repository: https://github.com/precice/dealii-adapter
       default: "develop"
+    DEALII_ADAPTER_PR:
 
 dumux-adapter:
   template: component-templates/dumux-adapter.yaml
@@ -69,6 +73,7 @@ dumux-adapter:
     DUMUX_ADAPTER_REF:
       repository: https://github.com/precice/dumux-adapter
       default: "develop"
+    DUMUX_ADAPTER_PR:
 
 dune-adapter:
   template: component-templates/dune-adapter.yaml
@@ -89,6 +94,7 @@ dune-adapter:
     DUNE_ADAPTER_REF:
       repository: https://github.com/precice/dune-adapter
       default: "main"
+    DUNE_ADAPTER_PR:
 
 fenics-adapter:
   template: component-templates/fenics-adapter.yaml
@@ -109,6 +115,7 @@ fenics-adapter:
     FENICS_ADAPTER_REF:
       repository: https://github.com/precice/fenics-adapter
       default: "develop"
+    FENICS_ADAPTER_PR:
 
 fenicsx-adapter:
   template: component-templates/fenicsx-adapter.yaml
@@ -129,6 +136,7 @@ fenicsx-adapter:
     FENICSX_ADAPTER_REF:
       repository: https://github.com/precice/fenicsx-adapter
       default: "develop"
+    FENICSX_ADAPTER_PR:
 
 fmi-runner:
   template: component-templates/fmi-runner.yaml
@@ -149,6 +157,7 @@ fmi-runner:
     FMI_RUNNER_REF:
       repository: https://github.com/precice/fmi-runner
       default: "main"
+    FMI_RUNNER_PR:
 
 julia-bindings:
   template: component-templates/julia-bindings.yaml
@@ -166,6 +175,7 @@ julia-bindings:
     JULIA_BINDINGS_REF:
       repository: https://github.com/precice/PreCICE.jl
       default: "develop"
+    JULIA_BINDINGS_PR:
 
 mercurydpm-adapter:
   template: component-templates/mercurydpm-adapter.yaml
@@ -197,6 +207,7 @@ micro-manager:
     MICRO_MANAGER_REF:
       repository: https://github.com/precice/micro-manager
       default: "develop"
+    MICRO_MANAGER_PR:
 
 nutils-adapter:
   template: component-templates/nutils-adapter.yaml
@@ -233,6 +244,7 @@ openfoam-adapter:
     OPENFOAM_ADAPTER_REF:
       repository: https://github.com/precice/openfoam-adapter
       default: "develop"
+    OPENFOAM_ADAPTER_PR:
 
 python-bindings:
   template: component-templates/python-bindings.yaml
@@ -250,6 +262,7 @@ python-bindings:
     PYTHON_BINDINGS_REF:
       repository: https://github.com/precice/python-bindings
       default: "develop"
+    PYTHON_BINDINGS_PR:
 
 rust-bindings:
   template: component-templates/rust-bindings.yaml
@@ -267,6 +280,7 @@ rust-bindings:
     RUST_BINDINGS_REF:
       repository: https://github.com/precice/rust-bindings
       default: "main"
+    RUST_BINDINGS_PR:
 
 solids4foam:
   repository: https://github.com/solids4foam/solids4foam
@@ -305,6 +319,7 @@ su2-adapter:
     SU2_ADAPTER_REF:
       repository: https://github.com/precice/su2-adapter
       default: "develop"
+    SU2_ADAPTER_PR:
 
 aste:
   template: component-templates/aste.yaml
@@ -324,3 +339,4 @@ aste:
     ASTE_REF:
       repository: https://github.com/precice/aste
       default: "develop"
+    ASTE_PR:
