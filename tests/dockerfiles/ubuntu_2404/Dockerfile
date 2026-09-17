@@ -74,7 +74,7 @@ USER precice
 
 # Copy the local mirror of third-party repositories.
 # Run mirror-repositories.sh once on the runner to fetch them.
-COPY ~/.precice-tests/thirdparty /home/precice/.precice-tests/thirdparty
+COPY /home/precice/.precice-tests/thirdparty /home/precice/.precice-tests/thirdparty
 ### end of precice_dependencies stage ###
 
 
