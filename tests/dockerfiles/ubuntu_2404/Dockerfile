@@ -71,6 +71,10 @@ RUN apt-get -qq update && \
     libxft2 \
     libxinerama1
 USER precice
+
+# Copy the local mirror of third-party repositories.
+# Run mirror-repositories.sh once on the runner to fetch them.
+COPY ~/.precice-tests/thirdparty /home/precice/.precice-tests/thirdparty
 ### end of precice_dependencies stage ###
 
 
@@ -241,60 +245,15 @@ USER precice
 WORKDIR /home/precice/dumux
 
 # This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-common; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-geometry; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-grid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-istl; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-subgrid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION}; then break; fi; \
-        rm -rf dumux; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git -b cell_problems; then break; fi; \
-        rm -rf dumux-phasefield; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-SPGrid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-localfunctions; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git -b cell_problems
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUMUX}
 RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
 
@@ -320,60 +279,15 @@ WORKDIR /home/precice/dune
 ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
 
 # This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-common; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-geometry; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-grid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-istl; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-localfunctions; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-foamgrid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-functions; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-typetree; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-uggrid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION_DUNE}
 
 # Modules specific to the dune adapter:
 RUN for i in $(seq 1 3); do \
@@ -432,7 +346,7 @@ USER precice
 WORKDIR /home/precice
 # The channel-transport-particles tutorial is hosted in a frozen fork of the MercuryDPM repository.
 # That's why there are no arguments for version, ref, or pr.
-RUN git clone https://bitbucket.org/davidscn/mercurydpm.git &&\
+RUN git clone /home/precice/.precice-tests/thirdparty/bitbucket.org/davidscn/mercurydpm.git &&\
     cd mercurydpm && \
     git checkout channel-transport-tutorial && \
     mkdir -p build && cd build && \
