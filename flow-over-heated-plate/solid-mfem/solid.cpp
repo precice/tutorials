@@ -14,18 +14,18 @@
  * term, and u is the temperature solution vector.
  *
  * For explicit time integration in TimeDependentOperator::Mult, the
- * equation to solve for (du/dt) at time t_n is simply
+ * equation to solve for (du/dt) for time t_n is simply
  *
- *                (du/dt)_{n} = M^{-1}(-Ku_n + N).
+ *                (du/dt) = M^{-1}(-Ku_n + N).
  *
  * For implicit time integration in TimeDependentOperator::ImplicitSolve, the
- * equation to solve for (du/dt)_{n+1} can be written as
+ * equation to solve for k=du/dt can be written as
  *
- *                (M + dt K)(du/dt)_{n+1} = -Ku_n + N.
+ *                (M + dt K)(du/dt) = -Ku_n + N.
  *
  * Writing A = M + dt K, the equation is then
  *
- *                (du/dt)_{n+1}= A^{-1}(-Ku_n + N).
+ *                (du/dt) = A^{-1}(-Ku_n + N).
  *
  * In this case, M and K are constant, A depends on dt, and N depends on the
  * coupling data. For essential BCs, it is enforced that (du/dt) = 0.
@@ -46,9 +46,12 @@ using namespace precice;
 
 class LinearHeatOperator : public TimeDependentOperator {
 protected:
-  ParFiniteElementSpace &f_
+  const Array<int> &ess_tdof_list_;
 
-      const Array<int> &ess_tdof_list_;
+  CGSolver      M_solver_;
+  CGSolver      A_solver_;
+  HypreSmoother M_prec_;
+  HypreSmoother A_prec_;
 
   ParBilinearForm                 M_;
   std::unique_ptr<HypreParMatrix> M_mat_;
@@ -59,8 +62,11 @@ protected:
   ParLinearForm b_;
   Vector        b_tvec_;
 
-  mutable std::unique_ptr<HypreParMatrix> A_mat_;
-  mutable Vector                          rhs_;
+  std::unique_ptr<HypreParMatrix> A_mat_;
+
+  mutable Vector rhs_;
+
+  void EvalRHS(const Vector &u, Vector &rhs) const;
 
 public:
   LinearHeatOperator(ParFiniteElementSpace &f,
@@ -72,8 +78,6 @@ public:
 
   void ImplicitSolve(const real_t dt, const Vector &u, Vector &k) override;
 
-  void EvalRHS(const Vector &u, Vector &rhs);
-
   void UpdateNeumann();
 };
 
@@ -84,64 +88,75 @@ int main(int argc, char *argv[])
   int rank = mfem::Mpi::WorldRank();
   mfem::Hypre::Init();
 
-  std::string precice_config = "../precice-config.xml";
-  bool        visualization  = true;
-  int         visport        = 19916;
-  char        vishost[]      = "localhost";
+  int         order           = 1;
+  int         ode_solver_type = 23; // SDIRK33Solver
+  real_t      dt              = 0.01;
+  int         pvdc_freq       = 20;
+  std::string precice_config  = "../precice-config.xml";
+  bool        visualization   = true;
+  int         visport         = 19916;
+  char        vishost[]       = "localhost";
 
   OptionsParser args(argc, argv);
+  args.AddOption(&order, "-o", "--order",
+                 "Finite element order (polynomial degree).");
+  args.AddOption(&ode_solver_type, "-s", "--ode-solver",
+                 ODESolver::Types.c_str());
+  args.AddOption(&order, "-dt", "--time-step",
+                 "Time step.");
+  args.AddOption(&pvdc_freq, "-pv", "--paraview-freq",
+                 "ParaView data collection write frequency. 0 to disable.");
   args.AddOption(&precice_config, "-c", "--config-file",
-                 "preCICE configuration file.")
-      args.AddOption(&visualization, "-vis", "--visualization", "-no-vis",
-                     "--no-visualization",
-                     "Enable or disable GLVis visualization.");
+                 "preCICE configuration file.");
+  args.AddOption(&visualization, "-vis", "--visualization", "-no-vis",
+                 "--no-visualization",
+                 "Enable or disable GLVis visualization.");
   args.AddOption(&visport, "-p", "--send-port", "Socket for GLVis.");
   args.Parse();
   if (!args.Good()) {
     if (rank == 0) {
-      args.PrintUsage(cout);
+      args.PrintUsage(std::cout);
     }
     return 1;
   }
   if (rank == 0) {
-    args.PrintOptions(cout);
+    args.PrintOptions(std::cout);
   }
 
   // Create mesh.
   // Bdr attributes are:
   // 1 = bottom, 2 = right, 3 = top, 4 = left.
-  const int     nx        = 100;
-  const int     ny        = 25;
-  const Element e_type    = Element::QUADRILATERAL;
-  const bool    gen_edges = true;
-  const real_t  Lx        = 1.0;
-  const real_t  Ly        = 0.25;
-  Mesh          mesh      = Mesh::MakeCartesian2D(nx, ny, e_type, gen_edges, Lx, Ly);
+  const int           nx        = 20;
+  const int           ny        = 5;
+  const Element::Type e_type    = Element::QUADRILATERAL;
+  const bool          gen_edges = true;
+  const real_t        Lx        = 1.0;
+  const real_t        Ly        = 0.25;
+  Mesh                mesh      = Mesh::MakeCartesian2D(nx, ny, e_type, gen_edges, Lx, Ly);
   mesh.Transform(
-      [](const Vector &x_old, Vector &x_new) {
+      [&](const Vector &x_old, Vector &x_new) {
         // Ensure top of plate at y = 0.
         x_new[1] = x_old[1] - Ly;
       });
 
   // Partition grid.
-  ParMesh pmesh(MPI_COMM_WORLD, &mesh);
+  ParMesh pmesh(MPI_COMM_WORLD, mesh);
 
-  // Use order p = 1, 2D H1-conforming finite elements.
-  const int       p   = 1;
+  // Use 2D H1-conforming finite elements.
   const int       dim = 2;
-  H1_FECollection fecoll(p, dim);
+  H1_FECollection fecoll(order, dim);
 
-  Array<int> interface_dofs; // rank-unique ldofs (ldofs of the tdofs)
-  Vector     interface_coords;
+  Array<int>          interface_dofs;   // rank-unique ldofs (ldofs of the tdofs)
+  std::vector<double> interface_coords; // preCICE requires double
   // Get the coordinates + indices of interface nodes on this rank.
   {
     // Create an FE space for the obtaining the nodal coordinates (2D).
     // Use Ordering::byVDIM to ensure XYZ XYZ ...
-    ParFiniteElementSpace fes_nodes(&mesh, &fecoll, 2, Ordering::byVDIM);
+    ParFiniteElementSpace fes_nodes(&pmesh, &fecoll, 2, Ordering::byVDIM);
 
     // Get the interface coordinates.
     // (If using p > 1, SetNodalFESpace() is necessary).
-    pmesh.SetNodalFESpace(&fespace);
+    pmesh.SetNodalFESpace(&fes_nodes);
     const GridFunction &coords = *pmesh.GetNodes();
 
     // Get the interface DOFs/indices
@@ -159,12 +174,17 @@ int main(int argc, char *argv[])
     interface_vdofs.Sort();
 
     // Get the coordinates, correctly organized.
-    coords.GetSubVector(interface_vdofs, interface_coords);
+    Vector vec_coords;
+    coords.GetSubVector(interface_vdofs, vec_coords);
+    interface_coords.resize(vec_coords.Size());
+    for (int i = 0; i < vec_coords.Size(); i++) {
+      interface_coords[i] = vec_coords[i];
+    }
   }
 
   // Initialize FE space for temperature solution.
   // Use same ordering to ensure indices `interface_dofs` match.
-  ParFiniteElementSpace fespace(&pmesh, &fecoll, ordering = Ordering::byVDIM);
+  ParFiniteElementSpace fespace(&pmesh, &fecoll, 1, Ordering::byVDIM);
 
   // Initialize temperature with IC
   ParGridFunction u_gf(&fespace);
@@ -183,7 +203,7 @@ int main(int argc, char *argv[])
 
   // Initialize interface boundary heat flux coefficient.
   ParGridFunction         q_interface(&fespace);
-  GridFunctionCoefficient q_interface_coeff(&q_wall);
+  GridFunctionCoefficient q_interface_coeff(&q_interface);
 
   // Initialize Neumann term coefficient.
   // Only add coefficient for interface.
@@ -194,9 +214,10 @@ int main(int argc, char *argv[])
   LinearHeatOperator oper(fespace, ess_tdof_list, alpha, q_bdr);
 
   // Initialize preCICE
-  Participant participant("Solid", precice_config, rank, size, MPI_COMM_WORLD);
-  Array<int>  mesh_vertices(lcoords / dim);
-  participant.setMeshVertices("Solid", lcoords, mesh_vertices);
+  Participant      participant("Solid", precice_config, rank, size);
+  std::vector<int> mesh_vertices(interface_coords.size() / dim);
+
+  participant.setMeshVertices("Solid", interface_coords, mesh_vertices);
 
   return 0;
 }
@@ -206,36 +227,61 @@ LinearHeatOperator::LinearHeatOperator(
     const Array<int>      &ess_tdof_list,
     Coefficient           &alpha,
     Coefficient           &q_bdr)
-    : f_(f),
-      ess_tdof_list_(ess_tdof_list),
+    : ess_tdof_list_(ess_tdof_list),
+      M_solver_(f.GetComm()),
+      A_solver_(f.GetComm()),
       M_(&f),
       K_(&f),
       b_(&f),
-      b_tvec(f_.GetTrueVSize()),
-      rhs_(f_.GetTrueVSize()),
-      alpha_(alpha)
+      b_tvec_(f.GetTrueVSize()),
+      rhs_(f.GetTrueVSize())
 {
+
+#if defined(MFEM_USE_DOUBLE)
+  const real_t rel_tol = 1e-12;
+#elif defined(MFEM_USE_SINGLE)
+  const real_t rel_tol = 1e-6;
+#else
+#error "Only single and double are supported!"
+  const real_t rel_tol = 1e-12;
+#endif
+  const int max_iter = 100;
+
   M_.AddDomainIntegrator(new MassIntegrator);
   M_.Assemble(0);
   M_.Finalize(0);
-  M_mat_ = std::make_unique<HypreParMatrix>(M.ParallelAssemble());
+  M_mat_ = std::unique_ptr<HypreParMatrix>(M_.ParallelAssemble());
   M_mat_->EliminateBC(ess_tdof_list, Operator::DiagonalPolicy::DIAG_ONE);
 
-  K_.AddDomainIntegrator(new DiffusionIntegrator(alpha_));
+  K_.AddDomainIntegrator(new DiffusionIntegrator(alpha));
   K_.Assemble(0);
   K_.Finalize(0);
-  K_mat_ = std::make_unique<HypreParMatrix>(K_.ParallelAssemble());
+  K_mat_ = std::unique_ptr<HypreParMatrix>(K_.ParallelAssemble());
 
   b_.AddBoundaryIntegrator(new BoundaryLFIntegrator(q_bdr));
   UpdateNeumann();
+
+  M_solver_.iterative_mode = false;
+  M_solver_.SetRelTol(rel_tol);
+  M_solver_.SetAbsTol(0.0);
+  M_solver_.SetMaxIter(max_iter);
+  M_solver_.SetPrintLevel(IterativeSolver::PrintLevel().Warnings().Errors());
+  M_solver_.SetPreconditioner(M_prec_);
+  M_solver_.SetOperator(*M_mat_);
+
+  A_solver_.iterative_mode = false;
+  A_solver_.SetRelTol(rel_tol);
+  A_solver_.SetAbsTol(0.0);
+  A_solver_.SetMaxIter(max_iter);
+  A_solver_.SetPrintLevel(IterativeSolver::PrintLevel().Warnings().Errors());
+  A_solver_.SetPreconditioner(A_prec_);
 }
 
-void LinearHeatOperator::EvalRHS(const Vector &u, Vector &rhs)
+void LinearHeatOperator::EvalRHS(const Vector &u, Vector &rhs) const
 {
   rhs = 0.0;
   K_mat_->Mult(u, rhs);
   rhs.Neg();
-
   rhs += b_tvec_;
 }
 
@@ -245,18 +291,23 @@ void LinearHeatOperator::Mult(const Vector &u, Vector &du_dt) const
 
   // Application of essential BC for M already done.
   rhs_.SetSubVector(ess_tdof_list_, 0.0);
+
+  M_solver_.Mult(rhs_, du_dt);
 }
 
 void LinearHeatOperator::ImplicitSolve(const real_t dt, const Vector &u,
-                                       Vector &k) const
+                                       Vector &k)
 {
   A_mat_.reset();
-  A_mat_ = std::make_unique<HypreParMatrix>(Add(1.0, *M_mat_, dt, *K_mat_));
+  A_mat_ = std::unique_ptr<HypreParMatrix>(Add(1.0, *M_mat_, dt, *K_mat_));
 
   EvalRHS(u, rhs_);
 
   A_mat_->EliminateBC(ess_tdof_list_, Operator::DiagonalPolicy::DIAG_ONE);
   rhs_.SetSubVector(ess_tdof_list_, 0.0);
+
+  A_solver_.SetOperator(*A_mat_);
+  A_solver_.Mult(rhs_, k);
 }
 
 void LinearHeatOperator::UpdateNeumann()
