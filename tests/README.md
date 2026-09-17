@@ -67,6 +67,12 @@ python -m venv .venv && source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
+Prepare the mirror of third-party repositories in `./thirdparty`, by running:
+
+```bash
+./mirror-repositories.sh
+```
+
 To test a certain test-suite defined in `tests.yaml`, use:
 
 ```bash
@@ -161,6 +167,8 @@ To re-run one test locally:
 1. Extract the zip and keep the `runs/` layout (the test folder needs the sibling `tests/` directory).
 2. `cd` into the test folder.
 3. Run `./rerun-system-test.sh` (or `sh rerun-system-test.sh`).
+
+The first time you run tests locally, you need to [initialize the mirror of third-party repositories](#running-locally).
 
 The script rebuilds images, runs the tutorial, and (if present) runs fieldcompare with `--exit-code-from field-compare`, matching the Python runner. Compose paths are relative to the test folder (`..` is the parent `runs/` directory), so you can move the extracted tree elsewhere on a Linux host with Docker.
 
