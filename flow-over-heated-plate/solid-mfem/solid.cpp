@@ -1,3 +1,40 @@
+/* 
+ *                flow-over-heated-plate/solid-mfem
+ * 
+ * This file implements the solid heat equation solver for the preCICE
+ * flow-over-heated-plate tutorial using MFEM in parallel. Only
+ * AssemblyLevel::LEGACY is supported. It is recommended to review Example 16p
+ * in the MFEM repository prior to this.
+ * 
+ * The semi-discrete form can be written as:
+ * 
+ *                       M (du/dt) = -Ku + N,
+ * 
+ * where M is a mass matrix, K is a stiffness matrix, N is the Neumann 
+ * term, and u is the temperature solution vector.
+ * 
+ * For explicit time integration in TimeDependentOperator::Mult, the 
+ * equation to solve for (du/dt) at time t_n is simply
+ * 
+ *                (du/dt)_{n} = M^{-1}(-Ku_n + N).
+ * 
+ * For implicit time integration in TimeDependentOperator::ImplicitSolve, the
+ * equation to solve for (du/dt)_{n+1} can be written as
+ *          
+ *                (M + dt K)(du/dt)_{n+1} = -Ku_n + N.
+ * 
+ * Writing A = M + dt K, the equation is then
+ * 
+ *                (du/dt)_{n+1}= A^{-1}(-Ku_n + N).
+ * 
+ * In this case, M and K are constant, A depends on dt, and N depends on the
+ * coupling data. For essential BCs, it is enforced that (du/dt) = 0.
+ * 
+ * For the coupled heat flux, we use GridFunctionCoefficient such that the
+ * received heat flux is then interpolated and quadrature is performed using
+ * the interpolated heat flux at quadrature points.
+ */
+
 #include <mfem/mfem.hpp>
 #include <precice/precice.hpp>
 
@@ -5,30 +42,27 @@ using namespace mfem;
 using namespace precice;
 
 
-class LinearDiffusionOperator : public TimeDependentOperator
+class LinearHeatOperator : public TimeDependentOperator
 {
 protected:
    ParFiniteElementSpace &f_
 
    const Array<int> &ess_tdof_list_;
 
-   // Mass bilinear form
    ParBilinearForm M_;
-
-   // Mass matrix
    std::unique_ptr<HypreParMatrix> M_mat_;
 
-   // Stiffness bilinear form.
    ParBilinearForm K_;
-
-   // Stiffness matrix.
    std::unique_ptr<HypreParMatrix> K_mat_;
 
-   // Neumann linear form.
    ParLinearForm b_;
+   Vector b_tvec_;
+
+   mutable std::unique_ptr<HypreParMatrix> A_mat_;
+   mutable Vector rhs_;
 
 public:
-   LinearDiffusionOperator(ParFiniteElementSpace &f, 
+   LinearHeatOperator(ParFiniteElementSpace &f, 
                            const Array<int> &ess_tdof_list,
                            Coefficient &alpha,
                            Coefficient &q_bdr);
@@ -37,7 +71,10 @@ public:
 
    void ImplicitSolve(const real_t dt, const Vector &u, Vector &k) override;
 
-   void ReassembleNeumann(Coefficient &q_bdr_);
+   void EvalRHS(const Vector &u, Vector &rhs);
+
+   void UpdateNeumann();
+
 };
 
 int main(int argc, char *argv[])
@@ -73,7 +110,9 @@ int main(int argc, char *argv[])
       args.PrintOptions(cout);
    }
 
-   // Create mesh. Boundary attribute 3 = interface, 1 = lower boundary.
+   // Create mesh.
+   // Bdr attributes are:
+   // 1 = bottom, 2 = right, 3 = top, 4 = left.
    const int nx = 100;
    const int ny = 25;
    const Element e_type = Element::QUADRILATERAL;
@@ -98,7 +137,7 @@ int main(int argc, char *argv[])
 
    Vector interface_ldofs;
    Vector lcoords;
-   // Get the coordinates of nodes on this rank.
+   // Get the coordinates + indices of interface nodes on this rank.
    {
       // Create an FE space for the obtaining the nodal coordinates (2D).
       // Use Ordering::byVDIM to ensure XYZ XYZ ...
@@ -109,7 +148,7 @@ int main(int argc, char *argv[])
       pmesh.SetNodalFESpace(&fespace);
       const GridFunction &coords = *pmesh.GetNodes();
 
-      // Get the interface DOFs.
+      // Get the interface DOFs/indices
       Array<int> interface_bdr_elems, interface_bdr_dofs;
       fes_nodes.GetBoundaryElementsByAttribute(3, interface_bdr_elems);
       fes_nodes.FiniteElementSpace::GetBoundaryLoopEdgeDofs(
@@ -136,10 +175,10 @@ int main(int argc, char *argv[])
    ParFiniteElementSpace fespace(&pmesh, &fecoll, ordering=Ordering::byVDIM);
    
    // Initialize temperature with IC
-   ParGridFunction temperature(&fespace);
-   temperature = 300;
+   ParGridFunction u_gf(&fespace);
+   u_gf = 300;
 
-   // Lower boundary will be essential, fixed at T=300 K.
+   // Lower bdr is essential, fixed at T=300 K.
    // Get tdofs.
    Array<int> bdr_marker_arr(pmesh.bdr_attributes.Size());
    bdr_marker_arr = 0;
@@ -151,7 +190,6 @@ int main(int argc, char *argv[])
    ConstantCoefficient alpha(1.0);
 
    // Initialize interface boundary heat flux coefficient.
-   // We use a GridFunction to store q_wall.
    ParGridFunction q_interface(&fespace);
    GridFunctionCoefficient q_interface_coeff(&q_wall);
 
@@ -161,8 +199,7 @@ int main(int argc, char *argv[])
    q_bdr.UpdateCoefficient(3, q_interface_coeff);
 
    // Initialize the operator.
-   const real_t alpha = 1.0;
-   LinearDiffusionOperator oper(fespace, ess_tdof_list, alpha, q_bdr);
+   LinearHeatOperator oper(fespace, ess_tdof_list, alpha, q_bdr);
 
    // Initialize preCICE
    Participant participant("Solid", "../precice-config.xml", rank, size);
@@ -175,7 +212,7 @@ int main(int argc, char *argv[])
 }
 
 
-LinearDiffusionOperator::LinearDiffusionOperator(
+LinearHeatOperator::LinearHeatOperator(
    ParFiniteElementSpace &f,
    const Array<int> &ess_tdof_list,
    Coefficient &alpha,
@@ -185,6 +222,8 @@ LinearDiffusionOperator::LinearDiffusionOperator(
   M_(&f),
   K_(&f),
   b_(&f),
+  b_tvec(f_.GetTrueVSize()),
+  rhs_(f_.GetTrueVSize()),
   alpha_(alpha)
 {
    M_.AddDomainIntegrator(new MassIntegrator);
@@ -197,5 +236,45 @@ LinearDiffusionOperator::LinearDiffusionOperator(
    K_.Assemble(0);
    K_.Finalize(0);
    K_mat_ = std::make_unique<HypreParMatrix>(K_.ParallelAssemble());
-   // Do not eliminate BCs of K, as it is on RHS and performed after evaluation.
+
+   b_.AddBoundaryIntegrator(new BoundaryLFIntegrator(q_bdr));
+   UpdateNeumann();
+}
+
+void LinearHeatOperator::EvalRHS(const Vector &u, Vector &rhs)
+{
+   rhs = 0.0;
+   K_mat_->Mult(u, rhs);
+   rhs.Neg();
+
+   rhs += b_tvec_;
+}
+
+void LinearHeatOperator::Mult(const Vector &u, Vector &du_dt) const
+{
+   EvalRHS(u, rhs_);
+
+   // Application of essential BC for M already done.
+   rhs_.SetSubVector(ess_tdof_list_, 0.0);
+
+   
+}
+
+void LinearHeatOperator::ImplicitSolve(const real_t dt, const Vector &u,
+                                       Vector &k) const
+{
+   A_mat_.reset();
+   A_mat_ = std::make_unique<HypreParMatrix>(Add(1.0, *M_mat_, dt, *K_mat_));
+   
+   EvalRHS(u, rhs_);
+
+   A_mat_->EliminateBC(ess_tdof_list_, Operator::DiagonalPolicy::DIAG_ONE);
+   rhs_.SetSubVector(ess_tdof_list_, 0.0);
+
+}
+
+void LinearHeatOperator::UpdateNeumann()
+{
+   b_.Assemble();
+   b_.ParallelAssemble(b_tvec_);
 }
