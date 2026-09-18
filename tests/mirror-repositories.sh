@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -u
 
-working_directory="${1:-$HOME/.precice-tests/thirdparty}"
+working_directory="${1:thirdparty}"
 mkdir -p "$working_directory"
 cd "$working_directory" || exit 1
 
