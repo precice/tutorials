@@ -11,24 +11,25 @@
  *                       M (du/dt) = -Ku + N,
  *
  * where M is a mass matrix, K is a stiffness matrix, N is the Neumann
- * term, and u is the temperature solution vector.
+ * term, and u is the temperature solution vector. In this case, N=0 (natural).
  *
  * For explicit time integration in TimeDependentOperator::Mult, the
  * equation to solve for (du/dt) for time t_n is simply
  *
- *                (du/dt) = M^{-1}(-Ku_n + N).
+ *                (du/dt) = M^{-1}(-Ku_n).
  *
  * For implicit time integration in TimeDependentOperator::ImplicitSolve, the
  * equation to solve for k=du/dt can be written as
  *
- *                (M + dt K)(du/dt) = -Ku_n + N.
+ *                (M + dt K)(du/dt) = -Ku_n.
  *
  * Writing A = M + dt K, the equation is then
  *
- *                (du/dt) = A^{-1}(-Ku_n + N).
+ *                (du/dt) = A^{-1}(-Ku_n).
  *
- * In this case, M and K are constant, A depends on dt, and N depends on the
- * coupling data. For essential BCs, it is enforced that (du/dt) = 0.
+ * In this case, M and K are constant, and A depends on dt. For essential BCs,
+ * it is enforced that (du/dt) = 0. Note that this is an approximation for the
+ * interface, as it indeed does vary in time.
  *
  * For the coupled heat flux, we set the interface mesh at the solution nodes,
  * and then GridFunctionCoefficient such that the received heat flux is then
@@ -40,6 +41,11 @@
 
 #include <mfem/mfem.hpp>
 #include <precice/precice.hpp>
+
+#ifndef MFEM_USE_DOUBLE
+#error "Tutorial requires MFEM built with double-precision for consistency \
+        with preCICE."
+#endif
 
 using namespace mfem;
 using namespace precice;
@@ -59,9 +65,6 @@ protected:
   ParBilinearForm                 K_;
   std::unique_ptr<HypreParMatrix> K_mat_;
 
-  ParLinearForm b_;
-  Vector        b_tvec_;
-
   std::unique_ptr<HypreParMatrix> A_mat_;
 
   mutable Vector rhs_;
@@ -71,14 +74,31 @@ protected:
 public:
   LinearHeatOperator(ParFiniteElementSpace &f,
                      const Array<int>      &ess_tdof_list,
-                     Coefficient           &alpha,
-                     Coefficient           &q_bdr);
+                     Coefficient           &alpha);
 
   void Mult(const Vector &u, Vector &du_dt) const override;
 
   void ImplicitSolve(const real_t dt, const Vector &u, Vector &k) override;
+};
 
-  void UpdateNeumann();
+// Class for extracting wall normal fluxes on a given boundary.
+class WallNormalFluxExtractor {
+private:
+  const FiniteElementSpace &fes_;
+
+  // Boundary element indices.
+  Array<int> bdr_elems_;
+
+  // Boundary dofs -> edofs for associated boundary element in bdr_elems_.
+  Array<int> bdr_edofs_;
+
+public:
+  WallNormalFluxExtractor(const FiniteElementSpace &fes,
+                          int                       bdr_attr,
+                          const Array<int>         &bdr_dofs);
+
+  // fluxes of size bdr_dofs
+  void GetWallNormalFluxes(const GridFunction &gf, real_t *fluxes) const;
 };
 
 int main(int argc, char *argv[])
@@ -146,8 +166,8 @@ int main(int argc, char *argv[])
   const int       dim = 2;
   H1_FECollection fecoll(order, dim);
 
-  Array<int>          interface_dofs;   // rank-unique ldofs (ldofs of the tdofs)
-  std::vector<double> interface_coords; // preCICE requires double
+  Array<int>          interface_dofs; // rank-unique ldofs (ldofs of the tdofs)
+  std::vector<double> interface_coords;
   // Get the coordinates + indices of interface nodes on this rank.
   {
     // Create an FE space for the obtaining the nodal coordinates (2D).
@@ -174,12 +194,8 @@ int main(int argc, char *argv[])
     interface_vdofs.Sort();
 
     // Get the coordinates, correctly organized.
-    Vector vec_coords;
-    coords.GetSubVector(interface_vdofs, vec_coords);
-    interface_coords.resize(vec_coords.Size());
-    for (int i = 0; i < vec_coords.Size(); i++) {
-      interface_coords[i] = vec_coords[i];
-    }
+    interface_coords.resize(interface_vdofs.Size());
+    coords.GetSubVector(interface_vdofs, interface_coords.data());
   }
 
   // Initialize FE space for temperature solution.
@@ -190,34 +206,93 @@ int main(int argc, char *argv[])
   ParGridFunction u_gf(&fespace);
   u_gf = 300;
 
-  // Lower bdr is essential, fixed at T=300 K.
-  // Get tdofs.
+  // Lower + upper boundaries are essential --> Get tdofs.
   Array<int> bdr_marker_arr(pmesh.bdr_attributes.Size());
   bdr_marker_arr                         = 0;
-  bdr_marker_arr[bdr_marker_arr.Find(1)] = 1;
+  bdr_marker_arr[bdr_marker_arr.Find(1)] = 1; // lower
+  bdr_marker_arr[bdr_marker_arr.Find(3)] = 1; // upper
   Array<int> ess_tdof_list;
   fespace.GetEssentialTrueDofs(bdr_marker_arr, ess_tdof_list);
 
   // Initialize coefficient for alpha.
   ConstantCoefficient alpha(1.0);
 
-  // Initialize interface boundary heat flux coefficient.
-  ParGridFunction         q_interface(&fespace);
-  GridFunctionCoefficient q_interface_coeff(&q_interface);
-
-  // Initialize Neumann term coefficient.
-  // Only add coefficient for interface.
-  PWCoefficient q_bdr;
-  q_bdr.UpdateCoefficient(3, q_interface_coeff);
-
   // Initialize the operator.
-  LinearHeatOperator oper(fespace, ess_tdof_list, alpha, q_bdr);
+  LinearHeatOperator oper(fespace, ess_tdof_list, alpha);
+
+  // Initialize ODE Solver
+  std::unique_ptr<ODESolver> ode_solver = ODESolver::Select(ode_solver_type);
+  ode_solver->Init(oper);
+  real_t t  = 0.0;
+  int    ti = 0;
+
+  // Initialize ParaViewDataCollection for output.
+  std::unique_ptr<ParaViewDataCollection> pvdc;
+  if (pvdc_freq > 0) {
+    pvdc = std::make_unique<ParaViewDataCollection>("Solid", &pmesh);
+    pvdc->SetLevelsOfDetail(order);
+    pvdc->SetDataFormat(VTKFormat::BINARY);
+    pvdc->SetHighOrderOutput(true);
+    pvdc->SetCycle(0);
+    pvdc->SetTime(0.0);
+    pvdc->RegisterField("Temperature", &u_gf);
+    pvdc->Save();
+  }
 
   // Initialize preCICE
-  Participant      participant("Solid", precice_config, rank, size);
-  std::vector<int> mesh_vertices(interface_coords.size() / dim);
+  const std::string mesh_name = "Solid-Mesh";
+  Participant       participant("Solid", precice_config, rank, size);
+  std::vector<int>  mesh_vertices(interface_coords.size() / dim);
+  participant.setMeshVertices(mesh_name, interface_coords, mesh_vertices);
+  participant.initialize();
 
-  participant.setMeshVertices("Solid", interface_coords, mesh_vertices);
+  // Initialize preCICE-related variables.
+  real_t                        precice_dt;
+  real_t                        t_save;
+  ParGridFunction               u_gf_save(&fespace);
+  std::vector<double>           u_receive(interface_dofs.Size());
+  std::vector<double>           qwall_write(interface_dofs.Size());
+  const WallNormalFluxExtractor qwall_getter(fespace, 3, interface_dofs);
+
+  // Main solver loop.
+  while (participant.isCouplingOngoing()) {
+    if (participant.requiresWritingCheckpoint()) {
+      t_save    = t;
+      u_gf_save = u_gf;
+    }
+
+    precice_dt = participant.getMaxTimeStepSize();
+    dt         = std::min(dt, precice_dt);
+
+    // Get coupling data + set
+    participant.readData(mesh_name, "Temperature", mesh_vertices, dt, u_receive);
+    u_gf.SetSubVector(interface_dofs, u_receive.data());
+
+    // Step in time
+    ode_solver->Step(u_gf.GetTrueVector(), t, dt);
+    u_gf.SetFromTrueVector();
+
+    // Get and write the heat fluxes.
+    qwall_getter.GetWallNormalFluxes(u_gf, qwall_write.data());
+    participant.writeData(mesh_name, "Heat-Flux", mesh_vertices, qwall_write);
+
+    if (participant.requiresReadingCheckpoint()) {
+      t    = t_save;
+      u_gf = u_gf_save;
+    } else {
+      if (rank == 0) {
+        std::cout << "step " << ti << ", t = " << t << std::endl;
+      }
+      ti++;
+      if (pvdc && ti % pvdc_freq == 0) {
+        pvdc->SetTime(t);
+        pvdc->SetCycle(ti);
+        pvdc->Save();
+      }
+    }
+  }
+
+  participant.finalize();
 
   return 0;
 }
@@ -225,26 +300,18 @@ int main(int argc, char *argv[])
 LinearHeatOperator::LinearHeatOperator(
     ParFiniteElementSpace &f,
     const Array<int>      &ess_tdof_list,
-    Coefficient           &alpha,
-    Coefficient           &q_bdr)
+    Coefficient           &alpha)
     : ess_tdof_list_(ess_tdof_list),
       M_solver_(f.GetComm()),
       A_solver_(f.GetComm()),
       M_(&f),
       K_(&f),
-      b_(&f),
-      b_tvec_(f.GetTrueVSize()),
       rhs_(f.GetTrueVSize())
 {
 
-#if defined(MFEM_USE_DOUBLE)
+  // Double-precision relative tolerance:
   const real_t rel_tol = 1e-12;
-#elif defined(MFEM_USE_SINGLE)
-  const real_t rel_tol = 1e-6;
-#else
-#error "Only single and double are supported!"
-  const real_t rel_tol = 1e-12;
-#endif
+
   const int max_iter = 100;
 
   M_.AddDomainIntegrator(new MassIntegrator);
@@ -257,9 +324,6 @@ LinearHeatOperator::LinearHeatOperator(
   K_.Assemble(0);
   K_.Finalize(0);
   K_mat_ = std::unique_ptr<HypreParMatrix>(K_.ParallelAssemble());
-
-  b_.AddBoundaryIntegrator(new BoundaryLFIntegrator(q_bdr));
-  UpdateNeumann();
 
   M_solver_.iterative_mode = false;
   M_solver_.SetRelTol(rel_tol);
@@ -282,7 +346,6 @@ void LinearHeatOperator::EvalRHS(const Vector &u, Vector &rhs) const
   rhs = 0.0;
   K_mat_->Mult(u, rhs);
   rhs.Neg();
-  rhs += b_tvec_;
 }
 
 void LinearHeatOperator::Mult(const Vector &u, Vector &du_dt) const
@@ -310,8 +373,61 @@ void LinearHeatOperator::ImplicitSolve(const real_t dt, const Vector &u,
   A_solver_.Mult(rhs_, k);
 }
 
-void LinearHeatOperator::UpdateNeumann()
+WallNormalFluxExtractor::WallNormalFluxExtractor(
+    const FiniteElementSpace &fes,
+    int                       bdr_attr,
+    const Array<int>         &bdr_dofs)
+    : fes_(fes),
+      bdr_elems_(bdr_dofs.Size()),
+      bdr_edofs_(bdr_dofs.Size())
 {
-  b_.Assemble();
-  b_.ParallelAssemble(b_tvec_);
+  // Loop over all boundary elements
+  // Save boundary element and associated edof for every bdr_dof
+  for (int i = 0; i < fes.GetNBE(); i++) {
+    // Check if this bdr element is associated with bdr_attr
+    if (fes.GetBdrAttribute(i) != bdr_attr) {
+      continue;
+    }
+
+    Array<int> edofs;
+    fes.GetBdrElementDofs(i, edofs);
+
+    for (int j = 0; j < edofs.Size(); j++) {
+      int idx = bdr_dofs.Find(edofs[j]);
+
+      // Skip if not in bdr_dofs
+      if (idx < 0) {
+        continue;
+      }
+
+      bdr_elems_[idx] = i;
+      bdr_edofs_[idx] = j;
+    }
+  }
+}
+
+void WallNormalFluxExtractor::GetWallNormalFluxes(const GridFunction &gf,
+                                                  real_t             *fluxes) const
+{
+  for (int i = 0; i < bdr_elems_.Size(); i++) {
+
+    const FiniteElement   &fe = *fes_.GetBE(bdr_elems_[i]);
+    ElementTransformation &tr =
+        *fes_.GetBdrElementTransformation(bdr_elems_[i]);
+
+    // Set point to compute normal at
+    const IntegrationPoint &ip = fe.GetNodes().IntPoint(bdr_edofs_[i]);
+    tr.SetIntPoint(&ip);
+
+    // Compute the normal
+    Vector normal(tr.Jacobian().Height());
+    CalcOrtho(tr.Jacobian(), normal);
+
+    // Get the gradient of the grid function at the point
+    Vector grad_u(normal.Size());
+    gf.GetGradient(tr, grad_u);
+
+    // Compute grad_u dot normal
+    fluxes[i] = grad_u * normal;
+  }
 }
