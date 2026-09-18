@@ -10,6 +10,7 @@ depends_on:
     condition: service_completed_successfully
 volumes:
   - {{ run_directory }}:/runs
+  - $HOME/.precice-tests/thirdparty:/mnt/thirdparty
 command: >
   /bin/bash -c "id && 
   cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&

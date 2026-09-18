@@ -9,7 +9,6 @@ services:
         {% endfor %}
     volumes:
       - {{ run_directory }}:/runs
-      - /home/precice/.precice-tests/thirdparty:/mnt/thirdparty
     command: >
       /bin/bash -c "id &&
       cd '/runs/{{ tutorial_folder }}' && 

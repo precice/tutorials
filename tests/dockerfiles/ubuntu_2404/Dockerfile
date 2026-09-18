@@ -344,6 +344,7 @@ USER precice
 WORKDIR /home/precice
 # The channel-transport-particles tutorial is hosted in a frozen fork of the MercuryDPM repository.
 # That's why there are no arguments for version, ref, or pr.
+# Third-party repository: Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
 RUN git clone /mnt/thirdparty/bitbucket.org/davidscn/mercurydpm.git &&\
     cd mercurydpm && \
     git checkout channel-transport-tutorial && \
