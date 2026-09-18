@@ -67,13 +67,13 @@ python -m venv .venv && source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-Prepare the mirror of third-party repositories, by running:
+Prepare the mirror of third-party repositories in `./thirdparty`, by running:
 
 ```bash
 ./mirror-repositories.sh
 ```
 
-By default, the script clones all repositories into `~/.precice-tests/thirdparty`.
+By default, the script clones all repositories into `./thirdparty`.
 You can set another path using `./mirror-repositories.sh <destination>`.
 
 To test a certain test-suite defined in `tests.yaml`, use:
