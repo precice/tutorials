@@ -76,6 +76,13 @@ public:
   void ImplicitSolve(const real_t dt, const Vector &u, Vector &k) override;
 };
 
+// Adapted from miniapps/common/pfem-extras
+void VisualizeField(socketstream &sock, const char *vishost, int visport,
+                    const ParGridFunction &gf, const char *title,
+                    int x = 0, int y = 0, int w = 400, int h = 400,
+                    const char *keys = NULL, bool vec = false,
+                    const char *commands = NULL);
+
 int main(int argc, char *argv[])
 {
   mfem::Mpi::Init(argc, argv);
@@ -121,8 +128,8 @@ int main(int argc, char *argv[])
   // Create mesh.
   // Bdr attributes are:
   // 1 = bottom, 2 = right, 3 = top, 4 = left.
-  const int           nx        = 20;
-  const int           ny        = 5;
+  const int           nx        = 80;
+  const int           ny        = 25;
   const Element::Type e_type    = Element::QUADRILATERAL;
   const bool          gen_edges = true;
   const real_t        Lx        = 1.0;
@@ -225,6 +232,9 @@ int main(int argc, char *argv[])
   // Initialize coefficient for alpha.
   ConstantCoefficient alpha(1.0);
 
+  // Initialize coefficient for thermal conductivity.
+  ConstantCoefficient k(100.0);
+
   // Initialize the operator.
   LinearHeatOperator oper(fespace, ess_tdof_list, alpha);
 
@@ -245,6 +255,19 @@ int main(int argc, char *argv[])
     pvdc->SetTime(0.0);
     pvdc->RegisterField("Temperature", &u_gf);
     pvdc->Save();
+  }
+
+  // GLVis parameters.
+  socketstream sout;
+  const auto   WriteGLVis = [&]() {
+    VisualizeField(sout, vishost, visport, u_gf,
+                     "flow-over-heated-plate", 10, 10, 600, 300,
+                     "ARj******]]]]]]]c", false,
+                     "autoscale off\n valuerange 300 310\n");
+  };
+
+  if (visualization) {
+    WriteGLVis();
   }
 
   // Initialize preCICE
@@ -272,8 +295,10 @@ int main(int argc, char *argv[])
     dt         = std::min(dt, precice_dt);
 
     // Get temperatures and set.
-    participant.readData(mesh_name, "Temperature", mesh_vertices, dt, u_receive);
+    participant.readData(mesh_name, "Temperature", mesh_vertices, dt,
+                         u_receive);
     u_gf.SetSubVector(interface_dofs, u_receive.data());
+    u_gf.SetTrueVector();
 
     // Step in time
     ode_solver->Step(u_gf.GetTrueVector(), t, dt);
@@ -289,7 +314,7 @@ int main(int argc, char *argv[])
       CalcOrtho(trf->Jacobian(), normal);
       normal /= normal.Norml2();
       u_gf.GetGradient(*trf, grad_u);
-      qwall_write[i] = grad_u * normal;
+      qwall_write[i] = -k.Eval(*trf, *ip) * (grad_u * normal);
     }
     participant.writeData(mesh_name, "Heat-Flux", mesh_vertices, qwall_write);
     participant.advance(dt);
@@ -298,6 +323,10 @@ int main(int argc, char *argv[])
       t    = t_save;
       u_gf = u_gf_save;
     } else {
+      if (visualization) {
+        WriteGLVis();
+      }
+
       if (rank == 0) {
         std::cout << "step " << ti << ", t = " << t << std::endl;
       }
@@ -389,4 +418,57 @@ void LinearHeatOperator::ImplicitSolve(const real_t dt, const Vector &u,
 
   A_solver_.SetOperator(*A_mat_);
   A_solver_.Mult(rhs_, k);
+}
+
+void VisualizeField(socketstream &sock, const char *vishost, int visport,
+                    const ParGridFunction &gf, const char *title,
+                    int x, int y, int w, int h, const char *keys, bool vec,
+                    const char *commands)
+{
+  ParMesh &pmesh = *gf.ParFESpace()->GetParMesh();
+  MPI_Comm comm  = pmesh.GetComm();
+
+  int num_procs, myid;
+  MPI_Comm_size(comm, &num_procs);
+  MPI_Comm_rank(comm, &myid);
+
+  bool newly_opened = false;
+  int  connection_failed;
+
+  do {
+    if (myid == 0) {
+      if (!sock.is_open() || !sock) {
+        sock.open(vishost, visport);
+        sock.precision(8);
+        newly_opened = true;
+      }
+      sock << "solution\n";
+    }
+
+    pmesh.PrintAsOne(sock);
+    gf.SaveAsOne(sock);
+
+    if (myid == 0 && newly_opened) {
+      if (commands) {
+        sock << commands << "\n";
+      }
+      sock << "window_title '" << title << "'\n"
+           << "window_geometry "
+           << x << " " << y << " " << w << " " << h << "\n";
+      if (keys) {
+        sock << "keys " << keys << "\n";
+      } else {
+        sock << "keys maaAc";
+      }
+      if (vec) {
+        sock << "vvv";
+      }
+      sock << std::endl;
+    }
+
+    if (myid == 0) {
+      connection_failed = !sock && !newly_opened;
+    }
+    MPI_Bcast(&connection_failed, 1, MPI_INT, 0, comm);
+  } while (connection_failed);
 }
