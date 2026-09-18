@@ -76,6 +76,9 @@ jobs:
     - name: Install Python dependencies
       run: |
         pip install --user -r tests/requirements.txt
+    - name: Copy the mirrored thirdparty repositories
+      run: |
+        cp -r /home/precice/thirdparty .
     - name: Run tests
       run: |
         cd tests
