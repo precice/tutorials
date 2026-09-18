@@ -81,26 +81,6 @@ public:
   void ImplicitSolve(const real_t dt, const Vector &u, Vector &k) override;
 };
 
-// Class for extracting wall normal fluxes on a given boundary.
-class WallNormalFluxExtractor {
-private:
-  const FiniteElementSpace &fes_;
-
-  // Boundary element indices.
-  Array<int> bdr_elems_;
-
-  // Boundary dofs -> edofs for associated boundary element in bdr_elems_.
-  Array<int> bdr_edofs_;
-
-public:
-  WallNormalFluxExtractor(const FiniteElementSpace &fes,
-                          int                       bdr_attr,
-                          const Array<int>         &bdr_dofs);
-
-  // fluxes of size bdr_dofs
-  void GetWallNormalFluxes(const GridFunction &gf, real_t *fluxes) const;
-};
-
 int main(int argc, char *argv[])
 {
   mfem::Mpi::Init(argc, argv);
@@ -166,24 +146,50 @@ int main(int argc, char *argv[])
   const int       dim = 2;
   H1_FECollection fecoll(order, dim);
 
-  Array<int>          interface_dofs; // rank-unique ldofs (ldofs of the tdofs)
+  // Initialize FE space for temperature solution.
+  ParFiniteElementSpace fespace(&pmesh, &fecoll, 1, Ordering::byVDIM);
+
+  // For setting temperature, need unique ldofs.
+  Array<int> interface_dofs;
+
+  // For getting heat flux, need ElementTransformation and associated
+  // IntegrationPoint (reference loc.) of each interface node.
+  Array<ElementTransformation *>  interface_trfs;
+  Array<const IntegrationPoint *> interface_ips;
+
+  // Initialize interface_dofs, interface_trfs, interface_ips.
+  {
+    Array<int> interface_bdr_elems, interface_tdofs;
+    fespace.GetBoundaryElementsByAttribute(3, interface_bdr_elems);
+    fespace.GetBoundaryLoopEdgeDofs(interface_bdr_elems, interface_tdofs,
+                                    interface_dofs);
+
+    interface_trfs.Reserve(interface_dofs.Size());
+    interface_ips.Reserve(interface_dofs.Size());
+    for (int i = 0; i < interface_bdr_elems.Size(); i++) {
+      const FiniteElement   *fe  = fespace.GetBE(i);
+      ElementTransformation *trf = fespace.GetBdrElementTransformation(i);
+
+      Array<int> elem_dofs;
+      fespace.GetBdrElementDofs(i, elem_dofs);
+      int edof = elem_dofs.Find(interface_dofs[i]);
+
+      const IntegrationPoint *ip = fe->GetNodes().IntPoint(edof);
+
+      interface_trfs.Append(trf);
+      interface_ips.Append(ip);
+    }
+  }
+
+  // Initialize interface coordinates for preCICE
   std::vector<double> interface_coords;
-  // Get the coordinates + indices of interface nodes on this rank.
   {
     // Create an FE space for the obtaining the nodal coordinates (2D).
-    // Use Ordering::byVDIM to ensure XYZ XYZ ...
     ParFiniteElementSpace fes_nodes(&pmesh, &fecoll, 2, Ordering::byVDIM);
 
-    // Get the interface coordinates.
-    // (If using p > 1, SetNodalFESpace() is necessary).
+    // Get the coordinates of each node.
     pmesh.SetNodalFESpace(&fes_nodes);
     const GridFunction &coords = *pmesh.GetNodes();
-
-    // Get the interface DOFs/indices
-    Array<int> interface_bdr_elems, interface_tdofs;
-    fes_nodes.GetBoundaryElementsByAttribute(3, interface_bdr_elems);
-    fes_nodes.GetBoundaryLoopEdgeDofs(interface_bdr_elems, interface_tdofs,
-                                      interface_dofs);
 
     // Convert ldofs to vdofs (include indices for y-coords).
     // Indices are appended to end.
@@ -197,10 +203,6 @@ int main(int argc, char *argv[])
     interface_coords.resize(interface_vdofs.Size());
     coords.GetSubVector(interface_vdofs, interface_coords.data());
   }
-
-  // Initialize FE space for temperature solution.
-  // Use same ordering to ensure indices `interface_dofs` match.
-  ParFiniteElementSpace fespace(&pmesh, &fecoll, 1, Ordering::byVDIM);
 
   // Initialize temperature with IC
   ParGridFunction u_gf(&fespace);
@@ -247,12 +249,11 @@ int main(int argc, char *argv[])
   participant.initialize();
 
   // Initialize preCICE-related variables.
-  real_t                        precice_dt;
-  real_t                        t_save;
-  ParGridFunction               u_gf_save(&fespace);
-  std::vector<double>           u_receive(interface_dofs.Size());
-  std::vector<double>           qwall_write(interface_dofs.Size());
-  const WallNormalFluxExtractor qwall_getter(fespace, 3, interface_dofs);
+  real_t              precice_dt;
+  real_t              t_save;
+  ParGridFunction     u_gf_save(&fespace);
+  std::vector<double> u_receive(interface_dofs.Size());
+  std::vector<double> qwall_write(interface_dofs.Size());
 
   // Main solver loop.
   while (participant.isCouplingOngoing()) {
@@ -264,7 +265,7 @@ int main(int argc, char *argv[])
     precice_dt = participant.getMaxTimeStepSize();
     dt         = std::min(dt, precice_dt);
 
-    // Get coupling data + set
+    // Get temperatures and set.
     participant.readData(mesh_name, "Temperature", mesh_vertices, dt, u_receive);
     u_gf.SetSubVector(interface_dofs, u_receive.data());
 
@@ -273,7 +274,17 @@ int main(int argc, char *argv[])
     u_gf.SetFromTrueVector();
 
     // Get and write the heat fluxes.
-    qwall_getter.GetWallNormalFluxes(u_gf, qwall_write.data());
+    // See https://mfem.org/howto/outer_normals/
+    Vector normal(dim), grad_u(dim);
+    for (int i = 0; i < interface_trfs.Size(); i++) {
+      ElementTransformation  *trf = interface_trfs[i];
+      const IntegrationPoint *ip - interface_ips[i];
+      trf->SetIntPoint(ip);
+      CalcOrtho(trf->Jacobian(), normal);
+      normal /= normal.Norml2();
+      u_gf.GetGradient(*trf, grad_u);
+      qwall_write[i] = grad_u * normal;
+    }
     participant.writeData(mesh_name, "Heat-Flux", mesh_vertices, qwall_write);
 
     if (participant.requiresReadingCheckpoint()) {
@@ -371,63 +382,4 @@ void LinearHeatOperator::ImplicitSolve(const real_t dt, const Vector &u,
 
   A_solver_.SetOperator(*A_mat_);
   A_solver_.Mult(rhs_, k);
-}
-
-WallNormalFluxExtractor::WallNormalFluxExtractor(
-    const FiniteElementSpace &fes,
-    int                       bdr_attr,
-    const Array<int>         &bdr_dofs)
-    : fes_(fes),
-      bdr_elems_(bdr_dofs.Size()),
-      bdr_edofs_(bdr_dofs.Size())
-{
-  // Loop over all boundary elements
-  // Save boundary element and associated edof for every bdr_dof
-  for (int i = 0; i < fes.GetNBE(); i++) {
-    // Check if this bdr element is associated with bdr_attr
-    if (fes.GetBdrAttribute(i) != bdr_attr) {
-      continue;
-    }
-
-    Array<int> edofs;
-    fes.GetBdrElementDofs(i, edofs);
-
-    for (int j = 0; j < edofs.Size(); j++) {
-      int idx = bdr_dofs.Find(edofs[j]);
-
-      // Skip if not in bdr_dofs
-      if (idx < 0) {
-        continue;
-      }
-
-      bdr_elems_[idx] = i;
-      bdr_edofs_[idx] = j;
-    }
-  }
-}
-
-void WallNormalFluxExtractor::GetWallNormalFluxes(const GridFunction &gf,
-                                                  real_t             *fluxes) const
-{
-  for (int i = 0; i < bdr_elems_.Size(); i++) {
-
-    const FiniteElement   &fe = *fes_.GetBE(bdr_elems_[i]);
-    ElementTransformation &tr =
-        *fes_.GetBdrElementTransformation(bdr_elems_[i]);
-
-    // Set point to compute normal at
-    const IntegrationPoint &ip = fe.GetNodes().IntPoint(bdr_edofs_[i]);
-    tr.SetIntPoint(&ip);
-
-    // Compute the normal
-    Vector normal(tr.Jacobian().Height());
-    CalcOrtho(tr.Jacobian(), normal);
-
-    // Get the gradient of the grid function at the point
-    Vector grad_u(normal.Size());
-    gf.GetGradient(tr, grad_u);
-
-    // Compute grad_u dot normal
-    fluxes[i] = grad_u * normal;
-  }
 }
