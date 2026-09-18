@@ -2,7 +2,9 @@
  *                flow-over-heated-plate/solid-mfem
  *
  * This file implements the solid heat equation solver for the preCICE
- * flow-over-heated-plate tutorial using MFEM in parallel. Only
+ * flow-over-heated-plate tutorial using MFEM in parallel, where the solid
+ * recieves the temperature and sends the heat flux. In regards to
+ * parallelization, we use unique DOFs across all ranks. Only
  * AssemblyLevel::LEGACY is supported. It is recommended to review Example 16p
  * in the MFEM repository prior to this.
  *
@@ -30,13 +32,6 @@
  * In this case, M and K are constant, and A depends on dt. For essential BCs,
  * it is enforced that (du/dt) = 0. Note that this is an approximation for the
  * interface, as it indeed does vary in time.
- *
- * For the coupled heat flux, we set the interface mesh at the solution nodes,
- * and then GridFunctionCoefficient such that the received heat flux is then
- * interpolated and quadrature is performed using the interpolated heat flux
- * at quadrature points.
- *
- * In regards to parallelization, we use unique DOFs across all ranks.
  */
 
 #include <mfem/mfem.hpp>
