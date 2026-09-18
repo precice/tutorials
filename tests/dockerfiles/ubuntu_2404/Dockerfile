@@ -242,15 +242,15 @@ WORKDIR /home/precice/dumux
 
 # Clone repositories from local mirrors, to avoid frequent network failures.
 # Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUMUX}
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION_DUMUX}
-RUN git clone --depth 1 /mnt/thirdparty/git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION}
-RUN git clone --depth 1 /mnt/thirdparty/git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git -b cell_problems
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION_DUMUX}
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /thirdparty/git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION}
+RUN git clone --depth 1 /thirdparty/git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git -b cell_problems
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUMUX}
 RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
 
@@ -277,15 +277,15 @@ ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
 
 # Clone repositories from local mirrors, to avoid frequent network failures.
 # Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION_DUNE}
 
 # Modules specific to the dune adapter:
 RUN for i in $(seq 1 3); do \
@@ -345,7 +345,7 @@ WORKDIR /home/precice
 # The channel-transport-particles tutorial is hosted in a frozen fork of the MercuryDPM repository.
 # That's why there are no arguments for version, ref, or pr.
 # Third-party repository: Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
-RUN git clone /mnt/thirdparty/bitbucket.org/davidscn/mercurydpm.git &&\
+RUN git clone /thirdparty/bitbucket.org/davidscn/mercurydpm.git &&\
     cd mercurydpm && \
     git checkout channel-transport-tutorial && \
     mkdir -p build && cd build && \
