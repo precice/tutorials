@@ -240,7 +240,8 @@ ARG DUMUX_ADAPTER_REF
 USER precice
 WORKDIR /home/precice/dumux
 
-# This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
+# Clone repositories from local mirrors, to avoid frequent network failures.
+# Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
 RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}
 RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}
 RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}
@@ -274,7 +275,8 @@ USER precice
 WORKDIR /home/precice/dune
 ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
 
-# This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
+# Clone repositories from local mirrors, to avoid frequent network failures.
+# Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
 RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}
 RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}
 RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}
