@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
   // Initialize FE space for temperature solution.
   ParFiniteElementSpace fespace(&pmesh, &fecoll, 1, Ordering::byVDIM);
 
-  // For setting temperature, need unique ldofs.
+  // For setting temperature, need ldof (index) of each interface node.
   Array<int> interface_dofs;
 
   // For getting heat flux, need ElementTransformation and associated
@@ -154,60 +154,71 @@ int main(int argc, char *argv[])
 
   // Initialize interface_dofs, interface_trfs, interface_ips.
   {
-    Array<int> interface_bdr_elems, interface_tdofs;
-    fespace.GetBoundaryElementsByAttribute(3, interface_bdr_elems);
-    fespace.GetBoundaryLoopEdgeDofs(interface_bdr_elems, interface_tdofs,
-                                    interface_dofs);
+    // Loop over all boundary elements
+    for (int i = 0; i < fespace.GetNBE(); i++) {
+      // Skip if not interface boundary element
+      if (fespace.GetBdrAttribute(i) != 3) {
+        continue;
+      }
 
-    interface_trfs.Reserve(interface_dofs.Size());
-    interface_ips.Reserve(interface_dofs.Size());
-    for (int i = 0; i < interface_bdr_elems.Size(); i++) {
-      const FiniteElement   *fe  = fespace.GetBE(i);
-      ElementTransformation *trf = fespace.GetBdrElementTransformation(i);
-
+      // Get ldofs from this element
       Array<int> elem_dofs;
       fespace.GetBdrElementDofs(i, elem_dofs);
-      int edof = elem_dofs.Find(interface_dofs[i]);
 
-      const IntegrationPoint *ip = fe->GetNodes().IntPoint(edof);
+      for (int j = 0; j < elem_dofs.Size(); j++) {
+        int ldof = elem_dofs[j];
 
-      interface_trfs.Append(trf);
-      interface_ips.Append(ip);
+        // Avoid duplication at bdr element ends
+        if (interface_dofs.Find(ldof) > 0) {
+          continue;
+        }
+
+        // Avoid duplication at MPI rank interfaces
+        if (fespace.GetLocalTDofNumber(ldof) < 0) {
+          continue;
+        }
+
+        const FiniteElement    *fe  = fespace.GetBE(i);
+        ElementTransformation  *trf = fespace.GetBdrElementTransformation(i);
+        const IntegrationPoint *ip  = &fe->GetNodes().IntPoint(j);
+
+        interface_dofs.Append(ldof);
+        interface_trfs.Append(trf);
+        interface_ips.Append(ip);
+      }
     }
   }
 
   // Initialize interface coordinates for preCICE
   std::vector<double> interface_coords;
-  {
-    // Create an FE space for the obtaining the nodal coordinates (2D).
-    ParFiniteElementSpace fes_nodes(&pmesh, &fecoll, 2, Ordering::byVDIM);
 
-    // Get the coordinates of each node.
-    pmesh.SetNodalFESpace(&fes_nodes);
-    const GridFunction &coords = *pmesh.GetNodes();
+  // Get the coordinates of each node.
+  pmesh.SetCurvature(order); // ensure that nodes are defined for p>1
+  const GridFunction &coords = *pmesh.GetNodes();
 
-    // Convert ldofs to vdofs (include indices for y-coords).
-    // Indices are appended to end.
-    Array<int> interface_vdofs = interface_dofs;
-    fes_nodes.DofsToVDofs(interface_vdofs);
+  // Convert ldofs to vdofs (include indices for y-coords).
+  // Indices are appended to end.
+  Array<int> interface_vdofs = interface_dofs;
+  pmesh.GetNodalFESpace()->DofsToVDofs(interface_vdofs);
 
-    // Sort indices so that x,y indices are adjacent.
-    interface_vdofs.Sort();
+  // Sort indices so that x,y indices are adjacent.
+  interface_vdofs.Sort();
 
-    // Get the coordinates, correctly organized.
-    interface_coords.resize(interface_vdofs.Size());
-    coords.GetSubVector(interface_vdofs, interface_coords.data());
-  }
+  // Get the coordinates, correctly organized.
+  interface_coords.resize(interface_vdofs.Size());
+  coords.GetSubVector(interface_vdofs, interface_coords.data());
+
+  pmesh.SetCurvature(1);
 
   // Initialize temperature with IC
   ParGridFunction u_gf(&fespace);
-  u_gf = 300;
+  u_gf = 310;
 
   // Lower + upper boundaries are essential --> Get tdofs.
   Array<int> bdr_marker_arr(pmesh.bdr_attributes.Size());
-  bdr_marker_arr                         = 0;
-  bdr_marker_arr[bdr_marker_arr.Find(1)] = 1; // lower
-  bdr_marker_arr[bdr_marker_arr.Find(3)] = 1; // upper
+  bdr_marker_arr                               = 0;
+  bdr_marker_arr[pmesh.bdr_attributes.Find(1)] = 1; // lower
+  bdr_marker_arr[pmesh.bdr_attributes.Find(3)] = 1; // upper
   Array<int> ess_tdof_list;
   fespace.GetEssentialTrueDofs(bdr_marker_arr, ess_tdof_list);
 
@@ -226,7 +237,7 @@ int main(int argc, char *argv[])
   // Initialize ParaViewDataCollection for output.
   std::unique_ptr<ParaViewDataCollection> pvdc;
   if (pvdc_freq > 0) {
-    pvdc = std::make_unique<ParaViewDataCollection>("Solid", &pmesh);
+    pvdc = std::make_unique<ParaViewDataCollection>("ParaView", &pmesh);
     pvdc->SetLevelsOfDetail(order);
     pvdc->SetDataFormat(VTKFormat::BINARY);
     pvdc->SetHighOrderOutput(true);
@@ -273,7 +284,7 @@ int main(int argc, char *argv[])
     Vector normal(dim), grad_u(dim);
     for (int i = 0; i < interface_trfs.Size(); i++) {
       ElementTransformation  *trf = interface_trfs[i];
-      const IntegrationPoint *ip - interface_ips[i];
+      const IntegrationPoint *ip  = interface_ips[i];
       trf->SetIntPoint(ip);
       CalcOrtho(trf->Jacobian(), normal);
       normal /= normal.Norml2();
@@ -281,6 +292,7 @@ int main(int argc, char *argv[])
       qwall_write[i] = grad_u * normal;
     }
     participant.writeData(mesh_name, "Heat-Flux", mesh_vertices, qwall_write);
+    participant.advance(dt);
 
     if (participant.requiresReadingCheckpoint()) {
       t    = t_save;
@@ -307,20 +319,20 @@ LinearHeatOperator::LinearHeatOperator(
     ParFiniteElementSpace &f,
     const Array<int>      &ess_tdof_list,
     Coefficient           &alpha)
-    : ess_tdof_list_(ess_tdof_list),
+    : TimeDependentOperator(f.GetTrueVSize()),
+      ess_tdof_list_(ess_tdof_list),
       M_solver_(f.GetComm()),
       A_solver_(f.GetComm()),
       M_(&f),
       K_(&f),
       rhs_(f.GetTrueVSize())
 {
-
   // Double-precision relative tolerance:
   const real_t rel_tol = 1e-12;
 
   const int max_iter = 100;
 
-  M_.AddDomainIntegrator(new MassIntegrator);
+  M_.AddDomainIntegrator(new MassIntegrator());
   M_.Assemble(0);
   M_.Finalize(0);
   M_mat_ = std::unique_ptr<HypreParMatrix>(M_.ParallelAssemble());
