@@ -71,11 +71,6 @@ RUN apt-get -qq update && \
     libxft2 \
     libxinerama1
 USER precice
-
-# Copy the local mirror of third-party repositories.
-# Run mirror-repositories.sh once on the runner to fetch them.
-RUN mkdir -p /home/precice/.precice-tests
-COPY /home/precice/.precice-tests/thirdparty /home/precice/.precice-tests/thirdparty
 ### end of precice_dependencies stage ###
 
 
@@ -246,15 +241,15 @@ USER precice
 WORKDIR /home/precice/dumux
 
 # This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUMUX}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION_DUMUX}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git -b cell_problems
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION_DUMUX}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /mnt/thirdparty/git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION}
+RUN git clone --depth 1 /mnt/thirdparty/git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git -b cell_problems
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUMUX}
 RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
 
@@ -280,15 +275,15 @@ WORKDIR /home/precice/dune
 ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
 
 # This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION_DUNE}
-RUN git clone --depth 1 /home/precice/.precice-tests/thirdparty/gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 /mnt/thirdparty/gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION_DUNE}
 
 # Modules specific to the dune adapter:
 RUN for i in $(seq 1 3); do \
@@ -347,7 +342,7 @@ USER precice
 WORKDIR /home/precice
 # The channel-transport-particles tutorial is hosted in a frozen fork of the MercuryDPM repository.
 # That's why there are no arguments for version, ref, or pr.
-RUN git clone /home/precice/.precice-tests/thirdparty/bitbucket.org/davidscn/mercurydpm.git &&\
+RUN git clone /mnt/thirdparty/bitbucket.org/davidscn/mercurydpm.git &&\
     cd mercurydpm && \
     git checkout channel-transport-tutorial && \
     mkdir -p build && cd build && \
