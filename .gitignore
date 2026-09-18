@@ -126,6 +126,9 @@ pointData.csv
 # FEniCS covered by .vtk
 # Nutils covered by .vtk
 
+# MFEM
+*.pvtu
+
 # System tests
 runs/
 
