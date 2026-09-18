@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
         int ldof = elem_dofs[j];
 
         // Avoid duplication at bdr element ends
-        if (interface_dofs.Find(ldof) > 0) {
+        if (interface_dofs.Find(ldof) >= 0) {
           continue;
         }
 
