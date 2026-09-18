@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
   // Create mesh.
   // Bdr attributes are:
   // 1 = bottom, 2 = right, 3 = top, 4 = left.
-  const int           nx        = 80;
+  const int           nx        = 100;
   const int           ny        = 25;
   const Element::Type e_type    = Element::QUADRILATERAL;
   const bool          gen_edges = true;
