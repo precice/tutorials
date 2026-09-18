@@ -82,6 +82,7 @@ jobs:
     - name: Run tests
       run: |
         cd tests
+        ls
         python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log_level=${{ inputs.log_level}}
         cd ../../
     - name: Archive system test logs
