@@ -42,6 +42,10 @@
         with preCICE."
 #endif
 
+#ifndef MFEM_USE_MPI
+#error "Tutorial uses MFEM built with MPI."
+#endif
+
 using namespace mfem;
 using namespace precice;
 
@@ -154,45 +158,37 @@ int main(int argc, char *argv[])
   // For setting temperature, need ldof (index) of each interface node.
   Array<int> interface_dofs;
 
-  // For getting heat flux, need ElementTransformation and associated
-  // IntegrationPoint (reference loc.) of each interface node.
-  Array<ElementTransformation *>  interface_trfs;
-  Array<const IntegrationPoint *> interface_ips;
+  // For getting heat flux, need bdr element and element-local dof of each
+  // interface node.
+  Array<int> interface_elems;
+  Array<int> interface_eldofs;
 
-  // Initialize interface_dofs, interface_trfs, interface_ips.
-  {
-    // Loop over all boundary elements
-    for (int i = 0; i < fespace.GetNBE(); i++) {
-      // Skip if not interface boundary element
-      if (fespace.GetBdrAttribute(i) != 3) {
+  // Loop over all boundary elements
+  for (int i = 0; i < fespace.GetNBE(); i++) {
+    // Skip if not interface boundary element
+    if (fespace.GetBdrAttribute(i) != 3) {
+      continue;
+    }
+
+    // Get ldofs from this element
+    Array<int> elem_dofs;
+    fespace.GetBdrElementDofs(i, elem_dofs);
+
+    for (int j = 0; j < elem_dofs.Size(); j++) {
+      int ldof = elem_dofs[j];
+
+      // Avoid duplication at bdr element ends
+      if (interface_dofs.Find(ldof) >= 0) {
         continue;
       }
 
-      // Get ldofs from this element
-      Array<int> elem_dofs;
-      fespace.GetBdrElementDofs(i, elem_dofs);
-
-      for (int j = 0; j < elem_dofs.Size(); j++) {
-        int ldof = elem_dofs[j];
-
-        // Avoid duplication at bdr element ends
-        if (interface_dofs.Find(ldof) >= 0) {
-          continue;
-        }
-
-        // Avoid duplication at MPI rank interfaces
-        if (fespace.GetLocalTDofNumber(ldof) < 0) {
-          continue;
-        }
-
-        const FiniteElement    *fe  = fespace.GetBE(i);
-        ElementTransformation  *trf = fespace.GetBdrElementTransformation(i);
-        const IntegrationPoint *ip  = &fe->GetNodes().IntPoint(j);
-
-        interface_dofs.Append(ldof);
-        interface_trfs.Append(trf);
-        interface_ips.Append(ip);
+      // Avoid duplication at MPI rank interfaces
+      if (fespace.GetLocalTDofNumber(ldof) < 0) {
+        continue;
       }
+      interface_dofs.Append(ldof);
+      interface_elems.Append(i);
+      interface_eldofs.Append(j);
     }
   }
 
@@ -307,14 +303,20 @@ int main(int argc, char *argv[])
     // Get and write the heat fluxes.
     // See https://mfem.org/howto/outer_normals/
     Vector normal(dim), grad_u(dim);
-    for (int i = 0; i < interface_trfs.Size(); i++) {
-      ElementTransformation  *trf = interface_trfs[i];
-      const IntegrationPoint *ip  = interface_ips[i];
-      trf->SetIntPoint(ip);
-      CalcOrtho(trf->Jacobian(), normal);
+    for (int i = 0; i < interface_elems.Size(); i++) {
+
+      const int be_i  = interface_elems[i];
+      const int eldof = interface_eldofs[i];
+
+      const FiniteElement    &fe  = *fespace.GetBE(be_i);
+      ElementTransformation  &trf = *fespace.GetBdrElementTransformation(be_i);
+      const IntegrationPoint &ip  = fe.GetNodes().IntPoint(eldof);
+      trf.SetIntPoint(&ip);
+
+      CalcOrtho(trf.Jacobian(), normal);
       normal /= normal.Norml2();
-      u_gf.GetGradient(*trf, grad_u);
-      qwall_write[i] = -k.Eval(*trf, *ip) * (grad_u * normal);
+      u_gf.GetGradient(trf, grad_u);
+      qwall_write[i] = -k.Eval(trf, ip) * (grad_u * normal);
     }
     participant.writeData(mesh_name, "Heat-Flux", mesh_vertices, qwall_write);
     participant.advance(dt);
