@@ -242,7 +242,7 @@ WORKDIR /home/precice/dumux
 
 # Clone repositories from local mirrors, to avoid frequent network failures.
 # Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
-ADD ../../thirdparty /
+ADD thirdparty /
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}
@@ -279,7 +279,7 @@ ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
 
 # Clone repositories from local mirrors, to avoid frequent network failures.
 # Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
-ADD ../../thirdparty /
+ADD thirdparty /
 RUN test -d /thirdparty/ && git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}
@@ -349,7 +349,7 @@ WORKDIR /home/precice
 # The channel-transport-particles tutorial is hosted in a frozen fork of the MercuryDPM repository.
 # That's why there are no arguments for version, ref, or pr.
 # Third-party repository: Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
-ADD ../../thirdparty /
+ADD thirdparty /
 RUN git clone /thirdparty/bitbucket.org/davidscn/mercurydpm.git &&\
     cd mercurydpm && \
     git checkout channel-transport-tutorial && \

@@ -78,7 +78,7 @@ jobs:
         pip install --user -r tests/requirements.txt
     - name: Copy the mirrored thirdparty repositories
       run: |
-        cp -r /home/precice/thirdparty ./tests/
+        cp -r /home/precice/thirdparty ./tests/dockerfiles/ubuntu_2404/
     - name: Run tests
       run: |
         cd tests
