@@ -242,6 +242,7 @@ WORKDIR /home/precice/dumux
 
 # Clone repositories from local mirrors, to avoid frequent network failures.
 # Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
+COPY thirdparty /thirdparty
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}
@@ -253,6 +254,7 @@ RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/extensions/dune-SPGr
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUMUX}
 RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
+RUN rm -rf /thirdparty
 
 RUN git clone https://github.com/precice/dumux-adapter.git &&\
     cd dumux-adapter && \
@@ -277,6 +279,7 @@ ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
 
 # Clone repositories from local mirrors, to avoid frequent network failures.
 # Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
+COPY thirdparty /thirdparty
 RUN test -d /thirdparty/ && git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}
@@ -286,6 +289,7 @@ RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/extensions/dune-foam
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION_DUNE}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION_DUNE}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION_DUNE}
+RUN rm -rf /thirdparty
 
 # Modules specific to the dune adapter:
 RUN for i in $(seq 1 3); do \
@@ -345,12 +349,14 @@ WORKDIR /home/precice
 # The channel-transport-particles tutorial is hosted in a frozen fork of the MercuryDPM repository.
 # That's why there are no arguments for version, ref, or pr.
 # Third-party repository: Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
+COPY thirdparty /thirdparty
 RUN git clone /thirdparty/bitbucket.org/davidscn/mercurydpm.git &&\
     cd mercurydpm && \
     git checkout channel-transport-tutorial && \
     mkdir -p build && cd build && \
     cmake -D MercuryDPM_PreCICE_COUPLING="ON" .. && \
     make -j $(nproc) ChannelTransport
+RUN rm -rf /thirdparty
 
 ENV PATH="/home/precice/mercurydpm/build/Drivers/PreCICE:$PATH"
 ### end of mercurydpm_adapter stage ###
