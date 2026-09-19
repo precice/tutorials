@@ -95,6 +95,8 @@ int main(int argc, char *argv[])
   mfem::Hypre::Init();
 
   int         order           = 1;
+  int         nx              = 100;
+  int         ny              = 25;
   int         ode_solver_type = 23; // SDIRK33Solver
   real_t      dt              = 0.01;
   int         pvdc_freq       = 5;
@@ -106,6 +108,10 @@ int main(int argc, char *argv[])
   OptionsParser args(argc, argv);
   args.AddOption(&order, "-o", "--order",
                  "Finite element order (polynomial degree).");
+  args.AddOption(&nx, "-nx", "--num-elems-x",
+                 "Number of elements to include in x.");
+  args.AddOption(&nx, "-ny", "--num-elems-y",
+                 "Number of elements to include in y.");
   args.AddOption(&ode_solver_type, "-s", "--ode-solver",
                  ODESolver::Types.c_str());
   args.AddOption(&order, "-dt", "--time-step",
@@ -132,8 +138,6 @@ int main(int argc, char *argv[])
   // Create mesh.
   // Bdr attributes are:
   // 1 = bottom, 2 = right, 3 = top, 4 = left.
-  const int           nx        = 100;
-  const int           ny        = 25;
   const Element::Type e_type    = Element::QUADRILATERAL;
   const bool          gen_edges = true;
   const real_t        Lx        = 1.0;
