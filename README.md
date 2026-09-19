@@ -13,6 +13,9 @@ As a general rule, you can start each participant from inside their `<tutorial>/
 
 Contributions to this repository are very welcome. Please refer to the page [Contribute to preCICE](https://precice.org/community-contribute-to-precice.html) for a few guidelines and hints to help you in this direction.
 
-Note that we use [Git LFS](https://git-lfs.com/) to version reference results. These will appear as seemingly empty files containing URLs if you don't have Git LFS installed (optional, mainly useful for our system tests).
+For Python dependency ranges and the sibling `requirements-reference.txt` files used for reproducible installs, see [`.dev-tools/releasing/README.md`](tools/releasing/README.md).
 
-For Python dependency ranges and the sibling `requirements-reference.txt` files used for reproducible installs, see [`tools/releasing/README.md`](tools/releasing/README.md).
+> [!NOTE]
+> We use [Git LFS](https://git-lfs.com/) to version reference results. These will appear as seemingly empty files containing URLs if you don't have Git LFS installed (optional, mainly useful for our system tests).
+> We host a Git LFS server for these, which only allows push access under restrictions.
+> In case you get issues pushing to a fork, set `GIT_LFS_SKIP_PUSH=1` or do `git push --no-verify`.

@@ -166,7 +166,7 @@ fenicsx-adapter:
     PYTHON_BINDINGS_REF:
       repository: https://github.com/precice/python-bindings
       default: "develop"
-    PYTHON_BINDINGS_REF:
+    PYTHON_BINDINGS_PR:
       default: ""
     FENICSX_ADAPTER_REF:
       repository: https://github.com/precice/fenicsx-adapter
