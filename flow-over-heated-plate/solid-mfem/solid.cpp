@@ -80,7 +80,7 @@ public:
   void ImplicitSolve(const real_t dt, const Vector &u, Vector &k) override;
 };
 
-// Adapted from miniapps/common/pfem-extras
+// Adapted from miniapps/common/pfem-extras to include commands.
 void VisualizeField(socketstream &sock, const char *vishost, int visport,
                     const ParGridFunction &gf, const char *title,
                     int x = 0, int y = 0, int w = 400, int h = 400,
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
   int         order           = 1;
   int         ode_solver_type = 23; // SDIRK33Solver
   real_t      dt              = 0.01;
-  int         pvdc_freq       = 20;
+  int         pvdc_freq       = 5;
   std::string precice_config  = "../precice-config.xml";
   bool        visualization   = true;
   int         visport         = 19916;
