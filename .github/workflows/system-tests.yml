@@ -76,11 +76,17 @@ jobs:
     - name: Install Python dependencies
       run: |
         pip install --user -r tests/requirements.txt
+    - name: Copy the mirrored thirdparty repositories
+      run: |
+        cp -r /home/precice/thirdparty ./tests/
     - name: Run tests
       run: |
         cd tests
         python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log_level=${{ inputs.log_level}}
         cd ../../
+    - name: Remove the mirrored thirdparty repositories
+      run: |
+        rm -rf runs/tests/thirdparty
     - name: Archive system test logs
       if: ${{ always() }}
       id: archive-logs
