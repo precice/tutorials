@@ -242,7 +242,7 @@ WORKDIR /home/precice/dumux
 
 # Clone repositories from local mirrors, to avoid frequent network failures.
 # Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
-RUN test -d /thirdparty/ && git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUMUX}
@@ -277,7 +277,7 @@ ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
 
 # Clone repositories from local mirrors, to avoid frequent network failures.
 # Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
-RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}
+RUN test -d /thirdparty/ && git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}
 RUN git clone --depth 1 /thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUNE}
