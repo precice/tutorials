@@ -4,9 +4,9 @@
  * This file implements the solid heat equation solver for the preCICE
  * flow-over-heated-plate tutorial using MFEM in parallel, where the solid
  * recieves the temperature and sends the heat flux. In regards to
- * parallelization, we use unique DOFs across all ranks. Only
- * AssemblyLevel::LEGACY is supported. It is recommended to review Example 16p
- * in the MFEM repository prior to this.
+ * parallelization, preCICE mesh vertices are defined uniquely across all
+ * ranks (no duplicate mesh vertices). Only AssemblyLevel::LEGACY is supported.
+ * It is recommended to view Example 16p in the MFEM repository prior to this.
  *
  * The semi-discrete form can be written as:
  *
