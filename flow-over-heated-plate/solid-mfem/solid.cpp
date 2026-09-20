@@ -142,7 +142,8 @@ int main(int argc, char *argv[])
   const bool          gen_edges = true;
   const real_t        Lx        = 1.0;
   const real_t        Ly        = 0.25;
-  Mesh                mesh      = Mesh::MakeCartesian2D(nx, ny, e_type, gen_edges, Lx, Ly);
+
+  Mesh mesh = Mesh::MakeCartesian2D(nx, ny, e_type, gen_edges, Lx, Ly);
   mesh.Transform(
       [&](const Vector &x_old, Vector &x_new) {
         // Ensure top of plate at y = 0.
