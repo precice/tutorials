@@ -84,9 +84,6 @@ jobs:
         cd tests
         python systemtests.py --build_args=${{ inputs.build_args}} --suites=${{ inputs.suites}} --log_level=${{ inputs.log_level}}
         cd ../../
-    - name: Remove the mirrored thirdparty repositories
-      run: |
-        rm -rf runs/tests/thirdparty
     - name: Archive system test logs
       if: ${{ always() }}
       id: archive-logs
@@ -126,3 +123,4 @@ jobs:
         name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_full
         path: |
           runs/*
+          !runs/tests/thirdparty
