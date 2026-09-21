@@ -76,9 +76,10 @@ jobs:
     - name: Install Python dependencies
       run: |
         pip install --user -r tests/requirements.txt
-    - name: Copy the mirrored thirdparty repositories
+    - name: Copy runner-specific files (mirrors, restricted)
       run: |
         cp -r /home/precice/thirdparty ./tests/
+        cp -r /home/precice/restricted ./tests/
     - name: Run tests
       run: |
         cd tests
@@ -124,3 +125,6 @@ jobs:
         path: |
           runs/*
           !runs/tests/thirdparty
+          !runs/tests/restricted
+          !runs/alya-flap*/
+

@@ -1,0 +1,18 @@
+build: 
+  context: {{ dockerfile_context }}
+  additional_contexts:
+    restricted: ../tests/restricted/
+  args:
+    {% for key, value in build_arguments.items() %}
+      - {{key}}={{value}}
+    {% endfor %}
+  target: alya_adapter
+depends_on:    
+  prepare:
+    condition: service_completed_successfully
+volumes:
+  - {{ run_directory }}:/runs
+command: >
+  /bin/bash -c "id && 
+  cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&
+  {{ run }} | tee system-tests_{{ case_folder }}.log 2>&1"
