@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 project(solid-mfem LANGUAGES CXX)
 
-find_package(MFEM 4.10 REQUIRED)
+find_package(MFEM 4 REQUIRED)
 find_package(precice 3 REQUIRED)
 
 add_executable(solid solid.cpp)
