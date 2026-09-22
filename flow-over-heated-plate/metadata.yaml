@@ -49,5 +49,9 @@ cases:
     run: ./run.sh
     component: openfoam-adapter 
 
+  solid-mfem:
+    participant: Solid
+    directory: ./solid-mfem
+    run: ./run.sh
 
 

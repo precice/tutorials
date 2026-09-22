@@ -49,6 +49,8 @@ Solid participant:
 
 * Dune-Fem. For more information, have a look at the [official documentation of Dune-Fem](https://www.dune-project.org/sphinx/dune-fem/). The `run.sh` script installs the solver from [PyPI](https://pypi.org/project/dune-fem/) into a Python virtual environment. Please note that Dune-Fem uses just-in-time compilation: The first time you run the solver script, it will take some time.
 
+* MFEM. For more information, please refer to the [official MFEM website](https://mfem.org/). Note that MFEM must be built with double precision and with MPI for this tutorial.
+
 It is also possible to use CalculiX as solid solver. In that case, two coupling meshes are needed: CalculiX read/writes temperatures on nodes, but read/writes heat-fluxes on face centers. This requires some adaptation of the `precice-config.xml` file, and [a separate tutorial](tutorials-flow-over-heated-plate-two-meshes.html) has been designed for it.
 
 ## Running the Simulation
