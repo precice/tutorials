@@ -168,7 +168,7 @@ To re-run one test locally:
 2. `cd` into the test folder.
 3. Run `./rerun-system-test.sh` (or `sh rerun-system-test.sh`).
 
-The first time you run tests locally, you need to [initialize the mirror of third-party repositories](#running-locally). There are also some restricted cases, which you cannot run locally and are not included in the `release` test suite (see `restricted` test suite).
+The first time you run tests locally, you need to [initialize the mirror of third-party repositories](#running-locally). There are also some restricted cases, which you cannot run locally and are not included in the `release` test suite (see `restricted` test suite). Similarly, externally-hosted have their reference results stored in the hosted runner; If you don't have these reference results, set `skip_compare: true` in the tests under the `external:` test suite.
 
 The script rebuilds images, runs the tutorial, and (if present) runs fieldcompare with `--exit-code-from field-compare`, matching the Python runner. Compose paths are relative to the test folder (`..` is the parent `runs/` directory), so you can move the extracted tree elsewhere on a Linux host with Docker.
 
