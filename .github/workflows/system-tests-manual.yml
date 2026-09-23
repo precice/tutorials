@@ -8,6 +8,10 @@ on:
         default: 'release'
         required: true
         type: string
+      parallel:
+        description: 'Run release as a per-tutorial matrix (serial by default)'
+        default: false
+        type: boolean
       system_tests_branch:
         description: 'Use the system tests from'
         default: 'develop'
@@ -53,11 +57,55 @@ on:
         type: string
 
 jobs:
-  run-system-tests:
+  run-system-tests-serial:
     name: Trigger system tests
+    if: ${{ inputs.suites == 'release' && !inputs.parallel }}
     uses: $/.github/workflows/system-tests.yml
     with:
-      suites: ${{ inputs.suites || 'release' }}
+      suites: release
+      build_args: "TUTORIALS_REF:${{ inputs.ref-tutorials }},\
+        PRECICE_REF:${{ inputs.ref-precice }},\
+        PYTHON_BINDINGS_REF:${{ inputs.ref-python-bindings }},\
+        CALCULIX_ADAPTER_REF:${{ inputs.ref-calculix-adapter }},\
+        DEALII_ADAPTER_REF:${{ inputs.ref-dealii-adapter }},\
+        DUMUX_ADAPTER_REF:${{ inputs.ref-dumux-adapter }},\
+        DUNE_ADAPTER_REF:${{ inputs.ref-dune-adapter }},\
+        FENICS_ADAPTER_REF:${{ inputs.ref-fenics-adapter }},\
+        FENICSX_ADAPTER_REF:${{ inputs.ref-fenicsx-adapter }},\
+        FMI_RUNNER_REF:${{ inputs.ref-fmi-runner }},\
+        MICRO_MANAGER_REF:${{ inputs.ref-micro-manager }},\
+        OPENFOAM_ADAPTER_REF:${{ inputs.ref-openfoam-adapter }},\
+        SU2_ADAPTER_REF:${{ inputs.ref-su2-adapter }}"
+      system_tests_branch: ${{ inputs.system_tests_branch || 'develop' }}
+      log_level: "INFO"
+
+  run-system-tests-parallel:
+    name: Trigger system tests (parallel)
+    if: ${{ inputs.suites == 'release' && inputs.parallel }}
+    uses: $/.github/workflows/system-tests-release-matrix.yml
+    with:
+      build_args: "TUTORIALS_REF:${{ inputs.ref-tutorials }},\
+        PRECICE_REF:${{ inputs.ref-precice }},\
+        PYTHON_BINDINGS_REF:${{ inputs.ref-python-bindings }},\
+        CALCULIX_ADAPTER_REF:${{ inputs.ref-calculix-adapter }},\
+        DEALII_ADAPTER_REF:${{ inputs.ref-dealii-adapter }},\
+        DUMUX_ADAPTER_REF:${{ inputs.ref-dumux-adapter }},\
+        DUNE_ADAPTER_REF:${{ inputs.ref-dune-adapter }},\
+        FENICS_ADAPTER_REF:${{ inputs.ref-fenics-adapter }},\
+        FENICSX_ADAPTER_REF:${{ inputs.ref-fenicsx-adapter }},\
+        FMI_RUNNER_REF:${{ inputs.ref-fmi-runner }},\
+        MICRO_MANAGER_REF:${{ inputs.ref-micro-manager }},\
+        OPENFOAM_ADAPTER_REF:${{ inputs.ref-openfoam-adapter }},\
+        SU2_ADAPTER_REF:${{ inputs.ref-su2-adapter }}"
+      system_tests_branch: ${{ inputs.system_tests_branch || 'develop' }}
+      log_level: "INFO"
+
+  run-system-tests-custom:
+    name: Trigger system tests
+    if: ${{ inputs.suites != 'release' }}
+    uses: $/.github/workflows/system-tests.yml
+    with:
+      suites: ${{ inputs.suites }}
       build_args: "TUTORIALS_REF:${{ inputs.ref-tutorials }},\
         PRECICE_REF:${{ inputs.ref-precice }},\
         PYTHON_BINDINGS_REF:${{ inputs.ref-python-bindings }},\
