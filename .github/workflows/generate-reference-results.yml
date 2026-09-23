@@ -113,7 +113,7 @@ jobs:
         else
           git add -A -- '**/reference-results/*.tar.gz'
         fi
-        git commit -m "${{inputs.commit_msg}}"
+        git commit -m "${{inputs.commit_msg}}" || echo "::warning:: Could not commit the reference results - Ignore if only meant to be stored locally."
         git push
     - name: Archive system test logs
       if: ${{ always() }}

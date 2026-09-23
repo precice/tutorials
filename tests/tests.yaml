@@ -981,8 +981,8 @@ test_suites:
           - left-openfoam
           - right-openfoam
         timeout: 480
-        skip_compare: true
-        reference_result: ./partitioned-heat-conduction-robin/reference_results/left-openfoam_right-openfoam.tar.gz
+        skip_compare: false # set to true if you don't have access to the reference results
+        reference_result: /home/precice/reference-results/partitioned-heat-conduction-robin/left-openfoam_right-openfoam.tar.gz
     
   partitioned-heat-conduction-mixedbc:
     external:
@@ -996,8 +996,8 @@ test_suites:
           - left-openfoam
           - right-openfoam
         timeout: 480
-        skip_compare: true
-        reference_result: ./partitioned-heat-conduction-mixedbc/reference_results/left-openfoam_right-openfoam.tar.gz
+        skip_compare: false # set to true if you don't have access to the reference results
+        reference_result: /home/precice/reference-results/partitioned-heat-conduction-mixedbc/left-openfoam_right-openfoam.tar.gz
 
 #####################################################################
 ## Restricted test cases
