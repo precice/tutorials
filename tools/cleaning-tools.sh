@@ -199,6 +199,7 @@ clean_dumux() {
         echo "- Cleaning up DuMuX case in $(pwd)"
         rm -fv ./*.vtu
         rm -fv ./*.pvd
+	rm -fv ./*.hdf5
         clean_precice_logs .
         clean_case_logs .
    )

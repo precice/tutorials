@@ -1,0 +1,25 @@
+[Assembly]
+Multithreading = false
+
+[TimeLoop]
+TEnd = 0.25                 # end time of the simulation
+DtInitial = 0.01            # initial time step size
+MaxTimeStepSize = 0.01      # maximal time step size
+
+[Grid]
+LowerLeft = 0.0 0.0         # lower left (front) corner of the domain (keep this fixed at 0 0!)
+UpperRight = 1.0 1.0        # upper right (back) corner of the domain
+Cells = 80 80               # grid resolution in each coordinate direction
+Periodic = 1 1              # Periodic Boundary conditions in both dimensions
+
+[Problem]
+xi = 0.08                   # phasefield parameter (lambda, set to around 4/Ncells) 
+omega = 0.01                # phasefield diffusivity/surface tension parameter (gamma)
+kt = 1.0                    # constant deciding speed of expansion/contraction
+eqconc = 0.5                # equilibrium concentration 
+ks = 1.0                    # conductivity of sand material
+kg = 0.0                    # conductivity of void material
+Name = cell_phase           # base name for VTK output files
+Radius = 0.4                # initial radius of the grain
+PhasefieldICScaling = 4.0   # factor in initial phasefield function
+MaxPorosity = 0.9686        # porosity cap
