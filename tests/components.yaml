@@ -221,6 +221,34 @@ fmi-runner:
     FMI_RUNNER_PR:
       default: ""
 
+gismo-adapter:
+  template: component-templates/gismo-adapter.yaml
+  build_timeout: 900
+  build_arguments:
+    PLATFORM:
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PR:
+      default: ""
+    PRECICE_PRESET:
+      default: "production-audit"
+    GISMO_REF:
+      repository: https://github.com/gismo/gismo
+      default: "v26.09.0"
+    GISMO_ELASTICITY_REF:
+      repository: https://github.com/gismo/gsElasticity
+      default: "v26.09.0"
+    GISMO_ADAPTER_REF:
+      repository: https://github.com/gismo/gsPreCICE
+      default: "main"
+    TUTORIALS_REF:
+      repository: https://github.com/precice/tutorials
+      default: "develop"
+    TUTORIALS_PR:
+      default: ""
+
 julia-bindings:
   template: component-templates/julia-bindings.yaml
   build_arguments:

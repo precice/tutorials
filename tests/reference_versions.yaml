@@ -9,6 +9,7 @@ CALCULIX_VERSION: "2.20"
 DUMUX_VERSION: "3.7"
 DUNE_VERSION_DUMUX: "2.9"      # Version of DUNE modules used by the dumux-adapter
 DUNE_VERSION_DUNE: "2.9"       # Version of DUNE modules used by the dune-adapter
+GISMO_REF: "v26.09.0"
 OPENFOAM_EXECUTABLE: "openfoam2512"
 SU2_VERSION: "7.5.1"
 
@@ -20,6 +21,7 @@ DUNE_ADAPTER_REF: "778d3bb"     # main,    July 8, 2026
 DUMUX_ADAPTER_REF: "3f3f54f"    # develop, May 27, 2026
 FENICS_ADAPTER_REF: "v2.3.0"
 FENICSX_ADAPTER_REF: "v1.0.1"
+GISMO_ADAPTER_REF: "97a66d4"    # main,    May 13, 2026
 FMI_RUNNER_REF: "v0.2.1"
 JULIA_BINDINGS_REF: "v3.4.0"
 MICRO_MANAGER_REF: "bf5ea7b"    # develop, July 7, 2026

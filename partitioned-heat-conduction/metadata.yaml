@@ -19,11 +19,11 @@ cases:
     run: ./run.sh
     component: fenicsx-adapter
 
-  # dirichlet-gismo:
-  #   participant: Dirichlet
-  #   directory: ./dirichlet-gismo
-  #   run: ./run.sh
-  #   component: gismo-adapter
+  dirichlet-gismo:
+    participant: Dirichlet
+    directory: ./dirichlet-gismo
+    run: ./run.sh
+    component: gismo-adapter
 
   dirichlet-nutils:
     participant: Dirichlet
@@ -49,11 +49,11 @@ cases:
     run: ./run.sh
     component: fenicsx-adapter
 
-  # neumann-gismo:
-  #   participant: Neumann
-  #   directory: ./neumann-gismo
-  #   run: ./run.sh
-  #   component: gismo-adapter
+  neumann-gismo:
+    participant: Neumann
+    directory: ./neumann-gismo
+    run: ./run.sh
+    component: gismo-adapter
 
   neumann-nutils:
     participant: Neumann
