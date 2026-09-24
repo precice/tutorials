@@ -10,6 +10,31 @@ volScalarField T(
         IOobject::AUTO_WRITE),
     mesh);
 
+Info << "Creating field gradT\n"
+     << endl;
+
+volVectorField gradT(
+    IOobject(
+        "gradT",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE),
+    mesh,
+    dimensionedVector("gradT", dimensionSet(0, -1, 0, 1, 0, 0, 0), vector::zero));
+
+Info << "Creating field maggradT\n"
+     << endl;
+
+volScalarField maggradT(
+    IOobject(
+        "maggradT",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE),
+    mag(gradT));
+
 Info << "Reading field U\n"
      << endl;
 
