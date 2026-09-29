@@ -81,6 +81,10 @@ jobs:
     - name: Install Python dependencies
       run: |
         pip install --user -r tests/requirements.txt
+    - name: Copy runner-specific files (mirrors, restricted)
+      run: |
+        cp -r /home/precice/thirdparty ./tests/
+        cp -r /home/precice/restricted ./tests/
     - name: Run tests
       run: |
         cd tests
@@ -125,3 +129,7 @@ jobs:
         name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}${{ inputs.job_label != '' && format('_{0}', inputs.job_label) || '' }}_full
         path: |
           runs/*
+          !runs/tests/thirdparty
+          !runs/tests/restricted
+          !runs/alya-flap*/
+

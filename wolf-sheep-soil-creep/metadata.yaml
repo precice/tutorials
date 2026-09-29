@@ -12,6 +12,18 @@ cases:
     directory: ./soil-creep-landlab
     run: ./run.sh
     component: python-bindings
+
+  soil-creep-simplified-landlab:
+    participant: Soil-Creep
+    directory: ./soil-creep-simplified-landlab
+    run: ./run.sh
+    component: python-bindings
+
+  soil-creep-fenicsx:
+    participant: Soil-Creep
+    directory: ./soil-creep-fenicsx
+    run: ./run.sh
+    component: fenicsx-adapter
   
   wolf-sheep-grass-mesa:
     participant: Wolf-Sheep-Grass
