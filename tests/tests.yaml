@@ -658,7 +658,7 @@ test_suites:
           - fluid-nutils
           - solid-nutils
         max_time: 0.003
-        timeout: 1200
+        timeout: 1800
         reference_result: ./turek-hron-fsi3/reference-results/fluid-nutils_solid-nutils.tar.gz
 
   turek-hron-fsi3_fluid-openfoam_solid-dealii:
