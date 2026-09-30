@@ -777,34 +777,30 @@ class Systemtest:
             exit_code = process.poll() or 1
         return exit_code, stdout_data, stderr_data
 
-    def _cleanup_docker_networks(self):
+    def _remove_docker_network(self):
         """
-        Prunes the unused Docker networks, since there is an upper limit on the number of custom networks defined.
+        Removes the Docker network created by this system test, since there is an upper limit on the number of custom networks defined.
         """
-        logging.debug(f"Deleting unused Docker networks...")
-        stdout_data = []
-        stderr_data = []
+        logging.debug(f"Deleting the Docker network corresponding to {self}...")
         try:
-            # Execute docker-network-prune command
-            process = subprocess.Popen(['docker',
-                                        'network',
-                                        'prune',
-                                        '-f'],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE,
-                                       start_new_session=True,
-                                       cwd=self.system_test_dir)
-            try:
-                stdout, stderr = process.communicate(timeout=self.timeout)
-            except KeyboardInterrupt as k:
-                process.kill()
-                raise KeyboardInterrupt from k
+            list_result = subprocess.run(
+                [
+                    'docker', 'network', 'ls',
+                    '--filter', f'label=com.docker.compose.project={self.tutorial_folder}',
+                    '--format', '{{.ID}}',
+                ],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=self.timeout, check=True)
+            network_ids = [line for line in list_result.stdout.splitlines() if line.strip()]
+            if not network_ids:
+                return
+            subprocess.run(
+                ['docker', 'network', 'rm', *network_ids],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=self.timeout, check=True)
+        except KeyboardInterrupt as k:
+            raise KeyboardInterrupt from k
         except Exception as e:
             logging.critical(
-                f"Systemtest {self} could not prune the Docker networks. This might prevent tests from starting.")
-            stdout_data.extend(stdout.decode().splitlines())
-            stderr_data.extend(stderr.decode().splitlines())
-            process.poll()
+                f"Systemtest {self} could not remove the Docker network(s): {e}")
 
     def _run_field_compare(self):
         """
@@ -831,6 +827,8 @@ class Systemtest:
             [
                 'docker',
                 'compose',
+                '--project-name',
+                self.tutorial_folder,
                 '--file',
                 'docker-compose.field_compare.yaml',
                 'up',
@@ -938,6 +936,8 @@ class Systemtest:
                 [
                     "docker",
                     "compose",
+                    "--project-name",
+                    self.tutorial_folder,
                     "--file",
                     compose_path.name,
                     "up",
@@ -1198,6 +1198,8 @@ class Systemtest:
             [
                 'docker',
                 'compose',
+                '--project-name',
+                self.tutorial_folder,
                 '--progress=plain',
                 '--file',
                 'docker-compose.tutorial.yaml',
@@ -1222,6 +1224,8 @@ class Systemtest:
             [
                 'docker',
                 'compose',
+                '--project-name',
+                self.tutorial_folder,
                 '--file',
                 'docker-compose.tutorial.yaml',
                 'up',
@@ -1314,61 +1318,30 @@ class Systemtest:
             logging.critical(str(e))
             return SystemtestResult(False, [], [str(e)], self, build_time=0, solver_time=0, fieldcompare_time=0)
 
-        self.__init_run_logs()
-        std_out: List[str] = []
-        std_err: List[str] = []
+        try:
+            self.__init_run_logs()
+            std_out: List[str] = []
+            std_err: List[str] = []
 
-        self._cleanup_docker_networks()
-        docker_build_result = self._build_docker()
-        std_out.extend(docker_build_result.stdout_data)
-        std_err.extend(docker_build_result.stderr_data)
-        if docker_build_result.exit_code != 0:
-            logging.critical(f"Could not build the docker images, {self} failed")
-            return SystemtestResult(
-                False,
-                std_out,
-                std_err,
-                self,
-                build_time=docker_build_result.runtime,
-                solver_time=0,
-                fieldcompare_time=0)
+            docker_build_result = self._build_docker()
+            std_out.extend(docker_build_result.stdout_data)
+            std_err.extend(docker_build_result.stderr_data)
+            if docker_build_result.exit_code != 0:
+                logging.critical(f"Could not build the docker images, {self} failed")
+                return SystemtestResult(
+                    False,
+                    std_out,
+                    std_err,
+                    self,
+                    build_time=docker_build_result.runtime,
+                    solver_time=0,
+                    fieldcompare_time=0)
 
-        docker_run_result = self._run_tutorial()
-        std_out.extend(docker_run_result.stdout_data)
-        std_err.extend(docker_run_result.stderr_data)
-        if docker_run_result.exit_code != 0:
-            logging.critical(f"Could not run the tutorial, {self} failed")
-            return SystemtestResult(
-                False,
-                std_out,
-                std_err,
-                self,
-                build_time=docker_build_result.runtime,
-                solver_time=docker_run_result.runtime,
-                fieldcompare_time=0)
-
-        if not self._run_hook('run-after', self.run_after):
-            logging.critical(f"run-after hook failed for {self}")
-            return SystemtestResult(
-                False,
-                std_out,
-                std_err,
-                self,
-                build_time=docker_build_result.runtime,
-                solver_time=docker_run_result.runtime,
-                fieldcompare_time=0)
-
-        if self.skip_compare:
-            logging.info(f"Skipping fieldcompare for {self} (skip_compare=true)")
-            fieldcompare_time = 0.0
-        else:
-            fieldcompare_result = self._run_field_compare()
-            std_out.extend(fieldcompare_result.stdout_data)
-            std_err.extend(fieldcompare_result.stderr_data)
-            if fieldcompare_result.exit_code != 0:
-                self.__archive_fieldcompare_diffs()
-                self.__visualize_fieldcompare_diffs()
-                logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
+            docker_run_result = self._run_tutorial()
+            std_out.extend(docker_run_result.stdout_data)
+            std_err.extend(docker_run_result.stderr_data)
+            if docker_run_result.exit_code != 0:
+                logging.critical(f"Could not run the tutorial, {self} failed")
                 return SystemtestResult(
                     False,
                     std_out,
@@ -1376,25 +1349,61 @@ class Systemtest:
                     self,
                     build_time=docker_build_result.runtime,
                     solver_time=docker_run_result.runtime,
-                    fieldcompare_time=fieldcompare_result.runtime)
-            fieldcompare_time = fieldcompare_result.runtime
+                    fieldcompare_time=0)
 
-        self.__archive_iterations_logs()
-        if not self.__compare_iterations_hashes():
-            logging.critical(
-                f"Iterations.log hash comparison failed (regression), {self} failed"
-            )
-            return SystemtestResult(
-                False,
-                std_out,
-                std_err,
-                self,
-                build_time=docker_build_result.runtime,
-                solver_time=docker_run_result.runtime,
-                fieldcompare_time=fieldcompare_time)
+            if not self._run_hook('run-after', self.run_after):
+                logging.critical(f"run-after hook failed for {self}")
+                return SystemtestResult(
+                    False,
+                    std_out,
+                    std_err,
+                    self,
+                    build_time=docker_build_result.runtime,
+                    solver_time=docker_run_result.runtime,
+                    fieldcompare_time=0)
+
+            if self.skip_compare:
+                logging.info(f"Skipping fieldcompare for {self} (skip_compare=true)")
+                fieldcompare_time = 0.0
+            else:
+                fieldcompare_result = self._run_field_compare()
+                std_out.extend(fieldcompare_result.stdout_data)
+                std_err.extend(fieldcompare_result.stderr_data)
+                if fieldcompare_result.exit_code != 0:
+                    self.__archive_fieldcompare_diffs()
+                    self.__visualize_fieldcompare_diffs()
+                    logging.critical(f"Fieldcompare returned non zero exit code, therefore {self} failed")
+                    return SystemtestResult(
+                        False,
+                        std_out,
+                        std_err,
+                        self,
+                        build_time=docker_build_result.runtime,
+                        solver_time=docker_run_result.runtime,
+                        fieldcompare_time=fieldcompare_result.runtime)
+                fieldcompare_time = fieldcompare_result.runtime
+
+            self.__archive_iterations_logs()
+            if not self.__compare_iterations_hashes():
+                logging.critical(
+                    f"Iterations.log hash comparison failed (regression), {self} failed"
+                )
+                return SystemtestResult(
+                    False,
+                    std_out,
+                    std_err,
+                    self,
+                    build_time=docker_build_result.runtime,
+                    solver_time=docker_run_result.runtime,
+                    fieldcompare_time=fieldcompare_time)
+
+        except RuntimeError as e:
+            logging.critical(str(e))
+            return SystemtestResult(False, [], [str(e)], self, build_time=0, solver_time=0, fieldcompare_time=0)
+        finally:
+            self._remove_docker_network()
 
         # self.__cleanup()
-        self._cleanup_docker_networks()
         return SystemtestResult(
             True,
             std_out,
@@ -1414,50 +1423,55 @@ class Systemtest:
             logging.critical(str(e))
             return SystemtestResult(False, [], [str(e)], self, build_time=0, solver_time=0, fieldcompare_time=0)
 
-        self.__init_run_logs()
-        std_out: List[str] = []
-        std_err: List[str] = []
-        self._cleanup_docker_networks()
-        docker_build_result = self._build_docker()
-        std_out.extend(docker_build_result.stdout_data)
-        std_err.extend(docker_build_result.stderr_data)
-        if docker_build_result.exit_code != 0:
-            logging.critical(f"Could not build the docker images, {self} failed")
-            return SystemtestResult(
-                False,
-                std_out,
-                std_err,
-                self,
-                build_time=docker_build_result.runtime,
-                solver_time=0,
-                fieldcompare_time=0)
+        try:
+            self.__init_run_logs()
+            std_out: List[str] = []
+            std_err: List[str] = []
+            docker_build_result = self._build_docker()
+            std_out.extend(docker_build_result.stdout_data)
+            std_err.extend(docker_build_result.stderr_data)
+            if docker_build_result.exit_code != 0:
+                logging.critical(f"Could not build the docker images, {self} failed")
+                return SystemtestResult(
+                    False,
+                    std_out,
+                    std_err,
+                    self,
+                    build_time=docker_build_result.runtime,
+                    solver_time=0,
+                    fieldcompare_time=0)
 
-        docker_run_result = self._run_tutorial()
-        std_out.extend(docker_run_result.stdout_data)
-        std_err.extend(docker_run_result.stderr_data)
-        if docker_run_result.exit_code != 0:
-            logging.critical(f"Could not run the tutorial, {self} failed")
-            return SystemtestResult(
-                False,
-                std_out,
-                std_err,
-                self,
-                build_time=docker_build_result.runtime,
-                solver_time=docker_run_result.runtime,
-                fieldcompare_time=0)
+            docker_run_result = self._run_tutorial()
+            std_out.extend(docker_run_result.stdout_data)
+            std_err.extend(docker_run_result.stderr_data)
+            if docker_run_result.exit_code != 0:
+                logging.critical(f"Could not run the tutorial, {self} failed")
+                return SystemtestResult(
+                    False,
+                    std_out,
+                    std_err,
+                    self,
+                    build_time=docker_build_result.runtime,
+                    solver_time=docker_run_result.runtime,
+                    fieldcompare_time=0)
 
-        if not self._run_hook('run-after', self.run_after):
-            logging.critical(f"run-after hook failed for {self}")
-            return SystemtestResult(
-                False,
-                std_out,
-                std_err,
-                self,
-                build_time=docker_build_result.runtime,
-                solver_time=docker_run_result.runtime,
-                fieldcompare_time=0)
+            if not self._run_hook('run-after', self.run_after):
+                logging.critical(f"run-after hook failed for {self}")
+                return SystemtestResult(
+                    False,
+                    std_out,
+                    std_err,
+                    self,
+                    build_time=docker_build_result.runtime,
+                    solver_time=docker_run_result.runtime,
+                    fieldcompare_time=0)
 
-        self._cleanup_docker_networks()
+        except RuntimeError as e:
+            logging.critical(str(e))
+            return SystemtestResult(False, [], [str(e)], self, build_time=0, solver_time=0, fieldcompare_time=0)
+        finally:
+            self._remove_docker_network()
+
         return SystemtestResult(
             True,
             std_out,
