@@ -10,9 +10,6 @@ depends_on:
     condition: service_completed_successfully
 volumes:
   - {{ run_directory }}:/runs
-environment:
-  NUTILS_NPROCS: 8
-  OMP_NUM_THREADS: 1
 command: >
   /bin/bash -c "id && 
   cd '/runs/{{ tutorial_folder }}/{{ case_folder }}' &&
