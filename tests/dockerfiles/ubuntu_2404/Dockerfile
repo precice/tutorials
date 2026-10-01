@@ -184,6 +184,29 @@ RUN python3 -m venv /home/precice/venv && \
 #   Non-dependent adapter build stages - Order alphabetically       #
 #####################################################################
 
+FROM precice AS alya_adapter
+
+USER root
+RUN apt-get -qq update && \
+    apt-get -qq install gfortran-9
+
+USER precice
+WORKDIR /home/precice
+
+# The alya code is proprietary and only available on specific runners.
+COPY --link --chown=${PRECICE_UID}:${PRECICE_GID} --from=restricted /codes/alya-small/ /restricted/codes/alya-small/
+RUN git clone --depth 1 file:///restricted/codes/alya-small &&\
+    cd alya-small/Executables/unix &&\
+    export OMPI_FC=gfortran-9 &&\
+    ./configure -f=configure.in/configure.txt nastin solidz alefor parall &&\
+    cd ../../Thirdparties/metis-4.0 &&\
+    make -j $(nproc) &&\
+    cd ../../Executables/unix &&\
+    make -j $(nproc)
+
+ENV PATH="/home/precice/alya-small/Executables/unix/:$PATH"
+
+
 FROM precice AS calculix_adapter
 ARG CALCULIX_VERSION
 ARG CALCULIX_ADAPTER_PR
@@ -240,63 +263,25 @@ ARG DUMUX_ADAPTER_REF
 USER precice
 WORKDIR /home/precice/dumux
 
-# This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-common; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-geometry; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-grid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-istl; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-subgrid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION}; then break; fi; \
-        rm -rf dumux; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git -b cell_problems; then break; fi; \
-        rm -rf dumux-phasefield; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-SPGrid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUMUX}; then break; fi; \
-        rm -rf dune-localfunctions; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
+# Clone repositories from local mirrors, to avoid frequent network failures.
+# Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
+COPY --link --chown=${PRECICE_UID}:${PRECICE_GID} --from=thirdparty / /thirdparty/
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/extensions/dune-subgrid.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 file:///thirdparty/git.iws.uni-stuttgart.de/dumux-repositories/dumux.git -b releases/${DUMUX_VERSION}
+RUN git clone --depth 1 file:///thirdparty/git.iws.uni-stuttgart.de/dumux-appl/dumux-phasefield.git -b cell_problems
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/extensions/dune-SPGrid.git -b releases/${DUNE_VERSION_DUMUX}
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUMUX}
 RUN ./dune-common/bin/dunecontrol --opts=./dumux/cmake.opts cmake &&\
     ./dune-common/bin/dunecontrol make -j $(nproc)
+
+# The mirrors are not needed anymore
+USER root
+RUN rm -rf /thirdparty
+USER precice
 
 RUN git clone https://github.com/precice/dumux-adapter.git &&\
     cd dumux-adapter && \
@@ -319,61 +304,23 @@ USER precice
 WORKDIR /home/precice/dune
 ENV PATH="/home/precice/dune/dune-common/bin:${PATH}"
 
-# This cascade of git clones often led to HTTP 502. Adding some delay and retries in between as a workaround.
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-common; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-geometry; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-grid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-istl; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-localfunctions; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-foamgrid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-functions; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-typetree; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
-RUN for i in $(seq 1 3); do \
-        if git clone --depth 1 https://gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION_DUNE}; then break; fi; \
-        rm -rf dune-uggrid; \
-        if [[ $i -eq 3 ]]; then exit 1; fi; \
-        sleep 10; \
-    done
+# Clone repositories from local mirrors, to avoid frequent network failures.
+# Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
+COPY --link --chown=${PRECICE_UID}:${PRECICE_GID} --from=thirdparty / /thirdparty/
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/core/dune-common.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/core/dune-geometry.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/core/dune-grid.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/core/dune-istl.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/core/dune-localfunctions.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/extensions/dune-foamgrid.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/staging/dune-functions.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/staging/dune-typetree.git -b releases/${DUNE_VERSION_DUNE}
+RUN git clone --depth 1 file:///thirdparty/gitlab.dune-project.org/staging/dune-uggrid.git -b releases/${DUNE_VERSION_DUNE}
+
+# The mirrors are not needed anymore
+USER root
+RUN rm -rf /thirdparty
+USER precice
 
 # Modules specific to the dune adapter:
 RUN for i in $(seq 1 3); do \
@@ -432,12 +379,19 @@ USER precice
 WORKDIR /home/precice
 # The channel-transport-particles tutorial is hosted in a frozen fork of the MercuryDPM repository.
 # That's why there are no arguments for version, ref, or pr.
-RUN git clone https://bitbucket.org/davidscn/mercurydpm.git &&\
+# Third-party repository: Prepare the mirrors once by running ./mirror-repositories.sh in the runner.
+COPY --link --chown=${PRECICE_UID}:${PRECICE_GID} --from=thirdparty / /thirdparty/
+RUN git clone file:///thirdparty/bitbucket.org/davidscn/mercurydpm.git &&\
     cd mercurydpm && \
     git checkout channel-transport-tutorial && \
     mkdir -p build && cd build && \
     cmake -D MercuryDPM_PreCICE_COUPLING="ON" .. && \
     make -j $(nproc) ChannelTransport
+
+# The mirrors are not needed anymore
+USER root
+RUN rm -rf /thirdparty
+USER precice
 
 ENV PATH="/home/precice/mercurydpm/build/Drivers/PreCICE:$PATH"
 ### end of mercurydpm_adapter stage ###
