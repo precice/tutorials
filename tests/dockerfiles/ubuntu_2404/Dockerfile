@@ -382,7 +382,7 @@ WORKDIR /home/precice
 RUN git clone https://github.com/gismo/gismo.git &&\
     cd gismo && git checkout ${GISMO_REF} &&\
     mkdir build && cd build &&\
-    cmake .. -DGISMO_OPTIONAL="gsElasticity;gsKLShell;gsPreCICE;gsStructuralAnalysis" -DBUILD_TESTING=OFF -DGISMO_BUILD_EXAMPLES=OFF -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=TRUE &&\
+    cmake .. -DGISMO_OPTIONAL="gsElasticity;gsPreCICE;gsStructuralAnalysis" -DBUILD_TESTING=OFF -DGISMO_BUILD_EXAMPLES=OFF -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=TRUE &&\
     cd .. &&\
     cd optional/gsElasticity && git fetch && git checkout ${GISMO_ELASTICITY_REF} && cd ../.. && rm -r build/optional/gsElasticity && cp -r optional/gsElasticity build/optional/ &&\ 
     cd optional/gsPreCICE && git fetch && git checkout ${GISMO_ADAPTER_REF} && cd ../.. && rm -r build/optional/gsPreCICE && cp -r optional/gsPreCICE build/optional/ &&\
