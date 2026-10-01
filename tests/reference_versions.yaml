@@ -18,7 +18,7 @@ CALCULIX_ADAPTER_REF: "v2.20.2"
 DEALII_ADAPTER_REF: "a421d92"   # develop, May 27, 2026
 DUNE_ADAPTER_REF: "778d3bb"     # main,    July 8, 2026
 DUMUX_ADAPTER_REF: "3f3f54f"    # develop, May 27, 2026
-FENICS_ADAPTER_REF: "v2.3.0"
+FENICS_ADAPTER_REF: "cb9c874"   # develop, Oct  1, 2026 (after v2.3.0, with relaxed scipy restrictions)
 FENICSX_ADAPTER_REF: "v1.0.1"
 FMI_RUNNER_REF: "v0.2.1"
 JULIA_BINDINGS_REF: "v3.4.0"
