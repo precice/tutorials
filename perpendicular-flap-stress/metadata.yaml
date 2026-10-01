@@ -13,8 +13,8 @@ cases:
     run: ./run.sh
     component: openfoam-adapter
   
-  # solid-gismo:
-  #   participant: Solid
-  #   directory: ./solid-gismo
-  #   run: ./run.sh 
-  #   component: gismo-adapter 
+  solid-gismo:
+    participant: Solid
+    directory: ./solid-gismo
+    run: ./run.sh 
+    component: gismo-adapter 
