@@ -184,6 +184,29 @@ RUN python3 -m venv /home/precice/venv && \
 #   Non-dependent adapter build stages - Order alphabetically       #
 #####################################################################
 
+FROM precice AS alya_adapter
+
+USER root
+RUN apt-get -qq update && \
+    apt-get -qq install gfortran-9
+
+USER precice
+WORKDIR /home/precice
+
+# The alya code is proprietary and only available on specific runners.
+COPY --link --chown=${PRECICE_UID}:${PRECICE_GID} --from=restricted /codes/alya-small/ /restricted/codes/alya-small/
+RUN git clone --depth 1 file:///restricted/codes/alya-small &&\
+    cd alya-small/Executables/unix &&\
+    export OMPI_FC=gfortran-9 &&\
+    ./configure -f=configure.in/configure.txt nastin solidz alefor parall &&\
+    cd ../../Thirdparties/metis-4.0 &&\
+    make -j $(nproc) &&\
+    cd ../../Executables/unix &&\
+    make -j $(nproc)
+
+ENV PATH="/home/precice/alya-small/Executables/unix/:$PATH"
+
+
 FROM precice AS calculix_adapter
 ARG CALCULIX_VERSION
 ARG CALCULIX_ADAPTER_PR
