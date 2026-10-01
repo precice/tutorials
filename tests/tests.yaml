@@ -1209,7 +1209,7 @@ test_suites:
       - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
       - *channel-transport-particles_fluid-nutils_particles-mercurydpm
 
-  mfem:
+  mfem-adapter:
     tutorials:
       - *flow-over-heated-plate_fluid-openfoam_solid-mfem
 

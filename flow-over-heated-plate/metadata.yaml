@@ -41,6 +41,7 @@ cases:
     participant: Solid
     directory: ./solid-mfem
     run: ./run.sh
+    component: mfem-adapter
 
   solid-nutils:
     participant: Solid
