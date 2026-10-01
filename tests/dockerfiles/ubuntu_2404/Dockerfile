@@ -397,6 +397,16 @@ ENV PATH="/home/precice/mercurydpm/build/Drivers/PreCICE:$PATH"
 ### end of mercurydpm_adapter stage ###
 
 
+FROM precice AS mfem_adapter
+
+USER root
+RUN apt-get -qq update && \
+    apt-get -qq install mfem
+
+USER precice
+WORKDIR /home/precice
+### end of mfem_adapter stage ###
+
 FROM precice AS openfoam_adapter
 ARG OPENFOAM_EXECUTABLE
 ARG OPENFOAM_ADAPTER_PR

@@ -37,6 +37,11 @@ cases:
     run: ./run.sh
     component: fenicsx-adapter
 
+  solid-mfem:
+    participant: Solid
+    directory: ./solid-mfem
+    run: ./run.sh
+
   solid-nutils:
     participant: Solid
     directory: ./solid-nutils
@@ -48,10 +53,5 @@ cases:
     directory: ./solid-openfoam
     run: ./run.sh
     component: openfoam-adapter 
-
-  solid-mfem:
-    participant: Solid
-    directory: ./solid-mfem
-    run: ./run.sh
 
 
