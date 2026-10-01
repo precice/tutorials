@@ -401,7 +401,7 @@ FROM precice AS mfem_adapter
 
 USER root
 RUN apt-get -qq update && \
-    apt-get -qq install mfem
+    apt-get -qq install libmfem-dev
 
 USER precice
 WORKDIR /home/precice
