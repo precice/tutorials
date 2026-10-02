@@ -13,6 +13,7 @@ out
 output/
 *.vtk
 *.vtu
+*.pvtu
 *.pvd
 *.series
 
@@ -125,9 +126,7 @@ pointData.csv
 
 # FEniCS covered by .vtk
 # Nutils covered by .vtk
-
-# MFEM
-*.pvtu
+# MFEM covered by .pvtu
 
 # System tests
 runs/
