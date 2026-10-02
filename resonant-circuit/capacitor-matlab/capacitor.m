@@ -104,3 +104,10 @@ legend('I', 'U')
 
 save('outputs.mat', 'I', 'U')
 saveas(gcf, 'Curves.png')
+
+% Error thresholds based on a reference run
+if error_I > 0.47 || error_U > 0.12
+    error("Voltage or current differs more than expected from the analytical solution.");
+    quit(1)
+end
+
