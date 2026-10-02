@@ -290,6 +290,24 @@ mercurydpm-adapter:
     TUTORIALS_PR:
       default: ""
 
+mfem-adapter:
+  template: component-templates/mfem-adapter.yaml
+  build_arguments:
+    PLATFORM:
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PR:
+      default: ""
+    PRECICE_PRESET:
+      default: "production-audit"
+    TUTORIALS_REF:
+      repository: https://github.com/precice/tutorials
+      default: "develop"
+    TUTORIALS_PR:
+      default: ""
+
 micro-manager:
   template: component-templates/micro-manager.yaml
   build_arguments:

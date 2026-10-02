@@ -207,6 +207,15 @@ test_suites:
           - solid-fenicsx
         reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-fenicsx.tar.gz
 
+  flow-over-heated-plate_fluid-openfoam_solid-mfem:
+    tutorials:
+      - &flow-over-heated-plate_fluid-openfoam_solid-mfem
+        path: flow-over-heated-plate
+        case_combination:
+          - fluid-openfoam
+          - solid-mfem
+        reference_result: ./flow-over-heated-plate/reference-results/fluid-openfoam_solid-mfem.tar.gz
+
   flow-over-heated-plate_fluid-openfoam_solid-nutils:
     tutorials:
       - &flow-over-heated-plate_fluid-openfoam_solid-nutils
@@ -851,6 +860,7 @@ test_suites:
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-fenicsx
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
+      - *flow-over-heated-plate_fluid-openfoam_solid-mfem
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam
       - *flow-over-heated-plate_fluid-su2_solid-openfoam
 
@@ -1076,6 +1086,7 @@ test_suites:
       - *flow-around-controlled-moving-cylinder_controller-fmi_fluid-openfoam_solid-python
       - *flow-over-heated-plate_fluid-openfoam_solid-fenics
       - *flow-over-heated-plate_fluid-openfoam_solid-fenicsx
+      - *flow-over-heated-plate_fluid-openfoam_solid-mfem
       - *flow-over-heated-plate_fluid-openfoam_solid-nutils
       - *flow-over-heated-plate_fluid-openfoam_solid-openfoam
       - *flow-over-heated-plate_fluid-su2_solid-openfoam
@@ -1242,6 +1253,10 @@ test_suites:
     tutorials:
       - *channel-transport-particles_fluid-openfoam_particles-mercurydpm
       - *channel-transport-particles_fluid-nutils_particles-mercurydpm
+
+  mfem-adapter:
+    tutorials:
+      - *flow-over-heated-plate_fluid-openfoam_solid-mfem
 
   micro-manager:
     tutorials:
