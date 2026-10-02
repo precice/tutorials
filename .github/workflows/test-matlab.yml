@@ -1,0 +1,75 @@
+name: 'Test MATLAB-based tutorials'
+
+on:
+  schedule:
+    - cron: "0 3 * * WED"
+      timezone: "Europe/Berlin"
+  workflow_dispatch:
+  push:
+    paths:
+      - '**/*matlab/**'
+
+jobs:
+  test-matlab:
+    name: Test MATLAB-based tutorials
+    runs-on: ubuntu-latest
+    container:
+      image: precice/precice:nightly
+    strategy:
+      fail-fast: true
+    steps:
+      - name: Checkout the tutorials repository
+        uses: actions/checkout@v7
+      - name: Install Dependencies
+        run: |
+          apt-get -qq update
+          apt-get -qq install wget
+          rm -rf /var/lib/apt/lists/*
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v3
+        with: 
+          release: R2024a
+      - name: Get the matlab-bindings repository
+        run: |
+          git clone --depth=1 https://github.com/precice/matlab-bindings.git
+          cd matlab-bindings && git status
+      - name: Run compilation script
+        uses: matlab-actions/run-command@v3
+        with:
+          command: "addpath('matlab-bindings'), compile_matlab_bindings_for_precice"
+      - name: Get run-matlab-command
+        run: |
+          wget -O /usr/local/bin/run-matlab-command https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v2/glnxa64/run-matlab-command
+          chmod +x /usr/local/bin/run-matlab-command
+      - name: Run solver dummies
+        working-directory: matlab-bindings/examples/solverdummy
+        env:
+          LD_PRELOAD: /usr/lib/x86_64-linux-gnu/libstdc++.so.6:/usr/lib/x86_64-linux-gnu/libgfortran.so.5
+        run: | 
+          run-matlab-command "addpath('../..'), solverdummy precice-config.xml SolverOne" & run-matlab-command "addpath('../..'), solverdummy precice-config.xml SolverTwo"
+      - name: Run resonant-circuit
+        working-directory: resonant-circuit
+        env:
+          LD_PRELOAD: /usr/lib/x86_64-linux-gnu/libstdc++.so.6:/usr/lib/x86_64-linux-gnu/libgfortran.so.5
+        run: |
+          sed -i 's%</participant>%<export:vtu directory=\"../precice-exports\" /> </participant>%g' precice-config.xml &&
+          cd capacitor-matlab/ && run-matlab-command "addpath('../../matlab-bindings'), capacitor;exit" &
+          cd coil-matlab/ && run-matlab-command "addpath('../../matlab-bindings'), coil;exit"
+      - name: Archive logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-matlab-logs
+          path: |
+            resonant-circuit/*.log
+            resonant-circuit/*/*.log
+            resonant-circuit/capacitor-matlab/Curves.png
+          if-no-files-found: warn
+      - name: Archive exports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-matlab-exports
+          path: |
+            resonant-circuit/precice-exports/*
+          if-no-files-found: warn
