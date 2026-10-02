@@ -19,3 +19,4 @@ For Python dependency ranges and the sibling `requirements-reference.txt` files 
 > We use [Git LFS](https://git-lfs.com/) to version reference results. These will appear as seemingly empty files containing URLs if you don't have Git LFS installed (optional, mainly useful for our system tests).
 > We host a Git LFS server for these, which only allows push access under restrictions.
 > In case you get issues pushing to a fork, set `GIT_LFS_SKIP_PUSH=1` or do `git push --no-verify`.
+> If you get issues pulling to a fork, set `GIT_LFS_SKIP_SMUDGE=1` prior to `git pull`.
