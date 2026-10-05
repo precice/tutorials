@@ -78,6 +78,10 @@ jobs:
       # to ensure consistent results and as storage cleanup
       run: |
         docker system prune --all --force
+    - name: Copy runner-specific files (mirrors, restricted)
+      run: |
+        cp -r /home/precice/thirdparty ./tests/
+        cp -r /home/precice/restricted ./tests/
     - name: Run tests
       run: |
         cd tests
@@ -109,7 +113,7 @@ jobs:
         else
           git add -A -- '**/reference-results/*.tar.gz'
         fi
-        git commit -m "${{inputs.commit_msg}}"
+        git commit -m "${{inputs.commit_msg}}" || echo "::warning:: Could not commit the reference results - Ignore if only meant to be stored locally."
         git push
     - name: Archive system test logs
       if: ${{ always() }}
@@ -128,4 +132,7 @@ jobs:
         name: system_tests_run_${{ github.run_id }}_${{ github.run_attempt }}_reference_full
         path: |
           runs/*
+          !runs/tests/thirdparty
+          !runs/tests/restricted
+          !runs/alya-flap*/
 

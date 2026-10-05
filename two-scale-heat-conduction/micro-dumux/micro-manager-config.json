@@ -1,28 +1,29 @@
 {
+  "participant_name": "Micro-Manager",
+  "precice_config_file_path": "../precice-config.xml",
+  "interfaces": [
+    {
+      "mesh_name": "Macro-Mesh",
+      "read_data": [{ "name": "Concentration" }],
+      "write_data": [{ "name": "K00" }, { "name": "K11" }, { "name": "Porosity" }]
+    }
+  ],
+  "micro_manager": {
     "micro_file_names": ["micro_sim"],
-    "coupling_params": {
-            "participant_name": "Micro-Manager",
-            "precice_config_file_name": "../precice-config.xml",
-            "macro_mesh_name": "Macro-Mesh",
-            "write_data_names": ["K00", "K11", "Porosity"],
-            "read_data_names": ["Concentration"]
-    },
     "simulation_params": {
       "micro_dt": 0.01,
       "macro_domain_bounds": [0.0, 1.0, 0.0, 0.5],
       "decomposition": [2, 1],
       "adaptivity": true,
       "adaptivity_settings": {
-            "type": "global",
-            "data": ["K00", "K11", "Porosity", "Concentration"],
-            "history_param": 0.1,
-            "coarsening_constant": 0.2,
-            "refining_constant": 0.05,
-            "similarity_measure": "L2rel",
-            "lazy_initialization": true
-        }
-    },
-    "diagnostics": {
-      "data_from_micro_sims": ["Grain-Size"]
+        "type": "global",
+        "data": ["K00", "K11", "Porosity", "Concentration"],
+        "history_param": 0.1,
+        "coarsening_constant": 0.2,
+        "refining_constant": 0.05,
+        "similarity_measure": "L2rel",
+        "lazy_initialization": true
+      }
     }
+  }
 }
