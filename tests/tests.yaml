@@ -91,6 +91,7 @@ test_suites:
           - fluid-fenics
           - chemical-fenics
         max_time: 0.5
+        timeout: 600
         reference_result: ./channel-transport-reaction/reference-results/fluid-fenics_chemical-fenics.tar.gz
   
   elastic-tube-1d_fluid-cpp_solid-cpp:
