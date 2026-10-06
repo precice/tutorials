@@ -51,7 +51,7 @@ gh workflow run system-tests-manual.yml -f suites=release
 More arguments are available, for example:
 
 ```bash
-gh workflow run system-tests-manual.yml -f suites=release -f build_args="PLATFORM:ubuntu2404,PRECICE_REF:develop" -f log_level="DEBUG" --ref=develop
+gh workflow run system-tests-manual.yml -f suites=release -f build_args="PLATFORM:ubuntu2604,PRECICE_REF:develop" -f log_level="DEBUG" --ref=develop
 ```
 
 The `build_args` override the defaults set in `tests/components.yaml`.
@@ -396,7 +396,7 @@ openfoam-adapter:
   template: component-templates/openfoam-adapter.yaml
   build_arguments:
     PLATFORM:
-      default: "ubuntu_2404"
+      default: "ubuntu_2604"
     PRECICE_REF:
       repository: https://github.com/precice/precice
       default: "develop"

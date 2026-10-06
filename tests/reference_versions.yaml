@@ -2,7 +2,7 @@
 # and default values for unspecified values in systemtests.py.
 
 # Dockerfile used (See dockerfiles/)
-PLATFORM: "ubuntu_2404"
+PLATFORM: "ubuntu_2604"
 
 # Third-party dependencies
 CALCULIX_VERSION: "2.20"
