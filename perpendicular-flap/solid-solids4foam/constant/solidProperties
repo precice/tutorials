@@ -10,16 +10,6 @@ solidModel    linearGeometryTotalDisplacement;
 
 linearGeometryTotalDisplacementCoeffs
 {
-    // Maximum number of momentum correctors
-    nCorrectors     1000;
-
-    // Solution tolerance for displacement
-    solutionTolerance 1e-08;
-
-    // Alternative solution tolerance for displacement
-    alternativeTolerance 1e-08;
-
-    // Write frequency for the residuals
-    infoFrequency   100;
+    solutionAlgorithm    PETScSNES;
 }
 
