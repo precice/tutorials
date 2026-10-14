@@ -29,7 +29,7 @@
       direction="write"
       from="Free-Flow-Mesh"
       to="Porous-Media-Mesh"
-      constraint="conservative" />
+      constraint="consistent" />
     <mapping:nearest-neighbor
       direction="read"
       from="Porous-Media-Mesh"
