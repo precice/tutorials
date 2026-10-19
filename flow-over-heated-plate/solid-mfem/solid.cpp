@@ -110,11 +110,11 @@ int main(int argc, char *argv[])
                  "Finite element order (polynomial degree).");
   args.AddOption(&nx, "-nx", "--num-elems-x",
                  "Number of elements to include in x.");
-  args.AddOption(&nx, "-ny", "--num-elems-y",
+  args.AddOption(&ny, "-ny", "--num-elems-y",
                  "Number of elements to include in y.");
   args.AddOption(&ode_solver_type, "-s", "--ode-solver",
                  ODESolver::Types.c_str());
-  args.AddOption(&order, "-dt", "--time-step",
+  args.AddOption(&dt, "-dt", "--time-step",
                  "Time step.");
   args.AddOption(&pvdc_freq, "-pv", "--paraview-freq",
                  "ParaView data collection write frequency. 0 to disable.");
