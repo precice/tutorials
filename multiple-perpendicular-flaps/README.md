@@ -74,6 +74,8 @@ set Flap location     = 1.0
 
 The scenario settings are implemented similarly for the nonlinear case.
 
+Alternatively, the solid participants can be simulated with solids4foam, using the cases `solid-upstream-solids4foam` and `solid-downstream-solids4foam`. These use a linear-elastic, small-strain solid model with the same material properties as the deal.II cases (E = 4 MPa, nu = 0.3, rho = 3000 kg/m^3). Here the flap geometry is given by `system/blockMeshDict`, which is the same for both flaps apart from the x-coordinates of the vertices. Each `interface` patch uses the solids4foam `solidTraction` boundary condition, reading the coupled traction from the `solidTraction` field that the adapter fills. This requires solids4foam v2.2 or later and an OpenFOAM-preCICE adapter with support for reading `Stress` in solid participants. For more information, have a look at the [solids4foam documentation](https://solids4foam.github.io/).
+
 ## Running the Simulation
 
 1. Preparation:

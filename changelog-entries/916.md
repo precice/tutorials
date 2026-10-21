@@ -1,0 +1,1 @@
+- Added solids4foam solid participants (upstream and downstream) to the `multiple-perpendicular-flaps` tutorial, reading `Stress-Upstream`/`Stress-Downstream` via the solids4foam `solidTraction` boundary condition.

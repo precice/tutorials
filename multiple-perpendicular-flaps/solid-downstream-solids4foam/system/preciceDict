@@ -1,0 +1,46 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      preciceDict;
+}
+
+preciceConfig "../precice-config.xml";
+
+participant Solid-Downstream;
+
+modules (FSI);
+
+interfaces
+{
+    Interface1
+    {
+        mesh              Solid-Downstream-Mesh;
+        patches           (interface);
+        locations         faceCenters;
+
+        readData
+        (
+            Stress-Downstream
+        );
+
+        writeData
+        (
+            Displacement-Downstream
+        );
+    };
+};
+
+FSI
+{
+    solverType solid;
+
+    // Name of displacement fields
+    namePointDisplacement pointD;
+    nameCellDisplacement D;
+
+    // Name of the stress (traction) field on the solid
+    nameStress solidTraction;
+}
