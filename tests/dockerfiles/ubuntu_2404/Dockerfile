@@ -88,9 +88,9 @@ RUN python3 -m venv /home/precice/venv && \
 
 FROM precice_dependencies AS precice
 # Build & install precice into /home/precice/precice
-ARG PRECICE_PR
-ARG PRECICE_REF
-ARG PRECICE_PRESET
+ARG PRECICE_PR=""
+ARG PRECICE_REF="develop"
+ARG PRECICE_PRESET="production-audit"
 
 USER precice
 WORKDIR /home/precice
@@ -113,7 +113,7 @@ ENV CMAKE_PREFIX_PATH="/home/precice/.local"
 
 
 FROM precice AS julia_bindings
-ARG JULIA_BINDINGS_REF
+ARG JULIA_BINDINGS_REF="develop"
 
 USER precice
 WORKDIR /home/precice
@@ -124,8 +124,8 @@ ENV PATH="/home/precice/.juliaup/bin:$PATH"
 
 
 FROM precice AS python_bindings
-ARG PYTHON_BINDINGS_PR
-ARG PYTHON_BINDINGS_REF
+ARG PYTHON_BINDINGS_PR=""
+ARG PYTHON_BINDINGS_REF="develop"
 
 USER precice
 WORKDIR /home/precice
@@ -144,8 +144,8 @@ RUN git clone https://github.com/precice/python-bindings.git python-bindings && 
 
 
 FROM precice AS rust_bindings
-ARG RUST_BINDINGS_PR
-ARG RUST_BINDINGS_REF
+ARG RUST_BINDINGS_PR=""
+ARG RUST_BINDINGS_REF="develop"
 
 USER root
 RUN apt-get -qq update && \
@@ -164,7 +164,7 @@ RUN rustup default stable && \
 
 
 FROM precice AS micro_manager
-ARG MICRO_MANAGER_REF
+ARG MICRO_MANAGER_REF="develop"
 
 USER precice
 WORKDIR /home/precice
@@ -208,9 +208,9 @@ ENV PATH="/home/precice/alya-small/Executables/unix/:$PATH"
 
 
 FROM precice AS calculix_adapter
-ARG CALCULIX_VERSION
-ARG CALCULIX_ADAPTER_PR
-ARG CALCULIX_ADAPTER_REF
+ARG CALCULIX_VERSION="v2.20"
+ARG CALCULIX_ADAPTER_PR=""
+ARG CALCULIX_ADAPTER_REF="develop"
 
 USER root
 RUN apt-get -qq update && \
@@ -233,8 +233,8 @@ RUN git clone https://github.com/precice/calculix-adapter.git && \
 
 
 FROM precice AS dealii_adapter
-ARG DEALII_ADAPTER_PR
-ARG DEALII_ADAPTER_REF
+ARG DEALII_ADAPTER_PR=""
+ARG DEALII_ADAPTER_REF="develop"
 
 USER root
 RUN apt-get update &&\
@@ -255,10 +255,10 @@ ENV PATH="/home/precice/dealii-adapter/:$PATH"
 
 FROM micro_manager AS dumux_adapter
 # The micro-manager is needed for some dumux-adapter cases
-ARG DUNE_VERSION_DUMUX
-ARG DUMUX_VERSION
-ARG DUMUX_ADAPTER_PR
-ARG DUMUX_ADAPTER_REF
+ARG DUNE_VERSION_DUMUX="2.9"
+ARG DUMUX_VERSION="2.9"
+ARG DUMUX_ADAPTER_PR=""
+ARG DUMUX_ADAPTER_REF="develop"
 
 USER precice
 WORKDIR /home/precice/dumux
@@ -296,9 +296,9 @@ ENV PATH="/home/precice/dumux/dune-common/bin:${PATH}"
 
 
 FROM precice AS dune_adapter
-ARG DUNE_VERSION_DUNE
-ARG DUNE_ADAPTER_PR
-ARG DUNE_ADAPTER_REF
+ARG DUNE_VERSION_DUNE="2.9"
+ARG DUNE_ADAPTER_PR=""
+ARG DUNE_ADAPTER_REF="develop"
 
 USER precice
 WORKDIR /home/precice/dune
@@ -343,7 +343,7 @@ ENV PATH="/home/precice/dune/dune-adapter/dune-precice-howto/build-cmake/example
 
 FROM precice AS fenics_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
-ARG FENICS_ADAPTER_REF
+ARG FENICS_ADAPTER_REF="develop"
 
 USER root
 RUN add-apt-repository -y ppa:fenics-packages/fenics && \
@@ -359,7 +359,7 @@ RUN python3 -m venv --system-site-packages /home/precice/venv && \
 
 FROM precice AS fenicsx_adapter
 COPY --from=python_bindings /home/precice/.local /home/precice/.local
-ARG FENICSX_ADAPTER_REF
+ARG FENICSX_ADAPTER_REF="develop"
 
 USER root
 RUN add-apt-repository -y ppa:fenics-packages/fenics && \
@@ -374,8 +374,8 @@ RUN python3 -m venv --system-site-packages /home/precice/venv && \
 
 
 FROM precice AS gismo_adapter
-ARG GISMO_REF
-ARG GISMO_ADAPTER_REF
+ARG GISMO_REF="v26.09.0"
+ARG GISMO_ADAPTER_REF="main"
 
 USER precice
 WORKDIR /home/precice
@@ -417,10 +417,9 @@ ENV PATH="/home/precice/mercurydpm/build/Drivers/PreCICE:$PATH"
 ### end of mercurydpm_adapter stage ###
 
 
-FROM precice AS openfoam_adapter
-ARG OPENFOAM_EXECUTABLE
-ARG OPENFOAM_ADAPTER_PR
-ARG OPENFOAM_ADAPTER_REF
+ARG OPENFOAM_EXECUTABLE="openfoam2606"
+ARG OPENFOAM_ADAPTER_PR=""
+ARG OPENFOAM_ADAPTER_REF="develop"
 
 USER root
 RUN apt-get update &&\
@@ -439,9 +438,9 @@ RUN git clone https://github.com/precice/openfoam-adapter.git &&\
 
 
 FROM python_bindings AS su2_adapter
-ARG SU2_VERSION
-ARG SU2_ADAPTER_PR
-ARG SU2_ADAPTER_REF
+ARG SU2_VERSION="7.5.1"
+ARG SU2_ADAPTER_PR=""
+ARG SU2_ADAPTER_REF="develop"
 
 USER root
 RUN apt-get -qq update && \
@@ -485,9 +484,9 @@ FROM ubuntu:26.04 AS ubuntu2604_precice
 
 ARG PRECICE_UID=1000
 ARG PRECICE_GID=1000
-ARG PRECICE_PR
-ARG PRECICE_REF
-ARG PRECICE_PRESET
+ARG PRECICE_PR=""
+ARG PRECICE_REF="develop"
+ARG PRECICE_PRESET="production-audit"
 
 USER root
 SHELL ["/bin/bash", "-c"]
@@ -564,8 +563,8 @@ ENV CMAKE_PREFIX_PATH="/home/precice/.local"
 
 FROM ubuntu2604_precice AS aste
 
-ARG ASTE_PR
-ARG ASTE_REF
+ARG ASTE_PR=""
+ARG ASTE_REF="develop"
 
 USER root
 SHELL ["/bin/bash", "-c"]
@@ -612,8 +611,8 @@ FROM solids4foam/solids4foam:v2.3-openfoam-v2412-latest AS solids4foam
 
 ARG PRECICE_UID=1000
 ARG PRECICE_GID=1000
-ARG OPENFOAM_ADAPTER_PR
-ARG OPENFOAM_ADAPTER_REF
+ARG OPENFOAM_ADAPTER_PR=""
+ARG OPENFOAM_ADAPTER_REF="develop"
 
 USER root
 SHELL ["/bin/bash", "-c"]
