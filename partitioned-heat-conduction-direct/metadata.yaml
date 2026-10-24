@@ -13,11 +13,11 @@ cases:
     run: ./run.sh
     component: nutils-adapter
 
-  # dirichlet-gismo:
-  #   participant: Dirichlet
-  #   directory: ./dirichlet-gismo
-  #   run: ./run.sh
-  #   component: gismo-adapter
+  dirichlet-gismo:
+    participant: Dirichlet
+    directory: ./dirichlet-gismo
+    run: ./run.sh
+    component: gismo-adapter
 
   neumann-nutils:
     participant: Neumann
@@ -25,8 +25,8 @@ cases:
     run: ./run.sh
     component: nutils-adapter
 
-  # neumann-gismo:
-  #   participant: Neumann
-  #   directory: ./neumann-gismo
-  #   run: ./run.sh
-  #   component: gismo-adapter
+  neumann-gismo:
+    participant: Neumann
+    directory: ./neumann-gismo
+    run: ./run.sh
+    component: gismo-adapter

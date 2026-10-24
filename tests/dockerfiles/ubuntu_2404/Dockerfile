@@ -373,6 +373,26 @@ RUN python3 -m venv --system-site-packages /home/precice/venv && \
 ### end of fenicsx_adapter stage ###
 
 
+FROM precice AS gismo_adapter
+ARG GISMO_REF
+ARG GISMO_ADAPTER_REF
+
+USER precice
+WORKDIR /home/precice
+RUN git clone https://github.com/gismo/gismo.git &&\
+    cd gismo && git checkout ${GISMO_REF} &&\
+    mkdir build && cd build &&\
+    cmake .. -DGISMO_OPTIONAL="gsElasticity;gsPreCICE;gsStructuralAnalysis" -DBUILD_TESTING=OFF -DGISMO_BUILD_EXAMPLES=OFF -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=TRUE &&\
+    cd .. &&\
+    cd optional/gsElasticity && git fetch && git checkout ${GISMO_ELASTICITY_REF} && cd ../.. && rm -r build/optional/gsElasticity && cp -r optional/gsElasticity build/optional/ &&\ 
+    cd optional/gsPreCICE && git fetch && git checkout ${GISMO_ADAPTER_REF} && cd ../.. && rm -r build/optional/gsPreCICE && cp -r optional/gsPreCICE build/optional/ &&\
+    cd build &&\
+    make -j $(nproc) perpendicular-flap-vertex-gismo &&\
+    make -j $(nproc) partitioned-heat-conduction
+
+ENV PATH="/home/precice/gismo/build/bin:$PATH"
+### end of gismo_adapter stage
+
 FROM precice AS mercurydpm_adapter
 
 USER precice
@@ -461,15 +481,13 @@ RUN cd "${SU2_HOME}" &&\
 #####################################################################
 
 
-FROM ubuntu:26.04 AS aste
+FROM ubuntu:26.04 AS ubuntu2604_precice
 
 ARG PRECICE_UID=1000
 ARG PRECICE_GID=1000
 ARG PRECICE_PR
 ARG PRECICE_REF
 ARG PRECICE_PRESET
-ARG ASTE_PR
-ARG ASTE_REF
 
 USER root
 SHELL ["/bin/bash", "-c"]
@@ -522,12 +540,7 @@ RUN apt-get -qq update && \
         pkg-config \
         wget \
         inotify-tools
-
-# Additional dependencies for ASTE
-RUN apt-get -qq update && \
-    apt-get -qq -y install \
-        libmetis-dev \
-        libvtk9-dev
+### end of ubuntu2604_precice stage ###
 
 USER precice
 WORKDIR /home/precice
@@ -548,6 +561,24 @@ ENV CPATH="/home/precice/.local/include"
 ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig"
 ENV CMAKE_PREFIX_PATH="/home/precice/.local"
 
+
+FROM ubuntu2604_precice AS aste
+
+ARG ASTE_PR
+ARG ASTE_REF
+
+USER root
+SHELL ["/bin/bash", "-c"]
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get -qq update && \
+    apt-get -qq -y install \
+        libmetis-dev \
+        libvtk9-dev
+
+USER precice
+WORKDIR /home/precice
+
 RUN git clone https://github.com/precice/aste.git aste && \
     cd aste && \
     if [ -n "${ASTE_PR}" ]; then git fetch origin pull/${ASTE_PR}/head; fi && \
@@ -566,6 +597,16 @@ RUN cd /home/precice/aste && \
 
 WORKDIR /home/precice
 
+
+FROM ubuntu2604_precice AS mfem_adapter
+
+USER root
+RUN apt-get -qq update && \
+    apt-get -qq install libmfem-dev
+
+USER precice
+WORKDIR /home/precice
+### end of mfem_adapter stage ###
 
 FROM solids4foam/solids4foam:v2.3-openfoam-v2412-latest AS solids4foam
 
@@ -626,4 +667,4 @@ RUN git clone https://github.com/precice/openfoam-adapter.git &&\
     /usr/bin/openfoam2412 ./Allwmake -j $(nproc)
 
 FROM python:3.14 AS fieldcompare
-RUN pip install fieldcompare[all]==0.5.0
+RUN pip install fieldcompare[all]==0.7.1
