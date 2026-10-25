@@ -34,7 +34,7 @@ The `Use workflow from` is a default option of GitHub Actions that concerns the 
 
 The [System tests (nightly)](https://github.com/precice/tutorials/actions/workflows/system-tests-nightly.yml) executes the `release` test suite every night. The [System tests (weekly)](https://github.com/precice/tutorials/actions/workflows/system-tests-weekly.yml) executes the `extra` test suite once per week.
 
-When the manual workflow runs `release`, it uses a single serial job by default. Enable the `parallel` input to split `release` into one job per tutorial. Other suite selections always run as a single job. If a parallel matrix job fails, re-run only that tutorial job from the Actions run page.
+The manual and nightly workflows always run a `prepare-matrix` job first. By default, suites run in a single serial matrix job. Enable the `parallel` input to split expandable suites (such as `release`) into one job per tutorial. If a parallel matrix job fails, re-run only that tutorial job from the Actions run page.
 
 ### Running from a pull request
 
@@ -89,7 +89,7 @@ There are also some auxiliary scripts:
 
 - `print_test_suites.py`: Print all test suites defined in `tests.yaml`
 - `print_case_combinations.py`: Print all possible combinations of participants in a tutorial, using its `metadata.yaml`.
-- `prepare_matrix.py`: Build the per-tutorial matrix used for parallel `release` runs.
+- `prepare_matrix.py`: Build the serial or per-tutorial matrix used by system test workflows.
 
 ## Understanding the logs
 

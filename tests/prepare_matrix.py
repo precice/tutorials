@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Emit a GitHub Actions matrix for parallel release system tests."""
+"""Emit a GitHub Actions matrix for system test workflows."""
 
 from __future__ import annotations
 
@@ -8,42 +8,60 @@ import json
 import os
 import sys
 
-from parallel_matrix import build_parallel_matrix, matrix_jobs_for_github
+from parallel_matrix import build_matrix, matrix_jobs_for_github
 
 
-def _write_github_step_summary(matrix_jobs, source_suite: str) -> None:
+def _write_github_step_summary(matrix_jobs, suites: str, parallel: bool) -> None:
     summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
     if not summary_path:
         return
 
-    total_cases = sum(job.case_count for job in matrix_jobs)
     job_count = len(matrix_jobs)
+    total_cases = sum(job.case_count for job in matrix_jobs)
     with open(summary_path, "w", encoding="utf-8") as summary_file:
-        print("## Parallel test matrix\n", file=summary_file)
-        print(
-            f"Next, **{job_count}** parallel jobs will run on the "
-            f"self-hosted runner(s), one per tutorial.\n",
-            file=summary_file,
-        )
-        print(f"- Source suite: `{source_suite}`", file=summary_file)
-        print(f"- Tutorial jobs: **{job_count}**", file=summary_file)
-        print(f"- Total cases: **{total_cases}**\n", file=summary_file)
-        print("| # | Tutorial | Cases |", file=summary_file)
-        print("| - | --- | ---: |", file=summary_file)
-        for index, job in enumerate(matrix_jobs, start=1):
+        print("## System test matrix\n", file=summary_file)
+        if parallel:
             print(
-                f"| {index} | `{job.tutorial}` | {job.case_count} |",
+                f"Next, **{job_count}** jobs will run on the "
+                f"self-hosted runner(s), split by tutorial.\n",
                 file=summary_file,
             )
+        else:
+            print(
+                f"Next, **{job_count}** serial job will run on the "
+                f"self-hosted runner(s).\n",
+                file=summary_file,
+            )
+        print(f"- Suites: `{suites}`", file=summary_file)
+        print(f"- Mode: `{'parallel' if parallel else 'serial'}`", file=summary_file)
+        print(f"- Jobs: **{job_count}**", file=summary_file)
+        if parallel:
+            print(f"- Total cases: **{total_cases}**\n", file=summary_file)
+            print("| # | Tutorial | Cases |", file=summary_file)
+            print("| - | --- | ---: |", file=summary_file)
+            for index, job in enumerate(matrix_jobs, start=1):
+                label = job.tutorial or suites
+                print(
+                    f"| {index} | `{label}` | {job.case_count} |",
+                    file=summary_file,
+                )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Build a per-tutorial matrix from a meta test suite.")
+        description="Build a system test matrix from tests.yaml.")
     parser.add_argument(
+        "--suites",
         "--source-suite",
+        dest="suites",
         default="release",
-        help="Meta suite to expand (default: release).",
+        help="Suite or comma-separated suites to run (default: release).",
+    )
+    parser.add_argument(
+        "--mode",
+        choices=["serial", "parallel"],
+        default="parallel",
+        help="serial: one matrix job; parallel: split expandable suites per tutorial.",
     )
     parser.add_argument(
         "--format",
@@ -53,24 +71,25 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    parallel = args.mode == "parallel"
     try:
-        matrix_jobs = build_parallel_matrix(args.source_suite)
+        matrix_jobs = build_matrix(args.suites, parallel=parallel)
     except (KeyError, FileNotFoundError) as error:
         print(error, file=sys.stderr)
         return 1
 
-    _write_github_step_summary(matrix_jobs, args.source_suite)
+    _write_github_step_summary(matrix_jobs, args.suites, parallel)
 
     if args.format == "github":
-        print(json.dumps(matrix_jobs_for_github(
-            args.source_suite, matrix_jobs=matrix_jobs)))
+        print(json.dumps(matrix_jobs_for_github(matrix_jobs=matrix_jobs)))
     else:
         total_cases = sum(job.case_count for job in matrix_jobs)
         print(
-            f"Matrix for {args.source_suite}: "
-            f"{len(matrix_jobs)} tutorial jobs, {total_cases} cases")
+            f"Matrix for {args.suites} ({args.mode}): "
+            f"{len(matrix_jobs)} job(s), {total_cases} case(s)")
         for index, job in enumerate(matrix_jobs, start=1):
-            print(f"  {index}. {job.tutorial}: {job.case_count} case(s)")
+            label = job.tutorial or "(serial)"
+            print(f"  {index}. {label}: {job.case_count} case(s)")
     return 0
 
 

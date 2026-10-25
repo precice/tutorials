@@ -94,6 +94,86 @@ def _release_case_entries(
     return entries
 
 
+def build_serial_matrix(suites: str) -> List[MatrixJob]:
+    """Return a single matrix job that runs the given suite selection as-is."""
+    return [MatrixJob(tutorial="", suites=suites, case_count=0)]
+
+
+def _tutorial_from_suite_name(suite_name: str) -> str:
+    if "_" in suite_name:
+        return suite_name.split("_", 1)[0]
+    return suite_name
+
+
+def _is_expandable_meta_suite(test_suites: dict, suite_name: str) -> bool:
+    if suite_name not in test_suites:
+        return False
+    suite_def = test_suites[suite_name]
+    return bool(suite_def.get("tutorials") or suite_def.get("external"))
+
+
+def merge_matrix_jobs(jobs: List[MatrixJob]) -> List[MatrixJob]:
+    """Merge jobs that target the same tutorial, preserving suite order."""
+    grouped_suites: Dict[str, List[str]] = defaultdict(list)
+    for job in jobs:
+        for suite_name in job.suites.split(","):
+            if suite_name:
+                grouped_suites[job.tutorial].append(suite_name)
+
+    merged: List[MatrixJob] = []
+    for tutorial in sorted(grouped_suites):
+        unique_suites: List[str] = []
+        seen: set[str] = set()
+        for suite_name in grouped_suites[tutorial]:
+            if suite_name in seen:
+                continue
+            seen.add(suite_name)
+            unique_suites.append(suite_name)
+        merged.append(
+            MatrixJob(
+                tutorial=tutorial,
+                suites=",".join(unique_suites),
+                case_count=len(unique_suites),
+            )
+        )
+    return merged
+
+
+def build_matrix(
+    suites: str,
+    parallel: bool,
+    tests_yaml: Path | None = None,
+) -> List[MatrixJob]:
+    """Build a GitHub Actions matrix for serial or per-tutorial parallel runs."""
+    if not parallel:
+        return build_serial_matrix(suites)
+
+    test_suites = load_test_suites(tests_yaml)
+    suite_names = [part.strip() for part in suites.split(",") if part.strip()]
+    if not suite_names:
+        raise KeyError("No test suites specified")
+
+    matrix_jobs: List[MatrixJob] = []
+    for suite_name in suite_names:
+        if _is_expandable_meta_suite(test_suites, suite_name):
+            matrix_jobs.extend(build_parallel_matrix(suite_name, tests_yaml))
+            continue
+        if suite_name in test_suites:
+            matrix_jobs.append(
+                MatrixJob(
+                    tutorial=_tutorial_from_suite_name(suite_name),
+                    suites=suite_name,
+                    case_count=1,
+                )
+            )
+            continue
+        raise KeyError(f"Unknown test suite: {suite_name}")
+
+    if len(suite_names) == 1:
+        return matrix_jobs
+    return merge_matrix_jobs(matrix_jobs)
+
+
 def build_parallel_matrix(
     source_suite_name: str = "release",
     tests_yaml: Path | None = None,
@@ -140,3 +220,7 @@ def matrix_jobs_for_github(
         {"tutorial": job.tutorial, "suites": job.suites}
         for job in jobs
     ]
+
+
+def total_case_count(matrix_jobs: List[MatrixJob]) -> int:
+    return sum(job.case_count for job in matrix_jobs)
