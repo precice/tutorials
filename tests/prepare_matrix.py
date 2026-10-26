@@ -98,7 +98,7 @@ def _meta_suite_case_entries(
 
 
 def _tutorial_from_suite_name(suite_name: str) -> str:
-    """Derive tutorial path from a per-case suite name.
+    """Derive tutorial name from a per-case suite name.
 
     Example: channel-transport_fluid-openfoam_transport-openfoam -> channel-transport
     """
