@@ -4,7 +4,7 @@
 # Source: volume-coupled-flow/source-nutils/requirements.txt
 # Generated: 2026-07-13T16:48:40Z
 
-setuptools==83.0.0
+setuptools==84.1.0
 nutils==7.3
 numpy==1.26.4
 pyprecice==3.4.0
