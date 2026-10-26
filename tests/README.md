@@ -89,7 +89,7 @@ There are also some auxiliary scripts:
 
 - `print_test_suites.py`: Print all test suites defined in `tests.yaml`
 - `print_case_combinations.py`: Print all possible combinations of participants in a tutorial, using its `metadata.yaml`.
-- `prepare_matrix.py`: Build the serial or per-tutorial matrix used by system test workflows.
+- `prepare_matrix.py`: Build the serial or per-tutorial matrix from `tests.yaml` for system test workflows.
 
 ## Understanding the logs
 

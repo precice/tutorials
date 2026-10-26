@@ -9,7 +9,7 @@ on:
         required: true
         type: string
       parallel:
-        description: 'Split expandable suites into per-tutorial matrix jobs'
+        description: 'Split into per-tutorial parallel jobs'
         default: false
         type: boolean
       system_tests_branch:
