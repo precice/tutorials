@@ -34,6 +34,8 @@ The `Use workflow from` is a default option of GitHub Actions that concerns the 
 
 The [System tests (nightly)](https://github.com/precice/tutorials/actions/workflows/system-tests-nightly.yml) executes the `release` test suite every night. The [System tests (weekly)](https://github.com/precice/tutorials/actions/workflows/system-tests-weekly.yml) executes the `extra` test suite once per week.
 
+The manual and nightly workflows always run a `prepare-matrix` job first. By default, suites run in a single serial matrix job. Enable the `parallel` input to split expandable suites (such as `release`) into one job per tutorial. If a parallel matrix job fails, re-run only that tutorial job from the Actions run page.
+
 ### Running from a pull request
 
 Several repositories include a workflow that allows triggering the system tests by adding the `trigger-system-tests` label to the pull request. The event is triggered only at the moment of adding the label, so you need to remove the label and add it again if needed.
@@ -67,6 +69,12 @@ python -m venv .venv && source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
+Prepare the mirror of third-party repositories in `./thirdparty`, by running:
+
+```bash
+./mirror-repositories.sh
+```
+
 To test a certain test-suite defined in `tests.yaml`, use:
 
 ```bash
@@ -77,10 +85,11 @@ This will build and connect Docker containers and run tutorials in the `runs/` d
 
 To clean up at the end, you might want to run a `docker system prune -a` and remove the `runs/` directory to save space.
 
-There are also some auxiliary scripts (run without arguments):
+There are also some auxiliary scripts:
 
-- `print_test_suites.py`: Print all test suites defined in `tests.yaml`
-- `print_case_combinations.py`: Print all possible combinations of participants in a tutorial, using its `metadata.yaml`.
+- `print_test_suites.py`: Print all test suites defined in `tests.yaml`. No arguments are expected.
+- `print_case_combinations.py`: Print all possible combinations of participants in a tutorial, using its `metadata.yaml`. No arguments are expected.
+- `prepare_matrix.py`: Preview how the manual and nightly workflows split selected suites into GitHub Actions matrix jobs. Run it as `python prepare_matrix.py --suites release --mode [serial|parallel] --format [pretty|github]`.
 
 ## Understanding the logs
 
@@ -161,6 +170,8 @@ To re-run one test locally:
 1. Extract the zip and keep the `runs/` layout (the test folder needs the sibling `tests/` directory).
 2. `cd` into the test folder.
 3. Run `./rerun-system-test.sh` (or `sh rerun-system-test.sh`).
+
+The first time you run tests locally, you need to [initialize the mirror of third-party repositories](#running-locally). There are also some restricted cases, which you cannot run locally and are not included in the `release` test suite (see `restricted` test suite). Similarly, externally-hosted have their reference results stored in the hosted runner; If you don't have these reference results, set `skip_compare: true` in the tests under the `external:` test suite.
 
 The script rebuilds images, runs the tutorial, and (if present) runs fieldcompare with `--exit-code-from field-compare`, matching the Python runner. Compose paths are relative to the test folder (`..` is the parent `runs/` directory), so you can move the extracted tree elsewhere on a Linux host with Docker.
 

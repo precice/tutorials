@@ -37,7 +37,8 @@ def main():
         'fenics': 'Fluid-FEniCS',
         'openfoam': 'Fluid-OpenFOAM',
         'nutils': 'Fluid-Nutils',
-        'dunefem': 'Fluid-DuneFem'}
+        'dunefem': 'Fluid-DuneFem',
+        'mfem': 'Fluid-MFEM'}
     styles = [':', '-', '--']
     colors = ['r', 'b', 'g', 'k']
 

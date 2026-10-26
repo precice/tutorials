@@ -6,8 +6,33 @@ on:
       timezone: "Europe/Berlin"
 
 jobs:
+  prepare-matrix:
+    name: Prepare test matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - name: Check out tutorials
+        uses: actions/checkout@v7
+        with:
+          ref: develop
+      - name: Install Python dependencies
+        run: pip install --user -r tests/requirements.txt
+      - name: Build serial matrix for release
+        id: matrix
+        working-directory: tests
+        run: |
+          python3 prepare_matrix.py --suites release --mode serial --format=github > matrix.json
+          echo "matrix=$(cat matrix.json)" >> "$GITHUB_OUTPUT"
+
   run-system-tests:
     name: Trigger system tests
+    needs: prepare-matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
     uses: $/.github/workflows/system-tests.yml
     with:
-      suites: 'release'
+      suites: ${{ matrix.suites }}
+      job_label: ${{ matrix.tutorial }}

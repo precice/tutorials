@@ -45,10 +45,10 @@ For this tutorial, we will mainly need to install preCICE, OpenFOAM, and the Ope
     ```bash
     # Add the signing key, add the repository, update (check this):
     wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash
-    # Install OpenFOAM v2512:
-    sudo apt install openfoam2512-dev
+    # Install OpenFOAM v2606:
+    sudo apt install openfoam2606-dev
     # Enable OpenFOAM by default in your system and apply now:
-    echo "source /usr/lib/openfoam/openfoam2512/etc/bashrc" >> ~/.bashrc
+    echo "source /usr/lib/openfoam/openfoam2606/etc/bashrc" >> ~/.bashrc
     source ~/.bashrc
     ```
 
@@ -61,14 +61,14 @@ For this tutorial, we will mainly need to install preCICE, OpenFOAM, and the Ope
 4. Download and install the [OpenFOAM-preCICE adapter](https://precice.org/adapter-openfoam-get.html):
 
     ```bash
-     wget https://github.com/precice/openfoam-adapter/archive/refs/tags/v1.3.1.tar.gz
-     tar -xzf v1.3.1.tar.gz 
-     cd openfoam-adapter-1.3.1/
+     wget https://github.com/precice/openfoam-adapter/archive/refs/tags/v1.4.0.tar.gz
+     tar -xzf v1.4.0.tar.gz 
+     cd openfoam-adapter-1.4.0/
      ./Allwmake
      cd ..
     ```
 
-5. Get the quickstart tutorial case:
+5. Get the quickstart tutorial case (or get the [latest development state](https://github.com/precice/tutorials/tree/develop/quickstart)):
 
     ```bash
     wget https://github.com/precice/tutorials/archive/refs/tags/v202404.0.tar.gz

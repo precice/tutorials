@@ -1,5 +1,7 @@
 build: 
   context: {{ dockerfile_context }}
+  additional_contexts:
+    thirdparty: ../tests/thirdparty
   args:
     {% for key, value in build_arguments.items() %}
       - {{key}}={{value}}
