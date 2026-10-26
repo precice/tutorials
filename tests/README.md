@@ -87,27 +87,9 @@ To clean up at the end, you might want to run a `docker system prune -a` and rem
 
 There are also some auxiliary scripts:
 
-- `print_test_suites.py`: Print all test suites defined in `tests.yaml`
-- `print_case_combinations.py`: Print all possible combinations of participants in a tutorial, using its `metadata.yaml`.
-- `prepare_matrix.py`: Preview how the manual and nightly workflows split selected suites into GitHub Actions matrix jobs (see below).
-
-### Previewing the GitHub Actions matrix (`prepare_matrix.py`)
-
-The [System tests (manual)](https://github.com/precice/tutorials/actions/workflows/system-tests-manual.yml) and [System tests (nightly)](https://github.com/precice/tutorials/actions/workflows/system-tests-nightly.yml) workflows run `prepare_matrix.py` before triggering `system-tests.yml`. The script reads `tests.yaml` and prints the resulting matrix. It does **not** build Docker images, run simulations, or start any tests.
-
-Run it from the `tests/` directory (after installing `requirements.txt` as above):
-
-```bash
-python prepare_matrix.py --suites release --mode serial
-python prepare_matrix.py --suites release --mode parallel
-```
-
-- **`--mode serial`**: One matrix job with the suite string passed through unchanged (the default for manual runs unless `parallel` is enabled).
-- **`--mode parallel`**: Expand meta suites such as `release` into one job per tutorial, with comma-separated per-case suite names (for example `quickstart_fluid-openfoam_solid-cpp`).
-- **`--format pretty`** (default): Human-readable summary of job count and tutorials.
-- **`--format github`**: JSON array for `fromJson()` in the workflow (`[{"tutorial": "...", "suites": "..."}, ...]`).
-
-Use this locally to check how a suite change affects CI parallelism, or to verify that a new per-case suite name resolves correctly, without dispatching a workflow. To actually execute tests, use `systemtests.py` as described above.
+- `print_test_suites.py`: Print all test suites defined in `tests.yaml`. No arguments are expected.
+- `print_case_combinations.py`: Print all possible combinations of participants in a tutorial, using its `metadata.yaml`. No arguments are expected.
+- `prepare_matrix.py`: Preview how the manual and nightly workflows split selected suites into GitHub Actions matrix jobs. Run it as `python prepare_matrix.py --suites release --mode [serial|parallel] --format [pretty|github]`.
 
 ## Understanding the logs
 
