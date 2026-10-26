@@ -49,6 +49,7 @@ test_suites:
           - fluid-openfoam
           - transport-nutils
         max_time: 0.1
+        timeout: 300
         reference_result: ./channel-transport/reference-results/fluid-openfoam_transport-nutils.tar.gz
 
   channel-transport_fluid-openfoam_transport-openfoam:
@@ -90,6 +91,7 @@ test_suites:
           - fluid-fenics
           - chemical-fenics
         max_time: 0.5
+        timeout: 600
         reference_result: ./channel-transport-reaction/reference-results/fluid-fenics_chemical-fenics.tar.gz
   
   elastic-tube-1d_fluid-cpp_solid-cpp:
@@ -789,6 +791,7 @@ test_suites:
           - soil-creep-fenicsx
           - wolf-sheep-grass-mesa
         max_time: 20
+        timeout: 600
         reference_result: ./wolf-sheep-soil-creep/reference-results/soil-creep-fenicsx_wolf-sheep-grass-mesa.tar.gz
 
   wolf-sheep-soil-creep_soil-creep-landlab_wolf-sheep-grass-mesa:
@@ -799,6 +802,7 @@ test_suites:
           - soil-creep-landlab
           - wolf-sheep-grass-mesa
         max_time: 20
+        timeout: 600
         reference_result: ./wolf-sheep-soil-creep/reference-results/soil-creep-landlab_wolf-sheep-grass-mesa.tar.gz
 
   wolf-sheep-soil-creep_soil-creep-simplified-landlab_wolf-sheep-grass-mesa:
@@ -809,6 +813,7 @@ test_suites:
           - soil-creep-simplified-landlab
           - wolf-sheep-grass-mesa
         max_time: 20
+        timeout: 600
         reference_result: ./wolf-sheep-soil-creep/reference-results/soil-creep-simplified-landlab_wolf-sheep-grass-mesa.tar.gz
 
   #####################################################################
