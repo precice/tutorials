@@ -1,0 +1,18 @@
+FoamFile {
+    version 2.0;
+    class dictionary;
+    object decomposeParDict;
+    format ascii;
+}
+
+numberOfSubdomains 4;
+
+// The adapter is independent of the decomposition method, more advanced methods are known to work as well
+method          simple;
+
+simpleCoeffs
+{
+    n               (2 2 1);
+    delta           0.001;
+}
+

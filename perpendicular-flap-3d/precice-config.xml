@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<precice-configuration>
+  <log>
+    <sink
+      filter="%Severity% > debug and %Rank% = 0"
+      format="---[precice] %ColorizedSeverity% %Message%"
+      enabled="true" />
+  </log>
+
+  <profiling mode="fundamental" synchronize="false" />
+
+  <data:vector name="FORCES" />
+  <data:vector name="DISPLACEMENTS" />
+
+  <mesh name="Fluid-Mesh" dimensions="3">
+    <use-data name="FORCES" />
+    <use-data name="DISPLACEMENTS" />
+  </mesh>
+
+  <mesh name="Solid-Mesh" dimensions="3">
+    <use-data name="DISPLACEMENTS" />
+    <use-data name="FORCES" />
+  </mesh>
+
+  <participant name="Fluid">
+    <provide-mesh name="Fluid-Mesh" />
+    <receive-mesh name="Solid-Mesh" from="Solid" />
+    <write-data name="FORCES" mesh="Fluid-Mesh" />
+    <read-data name="DISPLACEMENTS" mesh="Fluid-Mesh" />
+    <mapping:rbf direction="write" from="Fluid-Mesh" to="Solid-Mesh" constraint="conservative">
+      <basis-function:compact-polynomial-c6 support-radius="0.15" />
+    </mapping:rbf>
+    <mapping:rbf direction="read" from="Solid-Mesh" to="Fluid-Mesh" constraint="consistent">
+      <basis-function:compact-polynomial-c6 support-radius="0.15" />
+    </mapping:rbf>
+    <export:vtu directory="precice-exports" every-n-time-windows="500" />
+  </participant>
+
+  <participant name="Solid">
+    <provide-mesh name="Solid-Mesh" />
+    <write-data name="DISPLACEMENTS" mesh="Solid-Mesh" />
+    <read-data name="FORCES" mesh="Solid-Mesh" />
+    <export:vtu directory="precice-exports" every-n-time-windows="500" />
+    <watch-point mesh="Solid-Mesh" name="Center-Front-Tip" coordinate="0.50;0.35;0.0" />
+    <watch-point mesh="Solid-Mesh" name="Left-Back-Tip" coordinate="0.57;0.35;-0.3" />
+  </participant>
+
+  <m2n:sockets acceptor="Fluid" connector="Solid" exchange-directory=".." />
+
+  <coupling-scheme:parallel-explicit>
+    <time-window-size value="1e-3" />
+    <max-time value="30.0" />
+    <participants first="Fluid" second="Solid" />
+    <exchange data="FORCES" mesh="Solid-Mesh" from="Fluid" to="Solid" />
+    <exchange data="DISPLACEMENTS" mesh="Solid-Mesh" from="Solid" to="Fluid" />
+  </coupling-scheme:parallel-explicit>
+</precice-configuration>

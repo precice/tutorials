@@ -1,0 +1,85 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    inlet
+    {
+    type            codedFixedValue;
+    value           uniform (0 0 0);
+    name            timeVaryingParabolic;
+
+    code
+    #{
+        const vectorField& Cf = patch().Cf();        // face centres
+        const vectorField& n  = patch().nf();        // face normals (unit normals)
+        vectorField& field    = *this;
+
+        const scalar pi = constant::mathematical::pi;
+        const scalar t  = this->db().time().value();
+
+        forAll(Cf, faceI)
+        {
+            const scalar y = Cf[faceI].y();
+            const scalar z = Cf[faceI].z();
+
+            // Equivalent of:
+            // para = -2*((2500/81)*y*(y-0.6)*(z+0.6)*(z-0.6))*normal();
+
+            const scalar poly =
+                -2.0 * (2500.0/81.0)
+                * y * (y - 0.6)
+                * (z + 0.6)
+                * (z - 0.6);
+
+            vector para = poly * n[faceI];
+
+            if (t < 10.0)
+            {
+                scalar ramp = 0.5 * (1.0 - cos(pi * t));
+                field[faceI] = ramp * para;
+            }
+            else
+            {
+                field[faceI] = vector::zero;
+            }
+        }
+    #};
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+    flap
+    {
+        type            movingWallVelocity;
+        value           uniform (0 0 0);
+    }
+    upperWall
+    {
+        type            noSlip;
+    }
+    lowerWall
+    {
+        type            noSlip;
+    }
+    frontAndBack
+    {
+        type            noSlip;
+    }
+}
+
+
+// ************************************************************************* //
