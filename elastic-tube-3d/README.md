@@ -35,6 +35,10 @@ Solid participant:
 
 * FEniCS. The structural model is currently limited to linear elasticity. Currently 3D functionality is experimental in the FEniCS adapter and more details can be found [in this discussion](https://github.com/precice/fenics-adapter/pull/133). For more information, have a look at the [FeniCS adapter documentation](https://precice.org/adapter-fenics.html).
 
+* solids4foam (OpenFOAM). A linear-elastic, small-strain solid model on a `blockMesh`-generated annulus (inner radius 5 mm, outer radius 6 mm, length 50 mm), with the same material properties as the CalculiX case (E = 300 kPa, nu = 0.3, rho = 1200 kg/m^3). The `interface` patch uses the solids4foam `solidForce` boundary condition, and the participant writes `DisplacementDelta`, so this case requires an OpenFOAM-preCICE adapter with support for writing `DisplacementDelta` in solid participants, as well as solids4foam v2.2 or later. For more information, have a look at the [solids4foam documentation](https://solids4foam.github.io/).
+
+  Note that, unlike CalculiX, the OpenFOAM adapter provides the solid interface mesh at the face centers, without connectivity. preCICE therefore reports `3D Mesh "Solid-Mesh" does not contain triangles` and the two `nearest-projection` mappings fall back to nearest-neighbour. Since the fluid and solid interface meshes are of comparable resolution and the deformation is smooth, the tube midpoint displacement still agrees with the CalculiX and FEniCS results.
+
 ## Running the simulation
 
 You can start the simulation by running the script `./run.sh` located in each participant directory. OpenFOAM can be executed in parallel using `run.sh -parallel`. The default setting uses 4 MPI ranks.
