@@ -39,7 +39,6 @@
     <provide-mesh name="Solid-Mesh" />
     <write-data name="DISPLACEMENTS" mesh="Solid-Mesh" />
     <read-data name="FORCES" mesh="Solid-Mesh" />
-    <export:vtu directory="precice-exports" every-n-time-windows="500" />
     <watch-point mesh="Solid-Mesh" name="Center-Front-Tip" coordinate="0.50;0.35;0.0" />
     <watch-point mesh="Solid-Mesh" name="Left-Back-Tip" coordinate="0.57;0.35;-0.3" />
   </participant>
