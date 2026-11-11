@@ -669,6 +669,7 @@ test_suites:
           - fluid-openfoam
           - solid-openradioss
         max_time: 0.02
+        tolerance: 1e-6
         reference_result: ./perpendicular-flap-3d/reference-results/fluid-openfoam_solid-openradioss.tar.gz
 
   quickstart_fluid-openfoam_solid-cpp:
