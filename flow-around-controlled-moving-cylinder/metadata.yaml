@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Flow around a controlled moving cylinder
 path: flow-around-controlled-moving-cylinder
 url: https://precice.org/tutorials-flow-around-controlled-moving-cylinder.html

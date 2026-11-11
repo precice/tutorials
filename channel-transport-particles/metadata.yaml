@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Channel transport particles
 path: channel-transport-particles
 url: https://precice.org/tutorials-channel-transport-particles.html

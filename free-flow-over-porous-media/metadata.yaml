@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Free flow over porous media
 path: free-flow-over-porous-media
 url: https://precice.org/tutorials-free-flow-over-porous-media-2d.html

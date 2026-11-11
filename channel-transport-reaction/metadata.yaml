@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Channel transport reaction
 path: channel-transport-reaction
 url: https://precice.org/tutorials-channel-transport-reaction.html

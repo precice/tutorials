@@ -48,6 +48,23 @@ repos:
       language: script
       entry: .dev-tools/linting/check-links-to-precice.sh
       types_or: ["markdown", "html"]
+- repo: https://github.com/python-jsonschema/check-jsonschema
+  rev: 0.39.0
+  hooks:
+    - id: check-metaschema
+      files: ^tests/schemas/.*\.schema\.json$
+    - id: check-jsonschema
+      name: validate tests.yaml
+      files: ^tests/tests\.yaml$
+      args: [ --schemafile, tests/schemas/tests.schema.json ]
+    - id: check-jsonschema
+      name: validate components.yaml
+      files: ^tests/components\.yaml$
+      args: [ --schemafile, tests/schemas/components.schema.json ]
+    - id: check-jsonschema
+      name: validate metadata.yaml
+      files: ^[^/]+/metadata\.yaml$
+      args: [ --schemafile, tests/schemas/metadata.schema.json ]
 - repo: https://github.com/rhysd/actionlint
   rev: v1.7.12
   hooks:

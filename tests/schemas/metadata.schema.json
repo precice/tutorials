@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/precice/tutorials/blob/develop/tests/schemas/metadata.schema.json",
+  "title": "preCICE tutorials: metadata.yaml",
+  "description": "Metadata of a tutorial: its participants and the cases (directories) that can play the role of each participant.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "path", "url", "participants", "cases"],
+  "properties": {
+    "name": {
+      "description": "Human-readable name of the tutorial.",
+      "type": "string",
+      "minLength": 1
+    },
+    "path": {
+      "description": "Directory of the tutorial, relative to the root of the repository.",
+      "type": "string",
+      "minLength": 1
+    },
+    "url": {
+      "description": "URL of the documentation page of the tutorial.",
+      "type": "string",
+      "minLength": 1
+    },
+    "participants": {
+      "description": "The participants of the coupled simulation.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "cases": {
+      "description": "The available cases, by name. Each case provides one participant.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/definitions/case" }
+    }
+  },
+  "definitions": {
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["participant", "directory", "run", "component"],
+      "properties": {
+        "participant": {
+          "description": "The participant that this case provides. Must be one of the listed participants.",
+          "type": "string",
+          "minLength": 1
+        },
+        "directory": {
+          "description": "Directory of the case, relative to the tutorial directory.",
+          "type": "string",
+          "minLength": 1
+        },
+        "run": {
+          "description": "Command to run the case, executed in its directory. Leave empty (null) for cases that do not run anything, e.g., a placeholder for a participant that is not needed.",
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "component": {
+          "description": "The component (as defined in tests/components.yaml) that this case needs.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Quickstart
 path: quickstart # relative to git repo 
 url: https://precice.org/quickstart.html
