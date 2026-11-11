@@ -444,8 +444,9 @@ ARG OPENCOURANT_REF
 USER precice
 WORKDIR /home/precice
 RUN git clone https://github.com/OpenCourant/OpenCourant.git && \
+    cd OpenCourant && \
     git checkout ${OPENCOURANT_REF} && \
-    cd OpenCourant/starter && \
+    starter && \
     ./build_script.sh -arch=linux64_gf -nt $(nproc)
 RUN cd OpenCourant/engine && \
     ./build_script.sh -arch=linux64_gf -mpi=ompi -mpi-include=/usr/lib/x86_64-linux-gnu/openmpi/include -preCICE -nt $(nproc)
