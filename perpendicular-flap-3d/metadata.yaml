@@ -17,5 +17,5 @@ cases:
     participant: Solid
     directory: ./solid-openradioss
     run: ./run.sh 
-    component: opencourant-adapter 
+    component: openradioss-adapter
   
