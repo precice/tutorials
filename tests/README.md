@@ -320,6 +320,7 @@ Metadata and workflow/script files:
   - `components.yaml`: Declares the available components and their parameters/options
   - `reference-results-metadata.md.template`: Template for reporting the versions and machine used to generate each reference results archive
   - `reference_versions.yaml`: List of arguments to use for generating the reference results
+  - `schemas/`: JSON schemas that describe `tests.yaml`, `components.yaml`, and the `metadata.yaml` files of the tutorials
   - `tests.yaml`: Declares the available tests, grouped in test suites
 
 User-facing tools:
@@ -350,6 +351,7 @@ Implementation scripts:
 Every tutorial contains a file called `metadata.yaml` describing some important properties of the tutorial. For example:
 
 ```yaml
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Elastic tube 3D
 path: elastic-tube-3d
 url: https://precice.org/tutorials-elastic-tube-3d.html
@@ -389,6 +391,12 @@ Description:
   - `directory`: Where the case directory is located, relative to the tutorial directory
   - `run`: Command that executes the tutorial
   - `component`: Component or list of components that this case depends upon (typically an adapter)
+
+### Schemas
+
+The structure of `metadata.yaml`, `components.yaml`, and `tests.yaml` is described by the JSON schemas in the [`schemas/`](https://github.com/precice/tutorials/tree/develop/tests/schemas) directory. Each of these files starts with a comment of the form `# yaml-language-server: $schema=<path to the schema>`, which makes editors that use the [YAML language server](https://github.com/redhat-developer/yaml-language-server) (e.g., the YAML extension for VS Code) offer autocompletion, show documentation on hover, and highlight mistakes while you edit. When you add a `metadata.yaml` file for a new tutorial, start it with the same comment as the existing ones.
+
+The same schemas are checked by the [pre-commit](https://pre-commit.com/) hooks (and therefore in the "Check style" workflow), so that a malformed entry is reported before the system tests run. If you add a new option to one of these files, also extend the respective schema.
 
 ### Components
 

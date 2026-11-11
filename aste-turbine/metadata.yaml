@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: ASTE turbine
 path: aste-turbine
 url: https://precice.org/tutorials-aste-turbine.html

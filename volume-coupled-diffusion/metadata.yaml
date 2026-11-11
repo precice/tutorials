@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Volume coupled diffusion
 path: volume-coupled-diffusion # relative to git repo 
 url: https://precice.org/tutorials-volume-coupled-diffusion.html

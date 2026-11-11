@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Turek-Hron FSI3
 path: turek-hron-fsi3 # relative to git repo 
 url: https://precice.org/tutorials-turek-hron-fsi3.html

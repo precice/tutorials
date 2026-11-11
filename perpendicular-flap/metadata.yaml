@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Perpendicular flap
 path: perpendicular-flap
 url: https://precice.org/tutorials-perpendicular-flap.html

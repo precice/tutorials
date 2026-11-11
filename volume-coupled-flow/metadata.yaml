@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Volume coupled flow
 path: volume-coupled-flow # relative to git repo 
 url: https://precice.org/tutorials-volume-coupled-flow.html
