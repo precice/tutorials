@@ -11,8 +11,9 @@ export RAD_CFG_PATH=$OPENRADIOSS_PATH/hm_cfg_files
 export LD_LIBRARY_PATH="$OPENRADIOSS_PATH/extlib/hm_reader/linux64/:$OPENRADIOSS_PATH/extlib/h3d/lib/linux64/:$LD_LIBRARY_PATH"
 export OMP_STACKSIZE=400m
 
-alias radioss_starter='$OPENRADIOSS_PATH/starter/cbuild_starter_linux64_gf/starter_linux64_gf'
-alias radioss_engine='$OPENRADIOSS_PATH/engine/cbuild_engine_linux64_gf_ompi_precice/engine_linux64_gf_ompi_precice'
+export PATH="$OPENRADIOSS_PATH/starter/cbuild_starter_linux64_gf:$OPENRADIOSS_PATH/engine/cbuild_engine_linux64_gf_ompi_precice/:$PATH"
+alias radioss_starter='starter_linux64_gf'
+alias radioss_engine='engine_linux64_gf_ompi_precice'
 
 # These tools are not included in the basic installation.
 # For OpenCourant, find them in https://github.com/OpenCourant/Tools/tree/main/output_converters
