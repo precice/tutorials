@@ -661,6 +661,17 @@ test_suites:
         max_time: 0.1
         reference_result: ./perpendicular-flap-stress/reference-results/fluid-openfoam_solid-gismo.tar.gz
 
+  perpendicular-flap-3d_fluid-openfoam_solid-openradioss:
+    tutorials:
+      - &perpendicular-flap-3d_fluid-openfoam_solid-openradioss
+        path: perpendicular-flap-3d
+        case_combination:
+          - fluid-openfoam
+          - solid-openradioss
+        max_time: 0.02
+        skip_compare: true
+        reference_result: ./perpendicular-flap-3d/reference-results/fluid-openfoam_solid-openradioss.tar.gz
+
   quickstart_fluid-openfoam_solid-cpp:
     tutorials:
       - &quickstart_fluid-openfoam_solid-cpp
@@ -972,6 +983,10 @@ test_suites:
     tutorials:
       - *perpendicular-flap-stress_fluid-openfoam_solid-gismo
 
+  perpendicular-flap-3d:
+    tutorials:
+      - *perpendicular-flap-3d_fluid-openfoam_solid-openradioss
+
   quickstart:
     tutorials:
       - *quickstart_fluid-openfoam_solid-cpp
@@ -1128,6 +1143,7 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
       - *perpendicular-flap_fluid-su2_solid-fenics
       - *perpendicular-flap-stress_fluid-openfoam_solid-gismo
+      - *perpendicular-flap-3d_fluid-openfoam_solid-openradioss
       - *quickstart_fluid-openfoam_solid-cpp
       - *resonant-circuit_capacitor-python_coil-python
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
@@ -1314,6 +1330,8 @@ test_suites:
       - *perpendicular-flap_fluid-openfoam_solid-fenics
       - *perpendicular-flap_fluid-openfoam_solid-openfoam
       - *perpendicular-flap_fluid-openfoam_solid-solids4foam
+      - *perpendicular-flap-stress_fluid-openfoam_solid-gismo
+      - *perpendicular-flap-3d_fluid-openfoam_solid-openradioss
       - *turek-hron-fsi3_fluid-openfoam_solid-dealii
       - *quickstart_fluid-openfoam_solid-cpp
       - *volume-coupled-flow_fluid-openfoam_source-nutils
@@ -1322,6 +1340,10 @@ test_suites:
     external:
       - *partitioned-heat-conduction-mixedbc_left-openfoam_right-openfoam
       - *partitioned-heat-conduction-robin_left-openfoam_right-openfoam
+
+  openradioss-adapter:
+    tutorials:
+      - *perpendicular-flap-3d_fluid-openfoam_solid-openradioss
 
   julia-bindings:
     tutorials:

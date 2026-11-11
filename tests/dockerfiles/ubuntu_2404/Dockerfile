@@ -438,6 +438,29 @@ RUN git clone https://github.com/precice/openfoam-adapter.git &&\
 ### end of openfoam_adapter stage ###
 
 
+FROM precice AS openradioss_adapter
+ARG OPENCOURANT_REF
+
+USER precice
+WORKDIR /home/precice
+RUN git clone https://github.com/OpenCourant/OpenCourant.git && \
+    cd OpenCourant && \
+    git checkout ${OPENCOURANT_REF} && \
+    cd starter && \
+    ./build_script.sh -arch=linux64_gf -nt $(nproc)
+RUN cd OpenCourant/engine && \
+    ./build_script.sh -arch=linux64_gf -mpi=ompi -mpi-include=/usr/lib/x86_64-linux-gnu/openmpi/include -preCICE -nt $(nproc)
+
+ENV OPENRADIOSS_PATH="/home/precice/OpenCourant"
+ENV RAD_CFG_PATH="$OPENRADIOSS_PATH/hm_cfg_files"
+ENV RAD_H3D_PATH="$OPENRADIOSS_PATH/extlib/h3d/lib/linux64"
+ENV LD_LIBRARY_PATH="$OPENRADIOSS_PATH/extlib/hm_reader/linux64/:$OPENRADIOSS_PATH/extlib/h3d/lib/linux64/:$LD_LIBRARY_PATH"
+ENV PATH="$OPENRADIOSS_PATH/starter/cbuild_starter_linux64_gf:$OPENRADIOSS_PATH/engine/cbuild_engine_linux64_gf_ompi_precice/:$PATH"
+RUN echo "alias radioss_starter=starter_linux64_gf" >> ~/.bashrc
+RUN echo "alias radioss_engine=engine_linux64_gf_ompi_precice" >> ~/.bashrc
+### end of openradioss_adapter
+
+
 FROM python_bindings AS su2_adapter
 ARG SU2_VERSION
 ARG SU2_ADAPTER_PR
