@@ -33,7 +33,6 @@
     <mapping:rbf direction="read" from="Solid-Mesh" to="Fluid-Mesh" constraint="consistent">
       <basis-function:compact-polynomial-c6 support-radius="0.15" />
     </mapping:rbf>
-    <export:vtu directory="precice-exports" every-n-time-windows="500" />
   </participant>
 
   <participant name="Solid">
