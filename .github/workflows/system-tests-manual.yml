@@ -8,6 +8,10 @@ on:
         default: 'release'
         required: true
         type: string
+      parallel:
+        description: 'Split into per-tutorial parallel jobs'
+        default: false
+        type: boolean
       system_tests_branch:
         description: 'Use the system tests from'
         default: 'develop'
@@ -53,11 +57,42 @@ on:
         type: string
 
 jobs:
+  prepare-matrix:
+    name: Prepare test matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - name: Check out tutorials
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.system_tests_branch }}
+      - name: Install Python dependencies
+        run: pip install --user -r tests/requirements.txt
+      - name: Build matrix from selected suites
+        id: matrix
+        working-directory: tests
+        env:
+          SUITES: ${{ inputs.suites }}
+          PARALLEL: ${{ inputs.parallel }}
+        run: |
+          MODE=serial
+          if [ "$PARALLEL" = "true" ]; then
+            MODE=parallel
+          fi
+          python3 prepare_matrix.py --suites "$SUITES" --mode "$MODE" --format=github > matrix.json
+          echo "matrix=$(cat matrix.json)" >> "$GITHUB_OUTPUT"
+
   run-system-tests:
-    name: Trigger system tests
+    name: ${{ matrix.tutorial != '' && format('Trigger system tests ({0})', matrix.tutorial) || 'Trigger system tests' }}
+    needs: prepare-matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
     uses: $/.github/workflows/system-tests.yml
     with:
-      suites: ${{ inputs.suites || 'release' }}
+      suites: ${{ matrix.suites }}
       build_args: "TUTORIALS_REF:${{ inputs.ref-tutorials }},\
         PRECICE_REF:${{ inputs.ref-precice }},\
         PYTHON_BINDINGS_REF:${{ inputs.ref-python-bindings }},\
@@ -73,3 +108,4 @@ jobs:
         SU2_ADAPTER_REF:${{ inputs.ref-su2-adapter }}"
       system_tests_branch: ${{ inputs.system_tests_branch || 'develop' }}
       log_level: "INFO"
+      job_label: ${{ matrix.tutorial }}
