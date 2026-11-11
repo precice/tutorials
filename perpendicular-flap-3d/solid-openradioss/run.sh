@@ -12,6 +12,6 @@ radioss_starter -i solid-openradioss_0000.rad
 radioss_engine -i solid-openradioss_0001.rad
 
 # Depends on https://github.com/OpenCourant/Tools/tree/main/output_converters/anim_to_vtk
-toVTK solid-openradioss
+# toVTK solid-openradioss
 
 close_log

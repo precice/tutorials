@@ -63,7 +63,7 @@ Since this case takes a long time to complete, you probably want to run the flui
 
 ## Post-processing
 
-OpenCourant (same as OpenRadioss) writes `.anim` files, which can be converted to VTK using the [`anim_to_vtk` tool](https://github.com/OpenCourant/Tools/tree/main/output_converters/anim_to_vtk) tool. This tool is called at the end of `solid-openradioss/run.sh` using the alias `toVTK`, defined in `tools/setup-openradioss.sh`.
+OpenCourant (same as OpenRadioss) writes `.anim` files, which can be converted to VTK using the [`anim_to_vtk` tool](https://github.com/OpenCourant/Tools/tree/main/output_converters/anim_to_vtk) tool. This tool can be called (commented out by default) at the end of `solid-openradioss/run.sh` using the alias `toVTK`, defined in `tools/setup-openradioss.sh`.
 
 OpenFOAM results can directly be loaded in ParaView ([visualization details](https://precice.org/tutorials/visualization/)).
 
