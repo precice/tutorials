@@ -377,6 +377,27 @@ openfoam-adapter:
     OPENFOAM_ADAPTER_PR:
       default: ""
 
+openradioss-adapter:
+  template: component-templates/openradioss-adapter.yaml
+  build_arguments:
+    PLATFORM:
+      default: "ubuntu_2404"
+    PRECICE_REF:
+      repository: https://github.com/precice/precice
+      default: "develop"
+    PRECICE_PR:
+      default: ""
+    PRECICE_PRESET:
+      default: "production-audit"
+    TUTORIALS_REF:
+      repository: https://github.com/precice/tutorials
+      default: "develop"
+    TUTORIALS_PR:
+      default: ""
+    OPENCOURANT_REF:
+      repository: https://github.com/OpenCourant/OpenCourant
+      default: "main"  
+
 python-bindings:
   template: component-templates/python-bindings.yaml
   build_arguments:

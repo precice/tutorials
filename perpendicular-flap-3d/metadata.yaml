@@ -1,0 +1,21 @@
+name: Perpendicular flap 3D
+path: perpendicular-flap-3d
+url: https://precice.org/tutorials-perpendicular-flap-3d.html
+
+participants:
+  - Fluid 
+  - Solid 
+
+cases:
+  fluid-openfoam:
+    participant: Fluid
+    directory: ./fluid-openfoam
+    run: ./run.sh
+    component: openfoam-adapter
+
+  solid-openradioss:
+    participant: Solid
+    directory: ./solid-openradioss
+    run: ./run.sh 
+    component: opencourant-adapter 
+  
