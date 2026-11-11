@@ -5,6 +5,10 @@ FoamFile {
     format ascii;
 }
 
+// This domain can be decomposed more.
+// If you have the CPU resources, try, for example:
+// numberOfSubdomains 48
+// n (4 4 3);
 numberOfSubdomains 8;
 
 // The adapter is independent of the decomposition method, more advanced methods are known to work as well
