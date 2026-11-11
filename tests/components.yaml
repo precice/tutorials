@@ -396,7 +396,7 @@ openradioss-adapter:
       default: ""
     OPENCOURANT_REF:
       repository: https://github.com/OpenCourant/OpenCourant
-      default: "main"  
+      default: "latest-20261011"  
 
 python-bindings:
   template: component-templates/python-bindings.yaml
