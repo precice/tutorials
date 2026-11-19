@@ -47,8 +47,8 @@ Open two separate terminals and start the desired fluid and solid participant by
 
 ```sh
 # Terminal 1
-cd fluid-openfoam -parallel
-./run.sh
+cd fluid-openfoam
+./run.sh -parallel
 
 # Terminal 2
 cd solid-openradioss
