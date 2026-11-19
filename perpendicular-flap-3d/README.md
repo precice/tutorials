@@ -36,7 +36,7 @@ Solid participant:
 * OpenRadioss. While [OpenRadioss is no longer maintained](https://en.wikipedia.org/wiki/Radioss), the community fork [OpenCourant](https://opencourant.org/) is actively maintained and works with this tutorial. OpenCourant needs to [be built with preCICE enabled](https://github.com/OpenCourant/OpenCourant/tree/main/engine/source/coupling).
 In addition to the `starter` and `engine`, you will need to build the [`anim_to_vtk` tool](https://github.com/OpenCourant/Tools/tree/main/output_converters/anim_to_vtk).
 
-## Mesh Configuration
+## Mesh configuration
 
 The test case implemented within this repository implements what the [OpenFOAM-preCICE paper](https://doi.org/10.51560/ofj.v3.88) refers to as `coarse` mesh:
 The OpenRadioss `Solid` domain is discretized with 48 `HEX20` solid elements, arranged with a 2 x 4 x 6 cell resolution along the three spatial directions.
