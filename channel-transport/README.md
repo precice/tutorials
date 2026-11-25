@@ -43,6 +43,8 @@ Fluid participant:
 
 * OpenFOAM (pimpleFoam). For more information, have a look at the [OpenFOAM adapter documentation](https://precice.org/adapter-openfoam-overview.html).
 
+* Trixi. Required dependencies: [Trixi.jl](https://github.com/trixi-framework/Trixi.jl) (tested with v0.5.30), [OrdinaryDiffEq.jl](https://github.com/SciML/OrdinaryDiffEq.jl) (tested with v6.53.2), [PreCICE.jl](https://github.com/precice/PreCICE.jl) (tested with v2.5.0). Currently, Trixi uses Euler equations (not incompressible Navier-Stokes) and periodic boundary conditions in all directions.
+
 Transport participant:
 
 * Nutils with support for [adaptive mesh refinement](https://precice.org/couple-your-code-moving-or-changing-meshes.html#pseudo-reference-domain). For more information, have a look at the [Nutils adapter documentation](https://precice.org/adapter-nutils.html). This solver requires a preCICE release with [remeshing support](couple-your-code-moving-or-changing-meshes.html#remeshing-using-precice).
