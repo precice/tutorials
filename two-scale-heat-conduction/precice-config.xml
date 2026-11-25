@@ -16,6 +16,7 @@
   <data:scalar name="Grain-Size" />
   <data:scalar name="Active-State" />
   <data:scalar name="Active-Steps" />
+  <data:scalar name="model_resolution" />
 
   <mesh name="Macro-Mesh" dimensions="2">
     <use-data name="K00" />
@@ -25,6 +26,7 @@
     <use-data name="Grain-Size" />
     <use-data name="Active-State" />
     <use-data name="Active-Steps" />
+    <use-data name="model_resolution" />
   </mesh>
 
   <participant name="Macro">
@@ -44,6 +46,7 @@
     <write-data name="Grain-Size" mesh="Macro-Mesh" />
     <write-data name="Active-State" mesh="Macro-Mesh" />
     <write-data name="Active-Steps" mesh="Macro-Mesh" />
+    <write-data name="model_resolution" mesh="Macro-Mesh" />
     <export:vtu directory="precice-exports" />
   </participant>
 
