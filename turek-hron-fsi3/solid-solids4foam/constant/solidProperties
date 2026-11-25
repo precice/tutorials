@@ -1,0 +1,43 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      solidProperties;
+}
+
+solidModel    nonLinearGeometryTotalLagrangianTotalDisplacement;
+
+nonLinearGeometryTotalLagrangianTotalDisplacementCoeffs
+{
+    solutionAlgorithm PETScSNES;
+
+    highOrderCoeffs
+    {
+        highOrderJacobian false;
+        highOrderResidual true;
+
+        displacement
+        {
+            polynomialOrder 3;
+
+            faceStencilExtraCells 15;
+
+            weightFunctionCoeffs
+            {
+                type radiallySymmetricExponential;
+                k 6;
+            }
+            calcConditionNumber false;
+        }
+    }
+
+    stabilisation
+    {
+        momentum
+        {
+            type        alpha;
+            scaleFactor 1.0;
+        }
+    }
+}
