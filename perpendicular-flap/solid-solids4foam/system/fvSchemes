@@ -18,7 +18,7 @@ ddtSchemes
 
 gradSchemes
 {
-    default            leastSquaresS4f 0;
+    default            leastSquaresS4f;
 }
 
 divSchemes
@@ -28,7 +28,7 @@ divSchemes
 
 laplacianSchemes
 {
-    default            none;
+    default            Gauss linear corrected;
     laplacian(DD,D)    Gauss linear corrected;
     laplacian(DDD,DD)  Gauss linear corrected;
 }
