@@ -684,6 +684,13 @@ RUN apt-get -qq update && \
 USER precice
 WORKDIR /home/precice
 
+# The base image already has PETSc installed at /opt/petsc
+ENV PATH="${PATH}:/home/precice/.local/bin" 
+ENV LD_LIBRARY_PATH="/home/precice/.local/lib:${LD_LIBRARY_PATH}" 
+ENV CPATH="/home/precice/.local/include"
+ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:/opt/petsc/lib/pkgconfig"
+ENV CMAKE_PREFIX_PATH="/home/precice/.local:/opt/petsc"
+
 RUN git clone https://github.com/precice/precice.git precice && \
     cd precice && \
     if [ -n "${PRECICE_PR}" ]; then git fetch origin pull/${PRECICE_PR}/head; fi && \
@@ -692,13 +699,6 @@ RUN git clone https://github.com/precice/precice.git precice && \
     cmake .. --preset=${PRECICE_PRESET} -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DBUILD_TESTING=OFF && \
     make all install -j $(nproc) && \
     cd ../.. && rm -rf precice
-
-# The base image already has PETSc installed at /opt/petsc
-ENV PATH="${PATH}:/home/precice/.local/bin" 
-ENV LD_LIBRARY_PATH="/home/precice/.local/lib:${LD_LIBRARY_PATH}" 
-ENV CPATH="/home/precice/.local/include"
-ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:/opt/petsc/lib/pkgconfig"
-ENV CMAKE_PREFIX_PATH="/home/precice/.local:/opt/petsc"
 
 RUN git clone https://github.com/precice/openfoam-adapter.git &&\
     cd openfoam-adapter && \
