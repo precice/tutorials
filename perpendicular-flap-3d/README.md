@@ -34,7 +34,7 @@ Fluid participant:
 Solid participant:
 
 * OpenRadioss. While [OpenRadioss is no longer maintained](https://en.wikipedia.org/wiki/Radioss), the community fork [OpenCourant](https://opencourant.org/) is actively maintained and works with this tutorial. OpenCourant needs to [be built with preCICE enabled](https://github.com/OpenCourant/OpenCourant/tree/main/engine/source/coupling).
-In addition to the `starter` and `engine`, you will optionally need to build the [`anim_to_vtk` tool](https://github.com/OpenCourant/Tools/tree/main/output_converters/anim_to_vtk) for visualization.
+In addition to the `starter` and `engine`, you will optionally need to build the [`anim_to_vtk` tool](https://github.com/OpenCourant/Tools/tree/main/output_converters/anim_to_vtk) for visualization (the `setup-openradioss.sh` script expects it under `$OPENRADIOSS_PATH/exec`).
 
 ## Mesh configuration
 
