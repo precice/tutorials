@@ -647,6 +647,7 @@ RUN apt-get -qq update && \
         wget \
         inotify-tools \
         libosmesa6
+        # PETSc is already included in the solids4foam base image
 
 # Set the same user as the rest of the system tests components, for consistency.
 RUN set -eux; \
@@ -683,7 +684,6 @@ RUN apt-get -qq update && \
 USER precice
 WORKDIR /home/precice
 
-# Build preCICE. Disable PETSc to not conflict with the PETSc installation coming from the solids4foam image
 RUN git clone https://github.com/precice/precice.git precice && \
     cd precice && \
     if [ -n "${PRECICE_PR}" ]; then git fetch origin pull/${PRECICE_PR}/head; fi && \
