@@ -693,10 +693,11 @@ RUN git clone https://github.com/precice/precice.git precice && \
     make all install -j $(nproc) && \
     cd ../.. && rm -rf precice
 
+# The base image already has PETSc installed at /opt/petsc
 ENV PATH="${PATH}:/home/precice/.local/bin" 
 ENV LD_LIBRARY_PATH="/home/precice/.local/lib:${LD_LIBRARY_PATH}" 
 ENV CPATH="/home/precice/.local/include"
-ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig"
+ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:/opt/petsc/lib/pkgconfig"
 ENV CMAKE_PREFIX_PATH="/home/precice/.local"
 
 RUN git clone https://github.com/precice/openfoam-adapter.git &&\
