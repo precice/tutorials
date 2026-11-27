@@ -40,24 +40,3 @@ toVTK() {
         echo "Converted ${Rootname}A${animation_number} → ${Rootname}_${animation_number}.vtk"
     done
 }
-
-# Run `toCSV modelA` to convert all animation files modelAT* to CSV format
-toCSV() {
-
-    if [ $# -lt 1 ]; then
-        echo "ERROR - Usage: toVTK ROOTNAME"
-    fi
-
-    Rootname="$1"
-
-    for file in "${Rootname}"T*; do
-        # skip if no matching files
-        [ -e "$file" ] || { echo "ERROR: No files matching ${Rootname}T*"; }
-
-        history_number="${file#"${Rootname}T"}"
-
-        radiossCSV "$file" > "${Rootname}_${history_number}.csv"
-
-        echo "Converted ${Rootname}T${history_number} → ${Rootname}_${history_number}.csv"
-    done
-}
