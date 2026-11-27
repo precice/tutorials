@@ -1,0 +1,134 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+
+    p
+    {
+       solver           GAMG; 
+       smoother         GaussSeidel;
+       nPreSweeps       0;
+       nPostSweeps      2;
+       nVcycles         2;
+       cacheAgglomeration true;
+       nCellsInCoarsestLevel 50;
+       agglomerator     faceAreaPair;
+       mergeLevels      1;
+       tolerance        1e-08;
+       relTol           0;
+       minIter          1;
+    }
+
+   U
+    {
+     solver           PBiCGStab;
+     preconditioner   DILU;
+     tolerance        1e-08;
+     relTol           0;
+     minIter          1;
+    }
+
+    pcorr
+    {
+       solver           GAMG; 
+       smoother         GaussSeidel;
+       nPreSweeps       0;
+       nPostSweeps      2;
+       nVcycles         2;
+       cacheAgglomeration true;
+       nCellsInCoarsestLevel 50;
+       agglomerator     faceAreaPair;
+       mergeLevels      1;
+       tolerance        1e-6;
+       relTol           0.01;
+       minIter          1;
+    }
+
+   pFinal
+    {
+       solver           GAMG; 
+       smoother         GaussSeidel;
+       nPreSweeps       0;
+       nPostSweeps      2;
+       nVcycles         2;
+       cacheAgglomeration true;
+       nCellsInCoarsestLevel 50;
+       agglomerator     faceAreaPair;
+       mergeLevels      1;
+       tolerance        1e-7;
+       relTol           0.01;
+       minIter          1;
+    }
+
+   UFinal
+    {
+     solver           PBiCGStab;
+     preconditioner   DILU;
+     tolerance        1e-6;
+     relTol           0.1;
+     minIter          1;
+    }
+
+   pcorrFinal
+   {
+       solver           GAMG; 
+       smoother         GaussSeidel;
+       nPreSweeps       0;
+       nPostSweeps      2;
+       nVcycles         2;
+       cacheAgglomeration true;
+       nCellsInCoarsestLevel 50;
+       agglomerator     faceAreaPair;
+       mergeLevels      1;
+       tolerance        1e-6;
+       relTol           0.01;
+       minIter          1;
+   }
+
+    cellDisplacement
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-06;
+        relTol          0.0001;
+        minIter         2;
+    }
+    cellDisplacementFinal
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-06;
+        relTol          0;
+        minIter         2;
+    }
+}
+
+PIMPLE
+{
+    consistent  yes;
+    nNonOrthogonalCorrectors  3;
+    nOuterCorrectors          5;
+    nCorrectors               3;
+    momentumPredictor         yes;
+    correctPhi                yes;
+}
+
+relaxationFactors
+{
+    fields
+    {
+    p               1;
+}
+    equations
+    {
+    U               1;
+    }
+}

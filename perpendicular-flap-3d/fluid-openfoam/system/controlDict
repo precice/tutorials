@@ -1,0 +1,46 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     pimpleFoam;    // OpenFOAM v1806, OpenFOAM 6, or newer
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         30.0;
+
+deltaT          0.001;
+
+writeControl    runTime;
+
+writeInterval   0.5;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  15;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   8;
+
+functions
+{
+    preCICE_Adapter
+    {
+        type preciceAdapterFunctionObject;
+        libs ("libpreciceAdapterFunctionObject.so");
+    }
+}
