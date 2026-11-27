@@ -608,16 +608,46 @@ USER precice
 WORKDIR /home/precice
 ### end of mfem_adapter stage ###
 
-FROM solids4foam/solids4foam:v2.3-openfoam-v2412-latest AS solids4foam
+FROM solids4foam/solids4foam:development-openfoam-v2512-latest AS solids4foam
 
 ARG PRECICE_UID=1000
 ARG PRECICE_GID=1000
+ARG PRECICE_PR
+ARG PRECICE_REF
+ARG PRECICE_PRESET
 ARG OPENFOAM_ADAPTER_PR
 ARG OPENFOAM_ADAPTER_REF
 
 USER root
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
+
+# Dependencies for preCICE and common dependencies for the tutorials/tests
+RUN apt-get -qq update && \
+    apt-get -qq -y install \
+        build-essential \
+        software-properties-common \
+        cmake \
+        curl \
+        g++ \
+        gfortran \
+        git \
+        libbenchmark-dev \
+        libboost-all-dev \
+        libeigen3-dev \
+        libopenmpi-dev \
+        libxml2-dev \
+        lsb-release \
+        openmpi-bin \
+        python3-dev \
+        python3-numpy \
+        python3-pip \
+        python3-venv \
+        pkg-config \
+        wget \
+        inotify-tools \
+        libosmesa6
+        # PETSc is already included in the solids4foam base image
 
 # Set the same user as the rest of the system tests components, for consistency.
 RUN set -eux; \
@@ -646,25 +676,35 @@ RUN mv /root/OpenFOAM/ /home/precice/OpenFOAM/ && \
     chown -R "${PRECICE_UID}:${PRECICE_GID}" /home/precice/OpenFOAM
 
 # Set a general openfoam executable, to make the component template version-independent
-RUN ln -sf /usr/bin/openfoam2412 /usr/bin/openfoam
+RUN ln -sf /usr/bin/openfoam2512 /usr/bin/openfoam
 
 RUN apt-get -qq update && \
     apt-get -qq -y install wget git
 
-# preCICE v3.4 was the last release to support Ubuntu 22.04 (used as a base image),
-# so there is no reason to accept the preCICE version as an argument and build it from source.
-# Rework this part once a newer base image is used.
-RUN  wget https://github.com/precice/precice/releases/download/v3.4.1/libprecice3_3.4.1_jammy.deb && \
-     apt-get -qq -y install ./libprecice3_3.4.1_jammy.deb
-
 USER precice
 WORKDIR /home/precice
+
+# The base image already has PETSc installed at /opt/petsc
+ENV PATH="${PATH}:/home/precice/.local/bin" 
+ENV LD_LIBRARY_PATH="/home/precice/.local/lib:${LD_LIBRARY_PATH}" 
+ENV CPATH="/home/precice/.local/include"
+ENV PKG_CONFIG_PATH="/home/precice/.local/lib/pkgconfig:/opt/petsc/lib/pkgconfig"
+ENV CMAKE_PREFIX_PATH="/home/precice/.local:/opt/petsc"
+
+RUN git clone https://github.com/precice/precice.git precice && \
+    cd precice && \
+    if [ -n "${PRECICE_PR}" ]; then git fetch origin pull/${PRECICE_PR}/head; fi && \
+    git checkout ${PRECICE_REF} && \
+    mkdir build && cd build &&\
+    cmake .. --preset=${PRECICE_PRESET} -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DBUILD_TESTING=OFF && \
+    make all install -j $(nproc) && \
+    cd ../.. && rm -rf precice
 
 RUN git clone https://github.com/precice/openfoam-adapter.git &&\
     cd openfoam-adapter && \
     if [ -n "${OPENFOAM_ADAPTER_PR}" ]; then git fetch origin pull/${OPENFOAM_ADAPTER_PR}/head; fi && \
     git checkout ${OPENFOAM_ADAPTER_REF} && \
-    /usr/bin/openfoam2412 ./Allwmake -j $(nproc)
+    /usr/bin/openfoam2512 ./Allwmake -j $(nproc)
 
 FROM python:3.14 AS fieldcompare
 RUN pip install fieldcompare[all]==0.7.1
