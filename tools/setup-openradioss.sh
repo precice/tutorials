@@ -18,7 +18,6 @@ alias radioss_engine='engine_linux64_gf_ompi_precice'
 # These tools are not included in the basic installation.
 # For OpenCourant, find them in https://github.com/OpenCourant/Tools/tree/main/output_converters
 alias radiossVTK='$OPENRADIOSS_PATH/exec/anim_to_vtk_linux64_gf'
-alias radiossCSV='$OPENRADIOSS_PATH/exec/th_to_csv_linux64_gf'
 
 # Run `toVTK modelA` to convert all animation files modelAA* to VTK format
 toVTK() {
