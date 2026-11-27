@@ -639,7 +639,6 @@ RUN apt-get -qq update && \
         libxml2-dev \
         lsb-release \
         openmpi-bin \
-        petsc-dev \
         python3-dev \
         python3-numpy \
         python3-pip \
@@ -684,12 +683,13 @@ RUN apt-get -qq update && \
 USER precice
 WORKDIR /home/precice
 
+# Build preCICE. Disable PETSc to not conflict with the PETSc installation coming from the solids4foam image
 RUN git clone https://github.com/precice/precice.git precice && \
     cd precice && \
     if [ -n "${PRECICE_PR}" ]; then git fetch origin pull/${PRECICE_PR}/head; fi && \
     git checkout ${PRECICE_REF} && \
     mkdir build && cd build &&\
-    cmake .. --preset=${PRECICE_PRESET} -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DBUILD_TESTING=OFF && \
+    cmake .. --preset=${PRECICE_PRESET} -DPRECICE_FEATURE_PETSC_MAPPING=off -DCMAKE_INSTALL_PREFIX=/home/precice/.local/ -DBUILD_TESTING=OFF && \
     make all install -j $(nproc) && \
     cd ../.. && rm -rf precice
 
