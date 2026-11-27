@@ -60,6 +60,7 @@ The scripts rely on tools found in `../tools/`.
 OpenFOAM can be executed in parallel using `run.sh -parallel`.
 The default setting uses 8 MPI ranks, but you can increase the number of subdomains in `system/decomposeParDict`.
 Since this case takes a long time to complete, you probably want to run the fluid case in parallel.
+With the default configuration (8 MPI ranks), expect approximately 2h on a laptop.
 
 ## Post-processing
 
