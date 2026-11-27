@@ -15,7 +15,7 @@ Get the [case files of this tutorial](https://github.com/precice/tutorials/tree/
 
 This tutorial is derived from the "Pulsating flow over flexible flap" test case discussed in the [OpenFOAM-preCICE paper](https://doi.org/10.51560/ofj.v3.88) (comparing to a [benchmark from the literature](https://doi.org/10.1002/nme.6072)),
 and it was originally designed to validate OpenRadioss as a solid participant in fluid-structure interaction.
-In contrast to the discussed case, this is using an explicit coupling scheme with a smaller coupling time window / solver time step.
+In contrast to the discussed case, this is using an explicit coupling scheme (the OpenRadioss adapter does not support implicit coupling) with a smaller coupling time window / solver time step.
 
 Overall, this tutorial consists of a 3D flow channel with an elastic flap perpendicular to the flow, anchored from the bottom. The inlet velocity oscillates over time, and the flap deforms in all dimensions.
 
