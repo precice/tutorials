@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Breaking dam 2D
 path: breaking-dam-2d # relative to git repo 
 url: https://precice.org/tutorials-breaking-dam-2d.html

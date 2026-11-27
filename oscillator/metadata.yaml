@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Oscillator
 path: oscillator
 url: https://precice.org/tutorials-oscillator.html

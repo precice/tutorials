@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Flow over heated plate partitioned flow
 path: flow-over-heated-plate-partitioned-flow # relative to git repo 
 url: https://precice.org/tutorials-flow-over-heated-plate-partitioned-flow.html

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Partitioned backwards facing step
 path: partitioned-backwards-facing-step # relative to git repo 
 url: https://precice.org/tutorials-partitioned-backwards-facing-step.html

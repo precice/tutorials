@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Oscillator overlap
 path: oscillator-overlap
 url: https://precice.org/tutorials-oscillator-overlap.html

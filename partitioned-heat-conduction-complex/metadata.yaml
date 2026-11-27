@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Partitioned heat conduction complex
 path: partitioned-heat-conduction-complex # relative to git repo 
 url: https://precice.org/tutorials-partitioned-heat-conduction-complex.html

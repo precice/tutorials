@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Partitioned Burgers' equation 1D
 path: partitioned-burgers-1d # relative to git repo 
 url: https://precice.org/tutorials-partitioned-burgers-1d.html

@@ -1,0 +1,157 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/precice/tutorials/blob/develop/tests/schemas/tests.schema.json",
+  "title": "preCICE tutorials system tests: tests.yaml",
+  "description": "Test suites that can be triggered by the system tests. Each test suite is a list of tests, i.e., combinations of the cases of a tutorial.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["test_suites"],
+  "properties": {
+    "test_suites": {
+      "description": "The available test suites, by name. By convention, test suites follow the name of the respective tutorial or repository, and are sorted alphabetically.",
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/testSuite" }
+    }
+  },
+  "definitions": {
+    "testSuite": {
+      "type": "object",
+      "additionalProperties": false,
+      "anyOf": [
+        { "required": ["tutorials"] },
+        { "required": ["external"] }
+      ],
+      "properties": {
+        "tutorials": {
+          "description": "Tests that use tutorials from this repository.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/tutorialTest" }
+        },
+        "external": {
+          "description": "Tests that fetch the tutorial from an external git repository or archive.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/externalTest" }
+        }
+      }
+    },
+    "tutorialTest": {
+      "description": "A test of a tutorial from this repository.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "case_combination", "reference_result"],
+      "properties": {
+        "path": { "$ref": "#/definitions/path" },
+        "case_combination": { "$ref": "#/definitions/caseCombination" },
+        "reference_result": { "$ref": "#/definitions/referenceResult" },
+        "max_time": { "$ref": "#/definitions/maxTime" },
+        "max_time_windows": { "$ref": "#/definitions/maxTimeWindows" },
+        "timeout": { "$ref": "#/definitions/timeout" },
+        "tolerance": { "$ref": "#/definitions/tolerance" },
+        "skip_compare": { "$ref": "#/definitions/skipCompare" },
+        "run-before": { "$ref": "#/definitions/runBefore" },
+        "run-after": { "$ref": "#/definitions/runAfter" }
+      }
+    },
+    "externalTest": {
+      "description": "A test of a tutorial that is sourced from an external git repository or archive.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "source", "case_combination", "reference_result"],
+      "properties": {
+        "path": { "$ref": "#/definitions/path" },
+        "source": { "$ref": "#/definitions/source" },
+        "case_combination": { "$ref": "#/definitions/caseCombination" },
+        "reference_result": { "$ref": "#/definitions/referenceResult" },
+        "max_time": { "$ref": "#/definitions/maxTime" },
+        "max_time_windows": { "$ref": "#/definitions/maxTimeWindows" },
+        "timeout": { "$ref": "#/definitions/timeout" },
+        "tolerance": { "$ref": "#/definitions/tolerance" },
+        "skip_compare": { "$ref": "#/definitions/skipCompare" },
+        "run-before": { "$ref": "#/definitions/runBefore" },
+        "run-after": { "$ref": "#/definitions/runAfter" }
+      }
+    },
+    "source": {
+      "description": "Where to fetch an external tutorial from.",
+      "type": "object",
+      "required": ["type", "url"],
+      "properties": {
+        "type": {
+          "description": "git: clone the repository at the given ref. archive: download and extract a .tar.gz / .zip.",
+          "enum": ["git", "archive"]
+        },
+        "url": {
+          "description": "URL of the git repository or of the archive.",
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "description": "Branch or tag to check out (git only).",
+          "type": "string",
+          "minLength": 1
+        },
+        "subdir": {
+          "description": "Subdirectory of the repository or archive that contains the tutorial directory.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "if": { "properties": { "type": { "const": "git" } } },
+      "then": { "required": ["ref"] }
+    },
+    "path": {
+      "description": "Name of the tutorial directory (as in the path field of its metadata.yaml).",
+      "type": "string",
+      "minLength": 1
+    },
+    "caseCombination": {
+      "description": "Names of the cases (as defined in the metadata.yaml of the tutorial) that are run together, one for each participant.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "referenceResult": {
+      "description": "Path to the reference results archive, relative to the repository root.",
+      "type": "string",
+      "minLength": 1
+    },
+    "maxTime": {
+      "description": "Overrides the max-time of the preCICE configuration, to limit the simulated time.",
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "maxTimeWindows": {
+      "description": "Overrides the maximum number of time windows to simulate.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "timeout": {
+      "description": "Timeout of this test, in seconds.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "tolerance": {
+      "description": "Relative tolerance of the fieldcompare comparison. Defaults to 3e-7.",
+      "anyOf": [
+        { "type": "number", "exclusiveMinimum": 0 },
+        {
+          "description": "Numbers such as 1e-2 are loaded as strings by some YAML parsers.",
+          "type": "string",
+          "pattern": "^\\+?([0-9]+\\.?[0-9]*|\\.[0-9]+)([eE][+-]?[0-9]+)?$"
+        }
+      ]
+    },
+    "skipCompare": {
+      "description": "Skip the comparison with the reference results, and only check that the build and the run succeed.",
+      "type": "boolean"
+    },
+    "runBefore": {
+      "description": "Shell command to run in the copied tutorial directory before the Docker build.",
+      "type": "string"
+    },
+    "runAfter": {
+      "description": "Shell command to run in the copied tutorial directory after the simulation and before the comparison.",
+      "type": "string"
+    }
+  }
+}

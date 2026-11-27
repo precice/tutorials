@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=schemas/tests.schema.json
 # Test suites that can be triggered by the system tests.
 # Define test suites per tutorial in the beginning of the file,
 # then refer to these in the release test suite and in the individual test

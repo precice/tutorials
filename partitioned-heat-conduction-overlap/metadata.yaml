@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Partitioned heat conduction overlap
 path: partitioned-heat-conduction-overlap # relative to git repo 
 url: https://precice.org/tutorials-partitioned-heat-conduction-overlap.html

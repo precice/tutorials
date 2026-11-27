@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Perpendicular flap stress
 path: perpendicular-flap-stress
 url: https://precice.org/tutorials-perpendicular-flap-stress.html

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../tests/schemas/metadata.schema.json
 name: Heat Exchanger simplified
 path: heat-exchanger-simplified # relative to git repo 
 url: https://precice.org/tutorials-heat-exchanger-simplified.html

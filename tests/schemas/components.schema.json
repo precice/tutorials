@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/precice/tutorials/blob/develop/tests/schemas/components.schema.json",
+  "title": "preCICE tutorials system tests: components.yaml",
+  "description": "The components (e.g., adapters, language bindings) that can be used by the cases of the tutorials, together with the parameters that their Docker image accepts.",
+  "type": "object",
+  "additionalProperties": { "$ref": "#/definitions/component" },
+  "definitions": {
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["template", "build_arguments"],
+      "properties": {
+        "template": {
+          "description": "Path to the Docker Compose service template of this component, relative to the tests directory.",
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "description": "Repository of the component.",
+          "type": "string"
+        },
+        "build_timeout": {
+          "description": "Timeout for building the Docker image of this component, in seconds.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "build_arguments": {
+          "description": "The build arguments of the Docker image of this component, by name.",
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/buildArgument" }
+        }
+      }
+    },
+    "buildArgument": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "description": "Short description of the build argument.",
+          "type": "string"
+        },
+        "repository": {
+          "description": "Repository that a _REF build argument refers to.",
+          "type": "string"
+        },
+        "default": {
+          "description": "Default value. Build arguments without a default value are required.",
+          "type": "string"
+        },
+        "value_options": {
+          "description": "The values that are accepted. If not specified, all values are accepted.",
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}
