@@ -703,7 +703,7 @@ RUN git clone https://github.com/precice/openfoam-adapter.git &&\
     cd openfoam-adapter && \
     if [ -n "${OPENFOAM_ADAPTER_PR}" ]; then git fetch origin pull/${OPENFOAM_ADAPTER_PR}/head; fi && \
     git checkout ${OPENFOAM_ADAPTER_REF} && \
-    /usr/bin/openfoam2412 ./Allwmake -j $(nproc)
+    /usr/bin/openfoam2512 ./Allwmake -j $(nproc)
 
 FROM python:3.14 AS fieldcompare
 RUN pip install fieldcompare[all]==0.7.1
